@@ -110,7 +110,9 @@ import requests.adapters
 from urllib3 import Retry
 
 import github.Consts as Consts
+import github.GithubException
 import github.GithubException as GithubException
+from github.GithubObject import as_rest_api_attributes
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -119,6 +121,7 @@ if TYPE_CHECKING:
     from .InstallationAuthorization import InstallationAuthorization
 
 T = TypeVar("T")
+T_gh = TypeVar("T_gh", bound="GithubObject")
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
@@ -628,8 +631,77 @@ class Requester:
 
         response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
         if "errors" in data:
+            if len(data["errors"]) == 1:
+                error = data["errors"][0]
+                if error.get("type") == "NOT_FOUND":
+                    raise github.UnknownObjectException(404, data, response_headers, error.get("message"))
             raise self.createException(400, response_headers, data)
         return response_headers, data
+
+    @classmethod
+    def paths_of_dict(cls, d: dict) -> dict:
+        return {key: cls.paths_of_dict(val) if isinstance(val, dict) else None for key, val in d.items()}
+
+    def data_as_class(
+        self, headers: Dict[str, Any], data: Dict[str, Any], data_path: List[str], klass: Type[T_gh]
+    ) -> T_gh:
+        for item in data_path:
+            if item not in data:
+                raise RuntimeError(f"GraphQL path {data_path} not found in data: {self.paths_of_dict(data)}")
+            data = data[item]
+        if klass.is_rest():
+            data = as_rest_api_attributes(data)
+        return klass(self, headers, data, completed=False)
+
+    def graphql_node(self, node_id: str, graphql_schema: str, node_type: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        if not graphql_schema.startswith("\n"):
+            graphql_schema = f" {graphql_schema} "
+        query = (
+            """
+            query Q($id: ID!) {
+              node(id: $id) {
+                __typename
+                ... on """
+            + f"{node_type} {{{graphql_schema}}}"
+            + """
+              }
+            }
+            """
+        )
+
+        headers, data = self.graphql_query(query, {"id": node_id})
+        actual_node_type = data.get("data", {}).get("node", {}).get("__typename", node_type)
+        if actual_node_type != node_type:
+            raise github.GithubException(
+                400,
+                data,
+                message=f"Retrieved {node_type} object is of different type: {actual_node_type}",
+            )
+        return headers, data
+
+    def graphql_node_class(
+        self, node_id: str, graphql_schema: str, klass: Type[T_gh], node_type: Optional[str] = None
+    ) -> T_gh:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        if node_type is None:
+            node_type = klass.__name__
+
+        headers, data = self.graphql_node(node_id, graphql_schema, node_type)
+        return self.data_as_class(headers, data, ["data", "node"], klass)
+
+    def graphql_query_class(
+        self, query: str, variables: Dict[str, Any], data_path: List[str], klass: Type[T_gh]
+    ) -> T_gh:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        headers, data = self.graphql_query(query, variables)
+        return self.data_as_class(headers, data, ["data"] + data_path, klass)
 
     def graphql_named_mutation(
         self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str
@@ -647,6 +719,18 @@ class Requester:
         query = f"mutation Mutation($input: {mutation_input_name}) {{ {mutation_name}(input: $input) {{ {output_schema} }} }}"
         headers, data = self.graphql_query(query, {"input": mutation_input})
         return headers, data.get("data", {}).get(mutation_name, {})
+
+    def graphql_named_mutation_class(
+        self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str, item: str, klass: Type[T_gh]
+    ) -> T_gh:
+        """
+        Executes a mutation and returns the output object as the given GithubObject.
+
+        See {@link graphql_named_mutation}.
+
+        """
+        headers, data = self.graphql_named_mutation(mutation_name, mutation_input, output_schema)
+        return self.data_as_class(headers, data, [item], klass)
 
     def __check(
         self,

@@ -214,6 +214,7 @@ import github.PullRequest
 import github.PullRequestComment
 import github.Referrer
 import github.RepositoryAdvisory
+import github.RepositoryDiscussion
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.Secret
@@ -293,6 +294,7 @@ if TYPE_CHECKING:
     from github.PullRequest import PullRequest
     from github.PullRequestComment import PullRequestComment
     from github.Referrer import Referrer
+    from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
     from github.SecurityAndAnalysis import SecurityAndAnalysis
@@ -1047,6 +1049,8 @@ class Repository(CompletableGithubObject):
 
     @property
     def url(self) -> str:
+        if is_undefined(self._url) and is_defined(self._owner) and is_defined(self._name):
+            self._url = self._makeStringAttribute(self._requester.base_url + f"/repos/{self.owner.login}/{self.name}")
         self._completeIfNotSet(self._url)
         return self._url.value
 
@@ -2331,6 +2335,51 @@ class Repository(CompletableGithubObject):
         )
 
         return github.Deployment.Deployment(self._requester, headers, data, completed=True)
+
+    def get_discussions(
+        self,
+        discussion_graphql_schema: str,
+        *,
+        answered: bool | None = None,
+        category_id: str | None = None,
+        states: list[str] | None = None,
+    ) -> PaginatedList[RepositoryDiscussion]:
+        if not discussion_graphql_schema.startswith("\n"):
+            discussion_graphql_schema = f" {discussion_graphql_schema} "
+        query = (
+            """
+            query Q($repo: String!, $owner: String!, $answered: Boolean, $category_id: ID, $states: [DiscussionState!], $first: Int, $last: Int, $before: String, $after: String) {
+              repository(name: $repo, owner: $owner) {
+                discussions(answered: $answered, categoryId: $category_id, states: $states, first: $first, last: $last, before: $before, after: $after) {
+                  totalCount
+                  pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                    hasPreviousPage
+                  }
+                  nodes {"""
+            + discussion_graphql_schema
+            + """}
+                }
+              }
+            }
+            """
+        )
+        variables = {
+            "repo": self.name,
+            "owner": self.owner.login,
+            "answered": answered,
+            "category_id": category_id,
+            "states": states,
+        }
+        return PaginatedList(
+            github.RepositoryDiscussion.RepositoryDiscussion,
+            self._requester,
+            graphql_query=query,
+            graphql_variables=variables,
+            list_item=["repository", "discussions"],
+        )
 
     def get_top_referrers(self) -> None | list[Referrer]:
         """
