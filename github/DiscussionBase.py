@@ -38,7 +38,7 @@ class DiscussionBase(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._author: Attribute[github.NamedUser.NamedUser | None] = NotSet
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -52,7 +52,7 @@ class DiscussionBase(CompletableGithubObject):
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
-    def author(self) -> github.NamedUser.NamedUser:
+    def author(self) -> github.NamedUser.NamedUser | None:
         self._completeIfNotSet(self._author)
         return self._author.value
 

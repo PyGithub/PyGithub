@@ -62,7 +62,7 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._answer: Attribute[RepositoryDiscussionComment] = NotSet
+        self._answer: Attribute[RepositoryDiscussionComment | None] = NotSet
         self._body_text: Attribute[str] = NotSet
         self._category: Attribute[RepositoryDiscussionCategory] = NotSet
         self._comments_page = None
@@ -74,7 +74,7 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         self._repository: Attribute[Repository] = NotSet
 
     @property
-    def answer(self) -> RepositoryDiscussionComment:
+    def answer(self) -> RepositoryDiscussionComment | None:
         return self._answer.value
 
     @property
