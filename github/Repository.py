@@ -2338,14 +2338,14 @@ class Repository(CompletableGithubObject):
 
     def get_discussions(
         self,
-        discussion_graphql_schema: str | None = None,
+        discussion_graphql_schema: str,
         *,
         answered: bool | None = None,
         category_id: str | None = None,
         states: list[str] | None = None,
     ) -> PaginatedList[RepositoryDiscussion]:
-        if discussion_graphql_schema is None:
-            discussion_graphql_schema = github.RepositoryDiscussion.RepositoryDiscussion.minimal_graphql_schema
+        if not discussion_graphql_schema.startswith("\n"):
+            discussion_graphql_schema = f" {discussion_graphql_schema} "
         query = (
             """
             query Q($repo: String!, $owner: String!, $answered: Boolean, $category_id: ID, $states: [DiscussionState!], $first: Int, $last: Int, $before: String, $after: String) {
@@ -2358,9 +2358,9 @@ class Repository(CompletableGithubObject):
                     hasNextPage
                     hasPreviousPage
                   }
-                  nodes """
+                  nodes {"""
             + discussion_graphql_schema
-            + """
+            + """}
                 }
               }
             }

@@ -26,7 +26,7 @@ from . import Framework
 
 
 class RepositoryDiscussion(Framework.TestCase):
-    discussion_schema = """{
+    discussion_schema = """
         answer {
           author { login }
           body
@@ -107,7 +107,7 @@ class RepositoryDiscussion(Framework.TestCase):
         title
         updatedAt
         url
-      }"""
+      """
 
     def setUp(self):
         super().setUp()
@@ -174,37 +174,37 @@ class RepositoryDiscussion(Framework.TestCase):
         self.assertEqual(self.discussion.updated_at, datetime(2024, 8, 29, 16, 1, 0, tzinfo=timezone.utc))
 
         self.assertListEqual(
-            [c.node_id for c in self.discussion.get_comments()], ["DC_kwDOADYVqs4AnxkU", "DC_kwDOADYVqs4AoA2V"]
+            [c.node_id for c in self.discussion.get_comments("id")], ["DC_kwDOADYVqs4AnxkU", "DC_kwDOADYVqs4AoA2V"]
         )
         self.assertEqual(self.discussion.get_labels().totalCount, 0)
         self.assertEqual(self.discussion.get_reactions().totalCount, 0)
 
     def testGetComments(self):
-        discussion = self.g.get_repository_discussion("D_kwDOADYVqs4AaHoG", "{ id }")
-        comments_pages = discussion.get_comments()
+        discussion = self.g.get_repository_discussion("D_kwDOADYVqs4AaHoG", "id")
+        comments_pages = discussion.get_comments("id")
         comments = list(comments_pages)
         self.assertEqual(comments_pages.totalCount, 2)
         self.assertEqual(len(comments), 2)
         self.assertListEqual([c.id for c in comments], ["DC_kwDOADYVqs4AnxkU", "DC_kwDOADYVqs4AoA2V"])
 
     def testGetCommentsWithoutNodeId(self):
-        discussion = self.g.get_repository_discussion("D_kwDOADYVqs4AaHoG", "{ title }")
+        discussion = self.g.get_repository_discussion("D_kwDOADYVqs4AaHoG", "title")
         with self.assertRaises(RuntimeError) as e:
-            discussion.get_comments()
+            discussion.get_comments("id")
         self.assertEqual(e.exception.args, ("Retrieving discussion comments requires the discussion field 'id'",))
 
     def testAddAndDeleteComment(self):
-        discussion = self.g.get_repository_discussion("D_kwDOADYVqs4AaHoG", "{ id }")
-        comment = discussion.add_comment("test comment", output_schema="{ id body }")
+        discussion = self.g.get_repository_discussion("D_kwDOADYVqs4AaHoG", "id")
+        comment = discussion.add_comment("test comment", output_schema="id body")
         self.assertEqual(comment.id, "DC_kwDOADYVqs4AovYk")
         self.assertEqual(comment.body, "test comment")
 
-        reply = discussion.add_comment("test reply", reply_to=comment, output_schema="{ id body }")
+        reply = discussion.add_comment("test reply", reply_to=comment, output_schema="id body")
         self.assertEqual(reply.id, "DC_kwDOADYVqs4AovYl")
         self.assertEqual(reply.body, "test reply")
 
         reply_by_id_str = discussion.add_comment(
-            "test reply by string id", reply_to=comment.id, output_schema="{ id body }"
+            "test reply by string id", reply_to=comment.id, output_schema="id body"
         )
         self.assertEqual(reply_by_id_str.id, "DC_kwDOADYVqs4AovYm")
         self.assertEqual(reply_by_id_str.body, "test reply by string id")

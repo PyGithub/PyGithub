@@ -79,7 +79,7 @@ class GraphQl(Framework.TestCase):
 
     def testNode(self):
         requester = self.g._Github__requester
-        headers, data = requester.graphql_node("D_kwDOADYVqs4ATJZD", "{ title }", "Discussion")
+        headers, data = requester.graphql_node("D_kwDOADYVqs4ATJZD", "title", "Discussion")
         self.assertTrue(headers)
         self.assertEqual(
             data.get("data", {}).get("node", {}).get("title"),
@@ -88,7 +88,7 @@ class GraphQl(Framework.TestCase):
 
         # non-existing node should throw a NOT FOUND exception
         with self.assertRaises(github.UnknownObjectException) as e:
-            requester.graphql_node("D_abcdefgh", "{ title }", "Discussion")
+            requester.graphql_node("D_abcdefgh", "title", "Discussion")
         self.assertEqual(e.exception.status, 404)
         self.assertEqual(
             e.exception.data,
@@ -108,7 +108,7 @@ class GraphQl(Framework.TestCase):
 
         # wrong type should throw an exception
         with self.assertRaises(github.GithubException) as e:
-            requester.graphql_node("D_kwDOADYVqs4ATJZD", "{ login }", "User")
+            requester.graphql_node("D_kwDOADYVqs4ATJZD", "login", "User")
         self.assertEqual(e.exception.status, 400)
         self.assertEqual(e.exception.data, {"data": {"node": {"__typename": "Discussion"}}})
         self.assertEqual(e.exception.message, "Retrieved User object is of different type: Discussion")
@@ -116,14 +116,14 @@ class GraphQl(Framework.TestCase):
     def testNodeClass(self):
         requester = self.g._Github__requester
         discussion = requester.graphql_node_class(
-            "D_kwDOADYVqs4ATJZD", "{ title }", github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
+            "D_kwDOADYVqs4ATJZD", "title", github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
         self.assertEqual(discussion.title, "Is there a way to search if a string present in default branch?")
 
         # non-existing node should throw a NOT FOUND exception
         with self.assertRaises(github.UnknownObjectException) as e:
             requester.graphql_node_class(
-                "D_abcdefgh", "{ title }", github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
+                "D_abcdefgh", "title", github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
             )
         self.assertEqual(e.exception.status, 404)
         self.assertEqual(
@@ -145,7 +145,7 @@ class GraphQl(Framework.TestCase):
         # wrong type should throw an exception
         with self.assertRaises(github.GithubException) as e:
             requester.graphql_node_class(
-                "D_kwDOADYVqs4ATJZD", "{ login }", github.RepositoryDiscussion.RepositoryDiscussion, "User"
+                "D_kwDOADYVqs4ATJZD", "login", github.RepositoryDiscussion.RepositoryDiscussion, "User"
             )
         self.assertEqual(e.exception.status, 400)
         self.assertEqual(e.exception.data, {"data": {"node": {"__typename": "Discussion"}}})
@@ -191,7 +191,7 @@ class GraphQl(Framework.TestCase):
     def testMutation(self):
         requester = self.g._Github__requester
         header, data = requester.graphql_named_mutation(
-            "followOrganization", {"organizationId": "O_kgDOAKxBpA"}, "{ organization { name } }"
+            "followOrganization", {"organizationId": "O_kgDOAKxBpA"}, "organization { name }"
         )
         self.assertTrue(header)
         self.assertEqual(data, {"organization": {"name": "PyGithub"}})
@@ -201,7 +201,7 @@ class GraphQl(Framework.TestCase):
         org = requester.graphql_named_mutation_class(
             "followOrganization",
             {"organizationId": "O_kgDOAKxBpA"},
-            "{ organization { name } }",
+            "organization { name }",
             "organization",
             github.Organization.Organization,
         )
@@ -209,7 +209,7 @@ class GraphQl(Framework.TestCase):
 
     def testPaginationAndRestIntegration(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
-        discussion_schema = """{
+        discussion_schema = """
             id
             url
             number
@@ -306,7 +306,7 @@ class GraphQl(Framework.TestCase):
                 }
               }
             }
-          }"""
+          """
         discussions_pages = repo.get_discussions(discussion_schema)
         discussions = list(discussions_pages)
         # would perform an extra request if called before iterating discussions_pages
@@ -325,7 +325,7 @@ class GraphQl(Framework.TestCase):
         self.assertEqual(discussion.author.html_url, "https://github.com/arunanandhan")
 
         # inner page of GraphQL comments
-        comments = discussion.get_comments()
+        comments = discussion.get_comments("id")
         self.assertEqual(comments.totalCount, 1)  # does not perform an extra request
         comments = list(comments)
         self.assertEqual(len(comments), 1)

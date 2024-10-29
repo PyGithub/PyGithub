@@ -657,13 +657,15 @@ class Requester:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
         """
+        if not graphql_schema.startswith("\n"):
+            graphql_schema = f" {graphql_schema} "
         query = (
             """
             query Q($id: ID!) {
               node(id: $id) {
                 __typename
                 ... on """
-            + f"{node_type} {graphql_schema}"
+            + f"{node_type} {{{graphql_schema}}}"
             + """
               }
             }
@@ -719,7 +721,7 @@ class Requester:
         return headers, data.get("data", {}).get(mutation_name, {})
 
     def graphql_named_mutation_class(
-        self, mutation_name: str, mutation_input: Dict[str, Any], output: str, item: str, klass: Type[T_gh]
+        self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str, item: str, klass: Type[T_gh]
     ) -> T_gh:
         """
         Executes a mutation and returns the output object as the given GithubObject.
@@ -727,7 +729,7 @@ class Requester:
         See {@link graphql_named_mutation}.
 
         """
-        headers, data = self.graphql_named_mutation(mutation_name, mutation_input, output or "{ id }")
+        headers, data = self.graphql_named_mutation(mutation_name, mutation_input, output_schema)
         return self.data_as_class(headers, data, [item], klass)
 
     def __check(

@@ -60,8 +60,6 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
 
     """
 
-    minimal_graphql_schema = "{ id number }"
-
     def _initAttributes(self) -> None:
         super()._initAttributes()
         self._answer: Attribute[RepositoryDiscussionComment] = NotSet
@@ -107,7 +105,7 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
     def repository(self) -> Repository:
         return self._repository.value
 
-    def get_comments(self, comment_graphql_schema: str | None = None) -> PaginatedList[RepositoryDiscussionComment]:
+    def get_comments(self, comment_graphql_schema: str) -> PaginatedList[RepositoryDiscussionComment]:
         if self._comments_page is not None:
             return PaginatedList(
                 github.RepositoryDiscussionComment.RepositoryDiscussionComment,
@@ -118,11 +116,9 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
 
         if is_undefined(self._id):
             raise RuntimeError("Retrieving discussion comments requires the discussion field 'id'")
+        if not comment_graphql_schema.startswith("\n"):
+            comment_graphql_schema = f" {comment_graphql_schema} "
 
-        if comment_graphql_schema is None:
-            comment_graphql_schema = (
-                github.RepositoryDiscussionComment.RepositoryDiscussionComment.minimal_graphql_schema
-            )
         query = (
             """
             query Q($discussionId: ID!, $first: Int, $last: Int, $before: String, $after: String) {
@@ -136,9 +132,9 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
                       hasNextPage
                       hasPreviousPage
                     }
-                    nodes """
+                    nodes {"""
             + comment_graphql_schema
-            + """
+            + """}
                   }
                 }
               }
@@ -164,18 +160,21 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         return PaginatedList(github.Reaction.Reaction, self._requester, firstData=self._reactions_page, firstHeaders={})
 
     def add_comment(
-        self, body: str, reply_to: RepositoryDiscussionComment | str | None = None, output_schema: str = "{ id }"
+        self, body: str, reply_to: RepositoryDiscussionComment | str | None = None, output_schema: str = "id"
     ) -> RepositoryDiscussionComment:
         reply_to_id = (
             reply_to.id
             if isinstance(reply_to, github.RepositoryDiscussionComment.RepositoryDiscussionComment)
             else reply_to
         )
+        if not output_schema.startswith("\n"):
+            output_schema = f" {output_schema} "
+
         variables = {"body": body, "discussionId": self.id, "replyToId": reply_to_id}
         return self._requester.graphql_named_mutation_class(
             "addDiscussionComment",
             NotSet.remove_unset_items(variables),
-            f"{{ comment {output_schema} }}",
+            f"comment {{{output_schema}}}",
             "comment",
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,
         )

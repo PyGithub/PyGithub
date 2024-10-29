@@ -386,7 +386,7 @@ class PaginatedList(Framework.TestCase):
 
     def testGraphQlPagination(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
-        discussions = repo.get_discussions()
+        discussions = repo.get_discussions("id number")
         self.assertFalse(discussions.is_rest)
         self.assertTrue(discussions.is_graphql)
         rev = discussions.reversed
@@ -403,4 +403,4 @@ class PaginatedList(Framework.TestCase):
         self.assertListEqual([d.number for d in reversed_list], [d.number for d in reversed(discussions_list)])
 
         # accessing totalCount before iterating the PaginatedList triggers another request
-        self.assertEqual(repo.get_discussions().totalCount, 65)
+        self.assertEqual(repo.get_discussions("id number").totalCount, 65)

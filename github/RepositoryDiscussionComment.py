@@ -52,8 +52,6 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
 
     """
 
-    minimal_graphql_schema = "{ id }"
-
     def _initAttributes(self) -> None:
         super()._initAttributes()
         self._body_text: Attribute[str] = NotSet
@@ -102,20 +100,24 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
             RepositoryDiscussionComment, self._requester, firstData=self._replies_page, firstHeaders={}
         )
 
-    def edit(self, body: str, output_schema: str = "{ id }") -> RepositoryDiscussionComment:
+    def edit(self, body: str, output_schema: str = "id") -> RepositoryDiscussionComment:
+        if not output_schema.startswith("\n"):
+            output_schema = f" {output_schema} "
         return self._requester.graphql_named_mutation_class(
             "updateDiscussionComment",
             {"commentId": self.node_id, "body": body},
-            f"{{ comment {output_schema} }}",
+            f"comment {{{output_schema}}}",
             "comment",
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,
         )
 
-    def delete(self, output_schema: str = "{ id }") -> RepositoryDiscussionComment:
+    def delete(self, output_schema: str = "id") -> RepositoryDiscussionComment:
+        if not output_schema.startswith("\n"):
+            output_schema = f" {output_schema} "
         return self._requester.graphql_named_mutation_class(
             "deleteDiscussionComment",
             {"id": self.id},
-            f"{{ comment {output_schema} }}",
+            f"comment {{{output_schema}}}",
             "comment",
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,
         )

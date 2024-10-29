@@ -468,11 +468,7 @@ class Github:
             url_parameters,
         )
 
-    def get_repository_discussion(
-        self, node_id: str, discussion_graphql_schema: str | None = None
-    ) -> RepositoryDiscussion:
-        if discussion_graphql_schema is None:
-            discussion_graphql_schema = github.RepositoryDiscussion.RepositoryDiscussion.minimal_graphql_schema
+    def get_repository_discussion(self, node_id: str, discussion_graphql_schema: str) -> RepositoryDiscussion:
         return self.__requester.graphql_node_class(
             node_id, discussion_graphql_schema, github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
