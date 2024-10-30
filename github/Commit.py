@@ -125,11 +125,11 @@ class Commit(CompletableGithubObject):
             self._requester,
             self.url,
             {},
-            None,
-            "files",
-            "total_files",
-            self.raw_data,
-            self.raw_headers,
+            headers=None,
+            list_item="files",
+            total_count_item="total_files",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
         )
 
     @property

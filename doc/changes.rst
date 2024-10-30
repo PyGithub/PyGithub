@@ -4,6 +4,18 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.5.0 (XXXXXXX)
+-----------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* Parameters of method ``github.Requester.Requester.graphql_named_mutation`` have been renamed:
+
+  * Parameter ``variables`` renamed to ``mutation_input``
+  * Parameter ``output`` renamed to ``output_schema``
+  * Default value of parameter ``output`` has been removed
+
 Version 2.4.0 (August 26, 2024)
 -------------------------------
 

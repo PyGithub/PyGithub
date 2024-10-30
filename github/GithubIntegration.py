@@ -255,8 +255,10 @@ class GithubIntegration:
         """
         Deprecated by get_repo_installation.
 
-        :calls: `GET /repos/{owner}/{repo}/installation
-        <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
+        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
+        installation-for-the-authenticated-app>`
+        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
+        installation-for-the-authenticated-app>`
 
         """
         owner = urllib.parse.quote(owner)

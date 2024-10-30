@@ -48,11 +48,12 @@
 ################################################################################
 
 import email.utils
+import re
 import typing
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union, overload
 
 from typing_extensions import Protocol, TypeGuard
 
@@ -139,6 +140,62 @@ def is_optional_list(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
 
 
+camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
+
+
+@overload
+def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]:
+    ...
+
+
+@overload
+def as_rest_api_attributes(graphql_attributes: None) -> None:
+    ...
+
+
+def as_rest_api_attributes(graphql_attributes: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """
+    Converts attributes from GraphQL schema to REST API schema.
+
+    The GraphQL API uses lower camel case (e.g. createdAt), whereas REST API uses snake case (created_at). Initializing
+    REST API GithubObjects from GraphQL API attributes requires transformation provided by this method.
+
+    Further renames GraphQL attributes to REST API attributes where the case conversion is not sufficient. For example,
+    GraphQL attribute 'id' is equivalent to REST API attribute 'node_id'.
+
+    """
+    if graphql_attributes is None:
+        return None
+
+    attribute_translation = {
+        "id": "node_id",
+        "databaseId": "id",  # must be after 'id': 'node_id'!
+        "url": "html_url",
+    }
+
+    def translate(attr: str) -> str:
+        def un_capitalize(match: re.Match) -> str:
+            return match.group(1) + match.group(2).lower()
+
+        attr = attribute_translation.get(attr, attr)
+        attr = re.sub(r"([A-Z])([A-Z]+)", un_capitalize, attr)
+        attr = camel_to_snake_case_regexp.sub("_", attr)
+        attr = attr.lower()
+
+        return attr
+
+    return {
+        translate(k): as_rest_api_attributes(v)
+        if isinstance(v, dict)
+        else (as_rest_api_attributes_list(v) if isinstance(v, list) else v)
+        for k, v in graphql_attributes.items()
+    }
+
+
+def as_rest_api_attributes_list(graphql_attributes: List[Optional[Dict[str, Any]]]) -> List[Optional[Dict[str, Any]]]:
+    return [as_rest_api_attributes(v) if isinstance(v, dict) else v for v in graphql_attributes]
+
+
 class _ValuedAttribute(Attribute[T]):
     def __init__(self, value: T):
         self._value = value
@@ -171,6 +228,14 @@ class GithubObject:
     """
     CHECK_AFTER_INIT_FLAG = False
     _url: Attribute[str]
+
+    @classmethod
+    def is_rest(cls) -> bool:
+        return not cls.is_graphql()
+
+    @classmethod
+    def is_graphql(cls) -> bool:
+        return False
 
     @classmethod
     def setCheckAfterInitFlag(cls, flag: bool) -> None:
@@ -395,6 +460,12 @@ class GithubObject:
 
     def _completeIfNeeded(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _completeIfNeeded")
+
+
+class GraphQlObject:
+    @classmethod
+    def is_graphql(cls) -> bool:
+        return True
 
 
 class NonCompletableGithubObject(GithubObject):

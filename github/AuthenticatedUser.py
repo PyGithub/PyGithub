@@ -1086,6 +1086,17 @@ class AuthenticatedUser(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
+    def get_organization_memberships(self) -> PaginatedList[Membership]:
+        """
+        :calls: `GET /user/memberships/orgs/ <https://docs.github.com/en/rest/orgs/members#list-organization-memberships-for-the-authenticated-user>`_
+        """
+        return PaginatedList(
+            github.Membership.Membership,
+            self._requester,
+            "/user/memberships/orgs",
+            None,
+        )
+
     def get_organization_membership(self, org: str) -> Membership:
         """
         :calls: `GET /user/memberships/orgs/{org} <https://docs.github.com/en/rest/reference/orgs#get-an-organization-membership-for-the-authenticated-user>`_
