@@ -54,7 +54,6 @@ import github.CommitCombinedStatus
 import github.CommitComment
 import github.CommitStats
 import github.CommitStatus
-import github.CommitVerification
 import github.File
 import github.GitCommit
 import github.NamedUser
@@ -69,7 +68,6 @@ if TYPE_CHECKING:
     from github.CommitComment import CommitComment
     from github.CommitStats import CommitStats
     from github.CommitStatus import CommitStatus
-    from github.CommitVerification import CommitVerification
     from github.File import File
     from github.GitCommit import GitCommit
     from github.NamedUser import NamedUser
@@ -95,7 +93,6 @@ class Commit(CompletableGithubObject):
         self._sha: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
         self._url: Attribute[str] = NotSet
-        self._verification: Attribute[CommitVerification] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -160,11 +157,6 @@ class Commit(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def verification(self) -> CommitVerification:
-        self._completeIfNotSet(self._verification)
-        return self._verification.value
 
     def create_comment(
         self,
@@ -320,7 +312,3 @@ class Commit(CompletableGithubObject):
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "verification" in attributes:  # pragma no branch
-            self._verification = self._makeClassAttribute(
-                github.CommitVerification.CommitVerification, attributes["verification"]
-            )
