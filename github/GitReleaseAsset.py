@@ -155,7 +155,7 @@ class GitReleaseAsset(CompletableGithubObject):
         Download asset to the path.
         """
         assert isinstance(path, str), path
-        self._requester.requestFile("GET", self.url, path=path)
+        self._requester.getFile(self.url, path=path)
         return True
 
     def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
