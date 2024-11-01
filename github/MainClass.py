@@ -143,6 +143,7 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
     from github.Repository import Repository
+    from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
@@ -326,8 +327,7 @@ class Github:
         """
         Rate limit status for different resources (core/search/graphql).
 
-        :calls: `GET /rate_limit
-        <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :calls:`GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
@@ -466,6 +466,11 @@ class Github:
             self.__requester,
             "/repositories",
             url_parameters,
+        )
+
+    def get_repository_discussion(self, node_id: str, discussion_graphql_schema: str) -> RepositoryDiscussion:
+        return self.__requester.graphql_node_class(
+            node_id, discussion_graphql_schema, github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
 
     def get_project(self, id: int) -> Project:

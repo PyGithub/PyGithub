@@ -522,17 +522,13 @@ class PullRequest(Framework.TestCase):
             expected_head_oid="0283d46537193f1fed7d46859f15c5304b9836f9",
         )
         assert response == {
-            "data": {
-                "enablePullRequestAutoMerge": {
-                    "actor": {
-                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
-                        "login": "heitorpolidoro",
-                        "resourcePath": "/heitorpolidoro",
-                        "url": "https://github.com/heitorpolidoro",
-                    },
-                    "clientMutationId": None,
-                }
-            }
+            "actor": {
+                "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                "login": "heitorpolidoro",
+                "resourcePath": "/heitorpolidoro",
+                "url": "https://github.com/heitorpolidoro",
+            },
+            "clientMutationId": None,
         }
 
     def testEnableAutomergeDefaultValues(self):
@@ -566,15 +562,11 @@ class PullRequest(Framework.TestCase):
     def testDisableAutomerge(self):
         response = self.pull.disable_automerge()
         assert response == {
-            "data": {
-                "disablePullRequestAutoMerge": {
-                    "actor": {
-                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
-                        "login": "heitorpolidoro",
-                        "resourcePath": "/heitorpolidoro",
-                        "url": "https://github.com/heitorpolidoro",
-                    },
-                    "clientMutationId": None,
-                }
-            }
+            "actor": {
+                "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                "login": "heitorpolidoro",
+                "resourcePath": "/heitorpolidoro",
+                "url": "https://github.com/heitorpolidoro",
+            },
+            "clientMutationId": None,
         }

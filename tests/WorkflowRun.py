@@ -43,6 +43,7 @@ class WorkflowRun(Framework.TestCase):
             repr(self.workflow_run),
             'WorkflowRun(url="https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935", id=3881497935)',
         )
+        self.assertEqual(self.workflow_run.actor.login, "nuang-ee")
         self.assertEqual(self.workflow_run.id, 3881497935)
         self.assertEqual(self.workflow_run.name, "CI")
         self.assertEqual(self.workflow_run.head_branch, "feat/workflow-run")
