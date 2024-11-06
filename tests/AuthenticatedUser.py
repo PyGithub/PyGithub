@@ -28,6 +28,8 @@
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -364,6 +366,7 @@ class AuthenticatedUser(Framework.TestCase):
             has_issues=False,
             has_projects=False,
             has_wiki=False,
+            has_discussions=False,
             has_downloads=False,
             allow_squash_merge=False,
             allow_merge_commit=False,
@@ -780,3 +783,14 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
+
+    def testGetMemberships(self):
+        membership_data = self.user.get_organization_memberships()
+        self.assertListKeyEqual(
+            membership_data,
+            lambda e: e.organization.login,
+            ["aneyem-github", "nko4", "geoservel", "iic2154-uc-cl", "nnodes", "sushiclm"],
+        )
+        self.assertListKeyEqual(
+            membership_data, lambda e: e.role, ["member", "member", "admin", "member", "member", "admin"]
+        )

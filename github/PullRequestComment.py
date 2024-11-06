@@ -23,6 +23,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,7 +60,11 @@ from github.PaginatedList import PaginatedList
 
 class PullRequestComment(CompletableGithubObject):
     """
-    This class represents PullRequestComments. The reference can be found here https://docs.github.com/en/rest/reference/pulls#review-comments
+    This class represents PullRequestComments.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/pulls#review-comments
+
     """
 
     def _initAttributes(self) -> None:
@@ -72,6 +79,7 @@ class PullRequestComment(CompletableGithubObject):
         self._path: Attribute[str] = NotSet
         self._position: Attribute[int] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
+        self._pull_request_review_id: Attribute[int] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -129,6 +137,11 @@ class PullRequestComment(CompletableGithubObject):
     def position(self) -> int:
         self._completeIfNotSet(self._position)
         return self._position.value
+
+    @property
+    def pull_request_review_id(self) -> int:
+        self._completeIfNotSet(self._pull_request_review_id)
+        return self._pull_request_review_id.value
 
     @property
     def pull_request_url(self) -> str:
@@ -244,6 +257,8 @@ class PullRequestComment(CompletableGithubObject):
             self._path = self._makeStringAttribute(attributes["path"])
         if "position" in attributes:  # pragma no branch
             self._position = self._makeIntAttribute(attributes["position"])
+        if "pull_request_review_id" in attributes:  # pragma no branch
+            self._pull_request_review_id = self._makeIntAttribute(attributes["pull_request_review_id"])
         if "pull_request_url" in attributes:  # pragma no branch
             self._pull_request_url = self._makeStringAttribute(attributes["pull_request_url"])
         if "updated_at" in attributes:  # pragma no branch

@@ -4,6 +4,109 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.5.0 (XXXXXXX)
+-----------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* Parameters of method ``github.Requester.Requester.graphql_named_mutation`` have been renamed:
+
+  * Parameter ``variables`` renamed to ``mutation_input``
+  * Parameter ``output`` renamed to ``output_schema``
+  * Default value of parameter ``output`` has been removed
+
+Version 2.4.0 (August 26, 2024)
+-------------------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* The ``github.Commit.Commit`` class provides a ``files`` property that used to return a ``list[github.File.File]``,
+  which has now been changed to ``PaginatedList[github.File.File]``. This breaks user code that assumes a ``list``:
+
+.. code-block:: python
+
+    files = repo.get_commit("7266e812ed2976ea36a4303edecfe5d75522343f").files
+    no_of_files = len(files)
+
+This will raise a ``TypeError: object of type 'PaginatedList' has no len()``, as the returned ``PaginatedList``
+does not support the ``len()`` method. Use the ``totalCount`` property instead:
+
+.. code-block:: python
+
+    files = repo.get_commit("7266e812ed2976ea36a4303edecfe5d75522343f").files
+    no_of_files = files.totalCount
+
+* Removed support for Python 3.7.
+
+New features
+^^^^^^^^^^^^
+
+* Allow custom authentication (#2987) (32b826fd)
+
+Improvements
+^^^^^^^^^^^^
+
+* Add `has_discussions` to `AuthenticatedUser` and `Repository` classes (#3020) (75224167)
+* Update more `SecurityAndAnalysis` attributes (#3025) (fa168279)
+* Implement support for re-running only failed workflow jobs. (#2983) (23e87563)
+* Add possibility to mark a thread/notification as done (#2985) (5ba24379)
+* Add "pull_request_review_id" to PullRequestComment object (#3000) (6a59cf82)
+* Add minimize and unminimize functions for IssueComment class (#3005) (09c4f58e)
+* Support Organization/Repository custom properties (#2968) (c5e6b702)
+* Add `dict` type to `add_attribute` script (#2977) (2a04f9cc)
+* Allow for deleting and restoring branch associated with PR (#1784) (4ba1e412)
+* Add "archived_at" to Organization object. (#2974) (cc766a6f)
+* Adds Security & Analysis To Repository (#2960) (f22af54d)
+* Add added_by and last_used attributes to RepositoryKey (#2952) (5dffa64d)
+* Add `make_latest` to `GitRelease.update_release` (#2888) (60136105)
+* Make Commit.files return PaginatedList (#2939) (fa885f00)
+
+Bug Fixes
+^^^^^^^^^
+
+* Fix GraphQL Queries with Variables (#3002) (4324a3d9)
+
+Maintenance
+^^^^^^^^^^^
+
+* Remove support for Python 3.7 (#2975, #3008) (d0e05072, 6d60b754)
+* docs: add missing code-block (#2982) (c93e73e2)
+* Update README.md (#2961) (5d9f90d2)
+* CI: Fix test success job (#3010) (61d37dce)
+
+Version 2.3.0 (March 21, 2024)
+------------------------------
+
+New features
+^^^^^^^^^^^^
+
+* Support OAuth for enterprise (#2780) (e4106e00)
+* Support creation of Dependabot Organization and Repository Secrets (#2874) (0784f835)
+
+Improvements
+^^^^^^^^^^^^
+
+* Create release with optional name and message when generate_release_notes is true (#2868) (d65fc30d)
+* Add missing attributes to WorkflowJob (#2921) (9e092458)
+* Add `created` and `check_suite_id` filter for Repository WorkflowRuns (#2891) (c788985c)
+* Assert requester argument type in Auth (#2912) (0b8435fc)
+
+Bug Fixes
+^^^^^^^^^
+
+* Revert having allowed values for add_to_collaborators (#2905) (b542438e)
+
+Maintenance
+^^^^^^^^^^^
+
+* Fix imports in authentication docs (#2923) (e3d36535)
+* CI: add docformatter to precommit (#2614) (96ad19ae)
+* Add .swp files to gitignore (#2903) (af529abe)
+* Fix instructions building docs in CONTRIBUTING.md (#2900) (cd8e528d)
+* Explicitly name the modules built in pyproject.toml (#2894) (4d461734)
+
 Version 2.2.0 (January 28, 2024)
 --------------------------------
 

@@ -25,6 +25,8 @@
 # Copyright 2023 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
+# Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
+# Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,7 +50,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from github import GithubException
+import github
 
 from . import Framework
 
@@ -67,6 +69,9 @@ class PullRequest(Framework.TestCase):
 
         flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
         self.pullMaintainerCanModify = flo_repo.get_pull(2)
+
+        self.delete_restore_repo = self.g.get_repo("austinsasko/PyGithub")
+        self.delete_restore_pull = self.delete_restore_repo.get_pull(21)
 
     def testAttributesIssue256(self):
         self.assertEqual(
@@ -253,6 +258,7 @@ class PullRequest(Framework.TestCase):
         epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
         self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
+        self.assertListKeyEqual(comments, lambda c: c.pull_request_review_id, [131593233, None])
 
     def testReviewRequests(self):
         self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
@@ -447,6 +453,64 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
         self.assertTrue(self.pull.update_branch())
 
+    def testDeleteOnMerge(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.assertFalse(self.delete_restore_pull.is_merged())
+        status = self.delete_restore_pull.merge(delete_branch=True)
+        self.assertTrue(status.merged)
+        self.assertTrue(self.delete_restore_pull.is_merged())
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
+    def testRestoreBranch(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+        self.assertTrue(self.delete_restore_pull.restore_branch())
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+
+    def testDeleteBranch(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.delete_restore_pull.delete_branch(force=False)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
+    def testForceDeleteBranch(self):
+        self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
+        self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "documentation_url": "https://docs.github.com/rest/reference/repos#get-a-branch",
+                "message": "Branch not found",
+            },
+        )
+
     def testEnableAutomerge(self):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option enabled
         response = self.pull.enable_automerge(
@@ -458,17 +522,13 @@ class PullRequest(Framework.TestCase):
             expected_head_oid="0283d46537193f1fed7d46859f15c5304b9836f9",
         )
         assert response == {
-            "data": {
-                "enablePullRequestAutoMerge": {
-                    "actor": {
-                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
-                        "login": "heitorpolidoro",
-                        "resourcePath": "/heitorpolidoro",
-                        "url": "https://github.com/heitorpolidoro",
-                    },
-                    "clientMutationId": None,
-                }
-            }
+            "actor": {
+                "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                "login": "heitorpolidoro",
+                "resourcePath": "/heitorpolidoro",
+                "url": "https://github.com/heitorpolidoro",
+            },
+            "clientMutationId": None,
         }
 
     def testEnableAutomergeDefaultValues(self):
@@ -483,7 +543,7 @@ class PullRequest(Framework.TestCase):
 
     def testEnableAutomergeError(self):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
-        with pytest.raises(GithubException) as error:
+        with pytest.raises(github.GithubException) as error:
             self.pull.enable_automerge()
 
         assert error.value.status == 400
@@ -502,15 +562,11 @@ class PullRequest(Framework.TestCase):
     def testDisableAutomerge(self):
         response = self.pull.disable_automerge()
         assert response == {
-            "data": {
-                "disablePullRequestAutoMerge": {
-                    "actor": {
-                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
-                        "login": "heitorpolidoro",
-                        "resourcePath": "/heitorpolidoro",
-                        "url": "https://github.com/heitorpolidoro",
-                    },
-                    "clientMutationId": None,
-                }
-            }
+            "actor": {
+                "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                "login": "heitorpolidoro",
+                "resourcePath": "/heitorpolidoro",
+                "url": "https://github.com/heitorpolidoro",
+            },
+            "clientMutationId": None,
         }

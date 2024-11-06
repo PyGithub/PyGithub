@@ -17,6 +17,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -44,7 +46,11 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class NotificationSubject(NonCompletableGithubObject):
     """
-    This class represents Subjects of Notifications. The reference can be found here https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
+    This class represents Subjects of Notifications.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
+
     """
 
     def _initAttributes(self) -> None:

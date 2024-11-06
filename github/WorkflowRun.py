@@ -10,6 +10,9 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Sasha Chung <50770626+nuang-ee@users.noreply.github.com>      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Chris Gavin <chris@chrisgavin.me>                             #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,6 +38,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, NamedTuple
 
 import github.GitCommit
+import github.NamedUser
 import github.PullRequest
 import github.WorkflowJob
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
@@ -43,6 +47,7 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.Artifact import Artifact
     from github.GitCommit import GitCommit
+    from github.NamedUser import NamedUser
     from github.PullRequest import PullRequest
     from github.Repository import Repository
     from github.WorkflowJob import WorkflowJob
@@ -55,7 +60,11 @@ class TimingData(NamedTuple):
 
 class WorkflowRun(CompletableGithubObject):
     """
-    This class represents Workflow Runs. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflow-runs
+    This class represents Workflow Runs.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/actions#workflow-runs
+
     """
 
     def _initAttributes(self) -> None:
@@ -69,6 +78,7 @@ class WorkflowRun(CompletableGithubObject):
         self._run_number: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._actor: Attribute[NamedUser] = NotSet
         self._pull_requests: Attribute[list[PullRequest]] = NotSet
         self._status: Attribute[str] = NotSet
         self._conclusion: Attribute[str] = NotSet
@@ -181,6 +191,11 @@ class WorkflowRun(CompletableGithubObject):
         return self._updated_at.value
 
     @property
+    def actor(self) -> NamedUser:
+        self._completeIfNotSet(self._actor)
+        return self._actor.value
+
+    @property
     def jobs_url(self) -> str:
         self._completeIfNotSet(self._jobs_url)
         return self._jobs_url.value
@@ -255,6 +270,13 @@ class WorkflowRun(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         """
         status, _, _ = self._requester.requestJson("POST", self.rerun_url)
+        return status == 201
+
+    def rerun_failed_jobs(self) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
+        """
+        status, _, _ = self._requester.requestJson("POST", f"{self.url}/rerun-failed-jobs")
         return status == 201
 
     def timing(self) -> TimingData:
@@ -362,6 +384,8 @@ class WorkflowRun(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "actor" in attributes:  # pragma no branch
+            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "jobs_url" in attributes:  # pragma no branch
             self._jobs_url = self._makeStringAttribute(attributes["jobs_url"])
         if "logs_url" in attributes:  # pragma no branch

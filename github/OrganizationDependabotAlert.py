@@ -1,5 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -31,7 +33,11 @@ from github.Repository import Repository
 
 class OrganizationDependabotAlert(DependabotAlert):
     """
-    This class represents a Dependabot alert on an organization. The reference can be found here https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+    This class represents a Dependabot alert on an organization.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+
     """
 
     def _initAttributes(self) -> None:

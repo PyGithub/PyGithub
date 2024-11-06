@@ -280,3 +280,6 @@ class GithubIntegration(Framework.BasicTestCase):
 
         self.assertEqual(app.name, "PyGithubTest")
         self.assertEqual(app.url, "/apps/pygithubtest")
+
+        assert github_integration.requester is github_integration.__requester
+        assert app.requester is app._requester

@@ -27,6 +27,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 terenho <33275803+terenho@users.noreply.github.com>           #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -78,7 +80,11 @@ if TYPE_CHECKING:
 
 class Branch(NonCompletableGithubObject):
     """
-    This class represents Branches. The reference can be found here https://docs.github.com/en/rest/reference/repos#branches
+    This class represents Branches.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#branches
+
     """
 
     def __repr__(self) -> str:

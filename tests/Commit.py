@@ -15,6 +15,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 iarspider <iarspider@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,7 +51,8 @@ class Commit(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
         self.assertEqual(self.commit.committer.login, "jacquev6")
-        self.assertEqual(len(self.commit.files), 1)
+        self.assertEqual(len(list(self.commit.files)), 1)
+        self.assertEqual(self.commit.files.totalCount, 1)
         self.assertEqual(self.commit.files[0].additions, 0)
         self.assertEqual(
             self.commit.files[0].blob_url,

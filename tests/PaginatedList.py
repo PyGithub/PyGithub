@@ -37,6 +37,8 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime, timezone
+
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 from . import Framework
@@ -48,6 +50,10 @@ class PaginatedList(Framework.TestCase):
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
         self.licenses = self.g.get_enterprise("beaver-group").get_consumed_licenses()
+
+    def testIsApiType(self):
+        self.assertTrue(self.list.is_rest)
+        self.assertFalse(self.list.is_graphql)
 
     def testIteration(self):
         self.assertEqual(len(list(self.list)), 333)
@@ -326,6 +332,40 @@ class PaginatedList(Framework.TestCase):
         self.g.per_page = 100
         self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)
 
+    def testCustomPerPageIteration(self):
+        self.g.per_page = 3
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(1136).get_comments()
+        self.assertEqual(
+            [
+                datetime(2019, 8, 10, 18, 16, 46, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 16, 4, 34, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 17, 34, 11, tzinfo=timezone.utc),
+                datetime(2024, 3, 20, 15, 24, 15, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 10, 55, 14, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 14, 2, 22, tzinfo=timezone.utc),
+                datetime(2024, 3, 24, 13, 58, 57, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
+
+    def testCustomPerPageReversedIteration(self):
+        self.g.per_page = 3
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(1136).get_comments().reversed
+        self.assertEqual(
+            [
+                datetime(2024, 3, 24, 13, 58, 57, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 14, 2, 22, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 10, 55, 14, tzinfo=timezone.utc),
+                datetime(2024, 3, 20, 15, 24, 15, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 17, 34, 11, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 16, 4, 34, tzinfo=timezone.utc),
+                datetime(2019, 8, 10, 18, 16, 46, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
+
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))
 
@@ -343,3 +383,24 @@ class PaginatedList(Framework.TestCase):
         overrides_dict = {"c": 4, "d": 5, "e": 6}
         transformer = PaginatedListImpl.override_attributes(overrides_dict)
         self.assertDictEqual(transformer(input_dict), {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6})
+
+    def testGraphQlPagination(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("id number")
+        self.assertFalse(discussions.is_rest)
+        self.assertTrue(discussions.is_graphql)
+        rev = discussions.reversed
+
+        discussions_list = list(discussions)
+        self.assertEqual(discussions.totalCount, 65)
+        self.assertEqual(len(discussions_list), 65)
+        self.assertEqual(discussions_list[0].number, 3044)
+        self.assertEqual(discussions_list[-1].number, 1780)
+
+        reversed_list = list(rev)
+        self.assertEqual(rev.totalCount, 65)
+        self.assertEqual(len(reversed_list), 65)
+        self.assertListEqual([d.number for d in reversed_list], [d.number for d in reversed(discussions_list)])
+
+        # accessing totalCount before iterating the PaginatedList triggers another request
+        self.assertEqual(repo.get_discussions("id number").totalCount, 65)

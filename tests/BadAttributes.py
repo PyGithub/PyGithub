@@ -13,6 +13,7 @@
 # Copyright 2023 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 iarspider <iarspider@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -101,7 +102,7 @@ class BadAttributes(Framework.TestCase):
         commit = self.g.get_repo("klmitch/turnstile", lazy=True).get_commit("38d9082a898d0822b5ccdfd78f3a536e2efa6c26")
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:
-            commit.files
+            commit.parents
         self.assertEqual(raisedexp.exception.actual_value, [42])
         self.assertEqual(raisedexp.exception.expected_type, [dict])
         self.assertEqual(raisedexp.exception.transformation_exception, None)

@@ -9,6 +9,8 @@ All authentication methods require this import:
 .. code-block:: python
 
     >>> from github import Auth
+    >>> from github import Github
+    >>> from github import GithubIntegration
 
 Login authentication
 --------------------
@@ -114,6 +116,8 @@ A Github App can authenticate on behalf of a user. For this, the user has to `ge
 This process completes with a one-time ``code``. Together with the ``client_id`` and ``client_secret`` of the app,
 a Github App user token can be generated once:
 
+.. code-block:: python
+
     >>> g = Github()
     >>> app = g.get_oauth_application(client_id, client_secret)
     >>> token = app.get_access_token(code)
@@ -124,11 +128,15 @@ The ``token.token`` expires 8 hours, and the ``token.refresh_token`` expires 6 m
 A token can be refreshed as follows. This invalidates the old token and old refresh token, and creates
 a new set of token and refresh tokens:
 
+.. code-block:: python
+
     >>> g = Github()
     >>> app = g.get_oauth_application(client_id, client_secret)
     >>> token = app.refresh_access_token(refresh_token)
 
 You can authenticate with Github using this token:
+
+.. code-block:: python
 
    >>> auth = app.get_app_user_auth(token)
    >>> g = Github(auth=auth)

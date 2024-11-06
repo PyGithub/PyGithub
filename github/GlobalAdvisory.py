@@ -2,6 +2,8 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -36,7 +38,9 @@ from github.GithubObject import Attribute, NotSet
 class GlobalAdvisory(AdvisoryBase):
     """
     This class represents a GlobalAdvisory.
+
     https://docs.github.com/en/rest/security-advisories/global-advisories
+
     """
 
     def _initAttributes(self) -> None:

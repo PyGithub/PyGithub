@@ -62,7 +62,14 @@
 # Copyright 2023 Roberto Pastor Muela <37798125+RobPasMue@users.noreply.github.com>#
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
+# Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
+# Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -119,6 +126,7 @@ class Repository(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/releases{/id}",
         )
         self.assertFalse(self.repo.has_wiki)
+        self.assertFalse(self.repo.has_discussions)
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(self.repo.id, 3544490)
@@ -163,6 +171,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
+        self.assertEqual(self.repo.custom_properties, {"foo": "bar"})
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
@@ -176,6 +185,7 @@ class Repository(Framework.TestCase):
             has_issues=True,
             has_projects=False,
             has_wiki=False,
+            has_discussions=False,
             allow_auto_merge=True,
             allow_forking=True,
             allow_update_branch=True,
@@ -199,6 +209,7 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
         self.assertFalse(self.repo.has_wiki)
+        self.assertFalse(self.repo.has_discussions)
         self.assertTrue(self.repo.allow_auto_merge)
         self.assertTrue(self.repo.allow_forking)
         self.assertTrue(self.repo.allow_squash_merge)
@@ -406,6 +417,12 @@ class Repository(Framework.TestCase):
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, False)
 
+    def testCreateGitReleaseGenerateReleaseNotes(self):
+        release = self.repo.create_git_release("vX.Y.Z-by-PyGithub-acctest-release-notes", generate_release_notes=True)
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest-release-notes")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
     def testCreateGitReleaseWithAllArguments(self):
         release = self.repo.create_git_release(
             "vX.Y.Z-by-PyGithub-acctest2",
@@ -480,13 +497,6 @@ class Repository(Framework.TestCase):
         self.assertTrue(with_payload)
         without_payload = self.repo.create_repository_dispatch("type")
         self.assertTrue(without_payload)
-
-    @mock.patch("github.PublicKey.encrypt")
-    def testCreateSecret(self, encrypt):
-        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
-        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
-        secret = self.repo.create_secret("secret-name", "secret-value")
-        self.assertIsNotNone(secret)
 
     @mock.patch("github.PublicKey.encrypt")
     def testRepoSecrets(self, encrypt):
@@ -632,6 +642,10 @@ class Repository(Framework.TestCase):
 
     def testCollaboratorPermission(self):
         self.assertEqual(self.repo.get_collaborator_permission("jacquev6"), "admin")
+
+    def testAddToCollaboratorsCustomRole(self):
+        lyloa = self.g.get_user("Lyloa")
+        self.repo.add_to_collaborators(lyloa, "custom_role")
 
     def testGetPendingInvitations(self):
         lyloa = self.g.get_user("Lyloa")
@@ -1225,6 +1239,13 @@ class Repository(Framework.TestCase):
             [110932306, 110932159, 110932072, 110286191, 110278769],
         )
 
+    def testGetWorkflowRunsCreated(self):
+        self.assertListKeyEqual(
+            self.g.get_repo("PyGithub/PyGithub").get_workflow_runs(created="2022-12-24"),
+            lambda r: r.id,
+            [3770390952],
+        )
+
     def testGetSourceImport(self):
         import_repo = self.g.get_user("brix4dayz").get_repo("source-import-test")
         source_import = import_repo.get_source_import()
@@ -1502,6 +1523,49 @@ class Repository(Framework.TestCase):
     def testGetDeployments(self):
         deployments = self.repo.get_deployments()
         self.assertListKeyEqual(deployments, lambda d: d.id, [263877258, 262350588])
+
+    def testGetDiscussions(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussion_schema = """
+            author { login }
+            number
+            repository {
+              owner { login }
+              name
+            }
+            title
+          """
+        discussions_pages = repo.get_discussions(discussion_schema)
+        discussions = list(discussions_pages)
+        # would perform an extra request if called before iterating discussions_pages
+        self.assertEqual(discussions_pages.totalCount, 65)
+        self.assertEqual(len(discussions), 65)
+        self.assertEqual(discussions[0].number, 3044)
+        self.assertEqual(discussions[-1].number, 1780)
+
+        discussion = discussions[28]
+        self.assertEqual(discussion.author.login, "arunanandhan")
+        self.assertEqual(discussion.number, 2480)
+        self.assertEqual(discussion.repository.owner.login, "PyGithub")
+        self.assertEqual(discussion.repository.name, "PyGithub")
+        self.assertEqual(discussion.title, "Is there a way to search if a string present in default branch?")
+
+    def testGetDiscussionsByAnswered(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("number title", answered=True)
+        self.assertListEqual(
+            [d.number for d in discussions], [2993, 2619, 2104, 2500, 2292, 2153, 2277, 2023, 1964, 1778]
+        )
+
+    def testGetDiscussionsByCategory(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("number title", category_id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMyMDI5MDYy")
+        self.assertListEqual([d.number for d in discussions], [3044, 2997, 2057, 2242, 2173, 1993, 1780])
+
+    def testGetDiscussionsByStates(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("number title", states=["CLOSED"])
+        self.assertListEqual([d.number for d in discussions], [2938, 2495, 2559, 2104, 2539, 2480])
 
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
@@ -1961,6 +2025,36 @@ class Repository(Framework.TestCase):
         for matched_repo_variable in matched_repo_variables:
             matched_repo_variable.delete()
 
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateRepoActionsSecret(self, encrypt):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = repo.create_secret("secret_name", "secret-value", "actions")
+        self.assertIsNotNone(secret)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testCreateRepoDependabotSecret(self, encrypt):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = repo.create_secret("secret_name", "secret-value", "dependabot")
+        self.assertIsNotNone(secret)
+
+    def testRepoGetSecretAssertion(self):
+        repo = self.g.get_repo("demoorg/demo-repo-1")
+        with self.assertRaises(AssertionError) as exc:
+            repo.get_secret(secret_name="splat", secret_type="supersecret")
+        self.assertEqual(str(exc.exception), "secret_type should be actions or dependabot")
+
+    def testGetCustomProperties(self):
+        custom_properties = self.repo.get_custom_properties()
+        self.assertDictEqual(custom_properties, {"foo": "bar"})
+
+    def testUpdateCustomProperties(self):
+        custom_properties = {"foo": "bar"}
+        self.repo.update_custom_properties(custom_properties)
+
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):
@@ -2030,3 +2124,7 @@ class LazyRepository(Framework.TestCase):
     def testGetVulnerabilityAlertWhenTurnedOff(self):
         lazy_repo = self.getEagerRepository()
         self.assertFalse(lazy_repo.get_vulnerability_alert())
+
+    def testRequester(self):
+        lazy_repo = self.getLazyRepository()
+        assert lazy_repo.requester is lazy_repo._requester

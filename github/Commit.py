@@ -21,6 +21,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 iarspider <iarspider@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -72,7 +75,11 @@ if TYPE_CHECKING:
 
 class Commit(CompletableGithubObject):
     """
-    This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
+    This class represents Commits.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/git#commits
+
     """
 
     def _initAttributes(self) -> None:
@@ -80,7 +87,6 @@ class Commit(CompletableGithubObject):
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
         self._committer: Attribute[NamedUser] = NotSet
-        self._files: Attribute[list[File]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
         self._sha: Attribute[str] = NotSet
@@ -110,10 +116,21 @@ class Commit(CompletableGithubObject):
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def files(self) -> list[File]:
-        self._completeIfNotSet(self._files)
-        return self._files.value
+    def files(self) -> PaginatedList[File]:
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            {},
+            headers=None,
+            list_item="files",
+            total_count_item="total_files",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
+        )
 
     @property
     def html_url(self) -> str:
@@ -284,8 +301,6 @@ class Commit(CompletableGithubObject):
             self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
         if "committer" in attributes:  # pragma no branch
             self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
-        if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "parents" in attributes:  # pragma no branch
