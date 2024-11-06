@@ -491,7 +491,6 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(event, str), event
         assert is_optional_list(comments, dict), comments
         post_parameters: dict[str, Any] = NotSet.remove_unset_items({"body": body})
-        post_parameters["event"] = "COMMENT" if is_undefined(event) else event
         if is_defined(commit):
             post_parameters["commit_id"] = commit.sha
         if is_defined(comments):
