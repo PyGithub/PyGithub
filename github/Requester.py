@@ -395,6 +395,7 @@ class Requester:
         pool_size: Optional[int],
         seconds_between_requests: Optional[float] = None,
         seconds_between_writes: Optional[float] = None,
+        lazy: bool = False,
     ):
         self._initializeDebugFeature()
 
@@ -436,6 +437,7 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+        self.__lazy = lazy
 
         self.__installation_authorization = None
 
@@ -526,6 +528,7 @@ class Requester:
             pool_size=self.__pool_size,
             seconds_between_requests=self.__seconds_between_requests,
             seconds_between_writes=self.__seconds_between_writes,
+            lazy=self.__lazy,
         )
 
     @property
@@ -559,11 +562,32 @@ class Requester:
         Create a new requester instance with identical configuration but the given authentication method.
 
         :param auth: authentication method
-        :return: new Requester implementation
+        :return: new Requester instance
 
         """
         kwargs = self.kwargs
         kwargs.update(auth=auth)
+        return Requester(**kwargs)
+
+    @property
+    def is_lazy(self) -> bool:
+        return self.__lazy
+
+    @property
+    def is_not_lazy(self) -> bool:
+        return not self.__lazy
+
+    def withLazy(self, lazy: bool) -> "Requester":
+        """
+        Create a new requester instance with identical configuration but the given lazy setting.
+
+        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
+            from those, and so on
+        :return: new Requester instance
+
+        """
+        kwargs = self.kwargs
+        kwargs.update(lazy=lazy)
         return Requester(**kwargs)
 
     def requestJsonAndCheck(

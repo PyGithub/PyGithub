@@ -500,7 +500,7 @@ class PullRequest(CompletableGithubObject):
         else:
             post_parameters["comments"] = []
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
-        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
     def create_review_request(
         self,
@@ -685,7 +685,7 @@ class PullRequest(CompletableGithubObject):
             "GET",
             f"{self.url}/reviews/{id}",
         )
-        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
     def get_reviews(self) -> PaginatedList[github.PullRequestReview.PullRequestReview]:
         """
@@ -870,7 +870,7 @@ class PullRequest(CompletableGithubObject):
         if delete_branch:
             self.delete_branch()
 
-        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
+        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data)
 
     def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
         """

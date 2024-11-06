@@ -451,7 +451,6 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
             },
-            completed=False,
         )
 
         return self

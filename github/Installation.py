@@ -82,9 +82,8 @@ class Installation(NonCompletableGithubObject):
         requester: Requester,
         headers: dict[str, str | int],
         attributes: Any,
-        completed: bool,
     ) -> None:
-        super().__init__(requester, headers, attributes, completed)
+        super().__init__(requester, headers, attributes)
 
         auth = self._requester.auth if self._requester is not None else None
         # Usually, an Installation is created from a Requester with App authentication
