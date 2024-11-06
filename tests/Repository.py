@@ -1550,6 +1550,13 @@ class Repository(Framework.TestCase):
         self.assertEqual(discussion.repository.name, "PyGithub")
         self.assertEqual(discussion.title, "Is there a way to search if a string present in default branch?")
 
+    def testGetDiscussion(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussion = repo.get_discussion(2205, "author { login } number title")
+        self.assertEqual(discussion.author.login, "EnricoMi")
+        self.assertEqual(discussion.number, 2205)
+        self.assertEqual(discussion.title, "Is the PyGithub project dead? How can the community help?")
+
     def testGetDiscussionsByAnswered(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
         discussions = repo.get_discussions("number title", answered=True)
