@@ -676,7 +676,7 @@ class Requester:
             data = data[item]
         if klass.is_rest():
             data = as_rest_api_attributes(data)
-        return klass(self, headers, data, completed=False)
+        return klass(self, headers, data)
 
     def graphql_node(self, node_id: str, graphql_schema: str, node_type: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """

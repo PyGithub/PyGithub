@@ -385,11 +385,7 @@ class PaginatedList(PaginatedListBase[T]):
             nodes = data["nodes"]
             if self._reversed:
                 nodes = nodes[::-1]
-            return [
-                self.__contentClass(self.__requester, {}, element)
-                for element in nodes
-                if element is not None
-            ]
+            return [self.__contentClass(self.__requester, {}, element) for element in nodes if element is not None]
 
     def __parseLinkHeader(self, headers: Dict[str, Union[str, int]]) -> Dict[str, str]:
         links = {}

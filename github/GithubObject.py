@@ -57,7 +57,7 @@ from abc import ABC
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Callable, Union, overload
 
 from typing_extensions import Protocol, Self, TypeGuard
 
@@ -148,7 +148,7 @@ camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
 
 
 @overload
-def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]:
+def as_rest_api_attributes(graphql_attributes: dict[str, Any]) -> dict[str, Any]:
     ...
 
 
@@ -157,7 +157,7 @@ def as_rest_api_attributes(graphql_attributes: None) -> None:
     ...
 
 
-def as_rest_api_attributes(graphql_attributes: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+def as_rest_api_attributes(graphql_attributes: dict[str, Any] | None) -> dict[str, Any] | None:
     """
     Converts attributes from GraphQL schema to REST API schema.
 
@@ -196,7 +196,7 @@ def as_rest_api_attributes(graphql_attributes: Optional[Dict[str, Any]]) -> Opti
     }
 
 
-def as_rest_api_attributes_list(graphql_attributes: List[Optional[Dict[str, Any]]]) -> List[Optional[Dict[str, Any]]]:
+def as_rest_api_attributes_list(graphql_attributes: list[dict[str, Any] | None]) -> list[dict[str, Any] | None]:
     return [as_rest_api_attributes(v) if isinstance(v, dict) else v for v in graphql_attributes]
 
 
@@ -268,7 +268,7 @@ class GithubObject(ABC):
         self._useAttributes(attributes)
 
     @property
-    def requester(self) -> "Requester":
+    def requester(self) -> Requester:
         """
         Return my Requester object.
 
