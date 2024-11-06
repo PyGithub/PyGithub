@@ -46,6 +46,7 @@
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Evan Fetsko <emfetsko@gmail.com>                              #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 #                                                                              #

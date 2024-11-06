@@ -68,6 +68,8 @@
 # Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
 # Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 #                                                                              #
