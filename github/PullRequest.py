@@ -46,6 +46,7 @@
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Evan Fetsko <emfetsko@gmail.com>                              #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 #                                                                              #
@@ -777,7 +778,7 @@ class PullRequest(CompletableGithubObject):
         Convenience function that calls :meth:`GitRef.delete` :rtype: bool.
         """
         if not force:
-            remaining_pulls = self.head.repo.get_pulls(head=self.head.ref)
+            remaining_pulls = self.head.repo.get_pulls(head=f"{self.head.repo.owner.login}:{self.head.ref}")
             if remaining_pulls.totalCount > 0:
                 raise RuntimeError(
                     "This branch is referenced by open pull requests, set force=True to delete this branch."
@@ -817,9 +818,9 @@ class PullRequest(CompletableGithubObject):
 
         # Make the request
         _, data = self._requester.graphql_named_mutation(
-            mutation_name="enable_pull_request_auto_merge",
-            variables={"input": NotSet.remove_unset_items(variables)},
-            output="actor { avatarUrl login resourcePath url } clientMutationId",
+            mutation_name="enablePullRequestAutoMerge",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data
 
@@ -841,9 +842,9 @@ class PullRequest(CompletableGithubObject):
 
         # Make the request
         _, data = self._requester.graphql_named_mutation(
-            mutation_name="disable_pull_request_auto_merge",
-            variables={"input": NotSet.remove_unset_items(variables)},
-            output="actor { avatarUrl login resourcePath url } clientMutationId",
+            mutation_name="disablePullRequestAutoMerge",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data
 

@@ -204,11 +204,11 @@ class IssueComment(CompletableGithubObject):
             "classifier": reason,
         }
         _, data = self._requester.graphql_named_mutation(
-            mutation_name="minimize_comment",
-            variables={"input": NotSet.remove_unset_items(variables)},
-            output="minimizedComment { isMinimized }",
+            mutation_name="minimizeComment",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="minimizedComment { isMinimized }",
         )
-        return data["data"]["minimizeComment"]["minimizedComment"]["isMinimized"] is True
+        return data["minimizedComment"]["isMinimized"] is True
 
     def unminimize(self) -> bool:
         """
@@ -219,11 +219,11 @@ class IssueComment(CompletableGithubObject):
             "subjectId": self.node_id,
         }
         _, data = self._requester.graphql_named_mutation(
-            mutation_name="unminimize_comment",
-            variables={"input": NotSet.remove_unset_items(variables)},
-            output="unminimizedComment { isMinimized }",
+            mutation_name="unminimizeComment",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="unminimizedComment { isMinimized }",
         )
-        return data["data"]["unminimizeComment"]["unminimizedComment"]["isMinimized"] is False
+        return data["unminimizedComment"]["isMinimized"] is False
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch

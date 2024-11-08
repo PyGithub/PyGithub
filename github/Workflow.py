@@ -195,7 +195,7 @@ class Workflow(CompletableGithubObject):
             self._requester,
             f"{self.url}/runs",
             url_parameters,
-            None,
+            headers=None,
             list_item="workflow_runs",
         )
 

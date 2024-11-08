@@ -71,6 +71,7 @@
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -143,6 +144,7 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
     from github.Repository import Repository
+    from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
@@ -326,8 +328,7 @@ class Github:
         """
         Rate limit status for different resources (core/search/graphql).
 
-        :calls: `GET /rate_limit
-        <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :calls:`GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
@@ -466,6 +467,11 @@ class Github:
             self.__requester,
             "/repositories",
             url_parameters,
+        )
+
+    def get_repository_discussion(self, node_id: str, discussion_graphql_schema: str) -> RepositoryDiscussion:
+        return self.__requester.graphql_node_class(
+            node_id, discussion_graphql_schema, github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
 
     def get_project(self, id: int) -> Project:
