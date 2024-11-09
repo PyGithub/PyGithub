@@ -48,7 +48,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 
 import github.GithubObject
 import github.NamedUser
@@ -56,6 +56,15 @@ import github.Reaction
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
+
+AuthorAssociation = (
+    Literal[
+        "COLLABORATOR", "CONTRIBUTOR", "FIRST_TIMER", "FIRST_TIME_CONTRIBUTOR", "MANNEQUIN", "MEMBER", "NONE", "OWNER"
+    ]
+    | str
+)
+Side = Literal["LEFT", "RIGHT"] | str
+SubjectType = Literal["line", "file"] | str
 
 
 class PullRequestComment(CompletableGithubObject):
@@ -68,18 +77,29 @@ class PullRequestComment(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._author_association: Attribute[AuthorAssociation] = NotSet
+        self._body_html: Attribute[str | None] = NotSet
+        self._body_text: Attribute[str | None] = NotSet
         self._body: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._diff_hunk: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._in_reply_to_id: Attribute[int] = NotSet
+        self._in_reply_to_id: Attribute[int | None] = NotSet
+        self._line: Attribute[int | None] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._original_commit_id: Attribute[str] = NotSet
-        self._original_position: Attribute[int] = NotSet
+        self._original_line: Attribute[int | None] = NotSet
+        self._original_position: Attribute[int | None] = NotSet
+        self._original_start_line: Attribute[int | None] = NotSet
         self._path: Attribute[str] = NotSet
-        self._position: Attribute[int] = NotSet
+        self._position: Attribute[int | None] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
-        self._pull_request_review_id: Attribute[int] = NotSet
+        self._pull_request_review_id: Attribute[int | None] = NotSet
+        self._side: Attribute[Side | None] = NotSet
+        self._start_line: Attribute[int | None] = NotSet
+        self._start_side: Attribute[Side | None] = NotSet
+        self._subject_type: Attribute[SubjectType | None] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -89,9 +109,24 @@ class PullRequestComment(CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
+    def author_association(self) -> AuthorAssociation:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
+
+    @property
     def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
+
+    @property
+    def body_html(self) -> str | None:
+        self._completeIfNotSet(self._body_html)
+        return self._body_html.value
+
+    @property
+    def body_text(self) -> str | None:
+        self._completeIfNotSet(self._body_text)
+        return self._body_text.value
 
     @property
     def commit_id(self) -> str:
@@ -114,9 +149,19 @@ class PullRequestComment(CompletableGithubObject):
         return self._id.value
 
     @property
-    def in_reply_to_id(self) -> int:
+    def in_reply_to_id(self) -> int | None:
         self._completeIfNotSet(self._in_reply_to_id)
         return self._in_reply_to_id.value
+
+    @property
+    def line(self) -> int | None:
+        self._completeIfNotSet(self._line)
+        return self._line.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def original_commit_id(self) -> str:
@@ -124,9 +169,19 @@ class PullRequestComment(CompletableGithubObject):
         return self._original_commit_id.value
 
     @property
-    def original_position(self) -> int:
+    def original_line(self) -> int | None:
+        self._completeIfNotSet(self._original_line)
+        return self._original_line.value
+
+    @property
+    def original_position(self) -> int | None:
         self._completeIfNotSet(self._original_position)
         return self._original_position.value
+
+    @property
+    def original_start_line(self) -> int | None:
+        self._completeIfNotSet(self._original_start_line)
+        return self._original_start_line.value
 
     @property
     def path(self) -> str:
@@ -134,12 +189,12 @@ class PullRequestComment(CompletableGithubObject):
         return self._path.value
 
     @property
-    def position(self) -> int:
+    def position(self) -> int | None:
         self._completeIfNotSet(self._position)
         return self._position.value
 
     @property
-    def pull_request_review_id(self) -> int:
+    def pull_request_review_id(self) -> int | None:
         self._completeIfNotSet(self._pull_request_review_id)
         return self._pull_request_review_id.value
 
@@ -147,6 +202,26 @@ class PullRequestComment(CompletableGithubObject):
     def pull_request_url(self) -> str:
         self._completeIfNotSet(self._pull_request_url)
         return self._pull_request_url.value
+
+    @property
+    def side(self) -> Side | None:
+        self._completeIfNotSet(self._side)
+        return self._side.value
+
+    @property
+    def start_line(self) -> int | None:
+        self._completeIfNotSet(self._start_line)
+        return self._start_line.value
+
+    @property
+    def start_side(self) -> Side | None:
+        self._completeIfNotSet(self._start_side)
+        return self._start_side.value
+
+    @property
+    def subject_type(self) -> SubjectType | None:
+        self._completeIfNotSet(self._subject_type)
+        return self._subject_type.value
 
     @property
     def updated_at(self) -> datetime:
@@ -237,6 +312,12 @@ class PullRequestComment(CompletableGithubObject):
         return status == 204
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
+        if "body_html" in attributes:  # pragma no branch
+            self._body_html = self._makeStringAttribute(attributes["body_html"])
+        if "body_text" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["body_text"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
@@ -249,10 +330,18 @@ class PullRequestComment(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "in_reply_to_id" in attributes:  # pragma no branch
             self._in_reply_to_id = self._makeIntAttribute(attributes["in_reply_to_id"])
+        if "line" in attributes:  # pragma no branch
+            self._line = self._makeIntAttribute(attributes["line"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "original_commit_id" in attributes:  # pragma no branch
             self._original_commit_id = self._makeStringAttribute(attributes["original_commit_id"])
+        if "original_line" in attributes:  # pragma no branch
+            self._original_line = self._makeIntAttribute(attributes["original_line"])
         if "original_position" in attributes:  # pragma no branch
             self._original_position = self._makeIntAttribute(attributes["original_position"])
+        if "original_start_line" in attributes:  # pragma no branch
+            self._original_start_line = self._makeIntAttribute(attributes["original_start_line"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "position" in attributes:  # pragma no branch
@@ -261,6 +350,14 @@ class PullRequestComment(CompletableGithubObject):
             self._pull_request_review_id = self._makeIntAttribute(attributes["pull_request_review_id"])
         if "pull_request_url" in attributes:  # pragma no branch
             self._pull_request_url = self._makeStringAttribute(attributes["pull_request_url"])
+        if "side" in attributes:  # pragma no branch
+            self._side = self._makeStringAttribute(attributes["side"])
+        if "start_line" in attributes:  # pragma no branch
+            self._start_line = self._makeIntAttribute(attributes["start_line"])
+        if "start_side" in attributes:  # pragma no branch
+            self._start_side = self._makeStringAttribute(attributes["start_side"])
+        if "subject_type" in attributes:  # pragma no branch
+            self._subject_type = self._makeStringAttribute(attributes["subject_type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch

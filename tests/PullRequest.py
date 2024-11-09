@@ -260,6 +260,14 @@ class PullRequest(Framework.TestCase):
         comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
         self.assertListKeyEqual(comments, lambda c: c.id, [197784357, 1580134])
         self.assertListKeyEqual(comments, lambda c: c.pull_request_review_id, [131593233, None])
+        self.assertListKeyEqual(comments, lambda c: c.line, [7, 73])
+        self.assertListKeyEqual(comments, lambda c: c.original_line, [7, None])
+        self.assertListKeyEqual(comments, lambda c: c.original_position, [6, 5])
+        self.assertListKeyEqual(comments, lambda c: c.original_start_line, [None, None])
+        self.assertListKeyEqual(comments, lambda c: c.position, [6, 5])
+        self.assertListKeyEqual(comments, lambda c: c.side, ["RIGHT", "RIGHT"])
+        self.assertListKeyEqual(comments, lambda c: c.start_line, [None, None])
+        self.assertListKeyEqual(comments, lambda c: c.subject_type, ["line", "line"])
 
     def testReviewRequests(self):
         self.pull.create_review_request(reviewers="sfdye", team_reviewers="pygithub-owners")
