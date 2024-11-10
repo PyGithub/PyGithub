@@ -493,7 +493,7 @@ class PullRequest(CompletableGithubObject):
         post_parameters: dict[str, Any] = NotSet.remove_unset_items({
             "body": body,
             "event": event,
-            "commit_id": commit.sha if is_defined(commit) else None,
+            "commit_id": commit.sha if is_defined(commit) else NotSet,
             "comments": comments if is_defined(comments) else []
         })
         if is_defined(commit):
