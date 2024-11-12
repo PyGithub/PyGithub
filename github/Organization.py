@@ -53,9 +53,14 @@
 # Copyright 2023 Oliver Mannion <125105+tekumara@users.noreply.github.com>     #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
+# Copyright 2024 Bill Napier <napier@pobox.com>                                #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -85,6 +90,7 @@ import github.Event
 import github.GithubObject
 import github.HookDelivery
 import github.NamedUser
+import github.OrganizationCustomProperty
 import github.OrganizationDependabotAlert
 import github.OrganizationSecret
 import github.OrganizationVariable
@@ -113,6 +119,11 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Migration import Migration
     from github.NamedUser import NamedUser
+    from github.OrganizationCustomProperty import (
+        CustomProperty,
+        OrganizationCustomProperty,
+        RepositoryCustomPropertyValues,
+    )
     from github.OrganizationDependabotAlert import OrganizationDependabotAlert
     from github.OrganizationSecret import OrganizationSecret
     from github.OrganizationVariable import OrganizationVariable
@@ -125,10 +136,15 @@ if TYPE_CHECKING:
 
 class Organization(CompletableGithubObject):
     """
-    This class represents Organizations. The reference can be found here https://docs.github.com/en/rest/reference/orgs
+    This class represents Organizations.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/orgs
+
     """
 
     def _initAttributes(self) -> None:
+        self._archived_at: Attribute[datetime] = NotSet
         self._default_repository_permission: Attribute[str] = NotSet
         self._has_organization_projects: Attribute[bool] = NotSet
         self._has_repository_projects: Attribute[bool] = NotSet
@@ -169,6 +185,11 @@ class Organization(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
+
+    @property
+    def archived_at(self) -> datetime:
+        self._completeIfNotSet(self._archived_at)
+        return self._archived_at.value
 
     @property
     def avatar_url(self) -> str:
@@ -579,13 +600,23 @@ class Organization(CompletableGithubObject):
         unencrypted_value: str,
         visibility: str = "all",
         selected_repositories: Opt[list[github.Repository.Repository]] = NotSet,
+        secret_type: str = "actions",
     ) -> github.OrganizationSecret.OrganizationSecret:
         """
-        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :param secret_name: string name of the secret
+        :param unencrypted_value: string plain text value of the secret
+        :param visibility: string options all or selected
+        :param selected_repositories: list of repositrories that the secret will be available in
+        :param secret_type: string options actions or dependabot
+
+        :calls: `PUT /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
         assert isinstance(visibility, str), visibility
+        assert is_optional_list(selected_repositories, github.Repository.Repository), selected_repositories
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
                 isinstance(element, github.Repository.Repository) for element in selected_repositories
@@ -593,7 +624,7 @@ class Organization(CompletableGithubObject):
         else:
             assert selected_repositories is NotSet
 
-        public_key = self.get_public_key()
+        public_key = self.get_public_key(secret_type=secret_type)
         payload = public_key.encrypt(unencrypted_value)
         put_parameters: dict[str, Any] = {
             "key_id": public_key.key_id,
@@ -601,10 +632,16 @@ class Organization(CompletableGithubObject):
             "visibility": visibility,
         }
         if is_defined(selected_repositories):
-            put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
+            # Dependbot and Actions endpoint expects different types
+            # https://docs.github.com/en/rest/dependabot/secrets?apiVersion=2022-11-28#create-or-update-an-organization-secret
+            # https://docs.github.com/en/rest/actions/secrets?apiVersion=2022-11-28#create-or-update-an-organization-secret
+            if secret_type == "actions":
+                put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
+            if secret_type == "dependabot":
+                put_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]
 
         self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
+            "PUT", f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
         )
 
         return github.OrganizationSecret.OrganizationSecret(
@@ -613,17 +650,18 @@ class Organization(CompletableGithubObject):
             attributes={
                 "name": secret_name,
                 "visibility": visibility,
-                "selected_repositories_url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}/repositories",
-                "url": f"{self.url}/actions/secrets/{urllib.parse.quote(secret_name)}",
+                "selected_repositories_url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}/repositories",
+                "url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}",
             },
             completed=False,
         )
 
     def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret]:
         """
-        Gets all organization secrets
-        :param secret_type: string options actions or dependabot
-        :rtype: :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+        Gets all organization secrets :param secret_type: string options actions or dependabot :rtype:
+
+        :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+
         """
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return PaginatedList(
@@ -642,6 +680,7 @@ class Organization(CompletableGithubObject):
         :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         return github.OrganizationSecret.OrganizationSecret(
             requester=self._requester,
             headers={},
@@ -746,8 +785,8 @@ class Organization(CompletableGithubObject):
 
     def get_variables(self) -> PaginatedList[OrganizationVariable]:
         """
-        Gets all organization variables
-        :rtype: :class:`PaginatedList` of :class:`github.OrganizationVariable.OrganizationVariable`
+        Gets all organization variables :rtype: :class:`PaginatedList` of
+        :class:`github.OrganizationVariable.OrganizationVariable`
         """
         return PaginatedList(
             github.OrganizationVariable.OrganizationVariable,
@@ -954,7 +993,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/projects",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def get_public_members(self) -> PaginatedList[NamedUser]:
@@ -1005,12 +1044,13 @@ class Organization(CompletableGithubObject):
             "PUT", f"{self.url}/outside_collaborators/{member._identity}"
         )
 
-    def get_public_key(self) -> PublicKey:
+    def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
-        :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
+        :calls: `GET /orgs/{org}/{secret_type}/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
+        :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/secrets/public-key")
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/{secret_type}/secrets/public-key")
         return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def get_repo(self, name: str) -> Repository:
@@ -1245,7 +1285,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/installations",
             None,
-            None,
+            headers=None,
             list_item="installations",
         )
 
@@ -1300,7 +1340,123 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
+    def get_custom_properties(self) -> PaginatedList[OrganizationCustomProperty]:
+        """
+        :calls: `GET /orgs/{org}/properties/schema <https://docs.github.com/en/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        return PaginatedList(
+            contentClass=github.OrganizationCustomProperty.OrganizationCustomProperty,
+            requester=self._requester,
+            firstUrl=f"{self.url}/properties/schema",
+            firstParams=None,
+        )
+
+    def get_custom_property(self, property_name: str) -> OrganizationCustomProperty:
+        """
+        :calls: `GET /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#get-a-custom-property-for-an-organization>`_
+        :param property_name: string
+        :rtype: :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        assert isinstance(property_name, str), property_name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/properties/schema/{urllib.parse.quote(property_name)}"
+        )
+        return github.OrganizationCustomProperty.OrganizationCustomProperty(
+            requester=self._requester,
+            headers=headers,
+            attributes=data,
+            completed=False,
+        )
+
+    def create_custom_properties(self, properties: list[CustomProperty]) -> list[OrganizationCustomProperty]:
+        """
+        Create or update custom properties for an organization
+        :calls: `PATCH /orgs/{org}/properties/schema <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization>`_
+        :param properties: list of :class:`github.OrganizationCustomProperty.CustomProperty`
+        :rtype: list of :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        assert isinstance(properties, list), properties
+        assert all(isinstance(p, github.OrganizationCustomProperty.CustomProperty) for p in properties), properties
+        patch_parameters = {"properties": [p.to_dict() for p in properties]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH", f"{self.url}/properties/schema", input=patch_parameters
+        )
+        return [
+            github.OrganizationCustomProperty.OrganizationCustomProperty(
+                requester=self._requester, headers=headers, attributes=property, completed=True
+            )
+            for property in data
+        ]
+
+    def create_custom_property(self, property: CustomProperty) -> OrganizationCustomProperty:
+        """
+        Create or update a custom property for an organization
+        :calls: `PUT /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization>`_
+        :param property: :class:`github.OrganizationCustomProperty.CustomProperty`
+        :rtype: :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
+        """
+        assert isinstance(property, github.OrganizationCustomProperty.CustomProperty), property
+        assert property.values_editable_by is NotSet
+
+        post_parameters = property.to_dict()
+        property_name = post_parameters.pop("property_name")
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/properties/schema/{property_name}", input=post_parameters
+        )
+        return github.OrganizationCustomProperty.OrganizationCustomProperty(
+            requester=self._requester, headers=headers, attributes=data, completed=True
+        )
+
+    def remove_custom_property(self, property_name: str) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization>`_
+        :param property_name: string
+        :rtype: None
+        """
+        assert isinstance(property_name, str), property_name
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/properties/schema/{property_name}")
+
+    def list_custom_property_values(
+        self, repository_query: Opt[str] = NotSet
+    ) -> PaginatedList[RepositoryCustomPropertyValues]:
+        """
+        :calls: `GET /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of dict
+        """
+        return PaginatedList(
+            contentClass=github.OrganizationCustomProperty.RepositoryCustomPropertyValues,
+            requester=self._requester,
+            firstUrl=f"{self.url}/properties/values",
+            firstParams=NotSet.remove_unset_items({"repository_query": repository_query}),
+        )
+
+    def create_custom_property_values(
+        self, repository_names: list[str], properties: dict[str, str | list | None]
+    ) -> None:
+        """
+        Create or update custom property values for organization repositories
+        :calls: `PATCH /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories>`_
+        :param repository_names: list of strings
+        :param properties: dict of string to string, list or None
+        :rtype: None
+        """
+        assert isinstance(repository_names, list), repository_names
+        assert all(isinstance(repo, str) for repo in repository_names), repository_names
+        assert isinstance(properties, dict), properties
+        assert all(isinstance(value, (str, list, type(None))) for value in properties.values()), properties
+        patch_parameters = {
+            "repository_names": repository_names,
+            "properties": [{"property_name": k, "value": v} for k, v in properties.items()],
+        }
+        self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "archived_at" in attributes:  # pragma no branch
+            assert attributes["archived_at"] is None or isinstance(attributes["archived_at"], str), attributes[
+                "archived_at"
+            ]
+            self._archived_at = self._makeDatetimeAttribute(attributes["archived_at"])
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "billing_email" in attributes:  # pragma no branch

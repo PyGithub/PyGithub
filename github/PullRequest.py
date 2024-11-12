@@ -44,6 +44,11 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 sd-kialo <138505487+sd-kialo@users.noreply.github.com>        #
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
+# Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Evan Fetsko <emfetsko@gmail.com>                              #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -99,6 +104,7 @@ from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.GitRef import GitRef
     from github.NamedUser import NamedUser
 
 
@@ -114,7 +120,11 @@ class ReviewComment(TypedDict):
 
 class PullRequest(CompletableGithubObject):
     """
-    This class represents PullRequests. The reference can be found here https://docs.github.com/en/rest/reference/pulls
+    This class represents PullRequests.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/pulls
+
     """
 
     def _initAttributes(self) -> None:
@@ -757,6 +767,24 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
 
+    def restore_branch(self) -> GitRef:
+        """
+        Convenience function that calls :meth:`Repository.create_git_ref` :rtype: :class:`github.GitRef.GitRef`
+        """
+        return self.head.repo.create_git_ref(f"refs/heads/{self.head.ref}", sha=self.head.sha)
+
+    def delete_branch(self, force: bool = False) -> None:
+        """
+        Convenience function that calls :meth:`GitRef.delete` :rtype: bool.
+        """
+        if not force:
+            remaining_pulls = self.head.repo.get_pulls(head=f"{self.head.repo.owner.login}:{self.head.ref}")
+            if remaining_pulls.totalCount > 0:
+                raise RuntimeError(
+                    "This branch is referenced by open pull requests, set force=True to delete this branch."
+                )
+        return self.head.repo.get_git_ref(f"heads/{self.head.ref}").delete()
+
     def enable_automerge(
         self,
         merge_method: Opt[str] = "MERGE",
@@ -790,9 +818,9 @@ class PullRequest(CompletableGithubObject):
 
         # Make the request
         _, data = self._requester.graphql_named_mutation(
-            mutation_name="enable_pull_request_auto_merge",
-            variables=NotSet.remove_unset_items(variables),
-            output="actor { avatarUrl login resourcePath url } clientMutationId",
+            mutation_name="enablePullRequestAutoMerge",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data
 
@@ -814,9 +842,9 @@ class PullRequest(CompletableGithubObject):
 
         # Make the request
         _, data = self._requester.graphql_named_mutation(
-            mutation_name="disable_pull_request_auto_merge",
-            variables=NotSet.remove_unset_items(variables),
-            output="actor { avatarUrl login resourcePath url } clientMutationId",
+            mutation_name="disablePullRequestAutoMerge",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="actor { avatarUrl login resourcePath url } clientMutationId",
         )
         return data
 
@@ -826,6 +854,7 @@ class PullRequest(CompletableGithubObject):
         commit_title: Opt[str] = NotSet,
         merge_method: Opt[str] = NotSet,
         sha: Opt[str] = NotSet,
+        delete_branch: bool = False,
     ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
@@ -838,6 +867,9 @@ class PullRequest(CompletableGithubObject):
             {"commit_message": commit_message, "commit_title": commit_title, "merge_method": merge_method, "sha": sha}
         )
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/merge", input=post_parameters)
+        if delete_branch:
+            self.delete_branch()
+
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
     def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:

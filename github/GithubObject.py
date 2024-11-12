@@ -26,6 +26,9 @@
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -46,11 +49,12 @@
 ################################################################################
 
 import email.utils
+import re
 import typing
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union, overload
 
 from typing_extensions import Protocol, TypeGuard
 
@@ -75,7 +79,9 @@ class Attribute(Protocol[T_co]):
 def _datetime_from_http_date(value: str) -> datetime:
     """
     Convert an HTTP date to a datetime object.
+
     Raises ValueError for invalid dates.
+
     """
 
     dt = email.utils.parsedate_to_datetime(value)
@@ -88,7 +94,9 @@ def _datetime_from_http_date(value: str) -> datetime:
 def _datetime_from_github_isoformat(value: str) -> datetime:
     """
     Convert an GitHub API timestamps to a datetime object.
+
     Raises ValueError for invalid timestamps.
+
     """
 
     # Github always returns YYYY-MM-DDTHH:MM:SSZ, so we can use the stdlib parser
@@ -133,6 +141,62 @@ def is_optional_list(v: Any, type: Union[Type, Tuple[Type, ...]]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
 
 
+camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
+
+
+@overload
+def as_rest_api_attributes(graphql_attributes: Dict[str, Any]) -> Dict[str, Any]:
+    ...
+
+
+@overload
+def as_rest_api_attributes(graphql_attributes: None) -> None:
+    ...
+
+
+def as_rest_api_attributes(graphql_attributes: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """
+    Converts attributes from GraphQL schema to REST API schema.
+
+    The GraphQL API uses lower camel case (e.g. createdAt), whereas REST API uses snake case (created_at). Initializing
+    REST API GithubObjects from GraphQL API attributes requires transformation provided by this method.
+
+    Further renames GraphQL attributes to REST API attributes where the case conversion is not sufficient. For example,
+    GraphQL attribute 'id' is equivalent to REST API attribute 'node_id'.
+
+    """
+    if graphql_attributes is None:
+        return None
+
+    attribute_translation = {
+        "id": "node_id",
+        "databaseId": "id",  # must be after 'id': 'node_id'!
+        "url": "html_url",
+    }
+
+    def translate(attr: str) -> str:
+        def un_capitalize(match: re.Match) -> str:
+            return match.group(1) + match.group(2).lower()
+
+        attr = attribute_translation.get(attr, attr)
+        attr = re.sub(r"([A-Z])([A-Z]+)", un_capitalize, attr)
+        attr = camel_to_snake_case_regexp.sub("_", attr)
+        attr = attr.lower()
+
+        return attr
+
+    return {
+        translate(k): as_rest_api_attributes(v)
+        if isinstance(v, dict)
+        else (as_rest_api_attributes_list(v) if isinstance(v, list) else v)
+        for k, v in graphql_attributes.items()
+    }
+
+
+def as_rest_api_attributes_list(graphql_attributes: List[Optional[Dict[str, Any]]]) -> List[Optional[Dict[str, Any]]]:
+    return [as_rest_api_attributes(v) if isinstance(v, dict) else v for v in graphql_attributes]
+
+
 class _ValuedAttribute(Attribute[T]):
     def __init__(self, value: T):
         self._value = value
@@ -167,6 +231,14 @@ class GithubObject:
     _url: Attribute[str]
 
     @classmethod
+    def is_rest(cls) -> bool:
+        return not cls.is_graphql()
+
+    @classmethod
+    def is_graphql(cls) -> bool:
+        return False
+
+    @classmethod
     def setCheckAfterInitFlag(cls, flag: bool) -> None:
         cls.CHECK_AFTER_INIT_FLAG = flag
 
@@ -192,6 +264,16 @@ class GithubObject:
         self._headers = headers
         self._rawData = attributes
         self._useAttributes(attributes)
+
+    @property
+    def requester(self) -> "Requester":
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self._requester
 
     @property
     def raw_data(self) -> Dict[str, Any]:
@@ -381,6 +463,12 @@ class GithubObject:
         raise NotImplementedError("BUG: Not Implemented _completeIfNeeded")
 
 
+class GraphQlObject:
+    @classmethod
+    def is_graphql(cls) -> bool:
+        return True
+
+
 class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self) -> None:
         pass
@@ -423,8 +511,8 @@ class CompletableGithubObject(GithubObject):
 
     def update(self, additional_headers: Optional[Dict[str, Any]] = None) -> bool:
         """
-        Check and update the object with conditional request
-        :rtype: Boolean value indicating whether the object is changed
+        Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
+        changed.
         """
         conditionalRequestHeader = dict()
         if self.etag is not None:

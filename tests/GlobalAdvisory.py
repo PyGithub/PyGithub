@@ -2,6 +2,8 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -133,7 +135,9 @@ class GlobalAdvisory(Framework.TestCase):
         self.assertEqual(self.advisory.withdrawn_at, None)
 
     def testNewlyReleased(self):
-        """Test an advisory that was freshly released and does not have values for all fields."""
+        """
+        Test an advisory that was freshly released and does not have values for all fields.
+        """
         self.advisory = self.g.get_global_advisory("GHSA-cx3j-qqxj-9597")
         self.assertListKeyEqual(
             self.advisory.credits,

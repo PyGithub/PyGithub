@@ -17,6 +17,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,7 +46,11 @@ from github.PaginatedList import PaginatedList
 
 class EnterpriseConsumedLicenses(CompletableGithubObject):
     """
-    This class represents license consumed by enterprises. The reference can be found here https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+    This class represents license consumed by enterprises.
+
+    The reference can be found here
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
+
     """
 
     def _initAttributes(self) -> None:
@@ -86,8 +91,8 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
             self._requester,
             self.url,
             url_parameters,
-            None,
-            "users",
+            headers=None,
+            list_item="users",
             firstData=self.raw_data,
             firstHeaders=self.raw_headers,
         )

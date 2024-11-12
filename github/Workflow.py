@@ -20,6 +20,8 @@
 # Copyright 2023 Thomas Burghout <thomas.burghout@nedap.com>                   #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 sd-kialo <138505487+sd-kialo@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -56,7 +58,11 @@ from github.PaginatedList import PaginatedList
 
 class Workflow(CompletableGithubObject):
     """
-    This class represents Workflows. The reference can be found here https://docs.github.com/en/rest/reference/actions#workflows
+    This class represents Workflows.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/actions#workflows
+
     """
 
     def _initAttributes(self) -> None:
@@ -189,7 +195,7 @@ class Workflow(CompletableGithubObject):
             self._requester,
             f"{self.url}/runs",
             url_parameters,
-            None,
+            headers=None,
             list_item="workflow_runs",
         )
 

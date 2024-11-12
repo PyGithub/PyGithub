@@ -14,6 +14,8 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -95,3 +97,8 @@ class Installation(Framework.BasicTestCase):
 
             repo = g.get_repo("PyGithub/PyGithub")
             self.assertEqual(repo.full_name, "PyGithub/PyGithub")
+
+    def testRequester(self):
+        self.assertEqual(len(self.installations), 1)
+        installation = self.installations[0]
+        assert installation.requester is installation._requester

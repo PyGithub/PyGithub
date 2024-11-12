@@ -16,6 +16,8 @@
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,8 +47,12 @@ from github.Requester import Requester
 
 class Enterprise(NonCompletableGithubObject):
     """
-    This class represents Enterprises. Such objects do not exist in the Github API, so this class merely collects all endpoints the start with /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
+    This class represents Enterprises.
+
+    Such objects do not exist in the Github API, so this class merely collects all endpoints the start with
+    /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
     https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
+
     """
 
     def __init__(

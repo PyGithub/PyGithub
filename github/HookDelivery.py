@@ -4,6 +4,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,7 +34,7 @@ from github.GithubObject import Attribute, NotSet
 
 class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents a Summary of HookDeliveries
+    This class represents a Summary of HookDeliveries.
     """
 
     def _initAttributes(self) -> None:
@@ -129,7 +131,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
 
 class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents a HookDeliveryRequest
+    This class represents a HookDeliveryRequest.
     """
 
     def _initAttributes(self) -> None:
@@ -156,7 +158,7 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
 
 class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents a HookDeliveryResponse
+    This class represents a HookDeliveryResponse.
     """
 
     def __repr__(self) -> str:
@@ -183,7 +185,7 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
 
 class HookDelivery(HookDeliverySummary):
     """
-    This class represents a HookDelivery
+    This class represents a HookDelivery.
     """
 
     def _initAttributes(self) -> None:

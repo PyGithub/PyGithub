@@ -53,6 +53,10 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 adosibalo <94008816+adosibalo@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
+# Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -107,7 +111,9 @@ import requests.adapters
 from urllib3 import Retry
 
 import github.Consts as Consts
+import github.GithubException
 import github.GithubException as GithubException
+from github.GithubObject import as_rest_api_attributes
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -116,6 +122,7 @@ if TYPE_CHECKING:
     from .InstallationAuthorization import InstallationAuthorization
 
 T = TypeVar("T")
+T_gh = TypeVar("T_gh", bound="GithubObject")
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
@@ -344,8 +351,7 @@ class Requester:
 
     def DEBUG_ON_RESPONSE(self, statusCode: int, responseHeader: Dict[str, Union[str, int]], data: str) -> None:
         """
-        Update current frame with response
-        Current frame index will be attached to responseHeader
+        Update current frame with response Current frame index will be attached to responseHeader.
         """
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             self._frameBuffer[self._frameCount][1:4] = [
@@ -454,7 +460,7 @@ class Requester:
         self.__custom_connections = deque()
 
     @staticmethod
-    # replace with str.removesuffix once support for Python 3.7 is dropped
+    # replace with str.removesuffix once support for Python 3.8 is dropped
     def remove_suffix(string: str, suffix: str) -> str:
         if string.endswith(suffix):
             return string[: -len(suffix)]
@@ -468,6 +474,29 @@ class Requester:
             path = Requester.remove_suffix(path, "/")
             path = Requester.remove_suffix(path, "/v3")
         return path + "/graphql"
+
+    @staticmethod
+    def get_parameters_of_url(url: str) -> Dict[str, list]:
+        query = urllib.parse.urlparse(url)[4]
+        return urllib.parse.parse_qs(query)
+
+    @staticmethod
+    def add_parameters_to_url(
+        url: str,
+        parameters: Dict[str, Any],
+    ) -> str:
+        scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
+        url_params = urllib.parse.parse_qs(query)
+        # union parameters in url with given parameters, the latter have precedence
+        url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
+        parameter_list = [(key, value) for key, values in url_params.items() for value in values]
+        # remove query from url
+        url = urllib.parse.urlunparse((scheme, netloc, url, params, "", fragment))
+
+        if len(parameter_list) == 0:
+            return url
+        else:
+            return f"{url}?{urllib.parse.urlencode(parameter_list)}"
 
     def close(self) -> None:
         """
@@ -483,9 +512,8 @@ class Requester:
     @property
     def kwargs(self) -> Dict[str, Any]:
         """
-        Returns arguments required to recreate this Requester with Requester.__init__, as well as
-        with MainClass.__init__ and GithubIntegration.__init__.
-        :return:
+        Returns arguments required to recreate this Requester with Requester.__init__, as well as with
+        MainClass.__init__ and GithubIntegration.__init__.
         """
         return dict(
             auth=self.__auth,
@@ -509,8 +537,18 @@ class Requester:
         return self.__graphql_url
 
     @property
+    def scheme(self) -> str:
+        return self.__scheme
+
+    @property
     def hostname(self) -> str:
         return self.__hostname
+
+    @property
+    def hostname_and_port(self) -> str:
+        if self.__port is None:
+            return self.hostname
+        return f"{self.hostname}:{self.__port}"
 
     @property
     def auth(self) -> Optional["Auth"]:
@@ -519,8 +557,10 @@ class Requester:
     def withAuth(self, auth: Optional["Auth"]) -> "Requester":
         """
         Create a new requester instance with identical configuration but the given authentication method.
+
         :param auth: authentication method
         :return: new Requester implementation
+
         """
         kwargs = self.kwargs
         kwargs.update(auth=auth)
@@ -534,6 +574,15 @@ class Requester:
         headers: Optional[Dict[str, str]] = None,
         input: Optional[Any] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with JSON body.
+
+        :param input: request body, serialized to JSON if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestMultipartAndCheck(
@@ -544,6 +593,15 @@ class Requester:
         headers: Optional[Dict[str, Any]] = None,
         input: Optional[Dict[str, str]] = None,
     ) -> Tuple[Dict[str, Any], Optional[Dict[str, Any]]]:
+        """
+        Send a request with multi-part-encoded body.
+
+        :param input: request body, will be multi-part encoded if specified
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestBlobAndCheck(
@@ -555,37 +613,125 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Send a request with a file for the body.
+
+        :param input: path to a file to use for the request body
+
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def graphql_query(self, query: str, variables: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
         """
-        input_ = {"query": query, "variables": {"input": variables}}
+        input_ = {"query": query, "variables": variables}
 
         response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
         if "errors" in data:
+            if len(data["errors"]) == 1:
+                error = data["errors"][0]
+                if error.get("type") == "NOT_FOUND":
+                    raise github.UnknownObjectException(404, data, response_headers, error.get("message"))
             raise self.createException(400, response_headers, data)
         return response_headers, data
 
+    @classmethod
+    def paths_of_dict(cls, d: dict) -> dict:
+        return {key: cls.paths_of_dict(val) if isinstance(val, dict) else None for key, val in d.items()}
+
+    def data_as_class(
+        self, headers: Dict[str, Any], data: Dict[str, Any], data_path: List[str], klass: Type[T_gh]
+    ) -> T_gh:
+        for item in data_path:
+            if item not in data:
+                raise RuntimeError(f"GraphQL path {data_path} not found in data: {self.paths_of_dict(data)}")
+            data = data[item]
+        if klass.is_rest():
+            data = as_rest_api_attributes(data)
+        return klass(self, headers, data, completed=False)
+
+    def graphql_node(self, node_id: str, graphql_schema: str, node_type: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        if not graphql_schema.startswith("\n"):
+            graphql_schema = f" {graphql_schema} "
+        query = (
+            """
+            query Q($id: ID!) {
+              node(id: $id) {
+                __typename
+                ... on """
+            + f"{node_type} {{{graphql_schema}}}"
+            + """
+              }
+            }
+            """
+        )
+
+        headers, data = self.graphql_query(query, {"id": node_id})
+        actual_node_type = data.get("data", {}).get("node", {}).get("__typename", node_type)
+        if actual_node_type != node_type:
+            raise github.GithubException(
+                400,
+                data,
+                message=f"Retrieved {node_type} object is of different type: {actual_node_type}",
+            )
+        return headers, data
+
+    def graphql_node_class(
+        self, node_id: str, graphql_schema: str, klass: Type[T_gh], node_type: Optional[str] = None
+    ) -> T_gh:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        if node_type is None:
+            node_type = klass.__name__
+
+        headers, data = self.graphql_node(node_id, graphql_schema, node_type)
+        return self.data_as_class(headers, data, ["data", "node"], klass)
+
+    def graphql_query_class(
+        self, query: str, variables: Dict[str, Any], data_path: List[str], klass: Type[T_gh]
+    ) -> T_gh:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        """
+        headers, data = self.graphql_query(query, variables)
+        return self.data_as_class(headers, data, ["data"] + data_path, klass)
+
     def graphql_named_mutation(
-        self, mutation_name: str, variables: Dict[str, Any], output: Optional[str] = None
+        self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         Create a mutation in the format:
-            mutation MutationName($input: MutationNameInput!) {
-                mutationName(input: $input) {
-                    <output>
-                }
+            mutation Mutation($input: MutationNameInput!) {
+                mutationName(input: $input) { <output_schema> }
             }
-        and call the self.graphql_query method
-        """
-        title = "".join([x.capitalize() for x in mutation_name.split("_")])
-        mutation_name = title[:1].lower() + title[1:]
-        output = output or ""
-        query = f"mutation {title}($input: {title}Input!) {{ {mutation_name}(input: $input) {{ {output} }} }}"
+        and call the self.graphql_query method.
 
-        return self.graphql_query(query, variables)
+        Returns the response data according to given output schema.
+        """
+        mutation_input_name = mutation_name[:1].upper() + mutation_name[1:] + "Input!"
+        query = f"mutation Mutation($input: {mutation_input_name}) {{ {mutation_name}(input: $input) {{ {output_schema} }} }}"
+        headers, data = self.graphql_query(query, {"input": mutation_input})
+        return headers, data.get("data", {}).get(mutation_name, {})
+
+    def graphql_named_mutation_class(
+        self, mutation_name: str, mutation_input: Dict[str, Any], output_schema: str, item: str, klass: Type[T_gh]
+    ) -> T_gh:
+        """
+        Executes a mutation and returns the output object as the given GithubObject.
+
+        See {@link graphql_named_mutation}.
+
+        """
+        headers, data = self.graphql_named_mutation(mutation_name, mutation_input, output_schema)
+        return self.data_as_class(headers, data, [item], klass)
 
     def __check(
         self,
@@ -696,6 +842,14 @@ class Requester:
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with JSON input.
+
+        :param input: request body, will be serialized as JSON
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
@@ -710,6 +864,14 @@ class Requester:
         input: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with multi-part encoding.
+
+        :param input: request body, will be serialized as multipart form data
+        :returns:``(status, headers, body)``
+
+        """
+
         def encode(input: Dict[str, Any]) -> Tuple[str, str]:
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -734,6 +896,13 @@ class Requester:
         input: Optional[str] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[int, Dict[str, Any], str]:
+        """
+        Send a request with a file as request body.
+
+        :param input: path to a local file to use for request body
+        :returns:``(status, headers, body)``
+
+        """
         if headers is None:
             headers = {}
 
@@ -759,6 +928,15 @@ class Requester:
         file_like: BinaryIO,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
     ) -> Tuple[Dict[str, Any], Any]:
+        """
+        Send a request with a binary file-like for the body.
+
+        :param file_like: file-like object to use for the request body
+        :return: ``(headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
+
         # The expected signature of encode means that the argument is ignored.
         def encode(_: Any) -> Tuple[str, Any]:
             return headers["Content-Type"], file_like
@@ -784,11 +962,11 @@ class Requester:
             requestHeaders = {}
 
         if self.__auth is not None:
-            requestHeaders["Authorization"] = f"{self.__auth.token_type} {self.__auth.token}"
+            self.__auth.authentication(requestHeaders)
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
-        url = self.__addParametersToUrl(url, parameters)
+        url = Requester.add_parameters_to_url(url, parameters)
 
         encoded_input = None
         if input is not None:
@@ -917,22 +1095,12 @@ class Requester:
                 "status.github.com",
                 "github.com",
             ], o.hostname
-            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/")), o.path
+            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
             assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":
                 url += f"?{o.query}"
         return url
-
-    def __addParametersToUrl(
-        self,
-        url: str,
-        parameters: Dict[str, Any],
-    ) -> str:
-        if len(parameters) == 0:
-            return url
-        else:
-            return f"{url}?{urllib.parse.urlencode(parameters)}"
 
     def __createConnection(
         self,
@@ -974,17 +1142,8 @@ class Requester:
     ) -> None:
         if self._logger.isEnabledFor(logging.DEBUG):
             headersForRequest = requestHeaders.copy()
-            if "Authorization" in requestHeaders:
-                if requestHeaders["Authorization"].startswith("Basic"):
-                    headersForRequest["Authorization"] = "Basic (login and password removed)"
-                elif requestHeaders["Authorization"].startswith("token"):
-                    headersForRequest["Authorization"] = "token (oauth token removed)"
-                elif requestHeaders["Authorization"].startswith("Bearer"):
-                    headersForRequest["Authorization"] = "Bearer (jwt removed)"
-                else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    headersForRequest[
-                        "Authorization"
-                    ] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+            if self.__auth:
+                self.__auth.mask_authentication(headersForRequest)
             self._logger.debug(
                 "%s %s://%s%s %s %s ==> %i %s %s",
                 verb,

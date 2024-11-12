@@ -22,6 +22,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -628,3 +630,6 @@ class Github(Framework.TestCase):
             lambda e: e.type,
             ["PushEvent", "WatchEvent", "PushEvent", "CommitCommentEvent"],
         )
+
+    def testRequester(self):
+        assert self.g.requester is self.g.__requester

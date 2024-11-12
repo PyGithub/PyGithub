@@ -19,6 +19,8 @@
 # Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,13 +39,13 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 """
-The primary class you will instantiate is :class:`github.MainClass.Github`.
-From its ``get_``, ``create_`` methods, you will obtain instances of all Github objects
-like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository`.
+The primary class you will instantiate is :class:`github.MainClass.Github`. From its ``get_``, ``create_`` methods, you
+will obtain instances of all Github objects like :class:`github.NamedUser.NamedUser` or
+:class:`github.Repository.Repository`.
 
 All classes inherit from :class:`github.GithubObject.GithubObject`.
+
 """
 
 import logging
@@ -75,15 +77,15 @@ logger.addHandler(logging.StreamHandler())
 
 def set_log_level(level: int) -> None:
     """
-    Set the log level of the github logger, e.g. set_log_level(logging.WARNING)
-    :param level: log level
+    Set the log level of the github logger, e.g. set_log_level(logging.WARNING) :param level: log level.
     """
     logger.setLevel(level)
 
 
 def enable_console_debug_logging() -> None:  # pragma no cover (Function useful only outside test environment)
     """
-    This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
+    This function sets up a very simple logging configuration (log everything on standard output) that is useful for
+    troubleshooting.
     """
     set_log_level(logging.DEBUG)
 

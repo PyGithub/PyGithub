@@ -22,6 +22,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,7 +59,11 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 class Migration(CompletableGithubObject):
     """
-    This class represents Migrations. The reference can be found here https://docs.github.com/en/rest/reference/migrations
+    This class represents Migrations.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/migrations
+
     """
 
     def _initAttributes(self) -> None:

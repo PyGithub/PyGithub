@@ -12,6 +12,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -280,3 +282,6 @@ class GithubIntegration(Framework.BasicTestCase):
 
         self.assertEqual(app.name, "PyGithubTest")
         self.assertEqual(app.url, "/apps/pygithubtest")
+
+        assert github_integration.requester is github_integration.__requester
+        assert app.requester is app._requester
