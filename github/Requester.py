@@ -98,6 +98,7 @@ from typing import (
     Dict,
     Generic,
     ItemsView,
+    Iterator,
     List,
     Optional,
     Tuple,
@@ -134,12 +135,19 @@ class RequestsResponse:
         self.status = r.status_code
         self.headers = r.headers
         self.text = r.text
+        self.response = r
 
     def getheaders(self) -> ItemsView[str, str]:
         return self.headers.items()
 
     def read(self) -> str:
         return self.text
+
+    def iter_content(self, chunk_size: Union[int, None] = 1) -> Iterator:
+        return self.response.iter_content(chunk_size=chunk_size)
+
+    def raise_for_status(self) -> None:
+        self.response.raise_for_status()
 
 
 class HTTPSRequestsConnectionClass:
@@ -190,11 +198,13 @@ class HTTPSRequestsConnectionClass:
         url: str,
         input: Optional[Union[str, io.BufferedReader]],
         headers: Dict[str, str],
+        stream: bool = False,
     ) -> None:
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
+        self.stream = stream
 
     def getresponse(self) -> RequestsResponse:
         verb = getattr(self.session, self.verb.lower())
@@ -253,11 +263,12 @@ class HTTPRequestsConnectionClass:
         )
         self.session.mount("http://", self.adapter)
 
-    def request(self, verb: str, url: str, input: None, headers: Dict[str, str]) -> None:
+    def request(self, verb: str, url: str, input: None, headers: Dict[str, str], stream: bool = False) -> None:
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
+        self.stream = stream
 
     def getresponse(self) -> RequestsResponse:
         verb = getattr(self.session, self.verb.lower())
@@ -868,24 +879,23 @@ class Requester:
         """
         GET a file from the server and save it to the given path.
         """
-        _, _, response = self.getStream(url, parameters, headers, cnx)
-        response.raise_for_status()
+        _, _, stream_chunk_iterator = self.getResponseStream(url, parameters, headers, cnx)
         with open(path, "wb") as f:
-            for chunk in response.iter_content():
+            for chunk in stream_chunk_iterator():
                 if chunk:
                     f.write(chunk)
 
-    def getStream(
+    def getResponseStream(
         self,
         url: str,
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
-    ) -> Tuple[int, Dict[str, Any], requests.Response]:
+    ) -> Tuple[int, Dict[str, Any], Callable]:
         """
         GET a stream from the server.
 
-        :returns:``(status, headers, response)``
+        :returns:``(status, headers, stream_chunk_iterator)``
 
         """
         if headers is None:
@@ -898,9 +908,10 @@ class Requester:
         status, responseHeaders, output = self.__requestEncode(
             cnx, "GET", url, parameters, headers, None, encode, stream=True
         )
-        if isinstance(output, requests.Response):
-            return status, responseHeaders, output
-        raise ValueError("getStream() Expected a requests.Response object, should never happen")
+        if isinstance(output, RequestsResponse):
+            output.raise_for_status()
+            return status, responseHeaders, output.iter_content
+        raise ValueError("getStream() Expected a RequestsResponse object, should never happen")
 
     def requestJson(
         self,
@@ -1038,7 +1049,7 @@ class Requester:
         input: Optional[T],
         encode: Callable[[T], Tuple[str, Any]],
         stream: bool = False,
-    ) -> Tuple[int, Dict[str, Any], Union[str, requests.Response]]:
+    ) -> Tuple[int, Dict[str, Any], Union[str, RequestsResponse]]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = {}
@@ -1087,23 +1098,18 @@ class Requester:
         requestHeaders: Dict[str, str],
         input: Optional[Any],
         stream: bool = False,
-    ) -> Tuple[int, Dict[str, Any], Union[str, requests.Response]]:
+    ) -> Tuple[int, Dict[str, Any], Union[str, RequestsResponse]]:
         self.__deferRequest(verb)
 
         try:
             original_cnx = cnx
             if cnx is None:
                 cnx = self.__createConnection()
-            if stream:
-                response = cnx.session.get(url, stream=True, headers=requestHeaders)
-                status = response.status_code
-                responseHeaders = {k.lower(): v for k, v in response.headers.items()}
-            else:
-                cnx.request(verb, url, input, requestHeaders)
-                resp = cnx.getresponse()
-                output = resp.read()
-                status = resp.status
-                responseHeaders = {k.lower(): v for k, v in resp.getheaders()}
+            _ = cnx.request(verb, url, input, requestHeaders, stream)
+            resp = cnx.getresponse()
+            output = resp.read() if not stream else "stream"
+            status = resp.status
+            responseHeaders = {k.lower(): v for k, v in resp.headers.items()}
 
             if input:
                 if isinstance(input, IOBase):
@@ -1141,9 +1147,7 @@ class Requester:
                 if self._logger.isEnabledFor(logging.INFO):
                     self._logger.info(f"Following Github server redirection from {url} to {o.path}")
                 return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input, stream=stream)
-            if stream:
-                return status, responseHeaders, response
-            return status, responseHeaders, output
+            return status, responseHeaders, output if not stream else resp
         finally:
             # we record the time of this request after it finished
             # to defer next request starting from this request's end, not start

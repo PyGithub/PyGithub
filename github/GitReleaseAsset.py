@@ -42,7 +42,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Callable
 
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -150,13 +150,14 @@ class GitReleaseAsset(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
-    def download_asset(self, path: str) -> bool:
+    def download_asset(self, path: None | str = None) -> tuple[int, dict[str, Any], Callable] | None:
         """
-        Download asset to the path.
+        Download asset to the path or return an iterator for the stream.
         """
-        assert isinstance(path, str), path
+        if path is None:
+            return self._requester.getResponseStream(self.url)
         self._requester.getFile(self.url, path=path)
-        return True
+        return None
 
     def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
         """
