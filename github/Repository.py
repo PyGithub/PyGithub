@@ -130,6 +130,7 @@
 # Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
@@ -2335,6 +2336,34 @@ class Repository(CompletableGithubObject):
         )
 
         return github.Deployment.Deployment(self._requester, headers, data, completed=True)
+
+    def get_discussion(
+        self,
+        number: int,
+        discussion_graphql_schema: str,
+    ) -> RepositoryDiscussion:
+        assert isinstance(number, int), number
+        if not discussion_graphql_schema.startswith("\n"):
+            discussion_graphql_schema = f" {discussion_graphql_schema} "
+        query = (
+            """
+            query Q($repo: String!, $owner: String!, $number: Int!) {
+              repository(name: $repo, owner: $owner) {
+                discussion(number: $number) {"""
+            + discussion_graphql_schema
+            + """}
+              }
+            }
+            """
+        )
+        variables = {
+            "repo": self.name,
+            "owner": self.owner.login,
+            "number": number,
+        }
+        return self._requester.graphql_query_class(
+            query, variables, ["repository", "discussion"], github.RepositoryDiscussion.RepositoryDiscussion
+        )
 
     def get_discussions(
         self,

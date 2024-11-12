@@ -68,6 +68,8 @@
 # Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
 # Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 #                                                                              #
@@ -1549,6 +1551,13 @@ class Repository(Framework.TestCase):
         self.assertEqual(discussion.repository.owner.login, "PyGithub")
         self.assertEqual(discussion.repository.name, "PyGithub")
         self.assertEqual(discussion.title, "Is there a way to search if a string present in default branch?")
+
+    def testGetDiscussion(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussion = repo.get_discussion(2205, "author { login } number title")
+        self.assertEqual(discussion.author.login, "EnricoMi")
+        self.assertEqual(discussion.number, 2205)
+        self.assertEqual(discussion.title, "Is the PyGithub project dead? How can the community help?")
 
     def testGetDiscussionsByAnswered(self):
         repo = self.g.get_repo("PyGithub/PyGithub")

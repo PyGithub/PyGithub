@@ -27,6 +27,7 @@
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
