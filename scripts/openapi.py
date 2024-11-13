@@ -22,13 +22,15 @@
 
 from __future__ import annotations
 
+import argparse
+import dataclasses
 import difflib
 import json
 import sys
+from argparse import Namespace
 from typing import Sequence
 
 import libcst as cst
-import dataclasses
 
 
 @dataclasses.dataclass(frozen=True)
@@ -258,17 +260,20 @@ def as_python_type(data_type: str | None, format: str | None) -> str | None:
 
     return maybe_with_format.get(format)
 
+def apply(spec_file: str, schema_name: str, class_name: str, filename: str | None):
+    print(f"Using spec {spec_file} for {schema_name} {class_name}")
+    with open(spec_file, 'r') as r:
+        spec = json.load(r)
 
-def check(spec: dict, scheme_name: str, class_name: str, file_name: str | None = None):
     schemas = spec.get('components', {}).get('schemas', {})
-    schema = schemas.get(scheme_name, {})
-    properties = {k: (as_python_type(v.get("type"), v.get("format") or v.get("items", {}).get("type")), v.get("deprecated", False)) for k, v in schema.get("properties", {}).items()}
+    schema = schemas.get(schema_name, {})
+    properties = {k: (as_python_type(v.get("type"), v.get("format") or v.get("items", {}).get("type") or v.get("items", {}).get("$ref")), v.get("deprecated", False)) for k, v in schema.get("properties", {}).items()}
     print(schema)
     print(properties)
 
-    if file_name is None:
-        file_name = f"../github/{class_name}.py"
-    with open(file_name, "r") as r:
+    if filename is None:
+        filename = f"github/{class_name}.py"
+    with open(filename, "r") as r:
         code = "".join(r.readlines())
 
     tree = cst.parse_module(code)
@@ -279,14 +284,24 @@ def check(spec: dict, scheme_name: str, class_name: str, file_name: str | None =
     print("".join(diff))
 
 
-def main(spec_file: str):
-    print(f"Using spec: {spec_file}")
-    with open(spec_file, 'r') as r:
-        spec = json.load(r)
+def parse_args():
+    args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
+    args_parser.add_argument("--dry-run", default=False, action="store_true", help="show prospect changes and do not modify any files")
 
-    check(spec, "repository", "Repository")
+    subparsers = args_parser.add_subparsers(dest="subcommand")
+    apply_parser = subparsers.add_parser("apply")
+    apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
+    apply_parser.add_argument("schema_name", help="Name of schema under /components/schemas/")
+    apply_parser.add_argument("class_name", help="Python class name")
+    apply_parser.add_argument("filename", nargs="?", help="Python file")
+
+    if len(sys.argv) == 1:
+        args_parser.print_help()
+        sys.exit(1)
+    return args_parser.parse_args()
 
 
 if __name__ == "__main__":
-    spec = sys.argv[1]
-    main(spec)
+    args = parse_args()
+    if args.subcommand == "apply":
+        apply(args.spec, args.schema_name, args.class_name, args.filename)
