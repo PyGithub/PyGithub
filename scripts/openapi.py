@@ -27,10 +27,13 @@ import dataclasses
 import difflib
 import json
 import sys
-from argparse import Namespace
-from typing import Sequence
+from json import JSONEncoder
+from os import listdir
+from os.path import isfile, join
+from typing import Sequence, Optional, Any
 
 import libcst as cst
+from libcst import SimpleStatementLine, Expr, IndentedBlock, SimpleString, Module
 
 
 @dataclasses.dataclass(frozen=True)
@@ -38,6 +41,62 @@ class Property:
     name: str
     data_type: str | None
     deprecated: bool
+
+
+class IndexPythonClassesVisitor(cst.CSTVisitor):
+    def __init__(self):
+        super().__init__()
+        self._filename = None
+        self._module = None
+        self._classes = {}
+
+    def filename(self, filename: str):
+        self._filename = filename
+
+    @property
+    def classes(self) -> dict[str, Any]:
+        return self._classes
+
+    def visit_Module(self, node: "Module") -> Optional[bool]:
+        self._module = node
+
+    def visit_ClassDef(self, node: cst.ClassDef) -> Optional[bool]:
+        class_name = node.name.value
+        class_docstring = None
+        class_schemas = []
+        class_bases = [val if isinstance(val, str) else self._module.code_for_node(val)
+                       for base in node.bases for val in [base.value.value]]
+
+        # extract class docstring
+        try:
+            if (isinstance(node.body, IndentedBlock) and
+                    isinstance(node.body.body[0], SimpleStatementLine) and
+                    isinstance(node.body.body[0].body[0], Expr) and
+                    isinstance(node.body.body[0].body[0].value, SimpleString)):
+                class_docstring = node.body.body[0].body[0].value.value.strip('"\r\n ')
+        except Exception as e:
+            print(f"Extracting docstring of class {class_name} failed", e)
+
+        # extract OpenAPI schema
+        if class_docstring:
+            lines = class_docstring.splitlines()
+            for idx, line in enumerate(lines):
+                if "The OpenAPI schema can be found at" in line:
+                    for schema in lines[idx+1:]:
+                        if not schema.strip():
+                            break
+                        class_schemas.append(schema.strip())
+
+        if class_name in self._classes:
+            print(f"Duplicate class definition for {class_name}")
+
+        self._classes[class_name] = {
+            "bases": class_bases,
+            "docstring": class_docstring,
+            "filename": self._filename,
+            "schemas": class_schemas
+        }
+        return False
 
 
 class ApplySchemaTransformer(cst.CSTTransformer):
@@ -284,6 +343,69 @@ def apply(spec_file: str, schema_name: str, class_name: str, filename: str | Non
     print("".join(diff))
 
 
+def extend_inheritance(classes: dict[str, Any]) -> bool:
+    extended_classes = {}
+    updated = False
+
+    for name, cls in classes.items():
+        orig_inheritance = cls.get("inheritance", set()).union(set(cls.get("bases", [])))
+        inheritance = orig_inheritance.union(ancestor
+                                             for base in cls.get("bases", [])
+                                             for ancestor in classes.get(base, {}).get("inheritance", []))
+        cls["inheritance"] = inheritance
+        extended_classes[name] = cls
+        updated = updated or inheritance != orig_inheritance
+
+    return updated
+
+def index(github_path: str, index_filename: str):
+    files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
+    print(f"Indexing {len(files)} Python files")
+
+    visitor = IndexPythonClassesVisitor()
+    for file in files:
+        filename = join(github_path, file)
+        with open(filename, "r") as r:
+            code = "".join(r.readlines())
+
+        visitor.filename(filename)
+        tree = cst.parse_module(code)
+        tree.visit(visitor)
+
+    # construct inheritance list
+    classes = visitor.classes
+    while extend_inheritance(classes):
+        pass
+
+    # construct schema-to-class index
+    schema_to_classes = {}
+    for name, cls in classes.items():
+        for schema in cls.get("schemas"):
+            if schema in schema_to_classes:
+                print(f"Multiple classes for schema found: {name} and {schema_to_classes[schema]}")
+            schema_to_classes[schema] = name
+    print(schema_to_classes)
+
+    print(f"Indexed {len(classes)} classes")
+    print(f"Indexed {len([cls for cls in classes.values() if cls.get('schema')])} schemas")
+
+    data = {
+        "sources": github_path,
+        "classes": classes,
+        "indices": {
+            "schema_to_classes": schema_to_classes,
+        }
+    }
+
+    with open(index_filename, "w") as w:
+        json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+
+class JsonSerializer(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return list(sorted(obj))
+        return super().default(obj)
+
 def parse_args():
     args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
     args_parser.add_argument("--dry-run", default=False, action="store_true", help="show prospect changes and do not modify any files")
@@ -295,6 +417,10 @@ def parse_args():
     apply_parser.add_argument("class_name", help="Python class name")
     apply_parser.add_argument("filename", nargs="?", help="Python file")
 
+    index_parser = subparsers.add_parser("index")
+    index_parser.add_argument("github_path", help="Path to Github Python files")
+    index_parser.add_argument("index_filename", help="Path of index file")
+
     if len(sys.argv) == 1:
         args_parser.print_help()
         sys.exit(1)
@@ -305,3 +431,7 @@ if __name__ == "__main__":
     args = parse_args()
     if args.subcommand == "apply":
         apply(args.spec, args.schema_name, args.class_name, args.filename)
+    elif args.subcommand == "index":
+        index(args.github_path, args.index_filename)
+    else:
+        raise RuntimeError("Subcommand not implemented " + args.subcommand)
