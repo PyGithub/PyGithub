@@ -288,122 +288,6 @@ class ApplySchemaTransformer(cst.CSTTransformer):
 
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
-def as_python_type(data_type: str | None, format: str | None) -> str | None:
-    if data_type is None:
-        return None
-
-    data_types = {
-        "array": "list",
-        "boolean": "bool",
-        "integer": "int",
-        "object": "GithubObject",
-        "string": {
-            None: "str",
-            "date-time": "datetime",
-            "uri": "str",
-        },
-    }
-
-    if data_type not in data_types:
-        raise ValueError(f"Unsupported data type: {data_type}")
-
-    maybe_with_format = data_types.get(data_type)
-
-    if isinstance(maybe_with_format, str):
-        if data_type == "array":
-            return f"{maybe_with_format}[{as_python_type(format, None)}]"
-        return maybe_with_format
-
-    if format not in maybe_with_format:
-        raise ValueError(f"Unsupported data type format: {format}")
-
-    return maybe_with_format.get(format)
-
-def apply(spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool):
-    print(f"Using spec {spec_file} for {schema_name} {class_name}")
-    with open(spec_file, 'r') as r:
-        spec = json.load(r)
-
-    schemas = spec.get('components', {}).get('schemas', {})
-    schema = schemas.get(schema_name, {})
-    properties = {k: (as_python_type(v.get("type"), v.get("format") or v.get("items", {}).get("type") or v.get("items", {}).get("$ref")), v.get("deprecated", False)) for k, v in schema.get("properties", {}).items()}
-    print(schema)
-    print(properties)
-
-    if filename is None:
-        filename = f"github/{class_name}.py"
-    with open(filename, "r") as r:
-        code = "".join(r.readlines())
-
-    tree = cst.parse_module(code)
-    tree_updated = tree.visit(ApplySchemaTransformer(class_name, properties, deprecate=False))
-
-    if dry_run:
-        diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
-        print("Diff:")
-        print("".join(diff))
-    else:
-        if not tree_updated.deep_equals(tree):
-            with open(filename, "w") as w:
-                w.write(tree_updated.code)
-
-
-def extend_inheritance(classes: dict[str, Any]) -> bool:
-    extended_classes = {}
-    updated = False
-
-    for name, cls in classes.items():
-        orig_inheritance = cls.get("inheritance", set()).union(set(cls.get("bases", [])))
-        inheritance = orig_inheritance.union(ancestor
-                                             for base in cls.get("bases", [])
-                                             for ancestor in classes.get(base, {}).get("inheritance", []))
-        cls["inheritance"] = inheritance
-        extended_classes[name] = cls
-        updated = updated or inheritance != orig_inheritance
-
-    return updated
-
-def index(github_path: str, index_filename: str):
-    files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
-    print(f"Indexing {len(files)} Python files")
-
-    visitor = IndexPythonClassesVisitor()
-    for file in files:
-        filename = join(github_path, file)
-        with open(filename, "r") as r:
-            code = "".join(r.readlines())
-
-        visitor.filename(filename)
-        tree = cst.parse_module(code)
-        tree.visit(visitor)
-
-    # construct inheritance list
-    classes = visitor.classes
-    while extend_inheritance(classes):
-        pass
-
-    # construct schema-to-class index
-    schema_to_classes = {}
-    for name, cls in classes.items():
-        for schema in cls.get("schemas"):
-            if schema in schema_to_classes:
-                print(f"Multiple classes for schema found: {name} and {schema_to_classes[schema]}")
-            schema_to_classes[schema] = name
-    print(schema_to_classes)
-
-    print(f"Indexed {len(classes)} classes")
-    print(f"Indexed {len([cls for cls in classes.values() if cls.get('schema')])} schemas")
-
-    data = {
-        "sources": github_path,
-        "classes": classes,
-        "indices": {
-            "schema_to_classes": schema_to_classes,
-        }
-    }
-
-    with open(index_filename, "w") as w:
-        json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
 
 class JsonSerializer(JSONEncoder):
     def default(self, obj):
@@ -411,32 +295,169 @@ class JsonSerializer(JSONEncoder):
             return list(sorted(obj))
         return super().default(obj)
 
-def parse_args():
-    args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
-    args_parser.add_argument("--dry-run", default=False, action="store_true", help="show prospect changes and do not modify any files")
 
-    subparsers = args_parser.add_subparsers(dest="subcommand")
-    apply_parser = subparsers.add_parser("apply")
-    apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
-    apply_parser.add_argument("schema_name", help="Name of schema under /components/schemas/")
-    apply_parser.add_argument("class_name", help="Python class name")
-    apply_parser.add_argument("filename", nargs="?", help="Python file")
+class OpenApi:
+    def __init__(self, args: argparse.Namespace):
+        self.args = args
+        self.subcommand = args.subcommand
+        self.dry_run = args.dry_run
+        self.index = OpenApi.read_index(args.index_filename) if 'index_filename' in args else {}
+        self.schema_to_class = self.index.get("indices", {}).get("schema_to_classes", {})
+        self.schema_to_class['default'] = "GithubObject"
 
-    index_parser = subparsers.add_parser("index")
-    index_parser.add_argument("github_path", help="Path to Github Python files")
-    index_parser.add_argument("index_filename", help="Path of index file")
+    @staticmethod
+    def read_index(filename: str) -> dict[str, Any]:
+        with open(filename, 'r') as r:
+            return json.load(r)
 
-    if len(sys.argv) == 1:
-        args_parser.print_help()
-        sys.exit(1)
-    return args_parser.parse_args()
+    def as_python_type(self, data_type: str | None, format: str | None) -> str | None:
+        if data_type is None:
+            return None
+
+        data_types = {
+            "array": "list",
+            "boolean": "bool",
+            "integer": "int",
+            "object": self.schema_to_class,
+            "string": {
+                None: "str",
+                "date-time": "datetime",
+                "uri": "str",
+            },
+        }
+
+        if data_type not in data_types:
+            raise ValueError(f"Unsupported data type: {data_type}")
+
+        maybe_with_format = data_types.get(data_type)
+
+        if isinstance(maybe_with_format, str):
+            if data_type == "array":
+                return f"{maybe_with_format}[{self.as_python_type(format, None)}]"
+            return maybe_with_format
+
+        if 'default' not in maybe_with_format and format not in maybe_with_format:
+            raise ValueError(f"Unsupported data type format: {format}")
+
+        return maybe_with_format.get(format, maybe_with_format.get('default'))
+
+    def apply(self, spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool):
+        print(f"Using spec {spec_file} for {schema_name} {class_name}")
+        with open(spec_file, 'r') as r:
+            spec = json.load(r)
+
+        schemas = spec.get('components', {}).get('schemas', {})
+        schema = schemas.get(schema_name, {})
+        properties = {k: (self.as_python_type(v.get("type") or "object", v.get("format") or v.get("$ref", "").strip("# ") or v.get("items", {}).get("type") or v.get("items", {}).get("$ref")), v.get("deprecated", False)) for k, v in schema.get("properties", {}).items()}
+        print(schema)
+        print(properties)
+
+        if filename is None:
+            filename = f"github/{class_name}.py"
+        with open(filename, "r") as r:
+            code = "".join(r.readlines())
+
+        tree = cst.parse_module(code)
+        tree_updated = tree.visit(ApplySchemaTransformer(class_name, properties, deprecate=False))
+
+        if dry_run:
+            diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
+            print("Diff:")
+            print("".join(diff))
+        else:
+            if not tree_updated.deep_equals(tree):
+                with open(filename, "w") as w:
+                    w.write(tree_updated.code)
+
+
+    def extend_inheritance(self, classes: dict[str, Any]) -> bool:
+        extended_classes = {}
+        updated = False
+
+        for name, cls in classes.items():
+            orig_inheritance = cls.get("inheritance", set()).union(set(cls.get("bases", [])))
+            inheritance = orig_inheritance.union(ancestor
+                                                 for base in cls.get("bases", [])
+                                                 for ancestor in classes.get(base, {}).get("inheritance", []))
+            cls["inheritance"] = inheritance
+            extended_classes[name] = cls
+            updated = updated or inheritance != orig_inheritance
+
+        return updated
+
+    def index(self, github_path: str, index_filename: str):
+        files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
+        print(f"Indexing {len(files)} Python files")
+
+        visitor = IndexPythonClassesVisitor()
+        for file in files:
+            filename = join(github_path, file)
+            with open(filename, "r") as r:
+                code = "".join(r.readlines())
+
+            visitor.filename(filename)
+            tree = cst.parse_module(code)
+            tree.visit(visitor)
+
+        # construct inheritance list
+        classes = visitor.classes
+        while self.extend_inheritance(classes):
+            pass
+
+        # construct schema-to-class index
+        schema_to_classes = {}
+        for name, cls in classes.items():
+            for schema in cls.get("schemas"):
+                if schema in schema_to_classes:
+                    print(f"Multiple classes for schema found: {name} and {schema_to_classes[schema]}")
+                schema_to_classes[schema] = name
+        print(schema_to_classes)
+
+        print(f"Indexed {len(classes)} classes")
+        print(f"Indexed {len([cls for cls in classes.values() if cls.get('schema')])} schemas")
+
+        data = {
+            "sources": github_path,
+            "classes": classes,
+            "indices": {
+                "schema_to_classes": schema_to_classes,
+            }
+        }
+
+        with open(index_filename, "w") as w:
+            json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+
+    @staticmethod
+    def parse_args():
+        args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
+        args_parser.add_argument("--index-filename", help="filename of the index file")
+        args_parser.add_argument("--dry-run", default=False, action="store_true", help="show prospect changes and do not modify any files")
+
+        subparsers = args_parser.add_subparsers(dest="subcommand")
+        apply_parser = subparsers.add_parser("apply")
+        apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        apply_parser.add_argument("schema_name", help="Name of schema under /components/schemas/")
+        apply_parser.add_argument("class_name", help="Python class name")
+        apply_parser.add_argument("filename", nargs="?", help="Python file")
+
+        index_parser = subparsers.add_parser("index")
+        index_parser.add_argument("github_path", help="Path to Github Python files")
+        index_parser.add_argument("index_filename", help="Path of index file")
+
+        if len(sys.argv) == 1:
+            args_parser.print_help()
+            sys.exit(1)
+        return args_parser.parse_args()
+
+    def main(self):
+        if self.args.subcommand == "apply":
+            self.apply(self.args.spec, self.args.schema_name, self.args.class_name, self.args.filename, self.args.dry_run)
+        elif args.subcommand == "index":
+            self.index(self.args.github_path, self.args.index_filename)
+        else:
+            raise RuntimeError("Subcommand not implemented " + args.subcommand)
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    if args.subcommand == "apply":
-        apply(args.spec, args.schema_name, args.class_name, args.filename, args.dry_run)
-    elif args.subcommand == "index":
-        index(args.github_path, args.index_filename)
-    else:
-        raise RuntimeError("Subcommand not implemented " + args.subcommand)
+    args = OpenApi.parse_args()
+    OpenApi(args).main()
