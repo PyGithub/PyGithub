@@ -319,7 +319,7 @@ def as_python_type(data_type: str | None, format: str | None) -> str | None:
 
     return maybe_with_format.get(format)
 
-def apply(spec_file: str, schema_name: str, class_name: str, filename: str | None):
+def apply(spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool):
     print(f"Using spec {spec_file} for {schema_name} {class_name}")
     with open(spec_file, 'r') as r:
         spec = json.load(r)
@@ -338,9 +338,14 @@ def apply(spec_file: str, schema_name: str, class_name: str, filename: str | Non
     tree = cst.parse_module(code)
     tree_updated = tree.visit(ApplySchemaTransformer(class_name, properties, deprecate=False))
 
-    diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
-    print("Diff:")
-    print("".join(diff))
+    if dry_run:
+        diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
+        print("Diff:")
+        print("".join(diff))
+    else:
+        if not tree_updated.deep_equals(tree):
+            with open(filename, "w") as w:
+                w.write(tree_updated.code)
 
 
 def extend_inheritance(classes: dict[str, Any]) -> bool:
@@ -430,7 +435,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     if args.subcommand == "apply":
-        apply(args.spec, args.schema_name, args.class_name, args.filename)
+        apply(args.spec, args.schema_name, args.class_name, args.filename, args.dry_run)
     elif args.subcommand == "index":
         index(args.github_path, args.index_filename)
     else:
