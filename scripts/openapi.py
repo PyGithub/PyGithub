@@ -22,18 +22,20 @@
 
 from __future__ import annotations
 
+import abc
 import argparse
 import dataclasses
 import difflib
 import json
 import sys
+from collections import Counter
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
-from typing import Sequence, Optional, Any
+from typing import Sequence, Optional, Any, Union
 
 import libcst as cst
-from libcst import SimpleStatementLine, Expr, IndentedBlock, SimpleString, Module
+from libcst import SimpleStatementLine, Expr, IndentedBlock, SimpleString, Module, FlattenSentinel, RemovalSentinel
 
 
 @dataclasses.dataclass(frozen=True)
@@ -120,7 +122,7 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
         return False
 
 
-class ApplySchemaTransformer(cst.CSTTransformer):
+class ApplySchemaBaseTransformer(cst.CSTTransformer, abc.ABC):
     def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
         super().__init__()
         self.visit_class_name = []
@@ -141,6 +143,11 @@ class ApplySchemaTransformer(cst.CSTTransformer):
         if not self.properties:
             return None
         return self.properties[0]
+
+
+class ApplySchemaTransformer(ApplySchemaBaseTransformer):
+    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
+        super().__init__(module_name, class_name, properties, deprecate)
 
     @staticmethod
     def contains_decorator(seq: Sequence[cst.Decorator], decorator_name: str):
@@ -309,6 +316,18 @@ class ApplySchemaTransformer(cst.CSTTransformer):
         elif prop.data_type == "int":
             func_name = "_makeIntAttribute"
             args = [cst.Arg(attr)]
+        elif prop.data_type == "float":
+            func_name = "_makeFloatAttribute"
+            args = [cst.Arg(attr)]
+        elif prop.data_type == "datetime":
+            func_name = "_makeDatetimeAttribute"
+            args = [cst.Arg(attr)]
+        elif prop.data_type == "str":
+            func_name = "_makeStringAttribute"
+            args = [cst.Arg(attr)]
+        elif isinstance(prop.data_type, GithubClass):
+            func_name = "_makeClassAttribute"
+            args = [cst.Arg(cls.create_type(prop.data_type)), cst.Arg(attr)]
         elif prop.data_type == "list[int]":
             func_name = "_makeListOfIntAttribute"
             args = [cst.Arg(attr)]
@@ -318,12 +337,6 @@ class ApplySchemaTransformer(cst.CSTTransformer):
         elif prop.data_type == "list[None]":
             func_name = "_makeListOfClassAttribute"
             args = [cst.Arg(attr)]
-        elif prop.data_type == "str":
-            func_name = "_makeStringAttribute"
-            args = [cst.Arg(attr)]
-        elif isinstance(prop.data_type, GithubClass):
-            func_name = "_makeClassAttribute"
-            args = [cst.Arg(cls.create_type(prop.data_type)), cst.Arg(attr)]
         elif prop.data_type is None:
             func_name = "_makeClassAttribute"
             args = [cst.Arg(cst.Name("None")), cst.Arg(attr)]
@@ -388,6 +401,75 @@ class ApplySchemaTransformer(cst.CSTTransformer):
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
 
+class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
+    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
+        super().__init__(module_name, class_name, properties, deprecate)
+
+    def get_value(self, data_type: str | GithubClass) -> Any:
+        if isinstance(data_type, GithubClass):
+            return cst.Call(func=cst.Name("object"))
+        if data_type == "bool":
+            return cst.Expr(cst.Name("False"))
+        if data_type == "int":
+            return cst.Expr(cst.Integer("0"))
+        if data_type == "float":
+            return cst.Expr(cst.Float("0.0"))
+        if data_type == "datetime":
+            equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
+            return cst.Call(func=cst.Name("datetime"), args=[
+                cst.Arg(cst.Integer("2020")),
+                cst.Arg(cst.Integer("1")),
+                cst.Arg(cst.Integer("2")),
+                cst.Arg(cst.Integer("12")),
+                cst.Arg(cst.Integer("34")),
+                cst.Arg(cst.Integer("56")),
+                cst.Arg(keyword=cst.Name("tzinfo"), equal=equal, value=cst.Attribute(cst.Name("timezone"), cst.Name("utc"))),
+            ])
+        if data_type == "str":
+            return cst.Expr(cst.SimpleString('""'))
+        else:
+            return cst.SimpleString(f'"{data_type}"')
+
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        if updated_node.name.value == 'testAttributes':
+            # first we detect the attribute that is used to test this class
+            candidates = [attr.value.attr.value
+                          for stmt in updated_node.body.body if isinstance(stmt, cst.SimpleStatementLine)
+                          for expr in stmt.body if isinstance(expr, cst.Expr) and isinstance(expr.value, cst.Call)
+                          for call in [expr.value] if isinstance(call.func, cst.Attribute) and
+                             isinstance(call.func.value, cst.Name) and call.func.value.value == "self" and
+                             isinstance(call.func.attr, cst.Name) and call.func.attr.value.startswith("assert") and
+                             len(call.args) > 0
+                          for arg in [call.args[0]] if isinstance(arg.value, cst.Attribute)
+                          for attr in [arg.value] if  isinstance(attr.value, cst.Attribute) and
+                             isinstance(attr.value.value, cst.Name) and attr.value.value.value == "self" and
+                             isinstance(attr.value.attr, cst.Name)]
+            attribute = list(Counter(candidates).items())[0][0]
+
+            i = 0
+            while i < len(updated_node.body.body):
+                attr = updated_node.body.body[i].body[0].value.args[0].value
+                if isinstance(attr, cst.Attribute) and attr.value.value.value == "self" and attr.value.attr.value == attribute:
+                    asserted_property = attr.attr.value
+                    while self.properties and self.properties[0].name < asserted_property:
+                        prop = self.properties.pop(0)
+                        stmt = cst.SimpleStatementLine([
+                            cst.Expr(cst.Call(
+                                func=cst.Attribute(cst.Name("self"), cst.Name("assertEqual")),
+                                args=[
+                                    cst.Arg(cst.Attribute(cst.Attribute(cst.Name("self"), cst.Name(attribute)), cst.Name(prop.name))),
+                                    cst.Arg(self.get_value(prop.data_type))
+                                ]
+                            ))
+                        ])
+                        stmts = updated_node.body.body
+                        updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=tuple(stmts[:i]) + (stmt, ) + tuple(stmts[i:])))
+                        i = i + 1
+                    if self.properties and self.properties[0].name == asserted_property:
+                        self.properties.pop(0)
+                i = i + 1
+        return updated_node
+
 class JsonSerializer(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, set):
@@ -440,12 +522,10 @@ class OpenApi:
         if 'default' not in maybe_with_format and format not in maybe_with_format:
             raise ValueError(f"Unsupported data type format: {format}")
 
-        if isinstance(maybe_with_format.get(format), dict):
-            pass
-
         python_type = maybe_with_format.get(format, maybe_with_format.get('default'))
         if data_type == "object":
             return self.classes.get(python_type, python_type)
+        return python_type
 
     def apply(self, spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool):
         print(f"Using spec {spec_file} for {schema_name} {class_name}")
@@ -462,7 +542,23 @@ class OpenApi:
             code = "".join(r.readlines())
 
         tree = cst.parse_module(code)
-        tree_updated = tree.visit(ApplySchemaTransformer(class_name, class_name, properties, deprecate=False))
+        tree_updated = tree.visit(ApplySchemaTransformer(class_name, class_name, properties.copy(), deprecate=False))
+
+        if dry_run:
+            diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
+            print("Diff:")
+            print("".join(diff))
+        else:
+            if not tree_updated.deep_equals(tree):
+                with open(filename, "w") as w:
+                    w.write(tree_updated.code)
+
+        filename = f"tests/{class_name}.py"
+        with open(filename, "r") as r:
+            code = "".join(r.readlines())
+
+        tree = cst.parse_module(code)
+        tree_updated = tree.visit(ApplySchemaTestTransformer(class_name, class_name, properties.copy(), deprecate=False))
 
         if dry_run:
             diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
