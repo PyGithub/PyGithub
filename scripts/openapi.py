@@ -527,7 +527,7 @@ class OpenApi:
             return self.classes.get(python_type, python_type)
         return python_type
 
-    def apply(self, spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool):
+    def apply(self, spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool, tests: bool):
         print(f"Using spec {spec_file} for {schema_name} {class_name}")
         with open(spec_file, 'r') as r:
             spec = json.load(r)
@@ -553,21 +553,22 @@ class OpenApi:
                 with open(filename, "w") as w:
                     w.write(tree_updated.code)
 
-        filename = f"tests/{class_name}.py"
-        with open(filename, "r") as r:
-            code = "".join(r.readlines())
+        if tests:
+            filename = f"tests/{class_name}.py"
+            with open(filename, "r") as r:
+                code = "".join(r.readlines())
 
-        tree = cst.parse_module(code)
-        tree_updated = tree.visit(ApplySchemaTestTransformer(class_name, class_name, properties.copy(), deprecate=False))
+            tree = cst.parse_module(code)
+            tree_updated = tree.visit(ApplySchemaTestTransformer(class_name, class_name, properties.copy(), deprecate=False))
 
-        if dry_run:
-            diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
-            print("Diff:")
-            print("".join(diff))
-        else:
-            if not tree_updated.deep_equals(tree):
-                with open(filename, "w") as w:
-                    w.write(tree_updated.code)
+            if dry_run:
+                diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
+                print("Diff:")
+                print("".join(diff))
+            else:
+                if not tree_updated.deep_equals(tree):
+                    with open(filename, "w") as w:
+                        w.write(tree_updated.code)
 
 
     def extend_inheritance(self, classes: dict[str, Any]) -> bool:
@@ -636,6 +637,7 @@ class OpenApi:
 
         subparsers = args_parser.add_subparsers(dest="subcommand")
         apply_parser = subparsers.add_parser("apply")
+        apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("schema_name", help="Name of schema under /components/schemas/")
         apply_parser.add_argument("class_name", help="Python class name")
@@ -652,7 +654,7 @@ class OpenApi:
 
     def main(self):
         if self.args.subcommand == "apply":
-            self.apply(self.args.spec, self.args.schema_name, self.args.class_name, self.args.filename, self.args.dry_run)
+            self.apply(self.args.spec, self.args.schema_name, self.args.class_name, self.args.filename, self.args.dry_run, self.args.tests)
         elif args.subcommand == "index":
             self.index(self.args.github_path, self.args.index_filename)
         else:
