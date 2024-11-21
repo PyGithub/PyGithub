@@ -132,12 +132,14 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
             "docstring": class_docstring,
             "schemas": class_schemas,
             "bases": class_bases,
-            "method": self._methods
+            "methods": self._methods
         }
+        self._methods = {}
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> Optional[bool]:
         method_name = node.name.value
         returns = cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None
+        returns = returns.split(".")[-1] if returns else None
 
         visitor = SimpleStringCollector()
         node.body.visit(visitor)
@@ -152,7 +154,7 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
                         "path": fields[1] if len(fields) > 1 else None,
                         "docs": fields[2] if len(fields) > 2 else None
                     },
-                    "returns": returns
+                    "returns": [returns]
                 }
 
 
@@ -620,7 +622,7 @@ class OpenApi:
 
         return updated
 
-    def index(self, github_path: str, index_filename: str):
+    def index(self, github_path: str, index_filename: str, verbose: bool):
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
         print(f"Indexing {len(files)} Python files")
 
@@ -641,21 +643,36 @@ class OpenApi:
         while self.extend_inheritance(classes):
             pass
 
-        # construct schema-to-class index
+        path_to_classes = {}
         schema_to_classes = {}
         for name, cls in classes.items():
+            # construct path-to-class index
+            for method in cls.get("methods", {}).values():
+                path = method.get("call", {}).get("path")
+                if not path:
+                    continue
+                if not path.startswith("/") and verbose:
+                    print(f"Unsupported path: {path}")
+                returns = method.get("returns", [])
+                if not path in path_to_classes:
+                    path_to_classes[path] = set()
+                path_to_classes[path] = sorted(list(set(path_to_classes[path]).union(set(returns))))
+
+            # construct schema-to-class index
             for schema in cls.get("schemas"):
-                if schema in schema_to_classes:
-                    print(f"Multiple classes for schema found: {name} and {schema_to_classes[schema]}")
-                schema_to_classes[schema] = name
+                if not schema in schema_to_classes:
+                    schema_to_classes[schema] = []
+                schema_to_classes[schema].append(name)
 
         print(f"Indexed {len(classes)} classes")
-        print(f"Indexed {len([cls for cls in classes.values() if cls.get('schema')])} schemas")
+        print(f"Indexed {len(path_to_classes)} paths")
+        print(f"Indexed {len(schema_to_classes)} schemas")
 
         data = {
             "sources": github_path,
             "classes": classes,
             "indices": {
+                "path_to_classes": path_to_classes,
                 "schema_to_classes": schema_to_classes,
             }
         }
@@ -663,13 +680,69 @@ class OpenApi:
         with open(index_filename, "w") as w:
             json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
 
+    def suggest(self, spec_file: str, index_filename: str, verbose: bool):
+        print(f"Using spec {spec_file}")
+        with open(spec_file, 'r') as r:
+            spec = json.load(r)
+        with open(index_filename, "r") as r:
+            index = json.load(r)
+
+        print("Suggesting API schemas for PyGithub classes")
+        available_schemas = {}
+        paths = set(spec.get('paths', {}).keys()).union(index.get("indices", {}).get("path_to_classes", {}).keys())
+        for path in paths:
+            # TODO: only inspects GET calls, should inspect any, use classes.CLASS.method.NAME.call.method.VALUE
+            responses_of_path = spec.get("paths", {}).get(path, {}).get("get", {}).get("responses", {})
+            schemas_of_path = [components.lstrip("#")
+                               for response in responses_of_path.values() if "content" in response
+                               for schema in [response.get("content").get("application/json", {}).get("schema", {})]
+                               for components in ([schema.get("$ref")] if "$ref" in schema else
+                                                  [component.get("$ref") for component in schema.get("oneOf", []) if "$ref" in component])]
+            classes_of_path = index.get("indices", {}).get("path_to_classes", {}).get(path, [])
+
+            for cls in classes_of_path:
+                if cls not in available_schemas:
+                    available_schemas[cls] = {}
+                available_schemas[cls][path] = set(schemas_of_path)
+
+        classes = index.get("classes", {})
+        for cls, available in sorted(available_schemas.items(), key=lambda v: v[0]):
+            if cls not in classes:
+                if verbose:
+                    print(f"Unknown class {cls}")
+                continue
+
+            implemented = classes.get(cls, {}).get("schemas", [])
+            paths = available.keys()
+            available = {a for s in available.values() for a in s}
+            schemas_to_implement = sorted(list(available.difference(set(implemented))))
+            schemas_to_remove = sorted(list(set(implemented).difference(available)))
+            if schemas_to_implement or schemas_to_remove:
+                print()
+                print(f"Class {cls}:")
+                for schema_to_implement in schemas_to_implement:
+                    print(f"- should implement schema {schema_to_implement}")
+                for schema_to_remove in schemas_to_remove:
+                    print(f"- should not implement schema {schema_to_remove}")
+                print("Paths returning the class:")
+                for path in paths:
+                    print(f"- {path}")
+
     @staticmethod
     def parse_args():
         args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
-        args_parser.add_argument("--index-filename", help="filename of the index file")
-        args_parser.add_argument("--dry-run", default=False, action="store_true", help="show prospect changes and do not modify any files")
+        args_parser.add_argument("--dry-run", default=False, action="store_true", help="Show prospect changes and do not modify any files")
+        args_parser.add_argument("--verbose", default=False, action="store_true", help="Provide more information")
 
         subparsers = args_parser.add_subparsers(dest="subcommand")
+        index_parser = subparsers.add_parser("index")
+        index_parser.add_argument("github_path", help="Path to Github Python files")
+        index_parser.add_argument("index_filename", help="Path of index file")
+
+        suggest_parser = subparsers.add_parser("suggest")
+        suggest_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        suggest_parser.add_argument("index_filename", help="Path of index file")
+
         apply_parser = subparsers.add_parser("apply")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
@@ -677,9 +750,6 @@ class OpenApi:
         apply_parser.add_argument("class_name", help="Python class name")
         apply_parser.add_argument("filename", nargs="?", help="Python file")
 
-        index_parser = subparsers.add_parser("index")
-        index_parser.add_argument("github_path", help="Path to Github Python files")
-        index_parser.add_argument("index_filename", help="Path of index file")
 
         if len(sys.argv) == 1:
             args_parser.print_help()
@@ -687,10 +757,12 @@ class OpenApi:
         return args_parser.parse_args()
 
     def main(self):
-        if self.args.subcommand == "apply":
+        if args.subcommand == "index":
+            self.index(self.args.github_path, self.args.index_filename, self.args.verbose)
+        elif self.args.subcommand == "suggest":
+            self.suggest(self.args.spec, self.args.index_filename, self.args.verbose)
+        elif self.args.subcommand == "apply":
             self.apply(self.args.spec, self.args.schema_name, self.args.class_name, self.args.filename, self.args.dry_run, self.args.tests)
-        elif args.subcommand == "index":
-            self.index(self.args.github_path, self.args.index_filename)
         else:
             raise RuntimeError("Subcommand not implemented " + args.subcommand)
 
