@@ -86,6 +86,7 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.Copilot
 import github.Event
 import github.GithubObject
 import github.HookDelivery
@@ -112,6 +113,7 @@ from github.GithubObject import (
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.Copilot import Copilot
     from github.Event import Event
     from github.Hook import Hook
     from github.Installation import Installation
@@ -1052,6 +1054,13 @@ class Organization(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/{secret_type}/secrets/public-key")
         return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
+
+    def get_copilot(self) -> Copilot:
+        """
+        :calls: Various Copilot-related endpoints for this organization
+        :rtype: :class:`github.Copilot.Copilot`
+        """
+        return github.Copilot.Copilot(self._requester, self.login)
 
     def get_repo(self, name: str) -> Repository:
         """
