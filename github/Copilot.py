@@ -57,7 +57,7 @@ class Copilot(NonCompletableGithubObject):
         )
         return data["seats_created"]
 
-    def remove_seat(self, selected_usernames: list[str]) -> int:
+    def remove_seats(self, selected_usernames: list[str]) -> int:
         """
         :calls: `DELETE /orgs/{org}/copilot/billing/selected_users <https://docs.github.com/en/rest/copilot/copilot-business>`_
         :param selected_usernames: List of usernames to remove Copilot seats for
