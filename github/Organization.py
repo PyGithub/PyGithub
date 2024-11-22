@@ -1057,8 +1057,7 @@ class Organization(CompletableGithubObject):
 
     def get_copilot(self) -> Copilot:
         """
-        :calls: Various Copilot-related endpoints for this organization
-        :rtype: :class:`github.Copilot.Copilot`
+        :calls: Various Copilot-related endpoints for this organization :rtype: :class:`github.Copilot.Copilot`
         """
         return github.Copilot.Copilot(self._requester, self.login)
 

@@ -47,11 +47,7 @@ class Copilot(Framework.TestCase):
 
     def testGetAllSeats(self):
         seats = self.copilot.get_all_seats()
-        self.assertListKeyEqual(
-            seats,
-            lambda s: s.assignee.login,
-            ["pashafateev"]
-        )
+        self.assertListKeyEqual(seats, lambda s: s.assignee.login, ["pashafateev"])
 
     def testAddSeat(self):
         seats_created = self.copilot.add_seat(["pashafateev"])

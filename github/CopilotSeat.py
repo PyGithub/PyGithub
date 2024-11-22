@@ -1,22 +1,23 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 import github.NamedUser
 import github.Team
-from github.GithubObject import NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, _NotSetType
 
 
 class CopilotSeat(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
-        self._created_at = NotSet
-        self._updated_at = NotSet
-        self._pending_cancellation_date = NotSet
-        self._last_activity_at = NotSet
-        self._last_activity_editor = NotSet
-        self._plan_type = NotSet
-        self._assignee = NotSet
-        self._assigning_team = NotSet
+        self._created_at: Attribute[datetime] | _NotSetType = NotSet
+        self._updated_at: Attribute[datetime] | _NotSetType = NotSet
+        self._pending_cancellation_date: Attribute[datetime] | _NotSetType = NotSet
+        self._last_activity_at: Attribute[datetime] | _NotSetType = NotSet
+        self._last_activity_editor: Attribute[str] | _NotSetType = NotSet
+        self._plan_type: Attribute[str] | _NotSetType = NotSet
+        self._assignee: Attribute[github.NamedUser.NamedUser] | _NotSetType = NotSet
+        self._assigning_team: Attribute[github.Team.Team] | _NotSetType = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:
@@ -40,19 +41,19 @@ class CopilotSeat(NonCompletableGithubObject):
         return self.get__repr__({"assignee": self._assignee.value})
 
     @property
-    def created_at(self) -> str:
+    def created_at(self) -> datetime:
         return self._created_at.value
 
     @property
-    def updated_at(self) -> str:
+    def updated_at(self) -> datetime:
         return self._updated_at.value
 
     @property
-    def pending_cancellation_date(self) -> str:
+    def pending_cancellation_date(self) -> datetime:
         return self._pending_cancellation_date.value
 
     @property
-    def last_activity_at(self) -> str:
+    def last_activity_at(self) -> datetime:
         return self._last_activity_at.value
 
     @property

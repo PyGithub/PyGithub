@@ -8,10 +8,11 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.CopilotSeat import CopilotSeat
+    from github.Requester import Requester
 
 
 class Copilot(NonCompletableGithubObject):
-    def __init__(self, requester, org_name):
+    def __init__(self, requester: Requester, org_name: str) -> None:
         super().__init__(requester, {}, {"org_name": org_name}, True)
 
     def _initAttributes(self) -> None:
