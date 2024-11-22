@@ -85,6 +85,15 @@ class Commit(Framework.TestCase):
             'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',
         )
 
+    def testGetBranchesWhereHead(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        commit = repo.get_commit("0791cc7b1a706ab5d7c607ddff35de4d486ba3e9")
+        self.assertListKeyEqual(
+            commit.get_branches_where_head(),
+            lambda b: b.name,
+            ["release-v2-0"],
+        )
+
     def testGetComments(self):
         self.assertListKeyEqual(
             self.commit.get_comments(),
