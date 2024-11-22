@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2024 Pavel Fateev <pavel.m.fateev@gmail.com>                          #
+# Copyright 2024 Pasha Fateev <pashafateev@users.noreply.github.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
