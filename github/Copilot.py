@@ -42,7 +42,7 @@ class Copilot(NonCompletableGithubObject):
             list_item="seats",
         )
 
-    def add_seat(self, selected_usernames: list[str]) -> int:
+    def add_seats(self, selected_usernames: list[str]) -> int:
         """
         :calls: `POST /orgs/{org}/copilot/billing/selected_users <https://docs.github.com/en/rest/copilot/copilot-business>`_
         :param selected_usernames: List of usernames to add Copilot seats for
