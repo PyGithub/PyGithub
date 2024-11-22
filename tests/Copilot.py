@@ -45,8 +45,8 @@ class Copilot(Framework.TestCase):
         self.assertEqual(seat.assignee.login, "pashafateev")
         self.assertEqual(repr(seat), 'CopilotSeat(assignee=NamedUser(login="pashafateev"))')
 
-    def testGetAllSeats(self):
-        seats = self.copilot.get_all_seats()
+    def testGetSeats(self):
+        seats = self.copilot.get_seats()
         self.assertListKeyEqual(seats, lambda s: s.assignee.login, ["pashafateev"])
 
     def testAddSeat(self):
