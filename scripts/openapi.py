@@ -651,12 +651,20 @@ class OpenApi:
                 path = method.get("call", {}).get("path")
                 if not path:
                     continue
+                verb = method.get("call", {}).get("method", "").lower()
+                if not verb:
+                    if verbose:
+                        print(f"Unknown verb for path {path} of class {name}")
+                    continue
+
                 if not path.startswith("/") and verbose:
                     print(f"Unsupported path: {path}")
                 returns = method.get("returns", [])
                 if not path in path_to_classes:
-                    path_to_classes[path] = set()
-                path_to_classes[path] = sorted(list(set(path_to_classes[path]).union(set(returns))))
+                    path_to_classes[path] = {}
+                if verb not in path_to_classes[path]:
+                    path_to_classes[path][verb] = set()
+                path_to_classes[path][verb] = sorted(list(set(path_to_classes[path][verb]).union(set(returns))))
 
             # construct schema-to-class index
             for schema in cls.get("schemas"):
