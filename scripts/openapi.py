@@ -699,30 +699,39 @@ class OpenApi:
         available_schemas = {}
         paths = set(spec.get('paths', {}).keys()).union(index.get("indices", {}).get("path_to_classes", {}).keys())
         for path in paths:
-            # TODO: only inspects GET calls, should inspect any, use classes.CLASS.method.NAME.call.method.VALUE
-            responses_of_path = spec.get("paths", {}).get(path, {}).get("get", {}).get("responses", {})
-            schemas_of_path = [components.lstrip("#")
-                               for response in responses_of_path.values() if "content" in response
-                               for schema in [response.get("content").get("application/json", {}).get("schema", {})]
-                               for components in ([schema.get("$ref")] if "$ref" in schema else
-                                                  [component.get("$ref") for component in schema.get("oneOf", []) if "$ref" in component])]
-            classes_of_path = index.get("indices", {}).get("path_to_classes", {}).get(path, [])
+            for verb in spec.get("paths", {}).get(path, {}).keys():
+                responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
+                schemas_of_path = [components.lstrip("#")
+                                   for response in responses_of_path.values() if "content" in response
+                                   for schema in [response.get("content").get("application/json", {}).get("schema", {})]
+                                   for components in ([schema.get("$ref")] if "$ref" in schema else
+                                                      [component.get("$ref") for component in schema.get("oneOf", []) if "$ref" in component])]
+                classes_of_path = index.get("indices", {}).get("path_to_classes", {}).get(path, {}).get(verb, [])
 
-            for cls in classes_of_path:
-                if cls not in available_schemas:
-                    available_schemas[cls] = {}
-                available_schemas[cls][path] = set(schemas_of_path)
+                for cls in classes_of_path:
+                    if cls not in available_schemas:
+                        available_schemas[cls] = {}
+                    if verb not in available_schemas[cls]:
+                        available_schemas[cls][verb] = {}
+                    available_schemas[cls][verb][path] = set(schemas_of_path)
 
         classes = index.get("classes", {})
-        for cls, available in sorted(available_schemas.items(), key=lambda v: v[0]):
+        for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
             if cls not in classes:
                 if verbose:
                     print(f"Unknown class {cls}")
                 continue
 
+            paths = {}
+            available = set()
             implemented = classes.get(cls, {}).get("schemas", [])
-            paths = available.keys()
-            available = {a for s in available.values() for a in s}
+
+            for verb, available_paths in available_verbs.items():
+                if verb not in paths:
+                    paths[verb] = set()
+                paths[verb] = paths[verb].union(available_paths.keys())
+                available = available.union({a for s in available_paths.values() for a in s})
+
             schemas_to_implement = sorted(list(available.difference(set(implemented))))
             schemas_to_remove = sorted(list(set(implemented).difference(available)))
             if schemas_to_implement or schemas_to_remove:
@@ -733,8 +742,9 @@ class OpenApi:
                 for schema_to_remove in schemas_to_remove:
                     print(f"- should not implement schema {schema_to_remove}")
                 print("Paths returning the class:")
-                for path in paths:
-                    print(f"- {path}")
+                for verb, verb_paths in sorted(paths.items(), key=lambda v: v[0]):
+                    for path in verb_paths:
+                        print(f"- {verb.upper()} {path}")
 
     @staticmethod
     def parse_args():
