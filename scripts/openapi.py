@@ -139,7 +139,14 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
     def visit_FunctionDef(self, node: cst.FunctionDef) -> Optional[bool]:
         method_name = node.name.value
         returns = cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None
-        returns = returns.split(".")[-1] if returns else None
+        if returns:
+            if "[" in returns and "]" in returns:
+                prefix, remain = returns.split("[", maxsplit=1)
+                inner, suffix = remain.split("]", maxsplit=1)
+                inner = inner.split(".")[-1]
+                returns = f"{prefix}[{inner}]{suffix}"
+            else:
+                returns = returns.split(".")[-1]
 
         visitor = SimpleStringCollector()
         node.body.visit(visitor)
@@ -701,14 +708,22 @@ class OpenApi:
         for path in paths:
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
+                # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
                 schemas_of_path = [components.lstrip("#")
                                    for response in responses_of_path.values() if "content" in response
                                    for schema in [response.get("content").get("application/json", {}).get("schema", {})]
                                    for components in ([schema.get("$ref")] if "$ref" in schema else
-                                                      [component.get("$ref") for component in schema.get("oneOf", []) if "$ref" in component])]
+                                                      [component.get("$ref") for component in schema.get("oneOf", [schema.get("items")] if "items" in schema else []) if "$ref" in component])]
                 classes_of_path = index.get("indices", {}).get("path_to_classes", {}).get(path, {}).get(verb, [])
 
                 for cls in classes_of_path:
+                    # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
+                    if cls.endswith(" | None"):
+                        cls = cls[:-7]
+                    if cls.startswith("list[") and cls.endswith("]"):
+                        cls = cls[5:-1]
+                    if cls.endswith(" | None"):
+                        cls = cls[:-7]
                     if cls not in available_schemas:
                         available_schemas[cls] = {}
                     if verb not in available_schemas[cls]:
@@ -717,6 +732,8 @@ class OpenApi:
 
         classes = index.get("classes", {})
         for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
+            if cls in ['bool', 'str']:
+                continue
             if cls not in classes:
                 if verbose:
                     print(f"Unknown class {cls}")
@@ -737,13 +754,13 @@ class OpenApi:
             if schemas_to_implement or schemas_to_remove:
                 print()
                 print(f"Class {cls}:")
-                for schema_to_implement in schemas_to_implement:
+                for schema_to_implement in sorted(schemas_to_implement):
                     print(f"- should implement schema {schema_to_implement}")
-                for schema_to_remove in schemas_to_remove:
+                for schema_to_remove in sorted(schemas_to_remove):
                     print(f"- should not implement schema {schema_to_remove}")
                 print("Paths returning the class:")
                 for verb, verb_paths in sorted(paths.items(), key=lambda v: v[0]):
-                    for path in verb_paths:
+                    for path in sorted(verb_paths):
                         print(f"- {verb.upper()} {path}")
 
     @staticmethod
