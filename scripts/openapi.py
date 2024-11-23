@@ -722,12 +722,20 @@ class OpenApi:
 
                 for cls in classes_of_path:
                     # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
-                    if cls.endswith(" | None"):
-                        cls = cls[:-7]
-                    if cls.startswith("list[") and cls.endswith("]"):
-                        cls = cls[5:-1]
-                    if cls.endswith(" | None"):
-                        cls = cls[:-7]
+                    orig_cls = cls
+                    while True:
+                        if cls.startswith("None | "):
+                            cls = cls[7:]
+                        if cls.endswith(" | None"):
+                            cls = cls[:-7]
+                        if cls.startswith("list[") and cls.endswith("]"):
+                            cls = cls[5:-1]
+                        if cls.startswith("PaginatedList[") and cls.endswith("]"):
+                            cls = cls[14:-1]
+                        if cls == orig_cls:
+                            break
+                        orig_cls = cls
+
                     if cls not in available_schemas:
                         available_schemas[cls] = {}
                     if verb not in available_schemas[cls]:
