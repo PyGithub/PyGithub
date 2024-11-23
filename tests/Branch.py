@@ -118,7 +118,12 @@ class Branch(Framework.TestCase):
         )
         self.assertListKeyEqual(
             branch_protection.required_pull_request_reviews.dismissal_teams,
-            lambda u: u.slug,
+            lambda t: t.slug,
+            [],
+        )
+        self.assertListKeyEqual(
+            branch_protection.required_pull_request_reviews.dismissal_apps,
+            lambda a: a.slug,
             [],
         )
         self.assertListKeyEqual(
