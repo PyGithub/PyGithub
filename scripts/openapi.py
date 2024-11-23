@@ -695,6 +695,16 @@ class OpenApi:
         while self.extend_inheritance(classes):
             pass
 
+        # construct class_to_descendants
+        class_to_descendants = {}
+        for name, descendant in classes.items():
+            for cls in descendant.get("inheritance", []):
+                if cls not in class_to_descendants:
+                    class_to_descendants[cls] = []
+                class_to_descendants[cls].append(name)
+        class_to_descendants = {cls: sorted(descendants)
+                                for cls, descendants in class_to_descendants.items()}
+
         path_to_classes = {}
         schema_to_classes = {}
         for name, cls in classes.items():
@@ -732,6 +742,7 @@ class OpenApi:
             "sources": github_path,
             "classes": classes,
             "indices": {
+                "class_to_descendants": class_to_descendants,
                 "path_to_classes": path_to_classes,
                 "schema_to_classes": schema_to_classes,
             }
