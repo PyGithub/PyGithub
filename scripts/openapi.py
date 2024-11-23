@@ -59,6 +59,19 @@ class Property:
     deprecated: bool
 
 
+class SimpleStringCollector(cst.CSTVisitor):
+    def __init__(self):
+        super().__init__()
+        self._strings = []
+
+    @property
+    def strings(self):
+        return self._strings
+
+    def visit_SimpleString(self, node: cst.SimpleString) -> Optional[bool]:
+        self._strings.append(node.evaluated_value)
+
+
 class IndexPythonClassesVisitor(cst.CSTVisitor):
     def __init__(self):
         super().__init__()
@@ -66,6 +79,7 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
         self._package = None
         self._filename = None
         self._classes = {}
+        self._methods = {}
 
     def module(self, module: str):
         self._module = module
@@ -80,7 +94,7 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
     def classes(self) -> dict[str, Any]:
         return self._classes
 
-    def visit_ClassDef(self, node: cst.ClassDef) -> Optional[bool]:
+    def leave_ClassDef(self, node: cst.ClassDef) -> Optional[bool]:
         class_name = node.name.value
         class_docstring = None
         class_schemas = []
@@ -118,8 +132,28 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
             "docstring": class_docstring,
             "schemas": class_schemas,
             "bases": class_bases,
+            "method": self._methods
         }
-        return False
+
+    def visit_FunctionDef(self, node: cst.FunctionDef) -> Optional[bool]:
+        method_name = node.name.value
+        returns = cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None
+
+        visitor = SimpleStringCollector()
+        node.body.visit(visitor)
+        if visitor.strings:
+            string = [line for line in visitor.strings[0].splitlines() if ":calls:" in line]
+            if string:
+                fields = string[0].split(":calls:")[1].strip(" `").split(" ", maxsplit=2)
+                self._methods[method_name] = {
+                    "name": method_name,
+                    "call": {
+                        "method": fields[0] if len(fields) > 0 else None,
+                        "path": fields[1] if len(fields) > 1 else None,
+                        "docs": fields[2] if len(fields) > 2 else None
+                    },
+                    "returns": returns
+                }
 
 
 class ApplySchemaBaseTransformer(cst.CSTTransformer, abc.ABC):
