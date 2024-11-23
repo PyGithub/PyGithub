@@ -215,7 +215,6 @@ class Commit(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches-where-head")
         return [github.Branch.Branch(self._requester, headers, item, completed=True) for item in data]
 
-
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
