@@ -46,6 +46,7 @@ class GithubClass:
     filename: str
     bases: list[str]
     inheritance: list[str]
+    methods: dict
     schemas: list[str]
     docstring: str
 
@@ -55,7 +56,7 @@ class GithubClass:
 @dataclasses.dataclass(frozen=True)
 class Property:
     name: str
-    data_type: str | GithubClass | None
+    data_type: str | GithubClass | list[GithubClass] | None
     deprecated: bool
 
 
@@ -186,25 +187,26 @@ class BaseTransformer(cst.CSTTransformer, abc.ABC):
 
 
 class ApplySchemaBaseTransformer(BaseTransformer, abc.ABC):
-    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
+    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], deprecate: bool):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
-        self.properties = sorted([Property(name=k, data_type=GithubClass(**v[0]) if isinstance(v[0], dict) else v[0], deprecated=v[1])
+        self.properties = sorted([Property(name=k, data_type=GithubClass(**v[0]) if isinstance(v[0], dict) else (
+            [GithubClass(**v) for v in v[0]] if isinstance(v[0], list) else v[0]), deprecated=v[1])
                                   for k, v in properties.items()],
                                  key=lambda p: p.name)
         self.all_properties = self.properties.copy()
         self.deprecate = deprecate
 
     @property
-    def current_property(self) -> Property | GithubClass | None:
+    def current_property(self) -> Property | None:
         if not self.properties:
             return None
         return self.properties[0]
 
 
 class ApplySchemaTransformer(ApplySchemaBaseTransformer):
-    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
+    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], deprecate: bool):
         super().__init__(module_name, class_name, properties, deprecate)
 
     @staticmethod
@@ -331,8 +333,17 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             ])
         )
 
-    @staticmethod
-    def create_type(data_type: str | GithubClass, short_class_name: bool = False) -> cst.BaseExpression:
+    @classmethod
+    def create_type(cls, data_type: str | GithubClass | list[GithubClass], short_class_name: bool = False) -> cst.BaseExpression:
+        if isinstance(data_type, list):
+            if len(data_type) == 0:
+                return cst.Name("None")
+            if len(data_type) == 1:
+                return cls.create_type(data_type[0], short_class_name)
+            result = cst.BinaryOperation(cls.create_type(data_type[0]), cst.BitOr(), cls.create_type(data_type[1]))
+            for dt in data_type[2:]:
+                result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt))
+            return result
         if isinstance(data_type, GithubClass):
             if short_class_name:
                 return cst.Name(data_type.name)
@@ -452,12 +463,12 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
 
-class ApplySchemaTestTransformer(BaseTransformer):
-    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
+class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
+    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], deprecate: bool):
         super().__init__(module_name, class_name, properties, deprecate)
 
-    def get_value(self, data_type: str | GithubClass) -> Any:
-        if isinstance(data_type, GithubClass):
+    def get_value(self, data_type: str | GithubClass | list[GithubClass]) -> Any:
+        if isinstance(data_type, (GithubClass, list)):
             return cst.Call(func=cst.Name("object"))
         if data_type == "bool":
             return cst.Expr(cst.Name("False"))
@@ -567,14 +578,14 @@ class OpenApi:
         index = OpenApi.read_index(args.index_filename) if self.subcommand != "index" and 'index_filename' in args else {}
         self.classes = index.get("classes", {})
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
-        self.schema_to_class['default'] = "GithubObject"
+        self.schema_to_class['default'] = ["GithubObject"]
 
     @staticmethod
     def read_index(filename: str) -> dict[str, Any]:
         with open(filename, 'r') as r:
             return json.load(r)
 
-    def as_python_type(self, data_type: str | None, format: str | None) -> str | None:
+    def as_python_type(self, data_type: str | None, format: str | None) -> str | dict | list | None:
         if data_type is None:
             return None
 
@@ -605,7 +616,13 @@ class OpenApi:
 
         python_type = maybe_with_format.get(format, maybe_with_format.get('default'))
         if data_type == "object":
-            return self.classes.get(python_type, python_type)
+            if not isinstance(python_type, list):
+                raise ValueError(f"Expected list of types for data type: {data_type}")
+            if len(python_type) == 0:
+                raise ValueError(f"Expected non-empty list of types for data type: {data_type}")
+            if len(python_type) == 1:
+                return self.classes.get(python_type[0], python_type[0])
+            return [self.classes.get(cls, cls) for cls in python_type]
         return python_type
 
     @staticmethod
@@ -645,34 +662,47 @@ class OpenApi:
                 with open(filename, "w") as w:
                     w.write(updated_code)
 
-    def apply(self, spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool, tests: bool):
-        print(f"Using spec {spec_file} for {schema_name} {class_name}")
+    def apply(self, spec_file: str, index_filename: str, class_name: str, dry_run: bool, tests: bool):
+        full_class_name = class_name
+        if '.' not in class_name:
+            full_class_name = f'github.{class_name}.{class_name}'
+        package, module, class_name = full_class_name.split('.', maxsplit=2)
+        filename = f"{package}/{module}.py"
+        test_filename = f"tests/{module}.py"
+
+        print(f"Applying spec {spec_file} to {full_class_name} ({filename})")
         with open(spec_file, 'r') as r:
             spec = json.load(r)
+        with open(index_filename, "r") as r:
+            index = json.load(r)
 
         schemas = spec.get('components', {}).get('schemas', {})
-        schema = schemas.get(schema_name, {})
-        properties = {k: (self.as_python_type(v.get("type") or "object", v.get("format") or v.get("$ref", "").strip("# ") or v.get("items", {}).get("type") or v.get("items", {}).get("$ref")), v.get("deprecated", False)) for k, v in schema.get("properties", {}).items()}
+        for schema_name in index.get("classes", {}).get(class_name, {}).get("schemas", []):
+            if not schema_name.startswith('/components/schemas/'):
+                print(f"Unsupported schema {schema_name}")
+                continue
+            schema_name = schema_name[20:]
 
-        if filename is None:
-            filename = f"github/{class_name}.py"
-        with open(filename, "r") as r:
-            code = "".join(r.readlines())
+            print(f"Applying schema {schema_name}")
+            schema = schemas.get(schema_name, {})
+            properties = {k: (self.as_python_type(v.get("type") or "object", v.get("format") or v.get("$ref", "").strip("# ") or v.get("items", {}).get("type") or v.get("items", {}).get("$ref")), v.get("deprecated", False)) for k, v in schema.get("properties", {}).items()}
 
-        transformer = ApplySchemaTransformer(class_name, class_name, properties.copy(), deprecate=False)
-        tree = cst.parse_module(code)
-        tree_updated = tree.visit(transformer)
-        self.write_code(code, tree_updated.code, filename, dry_run)
-
-        if tests:
-            filename = f"tests/{class_name}.py"
             with open(filename, "r") as r:
                 code = "".join(r.readlines())
 
-            transformer = ApplySchemaTestTransformer(class_name, class_name, properties.copy(), deprecate=False)
+            transformer = ApplySchemaTransformer(class_name, class_name, properties.copy(), deprecate=False)
             tree = cst.parse_module(code)
             tree_updated = tree.visit(transformer)
             self.write_code(code, tree_updated.code, filename, dry_run)
+
+            if tests:
+                with open(test_filename, "r") as r:
+                    code = "".join(r.readlines())
+
+                transformer = ApplySchemaTestTransformer(class_name, class_name, properties.copy(), deprecate=False)
+                tree = cst.parse_module(code)
+                tree_updated = tree.visit(transformer)
+                self.write_code(code, tree_updated.code, test_filename, dry_run)
 
     def index(self, github_path: str, index_filename: str, verbose: bool):
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
@@ -873,9 +903,8 @@ class OpenApi:
         apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
-        apply_parser.add_argument("schema_name", help="Name of schema under /components/schemas/")
-        apply_parser.add_argument("class_name", help="Python class name")
-        apply_parser.add_argument("filename", nargs="?", help="Python file")
+        apply_parser.add_argument("index_filename", help="Path of index file")
+        apply_parser.add_argument("class_name", help="PyGithub GithubObject class name")
 
 
         if len(sys.argv) == 1:
@@ -889,7 +918,7 @@ class OpenApi:
         elif self.args.subcommand == "suggest":
             self.suggest(self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run, self.args.verbose)
         elif self.args.subcommand == "apply":
-            self.apply(self.args.spec, self.args.schema_name, self.args.class_name, self.args.filename, self.args.dry_run, self.args.tests)
+            self.apply(self.args.spec, self.args.index_filename, self.args.class_name, self.args.dry_run, self.args.tests)
         else:
             raise RuntimeError("Subcommand not implemented " + args.subcommand)
 
