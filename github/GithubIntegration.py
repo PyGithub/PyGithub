@@ -179,13 +179,14 @@ class GithubIntegration:
         return GithubIntegration(**kwargs)
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the
-        GithubIntegration object as a context manager:
+        """
+        Close connections to the server. Alternatively, use the GithubIntegration object as a context manager:
 
         .. code-block:: python
 
           with github.GithubIntegration(...) as gi:
             # do something
+
         """
         self.__requester.close()
 
@@ -196,10 +197,15 @@ class GithubIntegration:
         self.close()
 
     def get_github_for_installation(
-        self, installation_id: int, token_permissions: dict[str, str] | None = None
+        self,
+        installation_id: int,
+        token_permissions: dict[str, str] | None = None,
+        token_repositories: list[str | int] | None = None,
     ) -> github.Github:
         # The installation has to authenticate as an installation, not an app
-        auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
+        auth = self.auth.get_installation_auth(
+            installation_id, token_permissions, token_repositories, requester=self.__requester
+        )
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     @property
@@ -243,7 +249,10 @@ class GithubIntegration:
         return self.auth.create_jwt(expiration)
 
     def get_access_token(
-        self, installation_id: int, permissions: dict[str, str] | None = None
+        self,
+        installation_id: int,
+        permissions: dict[str, str] | None = None,
+        repositories: list[str | int] | None = None,
     ) -> InstallationAuthorization:
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
@@ -251,10 +260,25 @@ class GithubIntegration:
         if permissions is None:
             permissions = {}
 
+        if repositories is not None and not (
+            isinstance(repositories, list) and all(isinstance(r, (str, int)) for r in repositories)
+        ):
+            raise GithubException(status=400, data={"message": "Invalid repositories"}, headers=None)
+
         if not isinstance(permissions, dict):
             raise GithubException(status=400, data={"message": "Invalid permissions"}, headers=None)
 
-        body = {"permissions": permissions}
+        body: dict[str, Any] = {"permissions": permissions}
+        body["permissions"] = permissions
+        if repositories:
+            repo_names = [r for r in repositories if isinstance(r, str)]
+            repo_ids = [r for r in repositories if isinstance(r, int)]
+
+            if repo_names:
+                body["repositories"] = repo_names
+            if repo_ids:
+                body["repository_ids"] = repo_ids
+
         headers, response = self.__requester.requestJsonAndCheck(
             "POST",
             f"/app/installations/{installation_id}/access_tokens",
