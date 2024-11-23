@@ -51,7 +51,6 @@ class SortMethodsTransformer(cst.CSTTransformer):
             if not any(base.value.value.endswith("GithubObject") if isinstance(base.value, cst.Name) else (base.value.value.value.endswith("GithubObject") if isinstance(base.value.value, cst.Name) else base.value.value.attr.value.endswith("GithubObject")) for base in updated_node.bases):
                 return updated_node
 
-
             statements = list(updated_node.body.body)
             if sum(1 for s in statements if isinstance(s, cst.FunctionDef)) == 0:
                 raise ValueError(f"There are no functions in class {self.current_class_name}")
@@ -113,13 +112,20 @@ class SortMethodsTransformer(cst.CSTTransformer):
         return updated_node
 
 
-def main(file_name: str, dry_run: bool):
-    print(file_name)
-    with open(file_name, "r") as r:
+def main(class_name: str, dry_run: bool):
+    full_class_name = class_name
+    if '.' not in class_name:
+        full_class_name = f'github.{class_name}.{class_name}'
+    package, module, class_name = full_class_name.split('.', maxsplit=2)
+    filename = f"{package}/{module}.py"
+
+    print(f"Sorting {full_class_name} ({filename})")
+    with open(filename, "r") as r:
         code = "".join(r.readlines())
 
     tree = cst.parse_module(code)
-    tree_updated = tree.visit(SortMethodsTransformer())
+    transformer = SortMethodsTransformer(class_name)
+    tree_updated = tree.visit(transformer)
 
     if dry_run:
         diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
@@ -127,13 +133,13 @@ def main(file_name: str, dry_run: bool):
         print("".join(diff))
     else:
         if not tree_updated.deep_equals(tree):
-            with open(file_name, "w") as w:
+            with open(filename, "w") as w:
                 w.write(tree_updated.code)
 
 
 def parse_args():
     args_parser = argparse.ArgumentParser(description="Sorts methods of GithubObject classes, also sorts attributes in _initAttributes and _useAttributes")
-    args_parser.add_argument("filename", help="Python file to modify")
+    args_parser.add_argument("class_name", help="GithubObject class to sort, e.g. HookDelivery or github.HookDelivery.HookDeliverySummary")
     args_parser.add_argument("--dry-run", default=False, action="store_true", help="show prospect changes and do not modify the file")
     if len(sys.argv) == 1:
         args_parser.print_help()
@@ -143,4 +149,4 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    main(args.filename, args.dry_run)
+    main(args.class_name, args.dry_run)
