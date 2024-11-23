@@ -14,6 +14,8 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -75,6 +77,9 @@ class Installation(Framework.BasicTestCase):
                 pool_size=10,
                 seconds_between_requests=100,
                 seconds_between_writes=1000,
+                # v3: this should not be the default value, so if this has been changed in v3,
+                # change it here is well
+                lazy=True,
             )
 
             # assert kwargs consists of ALL requester constructor arguments

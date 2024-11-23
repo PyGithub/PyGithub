@@ -91,8 +91,8 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
             self._requester,
             self.url,
             url_parameters,
-            None,
-            "users",
+            headers=None,
+            list_item="users",
             firstData=self.raw_data,
             firstHeaders=self.raw_headers,
         )
