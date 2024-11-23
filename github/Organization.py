@@ -910,7 +910,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
         )
-        return github.HookDelivery.HookDelivery(self._requester, headers, data, completed=True)
+        return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
     def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
         """
@@ -1366,7 +1366,6 @@ class Organization(CompletableGithubObject):
             requester=self._requester,
             headers=headers,
             attributes=data,
-            completed=False,
         )
 
     def create_custom_properties(self, properties: list[CustomProperty]) -> list[OrganizationCustomProperty]:
@@ -1384,7 +1383,7 @@ class Organization(CompletableGithubObject):
         )
         return [
             github.OrganizationCustomProperty.OrganizationCustomProperty(
-                requester=self._requester, headers=headers, attributes=property, completed=True
+                requester=self._requester, headers=headers, attributes=property
             )
             for property in data
         ]
@@ -1405,7 +1404,7 @@ class Organization(CompletableGithubObject):
             "PUT", f"{self.url}/properties/schema/{property_name}", input=post_parameters
         )
         return github.OrganizationCustomProperty.OrganizationCustomProperty(
-            requester=self._requester, headers=headers, attributes=data, completed=True
+            requester=self._requester, headers=headers, attributes=data
         )
 
     def remove_custom_property(self, property_name: str) -> None:
