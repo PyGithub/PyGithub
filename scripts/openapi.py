@@ -707,6 +707,18 @@ class OpenApi:
         else:
             print("Suggesting API schemas for PyGithub classes")
 
+        def inner_return_type(return_type: str) -> str:
+            return_type = return_type.strip()
+            if return_type.startswith("None | "):
+                return_type = return_type[7:]
+            if return_type.endswith(" | None"):
+                return_type = return_type[:-7]
+            if return_type.startswith("list[") and return_type.endswith("]"):
+                return_type = return_type[5:-1]
+            if return_type.startswith("PaginatedList[") and return_type.endswith("]"):
+                return_type = return_type[14:-1]
+            return return_type
+
         available_schemas = {}
         paths = set(spec.get('paths', {}).keys()).union(index.get("indices", {}).get("path_to_classes", {}).keys())
         for path in paths:
@@ -722,19 +734,18 @@ class OpenApi:
 
                 for cls in classes_of_path:
                     # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
-                    orig_cls = cls
                     while True:
-                        if cls.startswith("None | "):
-                            cls = cls[7:]
-                        if cls.endswith(" | None"):
-                            cls = cls[:-7]
-                        if cls.startswith("list[") and cls.endswith("]"):
-                            cls = cls[5:-1]
-                        if cls.startswith("PaginatedList[") and cls.endswith("]"):
-                            cls = cls[14:-1]
-                        if cls == orig_cls:
+                        inner_cls = inner_return_type(cls)
+                        if inner_cls == cls:
                             break
-                        orig_cls = cls
+                        cls = inner_cls
+
+                    # handle some special cases where cls == "list[T] | T",
+                    # which for our purposes is equivalent to "T | T" which is "T"
+                    if "|" in cls:
+                        fields = cls.split("|")
+                        if len(fields) == 2 and inner_return_type(fields[0]) == inner_return_type(fields[1]):
+                            cls = inner_return_type(fields[0])
 
                     if cls not in available_schemas:
                         available_schemas[cls] = {}
@@ -744,7 +755,7 @@ class OpenApi:
 
         classes = index.get("classes", {})
         for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
-            if cls in ['bool', 'str']:
+            if cls in ['bool', 'str', 'None']:
                 continue
             if cls not in classes:
                 if verbose:
