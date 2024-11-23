@@ -695,14 +695,18 @@ class OpenApi:
         with open(index_filename, "w") as w:
             json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
 
-    def suggest(self, spec_file: str, index_filename: str, verbose: bool):
+    def suggest(self, spec_file: str, index_filename: str, class_name: str | None, verbose: bool):
         print(f"Using spec {spec_file}")
         with open(spec_file, 'r') as r:
             spec = json.load(r)
         with open(index_filename, "r") as r:
             index = json.load(r)
 
-        print("Suggesting API schemas for PyGithub classes")
+        if class_name:
+            print(f"Suggesting API schemas for PyGithub class {class_name}")
+        else:
+            print("Suggesting API schemas for PyGithub classes")
+
         available_schemas = {}
         paths = set(spec.get('paths', {}).keys()).union(index.get("indices", {}).get("path_to_classes", {}).keys())
         for path in paths:
@@ -737,6 +741,8 @@ class OpenApi:
             if cls not in classes:
                 if verbose:
                     print(f"Unknown class {cls}")
+                continue
+            if class_name and cls != class_name:
                 continue
 
             paths = {}
@@ -777,6 +783,7 @@ class OpenApi:
         suggest_parser = subparsers.add_parser("suggest")
         suggest_parser.add_argument("spec", help="Github API OpenAPI spec file")
         suggest_parser.add_argument("index_filename", help="Path of index file")
+        suggest_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="?")
 
         apply_parser = subparsers.add_parser("apply")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
@@ -795,7 +802,7 @@ class OpenApi:
         if args.subcommand == "index":
             self.index(self.args.github_path, self.args.index_filename, self.args.verbose)
         elif self.args.subcommand == "suggest":
-            self.suggest(self.args.spec, self.args.index_filename, self.args.verbose)
+            self.suggest(self.args.spec, self.args.index_filename, self.args.class_name, self.args.verbose)
         elif self.args.subcommand == "apply":
             self.apply(self.args.spec, self.args.schema_name, self.args.class_name, self.args.filename, self.args.dry_run, self.args.tests)
         else:
