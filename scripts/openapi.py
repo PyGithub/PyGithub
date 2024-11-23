@@ -72,6 +72,18 @@ class SimpleStringCollector(cst.CSTVisitor):
         self._strings.append(node.evaluated_value)
 
 
+
+def get_class_docstring(node: cst.ClassDef) -> str | None:
+    try:
+        if (isinstance(node.body, IndentedBlock) and
+                isinstance(node.body.body[0], SimpleStatementLine) and
+                isinstance(node.body.body[0].body[0], Expr) and
+                isinstance(node.body.body[0].body[0].value, SimpleString)):
+            return node.body.body[0].body[0].value.value
+    except Exception as e:
+        print(f"Extracting docstring of class {node.name.value} failed", e)
+
+
 class IndexPythonClassesVisitor(cst.CSTVisitor):
     def __init__(self):
         super().__init__()
@@ -96,20 +108,11 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
 
     def leave_ClassDef(self, node: cst.ClassDef) -> Optional[bool]:
         class_name = node.name.value
-        class_docstring = None
+        class_docstring = get_class_docstring(node)
+        class_docstring = class_docstring.strip('"\r\n ') if class_docstring else None
         class_schemas = []
         class_bases = [val if isinstance(val, str) else Module([]).code_for_node(val)
                        for base in node.bases for val in [base.value.value]]
-
-        # extract class docstring
-        try:
-            if (isinstance(node.body, IndentedBlock) and
-                    isinstance(node.body.body[0], SimpleStatementLine) and
-                    isinstance(node.body.body[0].body[0], Expr) and
-                    isinstance(node.body.body[0].body[0].value, SimpleString)):
-                class_docstring = node.body.body[0].body[0].value.value.strip('"\r\n ')
-        except Exception as e:
-            print(f"Extracting docstring of class {class_name} failed", e)
 
         # extract OpenAPI schema
         if class_docstring:
@@ -165,10 +168,26 @@ class IndexPythonClassesVisitor(cst.CSTVisitor):
                 }
 
 
-class ApplySchemaBaseTransformer(cst.CSTTransformer, abc.ABC):
-    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
+class BaseTransformer(cst.CSTTransformer, abc.ABC):
+    def __init__(self):
         super().__init__()
         self.visit_class_name = []
+
+    def visit_ClassDef(self, node: cst.ClassDef):
+        self.visit_class_name.append(node.name.value)
+
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef):
+        self.visit_class_name.pop()
+        return updated_node
+
+    @property
+    def current_class_name(self) -> str:
+        return ".".join(self.visit_class_name)
+
+
+class ApplySchemaBaseTransformer(BaseTransformer, abc.ABC):
+    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
+        super().__init__()
         self.module_name = module_name
         self.class_name = class_name
         self.properties = sorted([Property(name=k, data_type=GithubClass(**v[0]) if isinstance(v[0], dict) else v[0], deprecated=v[1])
@@ -176,10 +195,6 @@ class ApplySchemaBaseTransformer(cst.CSTTransformer, abc.ABC):
                                  key=lambda p: p.name)
         self.all_properties = self.properties.copy()
         self.deprecate = deprecate
-
-    @property
-    def current_class_name(self) -> str:
-        return ".".join(self.visit_class_name)
 
     @property
     def current_property(self) -> Property | GithubClass | None:
@@ -257,13 +272,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
         return node
 
-
-    def visit_ClassDef(self, node: cst.ClassDef):
-        self.visit_class_name.append(node.name.value)
-
-    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef):
-        self.visit_class_name.pop()
-        return updated_node
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         if self.current_class_name != self.class_name:
@@ -444,7 +452,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
 
-class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
+class ApplySchemaTestTransformer(BaseTransformer):
     def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | None, bool)], deprecate: bool):
         super().__init__(module_name, class_name, properties, deprecate)
 
@@ -513,6 +521,36 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 i = i + 1
         return updated_node
 
+
+class AddSchemasTransformer(BaseTransformer):
+    def __init__(self, class_name: str, schemas: list[str]):
+        super().__init__()
+        self.class_name = class_name
+        self.schemas = schemas
+
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef):
+        if self.current_class_name == self.class_name:
+            docstring = get_class_docstring(updated_node)
+            if not docstring:
+                print(f"Class has no docstring")
+            else:
+                lines = docstring.splitlines()
+                heading = len(lines)-1  # if there is no heading, we place it before the last line (the closing """)
+                schema_lines = []
+                for idx, line in enumerate(lines):
+                    if "The OpenAPI schema can be found at" in line:
+                        heading = idx
+                        schema_lines = lines[idx+1:-1]
+                        break
+                schema_lines = sorted(list(set(schema_lines).union(set([f"    {schema}" for schema in self.schemas]))))
+                lines = lines[:heading] + ["    The OpenAPI schema can be found at"] + schema_lines + lines[-1:]
+                docstring = "\n".join(lines)
+                stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
+                stmts = [stmt] + list(updated_node.body.body[1:])
+                updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=stmts))
+
+        return super().leave_ClassDef(original_node, updated_node)
+
 class JsonSerializer(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, set):
@@ -570,6 +608,43 @@ class OpenApi:
             return self.classes.get(python_type, python_type)
         return python_type
 
+    @staticmethod
+    def extend_inheritance(classes: dict[str, Any]) -> bool:
+        extended_classes = {}
+        updated = False
+
+        for name, cls in classes.items():
+            orig_inheritance = cls.get("inheritance", set()).union(set(cls.get("bases", [])))
+            inheritance = orig_inheritance.union(ancestor
+                                                 for base in cls.get("bases", [])
+                                                 for ancestor in classes.get(base, {}).get("inheritance", []))
+            cls["inheritance"] = inheritance
+            extended_classes[name] = cls
+            updated = updated or inheritance != orig_inheritance
+
+        return updated
+
+    @classmethod
+    def add_schema_to_class(cls, class_name: str, filename: str, schemas: list[str], dry_run: bool):
+        with open(filename, "r") as r:
+            code = "".join(r.readlines())
+
+        transformer = AddSchemasTransformer(class_name, schemas)
+        tree = cst.parse_module(code)
+        updated_tree = tree.visit(transformer)
+        cls.write_code(code, updated_tree.code, filename, dry_run)
+
+    @staticmethod
+    def write_code(orig_code: str, updated_code: str, filename: str, dry_run: bool):
+        if dry_run:
+            diff = difflib.unified_diff(orig_code.splitlines(1), updated_code.splitlines(1))
+            print("Diff:")
+            print("".join(diff))
+        else:
+            if updated_code != orig_code:
+                with open(filename, "w") as w:
+                    w.write(updated_code)
+
     def apply(self, spec_file: str, schema_name: str, class_name: str, filename: str | None, dry_run: bool, tests: bool):
         print(f"Using spec {spec_file} for {schema_name} {class_name}")
         with open(spec_file, 'r') as r:
@@ -584,50 +659,20 @@ class OpenApi:
         with open(filename, "r") as r:
             code = "".join(r.readlines())
 
+        transformer = ApplySchemaTransformer(class_name, class_name, properties.copy(), deprecate=False)
         tree = cst.parse_module(code)
-        tree_updated = tree.visit(ApplySchemaTransformer(class_name, class_name, properties.copy(), deprecate=False))
-
-        if dry_run:
-            diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
-            print("Diff:")
-            print("".join(diff))
-        else:
-            if not tree_updated.deep_equals(tree):
-                with open(filename, "w") as w:
-                    w.write(tree_updated.code)
+        tree_updated = tree.visit(transformer)
+        self.write_code(code, tree_updated.code, filename, dry_run)
 
         if tests:
             filename = f"tests/{class_name}.py"
             with open(filename, "r") as r:
                 code = "".join(r.readlines())
 
+            transformer = ApplySchemaTestTransformer(class_name, class_name, properties.copy(), deprecate=False)
             tree = cst.parse_module(code)
-            tree_updated = tree.visit(ApplySchemaTestTransformer(class_name, class_name, properties.copy(), deprecate=False))
-
-            if dry_run:
-                diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
-                print("Diff:")
-                print("".join(diff))
-            else:
-                if not tree_updated.deep_equals(tree):
-                    with open(filename, "w") as w:
-                        w.write(tree_updated.code)
-
-
-    def extend_inheritance(self, classes: dict[str, Any]) -> bool:
-        extended_classes = {}
-        updated = False
-
-        for name, cls in classes.items():
-            orig_inheritance = cls.get("inheritance", set()).union(set(cls.get("bases", [])))
-            inheritance = orig_inheritance.union(ancestor
-                                                 for base in cls.get("bases", [])
-                                                 for ancestor in classes.get(base, {}).get("inheritance", []))
-            cls["inheritance"] = inheritance
-            extended_classes[name] = cls
-            updated = updated or inheritance != orig_inheritance
-
-        return updated
+            tree_updated = tree.visit(transformer)
+            self.write_code(code, tree_updated.code, filename, dry_run)
 
     def index(self, github_path: str, index_filename: str, verbose: bool):
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
@@ -695,7 +740,7 @@ class OpenApi:
         with open(index_filename, "w") as w:
             json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
 
-    def suggest(self, spec_file: str, index_filename: str, class_name: str | None, verbose: bool):
+    def suggest(self, spec_file: str, index_filename: str, class_name: str | None, add: bool, dry_run: bool, verbose: bool):
         print(f"Using spec {spec_file}")
         with open(spec_file, 'r') as r:
             spec = json.load(r)
@@ -788,6 +833,15 @@ class OpenApi:
                     for path in sorted(verb_paths):
                         print(f"- {verb.upper()} {path}")
 
+                if add and schemas_to_implement:
+                    filename = classes.get(cls, {}).get("filename")
+                    if not filename:
+                        print(f"Filename for class {cls} not known")
+                        sys.exit(1)
+
+                    print(f"Adding schemas to {cls}")
+                    self.add_schema_to_class(cls, filename, schemas_to_implement, dry_run)
+
     @staticmethod
     def parse_args():
         args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
@@ -800,11 +854,12 @@ class OpenApi:
         index_parser.add_argument("index_filename", help="Path of index file")
 
         suggest_parser = subparsers.add_parser("suggest")
+        suggest_parser.add_argument("--add", default=False, action="store_true", help="Add suggested schemas to source code")
         suggest_parser.add_argument("spec", help="Github API OpenAPI spec file")
         suggest_parser.add_argument("index_filename", help="Path of index file")
         suggest_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="?")
 
-        apply_parser = subparsers.add_parser("apply")
+        apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("schema_name", help="Name of schema under /components/schemas/")
@@ -821,7 +876,7 @@ class OpenApi:
         if args.subcommand == "index":
             self.index(self.args.github_path, self.args.index_filename, self.args.verbose)
         elif self.args.subcommand == "suggest":
-            self.suggest(self.args.spec, self.args.index_filename, self.args.class_name, self.args.verbose)
+            self.suggest(self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run, self.args.verbose)
         elif self.args.subcommand == "apply":
             self.apply(self.args.spec, self.args.schema_name, self.args.class_name, self.args.filename, self.args.dry_run, self.args.tests)
         else:
