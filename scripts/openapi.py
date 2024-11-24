@@ -321,9 +321,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             returns=cst.Annotation(annotation=cst.Name(data_type)) if data_type else None,
             body=cst.IndentedBlock(body=[
                 cst.SimpleStatementLine(body=[
-                    cst.Expr(cst.SimpleString(f'"""\n        :type: {docstring_type}\n        """'))
-                ]),
-                cst.SimpleStatementLine(body=[
                     cst.Expr(cst.Call(
                         func=cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value="_completeIfNotSet")),
                         args=[cst.Arg(cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value=f"_{name}")))]
