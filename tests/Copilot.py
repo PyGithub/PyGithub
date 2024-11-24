@@ -35,7 +35,9 @@ class Copilot(Framework.TestCase):
         self.assertEqual(self.copilot.org_name, "BeaverSoftware")
         self.assertEqual(repr(self.copilot), 'Copilot(org_name="BeaverSoftware")')
 
-        seat = self.g.get_organization("BeaverSoftware").get_copilot().get_seats()[0]
+        seats = list(self.copilot.get_seats())
+        self.assertEqual(len(seats), 1)
+        seat = seats[0]
         self.assertEqual(seat.created_at, datetime(2010, 7, 9, 6, 10, 6, tzinfo=timezone.utc))
         self.assertEqual(seat.updated_at, datetime(2012, 5, 26, 11, 25, 48, tzinfo=timezone.utc))
         self.assertEqual(seat.pending_cancellation_date, None)
