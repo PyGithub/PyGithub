@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
 class Copilot(NonCompletableGithubObject):
     def __init__(self, requester: Requester, org_name: str) -> None:
-        super().__init__(requester, {}, {"org_name": org_name}, completed=True)
+        super().__init__(requester, {}, {"org_name": org_name})
 
     def _initAttributes(self) -> None:
         self._org_name: Attribute[str] = NotSet
