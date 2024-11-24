@@ -213,7 +213,7 @@ class Commit(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head <https://docs.github.com/rest/commits/commits#list-branches-for-head-commit>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches-where-head")
-        return [github.Branch.Branch(self._requester, headers, item, completed=True) for item in data]
+        return [github.Branch.Branch(self._requester, headers, item) for item in data]
 
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
