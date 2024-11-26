@@ -190,19 +190,26 @@ class Team(CompletableGithubObject):
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
+    @deprecated(
+        reason="""
+        Team.add_to_members() is deprecated, use Team.add_membership() instead.
+        """
+    )
+    # TODO: Actually, this call no longer gies to /teams/{id}, but to
+    # /orgs/.../teams/.../members/{user}. Same with the other two deprecated
+    # /teams/{id} calls in this file
     def add_to_members(self, member: NamedUser) -> None:
         """
         This API call is deprecated. Use `add_membership` instead.
-        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
-        :calls: `PUT /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{id}/members/{user} <https://docs.github.com/en/rest/teams/members#add-team-member-legacy>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/members/{member._identity}")
 
     def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
         """
-        :calls: `PUT /teams/{id}/memberships/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /orgs/{org}/teams/{team}/memberships/{username} <https://docs.github.com/en/rest/teams/members#add-or-update-team-membership-for-a-user>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         assert role is NotSet or isinstance(role, str), role
@@ -221,7 +228,7 @@ class Team(CompletableGithubObject):
 
     def get_team_membership(self, member: str | NamedUser) -> Membership:
         """
-        :calls: `GET /orgs/{org}/memberships/team/{team_id}/{username} <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
+        :calls: `GET /orgs/{org}/memberships/team/{team}/{username} <https://docs.github.com/en/rest/teams/members#get-team-membership-for-a-user>`_
         """
         assert isinstance(member, str) or isinstance(member, github.NamedUser.NamedUser), member
         if isinstance(member, github.NamedUser.NamedUser):
@@ -233,14 +240,14 @@ class Team(CompletableGithubObject):
 
     def add_to_repos(self, repo: Repository) -> None:
         """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /orgs/{org}/teams/{team}/repos/{owner}/{repo} <https://docs.github.com/en/rest/teams/teams#add-or-update-team-repository-permissions>`_
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/repos/{repo._identity}")
+        headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.repositories_url}/{repo._identity}")
 
     def get_repo_permission(self, repo: Repository) -> Permissions | None:
         """
-        :calls: `GET /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /orgs/{org}/teams/{team}/repos/{owner}/{repo} <https://docs.github.com/en/rest/teams/teams#check-team-permissions-for-a-repository>`_
         """
         assert isinstance(repo, github.Repository.Repository) or isinstance(repo, str), repo
         if isinstance(repo, github.Repository.Repository):
@@ -250,7 +257,7 @@ class Team(CompletableGithubObject):
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
-                f"{self.url}/repos/{repo}",
+                f"{self.repositories_url}/{repo}",
                 headers={"Accept": Consts.teamRepositoryPermissions},
             )
             return github.Permissions.Permissions(self._requester, headers, data["permissions"])
@@ -264,7 +271,9 @@ class Team(CompletableGithubObject):
     )
     def set_repo_permission(self, repo: Repository, permission: str) -> None:
         """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        This API call is deprecated. Use `update_team_repository` instead.
+
+        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/teams/teams#add-or-update-team-repository-permissions-legacy>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
         :rtype: None
@@ -280,27 +289,30 @@ class Team(CompletableGithubObject):
 
     def update_team_repository(self, repo: Repository, permission: str) -> bool:
         """
-        :calls: `PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams#check-team-permissions-for-a-repository>`_
+        :calls: `PUT /orgs/{org}/teams/{team}/repos/{owner}/{repo} <https://docs.github.com/en/rest/teams/teams#add-or-update-team-repository-permissions>`_
+        :param repo: :class:`github.Repository.Repository`
+        :param permission: string
+        :rtype: bool
         """
         assert isinstance(repo, github.Repository.Repository) or isinstance(repo, str), repo
         assert isinstance(permission, str), permission
         if isinstance(repo, github.Repository.Repository):
-            repo_url_param = repo._identity
+            repo = repo._identity
         else:
-            repo_url_param = urllib.parse.quote(repo)
+            repo = urllib.parse.quote(repo)
         put_parameters = {
             "permission": permission,
         }
         status, _, _ = self._requester.requestJson(
             "PUT",
-            f"{self.organization.url}/teams/{self.slug}/repos/{repo_url_param}",
+            f"{self.repositories_url}/{repo}",
             input=put_parameters,
         )
         return status == 204
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /teams/{id} <https://docs.github.com/en/rest/reference/teams#delete-a-team>`_
+        :calls: `DELETE /orgs/{org}/teams/{team} <https://docs.github.com/en/rest/teams/teams#delete-a-team>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -314,7 +326,7 @@ class Team(CompletableGithubObject):
         notification_setting: Opt[str] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /teams/{id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
+        :calls: `PATCH /orgs/{org}/teams/{team} <https://docs.github.com/en/rest/teams/teams#update-a-team>`_
         """
         assert isinstance(name, str), name
         assert description is NotSet or isinstance(description, str), description
@@ -338,7 +350,7 @@ class Team(CompletableGithubObject):
 
     def get_teams(self) -> PaginatedList[Team]:
         """
-        :calls: `GET /teams/{id}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
+        :calls: `GET /orgs/{org}/teams/{team}/teams <https://docs.github.com/en/rest/teams/teams#list-child-teams>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Team.Team,
@@ -349,7 +361,7 @@ class Team(CompletableGithubObject):
 
     def get_discussions(self) -> PaginatedList[TeamDiscussion]:
         """
-        :calls: `GET /teams/{id}/discussions <https://docs.github.com/en/rest/reference/teams#list-discussions>`_
+        :calls: `GET /orgs/{org}/teams/{team}/discussions <https://docs.github.com/en/rest/teams/discussions#list-discussions>`_
         """
         return github.PaginatedList.PaginatedList(
             github.TeamDiscussion.TeamDiscussion,
@@ -361,7 +373,7 @@ class Team(CompletableGithubObject):
 
     def get_members(self, role: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /teams/{id}/members <https://docs.github.com/en/rest/reference/teams#list-team-members>`_
+        :calls: `GET /orgs/{org}/teams/{team}/members <https://docs.github.com/en/rest/teams/members#list-team-members>`_
         """
         assert role is NotSet or isinstance(role, str), role
         url_parameters: dict[str, Any] = {}
@@ -377,15 +389,15 @@ class Team(CompletableGithubObject):
 
     def get_repos(self) -> PaginatedList[Repository]:
         """
-        :calls: `GET /teams/{id}/repos <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /orgs/{org}/teams/{team}/members <https://docs.github.com/en/rest/teams/teams#list-team-repositories>`_
         """
         return github.PaginatedList.PaginatedList(
-            github.Repository.Repository, self._requester, f"{self.url}/repos", None
+            github.Repository.Repository, self._requester, f"{self.repositories_url}", None
         )
 
     def invitations(self) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /teams/{id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
+        :calls: `GET /orgs/{org}/teams/{team}/invitations <https://docs.github.com/en/rest/teams/members#list-pending-team-invitations>`_
         """
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
@@ -397,43 +409,47 @@ class Team(CompletableGithubObject):
 
     def has_in_members(self, member: NamedUser) -> bool:
         """
-        :calls: `GET /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /orgs/{org}/teams/{team}/memberships/{username} <https://docs.github.com/en/rest/teams/members#get-team-membership-for-a-user>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
-        return status == 204
+        status, headers, data = self._requester.requestJson("GET", f"{self.url}/memberships/{member._identity}")
+        return status == 200
 
     def has_in_repos(self, repo: Repository) -> bool:
         """
-        :calls: `GET /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /orgs/{org}/teams/{team}/repos/{owner}/{repo} <https://docs.github.com/en/rest/teams/teams#check-team-permissions-for-a-repository>`_
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/repos/{repo._identity}")
+        status, headers, data = self._requester.requestJson("GET", f"{self.repositories_url}/{repo._identity}")
         return status == 204
 
     def remove_membership(self, member: NamedUser) -> None:
         """
-        :calls: `DELETE /teams/{team_id}/memberships/{username} <https://docs.github.com/en/rest/reference/teams#remove-team-membership-for-a-user>`_
+        :calls: `DELETE /orgs/{org}/teams/{team}/memberships/{username} <https://docs.github.com/en/rest/teams/members#remove-team-membership-for-a-user>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/memberships/{member._identity}")
 
+    @deprecated(
+        reason="""
+        Team.remove_from_members() is deprecated, use Team.remove_membership() instead.
+        """
+    )
     def remove_from_members(self, member: NamedUser) -> None:
         """
-        This API call is deprecated. Use `remove_membership` instead:
-        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
+        This API call is deprecated. Use `remove_membership` instead.
 
-        :calls: `DELETE /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `DELETE /teams/{id}/members/{user} <https://docs.github.com/en/rest/teams/members#remove-team-membership-for-a-user-legacy>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/members/{member._identity}")
 
     def remove_from_repos(self, repo: Repository) -> None:
         """
-        :calls: `DELETE /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `DELETE /orgs/{org}/teams/{team}/repos/{owner}/{repo} <https://docs.github.com/en/rest/teams/teams#remove-a-repository-from-a-team>`_
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repos/{repo._identity}")
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.repositories_url}/{repo._identity}")
 
     @property
     def _identity(self) -> int:
