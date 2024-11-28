@@ -496,12 +496,6 @@ class PullRequest(CompletableGithubObject):
             "commit_id": commit.sha if is_defined(commit) else NotSet,
             "comments": comments if is_defined(comments) else []
         })
-        if is_defined(commit):
-            post_parameters["commit_id"] = commit.sha
-        if is_defined(comments):
-            post_parameters["comments"] = comments
-        else:
-            post_parameters["comments"] = []
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
 
