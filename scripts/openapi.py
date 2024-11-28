@@ -86,12 +86,12 @@ def get_class_docstring(node: cst.ClassDef) -> str | None:
 
 
 class IndexPythonClassesVisitor(cst.CSTVisitor):
-    def __init__(self):
+    def __init__(self, classes: dict[str, Any] | None = None):
         super().__init__()
         self._module = None
         self._package = None
         self._filename = None
-        self._classes = {}
+        self._classes = classes if classes is not None else {}
         self._methods = {}
 
     def module(self, module: str):
@@ -191,6 +191,8 @@ class ApplySchemaBaseTransformer(BaseTransformer, abc.ABC):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
+        # drops properties of type GithubObject (unknown classes)
+        properties = {k: v for k, v in properties.items() if not isinstance(v[0], dict) or v[0].get("name") != "GithubObject"}
         self.properties = sorted([Property(name=k, data_type=GithubClass(**v[0]) if isinstance(v[0], dict) else (
             [GithubClass(**v) for v in v[0]] if isinstance(v[0], list) else v[0]), deprecated=v[1])
                                   for k, v in properties.items()],
@@ -206,8 +208,9 @@ class ApplySchemaBaseTransformer(BaseTransformer, abc.ABC):
 
 
 class ApplySchemaTransformer(ApplySchemaBaseTransformer):
-    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], deprecate: bool):
+    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], completable: bool, deprecate: bool):
         super().__init__(module_name, class_name, properties, deprecate)
+        self.completable = completable
 
     @staticmethod
     def contains_decorator(seq: Sequence[cst.Decorator], decorator_name: str):
@@ -238,17 +241,25 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             if in_github_imports and import_classes:
                 imported_module = node.body[i].body[0].names[0].name.attr.value
                 while import_classes and import_classes[0].module < imported_module:
-                    import_module = import_classes[0]
+                    import_module = import_classes.pop(0)
                     import_stmt = cst.SimpleStatementLine([
                         cst.Import([cst.ImportAlias(cst.Attribute(cst.Name(import_module.package), cst.Name(import_module.module)))])
                     ])
 
                     stmts = node.body
                     node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt, ) + tuple(stmts[i:]))
-                    import_classes = import_classes[1:]
                 if import_classes and import_classes[0].module == imported_module:
-                    import_classes = import_classes[1:]
+                    import_classes.pop(0)
             i = i + 1
+
+        while import_classes:
+            import_module = import_classes.pop(0)
+            import_stmt = cst.SimpleStatementLine([
+                cst.Import(
+                    [cst.ImportAlias(cst.Attribute(cst.Name(import_module.package), cst.Name(import_module.module)))])
+            ])
+            stmts = node.body
+            node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
 
         # insert typing classes if needed
         if isinstance(node.body[-2], cst.If):
@@ -257,7 +268,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             while i < len(if_node.body.body) and isinstance(if_node.body.body[i].body[0], (cst.Import, cst.ImportFrom)):
                 imported_module = if_node.body.body[i].body[0].module.attr.value
                 while typing_classes and typing_classes[0].module < imported_module:
-                    typing_class = typing_classes[0]
+                    typing_class = typing_classes.pop(0)
                     import_stmt = cst.SimpleStatementLine([
                         cst.ImportFrom(
                             module=cst.Attribute(cst.Name(typing_class.package), cst.Name(typing_class.module)),
@@ -266,10 +277,21 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
                     stmts = if_node.body.body
                     if_node = if_node.with_changes(body=if_node.body.with_changes(body=tuple(stmts[:i]) + (import_stmt, ) + tuple(stmts[i:])))
-                    typing_classes = typing_classes[1:]
                 if typing_classes and typing_classes[0].module == imported_module:
-                    typing_classes = typing_classes[1:]
+                    typing_classes.pop(0)
                 i = i + 1
+
+            while typing_classes:
+                typing_class = typing_classes.pop(0)
+                import_stmt = cst.SimpleStatementLine([
+                    cst.ImportFrom(
+                        module=cst.Attribute(cst.Name(typing_class.package), cst.Name(typing_class.module)),
+                        names=[cst.ImportAlias(cst.Name(typing_class.name))])
+                ])
+
+                stmts = if_node.body.body
+                if_node = if_node.with_changes(body=if_node.body.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:])))
+
             node = node.with_changes(body=tuple(node.body[:-2]) + (if_node, node.body[-1]))
 
         return node
@@ -307,27 +329,29 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
         return cst.FlattenSentinel(nodes=nodes)
 
-    @classmethod
-    def create_property_function(cls, name: str, data_type: str | GithubClass | None, deprecated: bool) -> cst.FunctionDef:
+    def create_property_function(self, name: str, data_type: str | GithubClass | None, deprecated: bool) -> cst.FunctionDef:
         docstring_type = data_type
         if isinstance(data_type, GithubClass):
             docstring_type = f":class:`{data_type.package}.{data_type.module}.{data_type.name}`"
             data_type = data_type.name
+
+        complete_if_completable_stmt = cst.SimpleStatementLine(body=[
+            cst.Expr(cst.Call(
+                func=cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value="_completeIfNotSet")),
+                args=[cst.Arg(cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value=f"_{name}")))]
+            ))
+        ])
+        return_stmt = cst.SimpleStatementLine(body=[
+            cst.Return(cst.Attribute(value=cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value=f"_{name}")), attr=cst.Name(value="value")))
+        ])
+        stmts = ([complete_if_completable_stmt] if self.completable else []) + [return_stmt]
 
         return cst.FunctionDef(
             decorators=[cst.Decorator(decorator=cst.Name(value="property"))],
             name=cst.Name(value=name),
             params=cst.Parameters(params=[cst.Param(cst.Name("self"))]),
             returns=cst.Annotation(annotation=cst.Name(data_type)) if data_type else None,
-            body=cst.IndentedBlock(body=[
-                cst.SimpleStatementLine(body=[
-                    cst.Expr(cst.Call(
-                        func=cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value="_completeIfNotSet")),
-                        args=[cst.Arg(cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value=f"_{name}")))]
-                    ))
-                ]),
-                cst.SimpleStatementLine(body=[cst.Return(cst.Attribute(value=cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value=f"_{name}")), attr=cst.Name(value="value")))])
-            ])
+            body=cst.IndentedBlock(body=stmts)
         )
 
     @classmethod
@@ -439,6 +463,8 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     new_statements.pop(0)
             else:
                 updated_statements.append(statement)
+        while new_statements:
+            updated_statements.append(new_statements.pop(0))
 
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
@@ -456,6 +482,8 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 new_statements.pop(0)
             else:
                 updated_statements.append(statement)
+        while new_statements:
+            updated_statements.append(new_statements.pop(0))
 
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
@@ -490,6 +518,18 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             return cst.SimpleString(f'"{data_type}"')
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        def create_statement(prop: Property) -> cst.SimpleStatementLine:
+            return cst.SimpleStatementLine([
+                cst.Expr(cst.Call(
+                    func=cst.Attribute(cst.Name("self"), cst.Name("assertEqual")),
+                    args=[
+                        cst.Arg(
+                            cst.Attribute(cst.Attribute(cst.Name("self"), cst.Name(attribute)), cst.Name(prop.name))),
+                        cst.Arg(self.get_value(prop.data_type))
+                    ]
+                ))
+            ])
+
         if updated_node.name.value == 'testAttributes':
             # first we detect the attribute that is used to test this class
             candidates = [attr.value.attr.value
@@ -512,21 +552,18 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                     asserted_property = attr.attr.value
                     while self.properties and self.properties[0].name < asserted_property:
                         prop = self.properties.pop(0)
-                        stmt = cst.SimpleStatementLine([
-                            cst.Expr(cst.Call(
-                                func=cst.Attribute(cst.Name("self"), cst.Name("assertEqual")),
-                                args=[
-                                    cst.Arg(cst.Attribute(cst.Attribute(cst.Name("self"), cst.Name(attribute)), cst.Name(prop.name))),
-                                    cst.Arg(self.get_value(prop.data_type))
-                                ]
-                            ))
-                        ])
+                        stmt = create_statement(prop)
                         stmts = updated_node.body.body
                         updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=tuple(stmts[:i]) + (stmt, ) + tuple(stmts[i:])))
                         i = i + 1
                     if self.properties and self.properties[0].name == asserted_property:
                         self.properties.pop(0)
                 i = i + 1
+            while self.properties:
+                prop = self.properties.pop(0)
+                stmt = create_statement(prop)
+                stmts = updated_node.body.body
+                updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=tuple(stmts) + (stmt, )))
         return updated_node
 
 
@@ -544,14 +581,15 @@ class AddSchemasTransformer(BaseTransformer):
             else:
                 lines = docstring.splitlines()
                 heading = len(lines)-1  # if there is no heading, we place it before the last line (the closing """)
+                empty_footing = lines[-2].strip() == ""
                 schema_lines = []
                 for idx, line in enumerate(lines):
                     if "The OpenAPI schema can be found at" in line:
                         heading = idx
-                        schema_lines = lines[idx+1:-1]
+                        schema_lines = lines[idx+1:-2 if empty_footing else -1]
                         break
                 schema_lines = sorted(list(set(schema_lines).union(set([f"    {schema}" for schema in self.schemas]))))
-                lines = lines[:heading] + ["    The OpenAPI schema can be found at"] + schema_lines + lines[-1:]
+                lines = lines[:heading] + ["    The OpenAPI schema can be found at"] + schema_lines + [""] + lines[-1:]
                 docstring = "\n".join(lines)
                 stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
                 stmts = [stmt] + list(updated_node.body.body[1:])
@@ -564,6 +602,22 @@ class JsonSerializer(JSONEncoder):
         if isinstance(obj, set):
             return list(sorted(obj))
         return super().default(obj)
+
+
+class IndexFileWorker:
+    def __init__(self, classes: dict[str, Any]):
+        self.classes = classes
+
+    def index_file(self, filename: str):
+        with open(filename, "r") as r:
+            code = "".join(r.readlines())
+
+        visitor = IndexPythonClassesVisitor(self.classes)
+        visitor.package("github")
+        visitor.module(filename.removesuffix(".py"))
+        visitor.filename(filename)
+        tree = cst.parse_module(code)
+        tree.visit(visitor)
 
 
 class OpenApi:
@@ -674,7 +728,10 @@ class OpenApi:
             index = json.load(r)
 
         schemas = spec.get('components', {}).get('schemas', {})
-        for schema_name in index.get("classes", {}).get(class_name, {}).get("schemas", []):
+        cls = index.get("classes", {}).get(class_name, {})
+        completable = "CompletableGithubObject" in cls.get("inheritance", [])
+        cls_schemas = cls.get("schemas", [])
+        for schema_name in cls_schemas:
             if not schema_name.startswith('/components/schemas/'):
                 print(f"Unsupported schema {schema_name}")
                 continue
@@ -687,7 +744,7 @@ class OpenApi:
             with open(filename, "r") as r:
                 code = "".join(r.readlines())
 
-            transformer = ApplySchemaTransformer(class_name, class_name, properties.copy(), deprecate=False)
+            transformer = ApplySchemaTransformer(class_name, class_name, properties.copy(), completable=completable, deprecate=False)
             tree = cst.parse_module(code)
             tree_updated = tree.visit(transformer)
             self.write_code(code, tree_updated.code, filename, dry_run)
@@ -702,23 +759,20 @@ class OpenApi:
                 self.write_code(code, tree_updated.code, test_filename, dry_run)
 
     def index(self, github_path: str, index_filename: str, verbose: bool):
+        import multiprocessing
+
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
         print(f"Indexing {len(files)} Python files")
 
-        visitor = IndexPythonClassesVisitor()
-        visitor.package("github")
-        for file in files:
-            filename = join(github_path, file)
-            with open(filename, "r") as r:
-                code = "".join(r.readlines())
-
-            visitor.module(file.removesuffix(".py"))
-            visitor.filename(filename)
-            tree = cst.parse_module(code)
-            tree.visit(visitor)
+        # index files in parallel
+        manager = multiprocessing.Manager()
+        classes = manager.dict()
+        indexer = IndexFileWorker(classes)
+        with multiprocessing.Pool() as pool:
+            pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
+        classes = dict(classes)
 
         # construct inheritance list
-        classes = visitor.classes
         while self.extend_inheritance(classes):
             pass
 
