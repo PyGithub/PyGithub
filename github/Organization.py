@@ -150,7 +150,13 @@ class Organization(CompletableGithubObject):
         self._has_repository_projects: Attribute[bool] = NotSet
         self._hooks_url: Attribute[str] = NotSet
         self._issues_url: Attribute[str] = NotSet
-        self._members_can_create_repositories: Attribute[bool] = NotSet
+        self._members_allowed_repository_creation_type: Attribute[str | None] = github.GithubObject.NotSet
+        self._members_can_create_internal_repositories: Attribute[bool | None] = github.GithubObject.NotSet
+        self._members_can_create_private_pages: Attribute[bool | None] = github.GithubObject.NotSet
+        self._members_can_create_private_repositories: Attribute[bool | None] = github.GithubObject.NotSet
+        self._members_can_create_public_pages: Attribute[bool | None] = github.GithubObject.NotSet
+        self._members_can_create_public_repositories: Attribute[bool | None] = github.GithubObject.NotSet
+        self._members_can_create_repositories: Attribute[bool | None] = NotSet
         self._two_factor_requirement_enabled: Attribute[bool] = NotSet
         self._avatar_url: Attribute[str] = NotSet
         self._billing_email: Attribute[str] = NotSet
@@ -302,7 +308,37 @@ class Organization(CompletableGithubObject):
         return self._login.value
 
     @property
-    def members_can_create_repositories(self) -> bool:
+    def members_allowed_repository_creation_type(self) -> str | None:
+        self._completeIfNotSet(self._members_allowed_repository_creation_type)
+        return self._members_allowed_repository_creation_type.value
+
+    @property
+    def members_can_create_internal_repositories(self) -> bool | None:
+        self._completeIfNotSet(self._members_can_create_internal_repositories)
+        return self._members_can_create_internal_repositories.value
+
+    @property
+    def members_can_create_private_pages(self) -> bool | None:
+        self._completeIfNotSet(self._members_can_create_private_pages)
+        return self._members_can_create_private_pages.value
+
+    @property
+    def members_can_create_private_repositories(self) -> bool | None:
+        self._completeIfNotSet(self._members_can_create_private_repositories)
+        return self._members_can_create_private_repositories.value
+
+    @property
+    def members_can_create_public_pages(self) -> bool | None:
+        self._completeIfNotSet(self._members_can_create_public_pages)
+        return self._members_can_create_public_pages.value
+
+    @property
+    def members_can_create_public_repositories(self) -> bool | None:
+        self._completeIfNotSet(self._members_can_create_public_repositories)
+        return self._members_can_create_public_repositories.value
+
+    @property
+    def members_can_create_repositories(self) -> bool | None:
         self._completeIfNotSet(self._members_can_create_repositories)
         return self._members_can_create_repositories.value
 
@@ -1500,6 +1536,30 @@ class Organization(CompletableGithubObject):
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        if "members_allowed_repository_creation_type" in attributes:  # pragma no branch
+            self._members_allowed_repository_creation_type = self._makeStringAttribute(
+                attributes["members_allowed_repository_creation_type"]
+            )
+        if "members_can_create_internal_repositories" in attributes:  # pragma no branch
+            self._members_can_create_internal_repositories = self._makeBoolAttribute(
+                attributes["members_can_create_internal_repositories"]
+            )
+        if "members_can_create_private_pages" in attributes:  # pragma no branch
+            self._members_can_create_private_pages = self._makeBoolAttribute(
+                attributes["members_can_create_private_pages"]
+            )
+        if "members_can_create_private_repositories" in attributes:  # pragma no branch
+            self._members_can_create_private_repositories = self._makeBoolAttribute(
+                attributes["members_can_create_private_repositories"]
+            )
+        if "members_can_create_public_pages" in attributes:  # pragma no branch
+            self._members_can_create_public_pages = self._makeBoolAttribute(
+                attributes["members_can_create_public_pages"]
+            )
+        if "members_can_create_public_repositories" in attributes:  # pragma no branch
+            self._members_can_create_public_repositories = self._makeBoolAttribute(
+                attributes["members_can_create_public_repositories"]
+            )
         if "members_can_create_repositories" in attributes:  # pragma no branch
             self._members_can_create_repositories = self._makeBoolAttribute(
                 attributes["members_can_create_repositories"]
