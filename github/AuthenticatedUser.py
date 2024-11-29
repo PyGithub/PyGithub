@@ -51,6 +51,7 @@
 # Copyright 2024 Eduardo Ramírez <edu.rh90@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Austin Lucas Lake <53884490+austinlucaslake@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -122,6 +123,7 @@ if TYPE_CHECKING:
     from github.Repository import Repository
     from github.Team import Team
     from github.UserKey import UserKey
+    from github.UserGPGKey import UserGPGKey
 
 
 class EmailData(NamedTuple):
@@ -538,6 +540,22 @@ class AuthenticatedUser(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", "/user/keys", input=post_parameters)
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
+    def create_gpg_key(self, name: str, armored_public_key: str) -> UserGPGKey:
+        """
+        :calls: `POST /user/gpg_keys <https://docs.github.com/en/rest/users/gpg-keys?apiVersion=2022-11-28#create-a-gpg-key-for-the-authenticated-user>`_
+        :param name: string
+        :param armored_public_key: string
+        :rtype: :class:`github.UserGPGKey.UserGPGKey`
+        """
+        assert isinstance(name, str), name
+        assert isinstance(armored_public_key, str), armored_public_key
+        post_parameters = {
+            "name": name,
+            "armored_public_key": armored_public_key,
+        }
+        headers, data = self._requester.requestJsonAndCheck("POST", "/user/gpg_keys", input=post_parameters)
+        return github.UserGPGKey.UserGPGKey(self._requester, headers, data, completed=True)
+
     def create_project(self, name: str, body: Opt[str] = NotSet) -> Project:
         """
         :calls: `POST /user/projects <https://docs.github.com/en/rest/reference/projects#create-a-user-project>`_
@@ -786,6 +804,23 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/keys <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
         """
         return PaginatedList(github.UserKey.UserKey, self._requester, "/user/keys", None)
+
+    def get_gpg_key(self, gpg_key_id: int) -> UserGPGKey:
+        """
+        :calls: `GET /user/gpg_keys/{gpg_key_id} <https://docs.github.com/en/rest/users/gpg-keys?apiVersion=2022-11-28#get-a-gpg-key-for-the-authenticated-user>`_
+        :param gpg_key_id: int
+        :rtype: :class:`github.UserGPGKey.UserGPGKey`
+        """
+        assert isinstance(gpg_key_id, int), gpg_key_id
+        headers, data = self._requester.requestJsonAndCheck("GET", f"/user/gpg_keys/{gpg_key_id}")
+        return github.UserGPGKey.UserGPGKey(self._requester, headers, data, completed=True)
+
+    def get_gpg_keys(self) -> PaginatedList[UserGPGKey]:
+        """
+        :calls: `GET /user/gpg_keys <https://docs.github.com/en/rest/users/gpg-keys?apiVersion=2022-11-28#list-gpg-keys-for-the-authenticated-user>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList`
+        """
+        return PaginatedList(github.UserGPGKey.UserGPGKey, self._requester, "/user/gpg_keys", None)
 
     def get_notification(self, id: str) -> Notification:
         """

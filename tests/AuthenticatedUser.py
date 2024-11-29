@@ -32,6 +32,7 @@
 # Copyright 2024 Eduardo Ramírez <edu.rh90@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Austin Lucas Lake <53884490+austinlucaslake@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -421,6 +422,13 @@ class AuthenticatedUser(Framework.TestCase):
         )
         self.assertEqual(key.id, 2626650)
 
+    def testCreateGPGKey(self)
+        gpg_key = self.user.create_gpg_key(
+            "GPG Key added through PyGithub",
+            "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw== vincent@IDEE",
+        )
+        self.assertEqual(key.id, 2626650)
+
     def testGetEvents(self):
         self.assertListKeyBegin(
             self.user.get_events(),
@@ -628,6 +636,13 @@ class AuthenticatedUser(Framework.TestCase):
             self.user.get_keys(),
             lambda k: k.title,
             ["vincent@home", "vincent@gandi", "vincent@aws", "vincent@macbook"],
+        )
+
+    def testGetGPGKeys(self):
+        self.assertListKeyEqual(
+            self.user.get_gpg_keys(),
+            lambda k: k.name,
+            ["TODO"],
         )
 
     def testGetOrgs(self):
