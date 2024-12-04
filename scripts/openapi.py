@@ -176,9 +176,9 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             for idx, line in enumerate(lines):
                 if "The OpenAPI schema can be found at" in line:
                     for schema in lines[idx+1:]:
-                        if not schema.strip():
+                        if not schema.strip().lstrip("- "):
                             break
-                        class_schemas.append(schema.strip())
+                        class_schemas.append(schema.strip().lstrip("- "))
 
         if class_name_short in self._classes:
             print(f"Duplicate class definition for {class_name_short}")
@@ -670,7 +670,7 @@ class AddSchemasTransformer(CstTransformerBase):
                         schema_lines = lines[idx+1:-2 if empty_footing else -1]
                         break
                 before = len(schema_lines)
-                schema_lines = sorted(list(set(schema_lines).union(set([f"{indent}{schema}" for schema in self.schemas]))))
+                schema_lines = sorted(list(set(schema_lines).union(set([f"{indent}- {schema}" for schema in self.schemas]))))
                 after = len(schema_lines)
                 lines = (lines[:heading] +
                          # we add an empty line before the schema lines if there is none
