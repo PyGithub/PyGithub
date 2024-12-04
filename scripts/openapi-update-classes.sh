@@ -8,7 +8,7 @@ source_path="$scripts_path/../github"
 openapi="$scripts_path/openapi.py"
 sort_class="$scripts_path/sort_class.py"
 pre_commit_conf="$scripts_path/openapi-update-classes.pre-commit-config.yaml"
-update_assertions="./$scripts_path/update-assertions.sh"
+update_assertions="$scripts_path/update-assertions.sh"
 spec=api.github.com.2022-11-28.json
 python_bin="$scripts_path/../../venv-PyGithub/bin"
 python="$python_bin/python3"
@@ -42,11 +42,17 @@ if [ $# -ge 1 ]; then
   github_classes="$@"
 else
   github_classes="$("$jq" -r '.indices.class_to_descendants.GithubObject | @tsv' < "$index")"
+  echo "Updating $(wc -w <<< "$github_classes") classes" | tee >(cat 1>&2)
 fi
+
+# update index
+echo -n "Updating index ($index)" | tee >(cat 1>&2)
+"$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
+echo | tee >(cat 1>&2)
 
 # skip abstract classes
 github_classes="$(for class in $github_classes; do
-  if [[ "$($jq ".classes.$class.bases | index(\"ABC\")" < "$index")" == "null" ]]; then
+  if [[ "$("$jq" ".classes.$class.bases | index(\"ABC\")" < "$index")" == "null" ]]; then
     echo $class
   fi
 done)"
@@ -67,6 +73,11 @@ changed() {
   fi
 }
 
+skip() {
+  echo -n -e " [${GREY}$1${NOCOLOR}]" | tee >(cat 1>&2);
+  echo 1>&2
+}
+
 failed() {
   echo -n -e " [${RED}$1${NOCOLOR}]" | tee >(cat 1>&2)
   echo 1>&2
@@ -85,7 +96,7 @@ commit() {
 
   # run linting
   "$python_bin"/mypy --show-column-numbers github tests 1>&2
-  "$python_bin"/pre-commit run --show-diff-on-failure --color=always --all-files 1>&2 || true
+  "$python_bin"/pre-commit run --all-files 1>&2 || true
 
   # commit
   "$git" commit -a -m "$message" "$@" 1>&2
@@ -119,8 +130,8 @@ update() {
   for github_class in $classes; do
     "$python" "$openapi" suggest --add "$spec" "$index" "$github_class" 1>&2
     echo 1>&2
-  done || failed "adding schemas"
-  commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "adding schemas"
+  done || failed "schemas"
+  commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "schemas"
 
   # update index
   "$python" "$openapi" index "$source_path" "$index" 1>&2
@@ -129,15 +140,15 @@ update() {
   for github_class in $classes; do
     "$python" "$sort_class" "$github_class" 1>&2
     echo 1>&2
-  done || failed "sorting $class"
-  commit "Sort attributes and methods in $class" && unchanged "sorted" || changed "sorted" "sorting $class"
+  done || failed "sort"
+  commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort"
 
   # apply schemas to class
   for github_class in $classes; do
     "$python" "$openapi" apply "$spec" "$index" "$github_class" 1>&2
     echo 1>&2
-  done || failed "applying schemas"
-  commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "applying schemas"
+  done || failed "$class"
+  commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class"
 
   # apply schemas to test class
   for github_class in $classes; do
@@ -145,22 +156,26 @@ update() {
       "$python" "$openapi" apply --tests "$spec" "$index" "$github_class" 1>&2
       echo 1>&2
     fi
-  done || failed "applying test schemas"
-  commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "applying test schemas"
+  done || failed "tests"
+  commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests"
 
   # fix test assertions
-  for github_class in $classes; do
-    filename="tests/$github_class.py"
-    if [ -f "$filename" ]; then
-      # reconstruct long lines
-      "$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" || true
-      "$update_assertions" "$filename" testAttributes 1>&2 || true
-      # record test data for testAttributes, fix assertions, commit as separate commit
-      # do not record for other tests (might delete things)
-      echo 1>&2
-    fi
-  done
-  commit "Updated test $class according to API spec" "--amend" && unchanged "assertions" || changed "assertions" "updating assertions"
+  if [[ "$(git log -1 --pretty=%B HEAD)" == "Updated test $class according to API spec"* ]]; then
+    for github_class in $classes; do
+      filename="tests/$github_class.py"
+      if [ -f "$filename" ]; then
+        # reconstruct long lines
+        "$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" || true
+        "$update_assertions" "$filename" testAttributes 1>&2 || true
+        # record test data for testAttributes, fix assertions, commit as separate commit
+        # do not record for other tests (might delete things)
+        echo 1>&2
+      fi
+    done
+    commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions"
+  else
+    skip "assertions"
+  fi
 
   # run tests
   pass=none
@@ -181,7 +196,13 @@ update() {
       fi
     fi
   done
-  if [ "$pass" == "true" ]; then unchanged "pass"; elif [ "$pass" == "false" ]; then failed "fail"; else echo -n -e " [${GREY}miss${NOCOLOR}]" | tee >(cat 1>&2); fi
+  if [ "$pass" == "true" ]; then
+    unchanged "pass"
+  elif [ "$pass" == "false" ]; then
+    failed "pass"
+  else
+    skip "pass"
+  fi
 
   echo -e " ${BLUE}($branch)${NOCOLOR}" | tee >(cat 1>&2)
   "$git" checkout "$base" 1>&2
