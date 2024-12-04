@@ -61,7 +61,10 @@ class GithubClass:
     docstring: str
 
     def __hash__(self):
-        return hash((self.package, self.module, self.name))
+        return hash(self.__repr__())
+
+    def __repr__(self):
+        return ".".join([self.package, self.module, self.name])
 
 @dataclasses.dataclass(frozen=True)
 class Property:
@@ -570,16 +573,22 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
     def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], deprecate: bool):
         super().__init__(module_name, class_name, properties, deprecate)
 
-    def get_value(self, data_type: str | GithubClass | list[GithubClass]) -> Any:
-        if isinstance(data_type, (GithubClass, list)):
-            return cst.Call(func=cst.Name("object"))
-        if data_type == "bool":
+    def get_value(self, data_type: PythonType | GithubClass | None) -> Any:
+        if data_type is None:
+            cst.Name("None")
+        if isinstance(data_type, GithubClass):
+            # TODO: get identity properties of class
+            return cst.Name(data_type.name.split(".")[-1])
+        # data_type is PythonType
+        if data_type.type == "bool":
             return cst.Expr(cst.Name("False"))
-        if data_type == "int":
+        if data_type.type == "int":
             return cst.Expr(cst.Integer("0"))
-        if data_type == "float":
+        if data_type.type == "float":
             return cst.Expr(cst.Float("0.0"))
-        if data_type == "datetime":
+        if data_type.type == "str":
+            return cst.Expr(cst.SimpleString('""'))
+        if data_type.type == "datetime":
             equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
             return cst.Call(func=cst.Name("datetime"), args=[
                 cst.Arg(cst.Integer("2020")),
@@ -590,10 +599,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 cst.Arg(cst.Integer("56")),
                 cst.Arg(keyword=cst.Name("tzinfo"), equal=equal, value=cst.Attribute(cst.Name("timezone"), cst.Name("utc"))),
             ])
-        if data_type == "str":
-            return cst.Expr(cst.SimpleString('""'))
-        else:
-            return cst.SimpleString(f'"{data_type}"')
+        return cst.SimpleString(f'"{data_type}"')
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         def create_statement(prop: Property) -> cst.SimpleStatementLine:
