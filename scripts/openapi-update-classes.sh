@@ -91,7 +91,6 @@ while true; do
   last_schemas="$now_schemas"
 done
 echo | tee >(cat 1>&2)
-echo "committing"
 commit "Added schemas to classes" || true
 
 unchanged() {
@@ -223,8 +222,6 @@ update() {
   echo -e " ${BLUE}($branch)${NOCOLOR}" | tee >(cat 1>&2)
   "$git" checkout "$base" 1>&2
 }
-
-echo "Updating $(wc -w <<< "$github_classes") classes" | tee >(cat 1>&2)
 
 # memorize current base commit
 base=$("$git" rev-parse --abbrev-ref HEAD)
