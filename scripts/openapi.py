@@ -49,6 +49,7 @@ class PythonType:
 
 @dataclasses.dataclass(frozen=True)
 class GithubClass:
+    ids: list[str]
     package: str
     module: str
     name: str
@@ -148,6 +149,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         self._package = None
         self._filename = None
         self._classes = classes if classes is not None else {}
+        self._ids = []
         self._properties = {}
         self._methods = {}
 
@@ -189,6 +191,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         # TODO: ideally, the key should be the fully qualified class name and there
         #       should be an index from class_name to the fully qualified class name
         self._classes[class_name_short] = {
+            "ids": self._ids,
             "name": class_name,
             "module": self._module,
             "package": self._package,
@@ -199,6 +202,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             "properties": self._properties,
             "methods": self._methods
         }
+        self._ids = []
         self._properties = {}
         self._methods = {}
 
@@ -251,6 +255,20 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                     },
                     "returns": returns
                 }
+
+        if method_name == "__repr__":
+            # extract properties used here as ids
+            visitor = DictKeyCollector(self._ids)
+            node.visit(visitor)
+
+
+class DictKeyCollector(cst.CSTVisitor):
+    def __init__(self, keys: list[str]):
+        super().__init__()
+        self.keys = keys
+
+    def visit_DictElement_key(self, node: cst.DictElement):
+        self.keys.append(node.key.value.strip('"'))
 
 
 class ApplySchemaBaseTransformer(CstTransformerBase, abc.ABC):
@@ -570,14 +588,14 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
 
 class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
-    def __init__(self, module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], deprecate: bool):
+    def __init__(self, ids: dict[str, list[str]], module_name: str, class_name: str, properties: dict[str, (str | dict | list | None, bool)], deprecate: bool):
         super().__init__(module_name, class_name, properties, deprecate)
+        self.ids = ids
 
     def get_value(self, data_type: PythonType | GithubClass | None) -> Any:
         if data_type is None:
             cst.Name("None")
         if isinstance(data_type, GithubClass):
-            # TODO: get identity properties of class
             return cst.Name(data_type.name.split(".")[-1])
         # data_type is PythonType
         if data_type.type == "bool":
@@ -603,12 +621,36 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         def create_statement(prop: Property) -> cst.SimpleStatementLine:
+            if isinstance(prop.data_type, GithubClass) and prop.data_type.ids:
+                id = prop.data_type.ids[0]
+                return cst.SimpleStatementLine([
+                    cst.Expr(cst.Call(
+                        func=cst.Attribute(cst.Name("self"), cst.Name("assertEqual")),
+                        args=[
+                            cst.Arg(
+                                cst.Attribute(
+                                    cst.Attribute(
+                                        cst.Attribute(cst.Name("self"), cst.Name(attribute)),
+                                        cst.Name(prop.name)
+                                    ),
+                                    cst.Name(id)
+                                )
+                            ),
+                            cst.Arg(self.get_value(prop.data_type))
+                        ]
+                    ))
+                ])
+
             return cst.SimpleStatementLine([
                 cst.Expr(cst.Call(
                     func=cst.Attribute(cst.Name("self"), cst.Name("assertEqual")),
                     args=[
                         cst.Arg(
-                            cst.Attribute(cst.Attribute(cst.Name("self"), cst.Name(attribute)), cst.Name(prop.name))),
+                            cst.Attribute(
+                                cst.Attribute(cst.Name("self"), cst.Name(attribute)),
+                                cst.Name(prop.name)
+                            )
+                        ),
                         cst.Arg(self.get_value(prop.data_type))
                     ]
                 ))
@@ -920,7 +962,7 @@ class OpenApi:
                 with open(test_filename, "r") as r:
                     code = "".join(r.readlines())
 
-                transformer = ApplySchemaTestTransformer(module, class_name, properties.copy(), deprecate=False)
+                transformer = ApplySchemaTestTransformer(cls.get("ids", []), module, class_name, properties.copy(), deprecate=False)
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
                 self.write_code(code, tree_updated.code, test_filename, dry_run)
