@@ -43,6 +43,10 @@ class PythonType:
     type: str
     inner_types: list[PythonType | GithubClass] | None = None
 
+    def __repr__(self):
+        return f"{self.type}[{', '.join([str(inner) for inner in self.inner_types])}]" if self.inner_types else self.type
+
+
 @dataclasses.dataclass(frozen=True)
 class GithubClass:
     package: str
