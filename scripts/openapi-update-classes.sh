@@ -179,7 +179,9 @@ update() {
       filename="tests/$github_class.py"
       if [ -f "$filename" ]; then
         # reconstruct long lines
-        "$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" || true
+        #sed -i -z 's/,\s*)/)/g' "$filename"
+        #black --line-length 1000 --line-ranges 108-108 tests/ApplicationOAuth.py
+        #"$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" 1>&2 || true
         "$update_assertions" "$filename" testAttributes 1>&2 || true
         # record test data for testAttributes, fix assertions, commit as separate commit
         # do not record for other tests (might delete things)
