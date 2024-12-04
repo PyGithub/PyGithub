@@ -62,7 +62,7 @@ spaces="$(head -c "$max_class_name_length" < /dev/zero | tr '\0' ' ')"
 last_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
 echo "Adding schemas to $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
 while true; do
-  "$python" "$openapi" suggest --add "$spec" "$index" "$github_class" 1>&2
+  "$python" "$openapi" suggest --add "$spec" "$index" $github_classes 1>&2
   "$python" "$openapi" index "$source_path" "$index" 1>&2
   now_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
   if [ "$now_schemas" -eq "$last_schemas" ]; then break; fi

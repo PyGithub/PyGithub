@@ -985,7 +985,7 @@ class OpenApi:
         with open(index_filename, "w") as w:
             json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
 
-    def suggest(self, spec_file: str, index_filename: str, class_name: str | None, add: bool, dry_run: bool):
+    def suggest(self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool):
         print(f"Using spec {spec_file}")
         with open(spec_file, 'r') as r:
             spec = json.load(r)
@@ -994,8 +994,11 @@ class OpenApi:
 
         schemas_added = 0
 
-        if class_name:
-            print(f"Suggesting API schemas for PyGithub class {class_name}")
+        if class_names:
+            if len(class_names) == 1:
+                print(f"Suggesting API schemas for PyGithub class {class_names[0]}")
+            else:
+                print(f"Suggesting API schemas for PyGithub {len(class_names)} classes")
         else:
             print("Suggesting API schemas for PyGithub classes")
 
@@ -1046,7 +1049,7 @@ class OpenApi:
                     for ret in returns:
                         cls_names = set(inner_return_type(ret))
                         for cls_name in cls_names:
-                            if class_name and cls_name != class_name:
+                            if class_names and cls_name not in class_names:
                                 continue
                             if cls_name in ["bool", "int", "str", "datetime", "list", "dict", "Any"]:
                                 continue
@@ -1126,7 +1129,7 @@ class OpenApi:
                 if self.verbose:
                     print(f"Unknown class {cls}")
                 continue
-            if class_name and cls != class_name:
+            if class_names and cls not in class_names:
                 continue
 
             paths = {}
@@ -1180,7 +1183,7 @@ class OpenApi:
         suggest_parser.add_argument("--add", default=False, action="store_true", help="Add suggested schemas to source code")
         suggest_parser.add_argument("spec", help="Github API OpenAPI spec file")
         suggest_parser.add_argument("index_filename", help="Path of index file")
-        suggest_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="?")
+        suggest_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="*")
 
         apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
