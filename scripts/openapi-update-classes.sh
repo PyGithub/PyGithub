@@ -82,6 +82,7 @@ commit() {
 # apply schemas on all classes iteratively, until no more schemas could be applied
 last_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
 echo -n "Adding schemas to $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
+echo "$github_classes"
 while true; do
   "$python" "$openapi" suggest --add "$spec" "$index" $github_classes 1>&2
   "$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
