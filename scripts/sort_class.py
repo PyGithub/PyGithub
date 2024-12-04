@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import json
 import sys
 from typing import Sequence
 
@@ -112,10 +113,13 @@ class SortMethodsTransformer(cst.CSTTransformer):
         return updated_node
 
 
-def main(class_name: str, dry_run: bool):
+def main(index_filename: str, class_name: str, dry_run: bool):
     full_class_name = class_name
     if '.' not in class_name:
-        full_class_name = f'github.{class_name}.{class_name}'
+        with open(index_filename, "r") as r:
+            index = json.load(r)
+        cls = index.get("classes", {}).get(class_name)
+        full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
     package, module, class_name = full_class_name.split('.', maxsplit=2)
     filename = f"{package}/{module}.py"
 
@@ -139,6 +143,7 @@ def main(class_name: str, dry_run: bool):
 
 def parse_args():
     args_parser = argparse.ArgumentParser(description="Sorts methods of GithubObject classes, also sorts attributes in _initAttributes and _useAttributes")
+    args_parser.add_argument("index_filename", help="Path of index file")
     args_parser.add_argument("class_name", help="GithubObject class to sort, e.g. HookDelivery or github.HookDelivery.HookDeliverySummary")
     args_parser.add_argument("--dry-run", default=False, action="store_true", help="show prospect changes and do not modify the file")
     if len(sys.argv) == 1:
@@ -149,4 +154,4 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    main(args.class_name, args.dry_run)
+    main(args.index_filename, args.class_name, args.dry_run)
