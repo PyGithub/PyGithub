@@ -98,6 +98,7 @@ from typing import (
     Dict,
     Generic,
     ItemsView,
+    Iterator,
     List,
     Optional,
     Tuple,
@@ -134,12 +135,19 @@ class RequestsResponse:
         self.status = r.status_code
         self.headers = r.headers
         self.text = r.text
+        self.response = r
 
     def getheaders(self) -> ItemsView[str, str]:
         return self.headers.items()
 
     def read(self) -> str:
         return self.text
+
+    def iter_content(self, chunk_size: Union[int, None] = 1) -> Iterator:
+        return self.response.iter_content(chunk_size=chunk_size)
+
+    def raise_for_status(self) -> None:
+        self.response.raise_for_status()
 
 
 class HTTPSRequestsConnectionClass:
@@ -190,11 +198,13 @@ class HTTPSRequestsConnectionClass:
         url: str,
         input: Optional[Union[str, io.BufferedReader]],
         headers: Dict[str, str],
+        stream: bool = False,
     ) -> None:
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
+        self.stream = stream
 
     def getresponse(self) -> RequestsResponse:
         verb = getattr(self.session, self.verb.lower())
@@ -253,11 +263,12 @@ class HTTPRequestsConnectionClass:
         )
         self.session.mount("http://", self.adapter)
 
-    def request(self, verb: str, url: str, input: None, headers: Dict[str, str]) -> None:
+    def request(self, verb: str, url: str, input: None, headers: Dict[str, str], stream: bool = False) -> None:
         self.verb = verb
         self.url = url
         self.input = input
         self.headers = headers
+        self.stream = stream
 
     def getresponse(self) -> RequestsResponse:
         verb = getattr(self.session, self.verb.lower())
@@ -857,6 +868,51 @@ class Requester:
                     raise
                 return {"data": data}
 
+    def getFile(
+        self,
+        url: str,
+        path: str,
+        parameters: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+    ) -> None:
+        """
+        GET a file from the server and save it to the given path.
+        """
+        _, _, stream_chunk_iterator = self.getResponseStream(url, parameters, headers, cnx)
+        with open(path, "wb") as f:
+            for chunk in stream_chunk_iterator():
+                if chunk:
+                    f.write(chunk)
+
+    def getResponseStream(
+        self,
+        url: str,
+        parameters: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+        cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+    ) -> Tuple[int, Dict[str, Any], Callable]:
+        """
+        GET a stream from the server.
+
+        :returns:``(status, headers, stream_chunk_iterator)``
+
+        """
+        if headers is None:
+            headers = {}
+        headers["Accept"] = "application/octet-stream"
+
+        def encode(_: Any) -> Tuple[str, str]:
+            return "", ""
+
+        status, responseHeaders, output = self.__requestEncode(
+            cnx, "GET", url, parameters, headers, None, encode, stream=True
+        )
+        if isinstance(output, RequestsResponse):
+            output.raise_for_status()
+            return status, responseHeaders, output.iter_content
+        raise ValueError("getStream() Expected a RequestsResponse object, should never happen")
+
     def requestJson(
         self,
         verb: str,
@@ -877,7 +933,10 @@ class Requester:
         def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        if isinstance(output, str):
+            return status, responseHeaders, output
+        raise ValueError("requestJson() Expected a str, should never happen")
 
     def requestMultipart(
         self,
@@ -909,7 +968,10 @@ class Requester:
             encoded_input += f"--{boundary}--{eol}"
             return f"multipart/form-data; boundary={boundary}", encoded_input
 
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        if isinstance(output, str):
+            return status, responseHeaders, output
+        raise ValueError("requestMultipart() Expected a str, should never happen")
 
     def requestBlob(
         self,
@@ -941,7 +1003,11 @@ class Requester:
 
         if input:
             headers["Content-Length"] = str(os.path.getsize(input))
-        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+
+        status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        if isinstance(output, str):
+            return status, responseHeaders, output
+        raise ValueError("requestBlob() Expected a str, should never happen")
 
     def requestMemoryBlobAndCheck(
         self,
@@ -967,7 +1033,11 @@ class Requester:
 
         if not cnx:
             cnx = self.__customConnection(url)
-        return self.__check(*self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode))
+
+        status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode)
+        if isinstance(output, str):
+            return self.__check(status, responseHeaders, output)
+        raise ValueError("requestMemoryBlobAndCheck() Expected a str, should never happen")
 
     def __requestEncode(
         self,
@@ -978,7 +1048,8 @@ class Requester:
         requestHeaders: Optional[Dict[str, str]],
         input: Optional[T],
         encode: Callable[[T], Tuple[str, Any]],
-    ) -> Tuple[int, Dict[str, Any], str]:
+        stream: bool = False,
+    ) -> Tuple[int, Dict[str, Any], Union[str, RequestsResponse]]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = {}
@@ -998,7 +1069,9 @@ class Requester:
 
         self.NEW_DEBUG_FRAME(requestHeaders)
 
-        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
+        status, responseHeaders, output = self.__requestRaw(
+            cnx, verb, url, requestHeaders, encoded_input, stream=stream
+        )
 
         if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
             self.rate_limiting = (
@@ -1013,7 +1086,7 @@ class Requester:
         if Consts.headerOAuthScopes in responseHeaders:
             self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
 
-        self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
+        self.DEBUG_ON_RESPONSE(status, responseHeaders, output if isinstance(output, str) else "stream")
 
         return status, responseHeaders, output
 
@@ -1024,19 +1097,19 @@ class Requester:
         url: str,
         requestHeaders: Dict[str, str],
         input: Optional[Any],
-    ) -> Tuple[int, Dict[str, Any], str]:
+        stream: bool = False,
+    ) -> Tuple[int, Dict[str, Any], Union[str, RequestsResponse]]:
         self.__deferRequest(verb)
 
         try:
             original_cnx = cnx
             if cnx is None:
                 cnx = self.__createConnection()
-            cnx.request(verb, url, input, requestHeaders)
-            response = cnx.getresponse()
-
-            status = response.status
-            responseHeaders = {k.lower(): v for k, v in response.getheaders()}
-            output = response.read()
+            _ = cnx.request(verb, url, input, requestHeaders, stream)
+            resp = cnx.getresponse()
+            output = resp.read() if not stream else "stream"
+            status = resp.status
+            responseHeaders = {k.lower(): v for k, v in resp.headers.items()}
 
             if input:
                 if isinstance(input, IOBase):
@@ -1048,7 +1121,7 @@ class Requester:
                 verb == "GET" or verb == "HEAD"
             ):  # only for requests that are considered 'safe' in RFC 2616
                 time.sleep(Consts.PROCESSING_202_WAIT_TIME)
-                return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
+                return self.__requestRaw(original_cnx, verb, url, requestHeaders, input, stream=stream)
 
             if status == 301 and "location" in responseHeaders:
                 location = responseHeaders["location"]
@@ -1073,9 +1146,8 @@ class Requester:
                     )
                 if self._logger.isEnabledFor(logging.INFO):
                     self._logger.info(f"Following Github server redirection from {url} to {o.path}")
-                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
-
-            return status, responseHeaders, output
+                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input, stream=stream)
+            return status, responseHeaders, output if not stream else resp
         finally:
             # we record the time of this request after it finished
             # to defer next request starting from this request's end, not start
