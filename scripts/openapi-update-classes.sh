@@ -58,19 +58,41 @@ done)"
 max_class_name_length=$(for class_name in $github_classes; do echo -n "$class_name" | wc -c; done | sort -rn | head -n1)
 spaces="$(head -c "$max_class_name_length" < /dev/zero | tr '\0' ' ')"
 
+commit() {
+  if [ $# -lt 1 ]; then
+    echo "Cannot commit without message"
+    exit 1
+  fi
+  message="$1"
+  shift
+
+  # skip if there are no changes
+  if "$git" diff --quiet; then return 0; fi
+
+  # run linting
+  "$python_bin"/mypy --show-column-numbers github tests 1>&2
+  "$python_bin"/pre-commit run --all-files 1>&2 || true
+
+  # commit
+  "$git" commit -a -m "$message" "$@" 1>&2
+  echo 1>&2
+  return 255
+}
+
 # apply schemas on all classes iteratively, until no more schemas could be applied
 last_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
-echo "Adding schemas to $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
+echo -n "Adding schemas to $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
 while true; do
   "$python" "$openapi" suggest --add "$spec" "$index" $github_classes 1>&2
-  "$python" "$openapi" index "$source_path" "$index" 1>&2
+  "$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
   now_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
   if [ "$now_schemas" -eq "$last_schemas" ]; then break; fi
-  now_schemas="$last_schemas"
-  echo "- $now_schemas schemas" | tee >(cat 1>&2)
+  echo -n "$now_schemas" | tee >(cat 1>&2)
+  last_schemas="$now_schemas"
 done
 echo | tee >(cat 1>&2)
-commit "Added schemas to $class" && unchanged "assertions" || changed "assertions" "assertions"
+echo "committing"
+commit "Added schemas to classes" || true
 
 unchanged() {
   echo -n -e " [${GREEN}$1${NOCOLOR}]" | tee >(cat 1>&2)
@@ -94,27 +116,6 @@ skip() {
 failed() {
   echo -n -e " [${RED}$1${NOCOLOR}]" | tee >(cat 1>&2)
   echo 1>&2
-}
-
-commit() {
-  if [ $# -lt 1 ]; then
-    echo "Cannot commit without message"
-    exit 1
-  fi
-  message="$1"
-  shift
-
-  # skip if there are no changes
-  if "$git" diff --quiet; then return 0; fi
-
-  # run linting
-  "$python_bin"/mypy --show-column-numbers github tests 1>&2
-  "$python_bin"/pre-commit run --all-files 1>&2 || true
-
-  # commit
-  "$git" commit -a -m "$message" "$@" 1>&2
-  echo 1>&2
-  return 255
 }
 
 update() {
