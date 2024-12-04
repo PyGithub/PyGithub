@@ -768,10 +768,14 @@ class OpenApi:
                     for spec_type in self.get_inner_spec_types(component, schema_path + ["oneOf", str(idx)])]
         if schema.get("type") == "object":
             # extract the inner type of pagination objects
-            if ("properties" in schema and "total_count" in schema.get("properties") and "items" in schema.get("properties")
-                and schema.get("properties").get("items").get("type") == "array" and "items" in schema.get("properties").get("items")):
-                return self.get_inner_spec_types(schema.get("properties").get("items").get("items"),
-                                                 schema_path + ["properties", "items", "items"])
+            if "properties" in schema:
+                props = schema.get("properties")
+                list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
+                if "total_count" in props and len(list_items) == 1:
+                    list_item = list_items[0]
+                    return self.get_inner_spec_types(
+                        props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
+                    )
             return ["/".join(["#"] + schema_path)]
         if schema.get("type") == "array" and "items" in schema:
             return self.get_inner_spec_types(schema.get("items"), schema_path + ["items"])
