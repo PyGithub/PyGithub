@@ -28,7 +28,7 @@ update_assertion() {
   #echo "$actual" >&2
   #echo "$expected" >&2
   #echo "$line_number" >&2
-  #echo "$line_number"
+  echo "$line_number"
   if [ "$actual" == "None" ]; then
     sed -i -e "${line_number}s/\S*[(]\([^,]*\),.*/self.assertIsNone(\1)/" "$test_file"
   elif [[ "$actual" == "'"*"["*" chars]"*"'" ]]; then
