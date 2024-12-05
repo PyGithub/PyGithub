@@ -1269,6 +1269,7 @@ class Repository(CompletableGithubObject):
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
+        make_latest: str = "true",
     ) -> GitRelease:
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and :meth:`Repository.create_git_release`.
@@ -1283,6 +1284,7 @@ class Repository(CompletableGithubObject):
         :param draft: bool
         :param prerelease: bool
         :param generate_release_notes: bool
+        :param make_latest: string
         :rtype: :class:`github.GitRelease.GitRelease`
 
         """
@@ -1295,6 +1297,7 @@ class Repository(CompletableGithubObject):
             prerelease,
             generate_release_notes,
             target_commitish=object,
+            make_latest=make_latest,
         )
 
     def create_git_release(
@@ -1306,6 +1309,7 @@ class Repository(CompletableGithubObject):
         prerelease: bool = False,
         generate_release_notes: bool = False,
         target_commitish: Opt[str] = NotSet,
+        make_latest: str = "true",
     ) -> GitRelease:
         """
         :calls: `POST /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/repos#releases>`_
@@ -1316,6 +1320,7 @@ class Repository(CompletableGithubObject):
         :param prerelease: bool
         :param generate_release_notes: bool
         :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
+        :param make_latest: string
         :rtype: :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(tag, str), tag
@@ -1334,6 +1339,7 @@ class Repository(CompletableGithubObject):
             "prerelease": prerelease,
             "generate_release_notes": generate_release_notes,
         }
+        assert make_latest in ["true", "false", "legacy"], make_latest
         if is_defined(name):
             post_parameters["name"] = name
         if is_defined(message):
@@ -1344,6 +1350,8 @@ class Repository(CompletableGithubObject):
             post_parameters["target_commitish"] = target_commitish.name
         elif isinstance(target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)):
             post_parameters["target_commitish"] = target_commitish.sha
+        if is_defined(make_latest):
+            post_parameters["make_latest"] = make_latest
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/releases", input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
