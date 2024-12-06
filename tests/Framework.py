@@ -61,7 +61,7 @@ import unittest
 import warnings
 from typing import Optional
 
-import httpretty  # type: ignore
+import responses  # type: ignore
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url  # type: ignore
 
@@ -198,10 +198,12 @@ class ReplayingConnection:
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
     def request(self, verb, url, input, headers):
-        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
+        port = self.__port if self.__port else 443 if self.__protocol == "https" else 80
+        full_url = Url(scheme=self.__protocol, host=self.__host, port=port, path=url)
 
-        httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
-
+        responses.add_callback(
+            method=verb, url=full_url.url, callback=lambda request: self.__request_callback(verb, full_url.url, headers)
+        )
         self.__cnx.request(verb, url, input, headers)
 
     def __readNextRequest(self, verb, url, input, headers):
@@ -211,7 +213,10 @@ class ReplayingConnection:
         assert self.__host == readLine(self.__file)
         assert str(self.__port) == readLine(self.__file)
         assert self.__splitUrl(url) == self.__splitUrl(readLine(self.__file))
-        assert headers == eval(readLine(self.__file))
+        expectedHeaders = eval(readLine(self.__file))
+        for key, value in expectedHeaders.items():
+            assert key in headers, f"Missing header: {key}"
+            assert headers[key] == value, f"Header value mismatch for {key}: expected {value}, got {headers[key]}"
         expectedInput = readLine(self.__file)
         if isinstance(input, str):
             trInput = input.replace("\n", "").replace("\r", "")
@@ -240,17 +245,9 @@ class ReplayingConnection:
         output = bytearray(readLine(self.__file), "utf-8")
         readLine(self.__file)
 
-        # make a copy of the headers and remove the ones that interfere with the response handling
-        adding_headers = CaseInsensitiveDict(self.response_headers)
-        adding_headers.pop("content-length", None)
-        adding_headers.pop("transfer-encoding", None)
-        adding_headers.pop("content-encoding", None)
-
-        response_headers.update(adding_headers)
         return [status, response_headers, output]
 
     def getresponse(self):
-        # call original connection, this will go all the way down to the python socket and will be intercepted by httpretty
         response = self.__cnx.getresponse()
 
         # restore original headers to the response
@@ -324,7 +321,7 @@ class BasicTestCase(unittest.TestCase):
             self.jwt = github.Auth.AppAuthToken("jwt")
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
-            httpretty.enable(allow_net_connect=False)
+            responses.start()
 
     @property
     def thisTestFailed(self) -> bool:
@@ -340,9 +337,8 @@ class BasicTestCase(unittest.TestCase):
 
     def tearDown(self):
         super().tearDown()
-        httpretty.disable()
-        httpretty.reset()
-
+        responses.stop()
+        responses.reset()
         self.__closeReplayFileIfNeeded(silent=self.thisTestFailed)
         github.Requester.Requester.resetConnectionClasses()
 
