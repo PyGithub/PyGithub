@@ -199,6 +199,20 @@ class Workflow(CompletableGithubObject):
             list_item="workflow_runs",
         )
 
+    def disable(self):
+        """
+        :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#get-a-workflow>`_
+        """
+        status, _, _ = self._requester.requestJson("PUT", f"{self.url}/disable")
+        return status == 204
+
+    def enable(self):
+        """
+        :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#enable-a-workflow>`_
+        """
+        status, _, _ = self._requester.requestJson("PUT", f"{self.url}/enable")
+        return status == 204
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
