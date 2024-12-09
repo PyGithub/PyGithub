@@ -42,8 +42,8 @@ class Pickle(unittest.TestCase):
         self.assertEqual(len(gh2._Github__requester._Requester__custom_connections), 0)
 
     def testPickleRepository(self):
-        gh = github.Github()
-        repo = gh.get_repo(REPO_NAME, lazy=True)
+        gh = github.Github(lazy=True)
+        repo = gh.get_repo(REPO_NAME)
         repo2 = pickle.loads(pickle.dumps(repo))
         self.assertIsInstance(repo2, Repository)
         self.assertIsNotNone(repo2._requester._Requester__connection_lock)

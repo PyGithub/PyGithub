@@ -125,11 +125,11 @@ class Commit(CompletableGithubObject):
             self._requester,
             self.url,
             {},
-            None,
-            "files",
-            "total_files",
-            self.raw_data,
-            self.raw_headers,
+            headers=None,
+            list_item="files",
+            total_count_item="total_files",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
         )
 
     @property
@@ -204,7 +204,7 @@ class Commit(CompletableGithubObject):
             f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             input=post_parameters,
         )
-        return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
+        return github.CommitStatus.CommitStatus(self._requester, headers, data)
 
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
@@ -233,7 +233,7 @@ class Commit(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
-        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data, completed=True)
+        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data)
 
     def get_pulls(self) -> PaginatedList[PullRequest]:
         """

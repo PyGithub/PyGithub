@@ -68,6 +68,8 @@
 # Copyright 2024 Heitor Polidoro <heitor.polidoro@gmail.com>                   #
 # Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 #                                                                              #
@@ -1524,6 +1526,56 @@ class Repository(Framework.TestCase):
         deployments = self.repo.get_deployments()
         self.assertListKeyEqual(deployments, lambda d: d.id, [263877258, 262350588])
 
+    def testGetDiscussions(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussion_schema = """
+            author { login }
+            number
+            repository {
+              owner { login }
+              name
+            }
+            title
+          """
+        discussions_pages = repo.get_discussions(discussion_schema)
+        discussions = list(discussions_pages)
+        # would perform an extra request if called before iterating discussions_pages
+        self.assertEqual(discussions_pages.totalCount, 65)
+        self.assertEqual(len(discussions), 65)
+        self.assertEqual(discussions[0].number, 3044)
+        self.assertEqual(discussions[-1].number, 1780)
+
+        discussion = discussions[28]
+        self.assertEqual(discussion.author.login, "arunanandhan")
+        self.assertEqual(discussion.number, 2480)
+        self.assertEqual(discussion.repository.owner.login, "PyGithub")
+        self.assertEqual(discussion.repository.name, "PyGithub")
+        self.assertEqual(discussion.title, "Is there a way to search if a string present in default branch?")
+
+    def testGetDiscussion(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussion = repo.get_discussion(2205, "author { login } number title")
+        self.assertEqual(discussion.author.login, "EnricoMi")
+        self.assertEqual(discussion.number, 2205)
+        self.assertEqual(discussion.title, "Is the PyGithub project dead? How can the community help?")
+
+    def testGetDiscussionsByAnswered(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("number title", answered=True)
+        self.assertListEqual(
+            [d.number for d in discussions], [2993, 2619, 2104, 2500, 2292, 2153, 2277, 2023, 1964, 1778]
+        )
+
+    def testGetDiscussionsByCategory(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("number title", category_id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMyMDI5MDYy")
+        self.assertListEqual([d.number for d in discussions], [3044, 2997, 2057, 2242, 2173, 1993, 1780])
+
+    def testGetDiscussionsByStates(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("number title", states=["CLOSED"])
+        self.assertListEqual([d.number for d in discussions], [2938, 2495, 2559, 2104, 2539, 2480])
+
     def testCreateFile(self):
         newFile = "doc/testCreateUpdateDeleteFile.md"
         content = b"Hello world"
@@ -2081,3 +2133,7 @@ class LazyRepository(Framework.TestCase):
     def testGetVulnerabilityAlertWhenTurnedOff(self):
         lazy_repo = self.getEagerRepository()
         self.assertFalse(lazy_repo.get_vulnerability_alert())
+
+    def testRequester(self):
+        lazy_repo = self.getLazyRepository()
+        assert lazy_repo.requester is lazy_repo._requester

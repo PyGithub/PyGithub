@@ -4,6 +4,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,12 +27,31 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 
+import github.Repository
+import github.RepositoryDiscussion
+
 from . import Framework
 
 gho = Framework.github.GithubObject
 
 
 class GithubObject(unittest.TestCase):
+    def testAttributesAsRest(self):
+        _ = gho.as_rest_api_attributes
+        self.assertIsNone(_(None))
+        self.assertDictEqual(_({}), {})
+        self.assertDictEqual(_({"id": "NID", "databaseId": "DBID"}), {"node_id": "NID", "id": "DBID"})
+        self.assertDictEqual(_({"someId": "someId"}), {"some_id": "someId"})
+        self.assertDictEqual(_({"someObj": {"someId": "someId"}}), {"some_obj": {"some_id": "someId"}})
+        self.assertDictEqual(_({"bodyHTML": "<html/>"}), {"body_html": "<html/>"})
+
+    def testApiType(self):
+        self.assertEqual(github.Repository.Repository.is_rest(), True)
+        self.assertEqual(github.Repository.Repository.is_graphql(), False)
+
+        self.assertEqual(github.RepositoryDiscussion.RepositoryDiscussion.is_rest(), False)
+        self.assertEqual(github.RepositoryDiscussion.RepositoryDiscussion.is_graphql(), True)
+
     def testMakeDatetimeAttribute(self):
         for value, expected in [
             (None, None),

@@ -253,7 +253,7 @@ class Team(CompletableGithubObject):
                 f"{self.url}/repos/{repo}",
                 headers={"Accept": Consts.teamRepositoryPermissions},
             )
-            return github.Permissions.Permissions(self._requester, headers, data["permissions"], completed=True)
+            return github.Permissions.Permissions(self._requester, headers, data["permissions"])
         except UnknownObjectException:
             return None
 
