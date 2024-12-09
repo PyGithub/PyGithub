@@ -141,8 +141,7 @@ update() {
 
   # add schemas to class
   for github_class in $classes; do
-    "$python" "$openapi" suggest --add "$spec" "$index" "$github_class" 1>&2
-    echo 1>&2
+    ("$python" "$openapi" suggest --add "$spec" "$index" "$github_class" && echo) 1>&2
   done || failed "schemas"
   commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "schemas"
 
@@ -151,23 +150,20 @@ update() {
 
   # sort the class
   for github_class in $classes; do
-    "$python" "$sort_class" "$github_class" 1>&2
-    echo 1>&2
+    ("$python" "$sort_class" "$github_class" && echo) 1>&2
   done || failed "sort"
   commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort"
 
   # apply schemas to class
   for github_class in $classes; do
-    "$python" "$openapi" apply "$spec" "$index" "$github_class" 1>&2
-    echo 1>&2
+    ("$python" "$openapi" apply "$spec" "$index" "$github_class" && echo) 1>&2
   done || failed "$class"
   commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class"
 
   # apply schemas to test class
   for github_class in $classes; do
     if [ -f "tests/$github_class.py" ]; then
-      "$python" "$openapi" apply --tests "$spec" "$index" "$github_class" 1>&2
-      echo 1>&2
+      ("$python" "$openapi" apply --tests "$spec" "$index" "$github_class" && echo) 1>&2
     fi
   done || failed "tests"
   commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests"
