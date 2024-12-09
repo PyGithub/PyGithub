@@ -466,11 +466,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
     def create_property_function(
         self, name: str, data_type: PythonType | GithubClass | None, deprecated: bool
     ) -> cst.FunctionDef:
-        docstring_type = data_type
-        if isinstance(data_type, GithubClass):
-            docstring_type = f":class:`{data_type.package}.{data_type.module}.{data_type.name}`"
-            data_type = data_type.name
-
         complete_if_completable_stmt = cst.SimpleStatementLine(
             body=[
                 cst.Expr(
@@ -806,15 +801,20 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             ]
             attribute = list(Counter(candidates).items())[0][0]
 
+            def parse_attribute(attr: cst.Attribute) -> list[str]:
+                attrs = []
+                while isinstance(attr, cst.Attribute):
+                    attrs.insert(0, attr.attr.value)
+                    attr = attr.value
+                attrs.insert(0, attr.value)
+                return attrs
+
             i = 0
             while i < len(updated_node.body.body):
                 attr = updated_node.body.body[i].body[0].value.args[0].value
-                if (
-                    isinstance(attr, cst.Attribute)
-                    and attr.value.value.value == "self"
-                    and attr.value.attr.value == attribute
-                ):
-                    asserted_property = attr.attr.value
+                attrs = parse_attribute(attr) if isinstance(attr, cst.Attribute) else []
+                if len(attrs) >= 3 and attrs[0] == "self" and attrs[1] == attribute:
+                    asserted_property = attrs[2]
                     while self.properties and self.properties[0].name < asserted_property:
                         prop = self.properties.pop(0)
                         stmt = create_statement(prop)
@@ -989,7 +989,7 @@ class OpenApi:
         if "$ref" in schema_type:
             schema = schema_type.get("$ref").strip("# ")
         if data_type == "object":
-            schema = "/".join(["#"] + schema_path)
+            schema = "/".join([""] + schema_path)
         if schema is not None:
             if schema in self.schema_to_class:
                 classes = self.schema_to_class[schema]
