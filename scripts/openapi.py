@@ -705,18 +705,18 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
     def get_value(self, data_type: PythonType | GithubClass | None) -> Any:
         if data_type is None:
-            cst.Name("None")
+            return cst.Name("None")
         if isinstance(data_type, GithubClass):
             return cst.Name(data_type.name.split(".")[-1])
         # data_type is PythonType
         if data_type.type == "bool":
-            return cst.Expr(cst.Name("False"))
+            return cst.Name("False")
         if data_type.type == "int":
-            return cst.Expr(cst.Integer("0"))
+            return cst.Integer("0")
         if data_type.type == "float":
-            return cst.Expr(cst.Float("0.0"))
+            return cst.Float("0.0")
         if data_type.type == "str":
-            return cst.Expr(cst.SimpleString('""'))
+            return cst.SimpleString('""')
         if data_type.type == "datetime":
             equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
             return cst.Call(
@@ -756,7 +756,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                                             cst.Name(id),
                                         )
                                     ),
-                                    cst.Arg(self.get_value(prop.data_type)),
+                                    cst.Arg(cst.SimpleString('""')),
                                 ],
                             )
                         )
