@@ -150,7 +150,7 @@ update() {
 
   # sort the class
   for github_class in $classes; do
-    ("$python" "$sort_class" "$github_class" && echo) 1>&2
+    ("$python" "$sort_class" "$index" "$github_class" && echo) 1>&2
   done || failed "sort"
   commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort"
 
