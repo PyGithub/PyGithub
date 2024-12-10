@@ -341,7 +341,12 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             ):
                 in_github_imports = True
             if in_github_imports and import_classes:
-                imported_module = node.body[i].body[0].names[0].name.attr.value
+                import_node = node.body[i].body[0]
+                imported_module = (
+                    import_node.module.attr.value
+                    if isinstance(import_node, cst.ImportFrom)
+                    else import_node.names[0].name.attr.value
+                )
                 while import_classes and import_classes[0].module < imported_module:
                     import_module = import_classes.pop(0)
                     import_stmt = cst.SimpleStatementLine(
