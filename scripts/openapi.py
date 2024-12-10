@@ -343,7 +343,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             if in_github_imports and import_classes:
                 import_node = node.body[i].body[0]
                 imported_module = (
-                    import_node.module.attr.value
+                    (import_node.module.value if isinstance(import_node.module, cst.Name) else import_node.module.attr.value)
                     if isinstance(import_node, cst.ImportFrom)
                     else import_node.names[0].name.attr.value
                 )
@@ -587,12 +587,12 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             args = [cst.Arg(attr)]
         elif prop.data_type.type == "list":
             if prop.data_type.inner_types[0] is None:
-                func_name = "_makeListOfClassAttribute"
+                func_name = "_makeListOfClassesAttribute"
                 args = [cst.Arg(attr)]
                 # TODO: warn about unknown / supported type
             elif isinstance(prop.data_type.inner_types[0], GithubClass):
-                func_name = "_makeListOfClassAttribute"
-                args = [cst.Arg(cls.create_type(prop.data_type)), cst.Arg(attr)]
+                func_name = "_makeListOfClassesAttribute"
+                args = [cst.Arg(cls.create_type(prop.data_type.inner_types[0])), cst.Arg(attr)]
                 # TODO: warn about unknown / supported type
             elif prop.data_type.inner_types[0].type == "int":
                 func_name = "_makeListOfIntAttribute"
@@ -608,9 +608,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 and prop.data_type.inner_types[0].inner_types[0].type == "str"
             ):
                 func_name = "_makeListOfListOfStringsAttribute"
-                args = [cst.Arg(attr)]
-            elif isinstance(prop.data_type.inner_types[0], GithubClass):
-                func_name = "_makeListOfClassesAttribute"
                 args = [cst.Arg(attr)]
         elif (
             prop.data_type.type == "union"
@@ -805,6 +802,8 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 and attr.value.value.value == "self"
                 and isinstance(attr.value.attr, cst.Name)
             ]
+            if not list(Counter(candidates).items()):
+                raise Exception("Could not find the attribute to test this class")
             attribute = list(Counter(candidates).items())[0][0]
 
             def parse_attribute(attr: cst.Attribute) -> list[str]:
