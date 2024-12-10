@@ -736,7 +736,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         return cst.SimpleString(f'"{data_type}"')
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
-        def create_statement(prop: Property) -> cst.SimpleStatementLine:
+        def create_statement(prop: Property, self_attribute: bool) -> cst.SimpleStatementLine:
             if isinstance(prop.data_type, GithubClass) and prop.data_type.ids:
                 id = prop.data_type.ids[0]
                 return cst.SimpleStatementLine(
@@ -748,7 +748,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                                     cst.Arg(
                                         cst.Attribute(
                                             cst.Attribute(
-                                                cst.Attribute(cst.Name("self"), cst.Name(attribute)),
+                                                cst.Attribute(cst.Name("self"), cst.Name(attribute)) if self_attribute else cst.Name(attribute),
                                                 cst.Name(prop.name),
                                             ),
                                             cst.Name(id),
@@ -770,7 +770,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                                 cst.Arg(
                                     cst.Attribute(
                                         cst.Attribute(cst.Name("self"), cst.Name(attribute)), cst.Name(prop.name)
-                                    )
+                                    ) if self_attribute else cst.Attribute(cst.Name(attribute), cst.Name(prop.name))
                                 ),
                                 cst.Arg(self.get_value(prop.data_type)),
                             ],
@@ -781,30 +781,37 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
         if updated_node.name.value == "testAttributes":
             # first we detect the attribute that is used to test this class
-            candidates = [
-                attr.value.attr.value
-                for stmt in updated_node.body.body
-                if isinstance(stmt, cst.SimpleStatementLine)
-                for expr in stmt.body
-                if isinstance(expr, cst.Expr) and isinstance(expr.value, cst.Call)
-                for call in [expr.value]
-                if isinstance(call.func, cst.Attribute)
-                and isinstance(call.func.value, cst.Name)
-                and call.func.value.value == "self"
-                and isinstance(call.func.attr, cst.Name)
-                and call.func.attr.value.startswith("assert")
-                and len(call.args) > 0
-                for arg in [call.args[0]]
-                if isinstance(arg.value, cst.Attribute)
-                for attr in [arg.value]
-                if isinstance(attr.value, cst.Attribute)
-                and isinstance(attr.value.value, cst.Name)
-                and attr.value.value.value == "self"
-                and isinstance(attr.value.attr, cst.Name)
-            ]
-            if not list(Counter(candidates).items()):
-                raise Exception("Could not find the attribute to test this class")
-            attribute = list(Counter(candidates).items())[0][0]
+            # either the first line assigns a variable with that attribute,
+            # or we check assertions for the most common attribute
+            if isinstance(updated_node.body.body[0], cst.SimpleStatementLine) and isinstance(updated_node.body.body[0].body[0], cst.Assign):
+                attribute = updated_node.body.body[0].body[0].targets[0].target.value
+                self_attribute = False
+            else:
+                candidates = [
+                    attr.value.attr.value
+                    for stmt in updated_node.body.body
+                    if isinstance(stmt, cst.SimpleStatementLine)
+                    for expr in stmt.body
+                    if isinstance(expr, cst.Expr) and isinstance(expr.value, cst.Call)
+                    for call in [expr.value]
+                    if isinstance(call.func, cst.Attribute)
+                    and isinstance(call.func.value, cst.Name)
+                    and call.func.value.value == "self"
+                    and isinstance(call.func.attr, cst.Name)
+                    and call.func.attr.value.startswith("assert")
+                    and len(call.args) > 0
+                    for arg in [call.args[0]]
+                    if isinstance(arg.value, cst.Attribute)
+                    for attr in [arg.value]
+                    if isinstance(attr.value, cst.Attribute)
+                    and isinstance(attr.value.value, cst.Name)
+                    and attr.value.value.value == "self"
+                    and isinstance(attr.value.attr, cst.Name)
+                ]
+                if not list(Counter(candidates).items()):
+                    raise Exception("Could not find the attribute to test this class")
+                attribute = list(Counter(candidates).items())[0][0]
+                self_attribute = True
 
             def parse_attribute(attr: cst.Attribute) -> list[str]:
                 attrs = []
@@ -812,17 +819,19 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                     attrs.insert(0, attr.attr.value)
                     attr = attr.value
                 attrs.insert(0, attr.value)
+                if self_attribute and attrs[0] == "self":
+                    attrs.pop(0)
                 return attrs
 
             i = 0
             while i < len(updated_node.body.body):
                 attr = updated_node.body.body[i].body[0].value.args[0].value
                 attrs = parse_attribute(attr) if isinstance(attr, cst.Attribute) else []
-                if len(attrs) >= 3 and attrs[0] == "self" and attrs[1] == attribute:
-                    asserted_property = attrs[2]
+                if len(attrs) >= 2 and attrs[0] == attribute:
+                    asserted_property = attrs[1]
                     while self.properties and self.properties[0].name < asserted_property:
                         prop = self.properties.pop(0)
-                        stmt = create_statement(prop)
+                        stmt = create_statement(prop, self_attribute)
                         stmts = updated_node.body.body
                         updated_node = updated_node.with_changes(
                             body=updated_node.body.with_changes(body=tuple(stmts[:i]) + (stmt,) + tuple(stmts[i:]))
@@ -833,7 +842,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 i = i + 1
             while self.properties:
                 prop = self.properties.pop(0)
-                stmt = create_statement(prop)
+                stmt = create_statement(prop, self_attribute)
                 stmts = updated_node.body.body
                 updated_node = updated_node.with_changes(
                     body=updated_node.body.with_changes(body=tuple(stmts) + (stmt,))
