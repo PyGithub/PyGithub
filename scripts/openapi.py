@@ -673,9 +673,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         updated_statements = []
 
         for statement in statements:
-            while new_statements and new_statements[0].test.left.value < statement.test.left.value:
+            comparison = statement.test if isinstance(statement.test, cst.Comparison) else statement.test.left
+            while new_statements and new_statements[0].test.left.value < comparison.left.value:
                 updated_statements.append(new_statements.pop(0))
-            if new_statements and new_statements[0].test.left.value == statement.test.left.value:
+            if new_statements and new_statements[0].test.left.value == comparison.left.value:
                 updated_statements.append(statement)
                 new_statements.pop(0)
             else:
