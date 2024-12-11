@@ -84,7 +84,7 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any
 
 import github.CodeSecurityConfig
 import github.DefaultCodeSecurityConfig
@@ -1466,22 +1466,25 @@ class Organization(CompletableGithubObject):
             firstUrl=f"{self.url}/code-security/configurations",
             firstParams=NotSet.remove_unset_items({"target_type": target_type}),
         )
-    
-    def create_code_security_config(self, name: str,
-                                    description: str,
-                                    advanced_security: Opt[str] = NotSet,
-                                    dependency_graph: Opt[str] = NotSet,
-                                    dependency_graph_autosubmit_action: Opt[str] = NotSet,
-                                    dependabot_alerts: Opt[str] = NotSet,
-                                    dependabot_security_updates: Opt[str] = NotSet,
-                                    code_scanning_default_setup: Opt[str] = NotSet,
-                                    secret_scanning: Opt[str] = NotSet,
-                                    secret_scanning_push_protection: Opt[str] = NotSet,
-                                    secret_scanning_delegated_bypass: Opt[str] = NotSet,
-                                    secret_scanning_validity_checks: Opt[str] = NotSet,
-                                    secret_scanning_non_provider_patterns: Opt[str] = NotSet,
-                                    private_vulnerability_reporting: Opt[str] = NotSet,
-                                    enforcement: Opt[str] = NotSet) -> CodeSecurityConfig:
+
+    def create_code_security_config(
+        self,
+        name: str,
+        description: str,
+        advanced_security: Opt[str] = NotSet,
+        dependency_graph: Opt[str] = NotSet,
+        dependency_graph_autosubmit_action: Opt[str] = NotSet,
+        dependabot_alerts: Opt[str] = NotSet,
+        dependabot_security_updates: Opt[str] = NotSet,
+        code_scanning_default_setup: Opt[str] = NotSet,
+        secret_scanning: Opt[str] = NotSet,
+        secret_scanning_push_protection: Opt[str] = NotSet,
+        secret_scanning_delegated_bypass: Opt[str] = NotSet,
+        secret_scanning_validity_checks: Opt[str] = NotSet,
+        secret_scanning_non_provider_patterns: Opt[str] = NotSet,
+        private_vulnerability_reporting: Opt[str] = NotSet,
+        enforcement: Opt[str] = NotSet,
+    ) -> CodeSecurityConfig:
         """
         :calls: `POST /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#create-a-code-security-configuration>`_
         :rtype: :class:`PaginatedList` of dict
@@ -1528,7 +1531,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
         return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
-    
+
     def update_code_security_config(
         self,
         id: int,
@@ -1546,7 +1549,7 @@ class Organization(CompletableGithubObject):
         secret_scanning_validity_checks: Opt[str] = NotSet,
         secret_scanning_non_provider_patterns: Opt[str] = NotSet,
         private_vulnerability_reporting: Opt[str] = NotSet,
-        enforcement: Opt[str] = NotSet
+        enforcement: Opt[str] = NotSet,
     ) -> CodeSecurityConfig:
         """
         :calls: `PATCH /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#update-a-code-security-configuration>`_
@@ -1587,9 +1590,11 @@ class Organization(CompletableGithubObject):
             }
         )
 
-        headers, data = self._requester.requestJsonAndCheck("PATCH", f"{self.url}/code-security/configurations/{id}", input=post_parameters)
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH", f"{self.url}/code-security/configurations/{id}", input=post_parameters
+        )
         return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
-    
+
     def delete_code_security_config(self, id: int) -> None:
         """
         :calls: `DELETE /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#delete-a-code-security-configuration>`_
@@ -1609,7 +1614,7 @@ class Organization(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-security/configurations/{id}")
         return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
-    
+
     def set_default_code_security_config(self, id: int, default_for_new_repos: Opt[str] = NotSet) -> None:
         """
         :calls: `PUT /orgs/{org}/code-security/configurations/{configuration_id}/defaults <https://docs.github.com/en/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-organization>`_
@@ -1620,7 +1625,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/code-security/configurations/{id}/defaults", input=put_parameters
         )
-    
+
     def list_default_code_security_configs(self) -> PaginatedList[DefaultCodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/defaults <https://docs.github.com/en/rest/code-security/configurations#get-default-code-security-configurations>`_
@@ -1633,7 +1638,7 @@ class Organization(CompletableGithubObject):
             firstParams=None,
         )
 
-    def attach_security_config(self, id: int, scope: str, selected_repository_ids: Opt[List[int]] = NotSet) -> None:
+    def attach_security_config(self, id: int, scope: str, selected_repository_ids: Opt[list[int]] = NotSet) -> None:
         """
         :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
         """
@@ -1654,8 +1659,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
-
-    def detach_security_config(self, selected_repository_ids: List[str]) -> None:
+    def detach_security_config(self, selected_repository_ids: list[int]) -> None:
         """
         :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
         """
@@ -1666,12 +1670,12 @@ class Organization(CompletableGithubObject):
             }
         )
         headers, data = self._requester.requestJsonAndCheck(
-            "DELETE", 
+            "DELETE",
             f"/orgs/{self.login}/code-security/configurations/detach",
-            input=delete_parameters,                                                             
+            input=delete_parameters,
             headers={"Accept": Consts.repoVisibilityPreview},
-            )
-        
+        )
+
     def get_repos_for_code_security_config(self, id: int, status: Opt[str] = NotSet) -> PaginatedList[Repository]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories <https://docs.github.com/en/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration>`_

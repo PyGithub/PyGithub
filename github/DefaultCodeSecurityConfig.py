@@ -41,11 +41,11 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 import github.CodeSecurityConfig
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
 
 class DefaultCodeSecurityConfig(NonCompletableGithubObject):
     """
@@ -56,11 +56,9 @@ class DefaultCodeSecurityConfig(NonCompletableGithubObject):
 
     """
 
-
     def _initAttributes(self) -> None:
-        self._configuration: Attribute['github.CodeSecurityConfig.CodeSecurityConfig'] = NotSet
+        self._configuration: Attribute[github.CodeSecurityConfig.CodeSecurityConfig] = NotSet
         self._default_for_new_repos: Attribute[str] = NotSet
-
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -69,18 +67,18 @@ class DefaultCodeSecurityConfig(NonCompletableGithubObject):
             }
         )
 
-
     @property
-    def configuration(self) -> 'github.CodeSecurityConfig.CodeSecurityConfig':
+    def configuration(self) -> github.CodeSecurityConfig.CodeSecurityConfig:
         return self._configuration.value
 
     @property
     def default_for_new_repos(self) -> str:
         return self._default_for_new_repos.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "configuration" in attributes:  # pragma no branch
-            self._configuration = self._makeClassAttribute(github.CodeSecurityConfig.CodeSecurityConfig, attributes["configuration"])
+            self._configuration = self._makeClassAttribute(
+                github.CodeSecurityConfig.CodeSecurityConfig, attributes["configuration"]
+            )
         if "default_for_new_repos" in attributes:  # pragma no branch
             self._default_for_new_repos = self._makeStringAttribute(attributes["default_for_new_repos"])
-

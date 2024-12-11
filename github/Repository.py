@@ -4143,12 +4143,12 @@ class Repository(CompletableGithubObject):
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
-    
+
     def attach_security_config(self, id: int) -> None:
         """
         :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
         """
-        self.organization.attach_security_config(id=id, scope='selected', selected_repository_ids=[self.id])
+        self.organization.attach_security_config(id=id, scope="selected", selected_repository_ids=[self.id])
 
     def detach_security_config(self) -> None:
         """
@@ -4156,7 +4156,7 @@ class Repository(CompletableGithubObject):
         """
         self.organization.detach_security_config(selected_repository_ids=[self.id])
 
-    def get_security_config(self) -> Opt[CodeSecurityConfig]:
+    def get_security_config(self) -> CodeSecurityConfig | None:
         """
         :calls: `GET /repos/{owner}/{repo}/code-security-configuration <https://docs.github.com/en/rest/code-security/configurations?apiVersion=2022-11-28#get-the-code-security-configuration-associated-with-a-repository>`_
         :rtype: dict[str, None | str | list]

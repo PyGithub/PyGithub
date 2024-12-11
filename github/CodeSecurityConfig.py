@@ -132,7 +132,6 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     def id(self) -> int:
         return self._id.value
 
-
     @property
     def name(self) -> str:
         return self._name.value
@@ -173,13 +172,15 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "advanced_security" in attributes:  # pragma no branch
             self._advanced_security = self._makeStringAttribute(attributes["advanced_security"])
         if "code_scanning_default_setup" in attributes:  # pragma no branch
             self._code_scanning_default_setup = self._makeStringAttribute(attributes["code_scanning_default_setup"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], str), attributes["created_at"]
+            assert attributes["created_at"] is None or isinstance(attributes["created_at"], str), attributes[
+                "created_at"
+            ]
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "dependabot_alerts" in attributes:  # pragma no branch
             self._dependabot_alerts = self._makeStringAttribute(attributes["dependabot_alerts"])
@@ -188,7 +189,9 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         if "dependency_graph" in attributes:  # pragma no branch
             self._dependency_graph = self._makeStringAttribute(attributes["dependency_graph"])
         if "dependency_graph_autosubmit_action" in attributes:  # pragma no branch
-            self._dependency_graph_autosubmit_action = self._makeStringAttribute(attributes["dependency_graph_autosubmit_action"])
+            self._dependency_graph_autosubmit_action = self._makeStringAttribute(
+                attributes["dependency_graph_autosubmit_action"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "enforcement" in attributes:  # pragma no branch
@@ -200,22 +203,33 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "private_vulnerability_reporting" in attributes:  # pragma no branch
-            self._private_vulnerability_reporting = self._makeStringAttribute(attributes["private_vulnerability_reporting"])
+            self._private_vulnerability_reporting = self._makeStringAttribute(
+                attributes["private_vulnerability_reporting"]
+            )
         if "secret_scanning" in attributes:  # pragma no branch
             self._secret_scanning = self._makeStringAttribute(attributes["secret_scanning"])
         if "secret_scanning_delegated_bypass" in attributes:  # pragma no branch
-            self._secret_scanning_delegated_bypass = self._makeStringAttribute(attributes["secret_scanning_delegated_bypass"])
+            self._secret_scanning_delegated_bypass = self._makeStringAttribute(
+                attributes["secret_scanning_delegated_bypass"]
+            )
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
-            self._secret_scanning_non_provider_patterns = self._makeStringAttribute(attributes["secret_scanning_non_provider_patterns"])
+            self._secret_scanning_non_provider_patterns = self._makeStringAttribute(
+                attributes["secret_scanning_non_provider_patterns"]
+            )
         if "secret_scanning_push_protection" in attributes:  # pragma no branch
-            self._secret_scanning_push_protection = self._makeStringAttribute(attributes["secret_scanning_push_protection"])
+            self._secret_scanning_push_protection = self._makeStringAttribute(
+                attributes["secret_scanning_push_protection"]
+            )
         if "secret_scanning_validity_checks" in attributes:  # pragma no branch
-            self._secret_scanning_validity_checks = self._makeStringAttribute(attributes["secret_scanning_validity_checks"])
+            self._secret_scanning_validity_checks = self._makeStringAttribute(
+                attributes["secret_scanning_validity_checks"]
+            )
         if "target_type" in attributes:  # pragma no branch
             self._target_type = self._makeStringAttribute(attributes["target_type"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], str), attributes["updated_at"]
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], str), attributes[
+                "updated_at"
+            ]
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-
