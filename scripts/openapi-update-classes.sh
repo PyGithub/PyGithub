@@ -115,10 +115,11 @@ skip() {
 failed() {
   echo -n -e " [${RED}$1${NOCOLOR}]" | tee >(cat 1>&2)
   echo 1>&2
+  false
 }
 
-update() {
-  # classes to update
+update_in_branch() {
+  # base branch where the class-specific branch originates from
   base="$1"; shift
   branch=
   if [ $# -gt 1 ]; then
@@ -128,7 +129,6 @@ update() {
     branch="openapi/update-$1"
     class="class"
   fi
-  classes="$*"
 
   # move to base branch
   "$git" checkout -f "$base" 1>&2
@@ -139,11 +139,25 @@ update() {
   fi
   "$git" checkout -b "$branch" 1>&2
 
+  # update class(es)
+  update "$class" "$*"
+
+  # restore base branch
+  echo -e " ${BLUE}($branch)${NOCOLOR}" | tee >(cat 1>&2)
+  "$git" checkout "$base" 1>&2
+}
+
+update() {
+  # class(es) label
+  class="$1"; shift
+  # classes to update
+  classes="$*"
+
   # add schemas to class
   for github_class in $classes; do
     ("$python" "$openapi" suggest --add "$spec" "$index" "$github_class" && echo) 1>&2
-  done || failed "schemas"
-  commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "schemas"
+  done || failed "schemas" || return 0
+  commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "schemas" || return 0
 
   # update index
   "$python" "$openapi" index "$source_path" "$index" 1>&2
@@ -151,22 +165,22 @@ update() {
   # sort the class
   for github_class in $classes; do
     ("$python" "$sort_class" "$index" "$github_class" && echo) 1>&2
-  done || failed "sort"
-  commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort"
+  done || failed "sort" || return 0
+  commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort" || return 0
 
   # apply schemas to class
   for github_class in $classes; do
     ("$python" "$openapi" apply "$spec" "$index" "$github_class" && echo) 1>&2
-  done || failed "$class"
-  commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class"
+  done || failed "$class" || return 0
+  commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class" || return 0
 
   # apply schemas to test class
   for github_class in $classes; do
     if [ -f "tests/$github_class.py" ]; then
       ("$python" "$openapi" apply --tests "$spec" "$index" "$github_class" && echo) 1>&2
     fi
-  done || failed "tests"
-  commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests"
+  done || failed "tests" || return 0
+  commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
 
   # fix test assertions
   if [[ "$(git log -1 --pretty=%B HEAD)" == "Updated test $class according to API spec"* ]]; then
@@ -183,7 +197,7 @@ update() {
         echo 1>&2
       fi
     done
-    commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions"
+    commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
   else
     skip "assertions"
   fi
@@ -210,13 +224,10 @@ update() {
   if [ "$pass" == "true" ]; then
     unchanged "pass"
   elif [ "$pass" == "false" ]; then
-    failed "pass"
+    failed "pass" || true
   else
     skip "pass"
   fi
-
-  echo -e " ${BLUE}($branch)${NOCOLOR}" | tee >(cat 1>&2)
-  "$git" checkout "$base" 1>&2
 }
 
 # memorize current base commit
@@ -231,12 +242,12 @@ echo | tee >(cat 1>&2)
 echo "Updating $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
 if [[ -n "$single_branch" ]]; then
   echo -n "$(wc -w <<< "$github_classes") PyGithub classes:" | tee >(cat 1>&2)
-  update "$base" "$single_branch" $github_classes
+  update_in_branch "$base" "$single_branch" $github_classes
 else
   for github_class in $github_classes
   do
     echo -n "${spaces:${#github_class}}$github_class:" | tee >(cat 1>&2)
-    update "$base" "$github_class"
+    update_in_branch "$base" "$github_class"
   done
 fi
 
