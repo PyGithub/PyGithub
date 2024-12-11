@@ -1146,7 +1146,15 @@ class OpenApi:
         with open(index_filename) as r:
             index = json.load(r)
 
-        cls = index.get("classes", {}).get(class_name_short, {})
+        classes = index.get("classes", {})
+        cls = classes.get(class_name_short, {})
+        irrelevant_bases = {inheritance
+                            for base in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
+                            for inheritance in classes.get(base, {}).get("inheritance", [])}
+        relevant_bases = set(cls.get("inheritance", [])).difference(irrelevant_bases)
+        inherited_properties = {property
+                                for base in relevant_bases
+                                for property in classes.get(base, {}).get("properties", {}).keys()}
         completable = "CompletableGithubObject" in cls.get("inheritance", [])
         cls_schemas = cls.get("schemas", [])
         for schema_name in cls_schemas:
@@ -1156,6 +1164,7 @@ class OpenApi:
             properties = {
                 k: (self.as_python_type(v, schema_path + ["properties", k]), v.get("deprecated", False))
                 for k, v in schema.get("properties", {}).items()
+                if k not in inherited_properties
             }
 
             with open(filename) as r:
