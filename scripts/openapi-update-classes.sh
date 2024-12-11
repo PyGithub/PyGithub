@@ -71,7 +71,10 @@ commit() {
 
   # run linting
   "$python_bin"/mypy github tests 1>&2
-  "$python_bin"/pre-commit run --all-files 1>&2 || true
+  "$python_bin"/pre-commit run --all-files --show-diff-on-failure 1>&2 || true
+
+  # skip if there are no changes after linting
+  if "$git" diff --exit-code 1>&2; then return 0; fi
 
   # commit
   "$git" commit -a -m "$message" "$@" 1>&2
