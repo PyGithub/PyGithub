@@ -831,6 +831,10 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
             i = 0
             while i < len(updated_node.body.body):
+                if not isinstance(updated_node.body.body[i].body[0].value, cst.Call):
+                    i = i + 1
+                    continue
+
                 attr = updated_node.body.body[i].body[0].value.args[0].value
                 attrs = self.parse_attribute(attr) if isinstance(attr, cst.Attribute) else []
                 if attrs and self_attribute and attrs[0] == "self":
