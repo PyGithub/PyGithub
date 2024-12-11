@@ -682,6 +682,9 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         updated_statements = []
 
         for statement in statements:
+            if not isinstance(statement, cst.SimpleStatementLine) or not isinstance(statement.body[0], cst.AnnAssign):
+                updated_statements.append(statement)
+                continue
             while new_statements and new_statements[0].body[0].target.attr.value < statement.body[0].target.attr.value:
                 updated_statements.append(new_statements.pop(0))
             if new_statements and new_statements[0].body[0].target.attr.value == statement.body[0].target.attr.value:
@@ -846,7 +849,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
             i = 0
             while i < len(updated_node.body.body):
-                if not isinstance(updated_node.body.body[i].body[0].value, cst.Call):
+                if not isinstance(updated_node.body.body[i].body[0].value, cst.Call) or not updated_node.body.body[i].body[0].value.args:
                     i = i + 1
                     continue
 
