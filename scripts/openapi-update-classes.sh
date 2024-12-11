@@ -142,8 +142,14 @@ update_in_branch() {
   # update class(es)
   update "$class" "$*"
 
-  # restore base branch
-  echo -e " ${BLUE}($branch)${NOCOLOR}" | tee >(cat 1>&2)
+  # remove class-specific branch if there are no changes, restore base branch
+  if "$git" diff --quiet "$base"; then
+    "$git" branch -m "$branch" "$branch-$(date +%s)" 1>&2
+  else
+    echo -n -e " ${BLUE}($branch)${NOCOLOR}" | tee >(cat 1>&2)
+  fi
+  echo
+
   "$git" checkout "$base" 1>&2
 }
 
