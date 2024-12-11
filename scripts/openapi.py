@@ -1106,7 +1106,10 @@ class OpenApi:
     def apply(self, spec_file: str, index_filename: str, class_name: str, dry_run: bool, tests: bool):
         full_class_name = class_name
         if "." not in class_name:
-            full_class_name = f"github.{class_name}.{class_name}"
+            with open(index_filename) as r:
+                index = json.load(r)
+            cls = index.get("classes", {}).get(class_name)
+            full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
         package, module, class_name = full_class_name.split(".", maxsplit=2)
         class_name_short = class_name.split(".")[-1]
         filename = f"{package}/{module}.py"
