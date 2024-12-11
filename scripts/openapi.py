@@ -113,12 +113,22 @@ class CstMethods(abc.ABC):
         return cls.contains_decorator(func_def.decorators, "property")
 
     @classmethod
-    def create_attribute(cls, names: list[str]) -> cst.Name | cst.Attribute:
+    def create_subscript(cls, name: str) -> cst.Subscript:
+        fields = name.rstrip("]").split("[", maxsplit=1)
+        name = fields[0]
+        index = fields[1]
+        sub = cst.Subscript(cst.Name(name), [cst.SubscriptElement(cst.Index(cst.Integer(index)))])
+        return sub
+
+    @classmethod
+    def create_attribute(cls, names: list[str]) -> cst.BaseExpression:
+        names = [cls.create_subscript(name) if "[" in name and name.endswith("]") else cst.Name(name)
+                 for name in names]
         if len(names) == 1:
-            return cst.Name(names[0])
-        attr = cst.Attribute(cst.Name(names[0]), cst.Name(names[1]))
+            return names[0]
+        attr = cst.Attribute(names[0], names[1])
         for name in names[2:]:
-            attr = cst.Attribute(attr, cst.Name(name))
+            attr = cst.Attribute(attr, name)
         return attr
 
     @staticmethod
@@ -761,6 +771,11 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         def create_statement(prop: Property, self_attribute: bool) -> cst.SimpleStatementLine:
+            # turn a list of GithubClasses into the first element of the list
+            if isinstance(prop.data_type, PythonType) and prop.data_type.type == "list" and \
+                isinstance(prop.data_type.inner_types[0], GithubClass) and prop.data_type.inner_types[0].ids:
+                prop = dataclasses.replace(prop, name=f"{prop.name}[0]", data_type=prop.data_type.inner_types[0])
+
             if isinstance(prop.data_type, GithubClass) and prop.data_type.ids:
                 id = prop.data_type.ids[0]
                 return cst.SimpleStatementLine(
