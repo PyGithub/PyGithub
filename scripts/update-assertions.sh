@@ -53,4 +53,3 @@ while true; do
   last_line_number="$line_number"
   sleep 1
 done
-
