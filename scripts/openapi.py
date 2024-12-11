@@ -112,6 +112,24 @@ class CstMethods(abc.ABC):
     def is_github_object_property(cls, func_def: cst.FunctionDef):
         return cls.contains_decorator(func_def.decorators, "property")
 
+    @classmethod
+    def create_attribute(cls, names: list[str]) -> cst.Name | cst.Attribute:
+        if len(names) == 1:
+            return cst.Name(names[0])
+        attr = cst.Attribute(cst.Name(names[0]), cst.Name(names[1]))
+        for name in names[2:]:
+            attr = cst.Attribute(attr, cst.Name(name))
+        return attr
+
+    @staticmethod
+    def parse_attribute(attr: cst.Attribute) -> list[str]:
+        attrs = []
+        while isinstance(attr, cst.Attribute):
+            attrs.insert(0, attr.attr.value)
+            attr = attr.value
+        attrs.insert(0, attr.value)
+        return attrs
+
 
 class CstVisitorBase(cst.CSTVisitor, CstMethods, abc.ABC):
     def __init__(self):
@@ -354,7 +372,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                             cst.Import(
                                 [
                                     cst.ImportAlias(
-                                        cst.Attribute(cst.Name(import_module.package), cst.Name(import_module.module))
+                                        self.create_attribute([import_module.package, import_module.module])
                                     )
                                 ]
                             )
@@ -374,7 +392,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     cst.Import(
                         [
                             cst.ImportAlias(
-                                cst.Attribute(cst.Name(import_module.package), cst.Name(import_module.module))
+                                self.create_attribute([import_module.package, import_module.module])
                             )
                         ]
                     )
@@ -394,7 +412,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     import_stmt = cst.SimpleStatementLine(
                         [
                             cst.ImportFrom(
-                                module=cst.Attribute(cst.Name(typing_class.package), cst.Name(typing_class.module)),
+                                module=self.create_attribute([typing_class.package, typing_class.module]),
                                 names=[cst.ImportAlias(cst.Name(typing_class.name))],
                             )
                         ]
@@ -413,7 +431,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 import_stmt = cst.SimpleStatementLine(
                     [
                         cst.ImportFrom(
-                            module=cst.Attribute(cst.Name(typing_class.package), cst.Name(typing_class.module)),
+                            module=self.create_attribute([typing_class.package, typing_class.module]),
                             names=[cst.ImportAlias(cst.Name(typing_class.name))],
                         )
                     ]
@@ -475,20 +493,15 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             body=[
                 cst.Expr(
                     cst.Call(
-                        func=cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value="_completeIfNotSet")),
-                        args=[cst.Arg(cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value=f"_{name}")))],
+                        func=self.create_attribute(["self", "_completeIfNotSet"]),
+                        args=[cst.Arg(self.create_attribute(["self", f"_{name}"]))],
                     )
                 )
             ]
         )
         return_stmt = cst.SimpleStatementLine(
             body=[
-                cst.Return(
-                    cst.Attribute(
-                        value=cst.Attribute(value=cst.Name(value="self"), attr=cst.Name(value=f"_{name}")),
-                        attr=cst.Name(value="value"),
-                    )
-                )
+                cst.Return(self.create_attribute(["self", f"_{name}", "value"]))
             ]
         )
         stmts = ([complete_if_completable_stmt] if self.completable else []) + [return_stmt]
@@ -509,10 +522,8 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             return cst.Name("None")
         if isinstance(data_type, GithubClass):
             if short_class_name:
-                return cst.Name(data_type.name)
-            return cst.Attribute(
-                cst.Attribute(cst.Name(data_type.package), cst.Name(data_type.module)), cst.Name(data_type.name)
-            )
+                return cst.Name(data_type.name.split(".")[-1])
+            return cls.create_attribute([data_type.package, data_type.module] + data_type.name.split("."))
         if data_type.type == "union":
             if len(data_type.inner_types) == 0:
                 return cst.Name("None")
@@ -537,7 +548,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         return cst.SimpleStatementLine(
             [
                 cst.AnnAssign(
-                    target=cst.Attribute(value=cst.Name("self"), attr=cst.Name(f"_{prop.name}")),
+                    target=cls.create_attribute(["self", f"_{prop.name}"]),
                     annotation=cst.Annotation(
                         annotation=cst.Subscript(
                             value=cst.Name("Attribute"),
@@ -618,7 +629,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             args = [cst.Arg(cls.create_type(prop.data_type)), cst.Arg(attr)]
         if func_name is None:
             raise ValueError(f"Unsupported data type {prop.data_type}")
-        return cst.Call(func=cst.Attribute(cst.Name("self"), cst.Name(func_name)), args=args)
+        return cst.Call(func=cls.create_attribute(["self", func_name]), args=args)
 
     @classmethod
     def create_use_attr(cls, prop: Property) -> cst.BaseStatement:
@@ -635,7 +646,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     cst.SimpleStatementLine(
                         [
                             cst.Assign(
-                                targets=[cst.AssignTarget(cst.Attribute(cst.Name("self"), cst.Name(f"_{prop.name}")))],
+                                targets=[cst.AssignTarget(cls.create_attribute(["self", f"_{prop.name}"]))],
                                 value=cls.make_attribute(prop),
                             )
                         ]
@@ -729,7 +740,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                     cst.Arg(
                         keyword=cst.Name("tzinfo"),
                         equal=equal,
-                        value=cst.Attribute(cst.Name("timezone"), cst.Name("utc")),
+                        value=self.create_attribute(["timezone", "utc"]),
                     ),
                 ],
             )
@@ -743,16 +754,10 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                     [
                         cst.Expr(
                             cst.Call(
-                                func=cst.Attribute(cst.Name("self"), cst.Name("assertEqual")),
+                                func=self.create_attribute(["self", "assertEqual"]),
                                 args=[
                                     cst.Arg(
-                                        cst.Attribute(
-                                            cst.Attribute(
-                                                cst.Attribute(cst.Name("self"), cst.Name(attribute)) if self_attribute else cst.Name(attribute),
-                                                cst.Name(prop.name),
-                                            ),
-                                            cst.Name(id),
-                                        )
+                                        self.create_attribute((["self"] if self_attribute else []) + [attribute, prop.name, id])
                                     ),
                                     cst.Arg(cst.SimpleString('""')),
                                 ],
@@ -765,12 +770,10 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 [
                     cst.Expr(
                         cst.Call(
-                            func=cst.Attribute(cst.Name("self"), cst.Name("assertEqual")),
+                            func=self.create_attribute(["self", "assertEqual"]),
                             args=[
                                 cst.Arg(
-                                    cst.Attribute(
-                                        cst.Attribute(cst.Name("self"), cst.Name(attribute)), cst.Name(prop.name)
-                                    ) if self_attribute else cst.Attribute(cst.Name(attribute), cst.Name(prop.name))
+                                    self.create_attribute((["self"] if self_attribute else []) + [attribute, prop.name])
                                 ),
                                 cst.Arg(self.get_value(prop.data_type)),
                             ],
@@ -813,20 +816,13 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 attribute = list(Counter(candidates).items())[0][0]
                 self_attribute = True
 
-            def parse_attribute(attr: cst.Attribute) -> list[str]:
-                attrs = []
-                while isinstance(attr, cst.Attribute):
-                    attrs.insert(0, attr.attr.value)
-                    attr = attr.value
-                attrs.insert(0, attr.value)
-                if self_attribute and attrs[0] == "self":
-                    attrs.pop(0)
-                return attrs
-
             i = 0
             while i < len(updated_node.body.body):
                 attr = updated_node.body.body[i].body[0].value.args[0].value
-                attrs = parse_attribute(attr) if isinstance(attr, cst.Attribute) else []
+                attrs = self.parse_attribute(attr) if isinstance(attr, cst.Attribute) else []
+                if attrs and self_attribute and attrs[0] == "self":
+                    attrs.pop(0)
+
                 if len(attrs) >= 2 and attrs[0] == attribute:
                     asserted_property = attrs[1]
                     while self.properties and self.properties[0].name < asserted_property:
