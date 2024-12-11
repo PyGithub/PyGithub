@@ -696,6 +696,9 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         updated_statements = []
 
         for statement in statements:
+            if not isinstance(statement, cst.If):
+                updated_statements.append(statement)
+                continue
             comparison = statement.test if isinstance(statement.test, cst.Comparison) else statement.test.left
             while new_statements and new_statements[0].test.left.value < comparison.left.value:
                 updated_statements.append(new_statements.pop(0))
@@ -794,9 +797,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
         if updated_node.name.value == "testAttributes":
             # first we detect the attribute that is used to test this class
-            # either the first line assigns a variable with that attribute,
+            # either the first line assigns a local variable with that attribute,
             # or we check assertions for the most common attribute
-            if isinstance(updated_node.body.body[0], cst.SimpleStatementLine) and isinstance(updated_node.body.body[0].body[0], cst.Assign):
+            if isinstance(updated_node.body.body[0], cst.SimpleStatementLine) and isinstance(updated_node.body.body[0].body[0], cst.Assign) and not isinstance(updated_node.body.body[0].body[0].targets[0].target, cst.Attribute):
                 attribute = updated_node.body.body[0].body[0].targets[0].target.value
                 self_attribute = False
             else:
