@@ -133,6 +133,7 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Bill Napier <napier@pobox.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -173,6 +174,7 @@ import github.CheckRun
 import github.CheckSuite
 import github.Clones
 import github.CodeScanAlert
+import github.CodeSecurityConfig
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -256,6 +258,7 @@ if TYPE_CHECKING:
     from github.CheckSuite import CheckSuite
     from github.Clones import Clones
     from github.CodeScanAlert import CodeScanAlert
+    from github.CodeSecurityConfig import CodeSecurityConfig
     from github.Commit import Commit
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
@@ -4140,6 +4143,28 @@ class Repository(CompletableGithubObject):
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
+    
+    def attach_security_config(self, id: int) -> None:
+        """
+        :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
+        """
+        self.organization.attach_security_config(id=id, scope='selected', selected_repository_ids=[self.id])
+
+    def detach_security_config(self) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
+        """
+        self.organization.detach_security_config(selected_repository_ids=[self.id])
+
+    def get_security_config(self) -> Opt[CodeSecurityConfig]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/code-security-configuration <https://docs.github.com/en/rest/code-security/configurations?apiVersion=2022-11-28#get-the-code-security-configuration-associated-with-a-repository>`_
+        :rtype: dict[str, None | str | list]
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-security-configuration")
+        if not data:
+            return None
+        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
