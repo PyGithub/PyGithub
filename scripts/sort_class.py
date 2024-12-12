@@ -206,6 +206,8 @@ def main(index_filename: str, class_names: list[str], dry_run: bool):
         full_class_name = class_name
         if "." not in class_name:
             cls = index.get("classes", {}).get(class_name)
+            if not cls:
+                raise ValueError(f"Class {class_name} does not exist in index")
             full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
         package, module, class_name = full_class_name.split(".", maxsplit=2)
         filename = f"{package}/{module}.py"
