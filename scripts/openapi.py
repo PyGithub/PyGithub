@@ -1129,67 +1129,68 @@ class OpenApi:
                 with open(filename, "w") as w:
                     w.write(updated_code)
 
-    def apply(self, spec_file: str, index_filename: str, class_name: str, dry_run: bool, tests: bool):
-        full_class_name = class_name
-        if "." not in class_name:
+    def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool):
+        for class_name in class_names:
+            full_class_name = class_name
+            if "." not in class_name:
+                with open(index_filename) as r:
+                    index = json.load(r)
+                cls = index.get("classes", {}).get(class_name)
+                full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
+            package, module, class_name = full_class_name.split(".", maxsplit=2)
+            class_name_short = class_name.split(".")[-1]
+            filename = f"{package}/{module}.py"
+            test_filename = f"tests/{module}.py"
+
+            print(f"Applying spec {spec_file} to {full_class_name} ({filename})")
+            with open(spec_file) as r:
+                spec = json.load(r)
             with open(index_filename) as r:
                 index = json.load(r)
-            cls = index.get("classes", {}).get(class_name)
-            full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
-        package, module, class_name = full_class_name.split(".", maxsplit=2)
-        class_name_short = class_name.split(".")[-1]
-        filename = f"{package}/{module}.py"
-        test_filename = f"tests/{module}.py"
 
-        print(f"Applying spec {spec_file} to {full_class_name} ({filename})")
-        with open(spec_file) as r:
-            spec = json.load(r)
-        with open(index_filename) as r:
-            index = json.load(r)
-
-        classes = index.get("classes", {})
-        cls = classes.get(class_name_short, {})
-        irrelevant_bases = {
-            inheritance
-            for base in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
-            for inheritance in classes.get(base, {}).get("inheritance", [])
-        }
-        relevant_bases = set(cls.get("inheritance", [])).difference(irrelevant_bases)
-        inherited_properties = {
-            property for base in relevant_bases for property in classes.get(base, {}).get("properties", {}).keys()
-        }
-        completable = "CompletableGithubObject" in cls.get("inheritance", [])
-        cls_schemas = cls.get("schemas", [])
-        for schema_name in cls_schemas:
-            print(f"Applying schema {schema_name}")
-            schema_path, schema = self.get_schema(spec, schema_name)
-
-            properties = {
-                k: (self.as_python_type(v, schema_path + ["properties", k]), v.get("deprecated", False))
-                for k, v in schema.get("properties", {}).items()
-                if k not in inherited_properties
+            classes = index.get("classes", {})
+            cls = classes.get(class_name_short, {})
+            irrelevant_bases = {
+                inheritance
+                for base in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
+                for inheritance in classes.get(base, {}).get("inheritance", [])
             }
+            relevant_bases = set(cls.get("inheritance", [])).difference(irrelevant_bases)
+            inherited_properties = {
+                property for base in relevant_bases for property in classes.get(base, {}).get("properties", {}).keys()
+            }
+            completable = "CompletableGithubObject" in cls.get("inheritance", [])
+            cls_schemas = cls.get("schemas", [])
+            for schema_name in cls_schemas:
+                print(f"Applying schema {schema_name}")
+                schema_path, schema = self.get_schema(spec, schema_name)
 
-            with open(filename) as r:
-                code = "".join(r.readlines())
+                properties = {
+                    k: (self.as_python_type(v, schema_path + ["properties", k]), v.get("deprecated", False))
+                    for k, v in schema.get("properties", {}).items()
+                    if k not in inherited_properties
+                }
 
-            transformer = ApplySchemaTransformer(
-                module, class_name, properties.copy(), completable=completable, deprecate=False
-            )
-            tree = cst.parse_module(code)
-            tree_updated = tree.visit(transformer)
-            self.write_code(code, tree_updated.code, filename, dry_run)
-
-            if tests:
-                with open(test_filename) as r:
+                with open(filename) as r:
                     code = "".join(r.readlines())
 
-                transformer = ApplySchemaTestTransformer(
-                    cls.get("ids", []), module, class_name, properties.copy(), deprecate=False
+                transformer = ApplySchemaTransformer(
+                    module, class_name, properties.copy(), completable=completable, deprecate=False
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
-                self.write_code(code, tree_updated.code, test_filename, dry_run)
+                self.write_code(code, tree_updated.code, filename, dry_run)
+
+                if tests:
+                    with open(test_filename) as r:
+                        code = "".join(r.readlines())
+
+                    transformer = ApplySchemaTestTransformer(
+                        cls.get("ids", []), module, class_name, properties.copy(), deprecate=False
+                    )
+                    tree = cst.parse_module(code)
+                    tree_updated = tree.visit(transformer)
+                    self.write_code(code, tree_updated.code, test_filename, dry_run)
 
     def index(self, github_path: str, index_filename: str):
         import multiprocessing
@@ -1477,7 +1478,7 @@ class OpenApi:
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("index_filename", help="Path of index file")
-        apply_parser.add_argument("class_name", help="PyGithub GithubObject class name")
+        apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
 
         if len(sys.argv) == 1:
             args_parser.print_help()

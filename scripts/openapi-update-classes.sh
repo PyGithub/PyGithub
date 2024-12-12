@@ -39,9 +39,9 @@ fi
 
 # get all GithubObject classes
 if [ $# -ge 1 ]; then
-  github_classes="$@"
+  github_classes=("$@")
 else
-  github_classes="$("$jq" -r '.indices.class_to_descendants.GithubObject | @tsv' < "$index")"
+  github_classes=("$("$jq" -r '.indices.class_to_descendants.GithubObject | @tsv' < "$index")")
 fi
 
 # update index
@@ -50,12 +50,14 @@ echo -n "Updating index ($index)" | tee >(cat 1>&2)
 echo | tee >(cat 1>&2)
 
 # skip abstract classes
-github_classes="$(for class in $github_classes; do
+declare -a concrete_github_classes
+for class in "${github_classes[@]}"; do
   if [[ "$("$jq" ".classes.$class.bases | index(\"ABC\")" < "$index")" == "null" ]]; then
-    echo $class
+    concrete_github_classes+=($class)
   fi
-done)"
-max_class_name_length=$(for class_name in $github_classes; do echo -n "$class_name" | wc -c; done | sort -rn | head -n1)
+done
+github_classes=("${concrete_github_classes[@]}")
+max_class_name_length=$(for class_name in "${github_classes[@]}"; do echo -n "$class_name" | wc -c; done | sort -rn | head -n1)
 spaces="$(head -c "$max_class_name_length" < /dev/zero | tr '\0' ' ')"
 
 commit() {
@@ -84,9 +86,9 @@ commit() {
 
 # apply schemas on all classes iteratively, until no more schemas could be applied
 last_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
-echo -n "Adding schemas to $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
+echo -n "Adding schemas to ${#github_classes[@]} classes:" | tee >(cat 1>&2)
 while true; do
-  "$python" "$openapi" suggest --add "$spec" "$index" $github_classes 1>&2
+  "$python" "$openapi" suggest --add "$spec" "$index" "${github_classes[@]}" 1>&2
   "$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
   now_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
   if [ "$now_schemas" -eq "$last_schemas" ]; then break; fi
@@ -143,7 +145,7 @@ update_in_branch() {
   "$git" checkout -b "$branch" 1>&2
 
   # update class(es)
-  update "$class" "$*"
+  update "$class" "$@"
 
   # remove class-specific branch if there are no changes, restore base branch
   if "$git" diff --quiet "$base"; then
@@ -224,12 +226,12 @@ echo -n "Updating index ($index)" | tee >(cat 1>&2)
 echo | tee >(cat 1>&2)
 
 # update all classes
-echo "Updating $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
+echo "Updating ${#github_classes[@]} classes:" | tee >(cat 1>&2)
 if [[ -n "$single_branch" ]]; then
-  echo -n "$(wc -w <<< "$github_classes") PyGithub classes:" | tee >(cat 1>&2)
-  update_in_branch "$base" "$single_branch" "${classes[@]}"
+  echo -n "${#github_classes[@]} PyGithub classes:" | tee >(cat 1>&2)
+  update_in_branch "$base" "$single_branch" "${github_classes[@]}"
 else
-  for github_class in $github_classes
+  for github_class in "${github_classes[@]}"
   do
     echo -n "${spaces:${#github_class}}$github_class:" | tee >(cat 1>&2)
     update_in_branch "$base" "$github_class"
