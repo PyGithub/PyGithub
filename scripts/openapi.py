@@ -1316,6 +1316,7 @@ class OpenApi:
 
         # suggest schemas based on properties of classes
         available_schemas = {}
+        unimplemented_schemas = set()
         for cls in self.classes.values():
             schemas: list[str] = cls.get("schemas", [])
             properties: dict[str, Any] = cls.get("properties", {})
@@ -1347,7 +1348,13 @@ class OpenApi:
                             spec_type = self.get_inner_spec_types(
                                 property_spec_type, schema_path + ["properties", property_name]
                             )
+                            for st in spec_type:
+                                if st.lstrip("#") not in index.get("indices", {}).get("schema_to_classes", {}):
+                                    unimplemented_schemas.add(st.lstrip("#"))
                             available_schemas[cls_name][key].extend(spec_type)
+
+        for schema in sorted(list(unimplemented_schemas)):
+            print(f"schema not implemented: {schema}")
 
         classes = index.get("classes", {})
 
