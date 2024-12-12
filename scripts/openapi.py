@@ -354,6 +354,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         import_classes = sorted(property_classes, key=lambda c: c.module)
         typing_classes = sorted(property_classes, key=lambda c: c.module)
         # TODO: do not import this file itself
+        datetime_added = False
         in_github_imports = False
         # insert import classes if needed
         while (
@@ -361,20 +362,21 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             and isinstance(node.body[i], cst.SimpleStatementLine)
             and isinstance(node.body[i].body[0], (cst.Import, cst.ImportFrom))
         ):
+            if not datetime_added and any(
+                    p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
+            ):
+                import_stmt = cst.SimpleStatementLine(
+                    [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])]
+                )
+                stmts = node.body
+                node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
+                datetime_added = True
+                i = i + 1
             if (
                 not in_github_imports
                 and isinstance(node.body[i].body[0].names[0].name, cst.Attribute)
                 and node.body[i].body[0].names[0].name.value.value == "github"
             ):
-                if any(
-                    p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
-                ):
-                    import_stmt = cst.SimpleStatementLine(
-                        [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])]
-                    )
-                    stmts = node.body
-                    node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
-                    i = i + 1
                 in_github_imports = True
             if in_github_imports and import_classes:
                 import_node = node.body[i].body[0]
