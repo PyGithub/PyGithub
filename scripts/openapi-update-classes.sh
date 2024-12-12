@@ -41,7 +41,7 @@ fi
 if [ $# -ge 1 ]; then
   github_classes=("$@")
 else
-  github_classes=("$("$jq" -r '.indices.class_to_descendants.GithubObject | @tsv' < "$index")")
+  read -r -a github_classes <<< "$("$jq" -r '.indices.class_to_descendants.GithubObject | @tsv' < "$index")"
 fi
 
 # update index
