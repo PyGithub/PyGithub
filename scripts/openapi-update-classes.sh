@@ -165,8 +165,8 @@ update() {
   classes=("$@")
 
   # classes with test files
-  declare -a classes_with_tests
   declare -a test_files
+  declare -a classes_with_tests
   for github_class in "${classes[@]}"; do
     test_file="tests/$github_class.py"
     if [ -f "$test_file" ]; then
@@ -203,11 +203,12 @@ update() {
       #sed -i -z 's/,\s*)/)/g' "$filename"
       #black --line-length 1000 --line-ranges 108-108 tests/ApplicationOAuth.py
       #"$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" 1>&2 || true
-      "$update_assertions" "test_file" testAttributes 1>&2 || true
+      ("$update_assertions" "$test_file" testAttributes 2>&1 | while read line; do echo "$test_file: $line"; done 1>&2 || true) &
       # record test data for testAttributes, fix assertions, commit as separate commit
       # do not record for other tests (might delete things)
       echo 1>&2
     done
+    wait
     commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
   else
     skip "assertions"
@@ -231,8 +232,7 @@ if [[ -n "$single_branch" ]]; then
   echo -n "${#github_classes[@]} PyGithub classes:" | tee >(cat 1>&2)
   update_in_branch "$base" "$single_branch" "${github_classes[@]}"
 else
-  for github_class in "${github_classes[@]}"
-  do
+  for github_class in "${github_classes[@]}"; do
     echo -n "${spaces:${#github_class}}$github_class:" | tee >(cat 1>&2)
     update_in_branch "$base" "$github_class"
   done
