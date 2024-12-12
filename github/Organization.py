@@ -1537,7 +1537,7 @@ class Organization(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.repoVisibilityPreview},
         )
-        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
+        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data)
 
     def update_code_security_config(
         self,
@@ -1600,7 +1600,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH", f"{self.url}/code-security/configurations/{id}", input=post_parameters
         )
-        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
+        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data)
 
     def delete_code_security_config(self, id: int) -> None:
         """
@@ -1620,7 +1620,7 @@ class Organization(CompletableGithubObject):
         assert isinstance(id, int), id
 
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-security/configurations/{id}")
-        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
+        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data)
 
     def set_default_code_security_config(self, id: int, default_for_new_repos: Opt[str] = NotSet) -> None:
         """

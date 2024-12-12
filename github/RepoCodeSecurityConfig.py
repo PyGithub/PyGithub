@@ -41,7 +41,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 import github.CodeSecurityConfig
@@ -58,7 +57,7 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._configuration: Attribute['github.CodeSecurityConfig.CodeSecurityConfig'] = NotSet
+        self._configuration: Attribute[github.CodeSecurityConfig.CodeSecurityConfig] = NotSet
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -69,9 +68,8 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
         )
 
     @property
-    def configuration(self) -> 'github.CodeSecurityConfig.CodeSecurityConfig':
+    def configuration(self) -> github.CodeSecurityConfig.CodeSecurityConfig:
         return self._configuration.value
-
 
     @property
     def status(self) -> str:
@@ -79,7 +77,8 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "configuration" in attributes:  # pragma no branch
-            self._configuration = self._makeClassAttribute(github.CodeSecurityConfig.CodeSecurityConfig, attributes["configuration"])
+            self._configuration = self._makeClassAttribute(
+                github.CodeSecurityConfig.CodeSecurityConfig, attributes["configuration"]
+            )
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
-

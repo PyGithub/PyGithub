@@ -175,7 +175,6 @@ import github.CheckRun
 import github.CheckSuite
 import github.Clones
 import github.CodeScanAlert
-import github.RepoCodeSecurityConfig
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -216,6 +215,7 @@ import github.PublicKey
 import github.PullRequest
 import github.PullRequestComment
 import github.Referrer
+import github.RepoCodeSecurityConfig
 import github.RepositoryAdvisory
 import github.RepositoryDiscussion
 import github.RepositoryKey
@@ -4238,7 +4238,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-security-configuration")
         if data is None:
             return None
-        return github.RepoCodeSecurityConfig.RepoCodeSecurityConfig(self._requester, headers, data, completed=True)
+        return github.RepoCodeSecurityConfig.RepoCodeSecurityConfig(self._requester, headers, data)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet

@@ -720,7 +720,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(config.id, 17)
 
     def testSetDefaultCodeSecurityConfig(self):
-        self.org.set_default_code_security_config(id=17, default_for_new_repos='all')
+        self.org.set_default_code_security_config(id=17, default_for_new_repos="all")
         configs = self.org.list_default_code_security_configs()
         for config in configs:
             if config.default_for_new_repos == "all":
@@ -730,13 +730,13 @@ class Organization(Framework.TestCase):
         config = self.org.create_code_security_config(name="test1", description="This is a description")
         repo = self.org.get_repo("test1")
         repo.attach_security_config(id=config.id)
-        status = 'unknown'
-        while status != 'enforced':
+        status = "unknown"
+        while status != "enforced":
             repo_config = repo.get_security_config()
             if repo_config:
                 status = repo_config.status
             else:
-                status = 'unknown'
+                status = "unknown"
 
         self.assertEqual(config.id, repo_config.configuration.id)
         repo.detach_security_config()
