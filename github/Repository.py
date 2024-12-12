@@ -260,7 +260,7 @@ if TYPE_CHECKING:
     from github.CheckSuite import CheckSuite
     from github.Clones import Clones
     from github.CodeScanAlert import CodeScanAlert
-    from github.CodeSecurityConfig import RepoCodeSecurityConfig
+    from github.RepoCodeSecurityConfig import RepoCodeSecurityConfig
     from github.Commit import Commit
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
