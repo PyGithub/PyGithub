@@ -122,8 +122,7 @@ class CstMethods(abc.ABC):
 
     @classmethod
     def create_attribute(cls, names: list[str]) -> cst.BaseExpression:
-        names = [cls.create_subscript(name) if "[" in name and name.endswith("]") else cst.Name(name)
-                 for name in names]
+        names = [cls.create_subscript(name) if "[" in name and name.endswith("]") else cst.Name(name) for name in names]
         if len(names) == 1:
             return names[0]
         attr = cst.Attribute(names[0], names[1])
@@ -367,12 +366,11 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 and isinstance(node.body[i].body[0].names[0].name, cst.Attribute)
                 and node.body[i].body[0].names[0].name.value.value == "github"
             ):
-                if any(p.data_type.type == "datetime"
-                       for p in self.all_properties if isinstance(p.data_type, PythonType)):
+                if any(
+                    p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
+                ):
                     import_stmt = cst.SimpleStatementLine(
-                        [
-                            cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])
-                        ]
+                        [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])]
                     )
                     stmts = node.body
                     node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
@@ -381,7 +379,11 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             if in_github_imports and import_classes:
                 import_node = node.body[i].body[0]
                 imported_module = (
-                    (import_node.module.value if isinstance(import_node.module, cst.Name) else import_node.module.attr.value)
+                    (
+                        import_node.module.value
+                        if isinstance(import_node.module, cst.Name)
+                        else import_node.module.attr.value
+                    )
                     if isinstance(import_node, cst.ImportFrom)
                     else import_node.names[0].name.attr.value
                 )
@@ -390,11 +392,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     import_stmt = cst.SimpleStatementLine(
                         [
                             cst.Import(
-                                [
-                                    cst.ImportAlias(
-                                        self.create_attribute([import_module.package, import_module.module])
-                                    )
-                                ]
+                                [cst.ImportAlias(self.create_attribute([import_module.package, import_module.module]))]
                             )
                         ]
                     )
@@ -408,15 +406,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         while import_classes:
             import_module = import_classes.pop(0)
             import_stmt = cst.SimpleStatementLine(
-                [
-                    cst.Import(
-                        [
-                            cst.ImportAlias(
-                                self.create_attribute([import_module.package, import_module.module])
-                            )
-                        ]
-                    )
-                ]
+                [cst.Import([cst.ImportAlias(self.create_attribute([import_module.package, import_module.module]))])]
             )
             stmts = node.body
             node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
@@ -519,11 +509,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 )
             ]
         )
-        return_stmt = cst.SimpleStatementLine(
-            body=[
-                cst.Return(self.create_attribute(["self", f"_{name}", "value"]))
-            ]
-        )
+        return_stmt = cst.SimpleStatementLine(body=[cst.Return(self.create_attribute(["self", f"_{name}", "value"]))])
         stmts = ([complete_if_completable_stmt] if self.completable else []) + [return_stmt]
 
         return cst.FunctionDef(
@@ -775,8 +761,12 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         def create_statement(prop: Property, self_attribute: bool) -> cst.SimpleStatementLine:
             # turn a list of GithubClasses into the first element of the list
-            if isinstance(prop.data_type, PythonType) and prop.data_type.type == "list" and \
-                isinstance(prop.data_type.inner_types[0], GithubClass) and prop.data_type.inner_types[0].ids:
+            if (
+                isinstance(prop.data_type, PythonType)
+                and prop.data_type.type == "list"
+                and isinstance(prop.data_type.inner_types[0], GithubClass)
+                and prop.data_type.inner_types[0].ids
+            ):
                 prop = dataclasses.replace(prop, name=f"{prop.name}[0]", data_type=prop.data_type.inner_types[0])
 
             if isinstance(prop.data_type, GithubClass) and prop.data_type.ids:
@@ -788,7 +778,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                                 func=self.create_attribute(["self", "assertEqual"]),
                                 args=[
                                     cst.Arg(
-                                        self.create_attribute((["self"] if self_attribute else []) + [attribute, prop.name, id])
+                                        self.create_attribute(
+                                            (["self"] if self_attribute else []) + [attribute, prop.name, id]
+                                        )
                                     ),
                                     cst.Arg(cst.SimpleString('""')),
                                 ],
@@ -817,7 +809,11 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             # first we detect the attribute that is used to test this class
             # either the first line assigns a local variable with that attribute,
             # or we check assertions for the most common attribute
-            if isinstance(updated_node.body.body[0], cst.SimpleStatementLine) and isinstance(updated_node.body.body[0].body[0], cst.Assign) and not isinstance(updated_node.body.body[0].body[0].targets[0].target, cst.Attribute):
+            if (
+                isinstance(updated_node.body.body[0], cst.SimpleStatementLine)
+                and isinstance(updated_node.body.body[0].body[0], cst.Assign)
+                and not isinstance(updated_node.body.body[0].body[0].targets[0].target, cst.Attribute)
+            ):
                 attribute = updated_node.body.body[0].body[0].targets[0].target.value
                 self_attribute = False
             else:
@@ -849,7 +845,10 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
             i = 0
             while i < len(updated_node.body.body):
-                if not isinstance(updated_node.body.body[i].body[0].value, cst.Call) or not updated_node.body.body[i].body[0].value.args:
+                if (
+                    not isinstance(updated_node.body.body[i].body[0].value, cst.Call)
+                    or not updated_node.body.body[i].body[0].value.args
+                ):
                     i = i + 1
                     continue
 
@@ -1148,13 +1147,15 @@ class OpenApi:
 
         classes = index.get("classes", {})
         cls = classes.get(class_name_short, {})
-        irrelevant_bases = {inheritance
-                            for base in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
-                            for inheritance in classes.get(base, {}).get("inheritance", [])}
+        irrelevant_bases = {
+            inheritance
+            for base in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
+            for inheritance in classes.get(base, {}).get("inheritance", [])
+        }
         relevant_bases = set(cls.get("inheritance", [])).difference(irrelevant_bases)
-        inherited_properties = {property
-                                for base in relevant_bases
-                                for property in classes.get(base, {}).get("properties", {}).keys()}
+        inherited_properties = {
+            property for base in relevant_bases for property in classes.get(base, {}).get("properties", {}).keys()
+        }
         completable = "CompletableGithubObject" in cls.get("inheritance", [])
         cls_schemas = cls.get("schemas", [])
         for schema_name in cls_schemas:
