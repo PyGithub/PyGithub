@@ -354,6 +354,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         import_classes = sorted(property_classes, key=lambda c: c.module)
         typing_classes = sorted(property_classes, key=lambda c: c.module)
         # TODO: do not import this file itself
+        future_added = False
         datetime_added = False
         in_github_imports = False
         # insert import classes if needed
@@ -362,6 +363,13 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             and isinstance(node.body[i], cst.SimpleStatementLine)
             and isinstance(node.body[i].body[0], (cst.Import, cst.ImportFrom))
         ):
+            if not future_added:
+                import_stmt = cst.SimpleStatementLine(
+                    [cst.ImportFrom(cst.Name("__future__"), [cst.ImportAlias(cst.Name("annotations"))])]
+                )
+                stmts = node.body
+                node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
+                future_added = True
             if not datetime_added and any(
                 p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
             ):
