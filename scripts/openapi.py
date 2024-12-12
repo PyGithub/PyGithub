@@ -1198,71 +1198,71 @@ class OpenApi:
         print(f"Indexing {len(files)} Python files")
 
         # index files in parallel
-        manager = multiprocessing.Manager()
-        classes = manager.dict()
-        indexer = IndexFileWorker(classes)
-        with multiprocessing.Pool() as pool:
-            pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
-        classes = dict(classes)
+        with multiprocessing.Manager() as manager:
+            classes = manager.dict()
+            indexer = IndexFileWorker(classes)
+            with multiprocessing.Pool() as pool:
+                pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
+            classes = dict(classes)
 
-        # construct inheritance list
-        while self.extend_inheritance(classes):
-            pass
+            # construct inheritance list
+            while self.extend_inheritance(classes):
+                pass
 
-        # construct class_to_descendants
-        class_to_descendants = {}
-        for name, descendant in classes.items():
-            for cls in descendant.get("inheritance", []):
-                if cls not in class_to_descendants:
-                    class_to_descendants[cls] = []
-                class_to_descendants[cls].append(name)
-        class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
+            # construct class_to_descendants
+            class_to_descendants = {}
+            for name, descendant in classes.items():
+                for cls in descendant.get("inheritance", []):
+                    if cls not in class_to_descendants:
+                        class_to_descendants[cls] = []
+                    class_to_descendants[cls].append(name)
+            class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
 
-        path_to_classes = {}
-        schema_to_classes = {}
-        for name, cls in classes.items():
-            # construct path-to-class index
-            for method in cls.get("methods", {}).values():
-                path = method.get("call", {}).get("path")
-                if not path:
-                    continue
-                verb = method.get("call", {}).get("method", "").lower()
-                if not verb:
-                    if self.verbose:
-                        print(f"Unknown verb for path {path} of class {name}")
-                    continue
+            path_to_classes = {}
+            schema_to_classes = {}
+            for name, cls in classes.items():
+                # construct path-to-class index
+                for method in cls.get("methods", {}).values():
+                    path = method.get("call", {}).get("path")
+                    if not path:
+                        continue
+                    verb = method.get("call", {}).get("method", "").lower()
+                    if not verb:
+                        if self.verbose:
+                            print(f"Unknown verb for path {path} of class {name}")
+                        continue
 
-                if not path.startswith("/") and self.verbose:
-                    print(f"Unsupported path: {path}")
-                returns = method.get("returns", [])
-                if path not in path_to_classes:
-                    path_to_classes[path] = {}
-                if verb not in path_to_classes[path]:
-                    path_to_classes[path][verb] = set()
-                path_to_classes[path][verb] = sorted(list(set(path_to_classes[path][verb]).union(set(returns))))
+                    if not path.startswith("/") and self.verbose:
+                        print(f"Unsupported path: {path}")
+                    returns = method.get("returns", [])
+                    if path not in path_to_classes:
+                        path_to_classes[path] = {}
+                    if verb not in path_to_classes[path]:
+                        path_to_classes[path][verb] = set()
+                    path_to_classes[path][verb] = sorted(list(set(path_to_classes[path][verb]).union(set(returns))))
 
-            # construct schema-to-class index
-            for schema in cls.get("schemas"):
-                if schema not in schema_to_classes:
-                    schema_to_classes[schema] = []
-                schema_to_classes[schema].append(name)
+                # construct schema-to-class index
+                for schema in cls.get("schemas"):
+                    if schema not in schema_to_classes:
+                        schema_to_classes[schema] = []
+                    schema_to_classes[schema].append(name)
 
-        print(f"Indexed {len(classes)} classes")
-        print(f"Indexed {len(path_to_classes)} paths")
-        print(f"Indexed {len(schema_to_classes)} schemas")
+            print(f"Indexed {len(classes)} classes")
+            print(f"Indexed {len(path_to_classes)} paths")
+            print(f"Indexed {len(schema_to_classes)} schemas")
 
-        data = {
-            "sources": github_path,
-            "classes": classes,
-            "indices": {
-                "class_to_descendants": class_to_descendants,
-                "path_to_classes": path_to_classes,
-                "schema_to_classes": schema_to_classes,
-            },
-        }
+            data = {
+                "sources": github_path,
+                "classes": classes,
+                "indices": {
+                    "class_to_descendants": class_to_descendants,
+                    "path_to_classes": path_to_classes,
+                    "schema_to_classes": schema_to_classes,
+                },
+            }
 
-        with open(index_filename, "w") as w:
-            json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+            with open(index_filename, "w") as w:
+                json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
 
     def suggest(self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool):
         print(f"Using spec {spec_file}")
