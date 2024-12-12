@@ -160,10 +160,21 @@ update() {
   # class(es) label
   class="$1"; shift
   # classes to update
-  classes="$*"
+  classes=("$@")
+
+  # classes with test files
+  declare -a classes_with_tests
+  declare -a test_files
+  for github_class in "${classes[@]}"; do
+    test_file="tests/$github_class.py"
+    if [ -f "$test_file" ]; then
+      test_files+=("$test_file")
+      classes_with_tests+=("$github_class")
+    fi
+  done
 
   # add schemas to class
-  for github_class in $classes; do
+  for github_class in "${classes[@]}"; do
     ("$python" "$openapi" suggest --add "$spec" "$index" "$github_class" && echo) 1>&2
   done || failed "schemas" || return 0
   commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "schemas" || return 0
@@ -172,39 +183,28 @@ update() {
   "$python" "$openapi" index "$source_path" "$index" 1>&2
 
   # sort the class
-  for github_class in $classes; do
-    ("$python" "$sort_class" "$index" "$github_class" && echo) 1>&2
-  done || failed "sort" || return 0
+  ("$python" "$sort_class" "$index" "${classes[@]}" && echo) 1>&2 || failed "sort" || return 0
   commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort" || return 0
 
   # apply schemas to class
-  for github_class in $classes; do
-    ("$python" "$openapi" apply "$spec" "$index" "$github_class" && echo) 1>&2
-  done || failed "$class" || return 0
+  ("$python" "$openapi" apply "$spec" "$index" "${classes[@]}" && echo) 1>&2 || failed "$class" || return 0
   commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class" || return 0
 
   # apply schemas to test class
-  for github_class in $classes; do
-    if [ -f "tests/$github_class.py" ]; then
-      ("$python" "$openapi" apply --tests "$spec" "$index" "$github_class" && echo) 1>&2
-    fi
-  done || failed "tests" || return 0
+  ("$python" "$openapi" apply --tests "$spec" "$index" "${classes_with_tests[@]}" && echo) 1>&2 || failed "tests" || return 0
   commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
 
   # fix test assertions
   if [[ "$(git log -1 --pretty=%B HEAD)" == "Updated test $class according to API spec"* ]]; then
-    for github_class in $classes; do
-      filename="tests/$github_class.py"
-      if [ -f "$filename" ]; then
-        # reconstruct long lines
-        #sed -i -z 's/,\s*)/)/g' "$filename"
-        #black --line-length 1000 --line-ranges 108-108 tests/ApplicationOAuth.py
-        #"$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" 1>&2 || true
-        "$update_assertions" "$filename" testAttributes 1>&2 || true
-        # record test data for testAttributes, fix assertions, commit as separate commit
-        # do not record for other tests (might delete things)
-        echo 1>&2
-      fi
+    for test_file in "${test_files[@]}"; do
+      # reconstruct long lines
+      #sed -i -z 's/,\s*)/)/g' "$filename"
+      #black --line-length 1000 --line-ranges 108-108 tests/ApplicationOAuth.py
+      #"$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" 1>&2 || true
+      "$update_assertions" "test_file" testAttributes 1>&2 || true
+      # record test data for testAttributes, fix assertions, commit as separate commit
+      # do not record for other tests (might delete things)
+      echo 1>&2
     done
     commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
   else
@@ -212,31 +212,7 @@ update() {
   fi
 
   # run tests
-  pass=none
-  for github_class in $classes; do
-    if [ -f "tests/$github_class.py" ]; then
-      code=0
-      "$python_bin"/pytest "tests/$github_class.py" -k testAttributes 1>&2 || code=$?
-      if [ $code -eq 5 ]; then
-        # ignore if testAttributes is missing
-        continue
-      elif [ $code -eq 0 ]; then
-        # record class with successful test
-        pass=true
-      else
-        # fail on first class with failing test
-        pass=false
-        break
-      fi
-    fi
-  done
-  if [ "$pass" == "true" ]; then
-    unchanged "pass"
-  elif [ "$pass" == "false" ]; then
-    failed "pass" || true
-  else
-    skip "pass"
-  fi
+  "$python_bin"/pytest "${test_files[@]}" -k testAttributes 1>&2 && unchanged "pass" || (failed "pass" || true)
 }
 
 # memorize current base commit
@@ -251,7 +227,7 @@ echo | tee >(cat 1>&2)
 echo "Updating $(wc -w <<< "$github_classes") classes:" | tee >(cat 1>&2)
 if [[ -n "$single_branch" ]]; then
   echo -n "$(wc -w <<< "$github_classes") PyGithub classes:" | tee >(cat 1>&2)
-  update_in_branch "$base" "$single_branch" $github_classes
+  update_in_branch "$base" "$single_branch" "${classes[@]}"
 else
   for github_class in $github_classes
   do
