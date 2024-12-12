@@ -39,3 +39,12 @@ Input classes
 .. autoclass:: github.InputFileContent.InputFileContent
 .. autoclass:: github.InputGitAuthor.InputGitAuthor
 .. autoclass:: github.InputGitTreeElement.InputGitTreeElement
+
+Raw Requests
+------------
+
+If you need to make requests to APIs not yet supported by PyGithub,
+you can use the :class:`.Requester` object directly, available as :attr:`object.requester` on most PyGithub objects.
+
+.. autoclass:: github.Requester.Requester
+    :members:

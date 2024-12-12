@@ -18,6 +18,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Bernhard M. Wiedemann <githubbmwprimary@lsmod.de>             #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -176,16 +178,15 @@ class Authentication(Framework.BasicTestCase):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
 
-        # test token expiry
         # token expires 2024-11-25 01:00:02
         token = installation_auth.token
-        self.assertFalse(installation_auth._is_expired)
         self.assertEqual(
             installation_auth._AppInstallationAuth__installation_authorization.expires_at,
             datetime(2024, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
         )
 
-        # forward the clock so token expires
+        # test token expiry
+        # control the current time used by _is_expired
         with mock.patch("github.Auth.datetime") as dt:
             # just before expiry
             dt.now = mock.Mock(return_value=datetime(2024, 11, 25, 0, 59, 3, tzinfo=timezone.utc))
@@ -204,9 +205,9 @@ class Authentication(Framework.BasicTestCase):
                 datetime(2025, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
             )
 
-        # use the token
-        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
-        self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
+            # use the token
+            self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+            self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
 
     def testAppInstallationAuthAuthenticationRequesterArgs(self):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)

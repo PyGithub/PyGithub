@@ -87,6 +87,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.CodeSecurityConfig
+import github.Copilot
 import github.DefaultCodeSecurityConfig
 import github.Event
 import github.GithubObject
@@ -115,6 +116,7 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.CodeSecurityConfig import CodeSecurityConfig
+    from github.Copilot import Copilot
     from github.DefaultCodeSecurityConfig import DefaultCodeSecurityConfig
     from github.Event import Event
     from github.Hook import Hook
@@ -914,7 +916,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
         )
-        return github.HookDelivery.HookDelivery(self._requester, headers, data, completed=True)
+        return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
     def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
         """
@@ -997,7 +999,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/projects",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def get_public_members(self) -> PaginatedList[NamedUser]:
@@ -1056,6 +1058,12 @@ class Organization(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/{secret_type}/secrets/public-key")
         return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
+
+    def get_copilot(self) -> Copilot:
+        """
+        :calls: Various Copilot-related endpoints for this organization :rtype: :class:`github.Copilot.Copilot`
+        """
+        return github.Copilot.Copilot(self._requester, self.login)
 
     def get_repo(self, name: str) -> Repository:
         """
@@ -1289,7 +1297,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/installations",
             None,
-            None,
+            headers=None,
             list_item="installations",
         )
 
@@ -1370,7 +1378,6 @@ class Organization(CompletableGithubObject):
             requester=self._requester,
             headers=headers,
             attributes=data,
-            completed=False,
         )
 
     def create_custom_properties(self, properties: list[CustomProperty]) -> list[OrganizationCustomProperty]:
@@ -1388,7 +1395,7 @@ class Organization(CompletableGithubObject):
         )
         return [
             github.OrganizationCustomProperty.OrganizationCustomProperty(
-                requester=self._requester, headers=headers, attributes=property, completed=True
+                requester=self._requester, headers=headers, attributes=property
             )
             for property in data
         ]
@@ -1409,7 +1416,7 @@ class Organization(CompletableGithubObject):
             "PUT", f"{self.url}/properties/schema/{property_name}", input=post_parameters
         )
         return github.OrganizationCustomProperty.OrganizationCustomProperty(
-            requester=self._requester, headers=headers, attributes=data, completed=True
+            requester=self._requester, headers=headers, attributes=data
         )
 
     def remove_custom_property(self, property_name: str) -> None:

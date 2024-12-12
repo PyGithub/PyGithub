@@ -48,6 +48,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
+# Copyright 2024 Eduardo Ramírez <edu.rh90@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 #                                                                              #
@@ -1064,6 +1065,17 @@ class AuthenticatedUser(CompletableGithubObject):
             "/user/migrations",
             None,
             headers={"Accept": Consts.mediaTypeMigrationPreview},
+        )
+
+    def get_organization_memberships(self) -> PaginatedList[Membership]:
+        """
+        :calls: `GET /user/memberships/orgs/ <https://docs.github.com/en/rest/orgs/members#list-organization-memberships-for-the-authenticated-user>`_
+        """
+        return PaginatedList(
+            github.Membership.Membership,
+            self._requester,
+            "/user/memberships/orgs",
+            None,
         )
 
     def get_organization_membership(self, org: str) -> Membership:
