@@ -165,7 +165,7 @@ update() {
   classes=("$@")
 
   # classes with test files
-  declare -a test_files
+  test_files=()
   declare -a classes_with_tests
   for github_class in "${classes[@]}"; do
     test_file="tests/$github_class.py"
@@ -215,7 +215,11 @@ update() {
   fi
 
   # run tests
-  "$python_bin"/pytest "${test_files[@]}" -k testAttributes 1>&2 && unchanged "pass" || (failed "pass" || true)
+  if [ ${#test_files[@]} -gt 0 ]; then
+    "$python_bin"/pytest "${test_files[@]}" -k testAttributes 1>&2 && unchanged "pass" || (failed "pass" || true)
+  else
+    skip "pass"
+  fi
 }
 
 # memorize current base commit
