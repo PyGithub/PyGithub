@@ -363,7 +363,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             and isinstance(node.body[i].body[0], (cst.Import, cst.ImportFrom))
         ):
             if not datetime_added and any(
-                    p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
+                p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
             ):
                 import_stmt = cst.SimpleStatementLine(
                     [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])]

@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import difflib
 import json
+import multiprocessing
 import sys
 from typing import Sequence
 
@@ -150,32 +151,74 @@ class SortMethodsTransformer(cst.CSTTransformer):
         return updated_node
 
 
-def main(index_filename: str, class_name: str, dry_run: bool):
-    full_class_name = class_name
-    if "." not in class_name:
-        with open(index_filename) as r:
-            index = json.load(r)
-        cls = index.get("classes", {}).get(class_name)
-        full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
-    package, module, class_name = full_class_name.split(".", maxsplit=2)
-    filename = f"{package}/{module}.py"
+def sort_class(class_name: str, filename: str, dry_run: bool, locks: dict[str, multiprocessing.Lock]):
+    print(f"Sorting {class_name} ({filename})")
 
-    print(f"Sorting {full_class_name} ({filename})")
-    with open(filename) as r:
-        code = "".join(r.readlines())
+    file_lock = locks.get(filename) if not dry_run else None
+    stdout_lock = locks.get("stdout")
 
-    tree = cst.parse_module(code)
-    transformer = SortMethodsTransformer(class_name)
-    tree_updated = tree.visit(transformer)
+    if file_lock:
+        file_lock.acquire()
+    try:
+        with open(filename) as r:
+            code = "".join(r.readlines())
 
-    if dry_run:
-        diff = difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1))
-        print("Diff:")
-        print("".join(diff))
-    else:
-        if not tree_updated.deep_equals(tree):
-            with open(filename, "w") as w:
-                w.write(tree_updated.code)
+        tree = cst.parse_module(code)
+        transformer = SortMethodsTransformer(class_name)
+        tree_updated = tree.visit(transformer)
+
+        if dry_run:
+            diff = "".join(difflib.unified_diff(code.splitlines(1), tree_updated.code.splitlines(1)))
+            if diff:
+                stdout_lock.acquire()
+                print(f"Diff of {class_name}:")
+                print(diff)
+                print()
+                stdout_lock.release()
+        else:
+            if not tree_updated.deep_equals(tree):
+                with open(filename, "w") as w:
+                    w.write(tree_updated.code)
+    finally:
+        if file_lock:
+            file_lock.release()
+
+
+class SortFileWorker:
+    def __init__(self, dry_run: bool, locks: dict[str, multiprocessing.Lock]):
+        self.dry_run = dry_run
+        self.locks = locks
+
+    def sort(self, class_name_and_file: tuple[str, str]):
+        class_name, filename = class_name_and_file
+        sort_class(class_name, filename, self.dry_run, self.locks)
+
+
+def main(index_filename: str, class_names: list[str], dry_run: bool):
+    if len(class_names) > 1:
+        print(f"Sorting {len(class_names)} Python files")
+
+    with open(index_filename) as r:
+        index = json.load(r)
+
+    filenames = {}
+    for class_name in class_names:
+        full_class_name = class_name
+        if "." not in class_name:
+            cls = index.get("classes", {}).get(class_name)
+            full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
+        package, module, class_name = full_class_name.split(".", maxsplit=2)
+        filename = f"{package}/{module}.py"
+        filenames[class_name] = filename
+
+    with multiprocessing.Manager() as manager:
+        locks = {filename: manager.Lock() for filename in filenames}
+        locks.update({"stdout": manager.Lock()})
+
+        # sort files in parallel
+        worker = SortFileWorker(dry_run, locks)
+        with multiprocessing.Pool() as pool:
+            pool.map(worker.sort, iterable=filenames.items())
 
 
 def parse_args():
@@ -184,7 +227,9 @@ def parse_args():
     )
     args_parser.add_argument("index_filename", help="Path of index file")
     args_parser.add_argument(
-        "class_name", help="GithubObject class to sort, e.g. HookDelivery or github.HookDelivery.HookDeliverySummary"
+        "class_name",
+        nargs="+",
+        help="GithubObject class to sort, e.g. HookDelivery or github.HookDelivery.HookDeliverySummary",
     )
     args_parser.add_argument(
         "--dry-run", default=False, action="store_true", help="show prospect changes and do not modify the file"
