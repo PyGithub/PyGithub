@@ -174,7 +174,7 @@ import github.CheckRun
 import github.CheckSuite
 import github.Clones
 import github.CodeScanAlert
-import github.CodeSecurityConfig
+import github.RepoCodeSecurityConfig
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -258,7 +258,7 @@ if TYPE_CHECKING:
     from github.CheckSuite import CheckSuite
     from github.Clones import Clones
     from github.CodeScanAlert import CodeScanAlert
-    from github.CodeSecurityConfig import CodeSecurityConfig
+    from github.CodeSecurityConfig import RepoCodeSecurityConfig
     from github.Commit import Commit
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
@@ -4156,15 +4156,16 @@ class Repository(CompletableGithubObject):
         """
         self.organization.detach_security_config(selected_repository_ids=[self.id])
 
-    def get_security_config(self) -> CodeSecurityConfig | None:
+    def get_security_config(self) -> RepoCodeSecurityConfig | None:
         """
         :calls: `GET /repos/{owner}/{repo}/code-security-configuration <https://docs.github.com/en/rest/code-security/configurations?apiVersion=2022-11-28#get-the-code-security-configuration-associated-with-a-repository>`_
-        :rtype: dict[str, None | str | list]
+        :rtype: RepoCodeSecurityConfig | None
         """
+        #### TODO(napier): this is actually a special type not CodeSecurityConfig
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-security-configuration")
-        if not data:
+        if data is None:
             return None
-        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data, completed=True)
+        return github.RepoCodeSecurityConfig.RepoCodeSecurityConfig(self._requester, headers, data, completed=True)
 
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
