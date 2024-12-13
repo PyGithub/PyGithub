@@ -219,7 +219,8 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
     def add_future_import(node: cst.Module) -> cst.Module:
         stmts = list(node.body)
         first_stmt = stmts[0] if stmts else None
-        if not (node.body
+        if not (
+            first_stmt
             and isinstance(first_stmt, cst.SimpleStatementLine)
             and isinstance(first_stmt.body[0], cst.ImportFrom)
             and isinstance(first_stmt.body[0].module, cst.Name)
@@ -232,6 +233,10 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
             import_stmt = cst.SimpleStatementLine(
                 [cst.ImportFrom(cst.Name("__future__"), [cst.ImportAlias(cst.Name("annotations"))])]
             )
+            if isinstance(first_stmt, cst.SimpleStatementLine) and isinstance(first_stmt.body[0], (cst.Import, cst.ImportFrom)) and not first_stmt.leading_lines:
+                first_stmt = first_stmt.with_changes(leading_lines=[cst.EmptyLine()])
+                stmts = [first_stmt] + stmts[1:]
+
             node = node.with_changes(body=[import_stmt] + stmts)
 
         return node
