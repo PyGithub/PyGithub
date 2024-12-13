@@ -32,7 +32,7 @@ from collections import Counter
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
-from typing import Any, Sequence
+from typing import Any, Sequence, Type
 
 import libcst as cst
 from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
@@ -130,11 +130,24 @@ class CstMethods(abc.ABC):
             attr = cst.Attribute(attr, name)
         return attr
 
+    @classmethod
+    def find_nodes(cls, node: cst.CSTNode, node_type: Type[cst.CSTNode]) -> list[cst.CSTNode]:
+        if isinstance(node, node_type):
+            return [node]
+        return [node
+                for child in node.children
+                for node in cls.find_nodes(child, node_type)]
+
     @staticmethod
     def parse_attribute(attr: cst.Attribute) -> list[str]:
         attrs = []
-        while isinstance(attr, cst.Attribute):
-            attrs.insert(0, attr.attr.value)
+        while (isinstance(attr, cst.Attribute) or
+               isinstance(attr, cst.Subscript) and isinstance(attr.value, cst.Attribute)):
+            if isinstance(attr, cst.Attribute):
+                attrs.insert(0, attr.attr.value)
+            elif isinstance(attr, cst.Subscript):
+                # we do not extract a name, we skip to the subscript value
+                pass
             attr = attr.value
         attrs.insert(0, attr.value)
         return attrs
@@ -978,7 +991,12 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                     i = i + 1
                     continue
 
-                attr = updated_node.body.body[i].body[0].value.args[0].value
+                attr_nodes = self.find_nodes(updated_node.body.body[i].body[0].value.args[0].value, cst.Attribute)
+                if not attr_nodes:
+                    i = i + 1
+                    continue
+
+                attr = attr_nodes[0]
                 attrs = self.parse_attribute(attr) if isinstance(attr, cst.Attribute) else []
                 if attrs and self_attribute and attrs[0] == "self":
                     attrs.pop(0)
