@@ -32,7 +32,7 @@ from collections import Counter
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
-from typing import Any, Sequence, Type
+from typing import Any, Sequence
 
 import libcst as cst
 from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
@@ -131,18 +131,17 @@ class CstMethods(abc.ABC):
         return attr
 
     @classmethod
-    def find_nodes(cls, node: cst.CSTNode, node_type: Type[cst.CSTNode]) -> list[cst.CSTNode]:
+    def find_nodes(cls, node: cst.CSTNode, node_type: type[cst.CSTNode]) -> list[cst.CSTNode]:
         if isinstance(node, node_type):
             return [node]
-        return [node
-                for child in node.children
-                for node in cls.find_nodes(child, node_type)]
+        return [node for child in node.children for node in cls.find_nodes(child, node_type)]
 
     @staticmethod
     def parse_attribute(attr: cst.Attribute) -> list[str]:
         attrs = []
-        while (isinstance(attr, cst.Attribute) or
-               isinstance(attr, cst.Subscript) and isinstance(attr.value, cst.Attribute)):
+        while (
+            isinstance(attr, cst.Attribute) or isinstance(attr, cst.Subscript) and isinstance(attr.value, cst.Attribute)
+        ):
             if isinstance(attr, cst.Attribute):
                 attrs.insert(0, attr.attr.value)
             elif isinstance(attr, cst.Subscript):
@@ -190,27 +189,36 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
         return (
             isinstance(stmt, cst.Import)
             and (
-                    isinstance(stmt.names[0].name, cst.Name) and stmt.names[0].name.value == "github"
-                    or isinstance(stmt.names[0].name, cst.Attribute) and stmt.names[0].name.value.value == "github"
+                isinstance(stmt.names[0].name, cst.Name)
+                and stmt.names[0].name.value == "github"
+                or isinstance(stmt.names[0].name, cst.Attribute)
+                and stmt.names[0].name.value.value == "github"
             )
-            or
-            isinstance(stmt, cst.ImportFrom)
+            or isinstance(stmt, cst.ImportFrom)
             and isinstance(stmt.module, cst.Attribute)
             and stmt.module.value.value == "github"
         )
 
     @staticmethod
     def is_datetime_import(stmt: cst.Import | cst.ImportFrom) -> bool:
-        return (isinstance(stmt, cst.ImportFrom)
-             and isinstance(stmt.module, cst.Name) and stmt.module.value == "datetime"
-             and stmt.names and isinstance(stmt.names[0], cst.ImportAlias)
-             and isinstance(stmt.names[0].name, cst.Name) and stmt.names[0].name.value == "datetime"
+        return (
+            isinstance(stmt, cst.ImportFrom)
+            and isinstance(stmt.module, cst.Name)
+            and stmt.module.value == "datetime"
+            and stmt.names
+            and isinstance(stmt.names[0], cst.ImportAlias)
+            and isinstance(stmt.names[0].name, cst.Name)
+            and stmt.names[0].name.value == "datetime"
         )
 
     @staticmethod
     def add_datetime_import(node: cst.Module, index: int) -> cst.Module:
         import_stmt = cst.SimpleStatementLine(
-            [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime")), cst.ImportAlias(cst.Name("timezone"))])]
+            [
+                cst.ImportFrom(
+                    cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime")), cst.ImportAlias(cst.Name("timezone"))]
+                )
+            ]
         )
         stmts = list(node.body)
         return node.with_changes(body=stmts[:index] + [import_stmt] + stmts[index:])
@@ -233,7 +241,11 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
             import_stmt = cst.SimpleStatementLine(
                 [cst.ImportFrom(cst.Name("__future__"), [cst.ImportAlias(cst.Name("annotations"))])]
             )
-            if isinstance(first_stmt, cst.SimpleStatementLine) and isinstance(first_stmt.body[0], (cst.Import, cst.ImportFrom)) and not first_stmt.leading_lines:
+            if (
+                isinstance(first_stmt, cst.SimpleStatementLine)
+                and isinstance(first_stmt.body[0], (cst.Import, cst.ImportFrom))
+                and not first_stmt.leading_lines
+            ):
                 first_stmt = first_stmt.with_changes(leading_lines=[cst.EmptyLine()])
                 stmts = [first_stmt] + stmts[1:]
 
@@ -430,8 +442,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         datetime_exists = False
         in_github_imports = False
         needs_datetime_import = any(
-            p.data_type.type == "datetime" for p in self.all_properties if
-            isinstance(p.data_type, PythonType)
+            p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
         )
 
         # insert import classes if needed
@@ -850,8 +861,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         updated_node = self.add_future_import(updated_node)
 
         needs_datetime_import = any(
-            p.data_type.type == "datetime" for p in self.all_properties if
-            isinstance(p.data_type, PythonType)
+            p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
         )
 
         if not needs_datetime_import:
@@ -899,15 +909,16 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 prop = dataclasses.replace(prop, name=f"{prop.name}[0]", data_type=prop.data_type.inner_types[0])
 
             if (
-                    isinstance(prop.data_type, GithubClass) or
-                    isinstance(prop.data_type, PythonType) and prop.data_type.type == "union"
-                    and any(isinstance(inner, GithubClass) for inner in prop.data_type.inner_types)
+                isinstance(prop.data_type, GithubClass)
+                or isinstance(prop.data_type, PythonType)
+                and prop.data_type.type == "union"
+                and any(isinstance(inner, GithubClass) for inner in prop.data_type.inner_types)
             ):
                 ids = []
                 if isinstance(prop.data_type, PythonType):
-                    ids_sets = [set(inner.ids)
-                           for inner in prop.data_type.inner_types
-                           if isinstance(inner, GithubClass)]
+                    ids_sets = [
+                        set(inner.ids) for inner in prop.data_type.inner_types if isinstance(inner, GithubClass)
+                    ]
                     if len(ids_sets) == 1:
                         ids = list(ids_sets[0])
                     elif len(ids_sets) > 1:
