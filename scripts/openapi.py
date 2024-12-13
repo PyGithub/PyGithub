@@ -540,10 +540,16 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         if updated_node.name.value == "_initAttributes":
             return self.update_init_attrs(updated_node)
 
-        if updated_node.name.value == "_useAttributes":
-            return self.update_use_attrs(updated_node)
-
         nodes = []
+        if updated_node.name.value == "_useAttributes":
+            while self.current_property:
+                prop = self.properties.pop(0)
+                node = self.create_property_function(prop.name, prop.data_type, prop.deprecated)
+                nodes.append(cst.EmptyLine(indent=False))
+                nodes.append(node)
+            nodes.append(self.update_use_attrs(updated_node))
+            return cst.FlattenSentinel(nodes=nodes)
+
         updated_node_is_github_object_property = self.is_github_object_property(updated_node)
 
         while self.current_property and (
