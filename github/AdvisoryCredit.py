@@ -61,6 +61,14 @@ class AdvisoryCredit(NonCompletableGithubObject):
         self._login: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
 
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "login": self.login,
+                "type": self.type,
+            }
+        )
+
     @property
     def login(self) -> str:
         """
