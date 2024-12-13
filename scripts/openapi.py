@@ -210,7 +210,7 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
     @staticmethod
     def add_datetime_import(node: cst.Module, index: int) -> cst.Module:
         import_stmt = cst.SimpleStatementLine(
-            [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])]
+            [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime")), cst.ImportAlias(cst.Name("timezone"))])]
         )
         stmts = list(node.body)
         return node.with_changes(body=stmts[:index] + [import_stmt] + stmts[index:])
