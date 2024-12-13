@@ -37,17 +37,17 @@ if [ $# -ge 2 ]; then
   fi
 fi
 
+# update index
+echo -n "Updating index ($index)" | tee >(cat 1>&2)
+"$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
+echo | tee >(cat 1>&2)
+
 # get all GithubObject classes
 if [ $# -ge 1 ]; then
   github_classes=("$@")
 else
   read -r -a github_classes <<< "$("$jq" -r '.indices.class_to_descendants.GithubObject | @tsv' < "$index")"
 fi
-
-# update index
-echo -n "Updating index ($index)" | tee >(cat 1>&2)
-"$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
-echo | tee >(cat 1>&2)
 
 # skip abstract classes
 declare -a concrete_github_classes

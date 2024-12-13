@@ -204,7 +204,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         class_docstring = class_docstring.strip('"\r\n ') if class_docstring else None
         class_schemas = []
         class_bases = [
-            val if isinstance(val, str) else Module([]).code_for_node(val)
+            val if isinstance(val, str) else Module([]).code_for_node(val).split(".")[-1]
             for base in node.bases
             for val in [base.value.value]
         ]
