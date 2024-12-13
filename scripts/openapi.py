@@ -172,6 +172,57 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
     def current_class_name(self) -> str:
         return ".".join(self.visit_class_name)
 
+    @staticmethod
+    def is_github_import(stmt: cst.Import | cst.ImportFrom) -> bool:
+        return (
+            isinstance(stmt, cst.Import)
+            and (
+                    isinstance(stmt.names[0].name, cst.Name) and stmt.names[0].name.value == "github"
+                    or isinstance(stmt.names[0].name, cst.Attribute) and stmt.names[0].name.value.value == "github"
+            )
+            or
+            isinstance(stmt, cst.ImportFrom)
+            and isinstance(stmt.module, cst.Attribute)
+            and stmt.module.value.value == "github"
+        )
+
+    @staticmethod
+    def is_datetime_import(stmt: cst.Import | cst.ImportFrom) -> bool:
+        return (isinstance(stmt, cst.ImportFrom)
+             and isinstance(stmt.module, cst.Name) and stmt.module.value == "datetime"
+             and stmt.names and isinstance(stmt.names[0], cst.ImportAlias)
+             and isinstance(stmt.names[0].name, cst.Name) and stmt.names[0].name.value == "datetime"
+        )
+
+    @staticmethod
+    def add_datetime_import(node: cst.Module, index: int) -> cst.Module:
+        import_stmt = cst.SimpleStatementLine(
+            [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])]
+        )
+        stmts = list(node.body)
+        return node.with_changes(body=stmts[:index] + [import_stmt] + stmts[index:])
+
+    @staticmethod
+    def add_future_import(node: cst.Module) -> cst.Module:
+        stmts = list(node.body)
+        first_stmt = stmts[0] if stmts else None
+        if not (node.body
+            and isinstance(first_stmt, cst.SimpleStatementLine)
+            and isinstance(first_stmt.body[0], cst.ImportFrom)
+            and isinstance(first_stmt.body[0].module, cst.Name)
+            and first_stmt.body[0].module.value == "__future__"
+            and first_stmt.body[0].names
+            and isinstance(first_stmt.body[0].names[0], cst.ImportAlias)
+            and isinstance(first_stmt.body[0].names[0].name, cst.Name)
+            and first_stmt.body[0].names[0].name.value == "annotations"
+        ):
+            import_stmt = cst.SimpleStatementLine(
+                [cst.ImportFrom(cst.Name("__future__"), [cst.ImportAlias(cst.Name("annotations"))])]
+            )
+            node = node.with_changes(body=[import_stmt] + stmts)
+
+        return node
+
 
 class IndexPythonClassesVisitor(CstVisitorBase):
     def __init__(self, classes: dict[str, Any] | None = None):
@@ -344,6 +395,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
     def leave_Module(self, original_node: Module, updated_node: Module) -> Module:
         i = 0
         node = updated_node
+
+        # add from __future__ import annotations if not the first import
+        node = self.add_future_import(node)
+
         property_classes = {
             p.data_type
             for p in self.all_properties
@@ -354,38 +409,31 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         import_classes = sorted(property_classes, key=lambda c: c.module)
         typing_classes = sorted(property_classes, key=lambda c: c.module)
         # TODO: do not import this file itself
-        future_added = False
-        datetime_added = False
+        datetime_exists = False
         in_github_imports = False
+        needs_datetime_import = any(
+            p.data_type.type == "datetime" for p in self.all_properties if
+            isinstance(p.data_type, PythonType)
+        )
+
         # insert import classes if needed
         while (
             i < len(node.body)
             and isinstance(node.body[i], cst.SimpleStatementLine)
             and isinstance(node.body[i].body[0], (cst.Import, cst.ImportFrom))
         ):
-            if not future_added:
-                import_stmt = cst.SimpleStatementLine(
-                    [cst.ImportFrom(cst.Name("__future__"), [cst.ImportAlias(cst.Name("annotations"))])]
-                )
-                stmts = node.body
-                node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
-                future_added = True
-            if not datetime_added and any(
-                p.data_type.type == "datetime" for p in self.all_properties if isinstance(p.data_type, PythonType)
-            ):
-                import_stmt = cst.SimpleStatementLine(
-                    [cst.ImportFrom(cst.Name("datetime"), [cst.ImportAlias(cst.Name("datetime"))])]
-                )
-                stmts = node.body
-                node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
-                datetime_added = True
-                i = i + 1
-            if (
-                not in_github_imports
-                and isinstance(node.body[i].body[0].names[0].name, cst.Attribute)
-                and node.body[i].body[0].names[0].name.value.value == "github"
-            ):
+            if self.is_datetime_import(node.body[i].body[0]):
+                datetime_exists = True
+
+            if not in_github_imports and self.is_github_import(node.body[i].body[0]):
                 in_github_imports = True
+
+                # emit datetime import if needed
+                if needs_datetime_import and not datetime_exists:
+                    node = self.add_datetime_import(node, i)
+                    datetime_exists = True
+                    i = i + 1
+
             if in_github_imports and import_classes:
                 import_node = node.body[i].body[0]
                 imported_module = (
@@ -411,6 +459,11 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
                 if import_classes and import_classes[0].module == imported_module:
                     import_classes.pop(0)
+            i = i + 1
+
+        # emit datetime import if needed
+        if needs_datetime_import and not datetime_exists:
+            node = self.add_datetime_import(node, i)
             i = i + 1
 
         while import_classes:
@@ -767,6 +820,48 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 ],
             )
         return cst.SimpleString(f'"{data_type}"')
+
+    def leave_Module(self, original_node: Module, updated_node: Module) -> Module:
+        # add from __future__ import annotations if not the first import
+        updated_node = self.add_future_import(updated_node)
+
+        needs_datetime_import = any(
+            p.data_type.type == "datetime" for p in self.all_properties if
+            isinstance(p.data_type, PythonType)
+        )
+
+        if not needs_datetime_import:
+            return updated_node
+
+        i = 0
+        node = updated_node
+        datetime_exists = False
+        in_github_imports = False
+        while (
+            i < len(node.body)
+            and isinstance(node.body[i], cst.SimpleStatementLine)
+            and isinstance(node.body[i].body[0], (cst.Import, cst.ImportFrom))
+        ):
+            import_stmt = node.body[i].body[0]
+            if self.is_datetime_import(import_stmt):
+                datetime_exists = True
+
+            if not in_github_imports and self.is_github_import(import_stmt):
+                in_github_imports = True
+
+                # emit datetime import if needed
+                if needs_datetime_import and not datetime_exists:
+                    node = self.add_datetime_import(node, i)
+                    datetime_exists = True
+                    i = i + 1
+
+            i = i + 1
+
+        # emit datetime import if needed
+        if needs_datetime_import and not datetime_exists:
+            node = self.add_datetime_import(node, i)
+
+        return node
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         def create_statement(prop: Property, self_attribute: bool) -> cst.SimpleStatementLine:
@@ -1138,12 +1233,18 @@ class OpenApi:
                     w.write(updated_code)
 
     def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool):
+        with open(index_filename) as r:
+            index = json.load(r)
+        classes = index.get("classes", {})
+
         for class_name in class_names:
             full_class_name = class_name
             if "." not in class_name:
-                with open(index_filename) as r:
-                    index = json.load(r)
-                cls = index.get("classes", {}).get(class_name)
+                if class_name not in classes:
+                    raise ValueError(f"Unknown class {class_name}")
+                cls = classes.get(class_name)
+                if any(key not in cls for key in ["package", "module", "name"]):
+                    raise KeyError(f"Missing package, module or name in {cls}")
                 full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
             package, module, class_name = full_class_name.split(".", maxsplit=2)
             class_name_short = class_name.split(".")[-1]
@@ -1156,7 +1257,6 @@ class OpenApi:
             with open(index_filename) as r:
                 index = json.load(r)
 
-            classes = index.get("classes", {})
             cls = classes.get(class_name_short, {})
             irrelevant_bases = {
                 inheritance
