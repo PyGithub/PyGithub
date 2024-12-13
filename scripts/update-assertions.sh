@@ -13,6 +13,14 @@ fi
 test_file="$1"
 test_func="$2"
 
+# python unittest package abbreviates actual and expected values on assertion errors
+# pytest will execute the following code, which configures unittest to not abbreviate
+cat > conftest.py << EOF
+def pytest_configure(config):
+    import unittest
+    unittest.util._MAX_LENGTH = 10240
+EOF
+
 update_assertion() {
   read assertion_line
   read line_number_line
