@@ -1261,6 +1261,30 @@ class OpenApi:
         return updated
 
     @classmethod
+    def propagate_ids(cls, classes: dict[str, Any]) -> bool:
+        updated = False
+
+        def get_ids(class_name: str) -> list[str]:
+            clazz = classes.get(class_name, {})
+            ids = clazz.get("ids", [])
+            if ids:
+                return ids
+            for base in clazz.get("bases", []):
+                ids = get_ids(base)
+                if ids:
+                    return ids
+            return []
+
+        for name, clazz in sorted(classes.items(), key=lambda v: v[0]):
+            if not clazz.get("ids", []):
+                base_ids = get_ids(name)
+                if base_ids:
+                    clazz["ids"] = base_ids
+                    updated = True
+
+        return updated
+
+    @classmethod
     def add_schema_to_class(cls, class_name: str, filename: str, schemas: list[str], dry_run: bool) -> int:
         with open(filename) as r:
             code = "".join(r.readlines())
@@ -1366,6 +1390,10 @@ class OpenApi:
 
             # construct inheritance list
             while self.extend_inheritance(classes):
+                pass
+
+            # propagate ids of base classes to derived classes
+            while self.propagate_ids(classes):
                 pass
 
             # construct class_to_descendants
