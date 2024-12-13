@@ -61,6 +61,11 @@ max_class_name_length=$(for class_name in "${github_classes[@]}"; do echo -n "$c
 spaces="$(head -c "$max_class_name_length" < /dev/zero | tr '\0' ' ')"
 
 commit() {
+  do_lint=true
+  if [ $# -gt 0 ] && [ "$1" == "--no-linting" ]; then
+    do_lint=false
+    shift
+  fi
   if [ $# -lt 1 ]; then
     echo "Cannot commit without message"
     exit 1
@@ -72,8 +77,10 @@ commit() {
   if "$git" diff --quiet; then return 0; fi
 
   # run linting
-  "$python_bin"/mypy github tests 1>&2
-  "$python_bin"/pre-commit run --all-files --show-diff-on-failure 1>&2 || true
+  if [[ "$do_lint" == "true" ]]; then
+    "$python_bin"/mypy github tests 1>&2
+    "$python_bin"/pre-commit run --all-files --show-diff-on-failure 1>&2 || true
+  fi
 
   # skip if there are no changes after linting
   if "$git" diff --exit-code 1>&2; then return 0; fi
@@ -194,7 +201,7 @@ update() {
 
   # apply schemas to test class
   ("$python" "$openapi" apply --tests "$spec" "$index" "${classes_with_tests[@]}" && echo) 1>&2 || failed "tests" || return 0
-  commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
+  commit --no-linting "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
 
   # fix test assertions
   if [[ "$(git log -1 --pretty=%B HEAD)" == "Updated test $class according to API spec"* ]]; then
@@ -209,9 +216,11 @@ update() {
       echo 1>&2
     done
     wait
-    commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
+    commit --no-linting "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
+    commit "Linting tests" && unchanged "linting" || changed "linting" "linting" || return 0
   else
     skip "assertions"
+    skip "linting"
   fi
 
   # run tests
