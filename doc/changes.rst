@@ -4,6 +4,49 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.5.0 (November 06, 2024)
+---------------------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* Parameters of method ``github.Requester.Requester.graphql_named_mutation`` have been renamed:
+
+  * Parameter ``variables`` renamed to ``mutation_input``
+  * Parameter ``output`` renamed to ``output_schema``
+  * Default value of parameter ``output`` has been removed
+
+New features
+^^^^^^^^^^^^
+
+* Rework GraphQL mutations (#3046) (27222251)
+* Make pagination work with GraphQL response data (#3047) (cd30e379)
+* Add `RepositoryDiscussion` powered by GraphQL API (#3048) (29359f3c)
+* Add `Repository.get_discussion()` to get a single Discussion (#3072) (44120b1e)
+
+Improvements
+^^^^^^^^^^^^
+
+* Adds List organization memberships for the authenticated user (#3040) (cf443955)
+* Add `actor` property to WorkflowRun (#2764) (612ba68e)
+* Make requester a public attribute (#3056) (c44ec523)
+
+Bug Fixes
+^^^^^^^^^
+
+* Fix requesting urls containing parameters with parameters dict (#2929) (e1d67ada)
+* PullRequest.delete_branch: fix the remaining pull requests check (#3063) (72fa6278)
+
+Maintenance
+^^^^^^^^^^^
+
+* Remove stale bot (510c1402)
+* Upgrade Github actions (#3075) (323e2828)
+* Add top issues dashboard action (#3049) (c91f26a7)
+* Make tests pass some more years (#3045) (352c55aa)
+* Run top issues workflow only in PyGithub repo (0d395d4e)
+* Replace pre-commit Github action in order to pin pre-commit version (#3059) (1a05b43d)
+
 Version 2.4.0 (August 26, 2024)
 -------------------------------
 
