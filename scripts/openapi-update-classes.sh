@@ -225,14 +225,15 @@ update() {
 
   # run tests
   if [ ${#test_files[@]} -gt 0 ]; then
+    code=0
     "$python_bin"/pytest "${test_files[@]}" -k testAttributes 1>&2 || code=$?
-      if [ $code -eq 5 ]; then
-        skip "pass"
-      elif [ $code -eq 0 ]; then
-        unchanged "pass"
-      else
-        failed "pass" || true
-      fi
+    if [ $code -eq 5 ]; then
+      skip "pass"
+    elif [ $code -eq 0 ]; then
+      unchanged "pass"
+    else
+      failed "pass" || true
+    fi
   else
     skip "pass"
   fi
