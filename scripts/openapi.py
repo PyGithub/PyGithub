@@ -874,25 +874,46 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             ):
                 prop = dataclasses.replace(prop, name=f"{prop.name}[0]", data_type=prop.data_type.inner_types[0])
 
-            if isinstance(prop.data_type, GithubClass) and prop.data_type.ids:
-                id = prop.data_type.ids[0]
-                return cst.SimpleStatementLine(
-                    [
-                        cst.Expr(
-                            cst.Call(
-                                func=self.create_attribute(["self", "assertEqual"]),
-                                args=[
-                                    cst.Arg(
-                                        self.create_attribute(
-                                            (["self"] if self_attribute else []) + [attribute, prop.name, id]
-                                        )
-                                    ),
-                                    cst.Arg(cst.SimpleString('""')),
-                                ],
+            if (
+                    isinstance(prop.data_type, GithubClass) or
+                    isinstance(prop.data_type, PythonType) and prop.data_type.type == "union"
+                    and any(isinstance(inner, GithubClass) for inner in prop.data_type.inner_types)
+            ):
+                ids = []
+                if isinstance(prop.data_type, PythonType):
+                    ids_sets = [set(inner.ids)
+                           for inner in prop.data_type.inner_types
+                           if isinstance(inner, GithubClass)]
+                    if len(ids_sets) == 1:
+                        ids = list(ids_sets[0])
+                    elif len(ids_sets) > 1:
+                        ids = ids_sets[0]
+                        for ids_set in ids_sets[1:]:
+                            ids = ids.intersection(ids_set)
+                        ids = list(ids)
+                else:
+                    if prop.data_type.ids:
+                        ids = prop.data_type.ids
+
+                if ids:
+                    id = ids[0]
+                    return cst.SimpleStatementLine(
+                        [
+                            cst.Expr(
+                                cst.Call(
+                                    func=self.create_attribute(["self", "assertEqual"]),
+                                    args=[
+                                        cst.Arg(
+                                            self.create_attribute(
+                                                (["self"] if self_attribute else []) + [attribute, prop.name, id]
+                                            )
+                                        ),
+                                        cst.Arg(cst.SimpleString('""')),
+                                    ],
+                                )
                             )
-                        )
-                    ]
-                )
+                        ]
+                    )
 
             return cst.SimpleStatementLine(
                 [
