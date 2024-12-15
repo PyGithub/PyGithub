@@ -387,6 +387,7 @@ class Branch(NonCompletableGithubObject):
         """
         assert is_optional_list(dismissal_users, str), dismissal_users
         assert is_optional_list(dismissal_teams, str), dismissal_teams
+        assert is_optional_list(dismissal_apps, str), dismissal_apps
         assert is_optional(dismiss_stale_reviews, bool), dismiss_stale_reviews
         assert is_optional(require_code_owner_reviews, bool), require_code_owner_reviews
         assert is_optional(required_approving_review_count, int), required_approving_review_count
