@@ -434,6 +434,7 @@ class Repository(Framework.TestCase):
             True,
             False,
             "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
+            "true",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
         self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest2")
