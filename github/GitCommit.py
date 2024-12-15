@@ -18,6 +18,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 timgates42 <tim.gates@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,9 +42,11 @@ from __future__ import annotations
 
 from typing import Any
 
+import github.CommitVerification
 import github.GitAuthor
 import github.GithubObject
 import github.GitTree
+from github.CommitVerification import CommitVerification
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -65,6 +68,7 @@ class GitCommit(CompletableGithubObject):
         self._sha: Attribute[str] = NotSet
         self._tree: Attribute[github.GitTree.GitTree] = NotSet
         self._url: Attribute[str] = NotSet
+        self._verification: Attribute[CommitVerification] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -110,6 +114,11 @@ class GitCommit(CompletableGithubObject):
         return self._url.value
 
     @property
+    def verification(self) -> CommitVerification:
+        self._completeIfNotSet(self._verification)
+        return self._verification.value
+
+    @property
     def _identity(self) -> str:
         return self.sha
 
@@ -130,3 +139,7 @@ class GitCommit(CompletableGithubObject):
             self._tree = self._makeClassAttribute(github.GitTree.GitTree, attributes["tree"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "verification" in attributes:  # pragma no branch
+            self._verification = self._makeClassAttribute(
+                github.CommitVerification.CommitVerification, attributes["verification"]
+            )
