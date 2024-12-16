@@ -698,8 +698,12 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             func_name = "_makeStringAttribute"
             args = [cst.Arg(attr)]
         elif prop.data_type.type == "dict":
-            func_name = "_makeDictAttribute"
-            args = [cst.Arg(attr)]
+            if isinstance(prop.data_type.inner_types[1], GithubClass):
+                func_name = "_makeDictOfStringsToClassesAttribute"
+                args = [cst.Arg(cls.create_type(prop.data_type.inner_types[1])), cst.Arg(attr)]
+            else:
+                func_name = "_makeDictAttribute"
+                args = [cst.Arg(attr)]
         elif prop.data_type.type == "list":
             if prop.data_type.inner_types[0] is None:
                 func_name = "_makeListOfClassesAttribute"
@@ -710,10 +714,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 args = [cst.Arg(cls.create_type(prop.data_type.inner_types[0])), cst.Arg(attr)]
                 # TODO: warn about unknown / supported type
             elif prop.data_type.inner_types[0].type == "int":
-                func_name = "_makeListOfIntAttribute"
+                func_name = "_makeListOfIntsAttribute"
                 args = [cst.Arg(attr)]
             elif prop.data_type.inner_types[0].type == "str":
-                func_name = "_makeListOfStringAttribute"
+                func_name = "_makeListOfStringsAttribute"
                 args = [cst.Arg(attr)]
             elif prop.data_type.inner_types[0].type == "dict":
                 func_name = "_makeListOfDictsAttribute"
