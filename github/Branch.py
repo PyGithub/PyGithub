@@ -186,27 +186,27 @@ class Branch(NonCompletableGithubObject):
         assert is_optional_list(apps_bypass_pull_request_allowances, str), apps_bypass_pull_request_allowances
         assert is_optional(require_last_push_approval, bool), require_last_push_approval
         assert is_optional(allow_deletions, bool), allow_deletions
+        assert is_optional_list(checks, (str, tuple)), checks
+        if is_defined(checks):
+            assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
         post_parameters: dict[str, Any] = {}
         if is_defined(strict) or is_defined(contexts) or is_defined(checks):
             if is_undefined(strict):
                 strict = False
-            if is_undefined(contexts) and is_undefined(checks):
-                checks = []
-            elif is_defined(checks):
-                post_parameters["checks"] = []
-                for check in checks:
-                    if isinstance(check, tuple):
-                        context, app_id = check
-                        post_parameters["checks"].append({"context": context, "app_id": app_id})
-                    else:
-                        post_parameters["checks"].append({"context": check})
+            if is_defined(checks):
+                checks_parameters = [
+                    {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
+                    for check in checks
+                ]
             elif is_defined(contexts):
-                post_parameters["checks"] = [{"context": context} for context in contexts]
+                checks_parameters = [{"context": context} for context in contexts]
+            else:
+                checks_parameters = []
 
             post_parameters["required_status_checks"] = {
                 "strict": strict,
-                "checks": checks,
+                "checks": checks_parameters,
             }
         else:
             post_parameters["required_status_checks"] = None
@@ -358,16 +358,14 @@ class Branch(NonCompletableGithubObject):
             assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
         if is_defined(checks):
-            checks_parameters = []
-            for check in checks:
-                if isinstance(check, tuple):
-                    context, app_id = check
-                    checks_parameters.append({"context": context, "app_id": app_id})
-                else:
-                    checks_parameters.append({"context": check})
-
+            checks_parameters = [
+                {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
+                for check in checks
+            ]
         elif is_defined(contexts):
             checks_parameters = [{"context": context} for context in contexts]
+        else:
+            checks_parameters = NotSet
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "checks": checks_parameters})
 
