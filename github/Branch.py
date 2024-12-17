@@ -194,6 +194,8 @@ class Branch(NonCompletableGithubObject):
         if is_defined(strict) or is_defined(contexts) or is_defined(checks):
             if is_undefined(strict):
                 strict = False
+
+            checks_parameters = []
             if is_defined(checks):
                 checks_parameters = [
                     {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
@@ -201,8 +203,6 @@ class Branch(NonCompletableGithubObject):
                 ]
             elif is_defined(contexts):
                 checks_parameters = [{"context": context} for context in contexts]
-            else:
-                checks_parameters = []
 
             post_parameters["required_status_checks"] = {
                 "strict": strict,
@@ -357,6 +357,7 @@ class Branch(NonCompletableGithubObject):
         if is_defined(checks):
             assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
+        checks_parameters: Opt[list[dict[str, Any]]] = NotSet
         if is_defined(checks):
             checks_parameters = [
                 {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
@@ -364,8 +365,6 @@ class Branch(NonCompletableGithubObject):
             ]
         elif is_defined(contexts):
             checks_parameters = [{"context": context} for context in contexts]
-        else:
-            checks_parameters = NotSet
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "checks": checks_parameters})
 
