@@ -2066,6 +2066,10 @@ class Repository(Framework.TestCase):
         self.repo.update_custom_properties(custom_properties)
 
     def testTransferOwnership(self):
+        status = self.repo.transfer_ownership(new_owner="An-Nie-Tan-99", new_name="PyGithub-test")
+        self.assertTrue(status)
+
+    def testTransferOwnershipInvalidOwner(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.transfer_ownership("new_owner")
         self.assertEqual(raisedexp.exception.status, 422)
