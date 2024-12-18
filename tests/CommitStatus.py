@@ -56,7 +56,7 @@ class CommitStatus(Framework.TestCase):
             datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
         self.assertEqual(self.statuses[0].creator.login, "jacquev6")
-        self.assertEqual(self.statuses[0].description, "Status successfuly created by PyGithub")
+        self.assertEqual(self.statuses[0].description, "Status successfully created by PyGithub")
         self.assertEqual(self.statuses[1].description, None)
         self.assertEqual(self.statuses[0].id, 277040)
         self.assertEqual(self.statuses[0].state, "success")
