@@ -85,6 +85,15 @@ class Commit(Framework.TestCase):
             'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',
         )
 
+    def testGetBranchesWhereHead(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        commit = repo.get_commit("0791cc7b1a706ab5d7c607ddff35de4d486ba3e9")
+        self.assertListKeyEqual(
+            commit.get_branches_where_head(),
+            lambda b: b.name,
+            ["release-v2-0"],
+        )
+
     def testGetComments(self):
         self.assertListKeyEqual(
             self.commit.get_comments(),
@@ -132,12 +141,12 @@ class Commit(Framework.TestCase):
         status = self.commit.create_status(
             "success",
             "https://github.com/jacquev6/PyGithub/issues/67",
-            "Status successfuly created by PyGithub",
+            "Status successfully created by PyGithub",
         )
         self.assertEqual(status.id, 277040)
         self.assertEqual(status.state, "success")
         self.assertEqual(status.target_url, "https://github.com/jacquev6/PyGithub/issues/67")
-        self.assertEqual(status.description, "Status successfuly created by PyGithub")
+        self.assertEqual(status.description, "Status successfully created by PyGithub")
 
     def testGetPulls(self):
         commit = self.g.get_user().get_repo("PyGithub").get_commit("e44d11d565c022496544dd6ed1f19a8d718c2b0c")

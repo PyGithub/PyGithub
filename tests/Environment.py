@@ -83,7 +83,7 @@ class Environment(Framework.TestCase):
         self.assertEqual(protection_rules[2].wait_timer, 15)
 
     def testReviewers(self):
-        # This is necessary so we can maintain our own expectations, which have been manually editted, for this test.
+        # This is necessary so we can maintain our own expectations, which have been manually edited, for this test.
         reviewers = self.repo.get_environment("dev").protection_rules[1].reviewers
         self.assertEqual(len(reviewers), 2)
         self.assertEqual(reviewers[0].type, "User")

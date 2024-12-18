@@ -158,6 +158,7 @@ class Branch(NonCompletableGithubObject):
         block_creations: Opt[bool] = NotSet,
         require_last_push_approval: Opt[bool] = NotSet,
         allow_deletions: Opt[bool] = NotSet,
+        checks: Opt[list[str | tuple[str, int]]] = NotSet,
     ) -> BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -185,16 +186,27 @@ class Branch(NonCompletableGithubObject):
         assert is_optional_list(apps_bypass_pull_request_allowances, str), apps_bypass_pull_request_allowances
         assert is_optional(require_last_push_approval, bool), require_last_push_approval
         assert is_optional(allow_deletions, bool), allow_deletions
+        assert is_optional_list(checks, (str, tuple)), checks
+        if is_defined(checks):
+            assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
         post_parameters: dict[str, Any] = {}
-        if is_defined(strict) or is_defined(contexts):
+        if is_defined(strict) or is_defined(contexts) or is_defined(checks):
             if is_undefined(strict):
                 strict = False
-            if is_undefined(contexts):
-                contexts = []
+
+            checks_parameters = []
+            if is_defined(checks):
+                checks_parameters = [
+                    {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
+                    for check in checks
+                ]
+            elif is_defined(contexts):
+                checks_parameters = [{"context": context} for context in contexts]
+
             post_parameters["required_status_checks"] = {
                 "strict": strict,
-                "contexts": contexts,
+                "checks": checks_parameters,
             }
         else:
             post_parameters["required_status_checks"] = None
@@ -334,14 +346,28 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
+        checks: Opt[list[str | tuple[str, int]]] = NotSet,
     ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         assert is_optional(strict, bool), strict
         assert is_optional_list(contexts, str), contexts
+        assert is_optional_list(checks, (str, tuple)), checks
+        if is_defined(checks):
+            assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "contexts": contexts})
+        checks_parameters: Opt[list[dict[str, Any]]] = NotSet
+        if is_defined(checks):
+            checks_parameters = [
+                {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
+                for check in checks
+            ]
+        elif is_defined(contexts):
+            checks_parameters = [{"context": context} for context in contexts]
+
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "checks": checks_parameters})
+
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             f"{self.protection_url}/required_status_checks",

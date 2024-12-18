@@ -310,7 +310,7 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
     def testCustomPerPageWithNoUrlParams(self):
-        from . import (  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
+        from . import (  # Don't pollute github.tests namespace, it would conflict with github.tests.CommitComment
             CommitComment,
         )
 
