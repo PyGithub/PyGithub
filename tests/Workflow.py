@@ -130,3 +130,19 @@ class Workflow(Framework.TestCase):
     def testCreateDispatchForNonTriggerEnabled(self):
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("check.yml")
         self.assertFalse(workflow.create_dispatch("main"))
+
+    def testDisable(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.disable())
+
+    def testDisabledWhenAlreadyDisabled(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertFalse(workflow.disable())
+
+    def testEnable(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.enable())
+
+    def testEnableWhenAlreadyEnabled(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.enable())
