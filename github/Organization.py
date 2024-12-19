@@ -1462,10 +1462,10 @@ class Organization(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
 
-    def list_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
+    def get_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#get-code-security-configurations-for-an-organization>`_
-        :rtype: :class:`github.CodeSecurityConfig.CodeSecurityConfig`
+        :rtype: :class:`CodeSecurityConfig`
         """
         return PaginatedList(
             contentClass=github.CodeSecurityConfig.CodeSecurityConfig,
@@ -1539,7 +1539,7 @@ class Organization(CompletableGithubObject):
         )
         return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data)
 
-    def update_code_security_config(
+    def edit_code_security_config(
         self,
         id: int,
         name: Opt[str] = NotSet,
@@ -1613,9 +1613,9 @@ class Organization(CompletableGithubObject):
 
     def get_code_security_config(self, id: int) -> CodeSecurityConfig:
         """
-        :calls: '/orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#get-a-code-security-configurationt>`_
+        :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#get-a-code-security-configurationt>`_
         :param id: configuration_id
-        :rtype: github.CodeSecurityConfig.CodeSecurityConfig
+        :rtype: CodeSecurityConfig
         """
         assert isinstance(id, int), id
 
@@ -1626,14 +1626,14 @@ class Organization(CompletableGithubObject):
         """
         :calls: `PUT /orgs/{org}/code-security/configurations/{configuration_id}/defaults <https://docs.github.com/en/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-organization>`_
         """
-        assert is_optional(default_for_new_repos, str), default_for_new_repos
         assert isinstance(id, int), id
+        assert is_optional(default_for_new_repos, str), default_for_new_repos
         put_parameters = NotSet.remove_unset_items({"default_for_new_repos": default_for_new_repos})
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/code-security/configurations/{id}/defaults", input=put_parameters
         )
 
-    def list_default_code_security_configs(self) -> PaginatedList[DefaultCodeSecurityConfig]:
+    def get_default_code_security_configs(self) -> PaginatedList[DefaultCodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/defaults <https://docs.github.com/en/rest/code-security/configurations#get-default-code-security-configurations>`_
         :rtype: :class:`github.DefaultCodeSecurityConfig.DefaultCodeSecurityConfig`
@@ -1645,7 +1645,9 @@ class Organization(CompletableGithubObject):
             firstParams=None,
         )
 
-    def attach_security_config(self, id: int, scope: str, selected_repository_ids: Opt[list[int]] = NotSet) -> None:
+    def attach_security_config_to_repositories(
+        self, id: int, scope: str, selected_repository_ids: Opt[list[int]] = NotSet
+    ) -> None:
         """
         :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
         """
@@ -1666,7 +1668,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
-    def detach_security_config(self, selected_repository_ids: list[int]) -> None:
+    def detach_security_config_from_repositories(self, selected_repository_ids: list[int]) -> None:
         """
         :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
         """

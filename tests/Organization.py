@@ -705,8 +705,8 @@ class Organization(Framework.TestCase):
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
 
-    def testListCodeSecurityConfigs(self):
-        configs = list(self.org.list_code_security_configs())
+    def testGetCodeSecurityConfigs(self):
+        configs = list(self.org.get_code_security_configs())
         self.assertEqual(configs.pop().id, 17)
 
     def testCreateCodeSecurityConfigs(self):
@@ -721,7 +721,7 @@ class Organization(Framework.TestCase):
 
     def testSetDefaultCodeSecurityConfig(self):
         self.org.set_default_code_security_config(id=17, default_for_new_repos="all")
-        configs = self.org.list_default_code_security_configs()
+        configs = self.org.get_default_code_security_configs()
         for config in configs:
             if config.default_for_new_repos == "all":
                 self.assertEqual(config.configuration.id, 17)
@@ -729,7 +729,7 @@ class Organization(Framework.TestCase):
     def testAttachDetachSecurityConfig(self):
         config = self.org.create_code_security_config(name="test1", description="This is a description")
         repo = self.org.get_repo("test1")
-        repo.attach_security_config(id=config.id)
+        repo.attach_security_config_to_repo(id=config.id)
         status = "unknown"
         while status != "enforced":
             repo_config = repo.get_security_config()
@@ -739,4 +739,4 @@ class Organization(Framework.TestCase):
                 status = "unknown"
 
         self.assertEqual(config.id, repo_config.configuration.id)
-        repo.detach_security_config()
+        repo.detach_security_config_from_repo()
