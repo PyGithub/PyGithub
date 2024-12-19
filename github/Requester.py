@@ -878,7 +878,7 @@ class Requester:
         chunk_size: Optional[Union[int, None]] = 1,
     ) -> None:
         """
-        GET a file from the server and save it to the given path.
+        GET a file from the server and save it to the given path, which includes the filename.
         """
         _, _, stream_chunk_iterator = self.getStream(url, parameters, headers, cnx, chunk_size=chunk_size)
         with open(path, "wb") as f:
