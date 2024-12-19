@@ -15,6 +15,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Nikolay Yurin <yurinnick93@gmail.com>                         #
+# Copyright 2024 Bill Napier <napier@pobox.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -53,13 +54,21 @@ class RateLimiting(Framework.TestCase):
         rateLimit = self.g.get_rate_limit()
         self.assertEqual(
             repr(rateLimit),
-            "RateLimit(core=Rate(reset=2023-05-15 23:57:21+00:00, remaining=4904, limit=5000))",
+            "RateLimit(core=Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000))",
         )
         self.assertEqual(
             repr(rateLimit.core),
-            "Rate(reset=2023-05-15 23:57:21+00:00, remaining=4904, limit=5000)",
+            "Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000)",
         )
         self.assertEqual(rateLimit.core.limit, 5000)
-        self.assertEqual(rateLimit.core.remaining, 4904)
-        self.assertEqual(rateLimit.core.used, 96)
-        self.assertEqual(rateLimit.core.reset, datetime(2023, 5, 15, 23, 57, 21, tzinfo=timezone.utc))
+        self.assertEqual(rateLimit.core.remaining, 4988)
+        self.assertEqual(rateLimit.core.used, 12)
+        self.assertEqual(rateLimit.core.reset, datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc))
+
+        self.assertEqual(rateLimit.search.remaining, 30)
+        self.assertEqual(rateLimit.graphql.remaining, 4808)
+        self.assertEqual(rateLimit.actions_runner_registration.remaining, 10000)
+        self.assertEqual(rateLimit.code_scanning_upload.remaining, 1000)
+        self.assertEqual(rateLimit.dependency_snapshots.remaining, 100)
+        self.assertEqual(rateLimit.integration_manifest.remaining, 5000)
+        self.assertEqual(rateLimit.code_search.remaining, 10)

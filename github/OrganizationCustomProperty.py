@@ -140,7 +140,7 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
     """
 
     @property
-    def respository_id(self) -> int:
+    def repository_id(self) -> int:
         return self._repository_id.value
 
     @property
