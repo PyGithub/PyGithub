@@ -62,25 +62,17 @@ class PullRequestReview(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
         self._body: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
         self._submitted_at: Attribute[datetime] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
-
-    @property
-    def id(self) -> int:
-        return self._id.value
-
-    @property
-    def user(self) -> github.NamedUser.NamedUser:
-        return self._user.value
 
     @property
     def body(self) -> str:
@@ -91,20 +83,28 @@ class PullRequestReview(NonCompletableGithubObject):
         return self._commit_id.value
 
     @property
-    def state(self) -> str:
-        return self._state.value
-
-    @property
     def html_url(self) -> str:
         return self._html_url.value
+
+    @property
+    def id(self) -> int:
+        return self._id.value
 
     @property
     def pull_request_url(self) -> str:
         return self._pull_request_url.value
 
     @property
+    def state(self) -> str:
+        return self._state.value
+
+    @property
     def submitted_at(self) -> datetime:
         return self._submitted_at.value
+
+    @property
+    def user(self) -> github.NamedUser.NamedUser:
+        return self._user.value
 
     def dismiss(self, message: str) -> None:
         """
@@ -141,19 +141,19 @@ class PullRequestReview(NonCompletableGithubObject):
         self._useAttributes(data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
         if "pull_request_url" in attributes:  # pragma no branch
             self._pull_request_url = self._makeStringAttribute(attributes["pull_request_url"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
         if "submitted_at" in attributes:  # pragma no branch
             self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])
+        if "user" in attributes:  # pragma no branch
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

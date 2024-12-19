@@ -54,36 +54,36 @@ class NotificationSubject(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._title: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
         self._latest_comment_url: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
-
-    @property
-    def title(self) -> str:
-        return self._title.value
-
-    @property
-    def url(self) -> str:
-        return self._url.value
 
     @property
     def latest_comment_url(self) -> str:
         return self._latest_comment_url.value
 
     @property
+    def title(self) -> str:
+        return self._title.value
+
+    @property
     def type(self) -> str:
         return self._type.value
 
+    @property
+    def url(self) -> str:
+        return self._url.value
+
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "title" in attributes:  # pragma no branch
-            self._title = self._makeStringAttribute(attributes["title"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
         if "latest_comment_url" in attributes:  # pragma no branch
             self._latest_comment_url = self._makeStringAttribute(attributes["latest_comment_url"])
+        if "title" in attributes:  # pragma no branch
+            self._title = self._makeStringAttribute(attributes["title"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

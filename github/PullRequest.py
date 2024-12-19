@@ -148,6 +148,7 @@ class PullRequest(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
         self._labels: Attribute[list[github.Label.Label]] = NotSet
+        self._maintainer_can_modify: Attribute[bool] = NotSet
         self._merge_commit_sha: Attribute[str] = NotSet
         self._mergeable: Attribute[bool] = NotSet
         self._mergeable_state: Attribute[str] = NotSet
@@ -155,6 +156,7 @@ class PullRequest(CompletableGithubObject):
         self._merged_at: Attribute[datetime | None] = NotSet
         self._merged_by: Attribute[github.NamedUser.NamedUser] = NotSet
         self._milestone: Attribute[github.Milestone.Milestone] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
         self._patch_url: Attribute[str] = NotSet
         self._rebaseable: Attribute[bool] = NotSet
@@ -167,8 +169,6 @@ class PullRequest(CompletableGithubObject):
         self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._maintainer_can_modify: Attribute[bool] = NotSet
-        self._node_id: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -274,6 +274,11 @@ class PullRequest(CompletableGithubObject):
         return self._labels.value
 
     @property
+    def maintainer_can_modify(self) -> bool:
+        self._completeIfNotSet(self._maintainer_can_modify)
+        return self._maintainer_can_modify.value
+
+    @property
     def merge_commit_sha(self) -> str:
         self._completeIfNotSet(self._merge_commit_sha)
         return self._merge_commit_sha.value
@@ -309,6 +314,11 @@ class PullRequest(CompletableGithubObject):
         return self._milestone.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def number(self) -> int:
         self._completeIfNotSet(self._number)
         return self._number.value
@@ -322,6 +332,16 @@ class PullRequest(CompletableGithubObject):
     def rebaseable(self) -> bool:
         self._completeIfNotSet(self._rebaseable)
         return self._rebaseable.value
+
+    @property
+    def requested_reviewers(self) -> list[github.NamedUser.NamedUser]:
+        self._completeIfNotSet(self._requested_reviewers)
+        return self._requested_reviewers.value
+
+    @property
+    def requested_teams(self) -> list[github.Team.Team]:
+        self._completeIfNotSet(self._requested_teams)
+        return self._requested_teams.value
 
     @property
     def review_comment_url(self) -> str:
@@ -354,16 +374,6 @@ class PullRequest(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def requested_reviewers(self) -> list[github.NamedUser.NamedUser]:
-        self._completeIfNotSet(self._requested_reviewers)
-        return self._requested_reviewers.value
-
-    @property
-    def requested_teams(self) -> list[github.Team.Team]:
-        self._completeIfNotSet(self._requested_teams)
-        return self._requested_teams.value
-
-    @property
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
@@ -372,16 +382,6 @@ class PullRequest(CompletableGithubObject):
     def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
-
-    @property
-    def maintainer_can_modify(self) -> bool:
-        self._completeIfNotSet(self._maintainer_can_modify)
-        return self._maintainer_can_modify.value
-
-    @property
-    def node_id(self) -> str:
-        self._completeIfNotSet(self._node_id)
-        return self._node_id.value
 
     def as_issue(self) -> Issue:
         """
@@ -982,12 +982,20 @@ class PullRequest(CompletableGithubObject):
             self._merged_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["merged_by"])
         if "milestone" in attributes:  # pragma no branch
             self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "rebaseable" in attributes:  # pragma no branch
             self._rebaseable = self._makeBoolAttribute(attributes["rebaseable"])
+        if "requested_reviewers" in attributes:
+            self._requested_reviewers = self._makeListOfClassesAttribute(
+                github.NamedUser.NamedUser, attributes["requested_reviewers"]
+            )
+        if "requested_teams" in attributes:
+            self._requested_teams = self._makeListOfClassesAttribute(github.Team.Team, attributes["requested_teams"])
         if "review_comment_url" in attributes:  # pragma no branch
             self._review_comment_url = self._makeStringAttribute(attributes["review_comment_url"])
         if "review_comments" in attributes:  # pragma no branch
@@ -1004,11 +1012,3 @@ class PullRequest(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
-        if "requested_reviewers" in attributes:
-            self._requested_reviewers = self._makeListOfClassesAttribute(
-                github.NamedUser.NamedUser, attributes["requested_reviewers"]
-            )
-        if "requested_teams" in attributes:
-            self._requested_teams = self._makeListOfClassesAttribute(github.Team.Team, attributes["requested_teams"])
-        if "node_id" in attributes:  # pragma no branch
-            self._node_id = self._makeStringAttribute(attributes["node_id"])

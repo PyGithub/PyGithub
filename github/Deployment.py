@@ -64,85 +64,25 @@ class Deployment(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._ref: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._sha: Attribute[str] = NotSet
-        self._task: Attribute[str] = NotSet
-        self._payload: Attribute[dict[str, Any]] = NotSet
-        self._original_environment: Attribute[str] = NotSet
-        self._environment: Attribute[str] = NotSet
-        self._production_environment: Attribute[bool] = NotSet
-        self._transient_environment: Attribute[bool] = NotSet
-        self._description: Attribute[str] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime | None] = NotSet
-        self._statuses_url: Attribute[str] = NotSet
+        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._environment: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._original_environment: Attribute[str] = NotSet
+        self._payload: Attribute[dict[str, Any]] = NotSet
+        self._production_environment: Attribute[bool] = NotSet
+        self._ref: Attribute[str] = NotSet
         self._repository_url: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._statuses_url: Attribute[str] = NotSet
+        self._task: Attribute[str] = NotSet
+        self._transient_environment: Attribute[bool] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
-
-    @property
-    def id(self) -> int:
-        self._completeIfNotSet(self._id)
-        return self._id.value
-
-    @property
-    def ref(self) -> str:
-        self._completeIfNotSet(self._ref)
-        return self._ref.value
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
-
-    @property
-    def sha(self) -> str:
-        self._completeIfNotSet(self._sha)
-        return self._sha.value
-
-    @property
-    def task(self) -> str:
-        self._completeIfNotSet(self._task)
-        return self._task.value
-
-    @property
-    def payload(self) -> dict[str, Any]:
-        self._completeIfNotSet(self._payload)
-        return self._payload.value
-
-    @property
-    def original_environment(self) -> str:
-        self._completeIfNotSet(self._original_environment)
-        return self._original_environment.value
-
-    @property
-    def environment(self) -> str:
-        self._completeIfNotSet(self._environment)
-        return self._environment.value
-
-    @property
-    def production_environment(self) -> bool:
-        self._completeIfNotSet(self._production_environment)
-        return self._production_environment.value
-
-    @property
-    def transient_environment(self) -> bool:
-        self._completeIfNotSet(self._transient_environment)
-        return self._transient_environment.value
-
-    @property
-    def description(self) -> str:
-        self._completeIfNotSet(self._description)
-        return self._description.value
-
-    @property
-    def creator(self) -> github.NamedUser.NamedUser:
-        self._completeIfNotSet(self._creator)
-        return self._creator.value
 
     @property
     def created_at(self) -> datetime:
@@ -150,9 +90,54 @@ class Deployment(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self) -> datetime | None:
-        self._completeIfNotSet(self._updated_at)
-        return self._updated_at.value
+    def creator(self) -> github.NamedUser.NamedUser:
+        self._completeIfNotSet(self._creator)
+        return self._creator.value
+
+    @property
+    def description(self) -> str:
+        self._completeIfNotSet(self._description)
+        return self._description.value
+
+    @property
+    def environment(self) -> str:
+        self._completeIfNotSet(self._environment)
+        return self._environment.value
+
+    @property
+    def id(self) -> int:
+        self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
+    def original_environment(self) -> str:
+        self._completeIfNotSet(self._original_environment)
+        return self._original_environment.value
+
+    @property
+    def payload(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._payload)
+        return self._payload.value
+
+    @property
+    def production_environment(self) -> bool:
+        self._completeIfNotSet(self._production_environment)
+        return self._production_environment.value
+
+    @property
+    def ref(self) -> str:
+        self._completeIfNotSet(self._ref)
+        return self._ref.value
+
+    @property
+    def repository_url(self) -> str:
+        self._completeIfNotSet(self._repository_url)
+        return self._repository_url.value
+
+    @property
+    def sha(self) -> str:
+        self._completeIfNotSet(self._sha)
+        return self._sha.value
 
     @property
     def statuses_url(self) -> str:
@@ -160,9 +145,24 @@ class Deployment(CompletableGithubObject):
         return self._statuses_url.value
 
     @property
-    def repository_url(self) -> str:
-        self._completeIfNotSet(self._repository_url)
-        return self._repository_url.value
+    def task(self) -> str:
+        self._completeIfNotSet(self._task)
+        return self._task.value
+
+    @property
+    def transient_environment(self) -> bool:
+        self._completeIfNotSet(self._transient_environment)
+        return self._transient_environment.value
+
+    @property
+    def updated_at(self) -> datetime | None:
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
 
     def get_statuses(self) -> PaginatedList[github.DeploymentStatus.DeploymentStatus]:
         """
@@ -236,35 +236,35 @@ class Deployment(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "creator" in attributes:  # pragma no branch
+            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
+        if "environment" in attributes:  # pragma no branch
+            self._environment = self._makeStringAttribute(attributes["environment"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "original_environment" in attributes:  # pragma no branch
+            self._original_environment = self._makeStringAttribute(attributes["original_environment"])
+        if "payload" in attributes:  # pragma no branch
+            self._payload = self._makeDictAttribute(attributes["payload"])
         if "production_environment" in attributes:  # pragma no branch
             self._production_environment = self._makeBoolAttribute(attributes["production_environment"])
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
-        if "transient_environment" in attributes:  # pragma no branch
-            self._transient_environment = self._makeBoolAttribute(attributes["transient_environment"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "sha" in attributes:  # pragma no branch
-            self._sha = self._makeStringAttribute(attributes["sha"])
-        if "task" in attributes:  # pragma no branch
-            self._task = self._makeStringAttribute(attributes["task"])
-        if "payload" in attributes:  # pragma no branch
-            self._payload = self._makeDictAttribute(attributes["payload"])
-        if "original_environment" in attributes:  # pragma no branch
-            self._original_environment = self._makeStringAttribute(attributes["original_environment"])
-        if "environment" in attributes:  # pragma no branch
-            self._environment = self._makeStringAttribute(attributes["environment"])
-        if "description" in attributes:  # pragma no branch
-            self._description = self._makeStringAttribute(attributes["description"])
-        if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
-        if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "statuses_url" in attributes:  # pragma no branch
-            self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
+        if "sha" in attributes:  # pragma no branch
+            self._sha = self._makeStringAttribute(attributes["sha"])
+        if "statuses_url" in attributes:  # pragma no branch
+            self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
+        if "task" in attributes:  # pragma no branch
+            self._task = self._makeStringAttribute(attributes["task"])
+        if "transient_environment" in attributes:  # pragma no branch
+            self._transient_environment = self._makeBoolAttribute(attributes["transient_environment"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

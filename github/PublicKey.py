@@ -71,8 +71,8 @@ class PublicKey(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._key_id: Attribute[str | int] = NotSet
         self._key: Attribute[str] = NotSet
+        self._key_id: Attribute[str | int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
@@ -87,6 +87,9 @@ class PublicKey(CompletableGithubObject):
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
 
+    def encrypt(self, unencrypted_value: str) -> str:
+        return encrypt(self._key.value, unencrypted_value)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
@@ -95,6 +98,3 @@ class PublicKey(CompletableGithubObject):
                 self._key_id = self._makeStringAttribute(attributes["key_id"])
             else:
                 self._key_id = self._makeIntAttribute(attributes["key_id"])
-
-    def encrypt(self, unencrypted_value: str) -> str:
-        return encrypt(self._key.value, unencrypted_value)

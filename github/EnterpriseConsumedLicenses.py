@@ -54,13 +54,18 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._enterprise: Attribute[str] = NotSet
         self._total_seats_consumed: Attribute[int] = NotSet
         self._total_seats_purchased: Attribute[int] = NotSet
-        self._enterprise: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"enterprise": self._enterprise.value})
+
+    @property
+    def enterprise(self) -> str:
+        self._completeIfNotSet(self._enterprise)
+        return self._enterprise.value
 
     @property
     def total_seats_consumed(self) -> int:
@@ -69,11 +74,6 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
     @property
     def total_seats_purchased(self) -> int:
         return self._total_seats_purchased.value
-
-    @property
-    def enterprise(self) -> str:
-        self._completeIfNotSet(self._enterprise)
-        return self._enterprise.value
 
     @property
     def url(self) -> str:
@@ -98,11 +98,11 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "enterprise" in attributes:  # pragma no branch
+            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "total_seats_consumed" in attributes:  # pragma no branch
             self._total_seats_consumed = self._makeIntAttribute(attributes["total_seats_consumed"])
         if "total_seats_purchased" in attributes:  # pragma no branch
             self._total_seats_purchased = self._makeIntAttribute(attributes["total_seats_purchased"])
-        if "enterprise" in attributes:  # pragma no branch
-            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

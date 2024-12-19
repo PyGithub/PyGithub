@@ -79,61 +79,31 @@ class GitRelease(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._body: Attribute[str] = NotSet
-        self._title: Attribute[str] = NotSet
-        self._tag_name: Attribute[str] = NotSet
-        self._target_commitish: Attribute[str] = NotSet
-        self._draft: Attribute[bool] = NotSet
-        self._prerelease: Attribute[bool] = NotSet
-        self._generate_release_notes: Attribute[bool] = NotSet
-        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._url: Attribute[str] = NotSet
-        self._upload_url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._published_at: Attribute[datetime] = NotSet
-        self._tarball_url: Attribute[str] = NotSet
-        self._zipball_url: Attribute[str] = NotSet
         self._assets: Attribute[list[github.GitReleaseAsset.GitReleaseAsset]] = NotSet
+        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._body: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._draft: Attribute[bool] = NotSet
+        self._generate_release_notes: Attribute[bool] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._prerelease: Attribute[bool] = NotSet
+        self._published_at: Attribute[datetime] = NotSet
+        self._tag_name: Attribute[str] = NotSet
+        self._tarball_url: Attribute[str] = NotSet
+        self._target_commitish: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
+        self._upload_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._zipball_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def id(self) -> int:
-        self._completeIfNotSet(self._id)
-        return self._id.value
-
-    @property
-    def body(self) -> str:
-        self._completeIfNotSet(self._body)
-        return self._body.value
-
-    @property
-    def title(self) -> str:
-        self._completeIfNotSet(self._title)
-        return self._title.value
-
-    @property
-    def tag_name(self) -> str:
-        self._completeIfNotSet(self._tag_name)
-        return self._tag_name.value
-
-    @property
-    def target_commitish(self) -> str:
-        self._completeIfNotSet(self._target_commitish)
-        return self._target_commitish.value
-
-    @property
-    def draft(self) -> bool:
-        self._completeIfNotSet(self._draft)
-        return self._draft.value
-
-    @property
-    def prerelease(self) -> bool:
-        self._completeIfNotSet(self._prerelease)
-        return self._prerelease.value
+    def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
+        self._completeIfNotSet(self._assets)
+        return self._assets.value
 
     @property
     def author(self) -> github.NamedUser.NamedUser:
@@ -141,24 +111,19 @@ class GitRelease(CompletableGithubObject):
         return self._author.value
 
     @property
+    def body(self) -> str:
+        self._completeIfNotSet(self._body)
+        return self._body.value
+
+    @property
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def published_at(self) -> datetime:
-        self._completeIfNotSet(self._published_at)
-        return self._published_at.value
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
-
-    @property
-    def upload_url(self) -> str:
-        self._completeIfNotSet(self._upload_url)
-        return self._upload_url.value
+    def draft(self) -> bool:
+        self._completeIfNotSet(self._draft)
+        return self._draft.value
 
     @property
     def html_url(self) -> str:
@@ -166,19 +131,54 @@ class GitRelease(CompletableGithubObject):
         return self._html_url.value
 
     @property
+    def id(self) -> int:
+        self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
+    def prerelease(self) -> bool:
+        self._completeIfNotSet(self._prerelease)
+        return self._prerelease.value
+
+    @property
+    def published_at(self) -> datetime:
+        self._completeIfNotSet(self._published_at)
+        return self._published_at.value
+
+    @property
+    def tag_name(self) -> str:
+        self._completeIfNotSet(self._tag_name)
+        return self._tag_name.value
+
+    @property
     def tarball_url(self) -> str:
         self._completeIfNotSet(self._tarball_url)
         return self._tarball_url.value
 
     @property
+    def target_commitish(self) -> str:
+        self._completeIfNotSet(self._target_commitish)
+        return self._target_commitish.value
+
+    @property
+    def title(self) -> str:
+        self._completeIfNotSet(self._title)
+        return self._title.value
+
+    @property
+    def upload_url(self) -> str:
+        self._completeIfNotSet(self._upload_url)
+        return self._upload_url.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
+    @property
     def zipball_url(self) -> str:
         self._completeIfNotSet(self._zipball_url)
         return self._zipball_url.value
-
-    @property
-    def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
-        self._completeIfNotSet(self._assets)
-        return self._assets.value
 
     def delete_release(self) -> None:
         """
@@ -303,39 +303,39 @@ class GitRelease(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "id" in attributes:
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "body" in attributes:
-            self._body = self._makeStringAttribute(attributes["body"])
-        if "name" in attributes:
-            self._title = self._makeStringAttribute(attributes["name"])
-        if "tag_name" in attributes:
-            self._tag_name = self._makeStringAttribute(attributes["tag_name"])
-        if "target_commitish" in attributes:
-            self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
-        if "draft" in attributes:
-            self._draft = self._makeBoolAttribute(attributes["draft"])
-        if "prerelease" in attributes:
-            self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
-        if "generate_release_notes" in attributes:
-            self._generate_release_notes = self._makeBoolAttribute(attributes["generate_release_notes"])
-        if "author" in attributes:
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "upload_url" in attributes:
-            self._upload_url = self._makeStringAttribute(attributes["upload_url"])
-        if "html_url" in attributes:
-            self._html_url = self._makeStringAttribute(attributes["html_url"])
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "published_at" in attributes:
-            self._published_at = self._makeDatetimeAttribute(attributes["published_at"])
-        if "tarball_url" in attributes:
-            self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
-        if "zipball_url" in attributes:
-            self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])
         if "assets" in attributes:
             self._assets = self._makeListOfClassesAttribute(
                 github.GitReleaseAsset.GitReleaseAsset, attributes["assets"]
             )
+        if "author" in attributes:
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+        if "body" in attributes:
+            self._body = self._makeStringAttribute(attributes["body"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "draft" in attributes:
+            self._draft = self._makeBoolAttribute(attributes["draft"])
+        if "generate_release_notes" in attributes:
+            self._generate_release_notes = self._makeBoolAttribute(attributes["generate_release_notes"])
+        if "html_url" in attributes:
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "id" in attributes:
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "name" in attributes:
+            self._title = self._makeStringAttribute(attributes["name"])
+        if "prerelease" in attributes:
+            self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
+        if "published_at" in attributes:
+            self._published_at = self._makeDatetimeAttribute(attributes["published_at"])
+        if "tag_name" in attributes:
+            self._tag_name = self._makeStringAttribute(attributes["tag_name"])
+        if "tarball_url" in attributes:
+            self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
+        if "target_commitish" in attributes:
+            self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
+        if "upload_url" in attributes:
+            self._upload_url = self._makeStringAttribute(attributes["upload_url"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])
+        if "zipball_url" in attributes:
+            self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])

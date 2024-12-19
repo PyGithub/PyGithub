@@ -67,56 +67,17 @@ class Migration(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._guid: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._lock_repositories: Attribute[bool] = NotSet
         self._exclude_attachments: Attribute[bool] = NotSet
+        self._guid: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._lock_repositories: Attribute[bool] = NotSet
+        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
         self._repositories: Attribute[list[github.Repository.Repository]] = NotSet
+        self._state: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"state": self._state.value, "url": self._url.value})
-
-    @property
-    def id(self) -> int:
-        return self._id.value
-
-    @property
-    def owner(self) -> github.NamedUser.NamedUser:
-        self._completeIfNotSet(self._owner)
-        return self._owner.value
-
-    @property
-    def guid(self) -> str:
-        self._completeIfNotSet(self._guid)
-        return self._guid.value
-
-    @property
-    def state(self) -> str:
-        self._completeIfNotSet(self._guid)
-        return self._state.value
-
-    @property
-    def lock_repositories(self) -> bool:
-        self._completeIfNotSet(self._repositories)
-        return self._lock_repositories.value
-
-    @property
-    def exclude_attachments(self) -> bool:
-        self._completeIfNotSet(self._exclude_attachments)
-        return self._exclude_attachments.value
-
-    @property
-    def repositories(self) -> list[github.Repository.Repository]:
-        self._completeIfNotSet(self._repositories)
-        return self._repositories.value
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
 
     @property
     def created_at(self) -> datetime:
@@ -124,9 +85,48 @@ class Migration(CompletableGithubObject):
         return self._created_at.value
 
     @property
+    def exclude_attachments(self) -> bool:
+        self._completeIfNotSet(self._exclude_attachments)
+        return self._exclude_attachments.value
+
+    @property
+    def guid(self) -> str:
+        self._completeIfNotSet(self._guid)
+        return self._guid.value
+
+    @property
+    def id(self) -> int:
+        return self._id.value
+
+    @property
+    def lock_repositories(self) -> bool:
+        self._completeIfNotSet(self._repositories)
+        return self._lock_repositories.value
+
+    @property
+    def owner(self) -> github.NamedUser.NamedUser:
+        self._completeIfNotSet(self._owner)
+        return self._owner.value
+
+    @property
+    def repositories(self) -> list[github.Repository.Repository]:
+        self._completeIfNotSet(self._repositories)
+        return self._repositories.value
+
+    @property
+    def state(self) -> str:
+        self._completeIfNotSet(self._guid)
+        return self._state.value
+
+    @property
     def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
 
     def get_status(self) -> str:
         """
@@ -172,25 +172,25 @@ class Migration(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "id" in attributes:
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "owner" in attributes:
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
-        if "guid" in attributes:
-            self._guid = self._makeStringAttribute(attributes["guid"])
-        if "state" in attributes:
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "lock_repositories" in attributes:
-            self._lock_repositories = self._makeBoolAttribute(attributes["lock_repositories"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "exclude_attachments" in attributes:
             self._exclude_attachments = self._makeBoolAttribute(attributes["exclude_attachments"])
+        if "guid" in attributes:
+            self._guid = self._makeStringAttribute(attributes["guid"])
+        if "id" in attributes:
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "lock_repositories" in attributes:
+            self._lock_repositories = self._makeBoolAttribute(attributes["lock_repositories"])
+        if "owner" in attributes:
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "repositories" in attributes:
             self._repositories = self._makeListOfClassesAttribute(
                 github.Repository.Repository, attributes["repositories"]
             )
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "state" in attributes:
+            self._state = self._makeStringAttribute(attributes["state"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])

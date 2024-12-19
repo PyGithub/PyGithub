@@ -70,6 +70,10 @@ class GitCommit(CompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value})
 
     @property
+    def _identity(self) -> str:
+        return self.sha
+
+    @property
     def author(self) -> github.GitAuthor.GitAuthor:
         self._completeIfNotSet(self._author)
         return self._author.value
@@ -108,10 +112,6 @@ class GitCommit(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def _identity(self) -> str:
-        return self.sha
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch

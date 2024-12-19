@@ -53,13 +53,9 @@ class StatsCodeFrequency(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._week: Attribute[datetime] = NotSet
         self._additions: Attribute[int] = NotSet
         self._deletions: Attribute[int] = NotSet
-
-    @property
-    def week(self) -> datetime:
-        return self._week.value
+        self._week: Attribute[datetime] = NotSet
 
     @property
     def additions(self) -> int:
@@ -68,6 +64,10 @@ class StatsCodeFrequency(NonCompletableGithubObject):
     @property
     def deletions(self) -> int:
         return self._deletions.value
+
+    @property
+    def week(self) -> datetime:
+        return self._week.value
 
     def _useAttributes(self, attributes: tuple[int, int, int]) -> None:
         self._week = self._makeTimestampAttribute(attributes[0])

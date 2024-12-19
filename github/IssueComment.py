@@ -71,14 +71,14 @@ class IssueComment(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._body: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._reactions: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -92,6 +92,11 @@ class IssueComment(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def id(self) -> int:
@@ -109,6 +114,11 @@ class IssueComment(CompletableGithubObject):
         return self._node_id.value
 
     @property
+    def reactions(self) -> dict:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
+
+    @property
     def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -119,19 +129,9 @@ class IssueComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def html_url(self) -> str:
-        self._completeIfNotSet(self._html_url)
-        return self._html_url.value
-
-    @property
     def user(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
-
-    @property
-    def reactions(self) -> dict:
-        self._completeIfNotSet(self._reactions)
-        return self._reactions.value
 
     def delete(self) -> None:
         """
@@ -230,19 +230,19 @@ class IssueComment(CompletableGithubObject):
             self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue_url" in attributes:  # pragma no branch
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "reactions" in attributes:
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "html_url" in attributes:  # pragma no branch
-            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
-        if "reactions" in attributes:
-            self._reactions = self._makeDictAttribute(attributes["reactions"])

@@ -48,11 +48,11 @@ class Plan(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._collaborators: Attribute[int] = NotSet
+        self._filled_seats: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._private_repos: Attribute[int] = NotSet
-        self._space: Attribute[int] = NotSet
-        self._filled_seats: Attribute[int] = NotSet
         self._seats: Attribute[int] = NotSet
+        self._space: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -60,6 +60,10 @@ class Plan(NonCompletableGithubObject):
     @property
     def collaborators(self) -> int:
         return self._collaborators.value
+
+    @property
+    def filled_seats(self) -> int:
+        return self._filled_seats.value
 
     @property
     def name(self) -> str:
@@ -70,27 +74,23 @@ class Plan(NonCompletableGithubObject):
         return self._private_repos.value
 
     @property
-    def space(self) -> int:
-        return self._space.value
-
-    @property
-    def filled_seats(self) -> int:
-        return self._filled_seats.value
-
-    @property
     def seats(self) -> int:
         return self._seats.value
+
+    @property
+    def space(self) -> int:
+        return self._space.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
+        if "filled_seats" in attributes:  # pragma no branch
+            self._filled_seats = self._makeIntAttribute(attributes["filled_seats"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "private_repos" in attributes:  # pragma no branch
             self._private_repos = self._makeIntAttribute(attributes["private_repos"])
-        if "space" in attributes:  # pragma no branch
-            self._space = self._makeIntAttribute(attributes["space"])
         if "seats" in attributes:  # pragma no branch
             self._seats = self._makeIntAttribute(attributes["seats"])
-        if "filled_seats" in attributes:  # pragma no branch
-            self._filled_seats = self._makeIntAttribute(attributes["filled_seats"])
+        if "space" in attributes:  # pragma no branch
+            self._space = self._makeIntAttribute(attributes["space"])

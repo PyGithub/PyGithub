@@ -56,6 +56,11 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
 
     """
 
+    def _initAttributes(self) -> None:
+        self._state: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+
     @property
     def state(self) -> str:
         """
@@ -76,11 +81,6 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._user.value
-
-    def _initAttributes(self) -> None:
-        self._state: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "state" in attributes:  # pragma no branch

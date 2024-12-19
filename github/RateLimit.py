@@ -59,8 +59,8 @@ class RateLimit(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._core: Attribute[Rate] = NotSet
-        self._search: Attribute[Rate] = NotSet
         self._graphql: Attribute[Rate] = NotSet
+        self._search: Attribute[Rate] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
@@ -73,23 +73,23 @@ class RateLimit(NonCompletableGithubObject):
         return self._core.value
 
     @property
-    def search(self) -> Rate:
-        """
-        Rate limit for the Search API.
-        """
-        return self._search.value
-
-    @property
     def graphql(self) -> Rate:
         """
         (Experimental) Rate limit for GraphQL API, use with caution.
         """
         return self._graphql.value
 
+    @property
+    def search(self) -> Rate:
+        """
+        Rate limit for the Search API.
+        """
+        return self._search.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "core" in attributes:  # pragma no branch
             self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
-        if "search" in attributes:  # pragma no branch
-            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
         if "graphql" in attributes:  # pragma no branch
             self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])
+        if "search" in attributes:  # pragma no branch
+            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])

@@ -110,7 +110,6 @@ class Issue(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
         self._active_lock_reason: Attribute[str | None] = NotSet
         self._assignee: Attribute[NamedUser | None] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
@@ -122,12 +121,14 @@ class Issue(CompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
         self._labels: Attribute[list[Label]] = NotSet
         self._labels_url: Attribute[str] = NotSet
         self._locked: Attribute[bool] = NotSet
         self._milestone: Attribute[Milestone] = NotSet
         self._number: Attribute[int] = NotSet
         self._pull_request: Attribute[IssuePullRequest] = NotSet
+        self._reactions: Attribute[dict] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._state: Attribute[str] = NotSet
         self._state_reason: Attribute[str | None] = NotSet
@@ -135,10 +136,18 @@ class Issue(CompletableGithubObject):
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
-        self._reactions: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
+
+    @property
+    def _identity(self) -> int:
+        return self.number
+
+    @property
+    def active_lock_reason(self) -> str | None:
+        self._completeIfNotSet(self._active_lock_reason)
+        return self._active_lock_reason.value
 
     @property
     def assignee(self) -> NamedUser | None:
@@ -206,6 +215,11 @@ class Issue(CompletableGithubObject):
         return self._labels_url.value
 
     @property
+    def locked(self) -> bool:
+        self._completeIfNotSet(self._locked)
+        return self._locked.value
+
+    @property
     def milestone(self) -> Milestone:
         self._completeIfNotSet(self._milestone)
         return self._milestone.value
@@ -219,6 +233,11 @@ class Issue(CompletableGithubObject):
     def pull_request(self) -> IssuePullRequest | None:
         self._completeIfNotSet(self._pull_request)
         return self._pull_request.value
+
+    @property
+    def reactions(self) -> dict:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
 
     @property
     def repository(self) -> Repository:
@@ -260,21 +279,6 @@ class Issue(CompletableGithubObject):
     def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
-
-    @property
-    def locked(self) -> bool:
-        self._completeIfNotSet(self._locked)
-        return self._locked.value
-
-    @property
-    def active_lock_reason(self) -> str | None:
-        self._completeIfNotSet(self._active_lock_reason)
-        return self._active_lock_reason.value
-
-    @property
-    def reactions(self) -> dict:
-        self._completeIfNotSet(self._reactions)
-        return self._reactions.value
 
     def as_pull_request(self) -> PullRequest:
         """
@@ -517,10 +521,6 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.issueTimelineEventsPreview},
         )
 
-    @property
-    def _identity(self) -> int:
-        return self.number
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
@@ -565,6 +565,8 @@ class Issue(CompletableGithubObject):
             self._pull_request = self._makeClassAttribute(
                 github.IssuePullRequest.IssuePullRequest, attributes["pull_request"]
             )
+        if "reactions" in attributes:
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "state" in attributes:  # pragma no branch
@@ -579,5 +581,3 @@ class Issue(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
-        if "reactions" in attributes:
-            self._reactions = self._makeDictAttribute(attributes["reactions"])

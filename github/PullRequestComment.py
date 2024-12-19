@@ -72,17 +72,17 @@ class PullRequestComment(CompletableGithubObject):
         self._commit_id: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._diff_hunk: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._in_reply_to_id: Attribute[int] = NotSet
         self._original_commit_id: Attribute[str] = NotSet
         self._original_position: Attribute[int] = NotSet
         self._path: Attribute[str] = NotSet
         self._position: Attribute[int] = NotSet
-        self._pull_request_url: Attribute[str] = NotSet
         self._pull_request_review_id: Attribute[int] = NotSet
+        self._pull_request_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
@@ -107,6 +107,11 @@ class PullRequestComment(CompletableGithubObject):
     def diff_hunk(self) -> str:
         self._completeIfNotSet(self._diff_hunk)
         return self._diff_hunk.value
+
+    @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def id(self) -> int:
@@ -157,11 +162,6 @@ class PullRequestComment(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def html_url(self) -> str:
-        self._completeIfNotSet(self._html_url)
-        return self._html_url.value
 
     @property
     def user(self) -> github.NamedUser.NamedUser:
@@ -245,6 +245,8 @@ class PullRequestComment(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "diff_hunk" in attributes:  # pragma no branch
             self._diff_hunk = self._makeStringAttribute(attributes["diff_hunk"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "in_reply_to_id" in attributes:  # pragma no branch
@@ -265,7 +267,5 @@ class PullRequestComment(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "html_url" in attributes:  # pragma no branch
-            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

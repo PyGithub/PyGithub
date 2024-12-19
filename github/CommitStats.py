@@ -43,9 +43,9 @@ class CommitStats(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._total: Attribute[int] = NotSet
-        self._deletions: Attribute[int] = NotSet
         self._additions: Attribute[int] = NotSet
+        self._deletions: Attribute[int] = NotSet
+        self._total: Attribute[int] = NotSet
 
     @property
     def additions(self) -> int:

@@ -96,24 +96,38 @@ class Team(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._description: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._members_count: Attribute[int] = NotSet
         self._members_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
-        self._description: Attribute[str] = NotSet
         self._notification_setting: Attribute[str] = NotSet
+        self._organization: Attribute[github.Organization.Organization] = NotSet
+        self._parent: Attribute[github.Team.Team] = NotSet
         self._permission: Attribute[str] = NotSet
+        self._privacy: Attribute[str] = NotSet
         self._repos_count: Attribute[int] = NotSet
         self._repositories_url: Attribute[str] = NotSet
         self._slug: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._organization: Attribute[github.Organization.Organization] = NotSet
-        self._privacy: Attribute[str] = NotSet
-        self._parent: Attribute[github.Team.Team] = NotSet
-        self._html_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "name": self._name.value})
+
+    @property
+    def _identity(self) -> int:
+        return self.id
+
+    @property
+    def description(self) -> str:
+        self._completeIfNotSet(self._description)
+        return self._description.value
+
+    @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def id(self) -> int:
@@ -136,19 +150,29 @@ class Team(CompletableGithubObject):
         return self._name.value
 
     @property
-    def description(self) -> str:
-        self._completeIfNotSet(self._description)
-        return self._description.value
-
-    @property
     def notification_setting(self) -> str:
         self._completeIfNotSet(self._notification_setting)
         return self._notification_setting.value
 
     @property
+    def organization(self) -> Organization:
+        self._completeIfNotSet(self._organization)
+        return self._organization.value
+
+    @property
+    def parent(self) -> Team:
+        self._completeIfNotSet(self._parent)
+        return self._parent.value
+
+    @property
     def permission(self) -> str:
         self._completeIfNotSet(self._permission)
         return self._permission.value
+
+    @property
+    def privacy(self) -> str:
+        self._completeIfNotSet(self._privacy)
+        return self._privacy.value
 
     @property
     def repos_count(self) -> int:
@@ -169,26 +193,6 @@ class Team(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def organization(self) -> Organization:
-        self._completeIfNotSet(self._organization)
-        return self._organization.value
-
-    @property
-    def privacy(self) -> str:
-        self._completeIfNotSet(self._privacy)
-        return self._privacy.value
-
-    @property
-    def parent(self) -> Team:
-        self._completeIfNotSet(self._parent)
-        return self._parent.value
-
-    @property
-    def html_url(self) -> str:
-        self._completeIfNotSet(self._html_url)
-        return self._html_url.value
 
     def add_to_members(self, member: NamedUser) -> None:
         """
@@ -435,11 +439,11 @@ class Team(CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repos/{repo._identity}")
 
-    @property
-    def _identity(self) -> int:
-        return self.id
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
+        if "html_url" in attributes:
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "members_count" in attributes:  # pragma no branch
@@ -448,12 +452,16 @@ class Team(CompletableGithubObject):
             self._members_url = self._makeStringAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
-        if "description" in attributes:  # pragma no branch
-            self._description = self._makeStringAttribute(attributes["description"])
         if "notification_setting" in attributes:  # pragma no branch
             self._notification_setting = self._makeStringAttribute(attributes["notification_setting"])
+        if "organization" in attributes:  # pragma no branch
+            self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+        if "parent" in attributes:  # pragma no branch
+            self._parent = self._makeClassAttribute(github.Team.Team, attributes["parent"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
+        if "privacy" in attributes:  # pragma no branch
+            self._privacy = self._makeStringAttribute(attributes["privacy"])
         if "repos_count" in attributes:  # pragma no branch
             self._repos_count = self._makeIntAttribute(attributes["repos_count"])
         if "repositories_url" in attributes:  # pragma no branch
@@ -462,11 +470,3 @@ class Team(CompletableGithubObject):
             self._slug = self._makeStringAttribute(attributes["slug"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "organization" in attributes:  # pragma no branch
-            self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
-        if "privacy" in attributes:  # pragma no branch
-            self._privacy = self._makeStringAttribute(attributes["privacy"])
-        if "parent" in attributes:  # pragma no branch
-            self._parent = self._makeClassAttribute(github.Team.Team, attributes["parent"])
-        if "html_url" in attributes:
-            self._html_url = self._makeStringAttribute(attributes["html_url"])

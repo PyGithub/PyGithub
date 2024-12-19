@@ -40,29 +40,29 @@ class DependabotAlertDependency(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
         self._manifest_path: Attribute[str] = NotSet
+        self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
         self._scope: Attribute[str] = NotSet
-
-    @property
-    def package(self) -> AdvisoryVulnerabilityPackage:
-        return self._package.value
 
     @property
     def manifest_path(self) -> str:
         return self._manifest_path.value
 
     @property
+    def package(self) -> AdvisoryVulnerabilityPackage:
+        return self._package.value
+
+    @property
     def scope(self) -> str:
         return self._scope.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "manifest_path" in attributes:
+            self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
         if "package" in attributes:
             self._package = self._makeClassAttribute(
                 AdvisoryVulnerabilityPackage,
                 attributes["package"],
             )
-        if "manifest_path" in attributes:
-            self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
         if "scope" in attributes:
             self._scope = self._makeStringAttribute(attributes["scope"])

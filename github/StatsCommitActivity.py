@@ -53,26 +53,26 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._week: Attribute[datetime] = github.GithubObject.NotSet
-        self._total: Attribute[int] = github.GithubObject.NotSet
         self._days: Attribute[int] = github.GithubObject.NotSet
+        self._total: Attribute[int] = github.GithubObject.NotSet
+        self._week: Attribute[datetime] = github.GithubObject.NotSet
 
     @property
-    def week(self) -> datetime:
-        return self._week.value
+    def days(self) -> int:
+        return self._days.value
 
     @property
     def total(self) -> int:
         return self._total.value
 
     @property
-    def days(self) -> int:
-        return self._days.value
+    def week(self) -> datetime:
+        return self._week.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "week" in attributes:  # pragma no branch
-            self._week = self._makeTimestampAttribute(attributes["week"])
-        if "total" in attributes:  # pragma no branch
-            self._total = self._makeIntAttribute(attributes["total"])
         if "days" in attributes:  # pragma no branch
             self._days = self._makeListOfIntsAttribute(attributes["days"])
+        if "total" in attributes:  # pragma no branch
+            self._total = self._makeIntAttribute(attributes["total"])
+        if "week" in attributes:  # pragma no branch
+            self._week = self._makeTimestampAttribute(attributes["week"])

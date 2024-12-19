@@ -53,12 +53,12 @@ class CommitStatus(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._context: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
         self._description: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
-        self._context: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -71,6 +71,10 @@ class CommitStatus(NonCompletableGithubObject):
                 "context": self._context.value,
             }
         )
+
+    @property
+    def context(self) -> str:
+        return self._context.value
 
     @property
     def created_at(self) -> datetime:
@@ -93,10 +97,6 @@ class CommitStatus(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def context(self) -> str:
-        return self._context.value
-
-    @property
     def target_url(self) -> str:
         return self._target_url.value
 
@@ -109,6 +109,8 @@ class CommitStatus(NonCompletableGithubObject):
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "context" in attributes:  # pragma no branch
+            self._context = self._makeStringAttribute(attributes["context"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
@@ -119,8 +121,6 @@ class CommitStatus(NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
-        if "context" in attributes:  # pragma no branch
-            self._context = self._makeStringAttribute(attributes["context"])
         if "target_url" in attributes:  # pragma no branch
             self._target_url = self._makeStringAttribute(attributes["target_url"])
         if "updated_at" in attributes:  # pragma no branch

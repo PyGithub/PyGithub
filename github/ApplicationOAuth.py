@@ -78,12 +78,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
     def client_secret(self) -> str:
         return self._client_secret.value
 
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "client_id" in attributes:  # pragma no branch
-            self._client_id = self._makeStringAttribute(attributes["client_id"])
-        if "client_secret" in attributes:  # pragma no branch
-            self._client_secret = self._makeStringAttribute(attributes["client_secret"])
-
     def get_oauth_url(self, path: str) -> str:
         if not path.startswith("/"):
             path = f"/{path}"
@@ -195,3 +189,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
             raise GithubException(200, data, headers)
 
         return headers, data
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "client_id" in attributes:  # pragma no branch
+            self._client_id = self._makeStringAttribute(attributes["client_id"])
+        if "client_secret" in attributes:  # pragma no branch
+            self._client_secret = self._makeStringAttribute(attributes["client_secret"])

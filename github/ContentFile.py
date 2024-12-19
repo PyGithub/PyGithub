@@ -76,9 +76,9 @@ class ContentFile(CompletableGithubObject):
         self._repository: Attribute[Repository] = NotSet
         self._sha: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
+        self._text_matches: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._text_matches: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"path": self._path.value})
@@ -149,6 +149,11 @@ class ContentFile(CompletableGithubObject):
         return self._size.value
 
     @property
+    def text_matches(self) -> str:
+        self._completeIfNotSet(self._text_matches)
+        return self._text_matches.value
+
+    @property
     def type(self) -> str:
         self._completeIfNotSet(self._type)
         return self._type.value
@@ -157,11 +162,6 @@ class ContentFile(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def text_matches(self) -> str:
-        self._completeIfNotSet(self._text_matches)
-        return self._text_matches.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
@@ -186,9 +186,9 @@ class ContentFile(CompletableGithubObject):
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "text_matches" in attributes:  # pragma no branch
-            self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])

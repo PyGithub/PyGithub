@@ -54,14 +54,14 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
 
     _dict: Dict[Tuple[int, int], int]
 
+    def _initAttributes(self) -> None:
+        self._dict = {}
+
     def get(self, day: int, hour: int) -> int:
         """
         Get a specific element.
         """
         return self._dict[(day, hour)]
-
-    def _initAttributes(self) -> None:
-        self._dict = {}
 
     def _useAttributes(self, attributes: Any) -> None:
         for day, hour, commits in attributes:
