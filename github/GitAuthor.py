@@ -47,9 +47,9 @@ class GitAuthor(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
-        self._email: Attribute[str] = NotSet
         self._date: Attribute[datetime] = NotSet
+        self._email: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})

@@ -64,35 +64,15 @@ class Membership(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._url: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._role: Attribute[str] = NotSet
-        self._organization_url: Attribute[str] = NotSet
         self._organization: Attribute[Organization] = NotSet
+        self._organization_url: Attribute[str] = NotSet
+        self._role: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
-
-    @property
-    def state(self) -> str:
-        self._completeIfNotSet(self._state)
-        return self._state.value
-
-    @property
-    def role(self) -> str:
-        self._completeIfNotSet(self._role)
-        return self._role.value
-
-    @property
-    def organization_url(self) -> str:
-        self._completeIfNotSet(self._organization_url)
-        return self._organization_url.value
 
     @property
     def organization(self) -> Organization:
@@ -100,20 +80,40 @@ class Membership(CompletableGithubObject):
         return self._organization.value
 
     @property
+    def organization_url(self) -> str:
+        self._completeIfNotSet(self._organization_url)
+        return self._organization_url.value
+
+    @property
+    def role(self) -> str:
+        self._completeIfNotSet(self._role)
+        return self._role.value
+
+    @property
+    def state(self) -> str:
+        self._completeIfNotSet(self._state)
+        return self._state.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
+    @property
     def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "role" in attributes:  # pragma no branch
-            self._role = self._makeStringAttribute(attributes["role"])
-        if "organization_url" in attributes:  # pragma no branch
-            self._organization_url = self._makeStringAttribute(attributes["organization_url"])
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+        if "organization_url" in attributes:  # pragma no branch
+            self._organization_url = self._makeStringAttribute(attributes["organization_url"])
+        if "role" in attributes:  # pragma no branch
+            self._role = self._makeStringAttribute(attributes["role"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

@@ -59,14 +59,14 @@ class Tag(NonCompletableGithubObject):
 
     """
 
-    def __repr__(self) -> str:
-        return self.get__repr__({"name": self._name.value, "commit": self._commit.value})
-
     def _initAttributes(self) -> None:
         self._commit: Attribute[Commit] = NotSet
         self._name: Attribute[str] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self._name.value, "commit": self._commit.value})
 
     @property
     def commit(self) -> Commit:

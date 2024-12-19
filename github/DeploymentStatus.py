@@ -66,13 +66,13 @@ class DeploymentStatus(CompletableGithubObject):
         self._description: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
         self._environment_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._repository_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._node_id: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
@@ -108,6 +108,16 @@ class DeploymentStatus(CompletableGithubObject):
         return self._environment_url.value
 
     @property
+    def id(self) -> int:
+        self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def repository_url(self) -> str:
         self._completeIfNotSet(self._repository_url)
         return self._repository_url.value
@@ -132,25 +142,7 @@ class DeploymentStatus(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    @property
-    def id(self) -> int:
-        self._completeIfNotSet(self._id)
-        return self._id.value
-
-    @property
-    def node_id(self) -> str:
-        self._completeIfNotSet(self._node_id)
-        return self._node_id.value
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "environment_url" in attributes:  # pragma no branch
-            self._environment_url = self._makeStringAttribute(attributes["environment_url"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "node_id" in attributes:  # pragma no branch
-            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
@@ -161,6 +153,12 @@ class DeploymentStatus(CompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "environment" in attributes:  # pragma no branch
             self._environment = self._makeStringAttribute(attributes["environment"])
+        if "environment_url" in attributes:  # pragma no branch
+            self._environment_url = self._makeStringAttribute(attributes["environment_url"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "state" in attributes:  # pragma no branch
@@ -169,3 +167,5 @@ class DeploymentStatus(CompletableGithubObject):
             self._target_url = self._makeStringAttribute(attributes["target_url"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

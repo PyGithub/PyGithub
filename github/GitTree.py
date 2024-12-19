@@ -66,6 +66,10 @@ class GitTree(CompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value})
 
     @property
+    def _identity(self) -> str:
+        return self.sha
+
+    @property
     def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
@@ -79,10 +83,6 @@ class GitTree(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def _identity(self) -> str:
-        return self.sha
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "sha" in attributes:  # pragma no branch

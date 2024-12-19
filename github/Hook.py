@@ -66,10 +66,10 @@ class Hook(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._last_response: Attribute[github.HookResponse.HookResponse] = NotSet
         self._name: Attribute[str] = NotSet
+        self._ping_url: Attribute[str] = NotSet
         self._test_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._ping_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
@@ -110,6 +110,11 @@ class Hook(CompletableGithubObject):
         return self._name.value
 
     @property
+    def ping_url(self) -> str:
+        self._completeIfNotSet(self._ping_url)
+        return self._ping_url.value
+
+    @property
     def test_url(self) -> str:
         self._completeIfNotSet(self._test_url)
         return self._test_url.value
@@ -123,11 +128,6 @@ class Hook(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def ping_url(self) -> str:
-        self._completeIfNotSet(self._ping_url)
-        return self._ping_url.value
 
     def delete(self) -> None:
         """
@@ -196,11 +196,11 @@ class Hook(CompletableGithubObject):
             )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "ping_url" in attributes:  # pragma no branch
+            self._ping_url = self._makeStringAttribute(attributes["ping_url"])
         if "test_url" in attributes:  # pragma no branch
             self._test_url = self._makeStringAttribute(attributes["test_url"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "ping_url" in attributes:  # pragma no branch
-            self._ping_url = self._makeStringAttribute(attributes["ping_url"])

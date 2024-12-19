@@ -99,6 +99,10 @@ class Commit(CompletableGithubObject):
         return self.get__repr__({"sha": self._sha.value})
 
     @property
+    def _identity(self) -> str:
+        return self.sha
+
+    @property
     def author(self) -> NamedUser:
         self._completeIfNotSet(self._author)
         return self._author.value
@@ -296,10 +300,6 @@ class Commit(CompletableGithubObject):
             headers=request_headers,
             list_item="check_suites",
         )
-
-    @property
-    def _identity(self) -> str:
-        return self.sha
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch

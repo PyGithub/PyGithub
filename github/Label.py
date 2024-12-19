@@ -66,6 +66,10 @@ class Label(CompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
+    def _identity(self) -> str:
+        return urllib.parse.quote(self.name)
+
+    @property
     def color(self) -> str:
         self._completeIfNotSet(self._color)
         return self._color.value
@@ -106,10 +110,6 @@ class Label(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview},
         )
         self._useAttributes(data)
-
-    @property
-    def _identity(self) -> str:
-        return urllib.parse.quote(self.name)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "color" in attributes:  # pragma no branch

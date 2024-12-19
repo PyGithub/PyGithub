@@ -138,24 +138,18 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
-    def __repr__(self) -> str:
-        return self.get__repr__({"login": self._login.value})
-
-    @property
-    def node_id(self) -> str:
-        self._completeIfNotSet(self._node_id)
-        return self._node_id.value
-
-    @property
-    def twitter_username(self) -> str | None:
-        self._completeIfNotSet(self._twitter_username)
-        return self._twitter_username.value
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, type(self)) and self.login == other.login and self.id == other.id
 
     def __hash__(self) -> int:
         return hash((self.id, self.login))
 
-    def __eq__(self, other: Any) -> bool:
-        return isinstance(other, type(self)) and self.login == other.login and self.id == other.id
+    def __repr__(self) -> str:
+        return self.get__repr__({"login": self._login.value})
+
+    @property
+    def _identity(self) -> str:
+        return self.login
 
     @property
     def avatar_url(self) -> str:
@@ -278,6 +272,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def organizations_url(self) -> str:
         self._completeIfNotSet(self._organizations_url)
         return self._organizations_url.value
@@ -356,6 +355,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def total_private_repos(self) -> int | None:
         self._completeIfNotSet(self._total_private_repos)
         return self._total_private_repos.value
+
+    @property
+    def twitter_username(self) -> str | None:
+        self._completeIfNotSet(self._twitter_username)
+        return self._twitter_username.value
 
     @property
     def type(self) -> str:
@@ -525,10 +529,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/following/{following._identity}")
         return status == 204
-
-    @property
-    def _identity(self) -> str:
-        return self.login
 
     def get_organization_membership(self, org: str | Organization) -> Membership:
         """

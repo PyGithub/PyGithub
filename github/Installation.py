@@ -77,6 +77,12 @@ class Installation(NonCompletableGithubObject):
 
     """
 
+    def _initAttributes(self) -> None:
+        self._app_id: Attribute[int] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._target_id: Attribute[int] = NotSet
+        self._target_type: Attribute[str] = NotSet
+
     def __init__(
         self,
         requester: Requester,
@@ -92,17 +98,16 @@ class Installation(NonCompletableGithubObject):
             auth = auth.get_installation_auth(self.id, requester=self._requester)
             self._requester = self._requester.withAuth(auth)
 
-    def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._app_id: Attribute[int] = NotSet
-        self._target_id: Attribute[int] = NotSet
-        self._target_type: Attribute[str] = NotSet
-
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
-    def get_github_for_installation(self) -> Github:
-        return github.Github(**self._requester.kwargs)
+    @property
+    def app_id(self) -> int:
+        return self._app_id.value
+
+    @property
+    def id(self) -> int:
+        return self._id.value
 
     @property
     def requester(self) -> Requester:
@@ -115,20 +120,15 @@ class Installation(NonCompletableGithubObject):
         return self._requester
 
     @property
-    def id(self) -> int:
-        return self._id.value
-
-    @property
-    def app_id(self) -> int:
-        return self._app_id.value
-
-    @property
     def target_id(self) -> int:
         return self._target_id.value
 
     @property
     def target_type(self) -> str:
         return self._target_type.value
+
+    def get_github_for_installation(self) -> Github:
+        return github.Github(**self._requester.kwargs)
 
     def get_repos(self) -> PaginatedList[github.Repository.Repository]:
         """
@@ -146,10 +146,10 @@ class Installation(NonCompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
         if "app_id" in attributes:  # pragma no branch
             self._app_id = self._makeIntAttribute(attributes["app_id"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
         if "target_id" in attributes:  # pragma no branch
             self._target_id = self._makeIntAttribute(attributes["target_id"])
         if "target_type" in attributes:  # pragma no branch

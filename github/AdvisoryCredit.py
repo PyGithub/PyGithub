@@ -57,6 +57,10 @@ class AdvisoryCredit(NonCompletableGithubObject):
 
     """
 
+    def _initAttributes(self) -> None:
+        self._login: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+
     @property
     def login(self) -> str:
         """
@@ -70,16 +74,6 @@ class AdvisoryCredit(NonCompletableGithubObject):
         :type: string
         """
         return self._type.value
-
-    def _initAttributes(self) -> None:
-        self._login: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "login" in attributes:  # pragma no branch
-            self._login = self._makeStringAttribute(attributes["login"])
-        if "type" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
 
     @staticmethod
     def _validate_credit(credit: Credit) -> None:
@@ -112,3 +106,9 @@ class AdvisoryCredit(NonCompletableGithubObject):
                 "login": credit.login,
                 "type": credit.type,
             }
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "login" in attributes:  # pragma no branch
+            self._login = self._makeStringAttribute(attributes["login"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])

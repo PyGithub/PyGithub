@@ -80,6 +80,10 @@ class Milestone(CompletableGithubObject):
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
 
     @property
+    def _identity(self) -> int:
+        return self.number
+
+    @property
     def closed_issues(self) -> int:
         self._completeIfNotSet(self._closed_issues)
         return self._closed_issues.value
@@ -179,10 +183,6 @@ class Milestone(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         return PaginatedList(github.Label.Label, self._requester, f"{self.url}/labels", None)
-
-    @property
-    def _identity(self) -> int:
-        return self.number
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "closed_issues" in attributes:  # pragma no branch

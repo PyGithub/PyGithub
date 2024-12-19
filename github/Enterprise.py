@@ -55,6 +55,10 @@ class Enterprise(NonCompletableGithubObject):
 
     """
 
+    def _initAttributes(self) -> None:
+        self._enterprise: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+
     def __init__(
         self,
         requester: Requester,
@@ -62,10 +66,6 @@ class Enterprise(NonCompletableGithubObject):
     ):
         enterprise = urllib.parse.quote(enterprise)
         super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"})
-
-    def _initAttributes(self) -> None:
-        self._enterprise: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"enterprise": self._enterprise.value})
