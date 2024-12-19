@@ -875,23 +875,25 @@ class Requester:
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+        chunk_size: Optional[Union[int, None]] = 1,
     ) -> None:
         """
         GET a file from the server and save it to the given path.
         """
-        _, _, stream_chunk_iterator = self.getResponseStream(url, parameters, headers, cnx)
+        _, _, stream_chunk_iterator = self.getStream(url, parameters, headers, cnx, chunk_size=chunk_size)
         with open(path, "wb") as f:
-            for chunk in stream_chunk_iterator():
+            for chunk in stream_chunk_iterator:
                 if chunk:
                     f.write(chunk)
 
-    def getResponseStream(
+    def getStream(
         self,
         url: str,
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
-    ) -> Tuple[int, Dict[str, Any], Callable]:
+        chunk_size: Optional[Union[int, None]] = 1,
+    ) -> Tuple[int, Dict[str, Any], Iterator]:
         """
         GET a stream from the server.
 
@@ -910,7 +912,7 @@ class Requester:
         )
         if isinstance(output, RequestsResponse):
             output.raise_for_status()
-            return status, responseHeaders, output.iter_content
+            return status, responseHeaders, output.iter_content(chunk_size=chunk_size)
         raise ValueError("getStream() Expected a RequestsResponse object, should never happen")
 
     def requestJson(
@@ -1049,7 +1051,7 @@ class Requester:
         input: Optional[T],
         encode: Callable[[T], Tuple[str, Any]],
         stream: bool = False,
-    ) -> Tuple[int, Dict[str, Any], Union[str, RequestsResponse]]:
+    ) -> Tuple[int, Dict[str, Any], Union[str, object]]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = {}
@@ -1098,7 +1100,7 @@ class Requester:
         requestHeaders: Dict[str, str],
         input: Optional[Any],
         stream: bool = False,
-    ) -> Tuple[int, Dict[str, Any], Union[str, RequestsResponse]]:
+    ) -> Tuple[int, Dict[str, Any], Union[str, object]]:
         self.__deferRequest(verb)
 
         try:
@@ -1106,10 +1108,10 @@ class Requester:
             if cnx is None:
                 cnx = self.__createConnection()
             _ = cnx.request(verb, url, input, requestHeaders, stream)
-            resp = cnx.getresponse()
-            output = resp.read() if not stream else "stream"
-            status = resp.status
-            responseHeaders = {k.lower(): v for k, v in resp.headers.items()}
+            response = cnx.getresponse()
+            output = response if stream else response.read()
+            status = response.status
+            responseHeaders = {k.lower(): v for k, v in response.headers.items()}
 
             if input:
                 if isinstance(input, IOBase):
@@ -1123,6 +1125,22 @@ class Requester:
                 time.sleep(Consts.PROCESSING_202_WAIT_TIME)
                 return self.__requestRaw(original_cnx, verb, url, requestHeaders, input, stream=stream)
 
+            if (
+                status == 302
+                and "location" in responseHeaders
+                and (
+                    isinstance(original_cnx, HTTPSRequestsConnectionClass)
+                    or isinstance(original_cnx, HTTPRequestsConnectionClass)
+                )
+            ):
+                location = responseHeaders["location"]
+                o = urllib.parse.urlparse(location)
+                if o.hostname != cnx.host:
+                    cnx = self.__createConnection(o.hostname)
+                path = o.path if o.query is None else f"{o.path}?{o.query}"
+                if self._logger.isEnabledFor(logging.DEBUG):
+                    self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
+                return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream)
             if status == 301 and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
@@ -1147,7 +1165,7 @@ class Requester:
                 if self._logger.isEnabledFor(logging.INFO):
                     self._logger.info(f"Following Github server redirection from {url} to {o.path}")
                 return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input, stream=stream)
-            return status, responseHeaders, output if not stream else resp
+            return status, responseHeaders, output
         finally:
             # we record the time of this request after it finished
             # to defer next request starting from this request's end, not start
@@ -1199,18 +1217,18 @@ class Requester:
         return url
 
     def __createConnection(
-        self,
+        self, hostname: Optional[str] = None
     ) -> Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]:
-        if self.__persist and self.__connection is not None:
+        if self.__persist and self.__connection is not None and hostname is not None and hostname == self.__hostname:
             return self.__connection
 
         with self.__connection_lock:
-            if self.__connection is not None:
+            if self.__connection is not None and hostname is not None and hostname == self.__hostname:
                 if self.__persist:
                     return self.__connection
                 self.__connection.close()
             self.__connection = self.__connectionClass(
-                self.__hostname,
+                hostname if hostname is not None else self.__hostname,
                 self.__port,
                 retry=self.__retry,
                 pool_size=self.__pool_size,
@@ -1234,7 +1252,7 @@ class Requester:
         input: Optional[Any],
         status: Optional[int],
         responseHeaders: Dict[str, Any],
-        output: Optional[str],
+        output: Optional[Union[str, object]],
     ) -> None:
         if self._logger.isEnabledFor(logging.DEBUG):
             headersForRequest = requestHeaders.copy()
@@ -1250,7 +1268,7 @@ class Requester:
                 input,
                 status,
                 responseHeaders,
-                output,
+                output if isinstance(output, str) else "stream",
             )
 
 
