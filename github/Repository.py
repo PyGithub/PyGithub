@@ -4222,6 +4222,24 @@ class Repository(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
 
+    def edit_ownersip(self, new_owner: str, new_name: Opt[str] = NotSet, team_ids: Opt[list[int]] = NotSet) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/transfer <https://docs.github.com/en/rest/repos/repos#transfer-a-repository>`_
+        :param new_owner: string
+        :param new_name: Optional string
+        :param team_ids: Optional list of int
+        :rtype: bool
+        """
+        assert isinstance(new_owner, str), new_owner
+        assert is_optional(new_name, str), new_name
+        assert is_optional(team_ids, list), team_ids
+        status, _, _ = self._requester.requestJson(
+            "POST",
+            f"{self.url}/transfer",
+            input=NotSet.remove_unset_items({"new_owner": new_owner, "new_name": new_name, "team_ids": team_ids}),
+        )
+        return status == 202
+
     def _initAttributes(self) -> None:
         self._allow_auto_merge: Attribute[bool] = NotSet
         self._allow_forking: Attribute[bool] = NotSet
