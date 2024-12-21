@@ -21,6 +21,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -81,9 +82,8 @@ class Installation(NonCompletableGithubObject):
         requester: Requester,
         headers: dict[str, str | int],
         attributes: Any,
-        completed: bool,
     ) -> None:
-        super().__init__(requester, headers, attributes, completed)
+        super().__init__(requester, headers, attributes)
 
         auth = self._requester.auth if self._requester is not None else None
         # Usually, an Installation is created from a Requester with App authentication

@@ -56,6 +56,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -394,6 +395,7 @@ class Requester:
         pool_size: Optional[int],
         seconds_between_requests: Optional[float] = None,
         seconds_between_writes: Optional[float] = None,
+        lazy: bool = False,
     ):
         self._initializeDebugFeature()
 
@@ -435,6 +437,7 @@ class Requester:
         )
         self.__userAgent = user_agent
         self.__verify = verify
+        self.__lazy = lazy
 
         self.__installation_authorization = None
 
@@ -525,6 +528,7 @@ class Requester:
             pool_size=self.__pool_size,
             seconds_between_requests=self.__seconds_between_requests,
             seconds_between_writes=self.__seconds_between_writes,
+            lazy=self.__lazy,
         )
 
     @property
@@ -558,11 +562,32 @@ class Requester:
         Create a new requester instance with identical configuration but the given authentication method.
 
         :param auth: authentication method
-        :return: new Requester implementation
+        :return: new Requester instance
 
         """
         kwargs = self.kwargs
         kwargs.update(auth=auth)
+        return Requester(**kwargs)
+
+    @property
+    def is_lazy(self) -> bool:
+        return self.__lazy
+
+    @property
+    def is_not_lazy(self) -> bool:
+        return not self.__lazy
+
+    def withLazy(self, lazy: bool) -> "Requester":
+        """
+        Create a new requester instance with identical configuration but the given lazy setting.
+
+        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
+            from those, and so on
+        :return: new Requester instance
+
+        """
+        kwargs = self.kwargs
+        kwargs.update(lazy=lazy)
         return Requester(**kwargs)
 
     def requestJsonAndCheck(
@@ -651,7 +676,7 @@ class Requester:
             data = data[item]
         if klass.is_rest():
             data = as_rest_api_attributes(data)
-        return klass(self, headers, data, completed=False)
+        return klass(self, headers, data)
 
     def graphql_node(self, node_id: str, graphql_schema: str, node_type: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """

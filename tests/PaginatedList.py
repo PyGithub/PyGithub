@@ -18,6 +18,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -309,7 +310,7 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
     def testCustomPerPageWithNoUrlParams(self):
-        from . import (  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
+        from . import (  # Don't pollute github.tests namespace, it would conflict with github.tests.CommitComment
             CommitComment,
         )
 

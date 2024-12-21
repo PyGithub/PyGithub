@@ -4,6 +4,7 @@
 # Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -65,6 +66,9 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
+            # v3: this should not be the default value, so if this has been changed in v3,
+            # change it here is well
+            lazy=True,
         )
         kwargs = requester.kwargs
 
@@ -83,6 +87,7 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
+                lazy=True,
             ),
         )
 
@@ -115,6 +120,9 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
+            # v3: this should not be the default value, so if this has been changed in v3,
+            # change it here is well
+            lazy=True,
         )
 
         # create a copy with different auth
@@ -135,6 +143,7 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
+                lazy=True,
             ),
         )
 

@@ -46,6 +46,7 @@
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Evan Fetsko <emfetsko@gmail.com>                              #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 #                                                                              #
@@ -499,7 +500,7 @@ class PullRequest(CompletableGithubObject):
         else:
             post_parameters["comments"] = []
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
-        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
     def create_review_request(
         self,
@@ -684,7 +685,7 @@ class PullRequest(CompletableGithubObject):
             "GET",
             f"{self.url}/reviews/{id}",
         )
-        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
     def get_reviews(self) -> PaginatedList[github.PullRequestReview.PullRequestReview]:
         """
@@ -869,7 +870,7 @@ class PullRequest(CompletableGithubObject):
         if delete_branch:
             self.delete_branch()
 
-        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
+        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data)
 
     def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
         """

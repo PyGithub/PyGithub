@@ -47,6 +47,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.CommitCombinedStatus
@@ -61,6 +62,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt,
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.Branch import Branch
     from github.CheckRun import CheckRun
     from github.CheckSuite import CheckSuite
     from github.CommitCombinedStatus import CommitCombinedStatus
@@ -204,7 +206,14 @@ class Commit(CompletableGithubObject):
             f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             input=post_parameters,
         )
-        return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
+        return github.CommitStatus.CommitStatus(self._requester, headers, data)
+
+    def get_branches_where_head(self) -> list[Branch]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head <https://docs.github.com/rest/commits/commits#list-branches-for-head-commit>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches-where-head")
+        return [github.Branch.Branch(self._requester, headers, item) for item in data]
 
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
@@ -233,7 +242,7 @@ class Commit(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
-        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data, completed=True)
+        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data)
 
     def get_pulls(self) -> PaginatedList[PullRequest]:
         """
