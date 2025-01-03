@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -45,7 +47,24 @@ class Deployment(Framework.TestCase):
         self.deployment = self.g.get_user().get_repo("PyGithub").get_deployment(263877258)
 
     def testAttributes(self):
+        self.assertEqual(self.deployment.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.deployment.creator.login, "")
+        self.assertEqual(self.deployment.description, "")
+        self.assertEqual(self.deployment.environment, "")
         self.assertEqual(self.deployment.id, 263877258)
+        self.assertEqual(self.deployment.message, "")
+        self.assertEqual(self.deployment.node_id, "")
+        self.assertEqual(self.deployment.original_environment, "")
+        self.assertEqual(self.deployment.payload, None)
+        self.assertEqual(self.deployment.performed_via_github_app.id, "")
+        self.assertEqual(self.deployment.production_environment, False)
+        self.assertEqual(self.deployment.ref, "")
+        self.assertEqual(self.deployment.repository_url, "")
+        self.assertEqual(self.deployment.sha, "")
+        self.assertEqual(self.deployment.statuses_url, "")
+        self.assertEqual(self.deployment.task, "")
+        self.assertEqual(self.deployment.transient_environment, False)
+        self.assertEqual(self.deployment.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(
             self.deployment.url,
             "https://api.github.com/repos/jacquev6/PyGithub/deployments/263877258",
