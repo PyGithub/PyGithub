@@ -38,9 +38,12 @@ class GithubApp(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.app_slug = "github-actions"
+        self.app = self.g.get_app(slug=self.app_slug)
+        # fetch lazy object
+        self.app.id
 
-    def testGetPublicApp(self):
-        app = self.g.get_app(slug=self.app_slug)
+    def testAttributes(self):
+        app = self.app
         self.assertEqual(app.created_at, datetime(2018, 7, 30, 9, 30, 17, tzinfo=timezone.utc))
         self.assertEqual(app.description, "Automate your workflow from idea to production")
         self.assertListEqual(
