@@ -57,6 +57,8 @@ import github.PaginatedList
 import github.Plan
 import github.Repository
 import github.UserKey
+from NamedUser import NamedUser
+from Organization import Organization
 from github import Consts
 from github.Auth import AppAuth
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -83,7 +85,7 @@ class Installation(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._access_tokens_url: Attribute[str] = NotSet
-        self._account: Attribute[None] = NotSet
+        self._account: Attribute[NamedUser | Organization] = NotSet
         self._app_id: Attribute[int] = NotSet
         self._app_slug: Attribute[str] = NotSet
         self._contact_email: Attribute[str] = NotSet
@@ -98,7 +100,7 @@ class Installation(NonCompletableGithubObject):
         self._single_file_name: Attribute[str] = NotSet
         self._single_file_paths: Attribute[list[str]] = NotSet
         self._suspended_at: Attribute[datetime] = NotSet
-        self._suspended_by: Attribute[github.NamedUser.NamedUser | github.Organization.Organization] = NotSet
+        self._suspended_by: Attribute[NamedUser | Organization] = NotSet
         self._target_id: Attribute[int] = NotSet
         self._target_type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -126,7 +128,7 @@ class Installation(NonCompletableGithubObject):
         return self._access_tokens_url.value
 
     @property
-    def account(self) -> None:
+    def account(self) -> NamedUser | Organization:
         return self._account.value
 
     @property
@@ -232,8 +234,12 @@ class Installation(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "access_tokens_url" in attributes:  # pragma no branch
             self._access_tokens_url = self._makeStringAttribute(attributes["access_tokens_url"])
-        if "account" in attributes:  # pragma no branch
-            self._account = self._makeClassAttribute(None, attributes["account"])
+        if "account" in attributes and "target_type" in attributes:  # pragma no branch
+            target_type = attributes["target_type"]
+            if target_type == "User":
+                self._account = self._makeClassAttribute(NamedUser, attributes["account"])
+            if target_type == "Organization":
+                self._account = self._makeClassAttribute(Organization, attributes["account"])
         if "app_id" in attributes:  # pragma no branch
             self._app_id = self._makeIntAttribute(attributes["app_id"])
         if "app_slug" in attributes:  # pragma no branch
