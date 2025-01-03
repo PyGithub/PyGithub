@@ -49,9 +49,7 @@ class GitBlob(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/git#blobs
 
     The OpenAPI schema can be found at
-    - /components/schemas/repository-rule-violation-error
     - /components/schemas/short-blob
-    - /components/schemas/validation-error
 
     """
 
