@@ -43,6 +43,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import os
 import zipfile
 from datetime import datetime, timezone
@@ -125,8 +127,28 @@ class GitRelease(Framework.TestCase):
 
     def testAttributes(self):
         release = self.release
+        self.assertEqual(release.assets[0].url, "")
+        self.assertEqual(release.assets_url, "")
+        self.assertEqual(release.author.login, "")
+        self.assertEqual(release.body, "")
+        self.assertEqual(release.body_html, "")
+        self.assertEqual(release.body_text, "")
+        self.assertEqual(release.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(release.discussion_url, "")
+        self.assertEqual(release.documentation_url, "")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.html_url, "")
         self.assertEqual(release.id, release_id)
+        self.assertEqual(release.mentions_count, 0)
+        self.assertEqual(release.message, "")
+        self.assertEqual(release.name, "")
+        self.assertEqual(release.node_id, "")
+        self.assertEqual(release.prerelease, False)
+        self.assertEqual(release.published_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(release.reactions, "dict[str, Any]")
+        self.assertEqual(release.status, "")
         self.assertEqual(release.tag_name, tag)
+        self.assertEqual(release.tarball_url, "")
         self.assertEqual(release.target_commitish, "master")
         self.assertEqual(
             release.upload_url,
