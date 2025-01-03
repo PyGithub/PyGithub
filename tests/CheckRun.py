@@ -23,6 +23,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -41,12 +43,14 @@ class CheckRun(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.check_run.app.id, 15368)
         self.assertEqual(self.check_run.app.slug, "github-actions")
+        self.assertEqual(self.check_run.check_suite.id, "")
         self.assertEqual(self.check_run.check_suite_id, 1110219217)
         self.assertEqual(
             self.check_run.completed_at,
             datetime(2020, 8, 28, 4, 21, 21, tzinfo=timezone.utc),
         )
         self.assertEqual(self.check_run.conclusion, "success")
+        self.assertEqual(self.check_run.deployment.id, "")
         self.assertEqual(
             self.check_run.details_url,
             "https://github.com/PyGithub/PyGithub/runs/1039891953",
