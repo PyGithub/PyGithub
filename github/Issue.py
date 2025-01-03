@@ -120,7 +120,7 @@ class Issue(CompletableGithubObject):
         self._active_lock_reason: Attribute[str | None] = NotSet
         self._assignee: Attribute[NamedUser | None] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
-        self._author_association: Attribute[dict[str, Any]] = NotSet
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
@@ -177,7 +177,7 @@ class Issue(CompletableGithubObject):
         return self._assignees.value
 
     @property
-    def author_association(self) -> dict[str, Any]:
+    def author_association(self) -> str:
         self._completeIfNotSet(self._author_association)
         return self._author_association.value
 
@@ -601,7 +601,7 @@ class Issue(CompletableGithubObject):
             else:
                 self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
         if "author_association" in attributes:  # pragma no branch
-            self._author_association = self._makeDictAttribute(attributes["author_association"])
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "body_html" in attributes:  # pragma no branch
