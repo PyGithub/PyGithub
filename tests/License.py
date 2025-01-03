@@ -26,6 +26,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -35,12 +37,14 @@ class License(Framework.TestCase):
         self.license = self.g.get_license("mit")
 
     def testAttributes(self):
+        self.assertEqual(self.license.html_url, "")
         self.assertEqual(self.license.key, "mit")
         self.assertEqual(self.license.name, "MIT License")
         self.assertEqual(
             self.license.description,
             "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
         )
+        self.assertEqual(self.license.node_id, "")
         self.assertEqual(self.license.spdx_id, "MIT")
         self.assertEqual(
             self.license.body,
