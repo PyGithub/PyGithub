@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -45,17 +47,35 @@ class PullRequestComment(Framework.TestCase):
         self.comment = self.g.get_user().get_repo("PyGithub").get_pull(31).get_comment(886298)
 
     def testAttributes(self):
+        self.assertEqual(self.comment._links, "dict[str, Any]")
+        self.assertEqual(self.comment.author_association, "dict[str, Any]")
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
+        self.assertEqual(self.comment.body_html, "")
+        self.assertEqual(self.comment.body_text, "")
         self.assertEqual(self.comment.commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")
         self.assertEqual(
             self.comment.created_at,
             datetime(2012, 5, 27, 9, 40, 12, tzinfo=timezone.utc),
         )
+        self.assertEqual(self.comment.diff_hunk, "")
+        self.assertEqual(self.comment.html_url, "")
         self.assertEqual(self.comment.id, 886298)
+        self.assertEqual(self.comment.in_reply_to_id, 0)
+        self.assertEqual(self.comment.line, 0)
+        self.assertEqual(self.comment.node_id, "")
         self.assertEqual(self.comment.original_commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")
+        self.assertEqual(self.comment.original_line, 0)
         self.assertEqual(self.comment.original_position, 5)
+        self.assertEqual(self.comment.original_start_line, 0)
         self.assertEqual(self.comment.path, "src/github/Issue.py")
         self.assertEqual(self.comment.position, 5)
+        self.assertEqual(self.comment.pull_request_review_id, 0)
+        self.assertEqual(self.comment.pull_request_url, "")
+        self.assertEqual(self.comment.reactions, "dict[str, Any]")
+        self.assertEqual(self.comment.side, "")
+        self.assertEqual(self.comment.start_line, 0)
+        self.assertEqual(self.comment.start_side, "")
+        self.assertEqual(self.comment.subject_type, "")
         self.assertEqual(
             self.comment.updated_at,
             datetime(2012, 5, 27, 9, 40, 12, tzinfo=timezone.utc),
