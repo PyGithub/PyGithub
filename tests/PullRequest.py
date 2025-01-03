@@ -109,8 +109,8 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pullIssue256Uncached.mergeable_state, "unknown")
 
     def testAttributes(self):
-        self.assertEqual(self.pull._links, "dict[str, Any]")
-        self.assertEqual(self.pull.active_lock_reason, "")
+        self.assertEqual(self.pull._links, {'self': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/31'}, 'html': {'href': 'https://github.com/PyGithub/PyGithub/pull/31'}, 'issue': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/issues/31'}, 'comments': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/issues/31/comments'}, 'review_comments': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/31/comments'}, 'review_comment': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/comments{/number}'}, 'commits': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/31/commits'}, 'statuses': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/statuses/8a4f306d4b223682dd19410d4a9150636ebe4206'}})
+        self.assertIsNone(self.pull.active_lock_reason)
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
