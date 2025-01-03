@@ -33,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -62,6 +64,7 @@ class GitTree(Framework.TestCase):
             self.tree.tree[6].url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/trees/60b4602b2c2070246c5df078fb7a5150b45815eb",
         )
+        self.assertEqual(self.tree.truncated, False)
         self.assertEqual(
             self.tree.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad",
