@@ -45,14 +45,14 @@ class GistComment(Framework.TestCase):
         self.comment = self.g.get_gist("2729810").get_comment(323629)
 
     def testAttributes(self):
-        self.assertEqual(self.comment.author_association, "dict[str, Any]")
+        self.assertIsNone(self.comment.author_association)
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
             self.comment.created_at,
             datetime(2012, 5, 19, 7, 7, 57, tzinfo=timezone.utc),
         )
         self.assertEqual(self.comment.id, 323629)
-        self.assertEqual(self.comment.node_id, "")
+        self.assertIsNone(self.comment.node_id)
         self.assertEqual(
             self.comment.updated_at,
             datetime(2012, 5, 19, 7, 7, 57, tzinfo=timezone.utc),
