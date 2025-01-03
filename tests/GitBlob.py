@@ -33,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -54,6 +56,7 @@ class GitBlob(Framework.TestCase):
         )
         self.assertEqual(len(self.blob.content), 1757)
         self.assertEqual(self.blob.encoding, "base64")
+        self.assertEqual(self.blob.sha, "")
         self.assertEqual(self.blob.size, 1295)
         self.assertEqual(self.blob.sha, "53bce9fa919b4544e67275089b3ec5b44be20667")
         self.assertEqual(
