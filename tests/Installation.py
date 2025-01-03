@@ -35,7 +35,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from urllib3.exceptions import InsecureRequestWarning
+from datetime import datetime, timezone
 
 import github
 from github import Consts
