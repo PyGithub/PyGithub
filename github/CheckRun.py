@@ -35,6 +35,8 @@ from typing import TYPE_CHECKING, Any
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
+import github.CheckSuite
+import github.Deployment
 import github.GithubApp
 import github.GithubObject
 import github.PullRequest
@@ -52,6 +54,8 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.CheckRunAnnotation import CheckRunAnnotation
     from github.CheckRunOutput import CheckRunOutput
+    from github.CheckSuite import CheckSuite
+    from github.Deployment import Deployment
     from github.GithubApp import GithubApp
     from github.PullRequest import PullRequest
 
@@ -70,9 +74,11 @@ class CheckRun(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._app: Attribute[GithubApp] = NotSet
+        self._check_suite: Attribute[CheckSuite] = NotSet
         self._check_suite_id: Attribute[int] = NotSet
         self._completed_at: Attribute[datetime | None] = NotSet
         self._conclusion: Attribute[str] = NotSet
+        self._deployment: Attribute[Deployment] = NotSet
         self._details_url: Attribute[str] = NotSet
         self._external_id: Attribute[str] = NotSet
         self._head_sha: Attribute[str] = NotSet
@@ -95,6 +101,11 @@ class CheckRun(CompletableGithubObject):
         return self._app.value
 
     @property
+    def check_suite(self) -> github.CheckSuite.CheckSuite:
+        self._completeIfNotSet(self._check_suite)
+        return self._check_suite.value
+
+    @property
     def check_suite_id(self) -> int:
         self._completeIfNotSet(self._check_suite_id)
         return self._check_suite_id.value
@@ -108,6 +119,11 @@ class CheckRun(CompletableGithubObject):
     def conclusion(self) -> str:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
+
+    @property
+    def deployment(self) -> github.Deployment.Deployment:
+        self._completeIfNotSet(self._deployment)
+        return self._deployment.value
 
     @property
     def details_url(self) -> str:
@@ -243,6 +259,8 @@ class CheckRun(CompletableGithubObject):
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch
             self._conclusion = self._makeStringAttribute(attributes["conclusion"])
+        if "deployment" in attributes:  # pragma no branch
+            self._deployment = self._makeClassAttribute(github.Deployment.Deployment, attributes["deployment"])
         if "details_url" in attributes:  # pragma no branch
             self._details_url = self._makeStringAttribute(attributes["details_url"])
         if "external_id" in attributes:  # pragma no branch
