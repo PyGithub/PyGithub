@@ -33,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 import github
@@ -44,6 +46,8 @@ class Gist(Framework.TestCase):
     def testAttributes(self):
         gist = self.g.get_gist("6296732")
         self.assertEqual(gist.comments, 0)
+        self.assertEqual(gist.comments_url, "")
+        self.assertEqual(gist.commits_url, "")
         self.assertEqual(
             gist.created_at,
             datetime(2013, 8, 21, 16, 28, 24, tzinfo=timezone.utc),
@@ -58,7 +62,9 @@ class Gist(Framework.TestCase):
             gist.files["GithubAPI.lua"].raw_url,
             "https://gist.githubusercontent.com/jacquev6/6296732/raw/88aafa25fb28e17013054a117354a37f0d78963c/GithubAPI.lua",
         )
+        self.assertEqual(gist.fork_of.id, "")
         self.assertEqual(gist.forks, [])
+        self.assertEqual(gist.forks_url, "")
         self.assertEqual(gist.git_pull_url, "https://gist.github.com/6296732.git")
         self.assertEqual(gist.git_push_url, "https://gist.github.com/6296732.git")
         self.assertEqual(len(gist.history), 1)
@@ -78,7 +84,10 @@ class Gist(Framework.TestCase):
         self.assertEqual(gist.history[0].version, "c464aecd7fea16684e935607eeea7ae4f8caa0e2")
         self.assertEqual(gist.html_url, "https://gist.github.com/6296732")
         self.assertEqual(gist.id, "6296732")
+        self.assertEqual(gist.node_id, "")
+        self.assertEqual(gist.owner.login, "")
         self.assertTrue(gist.public)
+        self.assertEqual(gist.truncated, False)
         self.assertEqual(
             gist.updated_at,
             datetime(2013, 8, 21, 16, 28, 24, tzinfo=timezone.utc),
