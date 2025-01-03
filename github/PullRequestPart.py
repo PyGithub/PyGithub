@@ -52,6 +52,15 @@ if TYPE_CHECKING:
 class PullRequestPart(NonCompletableGithubObject):
     """
     This class represents PullRequestParts.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/pull-request-minimal/properties/base
+    - /components/schemas/pull-request-minimal/properties/head
+    - /components/schemas/pull-request-simple/properties/base
+    - /components/schemas/pull-request-simple/properties/head
+    - /components/schemas/pull-request/properties/base
+    - /components/schemas/pull-request/properties/head
+
     """
 
     def _initAttributes(self) -> None:

@@ -48,6 +48,11 @@ class GitBlob(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#blobs
 
+    The OpenAPI schema can be found at
+    - /components/schemas/repository-rule-violation-error
+    - /components/schemas/short-blob
+    - /components/schemas/validation-error
+
     """
 
     def _initAttributes(self) -> None:

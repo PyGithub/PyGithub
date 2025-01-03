@@ -48,6 +48,9 @@ class GitignoreTemplate(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gitignore
 
+    The OpenAPI schema can be found at
+    - /components/schemas/gitignore-template
+
     """
 
     def _initAttributes(self) -> None:

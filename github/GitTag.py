@@ -59,6 +59,9 @@ class GitTag(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#tags
 
+    The OpenAPI schema can be found at
+    - /components/schemas/git-tag
+
     """
 
     def _initAttributes(self) -> None:

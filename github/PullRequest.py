@@ -125,6 +125,11 @@ class PullRequest(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/pulls
 
+    The OpenAPI schema can be found at
+    - /components/schemas/pull-request
+    - /components/schemas/pull-request-minimal
+    - /components/schemas/pull-request-simple
+
     """
 
     def _initAttributes(self) -> None:

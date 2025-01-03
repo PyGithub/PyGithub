@@ -55,6 +55,13 @@ class GitTree(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#trees
 
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-search-result-item/properties/commit/properties/tree
+    - /components/schemas/commit/properties/commit/properties/tree
+    - /components/schemas/file-commit/properties/commit/properties/tree
+    - /components/schemas/git-commit/properties/tree
+    - /components/schemas/git-tree
+
     """
 
     def _initAttributes(self) -> None:

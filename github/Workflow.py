@@ -63,6 +63,9 @@ class Workflow(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/actions#workflows
 
+    The OpenAPI schema can be found at
+    - /components/schemas/workflow
+
     """
 
     def _initAttributes(self) -> None:

@@ -54,6 +54,15 @@ class Label(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#labels
 
+    The OpenAPI schema can be found at
+    - /components/schemas/issue-event-label
+    - /components/schemas/issue-search-result-item/properties/labels/items
+    - /components/schemas/issue/properties/labels/items/oneOf/1
+    - /components/schemas/label
+    - /components/schemas/nullable-issue/properties/labels/items/oneOf/1
+    - /components/schemas/pull-request-simple/properties/labels/items
+    - /components/schemas/pull-request/properties/labels/items
+
     """
 
     def _initAttributes(self) -> None:

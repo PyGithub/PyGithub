@@ -44,6 +44,14 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class SecurityAndAnalysisFeature(NonCompletableGithubObject):
     """
     This class represents a Security and Analysis feature status.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/security-and-analysis/properties/advanced_security
+    - /components/schemas/security-and-analysis/properties/dependabot_security_updates
+    - /components/schemas/security-and-analysis/properties/secret_scanning
+    - /components/schemas/security-and-analysis/properties/secret_scanning_non_provider_patterns
+    - /components/schemas/security-and-analysis/properties/secret_scanning_push_protection
+
     """
 
     def _initAttributes(self) -> None:

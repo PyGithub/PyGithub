@@ -93,6 +93,12 @@ class Team(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/teams
 
+    The OpenAPI schema can be found at
+    - /components/schemas/nullable-team-simple
+    - /components/schemas/team
+    - /components/schemas/team-full
+    - /components/schemas/team-simple
+
     """
 
     def _initAttributes(self) -> None:

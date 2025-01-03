@@ -63,6 +63,9 @@ class CheckRun(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/checks#check-runs
 
+    The OpenAPI schema can be found at
+    - /components/schemas/check-run
+
     """
 
     def _initAttributes(self) -> None:

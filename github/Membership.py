@@ -61,6 +61,9 @@ class Membership(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/orgs
 
+    The OpenAPI schema can be found at
+    - /components/schemas/org-membership
+
     """
 
     def _initAttributes(self) -> None:

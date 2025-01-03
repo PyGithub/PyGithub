@@ -55,6 +55,9 @@ class GitReleaseAsset(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#releases
 
+    The OpenAPI schema can be found at
+    - /components/schemas/release-asset
+
     """
 
     def _initAttributes(self) -> None:

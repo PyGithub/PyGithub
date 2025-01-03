@@ -57,6 +57,9 @@ class GitRef(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#references
 
+    The OpenAPI schema can be found at
+    - /components/schemas/git-ref
+
     """
 
     def _initAttributes(self) -> None:

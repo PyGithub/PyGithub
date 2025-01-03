@@ -54,6 +54,16 @@ class GitCommit(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#commits
 
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-search-result-item/properties/commit
+    - /components/schemas/commit/properties/commit
+    - /components/schemas/file-commit/properties/commit
+    - /components/schemas/file-commit/properties/commit/properties/parents/items
+    - /components/schemas/git-commit
+    - /components/schemas/git-commit/properties/parents/items
+    - /components/schemas/nullable-simple-commit
+    - /components/schemas/simple-commit
+
     """
 
     def _initAttributes(self) -> None:

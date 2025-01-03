@@ -75,6 +75,9 @@ class Installation(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/apps#installations
 
+    The OpenAPI schema can be found at
+    - /components/schemas/installation
+
     """
 
     def _initAttributes(self) -> None:

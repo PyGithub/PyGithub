@@ -69,6 +69,12 @@ class Gist(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gists
 
+    The OpenAPI schema can be found at
+    - /components/schemas/base-gist
+    - /components/schemas/gist-simple
+    - /components/schemas/gist-simple/properties/fork_of
+    - /components/schemas/gist-simple/properties/forks/items
+
     """
 
     def _initAttributes(self) -> None:

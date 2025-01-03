@@ -66,6 +66,10 @@ class WorkflowRun(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/actions#workflow-runs
 
+    The OpenAPI schema can be found at
+    - /components/schemas/artifact/properties/workflow_run
+    - /components/schemas/workflow-run
+
     """
 
     def _initAttributes(self) -> None:

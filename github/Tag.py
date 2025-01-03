@@ -57,6 +57,9 @@ class Tag(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#list-repository-tags
 
+    The OpenAPI schema can be found at
+    - /components/schemas/tag
+
     """
 
     def _initAttributes(self) -> None:

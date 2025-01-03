@@ -43,6 +43,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class HookResponse(NonCompletableGithubObject):
     """
     This class represents HookResponses.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-response
+
     """
 
     def _initAttributes(self) -> None:

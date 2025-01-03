@@ -54,6 +54,10 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/security-advisories/repository-advisories
 
+    The OpenAPI schema can be found at
+    - /components/schemas/global-advisory/properties/credits/items
+    - /components/schemas/repository-advisory-credit
+
     """
 
     def _initAttributes(self) -> None:

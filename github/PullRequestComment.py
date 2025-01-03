@@ -65,6 +65,9 @@ class PullRequestComment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/pulls#review-comments
 
+    The OpenAPI schema can be found at
+    - /components/schemas/pull-request-review-comment
+
     """
 
     def _initAttributes(self) -> None:

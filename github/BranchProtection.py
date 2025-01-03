@@ -56,6 +56,10 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-branch-protection
 
+    The OpenAPI schema can be found at
+    - /components/schemas/branch-protection
+    - /components/schemas/protected-branch
+
     """
 
     def _initAttributes(self) -> None:

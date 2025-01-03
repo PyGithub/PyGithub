@@ -50,6 +50,9 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-the-hourly-commit-count-for-each-day
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-frequency-stat
+
     """
 
     _dict: Dict[Tuple[int, int], int]
