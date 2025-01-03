@@ -44,8 +44,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -127,7 +129,7 @@ class RepositoryKey(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "added_by" in attributes:  # pragma no branch
             self._added_by = self._makeStringAttribute(attributes["added_by"])
         if "created_at" in attributes:  # pragma no branch
