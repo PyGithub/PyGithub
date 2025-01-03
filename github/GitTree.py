@@ -67,6 +67,7 @@ class GitTree(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._sha: Attribute[str] = NotSet
         self._tree: Attribute[list[GitTreeElement]] = NotSet
+        self._truncated: Attribute[bool] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -87,6 +88,11 @@ class GitTree(CompletableGithubObject):
         return self._tree.value
 
     @property
+    def truncated(self) -> bool:
+        self._completeIfNotSet(self._truncated)
+        return self._truncated.value
+
+    @property
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
@@ -96,5 +102,7 @@ class GitTree(CompletableGithubObject):
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch
             self._tree = self._makeListOfClassesAttribute(github.GitTreeElement.GitTreeElement, attributes["tree"])
+        if "truncated" in attributes:  # pragma no branch
+            self._truncated = self._makeBoolAttribute(attributes["truncated"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
