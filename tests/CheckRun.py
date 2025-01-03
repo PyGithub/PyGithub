@@ -44,38 +44,27 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(self.check_run.app.id, 15368)
         self.assertEqual(self.check_run.app.slug, "github-actions")
         self.assertIsNone(self.check_run.check_suite)
-        self.assertEqual(self.check_run.check_suite_id, 1110219217)
-        self.assertEqual(
-            self.check_run.completed_at,
-            datetime(2020, 8, 28, 4, 21, 21, tzinfo=timezone.utc),
-        )
+        self.assertEqual(self.check_run.check_suite_id, 32504127411)
+        self.assertEqual(self.check_run.completed_at, datetime(2024, 12, 28, 16, 53, 10, tzinfo=timezone.utc))
         self.assertEqual(self.check_run.conclusion, "success")
         self.assertIsNone(self.check_run.deployment)
         self.assertEqual(
-            self.check_run.details_url,
-            "https://github.com/PyGithub/PyGithub/runs/1039891953",
+            self.check_run.details_url, "https://github.com/PyGithub/PyGithub/actions/runs/12528252236/job/34942661139"
         )
-        self.assertEqual(self.check_run.external_id, "6b512fe7-587c-5ecc-c4a3-03b7358c152d")
-        self.assertEqual(self.check_run.head_sha, "6bc9ecc8c849df4e45e60c1e6a5df8876180a20a")
+        self.assertEqual(self.check_run.external_id, "8ece7711-e8e8-5d87-8f8a-6791d424ecd6")
+        self.assertEqual(self.check_run.head_sha, "10a7135a04f71e6101f8b013aded8a662d08fd1f")
         self.assertEqual(
-            self.check_run.html_url,
-            "https://github.com/PyGithub/PyGithub/runs/1039891953",
+            self.check_run.html_url, "https://github.com/PyGithub/PyGithub/actions/runs/12528252236/job/34942661139"
         )
-        self.assertEqual(self.check_run.id, 1039891953)
-        self.assertEqual(self.check_run.name, "test (Python 3.8)")
-        self.assertEqual(self.check_run.node_id, "MDg6Q2hlY2tSdW4xMDM5ODkxOTUz")
-        self.assertEqual(self.check_run.output.annotations_count, 0)
+        self.assertEqual(self.check_run.id, 34942661139)
+        self.assertEqual(self.check_run.name, "test (Python 3.8 on Ubuntu)")
+        self.assertEqual(self.check_run.node_id, "CR_kwDOADYVqs8AAAAIIr6yEw")
+        self.assertEqual(self.check_run.output.annotations_count, 1)
         self.assertEqual(len(self.check_run.pull_requests), 0)
-        self.assertEqual(
-            self.check_run.started_at,
-            datetime(2020, 8, 28, 4, 20, 27, tzinfo=timezone.utc),
-        )
+        self.assertEqual(self.check_run.started_at, datetime(2024, 12, 28, 16, 51, 59, tzinfo=timezone.utc))
         self.assertEqual(self.check_run.status, "completed")
-        self.assertEqual(
-            self.check_run.url,
-            "https://api.github.com/repos/PyGithub/PyGithub/check-runs/1039891953",
-        )
-        self.assertEqual(repr(self.check_run), 'CheckRun(id=1039891953, conclusion="success")')
+        self.assertEqual(self.check_run.url, "https://api.github.com/repos/PyGithub/PyGithub/check-runs/34942661139")
+        self.assertEqual(repr(self.check_run), 'CheckRun(id=34942661139, conclusion="success")')
 
     def testCheckRunOutputAttributes(self):
         check_run_output = self.repo.get_check_run(1039891917).output
@@ -97,7 +86,7 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_runs.totalCount, 4)
         self.assertListEqual(
             [check_run.id for check_run in check_runs],
-            [1039891953, 1039891931, 1039891917, 1039891902],
+            [34942661139, 1039891931, 1039891917, 1039891902],
         )
 
     def testGetCheckRunsForRefFilterByCheckName(self):
@@ -110,7 +99,7 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(completed_check_runs.totalCount, 4)
         self.assertListEqual(
             [check_run.id for check_run in completed_check_runs],
-            [1039891953, 1039891931, 1039891917, 1039891902],
+            [34942661139, 1039891931, 1039891917, 1039891902],
         )
         queued_check_runs = self.commit.get_check_runs(status="queued")
         self.assertEqual(queued_check_runs.totalCount, 0)
@@ -123,12 +112,12 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(latest_check_runs.totalCount, 4)
         self.assertListEqual(
             [check_run.id for check_run in latest_check_runs],
-            [1039891953, 1039891931, 1039891917, 1039891902],
+            [34942661139, 1039891931, 1039891917, 1039891902],
         )
         self.assertEqual(all_check_runs.totalCount, 4)
         self.assertListEqual(
             [check_run.id for check_run in all_check_runs],
-            [1039891953, 1039891931, 1039891917, 1039891902],
+            [34942661139, 1039891931, 1039891917, 1039891902],
         )
 
     def testCreateCheckRunInProgress(self):
