@@ -50,18 +50,18 @@ class CommitStatus(Framework.TestCase):
         self.status = self.statuses[0]
 
     def testAttributes(self):
-        self.assertEqual(self.status.avatar_url, "")
-        self.assertEqual(self.status.context, "")
+        self.assertIsNone(self.status.avatar_url)
+        self.assertEqual(self.status.context, 'build')
         self.assertEqual(
             self.status.created_at,
             datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
-        self.assertEqual(self.status.creator.login, "")
-        self.assertEqual(self.status.description, "")
-        self.assertEqual(self.status.id, 0)
-        self.assertEqual(self.status.node_id, "")
-        self.assertEqual(self.status.state, "")
-        self.assertEqual(self.status.target_url, "")
+        self.assertEqual(self.status.creator.login, 'jacquev6')
+        self.assertEqual(self.status.description, 'Status successfully created by PyGithub')
+        self.assertEqual(self.status.id, 277040)
+        self.assertIsNone(self.status.node_id)
+        self.assertEqual(self.status.state, 'success')
+        self.assertEqual(self.status.target_url, 'https://github.com/jacquev6/PyGithub/issues/67')
         self.assertEqual(
             self.status.updated_at,
             datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
@@ -82,4 +82,4 @@ class CommitStatus(Framework.TestCase):
             repr(self.status),
             'CommitStatus(state="success", id=277040, context="build")',
         )
-        self.assertEqual(self.status.url, "")
+        self.assertEqual(self.status.url, 'https://api.github.com/repos/jacquev6/PyGithub/statuses/277040')
