@@ -63,7 +63,6 @@ class ContentFile(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#contents
 
     The OpenAPI schema can be found at
-    - /components/schemas/basic-error
     - /components/schemas/code-search-result-item
     - /components/schemas/content-directory
     - /components/schemas/content-file
@@ -71,7 +70,6 @@ class ContentFile(CompletableGithubObject):
     - /components/schemas/content-symlink
     - /components/schemas/file-commit
     - /components/schemas/license-content
-    - /components/schemas/repository-rule-violation-error
 
     """
 
