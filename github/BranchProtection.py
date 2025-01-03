@@ -66,12 +66,18 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._allow_deletions: Attribute[bool] = NotSet
         self._allow_force_pushes: Attribute[bool] = NotSet
         self._allow_fork_syncing: Attribute[bool] = NotSet
+        self._block_creations: Attribute[dict[str, Any]] = NotSet
+        self._enabled: Attribute[bool] = NotSet
         self._enforce_admins: Attribute[bool] = NotSet
         self._lock_branch: Attribute[bool] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._protection_url: Attribute[str] = NotSet
         self._required_conversation_resolution: Attribute[bool] = NotSet
         self._required_linear_history: Attribute[bool] = github.GithubObject.NotSet
         self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
+        self._required_signatures: Attribute[dict[str, Any]] = NotSet
         self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
+        self._restrictions: Attribute[dict[str, Any]] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
@@ -95,6 +101,14 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._allow_fork_syncing.value
 
     @property
+    def block_creations(self) -> dict[str, Any]:
+        return self._block_creations.value
+
+    @property
+    def enabled(self) -> bool:
+        return self._enabled.value
+
+    @property
     def enforce_admins(self) -> bool:
         self._completeIfNotSet(self._enforce_admins)
         return self._enforce_admins.value
@@ -103,6 +117,14 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     def lock_branch(self) -> bool:
         self._completeIfNotSet(self._lock_branch)
         return self._lock_branch.value
+
+    @property
+    def name(self) -> str:
+        return self._name.value
+
+    @property
+    def protection_url(self) -> str:
+        return self._protection_url.value
 
     @property
     def required_conversation_resolution(self) -> bool:
@@ -120,9 +142,17 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._required_pull_request_reviews.value
 
     @property
+    def required_signatures(self) -> dict[str, Any]:
+        return self._required_signatures.value
+
+    @property
     def required_status_checks(self) -> RequiredStatusChecks:
         self._completeIfNotSet(self._required_status_checks)
         return self._required_status_checks.value
+
+    @property
+    def restrictions(self) -> dict[str, Any]:
+        return self._restrictions.value
 
     @property
     def url(self) -> str:
@@ -151,10 +181,18 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             self._allow_force_pushes = self._makeBoolAttribute(attributes["allow_force_pushes"]["enabled"])
         if "allow_fork_syncing" in attributes:  # pragma no branch
             self._allow_fork_syncing = self._makeBoolAttribute(attributes["allow_fork_syncing"]["enabled"])
+        if "block_creations" in attributes:  # pragma no branch
+            self._block_creations = self._makeDictAttribute(attributes["block_creations"])
+        if "enabled" in attributes:  # pragma no branch
+            self._enabled = self._makeBoolAttribute(attributes["enabled"])
         if "enforce_admins" in attributes:  # pragma no branch
             self._enforce_admins = self._makeBoolAttribute(attributes["enforce_admins"]["enabled"])
         if "lock_branch" in attributes:  # pragma no branch
             self._lock_branch = self._makeBoolAttribute(attributes["lock_branch"]["enabled"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "protection_url" in attributes:  # pragma no branch
+            self._protection_url = self._makeStringAttribute(attributes["protection_url"])
         if "required_conversation_resolution" in attributes:  # pragma no branch
             self._required_conversation_resolution = self._makeBoolAttribute(
                 attributes["required_conversation_resolution"]["enabled"]
@@ -166,6 +204,8 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 github.RequiredPullRequestReviews.RequiredPullRequestReviews,
                 attributes["required_pull_request_reviews"],
             )
+        if "required_signatures" in attributes:  # pragma no branch
+            self._required_signatures = self._makeDictAttribute(attributes["required_signatures"])
         if "required_status_checks" in attributes:  # pragma no branch
             self._required_status_checks = self._makeClassAttribute(
                 github.RequiredStatusChecks.RequiredStatusChecks,
