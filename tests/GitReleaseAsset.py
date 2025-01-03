@@ -20,6 +20,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import os
 import zipfile
 from datetime import datetime, timezone
@@ -41,4 +43,16 @@ class GitRelease(Framework.TestCase):
         self.asset = self.release.assets[0]
 
     def testAttributes(self):
+        self.assertEqual(self.asset.browser_download_url, "")
+        self.assertEqual(self.asset.content_type, "")
+        self.assertEqual(self.asset.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.download_count, 0)
         self.assertEqual(self.asset.id, "")
+        self.assertEqual(self.asset.label, "")
+        self.assertEqual(self.asset.name, "")
+        self.assertEqual(self.asset.node_id, "")
+        self.assertEqual(self.asset.size, 0)
+        self.assertEqual(self.asset.state, "")
+        self.assertEqual(self.asset.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.uploader.login, "")
+        self.assertEqual(self.asset.url, "")
