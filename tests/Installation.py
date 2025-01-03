@@ -58,7 +58,26 @@ class Installation(Framework.BasicTestCase):
         self.installation = self.installations[0]
 
     def testAttributes(self):
+        self.assertEqual(self.installation.access_tokens_url, "")
+        self.assertEqual(self.installation.account, None)
+        self.assertEqual(self.installation.app_id, 0)
+        self.assertEqual(self.installation.app_slug, "")
+        self.assertEqual(self.installation.contact_email, "")
+        self.assertEqual(self.installation.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.installation.events, "list[str]")
+        self.assertEqual(self.installation.has_multiple_single_files, False)
+        self.assertEqual(self.installation.html_url, "")
         self.assertEqual(self.installation.id, "")
+        self.assertEqual(self.installation.permissions, "dict[str, Any]")
+        self.assertEqual(self.installation.repositories_url, "")
+        self.assertEqual(self.installation.repository_selection, "")
+        self.assertEqual(self.installation.single_file_name, "")
+        self.assertEqual(self.installation.single_file_paths, "list[str]")
+        self.assertEqual(self.installation.suspended_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.installation.suspended_by.login, "")
+        self.assertEqual(self.installation.target_id, 0)
+        self.assertEqual(self.installation.target_type, "")
+        self.assertEqual(self.installation.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
 
     def testGetRepos(self):
         repos = list(self.installation.get_repos())
