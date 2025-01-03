@@ -49,6 +49,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.GithubApp
 import github.GithubObject
 import github.NamedUser
 from github import Consts
@@ -56,6 +57,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.GithubApp import GithubApp
     from github.Reaction import Reaction
 
 
@@ -72,12 +74,16 @@ class IssueComment(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._author_association: Attribute[dict[str, Any]] = NotSet
         self._body: Attribute[str] = NotSet
+        self._body_html: Attribute[str] = NotSet
+        self._body_text: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp] = NotSet
         self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -87,9 +93,24 @@ class IssueComment(CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
+    def author_association(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
+
+    @property
     def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
+
+    @property
+    def body_html(self) -> str:
+        self._completeIfNotSet(self._body_html)
+        return self._body_html.value
+
+    @property
+    def body_text(self) -> str:
+        self._completeIfNotSet(self._body_text)
+        return self._body_text.value
 
     @property
     def created_at(self) -> datetime:
@@ -115,6 +136,11 @@ class IssueComment(CompletableGithubObject):
     def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
+
+    @property
+    def performed_via_github_app(self) -> github.GithubApp.GithubApp:
+        self._completeIfNotSet(self._performed_via_github_app)
+        return self._performed_via_github_app.value
 
     @property
     def reactions(self) -> dict:
@@ -229,8 +255,14 @@ class IssueComment(CompletableGithubObject):
         return data["unminimizedComment"]["isMinimized"] is False
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeDictAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
+        if "body_html" in attributes:  # pragma no branch
+            self._body_html = self._makeStringAttribute(attributes["body_html"])
+        if "body_text" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["body_text"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "html_url" in attributes:  # pragma no branch
@@ -241,6 +273,10 @@ class IssueComment(CompletableGithubObject):
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "performed_via_github_app" in attributes:  # pragma no branch
+            self._performed_via_github_app = self._makeClassAttribute(
+                github.GithubApp.GithubApp, attributes["performed_via_github_app"]
+            )
         if "reactions" in attributes:
             self._reactions = self._makeDictAttribute(attributes["reactions"])
         if "updated_at" in attributes:  # pragma no branch
