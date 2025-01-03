@@ -33,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -45,6 +47,7 @@ class GitTag(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.tag.message, "Version 0.6\n")
+        self.assertEqual(self.tag.node_id, "")
         self.assertEqual(self.tag.object.sha, "4303c5b90e2216d927155e9609436ccb8984c495")
         self.assertEqual(self.tag.object.type, "commit")
         self.assertEqual(
@@ -67,3 +70,4 @@ class GitTag(Framework.TestCase):
             repr(self.tag),
             'GitTag(tag="v0.6", sha="f5f37322407b02a80de4526ad88d5f188977bc3c")',
         )
+        self.assertEqual(self.tag.verification, "dict[str, Any]")
