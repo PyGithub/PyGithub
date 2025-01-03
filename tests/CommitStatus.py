@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -48,10 +50,18 @@ class CommitStatus(Framework.TestCase):
         self.status = self.statuses[0]
 
     def testAttributes(self):
+        self.assertEqual(self.status.avatar_url, "")
+        self.assertEqual(self.status.context, "")
         self.assertEqual(
             self.status.created_at,
             datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
+        self.assertEqual(self.status.creator.login, "")
+        self.assertEqual(self.status.description, "")
+        self.assertEqual(self.status.id, 0)
+        self.assertEqual(self.status.node_id, "")
+        self.assertEqual(self.status.state, "")
+        self.assertEqual(self.status.target_url, "")
         self.assertEqual(
             self.status.updated_at,
             datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
@@ -72,3 +82,4 @@ class CommitStatus(Framework.TestCase):
             repr(self.status),
             'CommitStatus(state="success", id=277040, context="build")',
         )
+        self.assertEqual(self.status.url, "")
