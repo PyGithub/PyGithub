@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from tests import Framework
 
 
@@ -48,6 +50,7 @@ class Autolink(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.link.id, 209614)
+        self.assertEqual(self.link.is_alphanumeric, False)
         self.assertEqual(self.link.key_prefix, "DUMMY-")
         self.assertEqual(self.link.url_template, "https://github.com/PyGithub/PyGithub/issues/<num>")
         self.assertEqual(self.link.is_alphanumeric, True)
