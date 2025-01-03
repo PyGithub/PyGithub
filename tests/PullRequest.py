@@ -47,6 +47,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 import pytest
@@ -107,9 +109,13 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pullIssue256Uncached.mergeable_state, "unknown")
 
     def testAttributes(self):
+        self.assertEqual(self.pull._links, "dict[str, Any]")
+        self.assertEqual(self.pull.active_lock_reason, "")
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
+        self.assertEqual(self.pull.author_association, "dict[str, Any]")
+        self.assertEqual(self.pull.auto_merge, "dict[str, Any]")
         self.assertEqual(self.pull.base.label, "PyGithub:topic/RewriteWithGeneratedCode")
         self.assertEqual(self.pull.base.sha, "ed866fc43833802ab553e5ff8581c81bb00dd433")
         self.assertEqual(self.pull.base.user.login, "PyGithub")
@@ -122,13 +128,16 @@ class PullRequest(Framework.TestCase):
             datetime(2012, 5, 27, 10, 29, 7, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.comments, 1)
+        self.assertEqual(self.pull.comments_url, "")
         self.assertEqual(self.pull.commits, 3)
+        self.assertEqual(self.pull.commits_url, "")
         self.assertEqual(
             self.pull.created_at,
             datetime(2012, 5, 27, 9, 25, 36, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.deletions, 384)
         self.assertEqual(self.pull.diff_url, "https://github.com/PyGithub/PyGithub/pull/31.diff")
+        self.assertEqual(self.pull.draft, False)
         self.assertEqual(self.pull.head.ref, "master")
         self.assertEqual(self.pull.html_url, "https://github.com/PyGithub/PyGithub/pull/31")
         self.assertEqual(self.pull.id, 1436215)
@@ -137,7 +146,18 @@ class PullRequest(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/31",
         )
         self.assertListKeyEqual(self.pull.labels, lambda a: a.name, [])
+        self.assertEqual(self.pull.locked, False)
+        self.assertEqual(self.pull.maintainer_can_modify, False)
+        self.assertEqual(self.pull.merge_commit_sha, "")
         self.assertFalse(self.pull.mergeable)
+        self.assertEqual(self.pull.mergeable_state, "")
+        self.assertEqual(self.pull.merged, False)
+        self.assertEqual(self.pull.merged_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.pull.merged_by.login, "")
+        self.assertEqual(self.pull.milestone.number, "")
+        self.assertEqual(self.pull.node_id, "")
+        self.assertEqual(self.pull.number, 0)
+        self.assertEqual(self.pull.patch_url, "")
         self.assertFalse(self.pull.rebaseable)
         self.assertTrue(self.pull.merged)
         self.assertEqual(
@@ -147,8 +167,13 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
         self.assertEqual(self.pull.number, 31)
         self.assertEqual(self.pull.patch_url, "https://github.com/PyGithub/PyGithub/pull/31.patch")
+        self.assertEqual(self.pull.requested_reviewers[0].login, "")
+        self.assertEqual(self.pull.requested_teams[0].id, "")
+        self.assertEqual(self.pull.review_comment_url, "")
         self.assertEqual(self.pull.review_comments, 2)
+        self.assertEqual(self.pull.review_comments_url, "")
         self.assertEqual(self.pull.state, "closed")
+        self.assertEqual(self.pull.statuses_url, "")
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(
             self.pull.updated_at,
