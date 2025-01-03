@@ -54,15 +54,15 @@ class RepositoryKey(Framework.TestCase):
         self.yet_unused_key = repo.get_key(98051552)
 
     def testAttributes(self):
-        self.assertEqual(self.key.added_by, "")
-        self.assertEqual(self.key.created_at, "")
+        self.assertEqual(self.key.added_by, 'key-admin-user')
+        self.assertEqual(self.key.created_at, datetime(2017, 2, 22, 8, 16, 23, tzinfo=timezone.utc))
         self.assertEqual(self.key.id, 21870881)
         self.assertEqual(
             self.key.key,
             "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLOoLSVPwG1OSgVSeEXNbfIofYdxR5zs3u4PryhnamfFPYwi2vZW3ZxeI1oRcDh2VEdwGvlN5VUduKJNoOWMVzV2jSyR8CeDHH+I0soQCC7kfJVodU96HcPMzZ6MuVwSfD4BFGvKMXyCnBUqzo28BGHFwVQG8Ya9gL6/cTbuWywgM4xaJgMHv1OVcESXBtBkrqOneTJuOgeEmP0RfUnIAK/3/wbg9mfiBq7JV4cmWAg1xNE8GJoAbci59Tdx1dQgVuuqdQGk5jzNusOVneyMtGEB+p7UpPLJsGBW29rsMt7ITUbXM/kl9v11vPtWb+oOUThoFsDYmsWy7fGGP9YAFB",
         )
-        self.assertEqual(self.key.last_used, "")
-        self.assertEqual(self.key.read_only, False)
+        self.assertEqual(self.key.last_used, datetime(2024, 4, 13, 10, 0, 21, tzinfo=timezone.utc))
+        self.assertEqual(self.key.read_only, True)
         self.assertEqual(self.key.title, "PyGithub Test Key")
         self.assertEqual(self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881")
         self.assertEqual(
