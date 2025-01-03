@@ -63,8 +63,8 @@ class CheckSuite(Framework.TestCase):
         self.assertEqual(len(cs.pull_requests), 1)
         self.assertEqual(cs.pull_requests[0].id, 462527907)
         self.assertEqual(cs.repository.url, "https://api.github.com/repos/wrecker/PySample")
-        self.assertEqual(cs.rerequestable, False)
-        self.assertEqual(cs.runs_rerequestable, False)
+        self.assertEqual(cs.rerequestable, True)
+        self.assertEqual(cs.runs_rerequestable, True)
         self.assertEqual(cs.status, "completed")
         self.assertEqual(cs.updated_at, datetime(2020, 8, 4, 5, 7, 40, tzinfo=timezone.utc))
         self.assertEqual(
