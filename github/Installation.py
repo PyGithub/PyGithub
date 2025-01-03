@@ -57,8 +57,8 @@ import github.PaginatedList
 import github.Plan
 import github.Repository
 import github.UserKey
-from NamedUser import NamedUser
-from Organization import Organization
+import github.NamedUser
+import github.Organization
 from github import Consts
 from github.Auth import AppAuth
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -67,6 +67,8 @@ from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.MainClass import Github
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
@@ -100,7 +102,7 @@ class Installation(NonCompletableGithubObject):
         self._single_file_name: Attribute[str] = NotSet
         self._single_file_paths: Attribute[list[str]] = NotSet
         self._suspended_at: Attribute[datetime] = NotSet
-        self._suspended_by: Attribute[NamedUser | Organization] = NotSet
+        self._suspended_by: Attribute[NamedUser] = NotSet
         self._target_id: Attribute[int] = NotSet
         self._target_type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -198,7 +200,7 @@ class Installation(NonCompletableGithubObject):
         return self._suspended_at.value
 
     @property
-    def suspended_by(self) -> github.NamedUser.NamedUser | github.Organization.Organization:
+    def suspended_by(self) -> NamedUser:
         return self._suspended_by.value
 
     @property
@@ -237,9 +239,9 @@ class Installation(NonCompletableGithubObject):
         if "account" in attributes and "target_type" in attributes:  # pragma no branch
             target_type = attributes["target_type"]
             if target_type == "User":
-                self._account = self._makeClassAttribute(NamedUser, attributes["account"])
+                self._account = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["account"])
             if target_type == "Organization":
-                self._account = self._makeClassAttribute(Organization, attributes["account"])
+                self._account = self._makeClassAttribute(github.Organization.Organization, attributes["account"])
         if "app_id" in attributes:  # pragma no branch
             self._app_id = self._makeIntAttribute(attributes["app_id"])
         if "app_slug" in attributes:  # pragma no branch
@@ -269,9 +271,7 @@ class Installation(NonCompletableGithubObject):
         if "suspended_at" in attributes:  # pragma no branch
             self._suspended_at = self._makeDatetimeAttribute(attributes["suspended_at"])
         if "suspended_by" in attributes:  # pragma no branch
-            self._suspended_by = self._makeClassAttribute(
-                github.NamedUser.NamedUser | github.Organization.Organization, attributes["suspended_by"]
-            )
+            self._suspended_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["suspended_by"])
         if "target_id" in attributes:  # pragma no branch
             self._target_id = self._makeIntAttribute(attributes["target_id"])
         if "target_type" in attributes:  # pragma no branch
