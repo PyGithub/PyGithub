@@ -69,20 +69,28 @@ class CommitComment(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._author_association: Attribute[dict[str, Any]] = NotSet
         self._body: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._line: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._position: Attribute[int] = NotSet
+        self._reactions: Attribute[dict[str, Any]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self.user})
+
+    @property
+    def author_association(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
 
     @property
     def body(self) -> str:
@@ -115,6 +123,11 @@ class CommitComment(CompletableGithubObject):
         return self._line.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
@@ -123,6 +136,11 @@ class CommitComment(CompletableGithubObject):
     def position(self) -> int:
         self._completeIfNotSet(self._position)
         return self._position.value
+
+    @property
+    def reactions(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
 
     @property
     def updated_at(self) -> datetime:
@@ -204,6 +222,8 @@ class CommitComment(CompletableGithubObject):
         return status == 204
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeDictAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
@@ -216,10 +236,14 @@ class CommitComment(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "line" in attributes:  # pragma no branch
             self._line = self._makeIntAttribute(attributes["line"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "position" in attributes:  # pragma no branch
             self._position = self._makeIntAttribute(attributes["position"])
+        if "reactions" in attributes:  # pragma no branch
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
