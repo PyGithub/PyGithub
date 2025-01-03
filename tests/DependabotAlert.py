@@ -42,9 +42,9 @@ class DependabotAlert(Framework.TestCase):
 
     def testAttributes(self):
         alert = self.repo.get_dependabot_alert(1)
-        self.assertEqual(alert.auto_dismissed_at, "dict[str, Any]")
-        self.assertEqual(alert.created_at, "dict[str, Any]")
-        self.assertEqual(alert.dependency.package, "")
+        self.assertIsNone(alert.auto_dismissed_at)
+        self.assertEqual(alert.created_at, datetime(2024, 1, 20, 17, 12, 38, tzinfo=timezone.utc))
+        self.assertEqual(alert.dependency.package, AdvisoryVulnerabilityPackage(name="jinja2"))
         self.assertEqual(alert.dismissed_at, "dict[str, Any]")
         self.assertEqual(alert.dismissed_by.login, "")
         self.assertEqual(alert.dismissed_comment, "")
