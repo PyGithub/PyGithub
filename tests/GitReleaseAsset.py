@@ -22,11 +22,7 @@
 
 from __future__ import annotations
 
-import os
-import zipfile
 from datetime import datetime, timezone
-
-from github import GithubException
 
 from . import Framework
 
@@ -35,7 +31,7 @@ user = "rickrickston123"
 release_id = 28524234
 
 
-class GitRelease(Framework.TestCase):
+class GitReleaseAsset(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.repo = self.g.get_user(user).get_repo(repo_name)
@@ -43,16 +39,20 @@ class GitRelease(Framework.TestCase):
         self.asset = self.release.assets[0]
 
     def testAttributes(self):
-        self.assertEqual(self.asset.browser_download_url, "")
-        self.assertEqual(self.asset.content_type, "")
-        self.assertEqual(self.asset.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(
+            self.asset.browser_download_url, "https://github.com/rickrickston123/RepoTest/releases/download/v1.0/fact"
+        )
+        self.assertEqual(self.asset.content_type, "application/octet-stream")
+        self.assertEqual(self.asset.created_at, datetime(2020, 7, 14, 0, 58, 17, tzinfo=timezone.utc))
         self.assertEqual(self.asset.download_count, 0)
-        self.assertEqual(self.asset.id, "")
-        self.assertEqual(self.asset.label, "")
-        self.assertEqual(self.asset.name, "")
-        self.assertEqual(self.asset.node_id, "")
-        self.assertEqual(self.asset.size, 0)
-        self.assertEqual(self.asset.state, "")
-        self.assertEqual(self.asset.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
-        self.assertEqual(self.asset.uploader.login, "")
-        self.assertEqual(self.asset.url, "")
+        self.assertEqual(self.asset.id, 22848494)
+        self.assertIsNone(self.asset.label)
+        self.assertEqual(self.asset.name, "fact")
+        self.assertEqual(self.asset.node_id, "MDEyOlJlbGVhc2VBc3NldDIyODQ4NDk0")
+        self.assertEqual(self.asset.size, 40)
+        self.assertEqual(self.asset.state, "uploaded")
+        self.assertEqual(self.asset.updated_at, datetime(2020, 7, 14, 0, 58, 18, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.uploader.login, "rickrickston123")
+        self.assertEqual(
+            self.asset.url, "https://api.github.com/repos/rickrickston123/RepoTest/releases/assets/22848494"
+        )
