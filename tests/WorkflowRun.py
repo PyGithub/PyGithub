@@ -29,6 +29,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -46,12 +48,37 @@ class WorkflowRun(Framework.TestCase):
             'WorkflowRun(url="https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935", id=3881497935)',
         )
         self.assertEqual(self.workflow_run.actor.login, "nuang-ee")
+        self.assertEqual(self.workflow_run.artifacts_url, "")
+        self.assertEqual(self.workflow_run.cancel_url, "")
+        self.assertEqual(self.workflow_run.check_suite_id, 0)
+        self.assertEqual(self.workflow_run.check_suite_node_id, "")
+        self.assertEqual(self.workflow_run.check_suite_url, "")
+        self.assertEqual(self.workflow_run.conclusion, "")
+        self.assertEqual(self.workflow_run.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.workflow_run.display_title, "")
+        self.assertEqual(self.workflow_run.event, "")
+        self.assertEqual(self.workflow_run.head_branch, "")
+        self.assertEqual(self.workflow_run.head_commit.sha, "")
+        self.assertEqual(self.workflow_run.head_repository.full_name, "")
+        self.assertEqual(self.workflow_run.head_repository_id, 0)
+        self.assertEqual(self.workflow_run.head_sha, "")
+        self.assertEqual(self.workflow_run.html_url, "")
         self.assertEqual(self.workflow_run.id, 3881497935)
+        self.assertEqual(self.workflow_run.jobs_url, "")
+        self.assertEqual(self.workflow_run.logs_url, "")
         self.assertEqual(self.workflow_run.name, "CI")
         self.assertEqual(self.workflow_run.head_branch, "feat/workflow-run")
         self.assertEqual(self.workflow_run.head_sha, "c6e5cac67a58a4eb11f1f28567a77a6e2cc8ee98")
+        self.assertEqual(self.workflow_run.node_id, "")
         self.assertEqual(self.workflow_run.path, ".github/workflows/ci.yml")
         self.assertEqual(self.workflow_run.display_title, "TEST PR")
+        self.assertEqual(self.workflow_run.previous_attempt_url, "")
+        self.assertEqual(self.workflow_run.pull_requests[0].number, "")
+        self.assertEqual(self.workflow_run.referenced_workflows, "list[dict[str, Any]]")
+        self.assertEqual(self.workflow_run.repository.full_name, "")
+        self.assertEqual(self.workflow_run.repository_id, 0)
+        self.assertEqual(self.workflow_run.rerun_url, "")
+        self.assertEqual(self.workflow_run.run_attempt, 0)
         self.assertEqual(self.workflow_run.run_number, 930)
         self.assertEqual(self.workflow_run.run_attempt, 1)
         self.assertEqual(
@@ -61,6 +88,9 @@ class WorkflowRun(Framework.TestCase):
         self.assertEqual(self.workflow_run.event, "pull_request")
         self.assertEqual(self.workflow_run.status, "completed")
         self.assertEqual(self.workflow_run.conclusion, "success")
+        self.assertEqual(self.workflow_run.triggering_actor.login, "")
+        self.assertEqual(self.workflow_run.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.workflow_run.url, "")
         self.assertEqual(self.workflow_run.workflow_id, 1903133)
         self.assertEqual(
             self.workflow_run.url,
