@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -44,8 +46,12 @@ class Label(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.label.color, "e10c02")
+        self.assertEqual(self.label.default, False)
+        self.assertEqual(self.label.description, "")
+        self.assertEqual(self.label.id, 0)
         self.assertEqual(self.label.name, "Bug")
         self.assertIsNone(self.label.description)
+        self.assertEqual(self.label.node_id, "")
         self.assertEqual(self.label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Bug")
         self.assertEqual(repr(self.label), 'Label(name="Bug")')
 
