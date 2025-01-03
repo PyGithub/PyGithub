@@ -44,7 +44,7 @@ class License(Framework.TestCase):
             self.license.description,
             "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
         )
-        self.assertIsNone(self.license.node_id)
+        self.assertEqual(self.license.node_id, "MDc6TGljZW5zZTEz")
         self.assertEqual(self.license.spdx_id, "MIT")
         self.assertEqual(
             self.license.body,
