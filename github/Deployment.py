@@ -49,6 +49,7 @@ from typing import Any
 
 import github.Consts
 import github.DeploymentStatus
+import github.GithubApp
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
@@ -74,8 +75,11 @@ class Deployment(CompletableGithubObject):
         self._description: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._original_environment: Attribute[str] = NotSet
         self._payload: Attribute[dict[str, Any]] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp] = NotSet
         self._production_environment: Attribute[bool] = NotSet
         self._ref: Attribute[str] = NotSet
         self._repository_url: Attribute[str] = NotSet
@@ -115,6 +119,16 @@ class Deployment(CompletableGithubObject):
         return self._id.value
 
     @property
+    def message(self) -> str:
+        self._completeIfNotSet(self._message)
+        return self._message.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def original_environment(self) -> str:
         self._completeIfNotSet(self._original_environment)
         return self._original_environment.value
@@ -123,6 +137,11 @@ class Deployment(CompletableGithubObject):
     def payload(self) -> dict[str, Any]:
         self._completeIfNotSet(self._payload)
         return self._payload.value
+
+    @property
+    def performed_via_github_app(self) -> github.GithubApp.GithubApp:
+        self._completeIfNotSet(self._performed_via_github_app)
+        return self._performed_via_github_app.value
 
     @property
     def production_environment(self) -> bool:
@@ -251,10 +270,18 @@ class Deployment(CompletableGithubObject):
             self._environment = self._makeStringAttribute(attributes["environment"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "message" in attributes:  # pragma no branch
+            self._message = self._makeStringAttribute(attributes["message"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "original_environment" in attributes:  # pragma no branch
             self._original_environment = self._makeStringAttribute(attributes["original_environment"])
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeDictAttribute(attributes["payload"])
+        if "performed_via_github_app" in attributes:  # pragma no branch
+            self._performed_via_github_app = self._makeClassAttribute(
+                github.GithubApp.GithubApp, attributes["performed_via_github_app"]
+            )
         if "production_environment" in attributes:  # pragma no branch
             self._production_environment = self._makeBoolAttribute(attributes["production_environment"])
         if "ref" in attributes:  # pragma no branch
