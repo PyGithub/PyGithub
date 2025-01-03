@@ -39,11 +39,12 @@
 from . import Framework
 
 
-class GitMembership(Framework.TestCase):
-    def testGetMembership(self):
-        octocat = self.g.get_user()
-        self.assertEqual(octocat.login, "octocat")
-        membership_data = octocat.get_organization_membership("github")
-        self.assertEqual(membership_data.user.login, "octocat")
-        self.assertEqual(membership_data.role, "admin")
-        self.assertEqual(membership_data.organization.login, "github")
+class Membership(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.membership = self.g.get_user().get_organization_membership("github")
+
+    def testAttributes(self):
+        self.assertEqual(self.membership.user.login, "octocat")
+        self.assertEqual(self.membership.role, "admin")
+        self.assertEqual(self.membership.organization.login, "github")
