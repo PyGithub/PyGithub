@@ -27,6 +27,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timedelta, timezone
 
 import github
@@ -41,14 +43,28 @@ class Migration(Framework.TestCase):
         self.migration = self.user.get_migrations()[0]
 
     def testAttributes(self):
+        self.assertEqual(self.migration.archive_url, "")
+        self.assertEqual(self.migration.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.migration.exclude, "list[str]")
+        self.assertEqual(self.migration.exclude_attachments, False)
+        self.assertEqual(self.migration.exclude_git_data, False)
+        self.assertEqual(self.migration.exclude_metadata, False)
+        self.assertEqual(self.migration.exclude_owner_projects, False)
+        self.assertEqual(self.migration.exclude_releases, False)
+        self.assertEqual(self.migration.guid, "")
         self.assertEqual(self.migration.id, 25320)
+        self.assertEqual(self.migration.lock_repositories, False)
+        self.assertEqual(self.migration.node_id, "")
+        self.assertEqual(self.migration.org_metadata_only, False)
         self.assertEqual(self.migration.owner.login, "singh811")
         self.assertEqual(self.migration.guid, "608bceae-b790-11e8-8b43-4e3cb0dd56cc")
+        self.assertEqual(self.migration.repositories[0].full_name, "")
         self.assertEqual(self.migration.state, "exported")
         self.assertEqual(self.migration.lock_repositories, False)
         self.assertEqual(self.migration.exclude_attachments, False)
         self.assertEqual(len(self.migration.repositories), 1)
         self.assertEqual(self.migration.repositories[0].name, "sample-repo")
+        self.assertEqual(self.migration.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(self.migration.url, "https://api.github.com/user/migrations/25320")
         self.assertEqual(
             self.migration.created_at,
