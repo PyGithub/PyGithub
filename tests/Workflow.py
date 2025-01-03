@@ -36,6 +36,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -51,8 +53,13 @@ class Workflow(Framework.TestCase):
             repr(self.workflow),
             'Workflow(url="https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390", name="check")',
         )
+        self.assertEqual(self.workflow.badge_url, "")
+        self.assertEqual(self.workflow.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.workflow.deleted_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.workflow.html_url, "")
         self.assertEqual(self.workflow.id, 1026390)
         self.assertEqual(self.workflow.name, "check")
+        self.assertEqual(self.workflow.node_id, "")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
         timestamp = datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc)
