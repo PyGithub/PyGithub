@@ -66,7 +66,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._allow_deletions: Attribute[bool] = NotSet
         self._allow_force_pushes: Attribute[bool] = NotSet
         self._allow_fork_syncing: Attribute[bool] = NotSet
-        self._block_creations: Attribute[dict[str, Any]] = NotSet
+        self._block_creations: Attribute[bool] = NotSet
         self._enabled: Attribute[bool] = NotSet
         self._enforce_admins: Attribute[bool] = NotSet
         self._lock_branch: Attribute[bool] = NotSet
@@ -75,7 +75,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._required_conversation_resolution: Attribute[bool] = NotSet
         self._required_linear_history: Attribute[bool] = github.GithubObject.NotSet
         self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
-        self._required_signatures: Attribute[dict[str, Any]] = NotSet
+        self._required_signatures: Attribute[bool] = NotSet
         self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
         self._restrictions: Attribute[dict[str, Any]] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
@@ -101,7 +101,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._allow_fork_syncing.value
 
     @property
-    def block_creations(self) -> dict[str, Any]:
+    def block_creations(self) -> bool:
         return self._block_creations.value
 
     @property
@@ -142,7 +142,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         return self._required_pull_request_reviews.value
 
     @property
-    def required_signatures(self) -> dict[str, Any]:
+    def required_signatures(self) -> bool:
         return self._required_signatures.value
 
     @property
@@ -182,7 +182,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "allow_fork_syncing" in attributes:  # pragma no branch
             self._allow_fork_syncing = self._makeBoolAttribute(attributes["allow_fork_syncing"]["enabled"])
         if "block_creations" in attributes:  # pragma no branch
-            self._block_creations = self._makeDictAttribute(attributes["block_creations"])
+            self._block_creations = self._makeBoolAttribute(attributes["block_creations"]["enabled"])
         if "enabled" in attributes:  # pragma no branch
             self._enabled = self._makeBoolAttribute(attributes["enabled"])
         if "enforce_admins" in attributes:  # pragma no branch
@@ -205,13 +205,14 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 attributes["required_pull_request_reviews"],
             )
         if "required_signatures" in attributes:  # pragma no branch
-            self._required_signatures = self._makeDictAttribute(attributes["required_signatures"])
+            self._required_signatures = self._makeBoolAttribute(attributes["required_signatures"]["enabled"])
         if "required_status_checks" in attributes:  # pragma no branch
             self._required_status_checks = self._makeClassAttribute(
                 github.RequiredStatusChecks.RequiredStatusChecks,
                 attributes["required_status_checks"],
             )
         if "restrictions" in attributes:  # pragma no branch
+            self._restrictions = attributes["restrictions"]
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]
         if "url" in attributes:  # pragma no branch
