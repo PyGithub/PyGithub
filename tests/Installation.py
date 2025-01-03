@@ -55,12 +55,13 @@ class Installation(Framework.BasicTestCase):
         self.auth = AppAuth(app_id, private_key)
         self.integration = github.GithubIntegration(auth=self.auth)
         self.installations = list(self.integration.get_installations())
+        self.installation = self.installations[0]
+
+    def testAttributes(self):
+        self.assertEqual(self.installation.id, "")
 
     def testGetRepos(self):
-        self.assertEqual(len(self.installations), 1)
-        installation = self.installations[0]
-
-        repos = list(installation.get_repos())
+        repos = list(self.installation.get_repos())
         self.assertEqual(len(repos), 2)
         self.assertListEqual([repo.full_name for repo in repos], ["EnricoMi/sandbox", "EnricoMi/python"])
 
