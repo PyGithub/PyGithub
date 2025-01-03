@@ -93,13 +93,21 @@ class Branch(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self.__links: Attribute[dict[str, Any]] = NotSet
         self._commit: Attribute[Commit] = github.GithubObject.NotSet
         self._name: Attribute[str] = github.GithubObject.NotSet
+        self._pattern: Attribute[str] = NotSet
         self._protected: Attribute[bool] = github.GithubObject.NotSet
+        self._protection: Attribute[BranchProtection] = NotSet
         self._protection_url: Attribute[str] = github.GithubObject.NotSet
+        self._required_approving_review_count: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
+
+    @property
+    def _links(self) -> dict[str, Any]:
+        return self.__links.value
 
     @property
     def commit(self) -> Commit:
@@ -110,12 +118,24 @@ class Branch(NonCompletableGithubObject):
         return self._name.value
 
     @property
+    def pattern(self) -> str:
+        return self._pattern.value
+
+    @property
     def protected(self) -> bool:
         return self._protected.value
 
     @property
+    def protection(self) -> github.BranchProtection.BranchProtection:
+        return self._protection.value
+
+    @property
     def protection_url(self) -> str:
         return self._protection_url.value
+
+    @property
+    def required_approving_review_count(self) -> int:
+        return self._required_approving_review_count.value
 
     def get_protection(self) -> BranchProtection:
         """
@@ -611,11 +631,23 @@ class Branch(NonCompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.protection_url}/allow_deletions")
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "_links" in attributes:  # pragma no branch
+            self.__links = self._makeDictAttribute(attributes["_links"])
         if "commit" in attributes:  # pragma no branch
             self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "pattern" in attributes:  # pragma no branch
+            self._pattern = self._makeStringAttribute(attributes["pattern"])
         if "protected" in attributes:  # pragma no branch
             self._protected = self._makeBoolAttribute(attributes["protected"])
+        if "protection" in attributes:  # pragma no branch
+            self._protection = self._makeClassAttribute(
+                github.BranchProtection.BranchProtection, attributes["protection"]
+            )
         if "protection_url" in attributes:  # pragma no branch
             self._protection_url = self._makeStringAttribute(attributes["protection_url"])
+        if "required_approving_review_count" in attributes:  # pragma no branch
+            self._required_approving_review_count = self._makeIntAttribute(
+                attributes["required_approving_review_count"]
+            )
