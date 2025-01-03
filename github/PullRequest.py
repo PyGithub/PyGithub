@@ -133,9 +133,13 @@ class PullRequest(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self.__links: Attribute[dict[str, Any]] = NotSet
+        self._active_lock_reason: Attribute[str] = NotSet
         self._additions: Attribute[int] = NotSet
         self._assignee: Attribute[github.NamedUser.NamedUser] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
+        self._author_association: Attribute[dict[str, Any]] = NotSet
+        self._auto_merge: Attribute[dict[str, Any]] = NotSet
         self._base: Attribute[github.PullRequestPart.PullRequestPart] = NotSet
         self._body: Attribute[str] = NotSet
         self._changed_files: Attribute[int] = NotSet
@@ -153,6 +157,7 @@ class PullRequest(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
         self._labels: Attribute[list[github.Label.Label]] = NotSet
+        self._locked: Attribute[bool] = NotSet
         self._maintainer_can_modify: Attribute[bool] = NotSet
         self._merge_commit_sha: Attribute[str] = NotSet
         self._mergeable: Attribute[bool] = NotSet
@@ -166,10 +171,12 @@ class PullRequest(CompletableGithubObject):
         self._patch_url: Attribute[str] = NotSet
         self._rebaseable: Attribute[bool] = NotSet
         self._requested_reviewers: Attribute[list[NamedUser]] = NotSet
+        self._requested_teams: Attribute[list[Team]] = NotSet
         self._review_comment_url: Attribute[str] = NotSet
         self._review_comments: Attribute[int] = NotSet
         self._review_comments_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
+        self._statuses_url: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
@@ -177,6 +184,16 @@ class PullRequest(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
+
+    @property
+    def _links(self) -> dict[str, Any]:
+        self._completeIfNotSet(self.__links)
+        return self.__links.value
+
+    @property
+    def active_lock_reason(self) -> str:
+        self._completeIfNotSet(self._active_lock_reason)
+        return self._active_lock_reason.value
 
     @property
     def additions(self) -> int:
@@ -192,6 +209,16 @@ class PullRequest(CompletableGithubObject):
     def assignees(self) -> list[github.NamedUser.NamedUser]:
         self._completeIfNotSet(self._assignees)
         return self._assignees.value
+
+    @property
+    def author_association(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
+
+    @property
+    def auto_merge(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._auto_merge)
+        return self._auto_merge.value
 
     @property
     def base(self) -> github.PullRequestPart.PullRequestPart:
@@ -277,6 +304,11 @@ class PullRequest(CompletableGithubObject):
     def labels(self) -> list[github.Label.Label]:
         self._completeIfNotSet(self._labels)
         return self._labels.value
+
+    @property
+    def locked(self) -> bool:
+        self._completeIfNotSet(self._locked)
+        return self._locked.value
 
     @property
     def maintainer_can_modify(self) -> bool:
@@ -367,6 +399,11 @@ class PullRequest(CompletableGithubObject):
     def state(self) -> str:
         self._completeIfNotSet(self._state)
         return self._state.value
+
+    @property
+    def statuses_url(self) -> str:
+        self._completeIfNotSet(self._statuses_url)
+        return self._statuses_url.value
 
     @property
     def title(self) -> str:
@@ -926,6 +963,10 @@ class PullRequest(CompletableGithubObject):
         return status == 202
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "_links" in attributes:  # pragma no branch
+            self.__links = self._makeDictAttribute(attributes["_links"])
+        if "active_lock_reason" in attributes:  # pragma no branch
+            self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "assignee" in attributes:  # pragma no branch
@@ -937,6 +978,10 @@ class PullRequest(CompletableGithubObject):
                 self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
             else:
                 self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeDictAttribute(attributes["author_association"])
+        if "auto_merge" in attributes:  # pragma no branch
+            self._auto_merge = self._makeDictAttribute(attributes["auto_merge"])
         if "base" in attributes:  # pragma no branch
             self._base = self._makeClassAttribute(github.PullRequestPart.PullRequestPart, attributes["base"])
         if "body" in attributes:  # pragma no branch
@@ -971,6 +1016,8 @@ class PullRequest(CompletableGithubObject):
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
         if "labels" in attributes:  # pragma no branch
             self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
+        if "locked" in attributes:  # pragma no branch
+            self._locked = self._makeBoolAttribute(attributes["locked"])
         if "maintainer_can_modify" in attributes:  # pragma no branch
             self._maintainer_can_modify = self._makeBoolAttribute(attributes["maintainer_can_modify"])
         if "merge_commit_sha" in attributes:  # pragma no branch
@@ -1009,6 +1056,8 @@ class PullRequest(CompletableGithubObject):
             self._review_comments_url = self._makeStringAttribute(attributes["review_comments_url"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "statuses_url" in attributes:  # pragma no branch
+            self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch
