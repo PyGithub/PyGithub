@@ -52,24 +52,24 @@ class GitCommit(Framework.TestCase):
             self.commit.author.date,
             datetime(2012, 4, 17, 17, 55, 16, tzinfo=timezone.utc),
         )
-        self.assertEqual(self.commit.comment_count, 0)
+        self.assertIsNone(self.commit.comment_count)
         self.assertEqual(self.commit.committer.name, "Vincent Jacques")
         self.assertEqual(self.commit.committer.email, "vincent@vincent-jacques.net")
         self.assertEqual(
             self.commit.committer.date,
             datetime(2012, 4, 17, 17, 55, 16, tzinfo=timezone.utc),
         )
-        self.assertEqual(self.commit.html_url, "")
-        self.assertEqual(self.commit.id, "")
+        self.assertIsNone(self.commit.html_url)
+        self.assertIsNone(self.commit.id)
         self.assertEqual(self.commit.message, "Merge branch 'develop'\n")
-        self.assertEqual(self.commit.node_id, "")
+        self.assertIsNone(self.commit.node_id)
         self.assertEqual(len(self.commit.parents), 2)
         self.assertEqual(self.commit.parents[0].sha, "936f4a97f1a86392637ec002bbf89ff036a5062d")
         self.assertEqual(self.commit.parents[1].sha, "2a7e80e6421c5d4d201d60619068dea6bae612cb")
         self.assertEqual(self.commit.sha, "4303c5b90e2216d927155e9609436ccb8984c495")
-        self.assertEqual(self.commit.timestamp, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertIsNone(self.commit.timestamp)
         self.assertEqual(self.commit.tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad")
-        self.assertEqual(self.commit.tree_id, "")
+        self.assertIsNone(self.commit.tree_id)
         self.assertEqual(
             self.commit.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495",
@@ -79,4 +79,4 @@ class GitCommit(Framework.TestCase):
             'GitCommit(sha="4303c5b90e2216d927155e9609436ccb8984c495")',
         )
         self.assertEqual(repr(self.commit.author), 'GitAuthor(name="Vincent Jacques")')
-        self.assertEqual(self.commit.verification, "dict[str, Any]")
+        self.assertIsNone(self.commit.verification)
