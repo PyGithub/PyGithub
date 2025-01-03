@@ -35,8 +35,8 @@ class CheckRun(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.testrepo = self.g.get_repo("dhruvmanila/pygithub-testing")
-        self.check_run_id = 1039891953
-        self.check_run_ref = "6bc9ecc8c849df4e45e60c1e6a5df8876180a20a"
+        self.check_run_id = 34942661139
+        self.check_run_ref = "10a7135a04f71e6101f8b013aded8a662d08fd1f"
         self.check_run = self.repo.get_check_run(self.check_run_id)
         self.commit = self.repo.get_commit(self.check_run_ref)
 
