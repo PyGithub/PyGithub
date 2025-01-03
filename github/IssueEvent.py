@@ -44,11 +44,13 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+import github.GithubApp
 import github.GithubObject
 import github.Issue
 import github.Label
 import github.Milestone
 import github.NamedUser
+import github.Team
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -69,6 +71,7 @@ class IssueEvent(CompletableGithubObject):
         self._actor: Attribute[github.NamedUser.NamedUser] = NotSet
         self._assignee: Attribute[github.NamedUser.NamedUser] = NotSet
         self._assigner: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._author_association: Attribute[dict[str, Any]] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._commit_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -80,8 +83,11 @@ class IssueEvent(CompletableGithubObject):
         self._lock_reason: Attribute[str] = NotSet
         self._milestone: Attribute[github.Milestone.Milestone] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._project_card: Attribute[dict[str, Any]] = NotSet
         self._rename: Attribute[dict] = NotSet
         self._requested_reviewer: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._requested_team: Attribute[Team] = NotSet
         self._review_requester: Attribute[github.NamedUser.NamedUser] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -102,6 +108,11 @@ class IssueEvent(CompletableGithubObject):
     def assigner(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._assigner)
         return self._assigner.value
+
+    @property
+    def author_association(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
 
     @property
     def commit_id(self) -> str:
@@ -159,6 +170,16 @@ class IssueEvent(CompletableGithubObject):
         return self._node_id.value
 
     @property
+    def performed_via_github_app(self) -> github.GithubApp.GithubApp:
+        self._completeIfNotSet(self._performed_via_github_app)
+        return self._performed_via_github_app.value
+
+    @property
+    def project_card(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._project_card)
+        return self._project_card.value
+
+    @property
     def rename(self) -> dict:
         self._completeIfNotSet(self._rename)
         return self._rename.value
@@ -167,6 +188,11 @@ class IssueEvent(CompletableGithubObject):
     def requested_reviewer(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._requested_reviewer)
         return self._requested_reviewer.value
+
+    @property
+    def requested_team(self) -> github.Team.Team:
+        self._completeIfNotSet(self._requested_team)
+        return self._requested_team.value
 
     @property
     def review_requester(self) -> github.NamedUser.NamedUser:
@@ -185,6 +211,8 @@ class IssueEvent(CompletableGithubObject):
             self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
         if "assigner" in attributes:  # pragma no branch
             self._assigner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assigner"])
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeDictAttribute(attributes["author_association"])
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
         if "commit_url" in attributes:  # pragma no branch
@@ -207,12 +235,20 @@ class IssueEvent(CompletableGithubObject):
             self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "performed_via_github_app" in attributes:  # pragma no branch
+            self._performed_via_github_app = self._makeClassAttribute(
+                github.GithubApp.GithubApp, attributes["performed_via_github_app"]
+            )
+        if "project_card" in attributes:  # pragma no branch
+            self._project_card = self._makeDictAttribute(attributes["project_card"])
         if "rename" in attributes:  # pragma no branch
             self._rename = self._makeDictAttribute(attributes["rename"])
         if "requested_reviewer" in attributes:  # pragma no branch
             self._requested_reviewer = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["requested_reviewer"]
             )
+        if "requested_team" in attributes:  # pragma no branch
+            self._requested_team = self._makeClassAttribute(github.Team.Team, attributes["requested_team"])
         if "review_requester" in attributes:  # pragma no branch
             self._review_requester = self._makeClassAttribute(
                 github.NamedUser.NamedUser, attributes["review_requester"]
