@@ -56,13 +56,13 @@ class Issue(Framework.TestCase):
         self.issue = self.repo.get_issue(28)
 
     def testAttributes(self):
-        self.assertEqual(self.issue.active_lock_reason, "")
+        self.assertIsNone(self.issue.active_lock_reason)
         self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
-        self.assertEqual(self.issue.author_association, "dict[str, Any]")
+        self.assertIsNone(self.issue.author_association)
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
-        self.assertEqual(self.issue.body_html, "")
-        self.assertEqual(self.issue.body_text, "")
+        self.assertIsNone(self.issue.body_html)
+        self.assertIsNone(self.issue.body_text)
         self.assertEqual(
             self.issue.closed_at,
             datetime(2012, 5, 26, 14, 59, 33, tzinfo=timezone.utc),
@@ -77,7 +77,7 @@ class Issue(Framework.TestCase):
             self.issue.created_at,
             datetime(2012, 5, 19, 10, 38, 23, tzinfo=timezone.utc),
         )
-        self.assertEqual(self.issue.draft, False)
+        self.assertIsNone(self.issue.draft)
         self.assertEqual(
             self.issue.events_url,
             "https://github.com/jacquev6/PyGithub/issues/28/events",
@@ -93,22 +93,22 @@ class Issue(Framework.TestCase):
             self.issue.labels_url,
             "https://github.com/jacquev6/PyGithub/issues/28/labels{/name}",
         )
-        self.assertEqual(self.issue.locked, False)
+        self.assertIsNone(self.issue.locked)
         self.assertEqual(self.issue.milestone.title, "Version 0.4")
-        self.assertEqual(self.issue.node_id, "")
+        self.assertIsNone(self.issue.node_id)
         self.assertEqual(self.issue.number, 28)
-        self.assertEqual(self.issue.performed_via_github_app.id, "")
+        self.assertIsNone(self.issue.performed_via_github_app)
         self.assertEqual(self.issue.pull_request.diff_url, None)
         self.assertEqual(self.issue.pull_request.patch_url, None)
         self.assertEqual(self.issue.pull_request.html_url, None)
-        self.assertEqual(self.issue.reactions, "dict[str, Any]")
-        self.assertEqual(self.issue.repository.full_name, "")
-        self.assertEqual(self.issue.repository_url, "")
+        self.assertEqual(self.issue.reactions, {'url': 'https://api.github.com/repos/PyGithub/PyGithub/issues/28/reactions', 'total_count': 2, '+1': 0, '-1': 0, 'laugh': 0, 'hooray': 2, 'confused': 0, 'heart': 0, 'rocket': 0, 'eyes': 0})
+        self.assertEqual(self.issue.repository.full_name, 'jacquev6/PyGithub')
+        self.assertIsNone(self.issue.repository_url)
         self.assertEqual(self.issue.score, None)
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
-        self.assertEqual(self.issue.text_matches, "dict[str, Any]")
-        self.assertEqual(self.issue.timeline_url, "")
+        self.assertIsNone(self.issue.text_matches)
+        self.assertIsNone(self.issue.timeline_url)
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
         self.assertEqual(
             self.issue.updated_at,
