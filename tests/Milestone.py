@@ -33,9 +33,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import date, datetime, timezone
 
 from . import Framework
+from datetime import datetime, timezone
 
 
 class Milestone(Framework.TestCase):
@@ -44,21 +47,27 @@ class Milestone(Framework.TestCase):
         self.milestone = self.g.get_user().get_repo("PyGithub").get_milestone(1)
 
     def testAttributes(self):
+        self.assertEqual(self.milestone.closed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(self.milestone.closed_issues, 2)
         self.assertEqual(
             self.milestone.created_at,
             datetime(2012, 3, 8, 12, 22, 10, tzinfo=timezone.utc),
         )
+        self.assertEqual(self.milestone.creator.login, "")
         self.assertEqual(self.milestone.description, "")
         self.assertEqual(
             self.milestone.due_on,
             datetime(2012, 3, 13, 7, 0, 0, tzinfo=timezone.utc),
         )
+        self.assertEqual(self.milestone.html_url, "")
         self.assertEqual(self.milestone.id, 93546)
+        self.assertEqual(self.milestone.labels_url, "")
+        self.assertEqual(self.milestone.node_id, "")
         self.assertEqual(self.milestone.number, 1)
         self.assertEqual(self.milestone.open_issues, 0)
         self.assertEqual(self.milestone.state, "closed")
         self.assertEqual(self.milestone.title, "Version 0.4")
+        self.assertEqual(self.milestone.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(
             self.milestone.url,
             "https://api.github.com/repos/jacquev6/PyGithub/milestones/1",
