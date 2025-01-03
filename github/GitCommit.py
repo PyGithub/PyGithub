@@ -43,6 +43,7 @@ from datetime import datetime
 from typing import Any
 
 import github.GitAuthor
+import github.GitTree
 import github.GithubObject
 import github.GitTree
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
