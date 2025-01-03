@@ -21,6 +21,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 import pytest
@@ -40,7 +42,18 @@ class DependabotAlert(Framework.TestCase):
 
     def testAttributes(self):
         alert = self.repo.get_dependabot_alert(1)
+        self.assertEqual(alert.auto_dismissed_at, "dict[str, Any]")
+        self.assertEqual(alert.created_at, "dict[str, Any]")
+        self.assertEqual(alert.dependency.package, "")
+        self.assertEqual(alert.dismissed_at, "dict[str, Any]")
+        self.assertEqual(alert.dismissed_by.login, "")
+        self.assertEqual(alert.dismissed_comment, "")
+        self.assertEqual(alert.dismissed_reason, "")
+        self.assertEqual(alert.fixed_at, "dict[str, Any]")
+        self.assertEqual(alert.html_url, "dict[str, Any]")
         self.assertEqual(alert.number, 1)
+        self.assertEqual(alert.security_advisory.ghsa_id, "")
+        self.assertEqual(alert.security_vulnerability.package, "")
         self.assertEqual(alert.state, "dismissed")
         self.assertEqual(alert.dependency.package.ecosystem, "pip")
         self.assertEqual(alert.dependency.package.name, "jinja2")
@@ -91,6 +104,7 @@ class DependabotAlert(Framework.TestCase):
         self.assertEqual(alert.security_vulnerability.vulnerable_version_range, "< 3.1.3")
         self.assertEqual(alert.security_vulnerability.severity, "medium")
         self.assertEqual(alert.security_vulnerability.first_patched_version["identifier"], "3.1.3")
+        self.assertEqual(alert.updated_at, "dict[str, Any]")
         self.assertEqual(alert.url, "https://api.github.com/repos/coopernetes/PyGithub/dependabot/alerts/1")
         self.assertEqual(alert.html_url, "https://github.com/coopernetes/PyGithub/security/dependabot/1")
         self.assertEqual(alert.created_at, datetime(2024, 1, 20, 17, 12, 38, tzinfo=timezone.utc))
