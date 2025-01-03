@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -43,9 +45,23 @@ class BranchProtection(Framework.TestCase):
         self.branch_protection = self.g.get_repo("curvewise-forks/PyGithub").get_branch("master").get_protection()
 
     def testAttributes(self):
+        self.assertEqual(self.branch_protection.allow_deletions, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.allow_force_pushes, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.allow_fork_syncing, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.block_creations, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.enabled, False)
+        self.assertEqual(self.branch_protection.enforce_admins, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.lock_branch, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.name, "")
+        self.assertEqual(self.branch_protection.protection_url, "")
+        self.assertEqual(self.branch_protection.required_conversation_resolution, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.required_linear_history, "dict[str, Any]")
+        self.assertEqual(self.branch_protection.required_pull_request_reviews.url, "")
+        self.assertEqual(self.branch_protection.required_signatures, "dict[str, Any]")
         self.assertTrue(self.branch_protection.required_status_checks.strict)
         self.assertEqual(self.branch_protection.required_status_checks.contexts, ["build (3.10)"])
         self.assertTrue(self.branch_protection.required_linear_history)
+        self.assertEqual(self.branch_protection.restrictions, "dict[str, Any]")
         self.assertEqual(
             self.branch_protection.url,
             "https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection",
