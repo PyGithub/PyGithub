@@ -36,6 +36,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -47,6 +49,7 @@ class Commit(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.commit.author.login, "jacquev6")
+        self.assertEqual(self.commit.comments_url, "")
         self.assertEqual(
             self.commit.commit.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
@@ -69,12 +72,17 @@ class Commit(Framework.TestCase):
         )
         self.assertEqual(self.commit.files[0].sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.commit.files[0].status, "modified")
+        self.assertEqual(self.commit.html_url, "")
+        self.assertEqual(self.commit.node_id, "")
         self.assertEqual(len(self.commit.parents), 1)
         self.assertEqual(self.commit.parents[0].sha, "b46ed0dfde5ad02d3b91eb54a41c5ed960710eae")
+        self.assertEqual(self.commit.repository.full_name, "")
+        self.assertEqual(self.commit.score, None)
         self.assertEqual(self.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.commit.stats.deletions, 20)
         self.assertEqual(self.commit.stats.additions, 0)
         self.assertEqual(self.commit.stats.total, 20)
+        self.assertEqual(self.commit.text_matches, "dict[str, Any]")
         self.assertEqual(
             self.commit.url,
             "https://api.github.com/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
