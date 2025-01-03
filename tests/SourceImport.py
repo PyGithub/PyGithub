@@ -33,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -49,19 +51,29 @@ class SourceImport(Framework.TestCase):
             self.source_import.authors_url,
             "https://api.github.com/repos/brix4dayz/source-import-test/import/authors",
         )
+        self.assertEqual(self.source_import.commit_count, 0)
+        self.assertEqual(self.source_import.error_message, "")
+        self.assertEqual(self.source_import.failed_step, "")
         self.assertEqual(self.source_import.has_large_files, False)
         self.assertEqual(
             self.source_import.html_url,
             "https://github.com/brix4dayz/source-import-test/import",
         )
+        self.assertEqual(self.source_import.import_percent, 0)
         self.assertEqual(self.source_import.large_files_count, 0)
         self.assertEqual(self.source_import.large_files_size, 0)
+        self.assertEqual(self.source_import.message, "")
+        self.assertEqual(self.source_import.project_choices, "list[dict[str, Any]]")
+        self.assertEqual(self.source_import.push_percent, 0)
         self.assertEqual(
             self.source_import.repository_url,
             "https://api.github.com/repos/brix4dayz/source-import-test",
         )
         self.assertEqual(self.source_import.status, "complete")
         self.assertEqual(self.source_import.status_text, "Done")
+        self.assertEqual(self.source_import.svc_root, "")
+        self.assertEqual(self.source_import.svn_root, "")
+        self.assertEqual(self.source_import.tfvc_project, "")
         self.assertEqual(
             self.source_import.url,
             "https://api.github.com/repos/brix4dayz/source-import-test/import",
