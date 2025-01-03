@@ -37,6 +37,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -48,6 +50,14 @@ class IssueComment(Framework.TestCase):
         self.comment = self.g.get_user().get_repo("PyGithub").get_issue(28).get_comment(5808311)
 
     def testAttributes(self):
+        self.assertEqual(self.comment.author_association, "dict[str, Any]")
+        self.assertEqual(self.comment.body, "")
+        self.assertEqual(self.comment.body_html, "")
+        self.assertEqual(self.comment.body_text, "")
+        self.assertEqual(self.comment.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.comment.html_url, "")
+        self.assertEqual(self.comment.id, 0)
+        self.assertEqual(self.comment.issue_url, "")
         self.assertEqual(self.comment.node_id, "IC_kwDOGpsAJ86Gecc_")
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
@@ -55,6 +65,8 @@ class IssueComment(Framework.TestCase):
             datetime(2012, 5, 20, 11, 46, 42, tzinfo=timezone.utc),
         )
         self.assertEqual(self.comment.id, 5808311)
+        self.assertEqual(self.comment.performed_via_github_app.id, "")
+        self.assertEqual(self.comment.reactions, "dict[str, Any]")
         self.assertEqual(
             self.comment.updated_at,
             datetime(2012, 5, 20, 11, 46, 42, tzinfo=timezone.utc),
