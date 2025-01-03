@@ -44,8 +44,8 @@ class GithubApp(Framework.TestCase):
 
     def testAttributes(self):
         app = self.app
-        self.assertEqual(app.client_id, "")
-        self.assertEqual(app.client_secret, "")
+        self.assertIsNone(app.client_id)
+        self.assertIsNone(app.client_secret)
         self.assertEqual(app.created_at, datetime(2018, 7, 30, 9, 30, 17, tzinfo=timezone.utc))
         self.assertEqual(app.description, "Automate your workflow from idea to production")
         self.assertListEqual(
@@ -85,11 +85,11 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.external_url, "https://help.github.com/en/actions")
         self.assertEqual(app.html_url, "https://github.com/apps/github-actions")
         self.assertEqual(app.id, 15368)
-        self.assertEqual(app.installations_count, 0)
+        self.assertIsNone(app.installations_count)
         self.assertEqual(app.name, "GitHub Actions")
-        self.assertEqual(app.node_id, "")
+        self.assertEqual(app.node_id, 'MDM6QXBwMTUzNjg=')
         self.assertEqual(app.owner.login, "github")
-        self.assertEqual(app.pem, "")
+        self.assertIsNone(app.pem)
         self.assertDictEqual(
             app.permissions,
             {
@@ -112,7 +112,7 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.slug, "github-actions")
         self.assertEqual(app.updated_at, datetime(2019, 12, 10, 19, 4, 12, tzinfo=timezone.utc))
         self.assertEqual(app.url, "/apps/github-actions")
-        self.assertEqual(app.webhook_secret, "")
+        self.assertIsNone(app.webhook_secret)
 
     def testGetAuthenticatedApp(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
