@@ -46,6 +46,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+import github.GithubApp
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -70,7 +71,9 @@ class DeploymentStatus(CompletableGithubObject):
         self._environment: Attribute[str] = NotSet
         self._environment_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._log_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp] = NotSet
         self._repository_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
@@ -116,9 +119,19 @@ class DeploymentStatus(CompletableGithubObject):
         return self._id.value
 
     @property
+    def log_url(self) -> str:
+        self._completeIfNotSet(self._log_url)
+        return self._log_url.value
+
+    @property
     def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
+
+    @property
+    def performed_via_github_app(self) -> github.GithubApp.GithubApp:
+        self._completeIfNotSet(self._performed_via_github_app)
+        return self._performed_via_github_app.value
 
     @property
     def repository_url(self) -> str:
@@ -160,8 +173,14 @@ class DeploymentStatus(CompletableGithubObject):
             self._environment_url = self._makeStringAttribute(attributes["environment_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "log_url" in attributes:  # pragma no branch
+            self._log_url = self._makeStringAttribute(attributes["log_url"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "performed_via_github_app" in attributes:  # pragma no branch
+            self._performed_via_github_app = self._makeClassAttribute(
+                github.GithubApp.GithubApp, attributes["performed_via_github_app"]
+            )
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "state" in attributes:  # pragma no branch
