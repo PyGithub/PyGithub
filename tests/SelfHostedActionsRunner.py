@@ -32,6 +32,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -45,8 +47,11 @@ class SelfHostedActionsRunner(Framework.TestCase):
         runner = self.repo.get_self_hosted_runner(2217)
         self.assertFalse(runner.busy)
         self.assertEqual(runner.id, 2217)
+        self.assertEqual(runner.labels, "list[dict[str, Any]]")
+        self.assertEqual(runner.name, "")
         self.assertEqual(runner.os, "linux")
         self.assertEqual(runner.name, "4306125c7c84")
+        self.assertEqual(runner.runner_group_id, 0)
         self.assertEqual(runner.status, "offline")
         labels = runner.labels
         self.assertEqual(len(labels), 3)
