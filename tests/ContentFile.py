@@ -33,7 +33,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
+from datetime import datetime, timezone
 
 
 class ContentFile(Framework.TestCase):
@@ -42,6 +45,27 @@ class ContentFile(Framework.TestCase):
         self.file = self.g.get_user().get_repo("PyGithub").get_readme()
 
     def testAttributes(self):
+        self.assertEqual(self.file._links, "dict[str, Any]")
+        self.assertEqual(self.file.commit.sha, "")
+        self.assertEqual(self.file.content, "")
+        self.assertEqual(self.file.download_url, "")
+        self.assertEqual(self.file.encoding, "")
+        self.assertEqual(self.file.file_size, 0)
+        self.assertEqual(self.file.git_url, "")
+        self.assertEqual(self.file.html_url, "")
+        self.assertEqual(self.file.language, "")
+        self.assertEqual(self.file.last_modified_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.file.license.name, "")
+        self.assertEqual(self.file.line_numbers, "list[str]")
+        self.assertEqual(self.file.name, "")
+        self.assertEqual(self.file.path, "")
+        self.assertEqual(self.file.repository.full_name, "")
+        self.assertEqual(self.file.score, None)
+        self.assertEqual(self.file.sha, "")
+        self.assertEqual(self.file.size, 0)
+        self.assertEqual(self.file.submodule_git_url, "")
+        self.assertEqual(self.file.target, "")
+        self.assertEqual(self.file.text_matches, "dict[str, Any]")
         self.assertEqual(self.file.type, "file")
         self.assertEqual(self.file.encoding, "base64")
         self.assertEqual(self.file.size, 7531)
@@ -56,3 +80,4 @@ class ContentFile(Framework.TestCase):
         )
         self.assertIsNone(self.file.license)
         self.assertEqual(repr(self.file), 'ContentFile(path="ReadMe.md")')
+        self.assertEqual(self.file.url, "")
