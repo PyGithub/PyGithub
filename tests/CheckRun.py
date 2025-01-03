@@ -332,6 +332,7 @@ class CheckRun(Framework.TestCase):
         self.assertIsNone(annotation.start_column)
         self.assertEqual(annotation.start_line, 2)
         self.assertEqual(annotation.title, "Spell Checker")
+        self.assertEqual(annotation.blob_href, "https://github.com/dhruvmanila/pygithub-testing/blob/0283d46537193f1fed7d46859f15c5304b9836f9/README.md")
         self.assertEqual(repr(annotation), 'CheckRunAnnotation(title="Spell Checker")')
 
     def testListCheckRunAnnotations(self):
