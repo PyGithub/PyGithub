@@ -30,9 +30,8 @@
 ################################################################################
 
 from __future__ import annotations
-from datetime import datetime, timezone
 
-import github
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -44,22 +43,22 @@ class Project(Framework.TestCase):
         self.proj = self.g.get_project(1682941)
 
     def testAttributes(self):
-        self.assertEqual(self.proj.body, "")
-        self.assertEqual(self.proj.columns_url, "")
-        self.assertEqual(self.proj.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
-        self.assertEqual(self.proj.creator.login, "")
-        self.assertEqual(self.proj.html_url, "")
+        self.assertEqual(self.proj.body, "To be used for testing project access API for PyGithub.")
+        self.assertEqual(self.proj.columns_url, "https://api.github.com/projects/1682941/columns")
+        self.assertEqual(self.proj.created_at, datetime(2018, 8, 1, 4, 6, 57, tzinfo=timezone.utc))
+        self.assertEqual(self.proj.creator.login, "bbi-yggy")
+        self.assertEqual(self.proj.html_url, "https://github.com/bbi-yggy/PyGithub/projects/1")
         self.assertEqual(self.proj.id, 1682941)
         self.assertEqual(self.proj.name, "TestProject")
         self.assertEqual(repr(self.proj), 'Project(name="TestProject")')
-        self.assertEqual(self.proj.node_id, "")
-        self.assertEqual(self.proj.number, 0)
-        self.assertEqual(self.proj.organization_permission, "")
-        self.assertEqual(self.proj.owner_url, "")
-        self.assertEqual(self.proj.private, False)
-        self.assertEqual(self.proj.state, "")
-        self.assertEqual(self.proj.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
-        self.assertEqual(self.proj.url, "")
+        self.assertEqual(self.proj.node_id, "MDc6UHJvamVjdDE2ODI5NDE=")
+        self.assertEqual(self.proj.number, 1)
+        self.assertIsNone(self.proj.organization_permission)
+        self.assertEqual(self.proj.owner_url, "https://api.github.com/repos/bbi-yggy/PyGithub")
+        self.assertIsNone(self.proj.private)
+        self.assertEqual(self.proj.state, "open")
+        self.assertEqual(self.proj.updated_at, datetime(2018, 8, 3, 0, 31, 17, tzinfo=timezone.utc))
+        self.assertEqual(self.proj.url, "https://api.github.com/projects/1682941")
 
     def testGetOrganizationProjects(self):
         expectedProjects = ["Project1", "Project2", "Project3"]
