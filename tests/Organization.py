@@ -672,6 +672,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(created_property.required, True)
         self.assertEqual(created_property.default_value, "foo")
         self.assertEqual(created_property.description, "description")
+        self.assertIsNone(created_property.url)
         self.assertEqual(created_property.values_editable_by, "org_actors")
 
     def testGetCustomProperties(self):
@@ -687,6 +688,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(custom_property.required, True)
         self.assertEqual(custom_property.default_value, "foo")
         self.assertEqual(custom_property.description, "description")
+        self.assertIsNone(custom_property.url)
         self.assertEqual(custom_property.values_editable_by, "org_actors")
 
     def testCreateCustomPropertyValues(self):
