@@ -29,6 +29,9 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+from datetime import datetime, timezone
+
 import github
 
 from . import Framework
@@ -41,9 +44,22 @@ class Project(Framework.TestCase):
         self.proj = self.g.get_project(1682941)
 
     def testAttributes(self):
+        self.assertEqual(self.proj.body, "")
+        self.assertEqual(self.proj.columns_url, "")
+        self.assertEqual(self.proj.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.proj.creator.login, "")
+        self.assertEqual(self.proj.html_url, "")
         self.assertEqual(self.proj.id, 1682941)
         self.assertEqual(self.proj.name, "TestProject")
         self.assertEqual(repr(self.proj), 'Project(name="TestProject")')
+        self.assertEqual(self.proj.node_id, "")
+        self.assertEqual(self.proj.number, 0)
+        self.assertEqual(self.proj.organization_permission, "")
+        self.assertEqual(self.proj.owner_url, "")
+        self.assertEqual(self.proj.private, False)
+        self.assertEqual(self.proj.state, "")
+        self.assertEqual(self.proj.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.proj.url, "")
 
     def testGetOrganizationProjects(self):
         expectedProjects = ["Project1", "Project2", "Project3"]
