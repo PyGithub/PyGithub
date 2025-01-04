@@ -38,13 +38,12 @@ class Project(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
+        self.proj = self.g.get_project(1682941)
 
-    def testGetProject(self):
-        pid = 1682941
-        proj = self.g.get_project(pid)
-        self.assertEqual(proj.id, pid)
-        self.assertEqual(proj.name, "TestProject")
-        self.assertEqual(repr(proj), 'Project(name="TestProject")')
+    def testAttributes(self):
+        self.assertEqual(self.proj.id, 1682941)
+        self.assertEqual(self.proj.name, "TestProject")
+        self.assertEqual(repr(self.proj), 'Project(name="TestProject")')
 
     def testGetOrganizationProjects(self):
         expectedProjects = ["Project1", "Project2", "Project3"]
