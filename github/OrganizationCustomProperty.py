@@ -124,8 +124,6 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._values_editable_by.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        self._property_name = self._makeStringAttribute(attributes["property_name"])
-        self._value_type = self._makeStringAttribute(attributes["value_type"])
         if "allowed_values" in attributes:
             self._allowed_values = self._makeListOfStringsAttribute(attributes["allowed_values"])
         if "default_value" in attributes:
