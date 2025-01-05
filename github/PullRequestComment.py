@@ -72,7 +72,7 @@ class PullRequestComment(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self.__links: Attribute[dict[str, Any]] = NotSet
-        self._author_association: Attribute[dict[str, Any]] = NotSet
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
@@ -110,7 +110,7 @@ class PullRequestComment(CompletableGithubObject):
         return self.__links.value
 
     @property
-    def author_association(self) -> dict[str, Any]:
+    def author_association(self) -> str:
         self._completeIfNotSet(self._author_association)
         return self._author_association.value
 
@@ -321,7 +321,7 @@ class PullRequestComment(CompletableGithubObject):
         if "_links" in attributes:  # pragma no branch
             self.__links = self._makeDictAttribute(attributes["_links"])
         if "author_association" in attributes:  # pragma no branch
-            self._author_association = self._makeDictAttribute(attributes["author_association"])
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "body_html" in attributes:  # pragma no branch
