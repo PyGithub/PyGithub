@@ -91,8 +91,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import date, datetime, timezone
 from unittest import mock
+from datetime import datetime, timezone
 
 import github
 
@@ -105,16 +108,48 @@ class Repository(Framework.TestCase):
         self.repo = self.g.get_repo("PyGithub/PyGithub")
 
     def testAttributes(self):
+        self.assertEqual(self.repo.allow_auto_merge, False)
+        self.assertEqual(self.repo.allow_forking, False)
+        self.assertEqual(self.repo.allow_merge_commit, False)
+        self.assertEqual(self.repo.allow_rebase_merge, False)
+        self.assertEqual(self.repo.allow_squash_merge, False)
+        self.assertEqual(self.repo.allow_update_branch, False)
+        self.assertEqual(self.repo.anonymous_access_enabled, False)
+        self.assertEqual(self.repo.archive_url, "")
+        self.assertEqual(self.repo.archived, False)
+        self.assertEqual(self.repo.assignees_url, "")
+        self.assertEqual(self.repo.blobs_url, "")
+        self.assertEqual(self.repo.branches_url, "")
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
+        self.assertEqual(self.repo.code_of_conduct, "dict[str, Any]")
+        self.assertEqual(self.repo.collaborators_url, "")
+        self.assertEqual(self.repo.comments_url, "")
+        self.assertEqual(self.repo.commits_url, "")
+        self.assertEqual(self.repo.compare_url, "")
+        self.assertEqual(self.repo.contents_url, "")
+        self.assertEqual(self.repo.contributors_url, "")
         self.assertEqual(
             self.repo.created_at,
             datetime(2012, 2, 25, 12, 53, 47, tzinfo=timezone.utc),
         )
+        self.assertEqual(self.repo.custom_properties, "dict[str, Any]")
+        self.assertEqual(self.repo.default_branch, "")
+        self.assertEqual(self.repo.delete_branch_on_merge, False)
+        self.assertEqual(self.repo.deployments_url, "")
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")
+        self.assertEqual(self.repo.disabled, False)
+        self.assertEqual(self.repo.downloads_url, "")
+        self.assertEqual(self.repo.events_url, "")
         self.assertFalse(self.repo.fork)
         self.assertEqual(self.repo.forks, 3)
+        self.assertEqual(self.repo.forks_count, 0)
+        self.assertEqual(self.repo.forks_url, "")
         self.assertEqual(self.repo.full_name, "jacquev6/PyGithub")
+        self.assertEqual(self.repo.git_commits_url, "")
+        self.assertEqual(self.repo.git_refs_url, "")
+        self.assertEqual(self.repo.git_tags_url, "")
         self.assertEqual(self.repo.git_url, "git://github.com/jacquev6/PyGithub.git")
+        self.assertEqual(self.repo.has_discussions, False)
         self.assertTrue(self.repo.has_downloads)
         self.assertTrue(self.repo.has_issues)
         self.assertEqual(
@@ -122,6 +157,40 @@ class Repository(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/deployments",
         )
         self.assertFalse(self.repo.has_pages)
+        self.assertEqual(self.repo.has_projects, False)
+        self.assertEqual(self.repo.has_wiki, False)
+        self.assertEqual(self.repo.homepage, "")
+        self.assertEqual(self.repo.hooks_url, "")
+        self.assertEqual(self.repo.html_url, "")
+        self.assertEqual(self.repo.id, 0)
+        self.assertEqual(self.repo.is_template, False)
+        self.assertEqual(self.repo.issue_comment_url, "")
+        self.assertEqual(self.repo.issue_events_url, "")
+        self.assertEqual(self.repo.issues_url, "")
+        self.assertEqual(self.repo.keys_url, "")
+        self.assertEqual(self.repo.labels_url, "")
+        self.assertEqual(self.repo.language, "")
+        self.assertEqual(self.repo.languages_url, "")
+        self.assertEqual(self.repo.license.name, "")
+        self.assertEqual(self.repo.master_branch, "")
+        self.assertEqual(self.repo.merge_commit_message, "")
+        self.assertEqual(self.repo.merge_commit_title, "")
+        self.assertEqual(self.repo.merges_url, "")
+        self.assertEqual(self.repo.milestones_url, "")
+        self.assertEqual(self.repo.mirror_url, "")
+        self.assertEqual(self.repo.name, "")
+        self.assertEqual(self.repo.network_count, 0)
+        self.assertEqual(self.repo.node_id, "")
+        self.assertEqual(self.repo.notifications_url, "")
+        self.assertEqual(self.repo.open_issues, 0)
+        self.assertEqual(self.repo.open_issues_count, 0)
+        self.assertEqual(self.repo.organization.login, "")
+        self.assertEqual(self.repo.owner.login, "")
+        self.assertEqual(self.repo.parent.full_name, "")
+        self.assertEqual(self.repo.permissions.admin, "")
+        self.assertEqual(self.repo.private, False)
+        self.assertEqual(self.repo.pulls_url, "")
+        self.assertEqual(self.repo.pushed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(
             self.repo.releases_url,
             "https://api.github.com/repos/jacquev6/PyGithub/releases{/id}",
@@ -148,15 +217,34 @@ class Repository(Framework.TestCase):
             self.repo.pushed_at,
             datetime(2012, 5, 27, 6, 0, 28, tzinfo=timezone.utc),
         )
+        self.assertEqual(self.repo.role_name, "")
+        self.assertEqual(self.repo.security_and_analysis.advanced_security, "")
         self.assertEqual(self.repo.size, 308)
         self.assertEqual(self.repo.source, None)
+        self.assertEqual(self.repo.squash_merge_commit_message, "")
+        self.assertEqual(self.repo.squash_merge_commit_title, "")
         self.assertEqual(self.repo.ssh_url, "git@github.com:jacquev6/PyGithub.git")
+        self.assertEqual(self.repo.stargazers_count, 0)
+        self.assertEqual(self.repo.stargazers_url, "")
+        self.assertEqual(self.repo.starred_at, "")
+        self.assertEqual(self.repo.statuses_url, "")
+        self.assertEqual(self.repo.subscribers_count, 0)
+        self.assertEqual(self.repo.subscribers_url, "")
+        self.assertEqual(self.repo.subscription_url, "")
         self.assertEqual(self.repo.svn_url, "https://github.com/jacquev6/PyGithub")
+        self.assertEqual(self.repo.tags_url, "")
+        self.assertEqual(self.repo.teams_url, "")
+        self.assertEqual(self.repo.temp_clone_token, "")
+        self.assertEqual(self.repo.template_repository, "dict[str, Any]")
+        self.assertEqual(self.repo.topics, "list[str]")
+        self.assertEqual(self.repo.trees_url, "")
         self.assertEqual(
             self.repo.updated_at,
             datetime(2012, 5, 27, 6, 55, 28, tzinfo=timezone.utc),
         )
         self.assertEqual(self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub")
+        self.assertEqual(self.repo.use_squash_pr_title_as_default, False)
+        self.assertEqual(self.repo.visibility, "")
         self.assertEqual(self.repo.watchers, 15)
         self.assertEqual(repr(self.repo), 'Repository(full_name="jacquev6/PyGithub")')
         self.assertTrue(self.repo.permissions.admin)
@@ -171,6 +259,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.squash_merge_commit_message, "COMMIT_MESSAGES")
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
+        self.assertEqual(self.repo.watchers_count, 0)
         self.assertTrue(self.repo.web_commit_signoff_required)
         self.assertEqual(self.repo.custom_properties, {"foo": "bar"})
 
