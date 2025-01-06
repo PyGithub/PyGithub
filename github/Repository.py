@@ -325,9 +325,9 @@ class Repository(CompletableGithubObject):
     - /components/schemas/event/properties/repo
     - /components/schemas/full-repository
     - /components/schemas/minimal-repository
+    - /components/schemas/nullable-repository
     - /components/schemas/pull-request-minimal/properties/base/properties/repo
     - /components/schemas/pull-request-minimal/properties/head/properties/repo
-    - /components/schemas/repo-search-result-item
     - /components/schemas/repository
     - /components/schemas/simple-repository
 
