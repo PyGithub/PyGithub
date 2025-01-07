@@ -107,6 +107,11 @@ class Issue(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues
 
+    The OpenAPI schema can be found at
+    - /components/schemas/issue
+    - /components/schemas/issue-search-result-item
+    - /components/schemas/nullable-issue
+
     """
 
     def _initAttributes(self) -> None:

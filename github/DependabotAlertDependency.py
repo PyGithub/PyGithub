@@ -37,6 +37,9 @@ class DependabotAlertDependency(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts
 
+    The OpenAPI schema can be found at
+    - /components/schemas/dependabot-alert/properties/dependency
+
     """
 
     def _initAttributes(self) -> None:

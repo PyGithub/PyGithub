@@ -51,6 +51,9 @@ class NotificationSubject(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
 
+    The OpenAPI schema can be found at
+    - /components/schemas/thread/properties/subject
+
     """
 
     def _initAttributes(self) -> None:

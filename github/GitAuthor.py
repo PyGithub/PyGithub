@@ -44,6 +44,20 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class GitAuthor(NonCompletableGithubObject):
     """
     This class represents GitAuthors.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-search-result-item/properties/commit/properties/author
+    - /components/schemas/file-commit/properties/commit/properties/author
+    - /components/schemas/file-commit/properties/commit/properties/committer
+    - /components/schemas/git-commit/properties/author
+    - /components/schemas/git-commit/properties/committer
+    - /components/schemas/git-tag/properties/tagger
+    - /components/schemas/nullable-git-user
+    - /components/schemas/nullable-simple-commit/properties/author
+    - /components/schemas/nullable-simple-commit/properties/committer
+    - /components/schemas/simple-commit/properties/author
+    - /components/schemas/simple-commit/properties/committer
+
     """
 
     def _initAttributes(self) -> None:

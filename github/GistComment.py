@@ -55,6 +55,9 @@ class GistComment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gists#comments
 
+    The OpenAPI schema can be found at
+    - /components/schemas/gist-comment
+
     """
 
     def _initAttributes(self) -> None:

@@ -46,6 +46,9 @@ class SourceImport(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/migrations#source-imports
 
+    The OpenAPI schema can be found at
+    - /components/schemas/import
+
     """
 
     def _initAttributes(self) -> None:

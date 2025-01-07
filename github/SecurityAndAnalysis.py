@@ -48,6 +48,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class SecurityAndAnalysis(NonCompletableGithubObject):
     """
     This class represents Security and Analysis Settings.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/security-and-analysis
+
     """
 
     def _initAttributes(self) -> None:

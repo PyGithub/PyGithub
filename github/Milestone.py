@@ -59,6 +59,11 @@ class Milestone(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#milestones
 
+    The OpenAPI schema can be found at
+    - /components/schemas/issue-event-milestone
+    - /components/schemas/milestone
+    - /components/schemas/nullable-milestone
+
     """
 
     def _initAttributes(self) -> None:

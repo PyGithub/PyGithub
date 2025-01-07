@@ -60,6 +60,9 @@ class Invitation(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#invitations
 
+    The OpenAPI schema can be found at
+    - /components/schemas/repository-invitation
+
     """
 
     def _initAttributes(self) -> None:

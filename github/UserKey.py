@@ -50,6 +50,9 @@ class UserKey(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/users#keys
 
+    The OpenAPI schema can be found at
+    - /components/schemas/key
+
     """
 
     def _initAttributes(self) -> None:

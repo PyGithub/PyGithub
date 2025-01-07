@@ -50,6 +50,9 @@ class Clones(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-repository-clones
 
+    The OpenAPI schema can be found at
+    - /components/schemas/clone-traffic
+
     """
 
     def _initAttributes(self) -> None:

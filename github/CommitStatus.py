@@ -50,6 +50,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class CommitStatus(NonCompletableGithubObject):
     """
     This class represents CommitStatuses.The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
+
+    The OpenAPI schema can be found at
+    - /components/schemas/status
+
     """
 
     def _initAttributes(self) -> None:

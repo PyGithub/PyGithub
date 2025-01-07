@@ -54,6 +54,10 @@ if TYPE_CHECKING:
 class InstallationAuthorization(NonCompletableGithubObject):
     """
     This class represents InstallationAuthorizations.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/installation-token
+
     """
 
     def _initAttributes(self) -> None:

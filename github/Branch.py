@@ -85,6 +85,11 @@ class Branch(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#branches
 
+    The OpenAPI schema can be found at
+    - /components/schemas/branch-short
+    - /components/schemas/branch-with-protection
+    - /components/schemas/short-branch
+
     """
 
     def _initAttributes(self) -> None:

@@ -35,6 +35,10 @@ from github.GithubObject import Attribute, NotSet
 class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a Summary of HookDeliveries.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery-item
+
     """
 
     def _initAttributes(self) -> None:
@@ -132,6 +136,10 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
 class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a HookDeliveryRequest.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery/properties/request
+
     """
 
     def _initAttributes(self) -> None:
@@ -159,6 +167,10 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
 class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a HookDeliveryResponse.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery/properties/response
+
     """
 
     def _initAttributes(self) -> None:
@@ -186,6 +198,10 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
 class HookDelivery(HookDeliverySummary):
     """
     This class represents a HookDelivery.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery
+
     """
 
     def _initAttributes(self) -> None:

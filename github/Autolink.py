@@ -50,6 +50,9 @@ class Autolink(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/repos/autolinks?apiVersion=2022-11-28
 
+    The OpenAPI schema can be found at
+    - /components/schemas/autolink
+
     """
 
     def _initAttributes(self) -> None:

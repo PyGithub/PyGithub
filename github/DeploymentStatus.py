@@ -57,6 +57,9 @@ class DeploymentStatus(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#deployments
 
+    The OpenAPI schema can be found at
+    - /components/schemas/deployment-status
+
     """
 
     def _initAttributes(self) -> None:

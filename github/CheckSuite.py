@@ -56,6 +56,9 @@ class CheckSuite(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/checks#check-suites
 
+    The OpenAPI schema can be found at
+    - /components/schemas/check-suite
+
     """
 
     def _initAttributes(self) -> None:

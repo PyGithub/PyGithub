@@ -50,6 +50,9 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-the-last-year-of-commit-activity
 
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-activity
+
     """
 
     def _initAttributes(self) -> None:
