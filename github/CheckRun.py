@@ -103,7 +103,7 @@ class CheckRun(CompletableGithubObject):
         return self._app.value
 
     @property
-    def check_suite(self) -> github.CheckSuite.CheckSuite:
+    def check_suite(self) -> CheckSuite:
         self._completeIfNotSet(self._check_suite)
         return self._check_suite.value
 
@@ -124,7 +124,7 @@ class CheckRun(CompletableGithubObject):
         return self._conclusion.value
 
     @property
-    def deployment(self) -> github.Deployment.Deployment:
+    def deployment(self) -> Deployment:
         self._completeIfNotSet(self._deployment)
         return self._deployment.value
 
