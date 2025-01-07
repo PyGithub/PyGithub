@@ -46,15 +46,17 @@ class SecurityAndAnalysis(Framework.TestCase):
         self.repo = self.g.get_repo("transmission-web-control/transmission-web-control")
         self.maxDiff = None
 
-    def testRepoSecurityAndAnalysisAttributes(self):
-        self.assertEqual(self.repo.security_and_analysis.advanced_security.status, "disabled")
-        self.assertEqual(self.repo.security_and_analysis.dependabot_security_updates.status, "disabled")
-        self.assertEqual(self.repo.security_and_analysis.secret_scanning.status, "disabled")
-        self.assertEqual(self.repo.security_and_analysis.secret_scanning_push_protection.status, "disabled")
-        self.assertEqual(self.repo.security_and_analysis.secret_scanning_non_provider_patterns.status, "disabled")
-        self.assertEqual(self.repo.security_and_analysis.secret_scanning_validity_checks.status, "disabled")
+    def testAttributes(self):
+        security_and_analysis = self.repo.security_and_analysis
+        self.assertEqual(security_and_analysis.advanced_security.status, "disabled")
+        self.assertEqual(security_and_analysis.dependabot_security_updates.status, "disabled")
+        self.assertEqual(security_and_analysis.secret_scanning.status, "disabled")
+        self.assertEqual(security_and_analysis.secret_scanning_ai_detection.status, "disabled")
+        self.assertEqual(security_and_analysis.secret_scanning_push_protection.status, "disabled")
+        self.assertEqual(security_and_analysis.secret_scanning_non_provider_patterns.status, "disabled")
+        self.assertEqual(security_and_analysis.secret_scanning_validity_checks.status, "disabled")
 
-    def testRepoSecurityAndAnalysisRepresentation(self):
+    def testRepresentation(self):
         self.assertEqual(
             repr(self.repo.security_and_analysis),
             "SecurityAndAnalysis("
