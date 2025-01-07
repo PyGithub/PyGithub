@@ -44,6 +44,14 @@ class DependabotAlertDependency(NonCompletableGithubObject):
         self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
         self._scope: Attribute[str] = NotSet
 
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "package": self.package,
+                "manifest_path": self.manifest_path,
+            }
+        )
+
     @property
     def manifest_path(self) -> str:
         return self._manifest_path.value

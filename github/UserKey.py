@@ -40,11 +40,10 @@
 
 from typing import Any, Dict
 
-import github.GithubObject
-from github.GithubObject import Attribute
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class UserKey(github.GithubObject.CompletableGithubObject):
+class UserKey(CompletableGithubObject):
     """
     This class represents UserKeys.
 
@@ -54,11 +53,11 @@ class UserKey(github.GithubObject.CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = github.GithubObject.NotSet
-        self._key: Attribute[str] = github.GithubObject.NotSet
-        self._title: Attribute[str] = github.GithubObject.NotSet
-        self._url: Attribute[str] = github.GithubObject.NotSet
-        self._verified: Attribute[bool] = github.GithubObject.NotSet
+        self._id: Attribute[int] = NotSet
+        self._key: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._verified: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})

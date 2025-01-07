@@ -72,6 +72,10 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
         return self._id.value
 
     @property
+    def labels(self) -> list[dict[str, int | str]]:
+        return self._labels.value
+
+    @property
     def name(self) -> str:
         return self._name.value
 
@@ -82,9 +86,6 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     @property
     def status(self) -> str:
         return self._status.value
-
-    def labels(self) -> list[dict[str, int | str]]:
-        return self._labels.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "busy" in attributes:

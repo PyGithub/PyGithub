@@ -61,6 +61,14 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
         self._type: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "user": self.user,
+                "type": self.type,
+            }
+        )
+
     @property
     def state(self) -> str:
         """
