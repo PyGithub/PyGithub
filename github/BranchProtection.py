@@ -47,6 +47,7 @@ if TYPE_CHECKING:
     from github.RequiredPullRequestReviews import RequiredPullRequestReviews
     from github.RequiredStatusChecks import RequiredStatusChecks
     from github.Team import Team
+    from github.GithubApp import GithubApp
 
 
 class BranchProtection(github.GithubObject.CompletableGithubObject):
@@ -74,6 +75,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
         self._user_push_restrictions: Opt[str] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
+        self._app_push_restrictions: Opt[str] = NotSet
 
     @property
     def allow_deletions(self) -> bool:
@@ -140,6 +142,11 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             return None
         return github.PaginatedList.PaginatedList(github.Team.Team, self._requester, self._team_push_restrictions, None)
 
+    def get_app_push_restrictions(self) -> PaginatedList[GithubApp] | None:
+        if not is_defined(self._app_push_restrictions):
+            return None
+        return github.PaginatedList.PaginatedList(github.GithubApp.GithubApp, self._requester, self._app_push_restrictions, None)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "allow_deletions" in attributes:  # pragma no branch
             self._allow_deletions = self._makeBoolAttribute(attributes["allow_deletions"]["enabled"])
@@ -172,3 +179,4 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "restrictions" in attributes:  # pragma no branch
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]
+            self._app_push_restrictions = attributes["restrictions"]["apps_url"]
