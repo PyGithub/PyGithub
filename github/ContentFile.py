@@ -93,7 +93,7 @@ class ContentFile(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._repository: Attribute[Repository] = NotSet
-        self._score: Attribute[None] = NotSet
+        self._score: Attribute[float] = NotSet
         self._sha: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._submodule_git_url: Attribute[str] = NotSet
@@ -191,7 +191,7 @@ class ContentFile(CompletableGithubObject):
         return self._repository.value
 
     @property
-    def score(self) -> None:
+    def score(self) -> float:
         self._completeIfNotSet(self._score)
         return self._score.value
 
@@ -262,7 +262,7 @@ class ContentFile(CompletableGithubObject):
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "score" in attributes:  # pragma no branch
-            self._score = self._makeClassAttribute(None, attributes["score"])
+            self._score = self._makeFloatAttribute(attributes["score"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch

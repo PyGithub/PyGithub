@@ -243,6 +243,7 @@ class Search(Framework.TestCase):
                 "ParserTestCase.py",
             ],
         )
+        self.assertEqual(files[0].score, 0.31651077)
         self.assertEqual(files[0].repository.full_name, "jacquev6/PyGithub")
         content = files[0].decoded_content
         if isinstance(content, bytes):
@@ -251,7 +252,32 @@ class Search(Framework.TestCase):
 
     def testSearchHighlightingCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6", highlight=True)
-        self.assertTrue(files[0].text_matches)
+        self.assertEqual(files[0].score, 14.030813)
+        self.assertEqual(
+            files[0].text_matches,
+            [
+                {
+                    "fragment": ".assertEqual(\n"
+                    "            self.recorded.instance_method(42, 43, 44, 45, "
+                    "toto=46, tutu=47",
+                    "matches": [{"indices": [72, 76], "text": "toto"}],
+                    "object_type": "FileContent",
+                    "object_url": "https://api.github.com/repositories/6430524/contents/MockMockMock/tests/record_replay.py?ref=562a55542f55426f6853f3013309c85f402c359e",
+                    "property": "content",
+                },
+                {
+                    "fragment": "),\n"
+                    "            \"(42, 43, (44, 45), [('toto', 46), ('tutu', "
+                    '47)])"\n'
+                    "        )\n"
+                    "        self.assertEqual",
+                    "matches": [{"indices": [38, 42], "text": "toto"}],
+                    "object_type": "FileContent",
+                    "object_url": "https://api.github.com/repositories/6430524/contents/MockMockMock/tests/record_replay.py?ref=562a55542f55426f6853f3013309c85f402c359e",
+                    "property": "content",
+                },
+            ],
+        )
 
     def testUrlquotingOfQualifiers(self):
         # Example taken from #236

@@ -36,7 +36,6 @@
 from __future__ import annotations
 
 from . import Framework
-from datetime import datetime, timezone
 
 
 class ContentFile(Framework.TestCase):
@@ -45,11 +44,18 @@ class ContentFile(Framework.TestCase):
         self.file = self.g.get_user().get_repo("PyGithub").get_readme()
 
     def testAttributes(self):
-        self.assertEqual(self.file._links, {'self': 'https://api.github.com/repos/jacquev6/PyGithub/contents/ReadMe.md', 'html': 'https://github.com/jacquev6/PyGithub/blob/master/ReadMe.md', 'git': 'https://api.github.com/repos/jacquev6/PyGithub/git/blobs/5628799a7d517a4aaa0c1a7004d07569cd154df0'})
+        self.assertEqual(
+            self.file._links,
+            {
+                "self": "https://api.github.com/repos/jacquev6/PyGithub/contents/ReadMe.md",
+                "html": "https://github.com/jacquev6/PyGithub/blob/master/ReadMe.md",
+                "git": "https://api.github.com/repos/jacquev6/PyGithub/git/blobs/5628799a7d517a4aaa0c1a7004d07569cd154df0",
+            },
+        )
         self.assertIsNone(self.file.commit)
-        self.assertTrue(self.file.content.startswith('VGhpcyBpcyBhIFB5dGhvbiBsaWJyYXJ5IHRvIGFjY'))
-        self.assertEqual(self.file.download_url, 'https://raw.githubusercontent.com/jacquev6/PyGithub/master/README.md')
-        self.assertEqual(self.file.encoding, 'base64')
+        self.assertTrue(self.file.content.startswith("VGhpcyBpcyBhIFB5dGhvbiBsaWJyYXJ5IHRvIGFjY"))
+        self.assertEqual(self.file.download_url, "https://raw.githubusercontent.com/jacquev6/PyGithub/master/README.md")
+        self.assertEqual(self.file.encoding, "base64")
         self.assertIsNone(self.file.file_size)
         self.assertIsNone(self.file.git_url)
         self.assertIsNone(self.file.html_url)
@@ -57,10 +63,10 @@ class ContentFile(Framework.TestCase):
         self.assertIsNone(self.file.last_modified_at)
         self.assertIsNone(self.file.license)
         self.assertIsNone(self.file.line_numbers)
-        self.assertEqual(self.file.name, 'ReadMe.md')
-        self.assertEqual(self.file.path, 'ReadMe.md')
+        self.assertEqual(self.file.name, "ReadMe.md")
+        self.assertEqual(self.file.path, "ReadMe.md")
         self.assertEqual(self.file.score, None)
-        self.assertEqual(self.file.sha, '5628799a7d517a4aaa0c1a7004d07569cd154df0')
+        self.assertEqual(self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
         self.assertEqual(self.file.size, 7531)
         self.assertIsNone(self.file.submodule_git_url)
         self.assertIsNone(self.file.target)
