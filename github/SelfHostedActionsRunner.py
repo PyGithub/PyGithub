@@ -53,15 +53,19 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._busy: Attribute[bool] = NotSet
         self._id: Attribute[int] = NotSet
+        self._labels: Attribute[list[dict[str, int | str]]] = NotSet
         self._name: Attribute[str] = NotSet
         self._os: Attribute[str] = NotSet
         self._status: Attribute[str] = NotSet
-        self._busy: Attribute[bool] = NotSet
-        self._labels: Attribute[list[dict[str, int | str]]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
+
+    @property
+    def busy(self) -> bool:
+        return self._busy.value
 
     @property
     def id(self) -> int:
@@ -79,23 +83,19 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     def status(self) -> str:
         return self._status.value
 
-    @property
-    def busy(self) -> bool:
-        return self._busy.value
-
     def labels(self) -> list[dict[str, int | str]]:
         return self._labels.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "busy" in attributes:
+            self._busy = self._makeBoolAttribute(attributes["busy"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "labels" in attributes:
+            self._labels = self._makeListOfDictsAttribute(attributes["labels"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "os" in attributes:  # pragma no branch
             self._os = self._makeStringAttribute(attributes["os"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
-        if "busy" in attributes:
-            self._busy = self._makeBoolAttribute(attributes["busy"])
-        if "labels" in attributes:
-            self._labels = self._makeListOfDictsAttribute(attributes["labels"])

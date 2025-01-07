@@ -66,18 +66,33 @@ class Workflow(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._badge_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._badge_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "url": self._url.value})
+
+    @property
+    def badge_url(self) -> str:
+        self._completeIfNotSet(self._badge_url)
+        return self._badge_url.value
+
+    @property
+    def created_at(self) -> datetime:
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def id(self) -> int:
@@ -100,11 +115,6 @@ class Workflow(CompletableGithubObject):
         return self._state.value
 
     @property
-    def created_at(self) -> datetime:
-        self._completeIfNotSet(self._created_at)
-        return self._created_at.value
-
-    @property
     def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -113,16 +123,6 @@ class Workflow(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def html_url(self) -> str:
-        self._completeIfNotSet(self._html_url)
-        return self._html_url.value
-
-    @property
-    def badge_url(self) -> str:
-        self._completeIfNotSet(self._badge_url)
-        return self._badge_url.value
 
     def create_dispatch(
         self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
@@ -200,6 +200,12 @@ class Workflow(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "badge_url" in attributes:  # pragma no branch
+            self._badge_url = self._makeStringAttribute(attributes["badge_url"])
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
@@ -208,13 +214,7 @@ class Workflow(CompletableGithubObject):
             self._path = self._makeStringAttribute(attributes["path"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
-        if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "html_url" in attributes:  # pragma no branch
-            self._html_url = self._makeStringAttribute(attributes["html_url"])
-        if "badge_url" in attributes:  # pragma no branch
-            self._badge_url = self._makeStringAttribute(attributes["badge_url"])

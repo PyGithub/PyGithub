@@ -147,19 +147,13 @@ class Organization(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._archived_at: Attribute[datetime] = NotSet
-        self._default_repository_permission: Attribute[str] = NotSet
-        self._has_organization_projects: Attribute[bool] = NotSet
-        self._has_repository_projects: Attribute[bool] = NotSet
-        self._hooks_url: Attribute[str] = NotSet
-        self._issues_url: Attribute[str] = NotSet
-        self._members_can_create_repositories: Attribute[bool] = NotSet
-        self._two_factor_requirement_enabled: Attribute[bool] = NotSet
         self._avatar_url: Attribute[str] = NotSet
         self._billing_email: Attribute[str] = NotSet
         self._blog: Attribute[str | None] = NotSet
         self._collaborators: Attribute[int] = NotSet
         self._company: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._default_repository_permission: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
         self._disk_usage: Attribute[int] = NotSet
         self._email: Attribute[str] = NotSet
@@ -167,10 +161,15 @@ class Organization(CompletableGithubObject):
         self._followers: Attribute[int] = NotSet
         self._following: Attribute[int] = NotSet
         self._gravatar_id: Attribute[str] = NotSet
+        self._has_organization_projects: Attribute[bool] = NotSet
+        self._has_repository_projects: Attribute[bool] = NotSet
+        self._hooks_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._issues_url: Attribute[str] = NotSet
         self._location: Attribute[str] = NotSet
         self._login: Attribute[str] = NotSet
+        self._members_can_create_repositories: Attribute[bool] = NotSet
         self._members_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
@@ -181,6 +180,7 @@ class Organization(CompletableGithubObject):
         self._public_repos: Attribute[int] = NotSet
         self._repos_url: Attribute[str] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
+        self._two_factor_requirement_enabled: Attribute[bool] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet

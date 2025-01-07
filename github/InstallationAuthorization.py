@@ -57,18 +57,14 @@ class InstallationAuthorization(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._token: Attribute[str] = NotSet
         self._expires_at: Attribute[datetime] = NotSet
         self._on_behalf_of: Attribute[NamedUser] = NotSet
         self._permissions: Attribute[dict] = NotSet
         self._repository_selection: Attribute[str] = NotSet
+        self._token: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"expires_at": self._expires_at.value})
-
-    @property
-    def token(self) -> str:
-        return self._token.value
 
     @property
     def expires_at(self) -> datetime:
@@ -86,9 +82,11 @@ class InstallationAuthorization(NonCompletableGithubObject):
     def repository_selection(self) -> str:
         return self._repository_selection.value
 
+    @property
+    def token(self) -> str:
+        return self._token.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "token" in attributes:  # pragma no branch
-            self._token = self._makeStringAttribute(attributes["token"])
         if "expires_at" in attributes:  # pragma no branch
             self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
         if "on_behalf_of" in attributes:  # pragma no branch
@@ -97,3 +95,5 @@ class InstallationAuthorization(NonCompletableGithubObject):
             self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "repository_selection" in attributes:  # pragma no branch
             self._repository_selection = self._makeStringAttribute(attributes["repository_selection"])
+        if "token" in attributes:  # pragma no branch
+            self._token = self._makeStringAttribute(attributes["token"])

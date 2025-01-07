@@ -65,10 +65,10 @@ class RepositoryKey(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
         self._last_used: Attribute[datetime] = NotSet
+        self._read_only: Attribute[bool] = NotSet
         self._title: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._verified: Attribute[bool] = NotSet
-        self._read_only: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
@@ -99,6 +99,11 @@ class RepositoryKey(CompletableGithubObject):
         return self._last_used.value
 
     @property
+    def read_only(self) -> bool:
+        self._completeIfNotSet(self._read_only)
+        return self._read_only.value
+
+    @property
     def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
@@ -112,11 +117,6 @@ class RepositoryKey(CompletableGithubObject):
     def verified(self) -> bool:
         self._completeIfNotSet(self._verified)
         return self._verified.value
-
-    @property
-    def read_only(self) -> bool:
-        self._completeIfNotSet(self._read_only)
-        return self._read_only.value
 
     def delete(self) -> None:
         """
@@ -136,11 +136,11 @@ class RepositoryKey(CompletableGithubObject):
         if "last_used" in attributes:  # pragma no branch
             assert attributes["last_used"] is None or isinstance(attributes["last_used"], str), attributes["last_used"]
             self._last_used = self._makeDatetimeAttribute(attributes["last_used"])
+        if "read_only" in attributes:  # pragma no branch
+            self._read_only = self._makeBoolAttribute(attributes["read_only"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
             self._verified = self._makeBoolAttribute(attributes["verified"])
-        if "read_only" in attributes:  # pragma no branch
-            self._read_only = self._makeBoolAttribute(attributes["read_only"])

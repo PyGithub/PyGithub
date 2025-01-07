@@ -87,6 +87,12 @@ class Branch(NonCompletableGithubObject):
 
     """
 
+    def _initAttributes(self) -> None:
+        self._commit: Attribute[Commit] = github.GithubObject.NotSet
+        self._name: Attribute[str] = github.GithubObject.NotSet
+        self._protected: Attribute[bool] = github.GithubObject.NotSet
+        self._protection_url: Attribute[str] = github.GithubObject.NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
@@ -105,22 +111,6 @@ class Branch(NonCompletableGithubObject):
     @property
     def protection_url(self) -> str:
         return self._protection_url.value
-
-    def _initAttributes(self) -> None:
-        self._commit: Attribute[Commit] = github.GithubObject.NotSet
-        self._name: Attribute[str] = github.GithubObject.NotSet
-        self._protection_url: Attribute[str] = github.GithubObject.NotSet
-        self._protected: Attribute[bool] = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
-        if "name" in attributes:  # pragma no branch
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "protection_url" in attributes:  # pragma no branch
-            self._protection_url = self._makeStringAttribute(attributes["protection_url"])
-        if "protected" in attributes:  # pragma no branch
-            self._protected = self._makeBoolAttribute(attributes["protected"])
 
     def get_protection(self) -> BranchProtection:
         """
@@ -614,3 +604,13 @@ class Branch(NonCompletableGithubObject):
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.protection_url}/allow_deletions")
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "commit" in attributes:  # pragma no branch
+            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "protected" in attributes:  # pragma no branch
+            self._protected = self._makeBoolAttribute(attributes["protected"])
+        if "protection_url" in attributes:  # pragma no branch
+            self._protection_url = self._makeStringAttribute(attributes["protection_url"])

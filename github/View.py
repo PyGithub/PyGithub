@@ -53,8 +53,8 @@ class View(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._timestamp: Attribute[datetime] = NotSet
         self._count: Attribute[int] = NotSet
+        self._timestamp: Attribute[datetime] = NotSet
         self._uniques: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
@@ -67,21 +67,21 @@ class View(NonCompletableGithubObject):
         )
 
     @property
-    def timestamp(self) -> datetime:
-        return self._timestamp.value
-
-    @property
     def count(self) -> int:
         return self._count.value
+
+    @property
+    def timestamp(self) -> datetime:
+        return self._timestamp.value
 
     @property
     def uniques(self) -> int:
         return self._uniques.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "timestamp" in attributes:  # pragma no branch
-            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
+        if "timestamp" in attributes:  # pragma no branch
+            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
