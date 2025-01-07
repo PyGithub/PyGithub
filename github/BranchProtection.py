@@ -126,7 +126,6 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
 
     @property
     def url(self) -> str:
-        self._completeIfNotSet(self._url)
         return self._url.value
 
     def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
