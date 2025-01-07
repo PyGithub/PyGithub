@@ -43,27 +43,27 @@ from . import Framework
 class SecurityAndAnalysis(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("transmission-web-control/transmission-web-control")
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.maxDiff = None
 
     def testAttributes(self):
         security_and_analysis = self.repo.security_and_analysis
-        self.assertEqual(security_and_analysis.advanced_security.status, "disabled")
-        self.assertEqual(security_and_analysis.dependabot_security_updates.status, "disabled")
+        self.assertIsNone(security_and_analysis.advanced_security)
+        self.assertEqual(security_and_analysis.dependabot_security_updates.status, "enabled")
         self.assertEqual(security_and_analysis.secret_scanning.status, "disabled")
-        self.assertEqual(security_and_analysis.secret_scanning_ai_detection.status, "disabled")
+        self.assertIsNone(security_and_analysis.secret_scanning_ai_detection)
         self.assertEqual(security_and_analysis.secret_scanning_push_protection.status, "disabled")
         self.assertEqual(security_and_analysis.secret_scanning_non_provider_patterns.status, "disabled")
-        self.assertEqual(security_and_analysis.secret_scanning_validity_checks.status, "disabled")
+        self.assertIsNone(security_and_analysis.secret_scanning_validity_checks)
 
     def testRepresentation(self):
         self.assertEqual(
             repr(self.repo.security_and_analysis),
             "SecurityAndAnalysis("
-            'secret_scanning_validity_checks="SecurityAndAnalysisFeature(status="disabled")", '
+            'secret_scanning_validity_checks="None", '
             'secret_scanning_push_protection="SecurityAndAnalysisFeature(status="disabled")", '
             'secret_scanning_non_provider_patterns="SecurityAndAnalysisFeature(status="disabled")", '
             'secret_scanning="SecurityAndAnalysisFeature(status="disabled")", '
-            'dependabot_security_updates="SecurityAndAnalysisFeature(status="disabled")", '
-            'advanced_security="SecurityAndAnalysisFeature(status="disabled")")',
+            'dependabot_security_updates="SecurityAndAnalysisFeature(status="enabled")", '
+            'advanced_security="None")',
         )
