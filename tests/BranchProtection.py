@@ -56,7 +56,10 @@ class BranchProtection(Framework.TestCase):
         self.assertIsNone(self.branch_protection.protection_url)
         self.assertEqual(self.branch_protection.required_conversation_resolution, False)
         self.assertEqual(self.branch_protection.required_linear_history, True)
-        self.assertEqual(self.branch_protection.required_pull_request_reviews.url, 'https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection/required_pull_request_reviews')
+        self.assertEqual(
+            self.branch_protection.required_pull_request_reviews.url,
+            "https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection/required_pull_request_reviews",
+        )
         self.assertEqual(self.branch_protection.required_signatures, False)
         self.assertTrue(self.branch_protection.required_status_checks.strict)
         self.assertEqual(self.branch_protection.required_status_checks.contexts, ["build (3.10)"])
