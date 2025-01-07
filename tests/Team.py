@@ -48,6 +48,8 @@
 ################################################################################
 
 
+from __future__ import annotations
+
 import warnings
 from datetime import datetime, timezone
 
@@ -61,11 +63,25 @@ class Team(Framework.TestCase):
         self.team = self.org.get_team(189850)
 
     def testAttributes(self):
+        self.assertEqual(self.team.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+        self.assertEqual(self.team.description, "")
+        self.assertEqual(self.team.html_url, "")
         self.assertEqual(self.team.id, 189850)
+        self.assertEqual(self.team.ldap_dn, "")
         self.assertEqual(self.team.members_count, 0)
+        self.assertEqual(self.team.members_url, "")
         self.assertEqual(self.team.name, "Team created by PyGithub")
+        self.assertEqual(self.team.node_id, "")
+        self.assertEqual(self.team.notification_setting, "")
+        self.assertEqual(self.team.organization.login, "")
+        self.assertEqual(self.team.parent.id, "")
         self.assertEqual(self.team.permission, "pull")
+        self.assertEqual(self.team.permissions.admin, "")
+        self.assertEqual(self.team.privacy, "")
         self.assertEqual(self.team.repos_count, 0)
+        self.assertEqual(self.team.repositories_url, "")
+        self.assertEqual(self.team.slug, "")
+        self.assertEqual(self.team.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
         self.assertEqual(self.team.organization, self.org)
         self.assertEqual(self.team.privacy, "closed")
