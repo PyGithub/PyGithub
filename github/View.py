@@ -37,8 +37,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -51,7 +53,7 @@ class View(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#traffic
 
     The OpenAPI schema can be found at
-    - /components/schemas/view-traffic
+    - /components/schemas/traffic
 
     """
 
@@ -81,7 +83,7 @@ class View(NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
         if "timestamp" in attributes:  # pragma no branch
