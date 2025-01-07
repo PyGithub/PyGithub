@@ -127,6 +127,8 @@ class Branch(NonCompletableGithubObject):
 
     @property
     def protection(self) -> BranchProtection:
+        if is_undefined(self._protection):
+            return self.get_protection()
         return self._protection.value
 
     @property
