@@ -126,7 +126,7 @@ class Branch(NonCompletableGithubObject):
         return self._protected.value
 
     @property
-    def protection(self) -> github.BranchProtection.BranchProtection:
+    def protection(self) -> BranchProtection:
         return self._protection.value
 
     @property
