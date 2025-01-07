@@ -62,7 +62,7 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
             github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
         ] = NotSet
         self._secret_scanning: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
-        self._secret_scanning_ai_detection: Attribute[dict[str, Any]] = NotSet
+        self._secret_scanning_ai_detection: Attribute[str] = NotSet
         self._secret_scanning_non_provider_patterns: Attribute[
             github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
         ] = NotSet
@@ -98,7 +98,7 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self._secret_scanning.value
 
     @property
-    def secret_scanning_ai_detection(self) -> dict[str, Any]:
+    def secret_scanning_ai_detection(self) -> str:
         return self._secret_scanning_ai_detection.value
 
     @property
@@ -114,22 +114,6 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self._secret_scanning_validity_checks.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        def make_attribute(attribute_name: str) -> None:
-            if attribute_name in attributes:
-                setattr(
-                    self,
-                    f"_{attribute_name}",
-                    self._makeClassAttribute(
-                        github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes[attribute_name]
-                    ),
-                )
-
-        make_attribute("advanced_security")
-        make_attribute("dependabot_security_updates")
-        make_attribute("secret_scanning")
-        make_attribute("secret_scanning_non_provider_patterns")
-        make_attribute("secret_scanning_push_protection")
-        make_attribute("secret_scanning_validity_checks")
         if "advanced_security" in attributes:  # pragma no branch
             self._advanced_security = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
@@ -143,7 +127,7 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["secret_scanning"]
             )
         if "secret_scanning_ai_detection" in attributes:  # pragma no branch
-            self._secret_scanning_ai_detection = self._makeDictAttribute(attributes["secret_scanning_ai_detection"])
+            self._secret_scanning_ai_detection = self._makeStringAttribute(attributes["secret_scanning_ai_detection"])
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
             self._secret_scanning_non_provider_patterns = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
