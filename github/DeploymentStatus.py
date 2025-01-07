@@ -44,11 +44,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubApp
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.GithubApp import GithubApp
+    from github.NamedUser import NamedUser
 
 
 class DeploymentStatus(CompletableGithubObject):
@@ -65,7 +69,7 @@ class DeploymentStatus(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._creator: Attribute[NamedUser] = NotSet
         self._deployment_url: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
@@ -89,7 +93,7 @@ class DeploymentStatus(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> github.NamedUser.NamedUser:
+    def creator(self) -> NamedUser:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
@@ -129,7 +133,7 @@ class DeploymentStatus(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def performed_via_github_app(self) -> github.GithubApp.GithubApp:
+    def performed_via_github_app(self) -> GithubApp:
         self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
