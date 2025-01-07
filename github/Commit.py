@@ -105,7 +105,7 @@ class Commit(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
         self._repository: Attribute[Repository] = NotSet
-        self._score: Attribute[None] = NotSet
+        self._score: Attribute[float] = NotSet
         self._sha: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
@@ -175,7 +175,7 @@ class Commit(CompletableGithubObject):
         return self._repository.value
 
     @property
-    def score(self) -> None:
+    def score(self) -> float:
         self._completeIfNotSet(self._score)
         return self._score.value
 
@@ -357,7 +357,7 @@ class Commit(CompletableGithubObject):
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "score" in attributes:  # pragma no branch
-            self._score = self._makeClassAttribute(None, attributes["score"])
+            self._score = self._makeFloatAttribute(attributes["score"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "stats" in attributes:  # pragma no branch

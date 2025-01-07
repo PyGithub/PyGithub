@@ -196,18 +196,26 @@ class Search(Framework.TestCase):
             ],
         )
 
-    def testPaginateSearchCommits(self):
-        commits = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
-        self.assertEqual(commits.totalCount, 3)
-
     def testSearchCommits(self):
-        commits = self.g.search_commits(
+        pages = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
+        commits = list(pages)
+        self.assertEqual(pages.totalCount, 12)
+        self.assertEqual(commits[0].commit.message, "Fix README instructions")
+        self.assertEqual(commits[0].score, 1.0)
+        self.assertEqual(commits[0].sha, "5b0224e868cc9242c9450ef02efbe3097abd7ba2")
+
+    def testSearchCommitsOrder(self):
+        pages = self.g.search_commits(
             query="hash:1265747e992ba7d34a469b6b2f527809f8bf7067",
             sort="author-date",
             order="asc",
             merge="false",
         )
-        self.assertEqual(commits.totalCount, 2)
+        commits = list(pages)
+        self.assertEqual(pages.totalCount, 4)
+        self.assertEqual(len(commits[0].commit.message), 490)
+        self.assertEqual(commits[0].score, 1.0)
+        self.assertEqual(commits[0].sha, "1265747e992ba7d34a469b6b2f527809f8bf7067")
 
     def testSearchTopics(self):
         topics = self.g.search_topics("python", repositories=">950")
