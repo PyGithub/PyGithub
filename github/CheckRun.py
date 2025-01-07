@@ -33,6 +33,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import deprecated
+
 import github.CheckRunAnnotation
 import github.CheckRunOutput
 import github.CheckSuite
@@ -106,6 +108,7 @@ class CheckRun(CompletableGithubObject):
         return self._check_suite.value
 
     @property
+    @deprecated("Use property check_suite.id instead")
     def check_suite_id(self) -> int:
         self._completeIfNotSet(self._check_suite_id)
         return self._check_suite_id.value
@@ -182,7 +185,6 @@ class CheckRun(CompletableGithubObject):
 
     @property
     def url(self) -> str:
-        self._completeIfNotSet(self._url)
         return self._url.value
 
     def get_annotations(self) -> PaginatedList[CheckRunAnnotation]:
@@ -254,7 +256,13 @@ class CheckRun(CompletableGithubObject):
             self._app = self._makeClassAttribute(github.GithubApp.GithubApp, attributes["app"])
         # This only gives us a dictionary with `id` attribute of `check_suite`
         if "check_suite" in attributes and "id" in attributes["check_suite"]:  # pragma no branch
-            self._check_suite_id = self._makeIntAttribute(attributes["check_suite"]["id"])
+            id = attributes["check_suite"]["id"]
+            if "url" not in attributes["check_suite"] and "url" in attributes:
+                url = attributes["url"].split("/")[:-2] + ["check-suites", str(id)]
+                attributes["check_suite"]["url"] = "/".join(url)
+            self._check_suite = self._makeClassAttribute(github.CheckSuite.CheckSuite, attributes["check_suite"])
+            # deprecated check suite id property
+            self._check_suite_id = self._makeIntAttribute(id)
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch

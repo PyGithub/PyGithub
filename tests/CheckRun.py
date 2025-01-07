@@ -43,7 +43,12 @@ class CheckRun(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.check_run.app.id, 15368)
         self.assertEqual(self.check_run.app.slug, "github-actions")
-        self.assertIsNone(self.check_run.check_suite)
+        self.assertEqual(self.check_run.check_suite.id, 32504127411)
+        self.assertEqual(
+            self.check_run.check_suite.url, "https://api.github.com/repos/PyGithub/PyGithub/check-suites/32504127411"
+        )
+        # check_suite is lazy, so accessing a property other than id or url fetches the suite object
+        self.assertEqual(self.check_run.check_suite.head_sha, "10a7135a04f71e6101f8b013aded8a662d08fd1f")
         self.assertEqual(self.check_run.check_suite_id, 32504127411)
         self.assertEqual(self.check_run.completed_at, datetime(2024, 12, 28, 16, 53, 10, tzinfo=timezone.utc))
         self.assertEqual(self.check_run.conclusion, "success")

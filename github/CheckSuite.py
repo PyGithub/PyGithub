@@ -208,7 +208,6 @@ class CheckSuite(CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self._url)
         return self._url.value
 
     def rerequest(self) -> bool:
