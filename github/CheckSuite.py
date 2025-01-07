@@ -57,6 +57,7 @@ class CheckSuite(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/checks#check-suites
 
     The OpenAPI schema can be found at
+    - /components/schemas/check-run/properties/check_suite
     - /components/schemas/check-suite
 
     """
@@ -207,7 +208,6 @@ class CheckSuite(CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self._url)
         return self._url.value
 
     def rerequest(self) -> bool:
