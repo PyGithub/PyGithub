@@ -102,8 +102,7 @@ from . import Framework
 class Repository(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user()
-        self.repo = self.user.get_repo("PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
 
     def testAttributes(self):
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
@@ -926,7 +925,7 @@ class Repository(Framework.TestCase):
         self.g.per_page = 5
         akfish = self.g.get_user("AKFish")
         self.assertListKeyBegin(
-            self.repo.get_commits(author=self.user),
+            self.repo.get_commits(author="jacquev6"),
             lambda c: c.sha,
             ["54f718a15770579a37ffbe7ae94ad30003407786"],
         )
@@ -2069,8 +2068,7 @@ class Repository(Framework.TestCase):
 class LazyRepository(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user()
-        self.repository_name = f"{self.user.login}/PyGithub"
+        self.repository_name = f"PyGithub/PyGithub"
 
     def getLazyRepository(self):
         return self.g.get_repo(self.repository_name, lazy=True)
