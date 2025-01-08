@@ -144,7 +144,7 @@ class Issue(CompletableGithubObject):
         self._reactions: Attribute[dict] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._repository_url: Attribute[str] = NotSet
-        self._score: Attribute[None] = NotSet
+        self._score: Attribute[float] = NotSet
         self._state: Attribute[str] = NotSet
         self._state_reason: Attribute[str | None] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
@@ -303,7 +303,7 @@ class Issue(CompletableGithubObject):
         return self._repository_url.value
 
     @property
-    def score(self) -> None:
+    def score(self) -> float:
         self._completeIfNotSet(self._score)
         return self._score.value
 
@@ -653,7 +653,7 @@ class Issue(CompletableGithubObject):
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "score" in attributes:  # pragma no branch
-            self._score = self._makeClassAttribute(None, attributes["score"])
+            self._score = self._makeFloatAttribute(attributes["score"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "state_reason" in attributes:  # pragma no branch
