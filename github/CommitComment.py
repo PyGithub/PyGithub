@@ -69,7 +69,7 @@ class CommitComment(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._author_association: Attribute[dict[str, Any]] = NotSet
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -88,7 +88,7 @@ class CommitComment(CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "user": self.user})
 
     @property
-    def author_association(self) -> dict[str, Any]:
+    def author_association(self) -> str:
         self._completeIfNotSet(self._author_association)
         return self._author_association.value
 
@@ -223,7 +223,7 @@ class CommitComment(CompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author_association" in attributes:  # pragma no branch
-            self._author_association = self._makeDictAttribute(attributes["author_association"])
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
