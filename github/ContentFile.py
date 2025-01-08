@@ -111,7 +111,7 @@ class ContentFile(CompletableGithubObject):
         return self.__links.value
 
     @property
-    def commit(self) -> github.GitCommit.GitCommit:
+    def commit(self) -> GitCommit:
         self._completeIfNotSet(self._commit)
         return self._commit.value
 
