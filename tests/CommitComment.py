@@ -44,7 +44,7 @@ from . import Framework
 class CommitComment(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.comment = self.g.get_user().get_repo("PyGithub").get_comment(1361949)
+        self.comment = self.g.get_repo("PyGithub/PyGithub").get_comment(1362000)
 
     def testAttributes(self):
         self.assertIsNone(self.comment.author_association)
