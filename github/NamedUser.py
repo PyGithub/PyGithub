@@ -139,7 +139,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._repos_url: Attribute[str] = NotSet
         self._role: Attribute[str] = NotSet
         self._role_name: Attribute[str] = NotSet
-        self._score: Attribute[None] = NotSet
+        self._score: Attribute[float] = NotSet
         self._site_admin: Attribute[bool] = NotSet
         self._starred_at: Attribute[str] = NotSet
         self._starred_url: Attribute[str] = NotSet
@@ -355,7 +355,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._role_name.value
 
     @property
-    def score(self) -> None:
+    def score(self) -> float:
         return self._score.value
 
     @property
@@ -663,7 +663,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "role_name" in attributes:  # pragma no branch
             self._role_name = self._makeStringAttribute(attributes["role_name"])
         if "score" in attributes:  # pragma no branch
-            self._score = self._makeClassAttribute(None, attributes["score"])
+            self._score = self._makeFloatAttribute(attributes["score"])
         if "site_admin" in attributes:  # pragma no branch
             self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
         if "starred_at" in attributes:  # pragma no branch
