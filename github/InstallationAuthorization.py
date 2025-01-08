@@ -45,10 +45,12 @@ from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.PaginatedList
+import github.Repository
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
+    from github.Repository import Repository
 
 
 class InstallationAuthorization(NonCompletableGithubObject):
@@ -91,7 +93,7 @@ class InstallationAuthorization(NonCompletableGithubObject):
         return self._permissions.value
 
     @property
-    def repositories(self) -> list[github.Repository.Repository]:
+    def repositories(self) -> list[Repository]:
         return self._repositories.value
 
     @property
