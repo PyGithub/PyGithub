@@ -44,7 +44,9 @@ class Migration(Framework.TestCase):
 
     def testAttributes(self):
         self.assertIsNone(self.migration.archive_url)
-        self.assertEqual(self.migration.created_at, datetime(2018, 9, 14, 1, 35, 35, tzinfo=timezone(timedelta(seconds=19800))))
+        self.assertEqual(
+            self.migration.created_at, datetime(2018, 9, 14, 1, 35, 35, tzinfo=timezone(timedelta(seconds=19800)))
+        )
         self.assertEqual(self.migration.exclude, ["repositories"])
         self.assertEqual(self.migration.exclude_attachments, False)
         self.assertEqual(self.migration.exclude_git_data, False)
@@ -64,7 +66,9 @@ class Migration(Framework.TestCase):
         self.assertEqual(self.migration.exclude_attachments, False)
         self.assertEqual(len(self.migration.repositories), 1)
         self.assertEqual(self.migration.repositories[0].name, "sample-repo")
-        self.assertEqual(self.migration.updated_at, datetime(2018, 9, 14, 1, 35, 46, tzinfo=timezone(timedelta(seconds=19800))))
+        self.assertEqual(
+            self.migration.updated_at, datetime(2018, 9, 14, 1, 35, 46, tzinfo=timezone(timedelta(seconds=19800)))
+        )
         self.assertEqual(self.migration.url, "https://api.github.com/user/migrations/25320")
         self.assertEqual(
             self.migration.created_at,
