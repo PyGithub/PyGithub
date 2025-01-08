@@ -50,26 +50,54 @@ class IssueComment(Framework.TestCase):
         self.comment = self.g.get_repo("PyGithub/PyGithub").get_issue(28).get_comment(20227753)
 
     def testAttributes(self):
-        self.assertEqual(self.comment.author_association, 'CONTRIBUTOR')
-        self.assertEqual(self.comment.body, 'Comment created by PyGithub\n')
+        self.assertEqual(self.comment.author_association, "CONTRIBUTOR")
+        self.assertEqual(self.comment.body, "Comment created by PyGithub\n")
         self.assertIsNone(self.comment.body_html)
         self.assertIsNone(self.comment.body_text)
         self.assertEqual(self.comment.created_at, datetime(2013, 6, 29, 10, 31, 38, tzinfo=timezone.utc))
-        self.assertEqual(self.comment.html_url, 'https://github.com/PyGithub/PyGithub/issues/28#issuecomment-20227753')
+        self.assertEqual(self.comment.html_url, "https://github.com/PyGithub/PyGithub/issues/28#issuecomment-20227753")
         self.assertEqual(self.comment.id, 20227753)
-        self.assertEqual(self.comment.issue_url, 'https://api.github.com/repos/PyGithub/PyGithub/issues/28')
-        self.assertEqual(self.comment.node_id, 'MDEyOklzc3VlQ29tbWVudDIwMjI3NzUz')
-        self.assertEqual(self.comment.body, 'Comment created by PyGithub\n')
+        self.assertEqual(self.comment.issue_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28")
+        self.assertEqual(self.comment.node_id, "MDEyOklzc3VlQ29tbWVudDIwMjI3NzUz")
+        self.assertEqual(self.comment.body, "Comment created by PyGithub\n")
         self.assertEqual(self.comment.created_at, datetime(2013, 6, 29, 10, 31, 38, tzinfo=timezone.utc))
         self.assertEqual(self.comment.id, 20227753)
         self.assertIsNone(self.comment.performed_via_github_app)
-        self.assertEqual(self.comment.reactions, {'url': 'https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753/reactions', 'total_count': 2, '+1': 1, '-1': 0, 'laugh': 0, 'hooray': 1, 'confused': 0, 'heart': 0, 'rocket': 0, 'eyes': 0})
+        self.assertEqual(
+            self.comment.reactions,
+            {
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753/reactions",
+                "total_count": 2,
+                "+1": 1,
+                "-1": 0,
+                "laugh": 0,
+                "hooray": 1,
+                "confused": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0,
+            },
+        )
         self.assertEqual(self.comment.updated_at, datetime(2013, 6, 29, 10, 31, 38, tzinfo=timezone.utc))
-        self.assertEqual(self.comment.url, 'https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753')
-        self.assertEqual(self.comment.user.login, 'stuglaser')
-        self.assertEqual(self.comment.html_url, 'https://github.com/PyGithub/PyGithub/issues/28#issuecomment-20227753')
+        self.assertEqual(self.comment.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753")
+        self.assertEqual(self.comment.user.login, "stuglaser")
+        self.assertEqual(self.comment.html_url, "https://github.com/PyGithub/PyGithub/issues/28#issuecomment-20227753")
         self.assertEqual(repr(self.comment), 'IssueComment(user=NamedUser(login="stuglaser"), id=20227753)')
-        self.assertEqual(self.comment.reactions, {'url': 'https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753/reactions', 'total_count': 2, '+1': 1, '-1': 0, 'laugh': 0, 'hooray': 1, 'confused': 0, 'heart': 0, 'rocket': 0, 'eyes': 0})
+        self.assertEqual(
+            self.comment.reactions,
+            {
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/comments/20227753/reactions",
+                "total_count": 2,
+                "+1": 1,
+                "-1": 0,
+                "laugh": 0,
+                "hooray": 1,
+                "confused": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0,
+            },
+        )
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
