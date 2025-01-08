@@ -43,7 +43,6 @@ from __future__ import annotations
 
 from datetime import date, datetime
 from typing import Any
-from datetime import datetime, timezone
 
 import github.GithubObject
 import github.Label
