@@ -57,11 +57,13 @@ class CommitStatus(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._avatar_url: Attribute[str] = NotSet
         self._context: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
         self._description: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -75,6 +77,10 @@ class CommitStatus(NonCompletableGithubObject):
                 "context": self._context.value,
             }
         )
+
+    @property
+    def avatar_url(self) -> str:
+        return self._avatar_url.value
 
     @property
     def context(self) -> str:
@@ -97,6 +103,10 @@ class CommitStatus(NonCompletableGithubObject):
         return self._id.value
 
     @property
+    def node_id(self) -> str:
+        return self._node_id.value
+
+    @property
     def state(self) -> str:
         return self._state.value
 
@@ -113,6 +123,8 @@ class CommitStatus(NonCompletableGithubObject):
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "avatar_url" in attributes:  # pragma no branch
+            self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "context" in attributes:  # pragma no branch
             self._context = self._makeStringAttribute(attributes["context"])
         if "created_at" in attributes:  # pragma no branch
@@ -123,6 +135,8 @@ class CommitStatus(NonCompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "target_url" in attributes:  # pragma no branch
