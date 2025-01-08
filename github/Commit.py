@@ -170,7 +170,7 @@ class Commit(CompletableGithubObject):
         return self._parents.value
 
     @property
-    def repository(self) -> github.Repository.Repository:
+    def repository(self) -> Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
