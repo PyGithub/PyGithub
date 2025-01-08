@@ -869,11 +869,16 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_added_to_project.requested_team, None)
         self.assertEqual(self.event_added_to_project.milestone, None)
         self.assertEqual(self.event_added_to_project.performed_via_github_app, None)
-        self.assertEqual(self.event_added_to_project.project_card, {'column_name': 'To do',
- 'id': 12179888,
- 'project_id': 1714960,
- 'project_url': 'https://api.github.com/projects/1714960',
- 'url': 'https://api.github.com/projects/columns/cards/12179888'})
+        self.assertEqual(
+            self.event_added_to_project.project_card,
+            {
+                "column_name": "To do",
+                "id": 12179888,
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179888",
+            },
+        )
         self.assertEqual(self.event_added_to_project.rename, None)
         self.assertEqual(self.event_added_to_project.dismissed_review, None)
         self.assertEqual(self.event_added_to_project.lock_reason, None)
@@ -907,12 +912,17 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_moved_columns_in_project.requested_team, None)
         self.assertEqual(self.event_moved_columns_in_project.milestone, None)
         self.assertEqual(self.event_moved_columns_in_project.performed_via_github_app, None)
-        self.assertEqual(self.event_moved_columns_in_project.project_card, {'column_name': 'In progress',
- 'id': 12179888,
- 'previous_column_name': 'To do',
- 'project_id': 1714960,
- 'project_url': 'https://api.github.com/projects/1714960',
- 'url': 'https://api.github.com/projects/columns/cards/12179888'})
+        self.assertEqual(
+            self.event_moved_columns_in_project.project_card,
+            {
+                "column_name": "In progress",
+                "id": 12179888,
+                "previous_column_name": "To do",
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179888",
+            },
+        )
         self.assertEqual(self.event_moved_columns_in_project.rename, None)
         self.assertEqual(self.event_moved_columns_in_project.dismissed_review, None)
         self.assertEqual(self.event_moved_columns_in_project.lock_reason, None)
@@ -946,11 +956,16 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_removed_from_project.requested_team, None)
         self.assertEqual(self.event_removed_from_project.milestone, None)
         self.assertEqual(self.event_removed_from_project.performed_via_github_app, None)
-        self.assertEqual(self.event_removed_from_project.project_card, {'column_name': 'In progress',
- 'id': 12179888,
- 'project_id': 1714960,
- 'project_url': 'https://api.github.com/projects/1714960',
- 'url': 'https://api.github.com/projects/columns/cards/12179888'})
+        self.assertEqual(
+            self.event_removed_from_project.project_card,
+            {
+                "column_name": "In progress",
+                "id": 12179888,
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179888",
+            },
+        )
         self.assertEqual(self.event_removed_from_project.rename, None)
         self.assertEqual(self.event_removed_from_project.dismissed_review, None)
         self.assertEqual(self.event_removed_from_project.lock_reason, None)
@@ -984,11 +999,16 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_converted_note_to_issue.requested_team, None)
         self.assertEqual(self.event_converted_note_to_issue.milestone, None)
         self.assertEqual(self.event_converted_note_to_issue.performed_via_github_app, None)
-        self.assertEqual(self.event_converted_note_to_issue.project_card, {'column_name': 'To do',
- 'id': 12179901,
- 'project_id': 1714960,
- 'project_url': 'https://api.github.com/projects/1714960',
- 'url': 'https://api.github.com/projects/columns/cards/12179901'})
+        self.assertEqual(
+            self.event_converted_note_to_issue.project_card,
+            {
+                "column_name": "To do",
+                "id": 12179901,
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179901",
+            },
+        )
         self.assertEqual(self.event_converted_note_to_issue.rename, None)
         self.assertEqual(self.event_converted_note_to_issue.dismissed_review, None)
         self.assertEqual(self.event_converted_note_to_issue.lock_reason, None)
