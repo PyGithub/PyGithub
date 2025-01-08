@@ -41,7 +41,7 @@ from . import Framework
 class ContentFile(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.file = self.g.get_user().get_repo("PyGithub").get_readme()
+        self.file = self.g.get_repo("PyGithub/PyGithub").get_readme()
 
     def testAttributes(self):
         self.assertEqual(
