@@ -127,28 +127,32 @@ class GitRelease(Framework.TestCase):
 
     def testAttributes(self):
         release = self.release
-        self.assertEqual(release.assets[0].url, 'https://api.github.com/repos/rickrickston123/RepoTest/releases/assets/22848494')
-        self.assertEqual(release.assets_url, 'https://api.github.com/repos/rickrickston123/RepoTest/releases/28524234/assets')
-        self.assertEqual(release.author.login, 'rickrickston123')
-        self.assertEqual(release.body, 'Body')
+        self.assertEqual(
+            release.assets[0].url, "https://api.github.com/repos/rickrickston123/RepoTest/releases/assets/22848494"
+        )
+        self.assertEqual(
+            release.assets_url, "https://api.github.com/repos/rickrickston123/RepoTest/releases/28524234/assets"
+        )
+        self.assertEqual(release.author.login, "rickrickston123")
+        self.assertEqual(release.body, "Body")
         self.assertIsNone(release.body_html)
         self.assertIsNone(release.body_text)
         self.assertEqual(release.created_at, datetime(2020, 7, 12, 7, 34, 42, tzinfo=timezone.utc))
         self.assertIsNone(release.discussion_url)
         self.assertIsNone(release.documentation_url)
         self.assertEqual(release.draft, False)
-        self.assertEqual(release.html_url, 'https://github.com/rickrickston123/RepoTest/releases/tag/v1.0')
+        self.assertEqual(release.html_url, "https://github.com/rickrickston123/RepoTest/releases/tag/v1.0")
         self.assertEqual(release.id, release_id)
         self.assertIsNone(release.mentions_count)
         self.assertIsNone(release.message)
         self.assertIsNone(release.name)
-        self.assertEqual(release.node_id, 'MDc6UmVsZWFzZTI4NTI0MjM0')
+        self.assertEqual(release.node_id, "MDc6UmVsZWFzZTI4NTI0MjM0")
         self.assertEqual(release.prerelease, False)
         self.assertEqual(release.published_at, datetime(2020, 7, 14, 0, 58, 20, tzinfo=timezone.utc))
         self.assertIsNone(release.reactions)
         self.assertIsNone(release.status)
         self.assertEqual(release.tag_name, tag)
-        self.assertEqual(release.tarball_url, 'https://api.github.com/repos/rickrickston123/RepoTest/tarball/v1.0')
+        self.assertEqual(release.tarball_url, "https://api.github.com/repos/rickrickston123/RepoTest/tarball/v1.0")
         self.assertEqual(release.target_commitish, "master")
         self.assertEqual(
             release.upload_url,
