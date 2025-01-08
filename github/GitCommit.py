@@ -39,6 +39,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 import github.GitAuthor
@@ -68,13 +69,19 @@ class GitCommit(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._author: Attribute[github.GitAuthor.GitAuthor] = NotSet
+        self._comment_count: Attribute[int] = NotSet
         self._committer: Attribute[github.GitAuthor.GitAuthor] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[str] = NotSet
         self._message: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._parents: Attribute[list[GitCommit]] = NotSet
         self._sha: Attribute[str] = NotSet
+        self._timestamp: Attribute[datetime] = NotSet
         self._tree: Attribute[github.GitTree.GitTree] = NotSet
+        self._tree_id: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
+        self._verification: Attribute[dict[str, Any]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -89,6 +96,11 @@ class GitCommit(CompletableGithubObject):
         return self._author.value
 
     @property
+    def comment_count(self) -> int:
+        self._completeIfNotSet(self._comment_count)
+        return self._comment_count.value
+
+    @property
     def committer(self) -> github.GitAuthor.GitAuthor:
         self._completeIfNotSet(self._committer)
         return self._committer.value
@@ -99,9 +111,19 @@ class GitCommit(CompletableGithubObject):
         return self._html_url.value
 
     @property
+    def id(self) -> str:
+        self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
     def message(self) -> str:
         self._completeIfNotSet(self._message)
         return self._message.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def parents(self) -> list[GitCommit]:
@@ -114,29 +136,56 @@ class GitCommit(CompletableGithubObject):
         return self._sha.value
 
     @property
+    def timestamp(self) -> datetime:
+        self._completeIfNotSet(self._timestamp)
+        return self._timestamp.value
+
+    @property
     def tree(self) -> github.GitTree.GitTree:
         self._completeIfNotSet(self._tree)
         return self._tree.value
+
+    @property
+    def tree_id(self) -> str:
+        self._completeIfNotSet(self._tree_id)
+        return self._tree_id.value
 
     @property
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def verification(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._verification)
+        return self._verification.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
+        if "comment_count" in attributes:  # pragma no branch
+            self._comment_count = self._makeIntAttribute(attributes["comment_count"])
         if "committer" in attributes:  # pragma no branch
             self._committer = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["committer"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeStringAttribute(attributes["id"])
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "parents" in attributes:  # pragma no branch
             self._parents = self._makeListOfClassesAttribute(GitCommit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
+        if "timestamp" in attributes:  # pragma no branch
+            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "tree" in attributes:  # pragma no branch
             self._tree = self._makeClassAttribute(github.GitTree.GitTree, attributes["tree"])
+        if "tree_id" in attributes:  # pragma no branch
+            self._tree_id = self._makeStringAttribute(attributes["tree_id"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "verification" in attributes:  # pragma no branch
+            self._verification = self._makeDictAttribute(attributes["verification"])
