@@ -37,7 +37,7 @@ class License(Framework.TestCase):
         self.license = self.g.get_license("mit")
 
     def testAttributes(self):
-        self.assertEqual(self.license.html_url, 'http://choosealicense.com/licenses/mit/')
+        self.assertEqual(self.license.html_url, "http://choosealicense.com/licenses/mit/")
         self.assertEqual(self.license.key, "mit")
         self.assertEqual(self.license.name, "MIT License")
         self.assertEqual(
