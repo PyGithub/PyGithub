@@ -37,8 +37,9 @@
 
 from __future__ import annotations
 
-from urllib3.exceptions import InsecureRequestWarning
 from datetime import datetime, timezone
+
+from urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts
@@ -58,25 +59,30 @@ class Installation(Framework.BasicTestCase):
         self.installation = self.installations[0]
 
     def testAttributes(self):
-        self.assertEqual(self.installation.access_tokens_url, 'https://api.github.com/app/installations/36541767/access_tokens')
-        self.assertEqual(self.installation.account.login, 'EnricoMi')
+        self.assertEqual(
+            self.installation.access_tokens_url, "https://api.github.com/app/installations/36541767/access_tokens"
+        )
+        self.assertEqual(self.installation.account.login, "EnricoMi")
         self.assertEqual(self.installation.app_id, 319953)
-        self.assertEqual(self.installation.app_slug, 'publish-test-results')
+        self.assertEqual(self.installation.app_slug, "publish-test-results")
         self.assertIsNone(self.installation.contact_email)
         self.assertEqual(self.installation.created_at, datetime(2023, 4, 17, 16, 18, 5, tzinfo=timezone.utc))
         self.assertEqual(self.installation.events, [])
         self.assertEqual(self.installation.has_multiple_single_files, False)
-        self.assertEqual(self.installation.html_url, 'https://github.com/settings/installations/36541767')
+        self.assertEqual(self.installation.html_url, "https://github.com/settings/installations/36541767")
         self.assertEqual(self.installation.id, 36541767)
-        self.assertEqual(self.installation.permissions, {'checks': 'write', 'issues': 'read', 'contents': 'read', 'metadata': 'read', 'pull_requests': 'write'})
-        self.assertEqual(self.installation.repositories_url, 'https://api.github.com/installation/repositories')
-        self.assertEqual(self.installation.repository_selection, 'selected')
+        self.assertEqual(
+            self.installation.permissions,
+            {"checks": "write", "issues": "read", "contents": "read", "metadata": "read", "pull_requests": "write"},
+        )
+        self.assertEqual(self.installation.repositories_url, "https://api.github.com/installation/repositories")
+        self.assertEqual(self.installation.repository_selection, "selected")
         self.assertIsNone(self.installation.single_file_name)
         self.assertEqual(self.installation.single_file_paths, [])
         self.assertIsNone(self.installation.suspended_at)
         self.assertIsNone(self.installation.suspended_by)
         self.assertEqual(self.installation.target_id, 44700269)
-        self.assertEqual(self.installation.target_type, 'User')
+        self.assertEqual(self.installation.target_type, "User")
         self.assertEqual(self.installation.updated_at, datetime(2023, 6, 8, 7, 38, 12, tzinfo=timezone.utc))
 
     def testGetRepos(self):
