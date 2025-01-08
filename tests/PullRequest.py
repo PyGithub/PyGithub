@@ -109,7 +109,21 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pullIssue256Uncached.mergeable_state, "unknown")
 
     def testAttributes(self):
-        self.assertEqual(self.pull._links, {'self': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/31'}, 'html': {'href': 'https://github.com/PyGithub/PyGithub/pull/31'}, 'issue': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/issues/31'}, 'comments': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/issues/31/comments'}, 'review_comments': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/31/comments'}, 'review_comment': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/comments{/number}'}, 'commits': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/pulls/31/commits'}, 'statuses': {'href': 'https://api.github.com/repos/PyGithub/PyGithub/statuses/8a4f306d4b223682dd19410d4a9150636ebe4206'}})
+        self.assertEqual(
+            self.pull._links,
+            {
+                "self": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/31"},
+                "html": {"href": "https://github.com/PyGithub/PyGithub/pull/31"},
+                "issue": {"href": "https://api.github.com/repos/PyGithub/PyGithub/issues/31"},
+                "comments": {"href": "https://api.github.com/repos/PyGithub/PyGithub/issues/31/comments"},
+                "review_comments": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/comments"},
+                "review_comment": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments{/number}"},
+                "commits": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/commits"},
+                "statuses": {
+                    "href": "https://api.github.com/repos/PyGithub/PyGithub/statuses/8a4f306d4b223682dd19410d4a9150636ebe4206"
+                },
+            },
+        )
         self.assertIsNone(self.pull.active_lock_reason)
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
@@ -169,11 +183,18 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.patch_url, "https://github.com/PyGithub/PyGithub/pull/31.patch")
         self.assertEqual(self.pull.requested_reviewers[0].login, "sfdye")
         self.assertEqual(self.pull.requested_teams[0].id, 123)
-        self.assertEqual(self.pull.review_comment_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments{/number}")
+        self.assertEqual(
+            self.pull.review_comment_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments{/number}"
+        )
         self.assertEqual(self.pull.review_comments, 2)
-        self.assertEqual(self.pull.review_comments_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/comments")
+        self.assertEqual(
+            self.pull.review_comments_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/comments"
+        )
         self.assertEqual(self.pull.state, "closed")
-        self.assertEqual(self.pull.statuses_url, "https://api.github.com/repos/PyGithub/PyGithub/statuses/8a4f306d4b223682dd19410d4a9150636ebe4206")
+        self.assertEqual(
+            self.pull.statuses_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/statuses/8a4f306d4b223682dd19410d4a9150636ebe4206",
+        )
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(
             self.pull.updated_at,
