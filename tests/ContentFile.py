@@ -47,42 +47,42 @@ class ContentFile(Framework.TestCase):
         self.assertEqual(
             self.file._links,
             {
-                "self": "https://api.github.com/repos/jacquev6/PyGithub/contents/ReadMe.md",
-                "html": "https://github.com/jacquev6/PyGithub/blob/master/ReadMe.md",
-                "git": "https://api.github.com/repos/jacquev6/PyGithub/git/blobs/5628799a7d517a4aaa0c1a7004d07569cd154df0",
+                "self": "https://api.github.com/repos/PyGithub/PyGithub/contents/README.md?ref=main",
+                "git": "https://api.github.com/repos/PyGithub/PyGithub/git/blobs/0d9df5bfb7d4b93443c130bc8f4eea5dd3f01205",
+                "html": "https://github.com/PyGithub/PyGithub/blob/main/README.md",
             },
         )
         self.assertIsNone(self.file.commit)
-        self.assertTrue(self.file.content.startswith("VGhpcyBpcyBhIFB5dGhvbiBsaWJyYXJ5IHRvIGFjY"))
-        self.assertEqual(self.file.download_url, "https://raw.githubusercontent.com/jacquev6/PyGithub/master/README.md")
+        self.assertTrue(self.file.content.startswith("IyBQeUdpdEh1YgoKWyFbUHlQSV0oaHR0cHM6Ly9p"))
+        self.assertEqual(self.file.download_url, "https://raw.githubusercontent.com/PyGithub/PyGithub/main/README.md")
         self.assertEqual(self.file.encoding, "base64")
         self.assertIsNone(self.file.file_size)
-        self.assertIsNone(self.file.git_url)
-        self.assertIsNone(self.file.html_url)
+        self.assertEqual(
+            self.file.git_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/git/blobs/0d9df5bfb7d4b93443c130bc8f4eea5dd3f01205",
+        )
+        self.assertEqual(self.file.html_url, "https://github.com/PyGithub/PyGithub/blob/main/README.md")
         self.assertIsNone(self.file.language)
         self.assertIsNone(self.file.last_modified_at)
         self.assertIsNone(self.file.license)
         self.assertIsNone(self.file.line_numbers)
-        self.assertEqual(self.file.name, "ReadMe.md")
-        self.assertEqual(self.file.path, "ReadMe.md")
+        self.assertEqual(self.file.name, "README.md")
+        self.assertEqual(self.file.path, "README.md")
         self.assertEqual(self.file.score, None)
-        self.assertEqual(self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
-        self.assertEqual(self.file.size, 7531)
+        self.assertEqual(self.file.sha, "0d9df5bfb7d4b93443c130bc8f4eea5dd3f01205")
+        self.assertEqual(self.file.size, 2524)
         self.assertIsNone(self.file.submodule_git_url)
         self.assertIsNone(self.file.target)
         self.assertIsNone(self.file.text_matches)
         self.assertEqual(self.file.type, "file")
         self.assertEqual(self.file.encoding, "base64")
-        self.assertEqual(self.file.size, 7531)
-        self.assertEqual(self.file.name, "ReadMe.md")
-        self.assertEqual(self.file.path, "ReadMe.md")
-        self.assertEqual(len(self.file.content), 10212)
-        self.assertEqual(len(self.file.decoded_content), 7531)
-        self.assertEqual(self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
-        self.assertEqual(
-            self.file.download_url,
-            "https://raw.githubusercontent.com/jacquev6/PyGithub/master/README.md",
-        )
+        self.assertEqual(self.file.size, 2524)
+        self.assertEqual(self.file.name, "README.md")
+        self.assertEqual(self.file.path, "README.md")
+        self.assertEqual(len(self.file.content), 3425)
+        self.assertEqual(len(self.file.decoded_content), 2524)
+        self.assertEqual(self.file.sha, "0d9df5bfb7d4b93443c130bc8f4eea5dd3f01205")
+        self.assertEqual(self.file.download_url, "https://raw.githubusercontent.com/PyGithub/PyGithub/main/README.md")
         self.assertIsNone(self.file.license)
-        self.assertEqual(repr(self.file), 'ContentFile(path="ReadMe.md")')
-        self.assertIsNone(self.file.url)
+        self.assertEqual(repr(self.file), 'ContentFile(path="README.md")')
+        self.assertEqual(self.file.url, "https://api.github.com/repos/PyGithub/PyGithub/contents/README.md?ref=main")
