@@ -101,7 +101,9 @@ class Team(Framework.TestCase):
         self.assertEqual(d.body_html, "<p>BODY</p>")
         self.assertEqual(d.body_version, "bedf0740b01d2d758cff9873c2387817")
         self.assertEqual(d.comments_count, 0)
-        self.assertEqual(d.comments_url, "https://api.github.com/organizations/1234567/team/12345678/discussions/1/comments")
+        self.assertEqual(
+            d.comments_url, "https://api.github.com/organizations/1234567/team/12345678/discussions/1/comments"
+        )
         self.assertEqual(d.created_at, datetime(2019, 10, 8, 21, 3, 36, tzinfo=timezone.utc))
         self.assertEqual(
             d.html_url,
