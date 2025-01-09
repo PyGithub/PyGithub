@@ -114,7 +114,7 @@ class Team(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._notification_setting: Attribute[str] = NotSet
-        self._organization: Attribute[github.Organization.Organization] = NotSet
+        self._organization: Attribute[Organization] = NotSet
         self._parent: Attribute[github.Team.Team] = NotSet
         self._permission: Attribute[str] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
@@ -198,7 +198,7 @@ class Team(CompletableGithubObject):
         return self._permission.value
 
     @property
-    def permissions(self) -> github.Permissions.Permissions:
+    def permissions(self) -> Permissions:
         self._completeIfNotSet(self._permissions)
         return self._permissions.value
 
