@@ -68,6 +68,7 @@ class GitReleaseAsset(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._label: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -111,6 +112,11 @@ class GitReleaseAsset(CompletableGithubObject):
     def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def size(self) -> int:
@@ -169,6 +175,8 @@ class GitReleaseAsset(CompletableGithubObject):
             self._label = self._makeStringAttribute(attributes["label"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "state" in attributes:  # pragma no branch

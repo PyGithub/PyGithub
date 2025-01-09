@@ -174,6 +174,10 @@ class GithubIntegration(Framework.BasicTestCase):
             {"issues": "read", "metadata": "read"},
         )
         self.assertEqual(repo_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(repo_installation_authorization.repositories)
+        self.assertIsNone(repo_installation_authorization.single_file)
+        self.assertIsNone(repo_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(repo_installation_authorization.single_file_paths)
 
         # Get org installation access token
         org_installation_authorization = github_integration.get_access_token(self.org_installation_id)
@@ -189,6 +193,10 @@ class GithubIntegration(Framework.BasicTestCase):
         }
         self.assertDictEqual(org_installation_authorization.permissions, org_permissions)
         self.assertEqual(org_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(org_installation_authorization.repositories)
+        self.assertIsNone(org_installation_authorization.single_file)
+        self.assertIsNone(org_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(org_installation_authorization.single_file_paths)
 
         # Get user installation access token
         user_installation_authorization = github_integration.get_access_token(self.user_installation_id)
@@ -201,6 +209,10 @@ class GithubIntegration(Framework.BasicTestCase):
             {"issues": "read", "metadata": "read"},
         )
         self.assertEqual(user_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(user_installation_authorization.repositories)
+        self.assertIsNone(user_installation_authorization.single_file)
+        self.assertIsNone(user_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(user_installation_authorization.single_file_paths)
 
     def testGetUserInstallation(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)

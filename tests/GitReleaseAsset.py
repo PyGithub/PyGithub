@@ -1,8 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,38 +20,39 @@
 #                                                                              #
 ################################################################################
 
-import pickle
+from __future__ import annotations
 
-import github
-from github.PaginatedList import PaginatedList
-from github.Repository import Repository
+from datetime import datetime, timezone
 
 from . import Framework
 
-REPO_NAME = "PyGithub/PyGithub"
+repo_name = "RepoTest"
+user = "rickrickston123"
+release_id = 28524234
 
 
-class Pickle(Framework.TestCase):
-    def testPickleGithub(self):
-        gh = github.Github()
-        gh2 = pickle.loads(pickle.dumps(gh))
-        self.assertIsInstance(gh2, github.Github)
-        self.assertIsNotNone(gh2._Github__requester._Requester__connection_lock)
-        self.assertIsNone(gh2._Github__requester._Requester__connection)
-        self.assertEqual(len(gh2._Github__requester._Requester__custom_connections), 0)
+class GitReleaseAsset(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.repo = self.g.get_user(user).get_repo(repo_name)
+        self.release = self.repo.get_release(release_id)
+        self.asset = self.release.assets[0]
 
-    def testPickleRepository(self):
-        gh = github.Github(lazy=True)
-        repo = gh.get_repo(REPO_NAME)
-        repo2 = pickle.loads(pickle.dumps(repo))
-        self.assertIsInstance(repo2, Repository)
-        self.assertIsNotNone(repo2._requester._Requester__connection_lock)
-        self.assertIsNone(repo2._requester._Requester__connection)
-        self.assertEqual(len(repo2._requester._Requester__custom_connections), 0)
-
-    def testPicklePaginatedList(self):
-        gh = github.Github()
-        repo = gh.get_repo(REPO_NAME, lazy=True)
-        branches = repo.get_branches()
-        branches2 = pickle.loads(pickle.dumps(branches))
-        self.assertIsInstance(branches2, PaginatedList)
+    def testAttributes(self):
+        self.assertEqual(
+            self.asset.browser_download_url, "https://github.com/rickrickston123/RepoTest/releases/download/v1.0/fact"
+        )
+        self.assertEqual(self.asset.content_type, "application/octet-stream")
+        self.assertEqual(self.asset.created_at, datetime(2020, 7, 14, 0, 58, 17, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.download_count, 0)
+        self.assertEqual(self.asset.id, 22848494)
+        self.assertIsNone(self.asset.label)
+        self.assertEqual(self.asset.name, "fact")
+        self.assertEqual(self.asset.node_id, "MDEyOlJlbGVhc2VBc3NldDIyODQ4NDk0")
+        self.assertEqual(self.asset.size, 40)
+        self.assertEqual(self.asset.state, "uploaded")
+        self.assertEqual(self.asset.updated_at, datetime(2020, 7, 14, 0, 58, 18, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.uploader.login, "rickrickston123")
+        self.assertEqual(
+            self.asset.url, "https://api.github.com/repos/rickrickston123/RepoTest/releases/assets/22848494"
+        )
