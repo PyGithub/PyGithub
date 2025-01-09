@@ -53,13 +53,15 @@ class Workflow(Framework.TestCase):
             repr(self.workflow),
             'Workflow(url="https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390", name="check")',
         )
-        self.assertEqual(self.workflow.badge_url, 'https://github.com/PyGithub/PyGithub/workflows/check/badge.svg')
+        self.assertEqual(self.workflow.badge_url, "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg")
         self.assertEqual(self.workflow.created_at, datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc))
         self.assertIsNone(self.workflow.deleted_at)
-        self.assertEqual(self.workflow.html_url, 'https://github.com/PyGithub/PyGithub/blob/master/.github/workflows/check.yml')
+        self.assertEqual(
+            self.workflow.html_url, "https://github.com/PyGithub/PyGithub/blob/master/.github/workflows/check.yml"
+        )
         self.assertEqual(self.workflow.id, 1026390)
         self.assertEqual(self.workflow.name, "check")
-        self.assertEqual(self.workflow.node_id, 'MDg6V29ya2Zsb3cxMDI2Mzkw')
+        self.assertEqual(self.workflow.node_id, "MDg6V29ya2Zsb3cxMDI2Mzkw")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
         timestamp = datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc)
