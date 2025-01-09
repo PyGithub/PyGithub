@@ -762,11 +762,13 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(invitation.permissions, "write")
         created_at = datetime(2019, 6, 27, 11, 47, tzinfo=timezone.utc)
         self.assertEqual(invitation.created_at, created_at)
+        self.assertEqual(invitation.expired, True)
         self.assertEqual(
             invitation.url,
             "https://api.github.com/user/repository_invitations/17285388",
         )
         self.assertEqual(invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations")
+        self.assertEqual(invitation.node_id, "MDIwOlJlcG9zaXRvcnlJbnZpdGF0aW9uMTcyODUzODg=")
         self.assertEqual(invitation.repository.name, "PyGithub")
         self.assertEqual(invitation.invitee.login, "foobar-test1")
         self.assertEqual(invitation.inviter.login, "jacquev6")
