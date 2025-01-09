@@ -47,8 +47,15 @@ class SelfHostedActionsRunner(Framework.TestCase):
         runner = self.repo.get_self_hosted_runner(2217)
         self.assertFalse(runner.busy)
         self.assertEqual(runner.id, 2217)
-        self.assertEqual(runner.labels, [{'id': 1, 'name': 'self-hosted', 'type': 'read-only'}, {'id': 3, 'name': 'X64', 'type': 'read-only'}, {'id': 4, 'name': 'Linux', 'type': 'read-only'}])
-        self.assertEqual(runner.name, '4306125c7c84')
+        self.assertEqual(
+            runner.labels,
+            [
+                {"id": 1, "name": "self-hosted", "type": "read-only"},
+                {"id": 3, "name": "X64", "type": "read-only"},
+                {"id": 4, "name": "Linux", "type": "read-only"},
+            ],
+        )
+        self.assertEqual(runner.name, "4306125c7c84")
         self.assertEqual(runner.os, "linux")
         self.assertEqual(runner.name, "4306125c7c84")
         self.assertIsNone(runner.runner_group_id)
