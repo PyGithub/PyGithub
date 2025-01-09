@@ -103,7 +103,9 @@ class WorkflowRun(Framework.TestCase):
             self.workflow_run.workflow_url,
             "https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1903133",
         )
+        self.assertEqual(self.workflow_run.head_commit.sha, "c6e5cac67a58a4eb11f1f28567a77a6e2cc8ee98")
         self.assertEqual(self.workflow_run.head_commit.message, "add attribute 'name' on WorkflowRun")
+        self.assertEqual(self.workflow_run.head_commit.tree.sha, "3ce398f9ee2571549b7fea545bfa5bf28e3ca0f5")
         self.assertEqual(self.workflow_run.repository.name, "PyGithub")
         self.assertEqual(self.workflow_run.head_repository.name, "PyGithub")
 
