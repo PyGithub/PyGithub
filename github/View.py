@@ -39,9 +39,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Traffic
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Traffic import Traffic
 
 
 class View(NonCompletableGithubObject):
@@ -78,7 +82,7 @@ class View(NonCompletableGithubObject):
         return self._uniques.value
 
     @property
-    def views(self) -> list[github.Traffic.Traffic]:
+    def views(self) -> list[Traffic]:
         return self._views.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

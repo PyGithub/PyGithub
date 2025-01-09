@@ -39,9 +39,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Traffic
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Traffic import Traffic
 
 
 class Clones(NonCompletableGithubObject):
@@ -70,7 +74,7 @@ class Clones(NonCompletableGithubObject):
         )
 
     @property
-    def clones(self) -> list[github.Traffic.Traffic]:
+    def clones(self) -> list[Traffic]:
         return self._clones.value
 
     @property
