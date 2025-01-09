@@ -196,6 +196,7 @@ class Search(Framework.TestCase):
                 23102422,
             ],
         )
+        self.assertEqual(issues[0].score, 0.08252439)
 
     def testSearchCommits(self):
         pages = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
