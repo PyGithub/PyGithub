@@ -407,7 +407,7 @@ class PullRequest(CompletableGithubObject):
         line: Opt[int] = NotSet,
         side: Opt[str] = NotSet,
         start_line: Opt[int] = NotSet,
-        start_side: Opt[int] = NotSet,
+        start_side: Opt[str] = NotSet,
         in_reply_to: Opt[int] = NotSet,
         subject_type: Opt[str] = NotSet,
         as_suggestion: bool = False,
