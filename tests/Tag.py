@@ -46,8 +46,12 @@ class Tag(Framework.TestCase):
         self.assertEqual(self.tag.commit.sha, "19ddb9f4fd996e99a5010d271b3c2e76dd280fb5")
         self.assertEqual(self.tag.name, "v2.5.0")
         self.assertEqual(self.tag.node_id, "MDM6UmVmMzU0NDQ5MDpyZWZzL3RhZ3MvdjIuNS4w")
-        self.assertEqual(self.tag.tarball_url, "https://api.github.com/repos/PyGithub/PyGithub/tarball/refs/tags/v2.5.0")
-        self.assertEqual(self.tag.zipball_url, "https://api.github.com/repos/PyGithub/PyGithub/zipball/refs/tags/v2.5.0")
+        self.assertEqual(
+            self.tag.tarball_url, "https://api.github.com/repos/PyGithub/PyGithub/tarball/refs/tags/v2.5.0"
+        )
+        self.assertEqual(
+            self.tag.zipball_url, "https://api.github.com/repos/PyGithub/PyGithub/zipball/refs/tags/v2.5.0"
+        )
         self.assertEqual(
             repr(self.tag),
             'Tag(name="v2.5.0", commit=Commit(sha="19ddb9f4fd996e99a5010d271b3c2e76dd280fb5"))',
