@@ -272,7 +272,7 @@ class Issue(CompletableGithubObject):
         return self._number.value
 
     @property
-    def performed_via_github_app(self) -> github.GithubApp.GithubApp:
+    def performed_via_github_app(self) -> GithubApp:
         self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
