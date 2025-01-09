@@ -37,7 +37,6 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
 from typing import Any, Dict
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -45,10 +44,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class Clones(NonCompletableGithubObject):
     """
-    This class represents a popular Path for a GitHub repository.
+    This class represents the total number of clones and breakdown per day or week for a GitHub repository.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/repos#get-repository-clones
+    https://docs.github.com/en/rest/metrics/traffic#get-repository-clones
 
     The OpenAPI schema can be found at
     - /components/schemas/clone-traffic
@@ -57,13 +56,11 @@ class Clones(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._count: Attribute[int] = NotSet
-        self._timestamp: Attribute[datetime] = NotSet
         self._uniques: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
             {
-                "timestamp": self._timestamp.value,
                 "count": self._count.value,
                 "uniques": self._uniques.value,
             }
@@ -74,17 +71,11 @@ class Clones(NonCompletableGithubObject):
         return self._count.value
 
     @property
-    def timestamp(self) -> datetime:
-        return self._timestamp.value
-
-    @property
     def uniques(self) -> int:
         return self._uniques.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
-        if "timestamp" in attributes:  # pragma no branch
-            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
