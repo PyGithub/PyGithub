@@ -2,7 +2,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/stats/commit_activity
+/repos/PyGithub/PyGithub/stats/commit_activity
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 202
@@ -13,7 +13,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/stats/commit_activity
+/repos/PyGithub/PyGithub/stats/commit_activity
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
