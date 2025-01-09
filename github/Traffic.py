@@ -1,23 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
-# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,56 +22,54 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from datetime import datetime
+from typing import Any
 
-import github.Traffic
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
-if TYPE_CHECKING:
-    from github.Traffic import Traffic
 
-
-class Clones(NonCompletableGithubObject):
+class Traffic(NonCompletableGithubObject):
     """
-    This class represents the total number of clones and breakdown per day or week for a GitHub repository.
+    This class represents traffic information at a specific point in time.
 
     The reference can be found here
-    https://docs.github.com/en/rest/metrics/traffic#get-repository-clones
+    https://docs.github.com/en/rest/metrics/traffic
 
     The OpenAPI schema can be found at
-    - /components/schemas/clone-traffic
+    - /components/schemas/traffic
 
     """
 
     def _initAttributes(self) -> None:
-        self._clones: Attribute[list[Traffic]] = NotSet
         self._count: Attribute[int] = NotSet
+        self._timestamp: Attribute[datetime] = NotSet
         self._uniques: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
             {
+                "timestamp": self._timestamp.value,
                 "count": self._count.value,
                 "uniques": self._uniques.value,
             }
         )
 
     @property
-    def clones(self) -> list[Traffic]:
-        return self._clones.value
-
-    @property
     def count(self) -> int:
         return self._count.value
+
+    @property
+    def timestamp(self) -> datetime:
+        return self._timestamp.value
 
     @property
     def uniques(self) -> int:
         return self._uniques.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "clones" in attributes:  # pragma no branch
-            self._clones = self._makeListOfClassesAttribute(github.Traffic.Traffic, attributes["clones"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
+        if "timestamp" in attributes:  # pragma no branch
+            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])

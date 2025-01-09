@@ -2596,10 +2596,11 @@ class Repository(CompletableGithubObject):
         if isinstance(data, list):
             return [github.Path.Path(self._requester, headers, item) for item in data]
 
-    def get_views_traffic(self, per: Opt[str] = NotSet) -> None | dict[str, int | list[View]]:
+    def get_views_traffic(self, per: Opt[str] = NotSet) -> View | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.View.View`
         """
         assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters = dict()
@@ -2608,11 +2609,9 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/views", parameters=url_parameters
         )
-        if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
-            data["views"] = [github.View.View(self._requester, headers, item) for item in data["views"]]
-            return data
+        return github.View.View(self._requester, headers, data)
 
-    def get_clones_traffic(self, per: Opt[str] = NotSet) -> dict[str, int | list[Clones]] | None:
+    def get_clones_traffic(self, per: Opt[str] = NotSet) -> Clones | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/clones <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
@@ -2623,9 +2622,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
         )
-        if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
-            data["clones"] = [github.Clones.Clones(self._requester, headers, item) for item in data["clones"]]
-            return data
+        return github.Clones.Clones(self._requester, headers, data)
 
     def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project]:
         """
