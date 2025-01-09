@@ -58,6 +58,7 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
+    from github.NamedUser import NamedUser
     from github.Reaction import Reaction
 
 
@@ -87,7 +88,7 @@ class IssueComment(CompletableGithubObject):
         self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -138,7 +139,7 @@ class IssueComment(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def performed_via_github_app(self) -> github.GithubApp.GithubApp:
+    def performed_via_github_app(self) -> GithubApp:
         self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
@@ -158,7 +159,7 @@ class IssueComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> github.NamedUser.NamedUser:
+    def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
