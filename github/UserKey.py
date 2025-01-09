@@ -38,7 +38,10 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -56,14 +59,21 @@ class UserKey(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
+        self._read_only: Attribute[bool] = NotSet
         self._title: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._verified: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
+
+    @property
+    def created_at(self) -> datetime:
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def id(self) -> int:
@@ -74,6 +84,11 @@ class UserKey(CompletableGithubObject):
     def key(self) -> str:
         self._completeIfNotSet(self._key)
         return self._key.value
+
+    @property
+    def read_only(self) -> bool:
+        self._completeIfNotSet(self._read_only)
+        return self._read_only.value
 
     @property
     def title(self) -> str:
@@ -97,11 +112,15 @@ class UserKey(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
+        if "read_only" in attributes:  # pragma no branch
+            self._read_only = self._makeBoolAttribute(attributes["read_only"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch

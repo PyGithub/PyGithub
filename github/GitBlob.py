@@ -36,7 +36,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -49,9 +51,7 @@ class GitBlob(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/git#blobs
 
     The OpenAPI schema can be found at
-    - /components/schemas/repository-rule-violation-error
     - /components/schemas/short-blob
-    - /components/schemas/validation-error
 
     """
 
@@ -90,7 +90,7 @@ class GitBlob(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch

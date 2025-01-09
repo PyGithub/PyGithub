@@ -26,7 +26,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -44,6 +46,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._annotation_level: Attribute[str] = NotSet
+        self._blob_href: Attribute[str] = NotSet
         self._end_column: Attribute[int] = NotSet
         self._end_line: Attribute[int] = NotSet
         self._message: Attribute[str] = NotSet
@@ -59,6 +62,10 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     @property
     def annotation_level(self) -> str:
         return self._annotation_level.value
+
+    @property
+    def blob_href(self) -> str:
+        return self._blob_href.value
 
     @property
     def end_column(self) -> int:
@@ -92,9 +99,11 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     def title(self) -> str:
         return self._title.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "annotation_level" in attributes:  # pragma no branch
             self._annotation_level = self._makeStringAttribute(attributes["annotation_level"])
+        if "blob_href" in attributes:  # pragma no branch
+            self._blob_href = self._makeStringAttribute(attributes["blob_href"])
         if "end_column" in attributes:  # pragma no branch
             self._end_column = self._makeIntAttribute(attributes["end_column"])
         if "end_line" in attributes:  # pragma no branch
