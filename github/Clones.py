@@ -37,7 +37,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -55,6 +57,7 @@ class Clones(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._clones: Attribute[list[Traffic]] = NotSet
         self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
 
@@ -67,6 +70,10 @@ class Clones(NonCompletableGithubObject):
         )
 
     @property
+    def clones(self) -> list[github.Traffic.Traffic]:
+        return self._clones.value
+
+    @property
     def count(self) -> int:
         return self._count.value
 
@@ -74,7 +81,9 @@ class Clones(NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "clones" in attributes:  # pragma no branch
+            self._clones = self._makeListOfClassesAttribute(github.Traffic.Traffic, attributes["clones"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch

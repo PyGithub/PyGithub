@@ -37,7 +37,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -57,6 +59,7 @@ class View(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
+        self._views: Attribute[list[Traffic]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -74,8 +77,14 @@ class View(NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    @property
+    def views(self) -> list[github.Traffic.Traffic]:
+        return self._views.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
+        if "views" in attributes:  # pragma no branch
+            self._views = self._makeListOfClassesAttribute(github.Traffic.Traffic, attributes["views"])
