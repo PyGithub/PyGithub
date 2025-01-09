@@ -51,6 +51,7 @@ class Permissions(NonCompletableGithubObject):
     - /components/schemas/minimal-repository/properties/permissions
     - /components/schemas/repo-search-result-item/properties/permissions
     - /components/schemas/repository/properties/permissions
+    - /components/schemas/team/properties/permissions
 
     """
 
