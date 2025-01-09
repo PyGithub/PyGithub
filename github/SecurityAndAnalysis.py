@@ -39,7 +39,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 import github.SecurityAndAnalysisFeature
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -60,6 +62,7 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
             github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
         ] = NotSet
         self._secret_scanning: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_ai_detection: Attribute[str] = NotSet
         self._secret_scanning_non_provider_patterns: Attribute[
             github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
         ] = NotSet
@@ -95,6 +98,10 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self._secret_scanning.value
 
     @property
+    def secret_scanning_ai_detection(self) -> str:
+        return self._secret_scanning_ai_detection.value
+
+    @property
     def secret_scanning_non_provider_patterns(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
         return self._secret_scanning_non_provider_patterns.value
 
@@ -106,20 +113,28 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
     def secret_scanning_validity_checks(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
         return self._secret_scanning_validity_checks.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        def make_attribute(attribute_name: str) -> None:
-            if attribute_name in attributes:
-                setattr(
-                    self,
-                    f"_{attribute_name}",
-                    self._makeClassAttribute(
-                        github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes[attribute_name]
-                    ),
-                )
-
-        make_attribute("advanced_security")
-        make_attribute("dependabot_security_updates")
-        make_attribute("secret_scanning")
-        make_attribute("secret_scanning_non_provider_patterns")
-        make_attribute("secret_scanning_push_protection")
-        make_attribute("secret_scanning_validity_checks")
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "advanced_security" in attributes:  # pragma no branch
+            self._advanced_security = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
+            )
+        if "dependabot_security_updates" in attributes:  # pragma no branch
+            self._dependabot_security_updates = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["dependabot_security_updates"]
+            )
+        if "secret_scanning" in attributes:  # pragma no branch
+            self._secret_scanning = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["secret_scanning"]
+            )
+        if "secret_scanning_ai_detection" in attributes:  # pragma no branch
+            self._secret_scanning_ai_detection = self._makeStringAttribute(attributes["secret_scanning_ai_detection"])
+        if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
+            self._secret_scanning_non_provider_patterns = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
+                attributes["secret_scanning_non_provider_patterns"],
+            )
+        if "secret_scanning_push_protection" in attributes:  # pragma no branch
+            self._secret_scanning_push_protection = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
+                attributes["secret_scanning_push_protection"],
+            )
