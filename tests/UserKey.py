@@ -34,8 +34,9 @@
 
 from __future__ import annotations
 
-from . import Framework
 from datetime import datetime, timezone
+
+from . import Framework
 
 
 class UserKey(Framework.TestCase):
