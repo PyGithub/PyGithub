@@ -90,6 +90,7 @@ class Search(Framework.TestCase):
             ],
         )
         self.assertEqual(users.totalCount, 6038)
+        self.assertEqual(users[0].score, 1.0)
 
     def testGetPageOnSearchUsers(self):
         users = self.g.search_users("", location="Berlin")
