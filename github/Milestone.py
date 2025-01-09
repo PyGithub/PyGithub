@@ -67,13 +67,16 @@ class Milestone(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._closed_at: Attribute[datetime] = NotSet
         self._closed_issues: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
         self._description: Attribute[str] = NotSet
         self._due_on: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._labels_url: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
         self._open_issues: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
@@ -87,6 +90,11 @@ class Milestone(CompletableGithubObject):
     @property
     def _identity(self) -> int:
         return self.number
+
+    @property
+    def closed_at(self) -> datetime:
+        self._completeIfNotSet(self._closed_at)
+        return self._closed_at.value
 
     @property
     def closed_issues(self) -> int:
@@ -114,6 +122,11 @@ class Milestone(CompletableGithubObject):
         return self._due_on.value
 
     @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
+
+    @property
     def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
@@ -122,6 +135,11 @@ class Milestone(CompletableGithubObject):
     def labels_url(self) -> str:
         self._completeIfNotSet(self._labels_url)
         return self._labels_url.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def number(self) -> int:
@@ -190,6 +208,8 @@ class Milestone(CompletableGithubObject):
         return PaginatedList(github.Label.Label, self._requester, f"{self.url}/labels", None)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "closed_at" in attributes:  # pragma no branch
+            self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
         if "closed_issues" in attributes:  # pragma no branch
             self._closed_issues = self._makeIntAttribute(attributes["closed_issues"])
         if "created_at" in attributes:  # pragma no branch
@@ -200,10 +220,14 @@ class Milestone(CompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "due_on" in attributes:  # pragma no branch
             self._due_on = self._makeDatetimeAttribute(attributes["due_on"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "labels_url" in attributes:  # pragma no branch
             self._labels_url = self._makeStringAttribute(attributes["labels_url"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "open_issues" in attributes:  # pragma no branch
