@@ -40,12 +40,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GitAuthor
-import github.GithubObject
 import github.GitTree
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, is_defined, is_undefined
+
+if TYPE_CHECKING:
+    from github.GitAuthor import GitAuthor
+    from github.GitTree import GitTree
 
 
 class GitCommit(CompletableGithubObject):
@@ -68,9 +71,9 @@ class GitCommit(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[github.GitAuthor.GitAuthor] = NotSet
+        self._author: Attribute[GitAuthor] = NotSet
         self._comment_count: Attribute[int] = NotSet
-        self._committer: Attribute[github.GitAuthor.GitAuthor] = NotSet
+        self._committer: Attribute[GitAuthor] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._message: Attribute[str] = NotSet
@@ -78,7 +81,7 @@ class GitCommit(CompletableGithubObject):
         self._parents: Attribute[list[GitCommit]] = NotSet
         self._sha: Attribute[str] = NotSet
         self._timestamp: Attribute[datetime] = NotSet
-        self._tree: Attribute[github.GitTree.GitTree] = NotSet
+        self._tree: Attribute[GitTree] = NotSet
         self._tree_id: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._verification: Attribute[dict[str, Any]] = NotSet
@@ -91,7 +94,7 @@ class GitCommit(CompletableGithubObject):
         return self.sha
 
     @property
-    def author(self) -> github.GitAuthor.GitAuthor:
+    def author(self) -> GitAuthor:
         self._completeIfNotSet(self._author)
         return self._author.value
 
@@ -101,7 +104,7 @@ class GitCommit(CompletableGithubObject):
         return self._comment_count.value
 
     @property
-    def committer(self) -> github.GitAuthor.GitAuthor:
+    def committer(self) -> GitAuthor:
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
@@ -132,6 +135,9 @@ class GitCommit(CompletableGithubObject):
 
     @property
     def sha(self) -> str:
+        # if populated from a simple-commit, id actually holds the sha
+        if is_undefined(self._sha) and is_defined(self._id):
+            return self._id.value
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
@@ -141,7 +147,10 @@ class GitCommit(CompletableGithubObject):
         return self._timestamp.value
 
     @property
-    def tree(self) -> github.GitTree.GitTree:
+    def tree(self) -> GitTree:
+        # if populated from a simple-commit, tree_id holds the sha
+        if is_undefined(self._tree) and is_defined(self._tree_id):
+            return github.GitTree.GitTree(self._requester, self._headers, {"sha": self._tree_id.value})
         self._completeIfNotSet(self._tree)
         return self._tree.value
 
