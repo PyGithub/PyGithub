@@ -23,6 +23,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -62,6 +63,9 @@ class Project(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects
+
+    The OpenAPI schema can be found at
+    - /components/schemas/project
 
     """
 
@@ -200,7 +204,7 @@ class Project(CompletableGithubObject):
             self._requester,
             self.columns_url,
             None,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def create_column(self, name: str) -> github.ProjectColumn.ProjectColumn:

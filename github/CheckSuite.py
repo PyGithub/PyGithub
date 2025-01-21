@@ -7,6 +7,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -55,6 +56,10 @@ class CheckSuite(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/checks#check-suites
 
+    The OpenAPI schema can be found at
+    - /components/schemas/check-run/properties/check_suite
+    - /components/schemas/check-suite
+
     """
 
     def _initAttributes(self) -> None:
@@ -69,8 +74,11 @@ class CheckSuite(CompletableGithubObject):
         self._head_sha: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._latest_check_runs_count: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._pull_requests: Attribute[list[PullRequest]] = NotSet
         self._repository: Attribute[Repository] = NotSet
+        self._rerequestable: Attribute[bool] = NotSet
+        self._runs_rerequestable: Attribute[bool] = NotSet
         self._status: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -167,6 +175,11 @@ class CheckSuite(CompletableGithubObject):
         return self._latest_check_runs_count.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def pull_requests(self) -> list[PullRequest]:
         """
         :type: list of :class:`github.PullRequest.PullRequest`
@@ -181,6 +194,16 @@ class CheckSuite(CompletableGithubObject):
         """
         self._completeIfNotSet(self._repository)
         return self._repository.value
+
+    @property
+    def rerequestable(self) -> bool:
+        self._completeIfNotSet(self._rerequestable)
+        return self._rerequestable.value
+
+    @property
+    def runs_rerequestable(self) -> bool:
+        self._completeIfNotSet(self._runs_rerequestable)
+        return self._runs_rerequestable.value
 
     @property
     def status(self) -> str:
@@ -203,7 +226,6 @@ class CheckSuite(CompletableGithubObject):
         """
         :type: string
         """
-        self._completeIfNotSet(self._url)
         return self._url.value
 
     def rerequest(self) -> bool:
@@ -270,12 +292,18 @@ class CheckSuite(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "latest_check_runs_count" in attributes:  # pragma no branch
             self._latest_check_runs_count = self._makeIntAttribute(attributes["latest_check_runs_count"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "pull_requests" in attributes:  # pragma no branch
             self._pull_requests = self._makeListOfClassesAttribute(
                 github.PullRequest.PullRequest, attributes["pull_requests"]
             )
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+        if "rerequestable" in attributes:  # pragma no branch
+            self._rerequestable = self._makeBoolAttribute(attributes["rerequestable"])
+        if "runs_rerequestable" in attributes:  # pragma no branch
+            self._runs_rerequestable = self._makeBoolAttribute(attributes["runs_rerequestable"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "updated_at" in attributes:  # pragma no branch

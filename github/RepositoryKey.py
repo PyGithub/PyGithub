@@ -22,7 +22,9 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Ramiro Morales <ramiro@users.noreply.github.com>              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,8 +44,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -55,6 +59,9 @@ class RepositoryKey(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#deploy-keys
 
+    The OpenAPI schema can be found at
+    - /components/schemas/deploy-key
+
     """
 
     def _initAttributes(self) -> None:
@@ -63,10 +70,10 @@ class RepositoryKey(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
         self._last_used: Attribute[datetime] = NotSet
+        self._read_only: Attribute[bool] = NotSet
         self._title: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._verified: Attribute[bool] = NotSet
-        self._read_only: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
@@ -97,6 +104,11 @@ class RepositoryKey(CompletableGithubObject):
         return self._last_used.value
 
     @property
+    def read_only(self) -> bool:
+        self._completeIfNotSet(self._read_only)
+        return self._read_only.value
+
+    @property
     def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
@@ -111,18 +123,13 @@ class RepositoryKey(CompletableGithubObject):
         self._completeIfNotSet(self._verified)
         return self._verified.value
 
-    @property
-    def read_only(self) -> bool:
-        self._completeIfNotSet(self._read_only)
-        return self._read_only.value
-
     def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/keys/{id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "added_by" in attributes:  # pragma no branch
             self._added_by = self._makeStringAttribute(attributes["added_by"])
         if "created_at" in attributes:  # pragma no branch
@@ -134,11 +141,11 @@ class RepositoryKey(CompletableGithubObject):
         if "last_used" in attributes:  # pragma no branch
             assert attributes["last_used"] is None or isinstance(attributes["last_used"], str), attributes["last_used"]
             self._last_used = self._makeDatetimeAttribute(attributes["last_used"])
+        if "read_only" in attributes:  # pragma no branch
+            self._read_only = self._makeBoolAttribute(attributes["read_only"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
             self._verified = self._makeBoolAttribute(attributes["verified"])
-        if "read_only" in attributes:  # pragma no branch
-            self._read_only = self._makeBoolAttribute(attributes["read_only"])

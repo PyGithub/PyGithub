@@ -3,6 +3,7 @@
 # Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -41,31 +42,15 @@ class Variable(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
-        self._value: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._name: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-        self._variables_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
+        self._value: Attribute[str] = NotSet
+        self._variables_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self.name})
-
-    @property
-    def name(self) -> str:
-        """
-        :type: string
-        """
-        self._completeIfNotSet(self._name)
-        return self._name.value
-
-    @property
-    def value(self) -> str:
-        """
-        :type: string
-        """
-        self._completeIfNotSet(self._value)
-        return self._value.value
 
     @property
     def created_at(self) -> datetime:
@@ -76,19 +61,20 @@ class Variable(CompletableGithubObject):
         return self._created_at.value
 
     @property
+    def name(self) -> str:
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._name)
+        return self._name.value
+
+    @property
     def updated_at(self) -> datetime:
         """
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
-
-    @property
-    def variables_url(self) -> str:
-        """
-        :type: string
-        """
-        return self._variables_url.value
 
     @property
     def url(self) -> str:
@@ -99,6 +85,21 @@ class Variable(CompletableGithubObject):
         if self._url is NotSet:
             self._url = self._makeStringAttribute(self.variables_url + "/" + self.name)
         return self._url.value
+
+    @property
+    def value(self) -> str:
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._value)
+        return self._value.value
+
+    @property
+    def variables_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._variables_url.value
 
     def edit(self, value: str) -> bool:
         """
@@ -127,15 +128,15 @@ class Variable(CompletableGithubObject):
         self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "value" in attributes:
-            self._value = self._makeStringAttribute(attributes["value"])
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "variables_url" in attributes:
-            self._variables_url = self._makeStringAttribute(attributes["variables_url"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+        if "value" in attributes:
+            self._value = self._makeStringAttribute(attributes["value"])
+        if "variables_url" in attributes:
+            self._variables_url = self._makeStringAttribute(attributes["variables_url"])

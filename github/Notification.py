@@ -19,7 +19,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Matthias Bilger <matthias@bilger.info>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -59,14 +61,17 @@ class Notification(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#notifications
 
+    The OpenAPI schema can be found at
+    - /components/schemas/thread
+
     """
 
     def _initAttributes(self) -> None:
         self._id: Attribute[str] = NotSet
         self._last_read_at: Attribute[datetime] = NotSet
+        self._reason: Attribute[str] = NotSet
         self._repository: Attribute[github.Repository.Repository] = NotSet
         self._subject: Attribute[github.NotificationSubject.NotificationSubject] = NotSet
-        self._reason: Attribute[str] = NotSet
         self._subscription_url: Attribute[str] = NotSet
         self._unread: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -86,6 +91,11 @@ class Notification(CompletableGithubObject):
         return self._last_read_at.value
 
     @property
+    def reason(self) -> str:
+        self._completeIfNotSet(self._reason)
+        return self._reason.value
+
+    @property
     def repository(self) -> github.Repository.Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
@@ -94,11 +104,6 @@ class Notification(CompletableGithubObject):
     def subject(self) -> github.NotificationSubject.NotificationSubject:
         self._completeIfNotSet(self._subject)
         return self._subject.value
-
-    @property
-    def reason(self) -> str:
-        self._completeIfNotSet(self._reason)
-        return self._reason.value
 
     @property
     def subscription_url(self) -> str:
@@ -129,6 +134,15 @@ class Notification(CompletableGithubObject):
             self.url,
         )
 
+    def mark_as_done(self) -> None:
+        """
+        :calls: `DELETE /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url,
+        )
+
     def get_pull_request(self) -> github.PullRequest.PullRequest:
         headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
@@ -142,14 +156,14 @@ class Notification(CompletableGithubObject):
             self._id = self._makeStringAttribute(attributes["id"])
         if "last_read_at" in attributes:  # pragma no branch
             self._last_read_at = self._makeDatetimeAttribute(attributes["last_read_at"])
+        if "reason" in attributes:  # pragma no branch
+            self._reason = self._makeStringAttribute(attributes["reason"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "subject" in attributes:  # pragma no branch
             self._subject = self._makeClassAttribute(
                 github.NotificationSubject.NotificationSubject, attributes["subject"]
             )
-        if "reason" in attributes:  # pragma no branch
-            self._reason = self._makeStringAttribute(attributes["reason"])
         if "subscription_url" in attributes:  # pragma no branch
             self._subscription_url = self._makeStringAttribute(attributes["subscription_url"])
         if "unread" in attributes:  # pragma no branch
