@@ -1750,10 +1750,14 @@ class Repository(Framework.TestCase):
         self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
 
     def testMergeUpstream(self):
-        self.assertTrue(self.repo.merge_upstream("master"))
+        # Use fork for being able to update it
+        repo = self.g.get_repo("Felixoid/PyGithub")
+        self.assertTrue(repo.merge_upstream("main"))
 
     def testMergeUpstreamFailure(self):
-        self.assertFalse(self.repo.merge_upstream("doesNotExist"))
+        # Use fork for being able to update it
+        repo = self.g.get_repo("Felixoid/PyGithub")
+        self.assertFalse(repo.merge_upstream("doesNotExist"))
 
     def testGetIssuesComments(self):
         self.assertListKeyEqual(
