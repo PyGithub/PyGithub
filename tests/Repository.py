@@ -1752,12 +1752,18 @@ class Repository(Framework.TestCase):
     def testMergeUpstream(self):
         # Use fork for being able to update it
         repo = self.g.get_repo("Felixoid/PyGithub")
-        self.assertTrue(repo.merge_upstream("main"))
+        repo.merge_upstream("main")
 
     def testMergeUpstreamFailure(self):
         # Use fork for being able to update it
         repo = self.g.get_repo("Felixoid/PyGithub")
-        self.assertFalse(repo.merge_upstream("doesNotExist"))
+        with self.assertRaises(github.GithubException) as raisedexp:
+            repo.merge_upstream("doesNotExist")
+        self.assertEqual(raisedexp.exception.status, 404)
+
+        with self.assertRaises(github.GithubException) as raisedexp:
+            repo.merge_upstream("merge-conflict")
+        self.assertEqual(raisedexp.exception.status, 409)
 
     def testGetIssuesComments(self):
         self.assertListKeyEqual(
