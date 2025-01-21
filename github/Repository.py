@@ -3861,7 +3861,7 @@ class Repository(CompletableGithubObject):
 
     def merge_upstream(self, branch: str) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/merge-upstream <http://docs.github.com/en/rest/reference/repos#sync-a-fork-branch-with-the-upstream-repository>`_
+        :calls: `POST /repos/{owner}/{repo}/merge-upstream <https://docs.github.com/en/rest/branches/branches#sync-a-fork-branch-with-the-upstream-repository>`_
         :param branch: string
         :rtype: bool
         :raises: :class:`GithubException` for error status codes
