@@ -265,7 +265,9 @@ if TYPE_CHECKING:
     from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
+    from github.EnvironmentDeploymentBranchPolicy import (
+        EnvironmentDeploymentBranchPolicyParams,
+    )
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
     from github.GitBlob import GitBlob
@@ -3857,7 +3859,7 @@ class Repository(CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def merge_upstream(self, branch: str):
+    def merge_upstream(self, branch: str) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/merge-upstream <http://docs.github.com/en/rest/reference/repos#sync-a-fork-branch-with-the-upstream-repository>`_
         :param branch: string
@@ -3865,9 +3867,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(branch, str), branch
         post_parameters = {"branch": branch}
-        status, _, _ = self._requester.requestJson(
-            "POST", f"{self.url}/merge-upstream", input=post_parameters
-        )
+        status, _, _ = self._requester.requestJson("POST", f"{self.url}/merge-upstream", input=post_parameters)
         return status == 200
 
     def replace_topics(self, topics: list[str]) -> None:
