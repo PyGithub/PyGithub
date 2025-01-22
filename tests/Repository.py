@@ -1749,9 +1749,12 @@ class Repository(Framework.TestCase):
         self.assertEqual(raisedexp.exception.status, 409)
         self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
 
-    def testMergeUpstream(self):
+    def testMergeUpstreamSuccess(self):
         # Use fork for being able to update it
         repo = self.g.get_repo("Felixoid/PyGithub")
+        # First one to sync with upstream
+        repo.merge_upstream("main")
+        # Second one to check it's already synced
         repo.merge_upstream("main")
 
     def testMergeUpstreamFailure(self):
