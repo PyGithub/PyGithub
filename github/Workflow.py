@@ -160,22 +160,14 @@ class Workflow(CompletableGithubObject):
             inputs = {}
         self._requester.requestJsonAndCheck("POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs})
 
-    def create_dispatch_throw(
-        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
-    ) -> Any:
-        """
-        Call Create Dispatch, throw an exception on error.
-
-        :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
-
-        """
-        return self._create_dispatch(ref, inputs)
-
     def create_dispatch(
-        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
     ) -> bool:
         """
-        Call Create Dispatch, return False without details on error.
+        Call Create Dispatch, raises or return False without details on error, depending on the "throw" parameter.
 
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
 
@@ -183,6 +175,8 @@ class Workflow(CompletableGithubObject):
         try:
             self._create_dispatch(ref, inputs)
         except GithubException.GithubException:
+            if throw:
+                raise
             return False
         return True
 
