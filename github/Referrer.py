@@ -16,6 +16,7 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -48,11 +49,14 @@ class Referrer(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#traffic
 
+    The OpenAPI schema can be found at
+    - /components/schemas/referrer-traffic
+
     """
 
     def _initAttributes(self) -> None:
-        self._referrer: Attribute[str] = NotSet
         self._count: Attribute[int] = NotSet
+        self._referrer: Attribute[str] = NotSet
         self._uniques: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
@@ -65,21 +69,21 @@ class Referrer(NonCompletableGithubObject):
         )
 
     @property
-    def referrer(self) -> str:
-        return self._referrer.value
-
-    @property
     def count(self) -> int:
         return self._count.value
+
+    @property
+    def referrer(self) -> str:
+        return self._referrer.value
 
     @property
     def uniques(self) -> int:
         return self._uniques.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "referrer" in attributes:  # pragma no branch
-            self._referrer = self._makeStringAttribute(attributes["referrer"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
+        if "referrer" in attributes:  # pragma no branch
+            self._referrer = self._makeStringAttribute(attributes["referrer"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])

@@ -39,7 +39,7 @@ from . import Framework
 class ConditionalRequestUpdate(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("akfish/PyGithub", lazy=False)
+        self.repo = self.g.get_repo("akfish/PyGithub")
 
     def testDidNotUpdate(self):
         self.assertFalse(self.repo.update(), msg="The repo is not changed. But update() != False")
@@ -51,5 +51,5 @@ class ConditionalRequestUpdate(Framework.TestCase):
         )
 
     def testUpdateObjectWithoutEtag(self):
-        r = self.g.get_repo("jacquev6/PyGithub", lazy=False)
+        r = self.g.get_repo("jacquev6/PyGithub")
         self.assertTrue(r.update())

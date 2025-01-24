@@ -18,6 +18,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -56,16 +57,20 @@ class Tag(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#list-repository-tags
 
-    """
+    The OpenAPI schema can be found at
+    - /components/schemas/tag
 
-    def __repr__(self) -> str:
-        return self.get__repr__({"name": self._name.value, "commit": self._commit.value})
+    """
 
     def _initAttributes(self) -> None:
         self._commit: Attribute[Commit] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self._name.value, "commit": self._commit.value})
 
     @property
     def commit(self) -> Commit:
@@ -74,6 +79,10 @@ class Tag(NonCompletableGithubObject):
     @property
     def name(self) -> str:
         return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        return self._node_id.value
 
     @property
     def tarball_url(self) -> str:
@@ -88,6 +97,8 @@ class Tag(NonCompletableGithubObject):
             self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "tarball_url" in attributes:  # pragma no branch
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "zipball_url" in attributes:  # pragma no branch

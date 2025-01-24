@@ -16,6 +16,7 @@
 # Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -51,9 +52,9 @@ class CodeScanTool(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._guid: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._version: Attribute[str] = NotSet
-        self._guid: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -65,6 +66,10 @@ class CodeScanTool(NonCompletableGithubObject):
         )
 
     @property
+    def guid(self) -> str:
+        return self._guid.value
+
+    @property
     def name(self) -> str:
         return self._name.value
 
@@ -72,14 +77,10 @@ class CodeScanTool(NonCompletableGithubObject):
     def version(self) -> str:
         return self._version.value
 
-    @property
-    def guid(self) -> str:
-        return self._guid.value
-
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "guid" in attributes:  # pragma no branch
+            self._guid = self._makeStringAttribute(attributes["guid"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "version" in attributes:  # pragma no branch
             self._version = self._makeStringAttribute(attributes["version"])
-        if "guid" in attributes:  # pragma no branch
-            self._guid = self._makeStringAttribute(attributes["guid"])

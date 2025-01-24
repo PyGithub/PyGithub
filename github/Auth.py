@@ -6,6 +6,7 @@
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -73,6 +74,22 @@ class Auth(abc.ABC):
 
         """
 
+    def authentication(self, headers: dict) -> None:
+        """
+        Add authorization to the headers.
+        """
+        headers["Authorization"] = f"{self.token_type} {self.token}"
+
+    def mask_authentication(self, headers: dict) -> None:
+        """
+        Mask header, e.g. for logging.
+        """
+        headers["Authorization"] = self._masked_token
+
+    @property
+    def _masked_token(self) -> str:
+        return "(unknown auth removed)"
+
 
 class HTTPBasicAuth(Auth, abc.ABC):
     @property
@@ -96,6 +113,10 @@ class HTTPBasicAuth(Auth, abc.ABC):
     @property
     def token(self) -> str:
         return base64.b64encode(f"{self.username}:{self.password}".encode()).decode("utf-8").replace("\n", "")
+
+    @property
+    def _masked_token(self) -> str:
+        return "Basic (login and password removed)"
 
 
 class Login(HTTPBasicAuth):
@@ -142,6 +163,10 @@ class Token(Auth):
     @property
     def token(self) -> str:
         return self._token
+
+    @property
+    def _masked_token(self) -> str:
+        return "token (oauth token removed)"
 
 
 class JWT(Auth, ABC):
@@ -341,6 +366,10 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
             permissions=self._token_permissions,
         )
 
+    @property
+    def _masked_token(self) -> str:
+        return "token (oauth token removed)"
+
 
 class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     """
@@ -422,7 +451,6 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
             },
-            completed=False,
         )
 
         return self
@@ -459,6 +487,10 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     @property
     def refresh_expires_at(self) -> Optional[datetime]:
         return self._refresh_expires_at
+
+    @property
+    def _masked_token(self) -> str:
+        return "Bearer (jwt removed)"
 
 
 class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):

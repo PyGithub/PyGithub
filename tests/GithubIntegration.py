@@ -12,6 +12,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -136,6 +138,9 @@ class GithubIntegration(Framework.BasicTestCase):
                 pool_size=10,
                 seconds_between_requests=100,
                 seconds_between_writes=1000,
+                # v3: this should not be the default value, so if this has been changed in v3,
+                # change it here is well
+                lazy=True,
             )
 
             # assert kwargs consists of ALL requester constructor arguments
@@ -169,6 +174,10 @@ class GithubIntegration(Framework.BasicTestCase):
             {"issues": "read", "metadata": "read"},
         )
         self.assertEqual(repo_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(repo_installation_authorization.repositories)
+        self.assertIsNone(repo_installation_authorization.single_file)
+        self.assertIsNone(repo_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(repo_installation_authorization.single_file_paths)
 
         # Get org installation access token
         org_installation_authorization = github_integration.get_access_token(self.org_installation_id)
@@ -184,6 +193,10 @@ class GithubIntegration(Framework.BasicTestCase):
         }
         self.assertDictEqual(org_installation_authorization.permissions, org_permissions)
         self.assertEqual(org_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(org_installation_authorization.repositories)
+        self.assertIsNone(org_installation_authorization.single_file)
+        self.assertIsNone(org_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(org_installation_authorization.single_file_paths)
 
         # Get user installation access token
         user_installation_authorization = github_integration.get_access_token(self.user_installation_id)
@@ -196,6 +209,10 @@ class GithubIntegration(Framework.BasicTestCase):
             {"issues": "read", "metadata": "read"},
         )
         self.assertEqual(user_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(user_installation_authorization.repositories)
+        self.assertIsNone(user_installation_authorization.single_file)
+        self.assertIsNone(user_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(user_installation_authorization.single_file_paths)
 
     def testGetUserInstallation(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
@@ -280,3 +297,6 @@ class GithubIntegration(Framework.BasicTestCase):
 
         self.assertEqual(app.name, "PyGithubTest")
         self.assertEqual(app.url, "/apps/pygithubtest")
+
+        assert github_integration.requester is github_integration.__requester
+        assert app.requester is app._requester

@@ -16,6 +16,7 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -48,12 +49,15 @@ class Path(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#traffic
 
+    The OpenAPI schema can be found at
+    - /components/schemas/content-traffic
+
     """
 
     def _initAttributes(self) -> None:
+        self._count: Attribute[int] = NotSet
         self._path: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
-        self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
@@ -67,6 +71,10 @@ class Path(NonCompletableGithubObject):
         )
 
     @property
+    def count(self) -> int:
+        return self._count.value
+
+    @property
     def path(self) -> str:
         return self._path.value
 
@@ -75,19 +83,15 @@ class Path(NonCompletableGithubObject):
         return self._title.value
 
     @property
-    def count(self) -> int:
-        return self._count.value
-
-    @property
     def uniques(self) -> int:
         return self._uniques.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "count" in attributes:  # pragma no branch
+            self._count = self._makeIntAttribute(attributes["count"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
-        if "count" in attributes:  # pragma no branch
-            self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])

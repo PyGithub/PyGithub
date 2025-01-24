@@ -15,6 +15,8 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,6 +39,7 @@
 import github
 
 from . import Framework
+from .Authentication import CustomAuth
 
 
 class Logging(Framework.BasicTestCase):
@@ -215,3 +218,17 @@ class Logging(Framework.BasicTestCase):
             None,
         )
         self.assertEqual(requestHeaders["Authorization"], "thisisnotatoken")
+
+    def testMaskingOfCustomAuthHeader(self):
+        requestHeaders = {"Custom key": "secret"}
+        responseHeaders = {"status": "200 OK"}
+        github.Github(auth=CustomAuth())._Github__requester._Requester__log(
+            "GET",
+            "http://example.com",
+            requestHeaders,
+            None,
+            200,
+            responseHeaders,
+            None,
+        )
+        self.assertEqual({"Custom key": "Masked custom header"}, self.logger.requestHeaders)

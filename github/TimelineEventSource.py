@@ -16,6 +16,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -57,22 +58,22 @@ class TimelineEventSource(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._type: Attribute[str] = NotSet
         self._issue: Attribute[Issue] = NotSet
+        self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def type(self) -> str:
-        return self._type.value
-
-    @property
     def issue(self) -> Issue:
         return self._issue.value
 
+    @property
+    def type(self) -> str:
+        return self._type.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "type" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
         if "issue" in attributes:  # pragma no branch
             self._issue = self._makeClassAttribute(github.Issue.Issue, attributes["issue"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])
