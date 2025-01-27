@@ -145,6 +145,6 @@ class Workflow(Framework.TestCase):
     def testCreateDispatchException(self):
         workflow = self.g.get_repo("test-org/test-repo").get_workflow("workflow-with-params.yaml")
         with self.assertRaises(GithubException) as raisedexp:
-            workflow.create_dispatch_throw("main")
+            workflow.create_dispatch("main", throw=True)
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(raisedexp.exception.data["message"], "Required input 'mandatory-parameter' not provided")
