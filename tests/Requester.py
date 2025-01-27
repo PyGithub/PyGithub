@@ -373,7 +373,9 @@ class Requester(Framework.TestCase):
         )
 
     def testShouldCreateUnknownObjectException2(self):
-        exc = self.g._Github__requester.createException(404, {"header": "value"}, {"message": "No object found for the path some-nonexistent-file"})
+        exc = self.g._Github__requester.createException(
+            404, {"header": "value"}, {"message": "No object found for the path some-nonexistent-file"}
+        )
         self.assertException(
             exc,
             github.UnknownObjectException,
