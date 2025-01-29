@@ -1129,8 +1129,7 @@ class Requester:
                 status == 302
                 and "location" in responseHeaders
                 and (
-                    isinstance(original_cnx, HTTPSRequestsConnectionClass)
-                    or isinstance(original_cnx, HTTPRequestsConnectionClass)
+                    isinstance(original_cnx, (HTTPSRequestsConnectionClass, HTTPRequestsConnectionClass))
                 )
             ):
                 location = responseHeaders["location"]
