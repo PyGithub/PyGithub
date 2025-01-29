@@ -1128,9 +1128,7 @@ class Requester:
             if (
                 status == 302
                 and "location" in responseHeaders
-                and (
-                    isinstance(original_cnx, (HTTPSRequestsConnectionClass, HTTPRequestsConnectionClass))
-                )
+                and (isinstance(original_cnx, (HTTPSRequestsConnectionClass, HTTPRequestsConnectionClass)))
             ):
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
