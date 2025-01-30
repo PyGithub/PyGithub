@@ -23,36 +23,68 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from tempfile import NamedTemporaryFile
 
 from . import Framework
-
-repo_name = "RepoTest"
-user = "rickrickston123"
-release_id = 28524234
 
 
 class GitReleaseAsset(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user(user).get_repo(repo_name)
-        self.release = self.repo.get_release(release_id)
+        self.release = self.g.get_repo("EnricoMi/PyGithub", lazy=True).get_release(197548596)
         self.asset = self.release.assets[0]
 
     def testAttributes(self):
         self.assertEqual(
-            self.asset.browser_download_url, "https://github.com/rickrickston123/RepoTest/releases/download/v1.0/fact"
+            self.asset.browser_download_url, "https://github.com/EnricoMi/PyGithub/releases/download/v1.55/asset1.md"
         )
-        self.assertEqual(self.asset.content_type, "application/octet-stream")
-        self.assertEqual(self.asset.created_at, datetime(2020, 7, 14, 0, 58, 17, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.content_type, "text/markdown")
+        self.assertEqual(self.asset.created_at, datetime(2025, 1, 30, 11, 11, 32, tzinfo=timezone.utc))
         self.assertEqual(self.asset.download_count, 0)
-        self.assertEqual(self.asset.id, 22848494)
+        self.assertEqual(self.asset.id, 224868540)
         self.assertIsNone(self.asset.label)
-        self.assertEqual(self.asset.name, "fact")
-        self.assertEqual(self.asset.node_id, "MDEyOlJlbGVhc2VBc3NldDIyODQ4NDk0")
-        self.assertEqual(self.asset.size, 40)
+        self.assertEqual(self.asset.name, "asset1.md")
+        self.assertEqual(self.asset.node_id, "RA_kwDOGpsAJ84NZzi8")
+        self.assertEqual(self.asset.size, 2524)
         self.assertEqual(self.asset.state, "uploaded")
-        self.assertEqual(self.asset.updated_at, datetime(2020, 7, 14, 0, 58, 18, tzinfo=timezone.utc))
-        self.assertEqual(self.asset.uploader.login, "rickrickston123")
+        self.assertEqual(self.asset.updated_at, datetime(2025, 1, 30, 11, 12, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.uploader.login, "EnricoMi")
+        self.assertEqual(self.asset.url, "https://api.github.com/repos/EnricoMi/PyGithub/releases/assets/224868540")
+
+    def testDownloadAssetFile(self):
+        with NamedTemporaryFile(mode="rb") as file:
+            self.asset.download_asset(file.name)
+            content = file.read()
+        self.assertEqual(len(content), 2524)
         self.assertEqual(
-            self.asset.url, "https://api.github.com/repos/rickrickston123/RepoTest/releases/assets/22848494"
+            content[:172],
+            b"# PyGitHub\n\n"
+            b"[![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)\n"
+            b"![CI](https://github.com/PyGithub/PyGithub/workflows/CI/badge.svg)\n",
         )
+        self.assertEqual(content[-50:], b"send an email to someone in the MAINTAINERS file.\n")
+
+        source_asset = self.release.assets[1]
+        with NamedTemporaryFile(mode="rb") as file:
+            source_asset.download_asset(file.name)
+            content = file.read()
+        self.assertEqual(len(content), 1199)
+        self.assertEqual(content[:19], b"\x1f\x8b\x08\x08\xf5\x9aag\x00\x03README.md")
+
+    def testDownloadAssetStream(self):
+        (_, _, chunks) = self.asset.download_asset()
+        content = b"".join([chunk for chunk in chunks if chunk])
+        self.assertEqual(len(content), 2524)
+        self.assertEqual(
+            content[:172],
+            b"# PyGitHub\n\n"
+            b"[![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)\n"
+            b"![CI](https://github.com/PyGithub/PyGithub/workflows/CI/badge.svg)\n",
+        )
+        self.assertEqual(content[-50:], b"send an email to someone in the MAINTAINERS file.\n")
+
+        source_asset = self.release.assets[1]
+        (_, _, chunks) = source_asset.download_asset()
+        content = b"".join([chunk for chunk in chunks if chunk])
+        self.assertEqual(len(content), 1199)
+        self.assertEqual(content[:19], b"\x1f\x8b\x08\x08\xf5\x9aag\x00\x03README.md")
