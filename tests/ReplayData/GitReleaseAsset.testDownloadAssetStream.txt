@@ -14,7 +14,7 @@ GET
 objects.githubusercontent.com
 None
 /github-production-release-asset-2e65be/446365735/eae43c8b-293d-4fb1-b84c-734756819b27?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250130%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250130T122126Z&X-Amz-Expires=300&X-Amz-Signature=d873e75eb478a9e5e9c21975f40f7616c6f07803deae1a05c72cb00be37fb081&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dasset1.md&response-content-type=application%2Foctet-stream
-{'Accept': 'application/octet-stream', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/octet-stream', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Connection', 'keep-alive'), ('Content-Length', '2524'), ('Content-Type', 'application/octet-stream'), ('Last-Modified', 'Thu, 30 Jan 2025 11:11:33 GMT'), ('ETag', '"0x8DD411EDB0E39C3"'), ('Server', 'Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0'), ('x-ms-request-id', '64fa4512-201e-0070-1b08-7358a2000000'), ('x-ms-version', '2025-01-05'), ('x-ms-creation-time', 'Thu, 30 Jan 2025 11:11:33 GMT'), ('x-ms-blob-content-md5', '0CEYVYQcHfnGxCWG82h1Yw=='), ('x-ms-lease-status', 'unlocked'), ('x-ms-lease-state', 'available'), ('x-ms-blob-type', 'BlockBlob'), ('Content-Disposition', 'attachment; filename=asset1.md'), ('x-ms-server-encrypted', 'true'), ('Via', '1.1 varnish, 1.1 varnish'), ('Fastly-Restarts', '1'), ('Accept-Ranges', 'bytes'), ('Date', 'Thu, 30 Jan 2025 12:21:27 GMT'), ('Age', '2'), ('X-Served-By', 'cache-iad-kcgs7200088-IAD, cache-ams2100086-AMS'), ('X-Cache', 'MISS, HIT'), ('X-Cache-Hits', '0, 1'), ('X-Timer', 'S1738239687.932711,VS0,VE1')]
@@ -76,7 +76,7 @@ GET
 objects.githubusercontent.com
 None
 /github-production-release-asset-2e65be/446365735/fe97f261-2422-4ee7-b080-b41991c18d74?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250130%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250130T122127Z&X-Amz-Expires=300&X-Amz-Signature=3b02fdcac6556ad0069cf0ca74bd7ad69a98e267f947d8872f064f267673b923&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dasset2.gz&response-content-type=application%2Foctet-stream
-{'Accept': 'application/octet-stream', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/octet-stream', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Connection', 'keep-alive'), ('Content-Length', '1199'), ('Content-Type', 'application/octet-stream'), ('Last-Modified', 'Thu, 30 Jan 2025 11:11:37 GMT'), ('ETag', '"0x8DD411EDD6F45C4"'), ('Server', 'Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0'), ('x-ms-request-id', '3d1464c0-a01e-0023-7a09-737b96000000'), ('x-ms-version', '2025-01-05'), ('x-ms-creation-time', 'Thu, 30 Jan 2025 11:11:37 GMT'), ('x-ms-blob-content-md5', 'RttfZbsGgE9+IX1ifB7xdQ=='), ('x-ms-lease-status', 'unlocked'), ('x-ms-lease-state', 'available'), ('x-ms-blob-type', 'BlockBlob'), ('Content-Disposition', 'attachment; filename=asset2.gz'), ('x-ms-server-encrypted', 'true'), ('Via', '1.1 varnish, 1.1 varnish'), ('Fastly-Restarts', '1'), ('Accept-Ranges', 'bytes'), ('Date', 'Thu, 30 Jan 2025 12:21:27 GMT'), ('Age', '3472'), ('X-Served-By', 'cache-iad-kcgs7200038-IAD, cache-ams2100094-AMS'), ('X-Cache', 'MISS, HIT'), ('X-Cache-Hits', '0, 1'), ('X-Timer', 'S1738239688.549926,VS0,VE1')]
