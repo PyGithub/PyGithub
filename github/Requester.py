@@ -134,14 +134,13 @@ class RequestsResponse:
     def __init__(self, r: requests.Response):
         self.status = r.status_code
         self.headers = r.headers
-        self.text = r.text
         self.response = r
 
     def getheaders(self) -> ItemsView[str, str]:
         return self.headers.items()
 
     def read(self) -> str:
-        return self.text
+        return self.response.text
 
     def iter_content(self, chunk_size: Union[int, None] = 1) -> Iterator:
         return self.response.iter_content(chunk_size=chunk_size)
@@ -910,10 +909,10 @@ class Requester:
         status, responseHeaders, output = self.__requestEncode(
             cnx, "GET", url, parameters, headers, None, encode, stream=True
         )
-        if isinstance(output, RequestsResponse):
+        if isinstance(output, RequestsResponse) or hasattr(output, "iter_content"):
             output.raise_for_status()
             return status, responseHeaders, output.iter_content(chunk_size=chunk_size)
-        raise ValueError("getStream() Expected a RequestsResponse object, should never happen")
+        raise TypeError(f"Expected a RequestsResponse object: {type(output)}")
 
     def requestJson(
         self,
@@ -1107,11 +1106,11 @@ class Requester:
             original_cnx = cnx
             if cnx is None:
                 cnx = self.__createConnection()
-            _ = cnx.request(verb, url, input, requestHeaders, stream)
+            cnx.request(verb, url, input, requestHeaders, stream)
             response = cnx.getresponse()
             output = response if stream else response.read()
             status = response.status
-            responseHeaders = {k.lower(): v for k, v in response.headers.items()}
+            responseHeaders = {k.lower(): v for k, v in response.getheaders()}
 
             if input:
                 if isinstance(input, IOBase):
@@ -1125,11 +1124,7 @@ class Requester:
                 time.sleep(Consts.PROCESSING_202_WAIT_TIME)
                 return self.__requestRaw(original_cnx, verb, url, requestHeaders, input, stream=stream)
 
-            if (
-                status == 302
-                and "location" in responseHeaders
-                and (isinstance(original_cnx, (HTTPSRequestsConnectionClass, HTTPRequestsConnectionClass)))
-            ):
+            if status == 302 and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
                 if o.hostname != cnx.host:
@@ -1223,7 +1218,9 @@ class Requester:
             if self.__connection is not None and hostname is not None and hostname == self.__hostname:
                 if self.__persist:
                     return self.__connection
+            if self.__connection is not None:
                 self.__connection.close()
+                self.__connection = None
             self.__connection = self.__connectionClass(
                 hostname if hostname is not None else self.__hostname,
                 self.__port,
