@@ -39,6 +39,6 @@ class Issue174(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_repo("twitter/bootstrap")
 
-    def testGetDirContentsWhithHttpRedirect(self):
+    def testGetDirContentsWithHttpRedirect(self):
         contents = self.repo.get_contents("js/")
         self.assertEqual(len(contents), 15)
