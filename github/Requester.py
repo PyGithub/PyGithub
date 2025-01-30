@@ -909,7 +909,9 @@ class Requester:
         status, responseHeaders, output = self.__requestEncode(
             cnx, "GET", url, parameters, headers, None, encode, stream=True, follow_302_redirect=True
         )
-        if isinstance(output, RequestsResponse) or hasattr(output, "iter_content"):
+        if isinstance(output, RequestsResponse) or (
+            hasattr(output, "iter_content") and hasattr(output, "raise_for_status")
+        ):
             output.raise_for_status()
             return status, responseHeaders, output.iter_content(chunk_size=chunk_size)
         raise TypeError(f"Expected a RequestsResponse object: {type(output)}")
@@ -1160,7 +1162,9 @@ class Requester:
                 # remove auth to not leak authentication to redirection location
                 if o.hostname != self.__hostname:
                     del requestHeaders["Authorization"]
-                return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True)
+                return self.__requestRaw(
+                    cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
+                )
             return status, responseHeaders, output
         finally:
             # we record the time of this request after it finished
@@ -1204,7 +1208,7 @@ class Requester:
                 "uploads.github.com",
                 "status.github.com",
                 "github.com",
-                "objects.githubusercontent.com"
+                "objects.githubusercontent.com",
             ], o.hostname
             assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
             assert o.port == self.__port, o.port
