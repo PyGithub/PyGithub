@@ -1126,17 +1126,6 @@ class Requester:
                 time.sleep(Consts.PROCESSING_202_WAIT_TIME)
                 return self.__requestRaw(original_cnx, verb, url, requestHeaders, input, stream=stream)
 
-            if status == 302 and follow_302_redirect and "location" in responseHeaders:
-                location = responseHeaders["location"]
-                o = urllib.parse.urlparse(location)
-                cnx = self.__customConnection(location)
-                path = self.__makeAbsoluteUrl(location)
-                if self._logger.isEnabledFor(logging.DEBUG):
-                    self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
-                # remove auth to not leak authentication to redirection location
-                if o.hostname != self.__hostname:
-                    del requestHeaders["Authorization"]
-                return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True)
             if status == 301 and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
@@ -1161,6 +1150,17 @@ class Requester:
                 if self._logger.isEnabledFor(logging.INFO):
                     self._logger.info(f"Following Github server redirection from {url} to {o.path}")
                 return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input, stream=stream)
+            if status == 302 and follow_302_redirect and "location" in responseHeaders:
+                location = responseHeaders["location"]
+                o = urllib.parse.urlparse(location)
+                cnx = self.__customConnection(location)
+                path = self.__makeAbsoluteUrl(location)
+                if self._logger.isEnabledFor(logging.DEBUG):
+                    self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
+                # remove auth to not leak authentication to redirection location
+                if o.hostname != self.__hostname:
+                    del requestHeaders["Authorization"]
+                return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True)
             return status, responseHeaders, output
         finally:
             # we record the time of this request after it finished
