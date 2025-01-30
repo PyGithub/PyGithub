@@ -907,7 +907,7 @@ class Requester:
             return "", ""
 
         status, responseHeaders, output = self.__requestEncode(
-            cnx, "GET", url, parameters, headers, None, encode, stream=True
+            cnx, "GET", url, parameters, headers, None, encode, stream=True, follow_302_redirect=True
         )
         if isinstance(output, RequestsResponse) or hasattr(output, "iter_content"):
             output.raise_for_status()
@@ -1050,6 +1050,7 @@ class Requester:
         input: Optional[T],
         encode: Callable[[T], Tuple[str, Any]],
         stream: bool = False,
+        follow_302_redirect: bool = False,
     ) -> Tuple[int, Dict[str, Any], Union[str, object]]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
@@ -1071,7 +1072,7 @@ class Requester:
         self.NEW_DEBUG_FRAME(requestHeaders)
 
         status, responseHeaders, output = self.__requestRaw(
-            cnx, verb, url, requestHeaders, encoded_input, stream=stream
+            cnx, verb, url, requestHeaders, encoded_input, stream=stream, follow_302_redirect=follow_302_redirect
         )
 
         if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
@@ -1099,6 +1100,7 @@ class Requester:
         requestHeaders: Dict[str, str],
         input: Optional[Any],
         stream: bool = False,
+        follow_302_redirect: bool = False,
     ) -> Tuple[int, Dict[str, Any], Union[str, object]]:
         self.__deferRequest(verb)
 
@@ -1124,15 +1126,14 @@ class Requester:
                 time.sleep(Consts.PROCESSING_202_WAIT_TIME)
                 return self.__requestRaw(original_cnx, verb, url, requestHeaders, input, stream=stream)
 
-            if status == 302 and "location" in responseHeaders:
+            if status == 302 and follow_302_redirect and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
-                if o.hostname != cnx.host:
-                    cnx = self.__createConnection(o.hostname)
-                path = o.path if o.query is None else f"{o.path}?{o.query}"
+                cnx = self.__customConnection(location)
+                path = self.__makeAbsoluteUrl(location)
                 if self._logger.isEnabledFor(logging.DEBUG):
                     self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
-                return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream)
+                return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True)
             if status == 301 and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
@@ -1200,6 +1201,7 @@ class Requester:
                 "uploads.github.com",
                 "status.github.com",
                 "github.com",
+                "objects.githubusercontent.com"
             ], o.hostname
             assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
             assert o.port == self.__port, o.port

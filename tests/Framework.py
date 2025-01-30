@@ -207,11 +207,11 @@ class RecordingConnection:
             self.__writeLine("")
         else:
             self.__writeLine(output)
+        self.__writeLine("")
 
         return FakeHttpResponse(status, headers, output)
 
     def close(self):
-        self.__writeLine("")
         return self.__cnx.close()
 
     def __writeLine(self, line):
