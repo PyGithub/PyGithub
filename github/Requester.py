@@ -1133,6 +1133,9 @@ class Requester:
                 path = self.__makeAbsoluteUrl(location)
                 if self._logger.isEnabledFor(logging.DEBUG):
                     self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
+                # remove auth to not leak authentication to redirection location
+                if o.hostname != self.__hostname:
+                    del requestHeaders["Authorization"]
                 return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True)
             if status == 301 and "location" in responseHeaders:
                 location = responseHeaders["location"]
