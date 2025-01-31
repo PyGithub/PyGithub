@@ -1,6 +1,23 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 James Simpson <james@snowterminal.com>                        #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Matthew Neal <meneal@matthews-mbp.raleigh.ibm.com>            #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Olof-Joachim Frahm (欧雅福) <olof@macrolet.net>                  #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Anuj Bansal <bansalanuj1996@gmail.com>                        #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 James Simpson <jsimpso@users.noreply.github.com>              #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,12 +46,8 @@ class Organization2072(Framework.TestCase):
         self.org = self.g.get_organization("TestOrganization2072")
 
     def testCancelInvitation(self):
-        self.assertFalse(
-            any([i for i in self.org.invitations() if i.email == "foo@bar.org"])
-        )
+        self.assertFalse(any([i for i in self.org.invitations() if i.email == "foo@bar.org"]))
         self.org.invite_user(email="foo@bar.org")
-        self.assertTrue(
-            any([i for i in self.org.invitations() if i.email == "foo@bar.org"])
-        )
+        self.assertTrue(any([i for i in self.org.invitations() if i.email == "foo@bar.org"]))
         invitation = [i for i in self.org.invitations() if i.email == "foo@bar.org"][0]
         self.assertTrue(self.org.cancel_invitation(invitation))

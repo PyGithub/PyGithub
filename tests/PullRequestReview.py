@@ -1,10 +1,28 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Aaron Levine <allevin@sandia.gov>                             #
 # Copyright 2017 Mike Miller <github@mikeage.net>                              #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
 # Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Olof-Joachim Frahm (欧雅福) <olof@macrolet.net>                  #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Claire Johns <42869556+johnsc1@users.noreply.github.com>      #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Gael Colas <gael.colas@plus.ai>                               #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,7 +42,7 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -51,18 +69,19 @@ class PullRequestReview(Framework.TestCase):
     def testDoesNotModifyPullRequest(self):
         self.assertEqual(self.pull.id, 111649703)
 
+    def testEdit(self):
+        self.pullreview.edit("Comment edited by PyGithub")
+        self.assertEqual(self.pullreview.body, "Comment edited by PyGithub")
+
     def testDismiss(self):
         self.pullreview.dismiss("with prejudice")
-        pr = self.pull.get_review(28482091)
-        self.assertEqual(pr.state, "DISMISSED")
+        self.assertEqual(self.pullreview.state, "DISMISSED")
 
     def testAttributes(self):
         self.assertEqual(self.pullreview.id, 28482091)
         self.assertEqual(self.pullreview.user.login, "jzelinskie")
         self.assertEqual(self.pullreview.body, "")
-        self.assertEqual(
-            self.pullreview.commit_id, "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc"
-        )
+        self.assertEqual(self.pullreview.commit_id, "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc")
         self.assertEqual(self.pullreview.state, "APPROVED")
         self.assertEqual(
             self.pullreview.html_url,
@@ -73,7 +92,8 @@ class PullRequestReview(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/pulls/538",
         )
         self.assertEqual(
-            self.pullreview.submitted_at, datetime.datetime(2017, 3, 22, 19, 6, 59)
+            self.pullreview.submitted_at,
+            datetime(2017, 3, 22, 19, 6, 59, tzinfo=timezone.utc),
         )
         self.assertIn(self.created_pullreview.id, [r.id for r in self.pullreviews])
         self.assertEqual(

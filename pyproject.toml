@@ -1,0 +1,106 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64", "setuptools_scm>=7"]
+
+[project]
+authors = [{ name = "Vincent Jacques", email = "vincent@vincent-jacques.net" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development",
+]
+description = "Use the full Github API v3"
+keywords = ["github"]
+name = "PyGithub"
+readme = "README.md"
+requires-python = ">=3.8"
+
+dynamic = ["version"]
+
+dependencies = [
+  "pynacl>=1.4.0",
+  "requests>=2.14.0",
+  "pyjwt[crypto]>=2.4.0",
+  "typing-extensions>=4.0.0",
+  "urllib3>=1.26.0",
+  "Deprecated",
+]
+
+[project.urls]
+Documentation = "https://pygithub.readthedocs.io/en/stable/"
+Source = "https://github.com/pygithub/pygithub"
+Tracker = "https://github.com/pygithub/pygithub/issues"
+
+[project.optional-dependencies]
+integrations = []
+
+[tool.setuptools_scm]
+
+[tool.setuptools]
+packages = ["github"]
+
+[tool.setuptools.package-data]
+github = ["py.typed", '*.pyi']
+
+[tool.mypy]
+python_version = '3.8'
+ignore_missing_imports = true
+namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = ["github.*"]
+check_untyped_defs = true
+disallow_untyped_defs = true
+warn_no_return = false
+
+[tool.black]
+# https://github.com/psf/black
+line-length = 120
+
+[tool.docformatter]
+recursive = true
+# some docstring start with r"""
+wrap-summaries = 119
+wrap-descriptions = 120
+blank = true
+pre-summary-newline = true
+make-summary-multi-line = true
+
+[tool.codespell]
+skip = 'tests/*'
+quiet-level = 3
+# comma separated list of words; waiting for:
+#  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
+# also adding links until they ignored by its: nature
+#  https://github.com/codespell-project/codespell/issues/2243#issuecomment-1732019960
+ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel"
+
+[tool.ruff]
+line-length = 120
+# Enable Pyflakes `E` and `F` codes by default.
+select = [
+  "E",
+  # see: https://pypi.org/project/pycodestyle
+  "W",
+  # see: https://pypi.org/project/pyflakes
+  "F",
+  # see: isort
+  "I",
+]
+ignore = ["E501", "E741"]
+ignore-init-module-imports = true
+unfixable = ["F401"]
+
+[tool.pytest.ini_options]
+python_files = "tests/*.py"
+addopts = "--color=yes"

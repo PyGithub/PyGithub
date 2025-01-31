@@ -7,7 +7,15 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Aaron L. Levine <allevin@sandia.gov>                          #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,7 +35,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -35,7 +45,7 @@ from . import Framework
 class IssueEvent(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        repo = self.g.get_repo("PyGithub/PyGithub")
 
         # From Issue #30
         self.event_subscribed = repo.get_issues_event(16347479)
@@ -76,7 +86,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_subscribed.actor.login, "jacquev6")
         self.assertEqual(self.event_subscribed.commit_id, None)
         self.assertEqual(
-            self.event_subscribed.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15)
+            self.event_subscribed.created_at,
+            datetime(2012, 5, 27, 5, 40, 15, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_subscribed.event, "subscribed")
         self.assertEqual(self.event_subscribed.id, 16347479)
@@ -85,16 +96,18 @@ class IssueEvent(Framework.TestCase):
             self.event_subscribed.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16347479",
         )
-        self.assertEqual(
-            self.event_subscribed.node_id, "MDE1OlN1YnNjcmliZWRFdmVudDE2MzQ3NDc5"
-        )
+        self.assertEqual(self.event_subscribed.node_id, "MDE1OlN1YnNjcmliZWRFdmVudDE2MzQ3NDc5")
         self.assertEqual(self.event_subscribed.commit_url, None)
         self.assertEqual(self.event_subscribed.label, None)
         self.assertEqual(self.event_subscribed.assignee, None)
         self.assertEqual(self.event_subscribed.assigner, None)
+        self.assertEqual(self.event_subscribed.author_association, None)
         self.assertEqual(self.event_subscribed.review_requester, None)
         self.assertEqual(self.event_subscribed.requested_reviewer, None)
+        self.assertEqual(self.event_subscribed.requested_team, None)
         self.assertEqual(self.event_subscribed.milestone, None)
+        self.assertEqual(self.event_subscribed.performed_via_github_app, None)
+        self.assertEqual(self.event_subscribed.project_card, None)
         self.assertEqual(self.event_subscribed.rename, None)
         self.assertEqual(self.event_subscribed.dismissed_review, None)
         self.assertEqual(self.event_subscribed.lock_reason, None)
@@ -104,7 +117,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_assigned.actor.login, "jacquev6")
         self.assertEqual(self.event_assigned.commit_id, None)
         self.assertEqual(
-            self.event_assigned.created_at, datetime.datetime(2012, 5, 27, 5, 40, 15)
+            self.event_assigned.created_at,
+            datetime(2012, 5, 27, 5, 40, 15, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_assigned.event, "assigned")
         self.assertEqual(self.event_assigned.id, 16347480)
@@ -113,16 +127,18 @@ class IssueEvent(Framework.TestCase):
             self.event_assigned.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16347480",
         )
-        self.assertEqual(
-            self.event_assigned.node_id, "MDEzOkFzc2lnbmVkRXZlbnQxNjM0NzQ4MA=="
-        )
+        self.assertEqual(self.event_assigned.node_id, "MDEzOkFzc2lnbmVkRXZlbnQxNjM0NzQ4MA==")
         self.assertEqual(self.event_assigned.commit_url, None)
         self.assertEqual(self.event_assigned.label, None)
         self.assertEqual(self.event_assigned.assignee.login, "jacquev6")
         self.assertEqual(self.event_assigned.assigner.login, "ghost")
+        self.assertEqual(self.event_assigned.author_association, None)
         self.assertEqual(self.event_assigned.review_requester, None)
         self.assertEqual(self.event_assigned.requested_reviewer, None)
+        self.assertEqual(self.event_assigned.requested_team, None)
         self.assertEqual(self.event_assigned.milestone, None)
+        self.assertEqual(self.event_assigned.performed_via_github_app, None)
+        self.assertEqual(self.event_assigned.project_card, None)
         self.assertEqual(self.event_assigned.rename, None)
         self.assertEqual(self.event_assigned.dismissed_review, None)
         self.assertEqual(self.event_assigned.lock_reason, None)
@@ -130,11 +146,10 @@ class IssueEvent(Framework.TestCase):
 
     def testEvent_referenced_Attributes(self):
         self.assertEqual(self.event_referenced.actor.login, "jacquev6")
+        self.assertEqual(self.event_referenced.commit_id, "ed866fc43833802ab553e5ff8581c81bb00dd433")
         self.assertEqual(
-            self.event_referenced.commit_id, "ed866fc43833802ab553e5ff8581c81bb00dd433"
-        )
-        self.assertEqual(
-            self.event_referenced.created_at, datetime.datetime(2012, 5, 27, 7, 29, 25)
+            self.event_referenced.created_at,
+            datetime(2012, 5, 27, 7, 29, 25, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_referenced.event, "referenced")
         self.assertEqual(self.event_referenced.id, 16348656)
@@ -143,9 +158,7 @@ class IssueEvent(Framework.TestCase):
             self.event_referenced.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/16348656",
         )
-        self.assertEqual(
-            self.event_referenced.node_id, "MDE1OlJlZmVyZW5jZWRFdmVudDE2MzQ4NjU2"
-        )
+        self.assertEqual(self.event_referenced.node_id, "MDE1OlJlZmVyZW5jZWRFdmVudDE2MzQ4NjU2")
         self.assertEqual(
             self.event_referenced.commit_url,
             "https://api.github.com/repos/PyGithub/PyGithub/commits/ed866fc43833802ab553e5ff8581c81bb00dd433",
@@ -153,9 +166,13 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_referenced.label, None)
         self.assertEqual(self.event_referenced.assignee, None)
         self.assertEqual(self.event_referenced.assigner, None)
+        self.assertEqual(self.event_referenced.author_association, None)
         self.assertEqual(self.event_referenced.review_requester, None)
         self.assertEqual(self.event_referenced.requested_reviewer, None)
+        self.assertEqual(self.event_referenced.requested_team, None)
         self.assertEqual(self.event_referenced.milestone, None)
+        self.assertEqual(self.event_referenced.performed_via_github_app, None)
+        self.assertEqual(self.event_referenced.project_card, None)
         self.assertEqual(self.event_referenced.rename, None)
         self.assertEqual(self.event_referenced.dismissed_review, None)
         self.assertEqual(self.event_referenced.lock_reason, None)
@@ -165,7 +182,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_closed.actor.login, "jacquev6")
         self.assertEqual(self.event_closed.commit_id, None)
         self.assertEqual(
-            self.event_closed.created_at, datetime.datetime(2012, 5, 27, 11, 4, 25)
+            self.event_closed.created_at,
+            datetime(2012, 5, 27, 11, 4, 25, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_closed.event, "closed")
         self.assertEqual(self.event_closed.id, 16351220)
@@ -179,9 +197,13 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_closed.label, None)
         self.assertEqual(self.event_closed.assignee, None)
         self.assertEqual(self.event_closed.assigner, None)
+        self.assertEqual(self.event_closed.author_association, None)
         self.assertEqual(self.event_closed.review_requester, None)
         self.assertEqual(self.event_closed.requested_reviewer, None)
+        self.assertEqual(self.event_closed.requested_team, None)
         self.assertEqual(self.event_closed.milestone, None)
+        self.assertEqual(self.event_closed.performed_via_github_app, None)
+        self.assertEqual(self.event_closed.project_card, None)
         self.assertEqual(self.event_closed.rename, None)
         self.assertEqual(self.event_closed.dismissed_review, None)
         self.assertEqual(self.event_closed.lock_reason, None)
@@ -191,7 +213,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_labeled.actor.login, "jacquev6")
         self.assertEqual(self.event_labeled.commit_id, None)
         self.assertEqual(
-            self.event_labeled.created_at, datetime.datetime(2014, 3, 2, 18, 55, 10)
+            self.event_labeled.created_at,
+            datetime(2014, 3, 2, 18, 55, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_labeled.event, "labeled")
         self.assertEqual(self.event_labeled.id, 98136337)
@@ -205,9 +228,13 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_labeled.label.name, "v1")
         self.assertEqual(self.event_labeled.assignee, None)
         self.assertEqual(self.event_labeled.assigner, None)
+        self.assertEqual(self.event_labeled.author_association, None)
         self.assertEqual(self.event_labeled.review_requester, None)
         self.assertEqual(self.event_labeled.requested_reviewer, None)
+        self.assertEqual(self.event_labeled.requested_team, None)
         self.assertEqual(self.event_labeled.milestone, None)
+        self.assertEqual(self.event_labeled.performed_via_github_app, None)
+        self.assertEqual(self.event_labeled.project_card, None)
         self.assertEqual(self.event_labeled.rename, None)
         self.assertEqual(self.event_labeled.dismissed_review, None)
         self.assertEqual(self.event_labeled.lock_reason, None)
@@ -217,7 +244,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_mentioned.actor.login, "jzelinskie")
         self.assertEqual(self.event_mentioned.commit_id, None)
         self.assertEqual(
-            self.event_mentioned.created_at, datetime.datetime(2017, 3, 21, 17, 30, 14)
+            self.event_mentioned.created_at,
+            datetime(2017, 3, 21, 17, 30, 14, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_mentioned.event, "mentioned")
         self.assertEqual(self.event_mentioned.id, 1009034767)
@@ -226,16 +254,18 @@ class IssueEvent(Framework.TestCase):
             self.event_mentioned.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1009034767",
         )
-        self.assertEqual(
-            self.event_mentioned.node_id, "MDE0Ok1lbnRpb25lZEV2ZW50MTAwOTAzNDc2Nw=="
-        )
+        self.assertEqual(self.event_mentioned.node_id, "MDE0Ok1lbnRpb25lZEV2ZW50MTAwOTAzNDc2Nw==")
         self.assertEqual(self.event_mentioned.commit_url, None)
         self.assertEqual(self.event_mentioned.label, None)
         self.assertEqual(self.event_mentioned.assignee, None)
         self.assertEqual(self.event_mentioned.assigner, None)
+        self.assertEqual(self.event_mentioned.author_association, None)
         self.assertEqual(self.event_mentioned.review_requester, None)
         self.assertEqual(self.event_mentioned.requested_reviewer, None)
+        self.assertEqual(self.event_mentioned.requested_team, None)
         self.assertEqual(self.event_mentioned.milestone, None)
+        self.assertEqual(self.event_mentioned.performed_via_github_app, None)
+        self.assertEqual(self.event_mentioned.project_card, None)
         self.assertEqual(self.event_mentioned.rename, None)
         self.assertEqual(self.event_mentioned.dismissed_review, None)
         self.assertEqual(self.event_mentioned.lock_reason, None)
@@ -243,11 +273,10 @@ class IssueEvent(Framework.TestCase):
 
     def testEvent_merged_Attributes(self):
         self.assertEqual(self.event_merged.actor.login, "jzelinskie")
+        self.assertEqual(self.event_merged.commit_id, "2525515b094d7425f7018eb5b66171e21c5fbc10")
         self.assertEqual(
-            self.event_merged.commit_id, "2525515b094d7425f7018eb5b66171e21c5fbc10"
-        )
-        self.assertEqual(
-            self.event_merged.created_at, datetime.datetime(2017, 3, 25, 16, 52, 49)
+            self.event_merged.created_at,
+            datetime(2017, 3, 25, 16, 52, 49, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_merged.event, "merged")
         self.assertEqual(self.event_merged.id, 1015402964)
@@ -256,9 +285,7 @@ class IssueEvent(Framework.TestCase):
             self.event_merged.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1015402964",
         )
-        self.assertEqual(
-            self.event_merged.node_id, "MDExOk1lcmdlZEV2ZW50MTAxNTQwMjk2NA=="
-        )
+        self.assertEqual(self.event_merged.node_id, "MDExOk1lcmdlZEV2ZW50MTAxNTQwMjk2NA==")
         self.assertEqual(
             self.event_merged.commit_url,
             "https://api.github.com/repos/PyGithub/PyGithub/commits/2525515b094d7425f7018eb5b66171e21c5fbc10",
@@ -266,9 +293,13 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_merged.label, None)
         self.assertEqual(self.event_merged.assignee, None)
         self.assertEqual(self.event_merged.assigner, None)
+        self.assertEqual(self.event_merged.author_association, None)
         self.assertEqual(self.event_merged.review_requester, None)
         self.assertEqual(self.event_merged.requested_reviewer, None)
+        self.assertEqual(self.event_merged.requested_team, None)
         self.assertEqual(self.event_merged.milestone, None)
+        self.assertEqual(self.event_merged.performed_via_github_app, None)
+        self.assertEqual(self.event_merged.project_card, None)
         self.assertEqual(self.event_merged.rename, None)
         self.assertEqual(self.event_merged.dismissed_review, None)
         self.assertEqual(self.event_merged.lock_reason, None)
@@ -279,7 +310,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_requested.commit_id, None)
         self.assertEqual(
             self.event_review_requested.created_at,
-            datetime.datetime(2017, 3, 22, 19, 6, 44),
+            datetime(2017, 3, 22, 19, 6, 44, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_review_requested.event, "review_requested")
         self.assertEqual(self.event_review_requested.id, 1011101309)
@@ -296,13 +327,13 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_requested.label, None)
         self.assertEqual(self.event_review_requested.assignee, None)
         self.assertEqual(self.event_review_requested.assigner, None)
-        self.assertEqual(
-            self.event_review_requested.review_requester.login, "jzelinskie"
-        )
-        self.assertEqual(
-            self.event_review_requested.requested_reviewer.login, "jzelinskie"
-        )
+        self.assertEqual(self.event_review_requested.author_association, None)
+        self.assertEqual(self.event_review_requested.review_requester.login, "jzelinskie")
+        self.assertEqual(self.event_review_requested.requested_reviewer.login, "jzelinskie")
+        self.assertEqual(self.event_review_requested.requested_team, None)
         self.assertEqual(self.event_review_requested.milestone, None)
+        self.assertEqual(self.event_review_requested.performed_via_github_app, None)
+        self.assertEqual(self.event_review_requested.project_card, None)
         self.assertEqual(self.event_review_requested.rename, None)
         self.assertEqual(self.event_review_requested.dismissed_review, None)
         self.assertEqual(self.event_review_requested.lock_reason, None)
@@ -312,7 +343,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_reopened.actor.login, "sfdye")
         self.assertEqual(self.event_reopened.commit_id, None)
         self.assertEqual(
-            self.event_reopened.created_at, datetime.datetime(2018, 8, 10, 13, 10, 9)
+            self.event_reopened.created_at,
+            datetime(2018, 8, 10, 13, 10, 9, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_reopened.event, "reopened")
         self.assertEqual(self.event_reopened.id, 1782463023)
@@ -321,16 +353,18 @@ class IssueEvent(Framework.TestCase):
             self.event_reopened.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782463023",
         )
-        self.assertEqual(
-            self.event_reopened.node_id, "MDEzOlJlb3BlbmVkRXZlbnQxNzgyNDYzMDIz"
-        )
+        self.assertEqual(self.event_reopened.node_id, "MDEzOlJlb3BlbmVkRXZlbnQxNzgyNDYzMDIz")
         self.assertEqual(self.event_reopened.commit_url, None)
         self.assertEqual(self.event_reopened.label, None)
         self.assertEqual(self.event_reopened.assignee, None)
         self.assertEqual(self.event_reopened.assigner, None)
+        self.assertEqual(self.event_reopened.author_association, None)
         self.assertEqual(self.event_reopened.review_requester, None)
         self.assertEqual(self.event_reopened.requested_reviewer, None)
+        self.assertEqual(self.event_reopened.requested_team, None)
         self.assertEqual(self.event_reopened.milestone, None)
+        self.assertEqual(self.event_reopened.performed_via_github_app, None)
+        self.assertEqual(self.event_reopened.project_card, None)
         self.assertEqual(self.event_reopened.rename, None)
         self.assertEqual(self.event_reopened.dismissed_review, None)
         self.assertEqual(self.event_reopened.lock_reason, None)
@@ -340,7 +374,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unassigned.actor.login, "sfdye")
         self.assertEqual(self.event_unassigned.commit_id, None)
         self.assertEqual(
-            self.event_unassigned.created_at, datetime.datetime(2018, 8, 10, 13, 10, 21)
+            self.event_unassigned.created_at,
+            datetime(2018, 8, 10, 13, 10, 21, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_unassigned.event, "unassigned")
         self.assertEqual(self.event_unassigned.id, 1782463379)
@@ -349,16 +384,18 @@ class IssueEvent(Framework.TestCase):
             self.event_unassigned.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782463379",
         )
-        self.assertEqual(
-            self.event_unassigned.node_id, "MDE1OlVuYXNzaWduZWRFdmVudDE3ODI0NjMzNzk="
-        )
+        self.assertEqual(self.event_unassigned.node_id, "MDE1OlVuYXNzaWduZWRFdmVudDE3ODI0NjMzNzk=")
         self.assertEqual(self.event_unassigned.commit_url, None)
         self.assertEqual(self.event_unassigned.label, None)
-        self.assertEqual(self.event_unassigned.actor.login, "sfdye")
-        self.assertEqual(self.event_unassigned.actor.login, "sfdye")
+        self.assertEqual(self.event_unassigned.assignee.login, "sfdye")
+        self.assertEqual(self.event_unassigned.assigner.login, "sfdye")
+        self.assertEqual(self.event_unassigned.author_association, None)
         self.assertEqual(self.event_unassigned.review_requester, None)
         self.assertEqual(self.event_unassigned.requested_reviewer, None)
+        self.assertEqual(self.event_unassigned.requested_team, None)
         self.assertEqual(self.event_unassigned.milestone, None)
+        self.assertEqual(self.event_unassigned.performed_via_github_app, None)
+        self.assertEqual(self.event_unassigned.project_card, None)
         self.assertEqual(self.event_unassigned.rename, None)
         self.assertEqual(self.event_unassigned.dismissed_review, None)
         self.assertEqual(self.event_unassigned.lock_reason, None)
@@ -368,7 +405,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unlabeled.actor.login, "sfdye")
         self.assertEqual(self.event_unlabeled.commit_id, None)
         self.assertEqual(
-            self.event_unlabeled.created_at, datetime.datetime(2018, 8, 10, 13, 10, 38)
+            self.event_unlabeled.created_at,
+            datetime(2018, 8, 10, 13, 10, 38, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_unlabeled.event, "unlabeled")
         self.assertEqual(self.event_unlabeled.id, 1782463917)
@@ -377,16 +415,18 @@ class IssueEvent(Framework.TestCase):
             self.event_unlabeled.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782463917",
         )
-        self.assertEqual(
-            self.event_unlabeled.node_id, "MDE0OlVubGFiZWxlZEV2ZW50MTc4MjQ2MzkxNw=="
-        )
+        self.assertEqual(self.event_unlabeled.node_id, "MDE0OlVubGFiZWxlZEV2ZW50MTc4MjQ2MzkxNw==")
         self.assertEqual(self.event_unlabeled.commit_url, None)
         self.assertEqual(self.event_unlabeled.label.name, "improvement")
         self.assertEqual(self.event_unlabeled.assignee, None)
         self.assertEqual(self.event_unlabeled.assigner, None)
+        self.assertEqual(self.event_unlabeled.author_association, None)
         self.assertEqual(self.event_unlabeled.review_requester, None)
         self.assertEqual(self.event_unlabeled.requested_reviewer, None)
+        self.assertEqual(self.event_unlabeled.requested_team, None)
         self.assertEqual(self.event_unlabeled.milestone, None)
+        self.assertEqual(self.event_unlabeled.performed_via_github_app, None)
+        self.assertEqual(self.event_unlabeled.project_card, None)
         self.assertEqual(self.event_unlabeled.rename, None)
         self.assertEqual(self.event_unlabeled.dismissed_review, None)
         self.assertEqual(self.event_unlabeled.lock_reason, None)
@@ -396,7 +436,8 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_renamed.actor.login, "sfdye")
         self.assertEqual(self.event_renamed.commit_id, None)
         self.assertEqual(
-            self.event_renamed.created_at, datetime.datetime(2018, 8, 10, 13, 15, 18)
+            self.event_renamed.created_at,
+            datetime(2018, 8, 10, 13, 15, 18, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_renamed.event, "renamed")
         self.assertEqual(self.event_renamed.id, 1782472556)
@@ -405,16 +446,18 @@ class IssueEvent(Framework.TestCase):
             self.event_renamed.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1782472556",
         )
-        self.assertEqual(
-            self.event_renamed.node_id, "MDE3OlJlbmFtZWRUaXRsZUV2ZW50MTc4MjQ3MjU1Ng=="
-        )
+        self.assertEqual(self.event_renamed.node_id, "MDE3OlJlbmFtZWRUaXRsZUV2ZW50MTc4MjQ3MjU1Ng==")
         self.assertEqual(self.event_renamed.commit_url, None)
         self.assertEqual(self.event_renamed.label, None)
         self.assertEqual(self.event_renamed.assignee, None)
         self.assertEqual(self.event_renamed.assigner, None)
+        self.assertEqual(self.event_renamed.author_association, None)
         self.assertEqual(self.event_renamed.review_requester, None)
         self.assertEqual(self.event_renamed.requested_reviewer, None)
+        self.assertEqual(self.event_renamed.requested_team, None)
         self.assertEqual(self.event_renamed.milestone, None)
+        self.assertEqual(self.event_renamed.performed_via_github_app, None)
+        self.assertEqual(self.event_renamed.project_card, None)
         self.assertEqual(
             self.event_renamed.rename,
             {
@@ -431,7 +474,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_base_ref_changed.commit_id, None)
         self.assertEqual(
             self.event_base_ref_changed.created_at,
-            datetime.datetime(2018, 8, 10, 16, 38, 22),
+            datetime(2018, 8, 10, 16, 38, 22, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_base_ref_changed.event, "base_ref_changed")
         self.assertEqual(self.event_base_ref_changed.id, 1782915693)
@@ -448,10 +491,14 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_base_ref_changed.label, None)
         self.assertEqual(self.event_base_ref_changed.assignee, None)
         self.assertEqual(self.event_base_ref_changed.assigner, None)
+        self.assertEqual(self.event_base_ref_changed.author_association, None)
         self.assertEqual(self.event_base_ref_changed.review_requester, None)
         self.assertEqual(self.event_base_ref_changed.requested_reviewer, None)
+        self.assertEqual(self.event_base_ref_changed.requested_team, None)
         self.assertEqual(self.event_base_ref_changed.milestone, None)
-        self.assertEqual(self.event_head_ref_deleted.rename, None)
+        self.assertEqual(self.event_base_ref_changed.performed_via_github_app, None)
+        self.assertEqual(self.event_base_ref_changed.project_card, None)
+        self.assertEqual(self.event_base_ref_changed.rename, None)
         self.assertEqual(self.event_base_ref_changed.dismissed_review, None)
         self.assertEqual(self.event_base_ref_changed.lock_reason, None)
         self.assertEqual(repr(self.event_base_ref_changed), "IssueEvent(id=1782915693)")
@@ -461,7 +508,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_deleted.commit_id, None)
         self.assertEqual(
             self.event_head_ref_deleted.created_at,
-            datetime.datetime(2018, 8, 10, 16, 39, 20),
+            datetime(2018, 8, 10, 16, 39, 20, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_head_ref_deleted.event, "head_ref_deleted")
         self.assertEqual(self.event_head_ref_deleted.id, 1782917185)
@@ -478,9 +525,13 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_deleted.label, None)
         self.assertEqual(self.event_head_ref_deleted.assignee, None)
         self.assertEqual(self.event_head_ref_deleted.assigner, None)
+        self.assertEqual(self.event_head_ref_deleted.author_association, None)
         self.assertEqual(self.event_head_ref_deleted.review_requester, None)
         self.assertEqual(self.event_head_ref_deleted.requested_reviewer, None)
+        self.assertEqual(self.event_head_ref_deleted.requested_team, None)
         self.assertEqual(self.event_head_ref_deleted.milestone, None)
+        self.assertEqual(self.event_head_ref_deleted.performed_via_github_app, None)
+        self.assertEqual(self.event_head_ref_deleted.project_card, None)
         self.assertEqual(self.event_head_ref_deleted.rename, None)
         self.assertEqual(self.event_head_ref_deleted.dismissed_review, None)
         self.assertEqual(self.event_head_ref_deleted.lock_reason, None)
@@ -491,7 +542,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_restored.commit_id, None)
         self.assertEqual(
             self.event_head_ref_restored.created_at,
-            datetime.datetime(2018, 8, 10, 16, 39, 23),
+            datetime(2018, 8, 10, 16, 39, 23, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_head_ref_restored.event, "head_ref_restored")
         self.assertEqual(self.event_head_ref_restored.id, 1782917299)
@@ -508,21 +559,24 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_head_ref_restored.label, None)
         self.assertEqual(self.event_head_ref_restored.assignee, None)
         self.assertEqual(self.event_head_ref_restored.assigner, None)
+        self.assertEqual(self.event_head_ref_restored.author_association, None)
         self.assertEqual(self.event_head_ref_restored.review_requester, None)
         self.assertEqual(self.event_head_ref_restored.requested_reviewer, None)
+        self.assertEqual(self.event_head_ref_restored.requested_team, None)
         self.assertEqual(self.event_head_ref_restored.milestone, None)
-        self.assertEqual(self.event_head_ref_deleted.rename, None)
+        self.assertEqual(self.event_head_ref_restored.performed_via_github_app, None)
+        self.assertEqual(self.event_head_ref_restored.project_card, None)
+        self.assertEqual(self.event_head_ref_restored.rename, None)
         self.assertEqual(self.event_head_ref_restored.dismissed_review, None)
-        self.assertEqual(self.event_head_ref_deleted.lock_reason, None)
-        self.assertEqual(
-            repr(self.event_head_ref_restored), "IssueEvent(id=1782917299)"
-        )
+        self.assertEqual(self.event_head_ref_restored.lock_reason, None)
+        self.assertEqual(repr(self.event_head_ref_restored), "IssueEvent(id=1782917299)")
 
     def testEvent_milestoned_Attributes(self):
         self.assertEqual(self.event_milestoned.actor.login, "sfdye")
         self.assertEqual(self.event_milestoned.commit_id, None)
         self.assertEqual(
-            self.event_milestoned.created_at, datetime.datetime(2018, 8, 11, 0, 46, 19)
+            self.event_milestoned.created_at,
+            datetime(2018, 8, 11, 0, 46, 19, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_milestoned.event, "milestoned")
         self.assertEqual(self.event_milestoned.id, 1783596418)
@@ -531,16 +585,18 @@ class IssueEvent(Framework.TestCase):
             self.event_milestoned.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1783596418",
         )
-        self.assertEqual(
-            self.event_milestoned.node_id, "MDE1Ok1pbGVzdG9uZWRFdmVudDE3ODM1OTY0MTg="
-        )
+        self.assertEqual(self.event_milestoned.node_id, "MDE1Ok1pbGVzdG9uZWRFdmVudDE3ODM1OTY0MTg=")
         self.assertEqual(self.event_milestoned.commit_url, None)
         self.assertEqual(self.event_milestoned.label, None)
         self.assertEqual(self.event_milestoned.assignee, None)
         self.assertEqual(self.event_milestoned.assigner, None)
+        self.assertEqual(self.event_milestoned.author_association, None)
         self.assertEqual(self.event_milestoned.review_requester, None)
         self.assertEqual(self.event_milestoned.requested_reviewer, None)
+        self.assertEqual(self.event_milestoned.requested_team, None)
         self.assertEqual(self.event_milestoned.milestone.title, "Version 1.25.0")
+        self.assertEqual(self.event_milestoned.performed_via_github_app, None)
+        self.assertEqual(self.event_milestoned.project_card, None)
         self.assertEqual(self.event_milestoned.rename, None)
         self.assertEqual(self.event_milestoned.dismissed_review, None)
         self.assertEqual(self.event_milestoned.lock_reason, None)
@@ -551,7 +607,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_demilestoned.commit_id, None)
         self.assertEqual(
             self.event_demilestoned.created_at,
-            datetime.datetime(2018, 8, 11, 0, 46, 22),
+            datetime(2018, 8, 11, 0, 46, 22, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_demilestoned.event, "demilestoned")
         self.assertEqual(self.event_demilestoned.id, 1783596452)
@@ -568,19 +624,24 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_demilestoned.label, None)
         self.assertEqual(self.event_demilestoned.assignee, None)
         self.assertEqual(self.event_demilestoned.assigner, None)
+        self.assertEqual(self.event_demilestoned.author_association, None)
         self.assertEqual(self.event_demilestoned.review_requester, None)
         self.assertEqual(self.event_demilestoned.requested_reviewer, None)
+        self.assertEqual(self.event_demilestoned.requested_team, None)
         self.assertEqual(self.event_demilestoned.milestone.title, "Version 1.25.0")
+        self.assertEqual(self.event_demilestoned.performed_via_github_app, None)
+        self.assertEqual(self.event_demilestoned.project_card, None)
         self.assertEqual(self.event_demilestoned.rename, None)
         self.assertEqual(self.event_demilestoned.dismissed_review, None)
         self.assertEqual(self.event_demilestoned.lock_reason, None)
         self.assertEqual(repr(self.event_demilestoned), "IssueEvent(id=1783596452)")
 
     def testEvent_locked_Attributes(self):
-        self.assertEqual(self.event_locked.actor.login, "PyGithub")
+        self.assertEqual(self.event_locked.actor.login, "sfdye")
         self.assertEqual(self.event_locked.commit_id, None)
         self.assertEqual(
-            self.event_locked.created_at, datetime.datetime(2018, 8, 11, 0, 46, 56)
+            self.event_locked.created_at,
+            datetime(2018, 8, 11, 0, 46, 56, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_locked.event, "locked")
         self.assertEqual(self.event_locked.id, 1783596743)
@@ -589,26 +650,29 @@ class IssueEvent(Framework.TestCase):
             self.event_locked.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1783596743",
         )
-        self.assertEqual(
-            self.event_locked.node_id, "MDExOkxvY2tlZEV2ZW50MTc4MzU5Njc0Mw=="
-        )
+        self.assertEqual(self.event_locked.node_id, "MDExOkxvY2tlZEV2ZW50MTc4MzU5Njc0Mw==")
         self.assertEqual(self.event_locked.commit_url, None)
         self.assertEqual(self.event_locked.label, None)
         self.assertEqual(self.event_locked.assignee, None)
         self.assertEqual(self.event_locked.assigner, None)
+        self.assertEqual(self.event_locked.author_association, None)
         self.assertEqual(self.event_locked.review_requester, None)
         self.assertEqual(self.event_locked.requested_reviewer, None)
+        self.assertEqual(self.event_locked.requested_team, None)
         self.assertEqual(self.event_locked.milestone, None)
+        self.assertEqual(self.event_locked.performed_via_github_app, None)
+        self.assertEqual(self.event_locked.project_card, None)
         self.assertEqual(self.event_locked.rename, None)
         self.assertEqual(self.event_locked.dismissed_review, None)
         self.assertEqual(self.event_locked.lock_reason, "too heated")
         self.assertEqual(repr(self.event_locked), "IssueEvent(id=1783596743)")
 
     def testEvent_unlocked_Attributes(self):
-        self.assertEqual(self.event_unlocked.actor.login, "PyGithub")
+        self.assertEqual(self.event_unlocked.actor.login, "sfdye")
         self.assertEqual(self.event_unlocked.commit_id, None)
         self.assertEqual(
-            self.event_unlocked.created_at, datetime.datetime(2018, 8, 11, 0, 47, 7)
+            self.event_unlocked.created_at,
+            datetime(2018, 8, 11, 0, 47, 7, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_unlocked.event, "unlocked")
         self.assertEqual(self.event_unlocked.id, 1783596818)
@@ -617,16 +681,18 @@ class IssueEvent(Framework.TestCase):
             self.event_unlocked.url,
             "https://api.github.com/repos/PyGithub/PyGithub/issues/events/1783596818",
         )
-        self.assertEqual(
-            self.event_unlocked.node_id, "MDEzOlVubG9ja2VkRXZlbnQxNzgzNTk2ODE4"
-        )
+        self.assertEqual(self.event_unlocked.node_id, "MDEzOlVubG9ja2VkRXZlbnQxNzgzNTk2ODE4")
         self.assertEqual(self.event_unlocked.commit_url, None)
         self.assertEqual(self.event_unlocked.label, None)
         self.assertEqual(self.event_unlocked.assignee, None)
         self.assertEqual(self.event_unlocked.assigner, None)
+        self.assertEqual(self.event_unlocked.author_association, None)
         self.assertEqual(self.event_unlocked.review_requester, None)
         self.assertEqual(self.event_unlocked.requested_reviewer, None)
+        self.assertEqual(self.event_unlocked.requested_team, None)
         self.assertEqual(self.event_unlocked.milestone, None)
+        self.assertEqual(self.event_unlocked.performed_via_github_app, None)
+        self.assertEqual(self.event_unlocked.project_card, None)
         self.assertEqual(self.event_unlocked.rename, None)
         self.assertEqual(self.event_unlocked.dismissed_review, None)
         self.assertEqual(self.event_unlocked.lock_reason, None)
@@ -637,7 +703,7 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_dismissed.commit_id, None)
         self.assertEqual(
             self.event_review_dismissed.created_at,
-            datetime.datetime(2018, 8, 11, 1, 7, 10),
+            datetime(2018, 8, 11, 1, 7, 10, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_review_dismissed.event, "review_dismissed")
         self.assertEqual(self.event_review_dismissed.id, 1783605084)
@@ -654,9 +720,13 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_dismissed.label, None)
         self.assertEqual(self.event_review_dismissed.assignee, None)
         self.assertEqual(self.event_review_dismissed.assigner, None)
+        self.assertEqual(self.event_review_dismissed.author_association, None)
         self.assertEqual(self.event_review_dismissed.review_requester, None)
         self.assertEqual(self.event_review_dismissed.requested_reviewer, None)
+        self.assertEqual(self.event_review_dismissed.requested_team, None)
         self.assertEqual(self.event_review_dismissed.milestone, None)
+        self.assertEqual(self.event_review_dismissed.performed_via_github_app, None)
+        self.assertEqual(self.event_review_dismissed.project_card, None)
         self.assertEqual(self.event_review_dismissed.rename, None)
         self.assertEqual(
             self.event_review_dismissed.dismissed_review,
@@ -674,11 +744,9 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_request_removed.commit_id, None)
         self.assertEqual(
             self.event_review_request_removed.created_at,
-            datetime.datetime(2018, 8, 11, 12, 32, 59),
+            datetime(2018, 8, 11, 12, 32, 59, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.event_review_request_removed.event, "review_request_removed"
-        )
+        self.assertEqual(self.event_review_request_removed.event, "review_request_removed")
         self.assertEqual(self.event_review_request_removed.id, 1783779835)
         self.assertEqual(self.event_review_request_removed.issue.number, 857)
         self.assertEqual(
@@ -693,26 +761,24 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_review_request_removed.label, None)
         self.assertEqual(self.event_review_request_removed.assignee, None)
         self.assertEqual(self.event_review_request_removed.assigner, None)
-        self.assertEqual(
-            self.event_review_request_removed.review_requester.login, "sfdye"
-        )
-        self.assertEqual(
-            self.event_review_request_removed.requested_reviewer.login, "jasonwhite"
-        )
+        self.assertEqual(self.event_review_request_removed.author_association, None)
+        self.assertEqual(self.event_review_request_removed.review_requester.login, "sfdye")
+        self.assertEqual(self.event_review_request_removed.requested_reviewer.login, "jasonwhite")
+        self.assertEqual(self.event_review_request_removed.requested_team, None)
         self.assertEqual(self.event_review_request_removed.milestone, None)
+        self.assertEqual(self.event_review_request_removed.performed_via_github_app, None)
+        self.assertEqual(self.event_review_request_removed.project_card, None)
         self.assertEqual(self.event_review_request_removed.rename, None)
         self.assertEqual(self.event_review_request_removed.dismissed_review, None)
         self.assertEqual(self.event_review_request_removed.lock_reason, None)
-        self.assertEqual(
-            repr(self.event_review_request_removed), "IssueEvent(id=1783779835)"
-        )
+        self.assertEqual(repr(self.event_review_request_removed), "IssueEvent(id=1783779835)")
 
     def testEvent_marked_as_duplicate_Attributes(self):
         self.assertEqual(self.event_marked_as_duplicate.actor.login, "sfdye")
         self.assertEqual(self.event_marked_as_duplicate.commit_id, None)
         self.assertEqual(
             self.event_marked_as_duplicate.created_at,
-            datetime.datetime(2018, 8, 11, 12, 32, 35),
+            datetime(2018, 8, 11, 12, 32, 35, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_marked_as_duplicate.event, "marked_as_duplicate")
         self.assertEqual(self.event_marked_as_duplicate.id, 1783779725)
@@ -729,26 +795,26 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_marked_as_duplicate.label, None)
         self.assertEqual(self.event_marked_as_duplicate.assignee, None)
         self.assertEqual(self.event_marked_as_duplicate.assigner, None)
+        self.assertEqual(self.event_marked_as_duplicate.author_association, None)
         self.assertEqual(self.event_marked_as_duplicate.review_requester, None)
         self.assertEqual(self.event_marked_as_duplicate.requested_reviewer, None)
+        self.assertEqual(self.event_marked_as_duplicate.requested_team, None)
         self.assertEqual(self.event_marked_as_duplicate.milestone, None)
+        self.assertEqual(self.event_marked_as_duplicate.performed_via_github_app, None)
+        self.assertEqual(self.event_marked_as_duplicate.project_card, None)
         self.assertEqual(self.event_marked_as_duplicate.rename, None)
         self.assertEqual(self.event_marked_as_duplicate.dismissed_review, None)
         self.assertEqual(self.event_marked_as_duplicate.lock_reason, None)
-        self.assertEqual(
-            repr(self.event_marked_as_duplicate), "IssueEvent(id=1783779725)"
-        )
+        self.assertEqual(repr(self.event_marked_as_duplicate), "IssueEvent(id=1783779725)")
 
     def testEvent_unmarked_as_duplicate_Attributes(self):
         self.assertEqual(self.event_unmarked_as_duplicate.actor.login, "sfdye")
         self.assertEqual(self.event_unmarked_as_duplicate.commit_id, None)
         self.assertEqual(
             self.event_unmarked_as_duplicate.created_at,
-            datetime.datetime(2018, 8, 15, 2, 57, 46),
+            datetime(2018, 8, 15, 2, 57, 46, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.event_unmarked_as_duplicate.event, "unmarked_as_duplicate"
-        )
+        self.assertEqual(self.event_unmarked_as_duplicate.event, "unmarked_as_duplicate")
         self.assertEqual(self.event_unmarked_as_duplicate.id, 1789228962)
         self.assertEqual(self.event_unmarked_as_duplicate.issue.number, 857)
         self.assertEqual(
@@ -763,22 +829,24 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_unmarked_as_duplicate.label, None)
         self.assertEqual(self.event_unmarked_as_duplicate.assignee, None)
         self.assertEqual(self.event_unmarked_as_duplicate.assigner, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.author_association, None)
         self.assertEqual(self.event_unmarked_as_duplicate.review_requester, None)
         self.assertEqual(self.event_unmarked_as_duplicate.requested_reviewer, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.requested_team, None)
         self.assertEqual(self.event_unmarked_as_duplicate.milestone, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.performed_via_github_app, None)
+        self.assertEqual(self.event_unmarked_as_duplicate.project_card, None)
         self.assertEqual(self.event_unmarked_as_duplicate.rename, None)
         self.assertEqual(self.event_unmarked_as_duplicate.dismissed_review, None)
         self.assertEqual(self.event_unmarked_as_duplicate.lock_reason, None)
-        self.assertEqual(
-            repr(self.event_unmarked_as_duplicate), "IssueEvent(id=1789228962)"
-        )
+        self.assertEqual(repr(self.event_unmarked_as_duplicate), "IssueEvent(id=1789228962)")
 
     def testEvent_added_to_project_Attributes(self):
         self.assertEqual(self.event_added_to_project.actor.login, "sfdye")
         self.assertEqual(self.event_added_to_project.commit_id, None)
         self.assertEqual(
             self.event_added_to_project.created_at,
-            datetime.datetime(2018, 8, 16, 8, 13, 24),
+            datetime(2018, 8, 16, 8, 13, 24, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_added_to_project.event, "added_to_project")
         self.assertEqual(self.event_added_to_project.id, 1791766828)
@@ -795,9 +863,22 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_added_to_project.label, None)
         self.assertEqual(self.event_added_to_project.assignee, None)
         self.assertEqual(self.event_added_to_project.assigner, None)
+        self.assertEqual(self.event_added_to_project.author_association, None)
         self.assertEqual(self.event_added_to_project.review_requester, None)
         self.assertEqual(self.event_added_to_project.requested_reviewer, None)
+        self.assertEqual(self.event_added_to_project.requested_team, None)
         self.assertEqual(self.event_added_to_project.milestone, None)
+        self.assertEqual(self.event_added_to_project.performed_via_github_app, None)
+        self.assertEqual(
+            self.event_added_to_project.project_card,
+            {
+                "column_name": "To do",
+                "id": 12179888,
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179888",
+            },
+        )
         self.assertEqual(self.event_added_to_project.rename, None)
         self.assertEqual(self.event_added_to_project.dismissed_review, None)
         self.assertEqual(self.event_added_to_project.lock_reason, None)
@@ -808,11 +889,9 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_moved_columns_in_project.commit_id, None)
         self.assertEqual(
             self.event_moved_columns_in_project.created_at,
-            datetime.datetime(2018, 8, 16, 8, 13, 55),
+            datetime(2018, 8, 16, 8, 13, 55, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.event_moved_columns_in_project.event, "moved_columns_in_project"
-        )
+        self.assertEqual(self.event_moved_columns_in_project.event, "moved_columns_in_project")
         self.assertEqual(self.event_moved_columns_in_project.id, 1791767766)
         self.assertEqual(self.event_moved_columns_in_project.issue.number, 857)
         self.assertEqual(
@@ -827,22 +906,34 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_moved_columns_in_project.label, None)
         self.assertEqual(self.event_moved_columns_in_project.assignee, None)
         self.assertEqual(self.event_moved_columns_in_project.assigner, None)
+        self.assertEqual(self.event_moved_columns_in_project.author_association, None)
         self.assertEqual(self.event_moved_columns_in_project.review_requester, None)
         self.assertEqual(self.event_moved_columns_in_project.requested_reviewer, None)
+        self.assertEqual(self.event_moved_columns_in_project.requested_team, None)
         self.assertEqual(self.event_moved_columns_in_project.milestone, None)
+        self.assertEqual(self.event_moved_columns_in_project.performed_via_github_app, None)
+        self.assertEqual(
+            self.event_moved_columns_in_project.project_card,
+            {
+                "column_name": "In progress",
+                "id": 12179888,
+                "previous_column_name": "To do",
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179888",
+            },
+        )
         self.assertEqual(self.event_moved_columns_in_project.rename, None)
         self.assertEqual(self.event_moved_columns_in_project.dismissed_review, None)
         self.assertEqual(self.event_moved_columns_in_project.lock_reason, None)
-        self.assertEqual(
-            repr(self.event_moved_columns_in_project), "IssueEvent(id=1791767766)"
-        )
+        self.assertEqual(repr(self.event_moved_columns_in_project), "IssueEvent(id=1791767766)")
 
     def testEvent_removed_from_project_Attributes(self):
         self.assertEqual(self.event_removed_from_project.actor.login, "sfdye")
         self.assertEqual(self.event_removed_from_project.commit_id, None)
         self.assertEqual(
             self.event_removed_from_project.created_at,
-            datetime.datetime(2018, 8, 16, 8, 14, 8),
+            datetime(2018, 8, 16, 8, 14, 8, tzinfo=timezone.utc),
         )
         self.assertEqual(self.event_removed_from_project.event, "removed_from_project")
         self.assertEqual(self.event_removed_from_project.id, 1791768212)
@@ -859,26 +950,35 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_removed_from_project.label, None)
         self.assertEqual(self.event_removed_from_project.assignee, None)
         self.assertEqual(self.event_removed_from_project.assigner, None)
+        self.assertEqual(self.event_removed_from_project.author_association, None)
         self.assertEqual(self.event_removed_from_project.review_requester, None)
         self.assertEqual(self.event_removed_from_project.requested_reviewer, None)
+        self.assertEqual(self.event_removed_from_project.requested_team, None)
         self.assertEqual(self.event_removed_from_project.milestone, None)
+        self.assertEqual(self.event_removed_from_project.performed_via_github_app, None)
+        self.assertEqual(
+            self.event_removed_from_project.project_card,
+            {
+                "column_name": "In progress",
+                "id": 12179888,
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179888",
+            },
+        )
         self.assertEqual(self.event_removed_from_project.rename, None)
         self.assertEqual(self.event_removed_from_project.dismissed_review, None)
         self.assertEqual(self.event_removed_from_project.lock_reason, None)
-        self.assertEqual(
-            repr(self.event_removed_from_project), "IssueEvent(id=1791768212)"
-        )
+        self.assertEqual(repr(self.event_removed_from_project), "IssueEvent(id=1791768212)")
 
     def testEvent_converted_note_to_issue_Attributes(self):
         self.assertEqual(self.event_converted_note_to_issue.actor.login, "sfdye")
         self.assertEqual(self.event_converted_note_to_issue.commit_id, None)
         self.assertEqual(
             self.event_converted_note_to_issue.created_at,
-            datetime.datetime(2018, 8, 16, 8, 14, 34),
+            datetime(2018, 8, 16, 8, 14, 34, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.event_converted_note_to_issue.event, "converted_note_to_issue"
-        )
+        self.assertEqual(self.event_converted_note_to_issue.event, "converted_note_to_issue")
         self.assertEqual(self.event_converted_note_to_issue.id, 1791769149)
         self.assertEqual(self.event_converted_note_to_issue.issue.number, 866)
         self.assertEqual(
@@ -893,12 +993,23 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_converted_note_to_issue.label, None)
         self.assertEqual(self.event_converted_note_to_issue.assignee, None)
         self.assertEqual(self.event_converted_note_to_issue.assigner, None)
+        self.assertEqual(self.event_converted_note_to_issue.author_association, None)
         self.assertEqual(self.event_converted_note_to_issue.review_requester, None)
         self.assertEqual(self.event_converted_note_to_issue.requested_reviewer, None)
+        self.assertEqual(self.event_converted_note_to_issue.requested_team, None)
         self.assertEqual(self.event_converted_note_to_issue.milestone, None)
+        self.assertEqual(self.event_converted_note_to_issue.performed_via_github_app, None)
+        self.assertEqual(
+            self.event_converted_note_to_issue.project_card,
+            {
+                "column_name": "To do",
+                "id": 12179901,
+                "project_id": 1714960,
+                "project_url": "https://api.github.com/projects/1714960",
+                "url": "https://api.github.com/projects/columns/cards/12179901",
+            },
+        )
         self.assertEqual(self.event_converted_note_to_issue.rename, None)
         self.assertEqual(self.event_converted_note_to_issue.dismissed_review, None)
         self.assertEqual(self.event_converted_note_to_issue.lock_reason, None)
-        self.assertEqual(
-            repr(self.event_converted_note_to_issue), "IssueEvent(id=1791769149)"
-        )
+        self.assertEqual(repr(self.event_converted_note_to_issue), "IssueEvent(id=1791769149)")

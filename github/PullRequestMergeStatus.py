@@ -10,6 +10,15 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,44 +38,41 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
+class PullRequestMergeStatus(NonCompletableGithubObject):
     """
-    This class represents PullRequestMergeStatuses. The reference can be found here https://docs.github.com/en/rest/reference/pulls#check-if-a-pull-request-has-been-merged
+    This class represents PullRequestMergeStatuses.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/pulls#check-if-a-pull-request-has-been-merged
+
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._merged: Attribute[bool] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._sha: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "merged": self._merged.value})
 
     @property
-    def merged(self):
-        """
-        :type: bool
-        """
+    def merged(self) -> bool:
         return self._merged.value
 
     @property
-    def message(self):
-        """
-        :type: string
-        """
+    def message(self) -> str:
         return self._message.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def sha(self) -> str:
         return self._sha.value
 
-    def _initAttributes(self):
-        self._merged = github.GithubObject.NotSet
-        self._message = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "merged" in attributes:  # pragma no branch
             self._merged = self._makeBoolAttribute(attributes["merged"])
         if "message" in attributes:  # pragma no branch

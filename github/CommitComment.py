@@ -11,7 +11,17 @@
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 per1234 <accounts@perglass.com>                               #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Huan-Cheng Chang <changhc84@gmail.com>                        #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,137 +41,147 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
 import github.GithubObject
 import github.NamedUser
+from github import Consts
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
 
-from . import Consts
+if TYPE_CHECKING:
+    from github.Reaction import Reaction
 
 
-class CommitComment(github.GithubObject.CompletableGithubObject):
+class CommitComment(CompletableGithubObject):
     """
-    This class represents CommitComments. The reference can be found here https://docs.github.com/en/rest/reference/repos#comments
+    This class represents CommitComments.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#comments
+
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-comment
+
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._author_association: Attribute[str] = NotSet
+        self._body: Attribute[str] = NotSet
+        self._commit_id: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._line: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._path: Attribute[str] = NotSet
+        self._position: Attribute[int] = NotSet
+        self._reactions: Attribute[dict[str, Any]] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self.user})
 
     @property
-    def body(self):
-        """
-        :type: string
-        """
+    def author_association(self) -> str:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
+
+    @property
+    def body(self) -> str:
         self._completeIfNotSet(self._body)
         return self._body.value
 
     @property
-    def commit_id(self):
-        """
-        :type: string
-        """
+    def commit_id(self) -> str:
         self._completeIfNotSet(self._commit_id)
         return self._commit_id.value
 
     @property
-    def created_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def line(self):
-        """
-        :type: integer
-        """
+    def line(self) -> int:
         self._completeIfNotSet(self._line)
         return self._line.value
 
     @property
-    def path(self):
-        """
-        :type: string
-        """
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
+    def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
 
     @property
-    def position(self):
-        """
-        :type: integer
-        """
+    def position(self) -> int:
         self._completeIfNotSet(self._position)
         return self._position.value
 
     @property
-    def updated_at(self):
-        """
-        :type: datetime.datetime
-        """
+    def reactions(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
+
+    @property
+    def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def user(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def user(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def edit(self, body):
+    def edit(self, body: str) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
-        :param body: string
-        :rtype: None
         """
         assert isinstance(body, str), body
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestJsonAndCheck(
-            "PATCH", self.url, input=post_parameters
-        )
+        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def get_reactions(self):
+    def get_reactions(self) -> PaginatedList[Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/comments/{id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-commit-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.Reaction.Reaction,
             self._requester,
             f"{self.url}/reactions",
@@ -169,12 +189,10 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    def create_reaction(self, reaction_type):
+    def create_reaction(self, reaction_type: str) -> Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/comments/{id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-commit-comment>`_
-        :param reaction_type: string
-        :rtype: :class:`github.Reaction.Reaction`
         """
         assert isinstance(reaction_type, str), reaction_type
         post_parameters = {
@@ -188,7 +206,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         )
         return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
-    def delete_reaction(self, reaction_id):
+    def delete_reaction(self, reaction_id: int) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}
                 <https://docs.github.com/en/rest/reference/reactions#delete-a-commit-comment-reaction>`_
@@ -203,20 +221,9 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def _initAttributes(self):
-        self._body = github.GithubObject.NotSet
-        self._commit_id = github.GithubObject.NotSet
-        self._created_at = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._id = github.GithubObject.NotSet
-        self._line = github.GithubObject.NotSet
-        self._path = github.GithubObject.NotSet
-        self._position = github.GithubObject.NotSet
-        self._updated_at = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
@@ -229,15 +236,17 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "line" in attributes:  # pragma no branch
             self._line = self._makeIntAttribute(attributes["line"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "position" in attributes:  # pragma no branch
             self._position = self._makeIntAttribute(attributes["position"])
+        if "reactions" in attributes:  # pragma no branch
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["user"]
-            )
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

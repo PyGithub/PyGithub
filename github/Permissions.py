@@ -9,6 +9,14 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 karsten-wagner <39054096+karsten-wagner@users.noreply.github.com>#
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,15 +36,33 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Permissions(github.GithubObject.NonCompletableGithubObject):
+class Permissions(NonCompletableGithubObject):
     """
-    This class represents Permissions
+    This class represents Permissions.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/collaborator/properties/permissions
+    - /components/schemas/full-repository/properties/permissions
+    - /components/schemas/minimal-repository/properties/permissions
+    - /components/schemas/repo-search-result-item/properties/permissions
+    - /components/schemas/repository/properties/permissions
+    - /components/schemas/team/properties/permissions
+
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._admin: Attribute[bool] = NotSet
+        self._maintain: Attribute[bool] = NotSet
+        self._pull: Attribute[bool] = NotSet
+        self._push: Attribute[bool] = NotSet
+        self._triage: Attribute[bool] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__(
             {
                 "admin": self._admin.value,
@@ -48,48 +74,26 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         )
 
     @property
-    def admin(self):
-        """
-        :type: bool
-        """
+    def admin(self) -> bool:
         return self._admin.value
 
     @property
-    def maintain(self):
-        """
-        :type: bool
-        """
+    def maintain(self) -> bool:
         return self._maintain.value
 
     @property
-    def pull(self):
-        """
-        :type: bool
-        """
+    def pull(self) -> bool:
         return self._pull.value
 
     @property
-    def push(self):
-        """
-        :type: bool
-        """
+    def push(self) -> bool:
         return self._push.value
 
     @property
-    def triage(self):
-        """
-        :type: bool
-        """
+    def triage(self) -> bool:
         return self._triage.value
 
-    def _initAttributes(self):
-        self._admin = github.GithubObject.NotSet
-        self._maintain = github.GithubObject.NotSet
-        self._pull = github.GithubObject.NotSet
-        self._push = github.GithubObject.NotSet
-        self._triage = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "admin" in attributes:  # pragma no branch
             self._admin = self._makeBoolAttribute(attributes["admin"])
         if "maintain" in attributes:  # pragma no branch

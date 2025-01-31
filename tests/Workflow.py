@@ -1,6 +1,22 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Mahesh Raju <coder@mahesh.net>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Thomas Burghout <thomas.burghout@nedap.com>                   #
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,7 +36,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -35,11 +53,18 @@ class Workflow(Framework.TestCase):
             repr(self.workflow),
             'Workflow(url="https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390", name="check")',
         )
+        self.assertEqual(self.workflow.badge_url, "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg")
+        self.assertEqual(self.workflow.created_at, datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc))
+        self.assertIsNone(self.workflow.deleted_at)
+        self.assertEqual(
+            self.workflow.html_url, "https://github.com/PyGithub/PyGithub/blob/master/.github/workflows/check.yml"
+        )
         self.assertEqual(self.workflow.id, 1026390)
         self.assertEqual(self.workflow.name, "check")
+        self.assertEqual(self.workflow.node_id, "MDg6V29ya2Zsb3cxMDI2Mzkw")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
-        timestamp = datetime.datetime(2020, 4, 15, 0, 48, 32)
+        timestamp = datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc)
         self.assertEqual(self.workflow.created_at, timestamp)
         self.assertEqual(self.workflow.updated_at, timestamp)
         self.assertEqual(
@@ -66,9 +91,7 @@ class Workflow(Framework.TestCase):
         sfdye = self.g.get_user("sfdye")
         master = self.g.get_repo("PyGithub/PyGithub").get_branch("master")
         self.assertListKeyEqual(
-            self.workflow.get_runs(
-                actor=sfdye, branch=master, event="push", status="completed"
-            ),
+            self.workflow.get_runs(actor=sfdye, branch=master, event="push", status="completed"),
             lambda r: r.id,
             [100957683, 94845611, 93946842, 92714488],
         )
@@ -80,30 +103,36 @@ class Workflow(Framework.TestCase):
             [109950033, 108817672, 108794468, 107927403, 105213061, 105212023],
         )
 
+    def testGetRunsWithHeadSha(self):
+        self.assertListKeyEqual(
+            self.workflow.get_runs(head_sha="3a6235b56eecc0e193c1e267b064c155c6ebc022"),
+            lambda r: r.id,
+            [3349872717],
+        )
+
+    def testGetRunsWithCreated(self):
+        self.assertListKeyEqual(
+            self.workflow.get_runs(created="2022-12-24"),
+            lambda r: r.id,
+            [3770390952],
+        )
+
     def testCreateDispatchWithBranch(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
-        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
-        )
-        branch = self.g.get_repo("wrecker/PyGithub").get_branch(
-            "workflow_dispatch_branch"
-        )
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
+        branch = self.g.get_repo("wrecker/PyGithub").get_branch("workflow_dispatch_branch")
         self.assertTrue(workflow.create_dispatch(branch, dispatch_inputs))
 
     def testCreateDispatchWithTag(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
-        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
-        )
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
         tags = self.g.get_repo("wrecker/PyGithub").get_tags()
         tag = [t for t in tags if t.name == "workflow_dispatch_tag"].pop()
         self.assertTrue(workflow.create_dispatch(tag, dispatch_inputs))
 
     def testCreateDispatchWithString(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
-        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow(
-            "manual_dispatch.yml"
-        )
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
         ref_str = "main"
         self.assertTrue(workflow.create_dispatch(ref_str, dispatch_inputs))
 

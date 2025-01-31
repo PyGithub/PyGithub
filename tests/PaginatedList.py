@@ -8,6 +8,17 @@
 # Copyright 2015 Eliot Walker <eliot@lyft.com>                                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2022 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,6 +38,8 @@
 #                                                                              #
 ################################################################################
 
+from datetime import datetime, timezone
+
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 from . import Framework
@@ -37,9 +50,20 @@ class PaginatedList(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
+        self.licenses = self.g.get_enterprise("beaver-group").get_consumed_licenses()
+
+    def testIsApiType(self):
+        self.assertTrue(self.list.is_rest)
+        self.assertFalse(self.list.is_graphql)
 
     def testIteration(self):
         self.assertEqual(len(list(self.list)), 333)
+
+    def testIterationWithPrefetchedFirstPage(self):
+        # test data taken from EnterpriseAdmin.testGetEnterpriseUsers
+        users = self.licenses.get_users()
+        self.assertEqual(len(list(users)), 102)
+        self.assertEqual(len({user.github_com_login for user in users}), 102)
 
     def testSeveralIterations(self):
         self.assertEqual(len(list(self.list)), 333)
@@ -181,12 +205,8 @@ class PaginatedList(Framework.TestCase):
             lambda i: i.id,
             [4772349, 4700182, 4604661, 4554058, 4507492],
         )
-        self.assertListKeyEqual(
-            self.list[10:13], lambda i: i.id, [4539985, 4507572, 4507492]
-        )
-        self.assertListKeyEqual(
-            self.list[5:13:3], lambda i: i.id, [4608132, 4557803, 4507572]
-        )
+        self.assertListKeyEqual(self.list[10:13], lambda i: i.id, [4539985, 4507572, 4507492])
+        self.assertListKeyEqual(self.list[5:13:3], lambda i: i.id, [4608132, 4557803, 4507572])
 
     def testSliceIndexingUntilFourthPage(self):
         self.assertListKeyEqual(
@@ -263,7 +283,8 @@ class PaginatedList(Framework.TestCase):
     def testInterruptedIterationInSlice(self):
         # No asserts, but checks that only three pages are fetched
         count = 0
-        for element in self.list[:100]:  # pragma no branch (exits only by break)
+        # pragma no branch (exits only by break)
+        for element in self.list[:100]:
             count += 1
             if count == 75:
                 break
@@ -289,9 +310,9 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
     def testCustomPerPageWithNoUrlParams(self):
-        from . import (
+        from . import (  # Don't pollute github.tests namespace, it would conflict with github.tests.CommitComment
             CommitComment,
-        )  # Don't polute github.tests namespace, it would conflict with github.tests.CommitComment
+        )
 
         self.g.per_page = 100
         PaginatedListImpl(
@@ -312,5 +333,75 @@ class PaginatedList(Framework.TestCase):
         self.g.per_page = 100
         self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)
 
+    def testCustomPerPageIteration(self):
+        self.g.per_page = 3
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(1136).get_comments()
+        self.assertEqual(
+            [
+                datetime(2019, 8, 10, 18, 16, 46, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 16, 4, 34, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 17, 34, 11, tzinfo=timezone.utc),
+                datetime(2024, 3, 20, 15, 24, 15, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 10, 55, 14, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 14, 2, 22, tzinfo=timezone.utc),
+                datetime(2024, 3, 24, 13, 58, 57, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
+
+    def testCustomPerPageReversedIteration(self):
+        self.g.per_page = 3
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(1136).get_comments().reversed
+        self.assertEqual(
+            [
+                datetime(2024, 3, 24, 13, 58, 57, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 14, 2, 22, tzinfo=timezone.utc),
+                datetime(2024, 3, 21, 10, 55, 14, tzinfo=timezone.utc),
+                datetime(2024, 3, 20, 15, 24, 15, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 17, 34, 11, tzinfo=timezone.utc),
+                datetime(2024, 1, 6, 16, 4, 34, tzinfo=timezone.utc),
+                datetime(2019, 8, 10, 18, 16, 46, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
+
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))
+
+    def testMergeDicts(self):
+        self.assertDictEqual(
+            PaginatedListImpl.merge_dicts(
+                {"a": 1, "b": 2, "c": 3},
+                {"c": 4, "d": 5, "e": 6},
+            ),
+            {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6},
+        )
+
+    def testOverrideAttributes(self):
+        input_dict = {"a": 1, "b": 2, "c": 3}
+        overrides_dict = {"c": 4, "d": 5, "e": 6}
+        transformer = PaginatedListImpl.override_attributes(overrides_dict)
+        self.assertDictEqual(transformer(input_dict), {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6})
+
+    def testGraphQlPagination(self):
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        discussions = repo.get_discussions("id number")
+        self.assertFalse(discussions.is_rest)
+        self.assertTrue(discussions.is_graphql)
+        rev = discussions.reversed
+
+        discussions_list = list(discussions)
+        self.assertEqual(discussions.totalCount, 65)
+        self.assertEqual(len(discussions_list), 65)
+        self.assertEqual(discussions_list[0].number, 3044)
+        self.assertEqual(discussions_list[-1].number, 1780)
+
+        reversed_list = list(rev)
+        self.assertEqual(rev.totalCount, 65)
+        self.assertEqual(len(reversed_list), 65)
+        self.assertListEqual([d.number for d in reversed_list], [d.number for d in reversed(discussions_list)])
+
+        # accessing totalCount before iterating the PaginatedList triggers another request
+        self.assertEqual(repo.get_discussions("id number").totalCount, 65)

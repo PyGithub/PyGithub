@@ -1,0 +1,9 @@
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/actions/jobs/11421878319/logs
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+None
+302
+[('Server', 'GitHub.com'), ('Date', 'Wed, 15 Mar 2023 17:01:58 GMT'), ('Content-Type', 'text/html;charset=utf-8'), ('Content-Length', '0'), ('Location', 'https://pipelines.actions.githubusercontent.com/serviceHosts/d560a817-28d4-4544-a539-eb35c2a56899/_apis/pipelines/1/runs/5/signedlogcontent/5?urlExpires=2023-03-15T17%3A02%3A58.1305046Z&urlSigningMethod=HMACV1&urlSignature=abcdefghijklmn'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4996'), ('X-RateLimit-Reset', '1678903315'), ('X-RateLimit-Used', '4'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'A66C:CC26:9983F9A:9BF3547:6411FA05')]

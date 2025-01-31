@@ -8,6 +8,12 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,7 +33,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -40,19 +48,25 @@ class Hook(Framework.TestCase):
     def testAttributes(self):
         self.assertTrue(self.hook.active)  # WTF
         self.assertEqual(self.hook.config, {"url": "http://foobar.com"})
-        self.assertEqual(self.hook.created_at, datetime.datetime(2012, 5, 19, 6, 1, 45))
+        self.assertEqual(
+            self.hook.created_at,
+            datetime(2012, 5, 19, 6, 1, 45, tzinfo=timezone.utc),
+        )
+        self.assertIsNone(self.hook.deliveries_url)
         self.assertEqual(self.hook.events, ["push"])
         self.assertEqual(self.hook.id, 257993)
         self.assertEqual(self.hook.last_response.status, "ok")
         self.assertEqual(self.hook.last_response.message, "OK")
         self.assertEqual(self.hook.last_response.code, 200)
         self.assertEqual(self.hook.name, "web")
+        self.assertEqual(self.hook.ping_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings")
+        self.assertEqual(self.hook.test_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests")
+        self.assertIsNone(self.hook.type)
         self.assertEqual(
-            self.hook.updated_at, datetime.datetime(2012, 5, 29, 18, 49, 47)
+            self.hook.updated_at,
+            datetime(2012, 5, 29, 18, 49, 47, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993"
-        )
+        self.assertEqual(self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993")
         self.assertEqual(
             self.hook.test_url,
             "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests",
@@ -71,7 +85,10 @@ class Hook(Framework.TestCase):
     def testEditWithMinimalParameters(self):
         self.hook.edit("web", {"url": "http://foobar.com/hook"})
         self.assertEqual(self.hook.config, {"url": "http://foobar.com/hook"})
-        self.assertEqual(self.hook.updated_at, datetime.datetime(2012, 5, 19, 5, 8, 16))
+        self.assertEqual(
+            self.hook.updated_at,
+            datetime(2012, 5, 19, 5, 8, 16, tzinfo=timezone.utc),
+        )
 
     def testDelete(self):
         self.hook.delete()

@@ -1,19 +1,36 @@
 name: CI
 on:
   push:
-    branches: master
+    branches:
+      - main
+      - release-v*
   pull_request:
+  merge_group:
+
 jobs:
+
+  build:
+    uses: "./.github/workflows/_build-pkg.yml"
+    with:
+      artifact-name: package
+
   test:
-    runs-on: ubuntu-latest
-    name: test (Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    name: test (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        # keep in sync with tox.ini [gh-actions] section
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        os: ["ubuntu-latest"]
+        os-label: ["Ubuntu"]
+        include:
+          - {python-version: "3.8", os: "windows-latest", os-label: "Windows"}
+          - {python-version: "3.8", os: "macos-latest", os-label: "macOS"}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "${{ matrix.python-version }}"
       - name: Install tox
@@ -23,5 +40,30 @@ jobs:
       - name: Run tests
         run: tox
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3
 
+  test_success:
+    # this aggregates success state of all jobs listed in `needs`
+    # this is the only required check to pass CI
+    name: "Test success"
+    if: always()
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: "Success"
+        if: needs.test.result == 'success'
+        run: true
+        shell: bash
+      - name: "Failure"
+        if: needs.test.result != 'success'
+        run: false
+        shell: bash
+
+  draft:
+    runs-on: ubuntu-latest
+    needs: test_success
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,10 @@
+https
+POST
+api.github.com
+None
+/app/installations/30614431/access_tokens
+{'Authorization': 'Bearer jwt_removed', 'Accept': 'application/vnd.github.machine-man-preview+json', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"permissions": {"test-permissions": "read"}}
+422
+[('status', '422 UNPROCESSABLE ENTITY'), ('server', 'Github.com'), ('date', 'Mon, 24 Oct 2022 23:11:45 GMT'), ('content-type', 'application/json; charset=utf-8'), ('connection', 'keep-alive'), ('content-length', '1962'), ('etag', 'W/"b11a1c9caabe35f1de0a13e597a3022d27d2bff0694c2ccb5a65edc3b4d18837"'), ('cache-control', 'public, max-age=60, s-maxage=60'), ('vary', 'Accept'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('access-control-allow-origin', '*'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-frame-options', 'deny'), ('x-content-type-options', 'nosniff'), ('x-xss-protection', '0'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('x-github-request-id', "E475:53DD:8B7A89E:11E38A79:63571BB0"), ('vary', 'Accept-Encoding, Accept, X-Requested-With'), ('content-security-policy', "default-src 'none'")]
+{"message":"The permissions requested are not granted to this installation.","documentation_url":"https://docs.github.com/rest/reference/apps#create-an-installation-access-token-for-an-app"}

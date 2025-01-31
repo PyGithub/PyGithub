@@ -1,6 +1,12 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2020 Michał Górny <mgorny@gentoo.org>                              #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,18 +63,16 @@ PARAMETERS = itertools.product(
 
 
 class RecordingMockConnection(Framework.RecordingConnection):
-    def __init__(self, file, protocol, host, port, realConnection):
+    def __init__(self, protocol, host, port, realConnection):
         self._realConnection = realConnection
-        super().__init__(file, protocol, host, port)
+        super().__init__(protocol, host, port)
 
 
 @pytest.mark.parametrize(
     ("replaying_connection_class", "protocol", "response_body", "expected_recording"),
     list(tuple(itertools.chain(*p)) for p in PARAMETERS),
 )
-def testRecordAndReplay(
-    replaying_connection_class, protocol, response_body, expected_recording
-):
+def testRecordAndReplay(replaying_connection_class, protocol, response_body, expected_recording):
     file = StringIO()
     host = "api.github.com"
     verb = "GET"
@@ -84,9 +88,8 @@ def testRecordAndReplay(
     connection.getresponse.return_value = response
 
     # write mock response to buffer
-    recording_connection = RecordingMockConnection(
-        file, protocol, host, None, lambda *args, **kwds: connection
-    )
+    RecordingMockConnection.setOpenFile(lambda slf, mode: file)
+    recording_connection = RecordingMockConnection(protocol, host, None, lambda *args, **kwds: connection)
     recording_connection.request(verb, url, None, headers)
     recording_connection.getresponse()
     recording_connection.close()
@@ -104,7 +107,8 @@ def testRecordAndReplay(
 
     # rewind buffer and attempt to replay response from it
     file.seek(0)
-    replaying_connection = replaying_connection_class(file, host=host, port=None)
+    replaying_connection_class.setOpenFile(lambda slf, mode: file)
+    replaying_connection = replaying_connection_class(host=host, port=None)
     replaying_connection.request(verb, url, None, headers)
     replaying_connection.getresponse()
 

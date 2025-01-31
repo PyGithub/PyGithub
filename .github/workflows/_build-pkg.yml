@@ -1,0 +1,32 @@
+name: Build package
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: "Name of an artifact"
+        type: "string"
+        required: false
+        default: "package"
+
+jobs:
+  build-pkg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -U build twine
+      - name: Build 📦 package
+        run: python -m build
+      - name: Check 📦 package
+        run: twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: dist

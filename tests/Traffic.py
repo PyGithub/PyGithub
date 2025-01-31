@@ -1,10 +1,11 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2018 Justin Kufro <jkufro@andrew.cmu.edu>                          #
-# Copyright 2018 Ivan Minno <iminno@andrew.cmu.edu>                            #
-# Copyright 2018 Zilei Gu <zileig@andrew.cmu.edu>                              #
-# Copyright 2018 Yves Zumbach <yzumbach@andrew.cmu.edu>                        #
-# Copyright 2018 Leying Chen <leyingc@andrew.cmu.edu>                          #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,7 +25,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -62,27 +65,35 @@ class Traffic(Framework.TestCase):
         )
 
     def testGetViews(self):
-        viewsResponse = self.repo.get_views_traffic()
-        self.assertEqual(viewsResponse["count"], 93)
-        self.assertEqual(viewsResponse["uniques"], 4)
-        self.assertEqual(len(viewsResponse["views"]), 5)
-        view_obj = viewsResponse["views"][0]
-        self.assertEqual(view_obj.uniques, 4)
-        self.assertEqual(view_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
-        self.assertEqual(view_obj.count, 56)
+        views = self.repo.get_views_traffic()
+        self.assertEqual(views.count, 93)
+        self.assertEqual(views.uniques, 4)
+        self.assertEqual(len(views.views), 5)
+        view = views.views[0]
+        self.assertEqual(view.uniques, 4)
         self.assertEqual(
-            repr(view_obj), "View(uniques=4, timestamp=2018-11-27 00:00:00, count=56)"
+            view.timestamp,
+            datetime(2018, 11, 27, 0, 0, tzinfo=timezone.utc),
+        )
+        self.assertEqual(view.count, 56)
+        self.assertEqual(
+            repr(view),
+            "Traffic(uniques=4, timestamp=2018-11-27 00:00:00+00:00, count=56)",
         )
 
     def testGetClones(self):
-        clonesResponse = self.repo.get_clones_traffic()
-        self.assertEqual(clonesResponse["count"], 4)
-        self.assertEqual(clonesResponse["uniques"], 4)
-        self.assertEqual(len(clonesResponse["clones"]), 1)
-        clone_obj = clonesResponse["clones"][0]
-        self.assertEqual(clone_obj.uniques, 4)
-        self.assertEqual(clone_obj.timestamp, datetime.datetime(2018, 11, 27, 0, 0))
-        self.assertEqual(clone_obj.count, 4)
+        clones = self.repo.get_clones_traffic()
+        self.assertEqual(clones.count, 4)
+        self.assertEqual(clones.uniques, 4)
+        self.assertEqual(len(clones.clones), 1)
+        clone = clones.clones[0]
+        self.assertEqual(clone.uniques, 4)
         self.assertEqual(
-            repr(clone_obj), "Clones(uniques=4, timestamp=2018-11-27 00:00:00, count=4)"
+            clone.timestamp,
+            datetime(2018, 11, 27, 0, 0, tzinfo=timezone.utc),
+        )
+        self.assertEqual(clone.count, 4)
+        self.assertEqual(
+            repr(clone),
+            "Traffic(uniques=4, timestamp=2018-11-27 00:00:00+00:00, count=4)",
         )

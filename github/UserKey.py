@@ -10,6 +10,15 @@
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,76 +38,89 @@
 #                                                                              #
 ################################################################################
 
-import github.GithubObject
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
+
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
-class UserKey(github.GithubObject.CompletableGithubObject):
+class UserKey(CompletableGithubObject):
     """
-    This class represents UserKeys. The reference can be found here https://docs.github.com/en/rest/reference/users#keys
+    This class represents UserKeys.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/users#keys
+
+    The OpenAPI schema can be found at
+    - /components/schemas/key
+
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._created_at: Attribute[datetime] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._key: Attribute[str] = NotSet
+        self._read_only: Attribute[bool] = NotSet
+        self._title: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._verified: Attribute[bool] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "title": self._title.value})
 
     @property
-    def id(self):
-        """
-        :type: integer
-        """
+    def created_at(self) -> datetime:
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
-    def key(self):
-        """
-        :type: string
-        """
+    def key(self) -> str:
         self._completeIfNotSet(self._key)
         return self._key.value
 
     @property
-    def title(self):
-        """
-        :type: string
-        """
+    def read_only(self) -> bool:
+        self._completeIfNotSet(self._read_only)
+        return self._read_only.value
+
+    @property
+    def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     @property
-    def verified(self):
-        """
-        :type: bool
-        """
+    def verified(self) -> bool:
         self._completeIfNotSet(self._verified)
         return self._verified.value
 
-    def delete(self):
+    def delete(self) -> None:
         """
         :calls: `DELETE /user/keys/{id} <https://docs.github.com/en/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
-    def _initAttributes(self):
-        self._id = github.GithubObject.NotSet
-        self._key = github.GithubObject.NotSet
-        self._title = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-        self._verified = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
+        if "read_only" in attributes:  # pragma no branch
+            self._read_only = self._makeBoolAttribute(attributes["read_only"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch

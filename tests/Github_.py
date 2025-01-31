@@ -2,15 +2,28 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Steve Brown <steve@evolvedlight.co.uk>                        #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Tyler Treat <ttreat31@gmail.com>                              #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Bruce Richardson <itsbruce@workshy.org>                       #
 # Copyright 2018 Svend Sorensen <svend@svends.net>                             #
 # Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Nikolay Edigaryev <edigaryev@gmail.com>                       #
+# Copyright 2020 Omar Brikaa <brikaaomar@gmail.com>                            #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
+# Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,11 +43,11 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from datetime import datetime, timezone
 
 import github
 
-from . import Framework, Time
+from . import Framework
 
 
 class Github(Framework.TestCase):
@@ -148,11 +161,7 @@ class Github(Framework.TestCase):
 
     def testGetGistsWithSince(self):
         self.assertListKeyBegin(
-            self.g.get_gists(
-                since=datetime.datetime(
-                    2018, 10, 2, 10, 38, 30, 00, tzinfo=Time.UTCtzinfo()
-                )
-            ),
+            self.g.get_gists(since=datetime(2018, 10, 2, 10, 38, 30, 00)),
             lambda g: g.id,
             [
                 "69b8a5831b74946db944c5451017fa40",
@@ -162,6 +171,65 @@ class Github(Framework.TestCase):
                 "3195465",
             ],
         )
+
+    def testGetGlobalAdvisories(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(ecosystem="pub"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-9324-jv53-9cc8",
+                "GHSA-9f2c-xxfm-32mj",
+                "GHSA-4xh4-v2pq-jvhm",
+                "GHSA-jwpw-q68h-r678",
+                "GHSA-4rgh-jx4f-qfcq",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesByGHSA(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(ghsa_id="GHSA-9324-jv53-9cc8"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-9324-jv53-9cc8",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesByCVE(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(cve_id="CVE-2023-38503"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-gggm-66rh-pp98",
+            ],
+        )
+
+    def testGetGlobalAdvisoriesManyFilters(self):
+        cases = [
+            {"cwes": [200, 900], "affects": ["directus", "made_up"], "modified": ">2023-07-01"},
+            {"cwes": ["200", "900"], "affects": ["directus"], "updated": ">2023-07-01"},
+            {"cwes": "200,900", "affects": "directus", "published": ">2023-07-01"},
+        ]
+        for case in cases:
+            with self.subTest(**case):
+                advisories = self.g.get_global_advisories(
+                    type="reviewed",
+                    ecosystem="npm",
+                    severity="medium",
+                    #  cwes=case["cwes"],
+                    is_withdrawn=False,
+                    #  affects=case["affects"],
+                    #  modified=">2023-07-01",
+                    direction="desc",
+                    sort="updated",
+                    **case,
+                )
+                self.assertListKeyEqual(
+                    advisories,
+                    lambda a: a.ghsa_id,
+                    [
+                        "GHSA-gggm-66rh-pp98",
+                    ],
+                )
 
     def testGetHooks(self):
         hooks = self.g.get_hooks()
@@ -183,9 +251,7 @@ class Github(Framework.TestCase):
     def testGetEmojis(self):
         emojis = self.g.get_emojis()
         first = emojis.get("+1")
-        self.assertEqual(
-            first, "https://github.global.ssl.fastly.net/images/icons/emoji/+1.png?v5"
-        )
+        self.assertEqual(first, "https://github.global.ssl.fastly.net/images/icons/emoji/+1.png?v5")
 
     def testGetHook(self):
         hook = self.g.get_hook("activecollab")
@@ -203,6 +269,50 @@ class Github(Framework.TestCase):
             ],
         )
         self.assertEqual(repr(hook), 'HookDescription(name="activecollab")')
+
+    def testGetHookDelivery(self):
+        delivery = self.g.get_hook_delivery(257993, 12345)
+        self.assertEqual(delivery.id, 12345)
+        self.assertEqual(delivery.guid, "abcde-12345")
+        self.assertEqual(
+            delivery.delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(delivery.redelivery, False)
+        self.assertEqual(delivery.duration, 0.27)
+        self.assertEqual(delivery.status, "OK")
+        self.assertEqual(delivery.status_code, 200)
+        self.assertIsNone(delivery.throttled_at)
+        self.assertEqual(delivery.event, "issues")
+        self.assertEqual(delivery.action, "opened")
+        self.assertEqual(delivery.installation_id, 123)
+        self.assertEqual(delivery.repository_id, 456)
+        self.assertEqual(delivery.url, "https://www.example-webhook.com")
+        self.assertIsInstance(delivery.request, github.HookDelivery.HookDeliveryRequest)
+        self.assertEqual(delivery.request.headers, {"content-type": "application/json"})
+        self.assertEqual(delivery.request.payload, {"action": "opened"})
+        self.assertIsInstance(delivery.response, github.HookDelivery.HookDeliveryResponse)
+        self.assertEqual(delivery.response.headers, {"content-type": "text/html;charset=utf-8"})
+        self.assertEqual(delivery.response.payload, "ok")
+
+    def testGetHookDeliveries(self):
+        deliveries = list(self.g.get_hook_deliveries(257993))
+        self.assertEqual(len(deliveries), 1)
+        self.assertEqual(deliveries[0].id, 12345)
+        self.assertEqual(deliveries[0].guid, "abcde-12345")
+        self.assertEqual(
+            deliveries[0].delivered_at,
+            datetime(2012, 5, 27, 6, 0, 32, tzinfo=timezone.utc),
+        )
+        self.assertEqual(deliveries[0].redelivery, False)
+        self.assertEqual(deliveries[0].duration, 0.27)
+        self.assertEqual(deliveries[0].status, "OK")
+        self.assertEqual(deliveries[0].status_code, 200)
+        self.assertEqual(deliveries[0].event, "issues")
+        self.assertEqual(deliveries[0].action, "opened")
+        self.assertEqual(deliveries[0].installation_id, 123)
+        self.assertEqual(deliveries[0].repository_id, 456)
+        self.assertEqual(deliveries[0].url, "https://www.example-webhook.com")
 
     def testGetRepoFromFullName(self):
         self.assertEqual(
@@ -431,9 +541,7 @@ class Github(Framework.TestCase):
         )
 
     def testGetUsersSince(self):
-        self.assertListKeyBegin(
-            self.g.get_users(since=1000), lambda u: u.login, ["sbecker"]
-        )
+        self.assertListKeyBegin(self.g.get_users(since=1000), lambda u: u.login, ["sbecker"])
 
     def testGetOrganizations(self):
         self.assertListKeyBegin(
@@ -523,3 +631,6 @@ class Github(Framework.TestCase):
             lambda e: e.type,
             ["PushEvent", "WatchEvent", "PushEvent", "CommitCommentEvent"],
         )
+
+    def testRequester(self):
+        assert self.g.requester is self.g.__requester

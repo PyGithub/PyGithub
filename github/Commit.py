@@ -11,6 +11,19 @@
 # Copyright 2016 John Eskew <jeskew@edx.org>                                   #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Danilo Martins <mawkee@gmail.com>                             #
+# Copyright 2020 Dhruv Manilawala <dhruvmanila@gmail.com>                      #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 iarspider <iarspider@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,6 +43,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.CommitCombinedStatus
@@ -38,219 +56,239 @@ import github.CommitStats
 import github.CommitStatus
 import github.File
 import github.GitCommit
-import github.GithubObject
 import github.NamedUser
 import github.PaginatedList
+import github.Repository
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.Branch import Branch
+    from github.CheckRun import CheckRun
+    from github.CheckSuite import CheckSuite
+    from github.CommitCombinedStatus import CommitCombinedStatus
+    from github.CommitComment import CommitComment
+    from github.CommitStats import CommitStats
+    from github.CommitStatus import CommitStatus
+    from github.File import File
+    from github.GitCommit import GitCommit
+    from github.NamedUser import NamedUser
+    from github.PullRequest import PullRequest
+    from github.Repository import Repository
 
 
-class Commit(github.GithubObject.CompletableGithubObject):
+class Commit(CompletableGithubObject):
     """
-    This class represents Commits. The reference can be found here https://docs.github.com/en/rest/reference/git#commits
+    This class represents Commits.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/git#commits
+
+    The OpenAPI schema can be found at
+    - /components/schemas/branch-short/properties/commit
+    - /components/schemas/commit
+    - /components/schemas/commit-search-result-item
+    - /components/schemas/commit-search-result-item/properties/parents/items
+    - /components/schemas/commit/properties/parents/items
+    - /components/schemas/short-branch/properties/commit
+    - /components/schemas/tag/properties/commit
+
     """
 
-    def __repr__(self):
+    def _initAttributes(self) -> None:
+        self._author: Attribute[NamedUser] = NotSet
+        self._comments_url: Attribute[str] = NotSet
+        self._commit: Attribute[GitCommit] = NotSet
+        self._committer: Attribute[NamedUser] = NotSet
+        self._files: Attribute[list[File]] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._parents: Attribute[list[Commit]] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._score: Attribute[float] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._stats: Attribute[CommitStats] = NotSet
+        self._text_matches: Attribute[dict[str, Any]] = NotSet
+        self._url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
 
     @property
-    def author(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def _identity(self) -> str:
+        return self.sha
+
+    @property
+    def author(self) -> NamedUser:
         self._completeIfNotSet(self._author)
         return self._author.value
 
     @property
-    def comments_url(self):
-        """
-        :type: string
-        """
+    def comments_url(self) -> str:
         self._completeIfNotSet(self._comments_url)
         return self._comments_url.value
 
     @property
-    def commit(self):
-        """
-        :type: :class:`github.GitCommit.GitCommit`
-        """
+    def commit(self) -> GitCommit:
         self._completeIfNotSet(self._commit)
         return self._commit.value
 
     @property
-    def committer(self):
-        """
-        :type: :class:`github.NamedUser.NamedUser`
-        """
+    def committer(self) -> NamedUser:
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def files(self):
-        """
-        :type: list of :class:`github.File.File`
-        """
-        self._completeIfNotSet(self._files)
-        return self._files.value
+    def files(self) -> PaginatedList[File]:
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            {},
+            headers=None,
+            list_item="files",
+            total_count_item="total_files",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
+        )
 
     @property
-    def html_url(self):
-        """
-        :type: string
-        """
+    def html_url(self) -> str:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
     @property
-    def parents(self):
-        """
-        :type: list of :class:`github.Commit.Commit`
-        """
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
+    def parents(self) -> list[Commit]:
         self._completeIfNotSet(self._parents)
         return self._parents.value
 
     @property
-    def sha(self):
-        """
-        :type: string
-        """
+    def repository(self) -> Repository:
+        self._completeIfNotSet(self._repository)
+        return self._repository.value
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    @property
+    def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
-    def stats(self):
-        """
-        :type: :class:`github.CommitStats.CommitStats`
-        """
+    def stats(self) -> CommitStats:
         self._completeIfNotSet(self._stats)
         return self._stats.value
 
     @property
-    def url(self):
-        """
-        :type: string
-        """
+    def text_matches(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._text_matches)
+        return self._text_matches.value
+
+    @property
+    def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     def create_comment(
         self,
-        body,
-        line=github.GithubObject.NotSet,
-        path=github.GithubObject.NotSet,
-        position=github.GithubObject.NotSet,
-    ):
+        body: str,
+        line: Opt[int] = NotSet,
+        path: Opt[str] = NotSet,
+        position: Opt[int] = NotSet,
+    ) -> CommitComment:
         """
         :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
-        :param body: string
-        :param line: integer
-        :param path: string
-        :param position: integer
-        :rtype: :class:`github.CommitComment.CommitComment`
         """
         assert isinstance(body, str), body
-        assert line is github.GithubObject.NotSet or isinstance(line, int), line
-        assert path is github.GithubObject.NotSet or isinstance(path, str), path
-        assert position is github.GithubObject.NotSet or isinstance(
-            position, int
-        ), position
-        post_parameters = {
-            "body": body,
-        }
-        if line is not github.GithubObject.NotSet:
-            post_parameters["line"] = line
-        if path is not github.GithubObject.NotSet:
-            post_parameters["path"] = path
-        if position is not github.GithubObject.NotSet:
-            post_parameters["position"] = position
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST", f"{self.url}/comments", input=post_parameters
-        )
-        return github.CommitComment.CommitComment(
-            self._requester, headers, data, completed=True
-        )
+        assert is_optional(line, int), line
+        assert is_optional(path, str), path
+        assert is_optional(position, int), position
+        post_parameters = NotSet.remove_unset_items({"body": body, "line": line, "path": path, "position": position})
+
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/comments", input=post_parameters)
+        return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
 
     def create_status(
         self,
-        state,
-        target_url=github.GithubObject.NotSet,
-        description=github.GithubObject.NotSet,
-        context=github.GithubObject.NotSet,
-    ):
+        state: str,
+        target_url: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
+        context: Opt[str] = NotSet,
+    ) -> CommitStatus:
         """
         :calls: `POST /repos/{owner}/{repo}/statuses/{sha} <https://docs.github.com/en/rest/reference/repos#statuses>`_
-        :param state: string
-        :param target_url: string
-        :param description: string
-        :param context: string
-        :rtype: :class:`github.CommitStatus.CommitStatus`
         """
         assert isinstance(state, str), state
-        assert target_url is github.GithubObject.NotSet or isinstance(
-            target_url, str
-        ), target_url
-        assert description is github.GithubObject.NotSet or isinstance(
-            description, str
-        ), description
-        assert context is github.GithubObject.NotSet or isinstance(
-            context, str
-        ), context
-        post_parameters = {
-            "state": state,
-        }
-        if target_url is not github.GithubObject.NotSet:
-            post_parameters["target_url"] = target_url
-        if description is not github.GithubObject.NotSet:
-            post_parameters["description"] = description
-        if context is not github.GithubObject.NotSet:
-            post_parameters["context"] = context
+        assert is_optional(target_url, str), target_url
+        assert is_optional(description, str), description
+        assert is_optional(context, str), context
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "target_url": target_url,
+                "description": description,
+                "context": context,
+            }
+        )
+
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             input=post_parameters,
         )
-        return github.CommitStatus.CommitStatus(
-            self._requester, headers, data, completed=True
-        )
+        return github.CommitStatus.CommitStatus(self._requester, headers, data)
 
-    def get_comments(self):
+    def get_branches_where_head(self) -> list[Branch]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head <https://docs.github.com/rest/commits/commits#list-branches-for-head-commit>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches-where-head")
+        return [github.Branch.Branch(self._requester, headers, item) for item in data]
+
+    def get_comments(self) -> PaginatedList[CommitComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitComment.CommitComment`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.CommitComment.CommitComment,
             self._requester,
             f"{self.url}/comments",
             None,
         )
 
-    def get_statuses(self):
+    def get_statuses(self) -> PaginatedList[CommitStatus]:
         """
         :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <https://docs.github.com/en/rest/reference/repos#statuses>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitStatus.CommitStatus`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.CommitStatus.CommitStatus,
             self._requester,
             f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             None,
         )
 
-    def get_combined_status(self):
+    def get_combined_status(self) -> CommitCombinedStatus:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
-        :rtype: :class:`github.CommitCombinedStatus.CommitCombinedStatus`
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
-        return github.CommitCombinedStatus.CommitCombinedStatus(
-            self._requester, headers, data, completed=True
-        )
+        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data)
 
-    def get_pulls(self):
+    def get_pulls(self) -> PaginatedList[PullRequest]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.PullRequest.PullRequest,
             self._requester,
             f"{self.url}/pulls",
@@ -260,30 +298,19 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_check_runs(
         self,
-        check_name=github.GithubObject.NotSet,
-        status=github.GithubObject.NotSet,
-        filter=github.GithubObject.NotSet,
-    ):
+        check_name: Opt[str] = NotSet,
+        status: Opt[str] = NotSet,
+        filter: Opt[str] = NotSet,
+    ) -> PaginatedList[CheckRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
-        :param check_name: string
-        :param status: string
-        :param filter: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckRun.CheckRun`
         """
-        assert check_name is github.GithubObject.NotSet or isinstance(
-            check_name, str
-        ), check_name
-        assert status is github.GithubObject.NotSet or isinstance(status, str), status
-        assert filter is github.GithubObject.NotSet or isinstance(filter, str), filter
-        url_parameters = dict()
-        if check_name is not github.GithubObject.NotSet:
-            url_parameters["check_name"] = check_name
-        if status is not github.GithubObject.NotSet:
-            url_parameters["status"] = status
-        if filter is not github.GithubObject.NotSet:
-            url_parameters["filter"] = filter
-        return github.PaginatedList.PaginatedList(
+        assert is_optional(check_name, str), check_name
+        assert is_optional(status, str), status
+        assert is_optional(filter, str), filter
+        url_parameters = NotSet.remove_unset_items({"check_name": check_name, "status": status, "filter": filter})
+
+        return PaginatedList(
             github.CheckRun.CheckRun,
             self._requester,
             f"{self.url}/check-runs",
@@ -292,26 +319,16 @@ class Commit(github.GithubObject.CompletableGithubObject):
             list_item="check_runs",
         )
 
-    def get_check_suites(
-        self, app_id=github.GithubObject.NotSet, check_name=github.GithubObject.NotSet
-    ):
+    def get_check_suites(self, app_id: Opt[int] = NotSet, check_name: Opt[str] = NotSet) -> PaginatedList[CheckSuite]:
         """
         :class: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
-        :param app_id: int
-        :param check_name: string
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CheckSuite.CheckSuite`
         """
-        assert app_id is github.GithubObject.NotSet or isinstance(app_id, int), app_id
-        assert check_name is github.GithubObject.NotSet or isinstance(
-            check_name, str
-        ), check_name
-        parameters = dict()
-        if app_id is not github.GithubObject.NotSet:
-            parameters["app_id"] = app_id
-        if check_name is not github.GithubObject.NotSet:
-            parameters["check_name"] = check_name
+        assert is_optional(app_id, int), app_id
+        assert is_optional(check_name, str), check_name
+        parameters = NotSet.remove_unset_items({"app_id": app_id, "check_name": check_name})
+
         request_headers = {"Accept": "application/vnd.github.v3+json"}
-        return github.PaginatedList.PaginatedList(
+        return PaginatedList(
             github.CheckSuite.CheckSuite,
             self._requester,
             f"{self.url}/check-suites",
@@ -320,52 +337,32 @@ class Commit(github.GithubObject.CompletableGithubObject):
             list_item="check_suites",
         )
 
-    @property
-    def _identity(self):
-        return self.sha
-
-    def _initAttributes(self):
-        self._author = github.GithubObject.NotSet
-        self._comments_url = github.GithubObject.NotSet
-        self._commit = github.GithubObject.NotSet
-        self._committer = github.GithubObject.NotSet
-        self._files = github.GithubObject.NotSet
-        self._html_url = github.GithubObject.NotSet
-        self._parents = github.GithubObject.NotSet
-        self._sha = github.GithubObject.NotSet
-        self._stats = github.GithubObject.NotSet
-        self._url = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes):
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["author"]
-            )
+            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "comments_url" in attributes:  # pragma no branch
             self._comments_url = self._makeStringAttribute(attributes["comments_url"])
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(
-                github.GitCommit.GitCommit, attributes["commit"]
-            )
+            self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
         if "committer" in attributes:  # pragma no branch
-            self._committer = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["committer"]
-            )
+            self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
         if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(
-                github.File.File, attributes["files"]
-            )
+            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "parents" in attributes:  # pragma no branch
-            self._parents = self._makeListOfClassesAttribute(
-                Commit, attributes["parents"]
-            )
+            self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
+        if "repository" in attributes:  # pragma no branch
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "stats" in attributes:  # pragma no branch
-            self._stats = self._makeClassAttribute(
-                github.CommitStats.CommitStats, attributes["stats"]
-            )
+            self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

@@ -4,7 +4,7 @@ api.github.com
 None
 /repos/PyGithub/PyGithub/branches/master/protection
 {'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.luke-cage-preview+json'}
-{"restrictions": {"teams": [], "users": ["jacquev6"]}, "required_pull_request_reviews": {"dismissal_restrictions": {"users": ["jacquev6"]}}, "required_status_checks": null, "enforce_admins": null}
+{"restrictions": {"apps": [], "teams": [], "users": ["jacquev6"]}, "required_pull_request_reviews": {"dismissal_restrictions": {"users": ["jacquev6"]}}, "required_status_checks": null, "enforce_admins": null, "allow_force_pushes": null, "allow_fork_syncing": null, "lock_branch": null, "required_conversation_resolution": null, "required_linear_history": null, "block_creations": null, "allow_deletions": null }
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '0'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e0dc2dfc56971f4a36de1216356ea98b"'), ('date', 'Sun, 13 May 2018 13:21:24 GMT'), ('content-type', 'application/json; charset=utf-8')]
 ''
@@ -41,4 +41,3 @@ None
 200
 [('x-runtime-rack', '0.049160'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-oauth-scopes', 'public_repo, repo:status'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', 'W/"a4ef2f2bcfdf33fadd5c8fa6867ebc3a"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4986'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('transfer-encoding', 'chunked'), ('x-github-request-id', '860C:2DC5:28789D:34E3E8:5AF7FF18'), ('date', 'Sun, 13 May 2018 09:02:17 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('content-encoding', 'gzip'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1526204223')]
 []
-

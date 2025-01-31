@@ -7,9 +7,18 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Bruce Richardson <itsbruce@workshy.org>                       #
+# Copyright 2018 Riccardo Pittau <elfosardo@users.noreply.github.com>          #
 # Copyright 2018 namc <namratachaudhary@users.noreply.github.com>              #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Surya Teja <94suryateja@gmail.com>                            #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Daniel Haas <thisisdhaas@gmail.com>                           #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,7 +38,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -38,6 +49,62 @@ class NamedUser(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.user = self.g.get_user("jacquev6")
+
+    def testAttributes(self):
+        self.assertEqual(self.user.avatar_url, "https://avatars.githubusercontent.com/u/327146?v=4")
+        self.assertIsNone(self.user.bio)
+        self.assertEqual(self.user.blog, "http://vincent-jacques.net")
+        self.assertIsNone(self.user.collaborators)
+        self.assertIsNone(self.user.company)
+        self.assertIsNone(self.user.contributions)
+        self.assertEqual(self.user.created_at, datetime(2010, 7, 9, 6, 10, 6, tzinfo=timezone.utc))
+        self.assertIsNone(self.user.disk_usage)
+        self.assertIsNone(self.user.display_login)
+        self.assertEqual(self.user.email, "vincent@vincent-jacques.net")
+        self.assertEqual(self.user.events_url, "https://api.github.com/users/jacquev6/events{/privacy}")
+        self.assertEqual(self.user.followers, 98)
+        self.assertEqual(self.user.followers_url, "https://api.github.com/users/jacquev6/followers")
+        self.assertEqual(self.user.following, 62)
+        self.assertEqual(self.user.following_url, "https://api.github.com/users/jacquev6/following{/other_user}")
+        self.assertEqual(self.user.gists_url, "https://api.github.com/users/jacquev6/gists{/gist_id}")
+        self.assertEqual(self.user.gravatar_id, "")
+        self.assertTrue(self.user.hireable)
+        self.assertEqual(self.user.html_url, "https://github.com/jacquev6")
+        self.assertEqual(self.user.id, 327146)
+        self.assertEqual(self.user.location, "France")
+        self.assertEqual(self.user.login, "jacquev6")
+        self.assertEqual(self.user.name, "Vincent Jacques")
+        self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
+        self.assertIsNone(self.user.notification_email)
+        self.assertEqual(self.user.organizations_url, "https://api.github.com/users/jacquev6/orgs")
+        self.assertIsNone(self.user.owned_private_repos)
+        self.assertIsNone(self.user.permissions)
+        self.assertIsNone(self.user.plan)
+        self.assertIsNone(self.user.plan)
+        self.assertIsNone(self.user.plan)
+        self.assertIsNone(self.user.plan)
+        self.assertIsNone(self.user.private_gists)
+        self.assertEqual(self.user.public_gists, 18)
+        self.assertEqual(self.user.public_repos, 38)
+        self.assertEqual(self.user.received_events_url, "https://api.github.com/users/jacquev6/received_events")
+        self.assertEqual(self.user.repos_url, "https://api.github.com/users/jacquev6/repos")
+        self.assertIsNone(self.user.role_name)
+        self.assertEqual(self.user.score, None)
+        self.assertEqual(self.user.site_admin, False)
+        self.assertIsNone(self.user.starred_at)
+        self.assertEqual(self.user.starred_url, "https://api.github.com/users/jacquev6/starred{/owner}{/repo}")
+        self.assertEqual(self.user.subscriptions_url, "https://api.github.com/users/jacquev6/subscriptions")
+        self.assertIsNone(self.user.suspended_at)
+        self.assertIsNone(self.user.text_matches)
+        self.assertIsNone(self.user.total_private_repos)
+        self.assertIsNone(self.user.twitter_username)
+        self.assertEqual(self.user.type, "User")
+        self.assertEqual(self.user.updated_at, datetime(2024, 10, 20, 7, 14, 52, tzinfo=timezone.utc))
+        self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
+        self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
+        self.assertEqual(repr(self.user), 'NamedUser(login="jacquev6")')
+        self.assertEqual(repr(self.user.plan), "None")
+        self.assertEqual(self.user.user_view_type, "public")
 
     def testAttributesOfOtherUser(self):
         self.user = self.g.get_user("nvie")
@@ -50,7 +117,8 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.collaborators, None)
         self.assertEqual(self.user.company, "3rd Cloud")
         self.assertEqual(
-            self.user.created_at, datetime.datetime(2009, 5, 12, 21, 19, 38)
+            self.user.created_at,
+            datetime(2009, 5, 12, 21, 19, 38, tzinfo=timezone.utc),
         )
         self.assertEqual(self.user.disk_usage, None)
         self.assertEqual(self.user.email, "vincent@3rdcloud.com")
@@ -76,46 +144,6 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjgzODQ0")
         self.assertEqual(repr(self.user), 'NamedUser(login="nvie")')
 
-    def testAttributesOfSelf(self):
-        self.assertEqual(
-            self.user.avatar_url,
-            "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png",
-        )
-        self.assertEqual(self.user.bio, "")
-        self.assertEqual(self.user.blog, "http://vincent-jacques.net")
-        self.assertEqual(self.user.collaborators, 0)
-        self.assertEqual(self.user.company, "Criteo")
-        self.assertEqual(self.user.created_at, datetime.datetime(2010, 7, 9, 6, 10, 6))
-        self.assertEqual(self.user.disk_usage, 17080)
-        self.assertEqual(self.user.email, "vincent@vincent-jacques.net")
-        self.assertEqual(self.user.followers, 13)
-        self.assertEqual(self.user.following, 24)
-        self.assertEqual(self.user.gravatar_id, "b68de5ae38616c296fa345d2b9df2225")
-        self.assertFalse(self.user.hireable)
-        self.assertEqual(self.user.html_url, "https://github.com/jacquev6")
-        self.assertEqual(self.user.id, 327146)
-        self.assertEqual(self.user.location, "Paris, France")
-        self.assertEqual(self.user.login, "jacquev6")
-        self.assertEqual(self.user.name, "Vincent Jacques")
-        self.assertEqual(self.user.owned_private_repos, 5)
-        self.assertEqual(self.user.plan.name, "micro")
-        self.assertEqual(self.user.plan.collaborators, 1)
-        self.assertEqual(self.user.plan.space, 614400)
-        self.assertEqual(self.user.plan.private_repos, 5)
-        self.assertEqual(self.user.private_gists, 5)
-        self.assertEqual(self.user.public_gists, 2)
-        self.assertEqual(self.user.public_repos, 11)
-        self.assertEqual(
-            self.user.suspended_at, datetime.datetime(2013, 8, 10, 7, 11, 7)
-        )
-        self.assertEqual(self.user.total_private_repos, 5)
-        self.assertIsNone(self.user.twitter_username)
-        self.assertEqual(self.user.type, "User")
-        self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
-        self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
-        self.assertEqual(repr(self.user), 'NamedUser(login="jacquev6")')
-        self.assertEqual(repr(self.user.plan), 'Plan(name="micro")')
-
     def testGetGists(self):
         self.assertListKeyEqual(
             self.user.get_gists(),
@@ -128,7 +156,7 @@ class NamedUser(Framework.TestCase):
             ],
         )
         self.assertListKeyEqual(
-            self.user.get_gists(since=datetime.datetime(2012, 3, 1, 17, 0, 0)),
+            self.user.get_gists(since=datetime(2012, 3, 1, 17, 0, 0)),
             lambda g: g.description,
             ["Gist created by PyGithub", "FairThreadPoolPool.cpp"],
         )
@@ -191,9 +219,7 @@ class NamedUser(Framework.TestCase):
         self.assertTrue(self.user.has_in_following(nvie))
 
     def testGetOrgs(self):
-        self.assertListKeyEqual(
-            self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"]
-        )
+        self.assertListKeyEqual(self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"])
 
     def testGetOrganizationMembership(self):
         o = self.user.get_orgs()
@@ -210,9 +236,7 @@ class NamedUser(Framework.TestCase):
             "https://api.github.com/orgs/BeaverSoftware/memberships/jacquev6",
         )
         self.assertEqual(membership.organization.login, "BeaverSoftware")
-        self.assertEqual(
-            membership.organization_url, "https://api.github.com/orgs/BeaverSoftware"
-        )
+        self.assertEqual(membership.organization_url, "https://api.github.com/orgs/BeaverSoftware")
 
     def testGetOrganizationMembershipNotMember(self):
         from github import UnknownObjectException

@@ -1,11 +1,19 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2015 Uriel Corfa <uriel@corfa.fr>                                  #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,12 +39,10 @@ from . import Framework
 class ConditionalRequestUpdate(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("akfish/PyGithub", lazy=False)
+        self.repo = self.g.get_repo("akfish/PyGithub")
 
     def testDidNotUpdate(self):
-        self.assertFalse(
-            self.repo.update(), msg="The repo is not changed. But update() != False"
-        )
+        self.assertFalse(self.repo.update(), msg="The repo is not changed. But update() != False")
 
     def testDidUpdate(self):
         self.assertTrue(
@@ -45,5 +51,5 @@ class ConditionalRequestUpdate(Framework.TestCase):
         )
 
     def testUpdateObjectWithoutEtag(self):
-        r = self.g.get_repo("jacquev6/PyGithub", lazy=False)
+        r = self.g.get_repo("jacquev6/PyGithub")
         self.assertTrue(r.update())

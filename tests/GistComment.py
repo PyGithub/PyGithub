@@ -7,6 +7,12 @@
 # Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
 # Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
 # Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,7 +32,9 @@
 #                                                                              #
 ################################################################################
 
-import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -37,17 +45,19 @@ class GistComment(Framework.TestCase):
         self.comment = self.g.get_gist("2729810").get_comment(323629)
 
     def testAttributes(self):
+        self.assertIsNone(self.comment.author_association)
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
-            self.comment.created_at, datetime.datetime(2012, 5, 19, 7, 7, 57)
+            self.comment.created_at,
+            datetime(2012, 5, 19, 7, 7, 57, tzinfo=timezone.utc),
         )
         self.assertEqual(self.comment.id, 323629)
+        self.assertIsNone(self.comment.node_id)
         self.assertEqual(
-            self.comment.updated_at, datetime.datetime(2012, 5, 19, 7, 7, 57)
+            self.comment.updated_at,
+            datetime(2012, 5, 19, 7, 7, 57, tzinfo=timezone.utc),
         )
-        self.assertEqual(
-            self.comment.url, "https://api.github.com/gists/2729810/comments/323629"
-        )
+        self.assertEqual(self.comment.url, "https://api.github.com/gists/2729810/comments/323629")
         self.assertEqual(self.comment.user.login, "jacquev6")
         self.assertEqual(
             repr(self.comment),
@@ -58,7 +68,8 @@ class GistComment(Framework.TestCase):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")
         self.assertEqual(
-            self.comment.updated_at, datetime.datetime(2012, 5, 19, 7, 12, 32)
+            self.comment.updated_at,
+            datetime(2012, 5, 19, 7, 12, 32, tzinfo=timezone.utc),
         )
 
     def testDelete(self):

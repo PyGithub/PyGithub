@@ -1,7 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2020 Raju Subramanian <coder@mahesh.net>                           #
 # Copyright 2020 Dhruv Manilawala <dhruvmanila@gmail.com>                      #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -21,7 +23,9 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
@@ -48,20 +52,21 @@ class CheckSuite(Framework.TestCase):
             "https://api.github.com/repos/wrecker/PySample/check-suites/1004503837/check-runs",
         )
         self.assertEqual(cs.conclusion, "success")
-        self.assertEqual(cs.created_at, datetime(2020, 8, 4, 5, 6, 54))
+        self.assertEqual(cs.created_at, datetime(2020, 8, 4, 5, 6, 54, tzinfo=timezone.utc))
         self.assertEqual(cs.head_branch, "wrecker-patch-1")
         self.assertEqual(cs.head_commit.sha, "fd09d934bcce792176d6b79d6d0387e938b62b7a")
         self.assertEqual(cs.head_sha, "fd09d934bcce792176d6b79d6d0387e938b62b7a")
         self.assertEqual(cs.id, self.check_suite_id)
         self.assertEqual(cs.latest_check_runs_count, 2)
         self.assertEqual(cs.id, self.check_suite_id)
+        self.assertEqual(cs.node_id, "MDEwOkNoZWNrU3VpdGUxMDA0NTAzODM3")
         self.assertEqual(len(cs.pull_requests), 1)
         self.assertEqual(cs.pull_requests[0].id, 462527907)
-        self.assertEqual(
-            cs.repository.url, "https://api.github.com/repos/wrecker/PySample"
-        )
+        self.assertEqual(cs.repository.url, "https://api.github.com/repos/wrecker/PySample")
+        self.assertEqual(cs.rerequestable, True)
+        self.assertEqual(cs.runs_rerequestable, True)
         self.assertEqual(cs.status, "completed")
-        self.assertEqual(cs.updated_at, datetime(2020, 8, 4, 5, 7, 40))
+        self.assertEqual(cs.updated_at, datetime(2020, 8, 4, 5, 7, 40, tzinfo=timezone.utc))
         self.assertEqual(
             cs.url,
             "https://api.github.com/repos/wrecker/PySample/check-suites/1004503837",
@@ -161,9 +166,7 @@ class CheckSuite(Framework.TestCase):
             if app["app_id"] == data[0]["app_id"]:
                 setting = app["setting"]
         self.assertFalse(setting)
-        self.assertEqual(
-            repo_preferences.repository.full_name, "dhruvmanila/pygithub-testing"
-        )
+        self.assertEqual(repo_preferences.repository.full_name, "dhruvmanila/pygithub-testing")
         data = [{"app_id": 85429, "setting": True}]
         repo_preferences = self.test_repo.update_check_suites_preferences(data)
         for app in repo_preferences.preferences["auto_trigger_checks"]:
