@@ -285,10 +285,34 @@ class GithubIntegration(Framework.BasicTestCase):
     def testGetAccessTokenWithInvalidData(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         github_integration = github.GithubIntegration(auth=auth)
-        with self.assertRaises(github.GithubException) as raisedexp:
-            github_integration.get_access_token(self.repo_installation_id, permissions="invalid_data")
 
-        self.assertEqual(raisedexp.exception.status, 400)
+        with self.assertRaises(github.GithubException) as raisedPermissionExp:
+            github_integration.get_access_token(self.repo_installation_id, permissions="invalid_data")
+        self.assertEqual(raisedPermissionExp.exception.status, 400)
+
+        with self.assertRaises(github.GithubException) as raisedRepositoriesExp:
+            github_integration.get_access_token(self.repo_installation_id, repositories="invalid_data")
+        self.assertEqual(raisedRepositoriesExp.exception.status, 400)
+
+        with self.assertRaises(github.GithubException) as raisedRepositoriesExp:
+            github_integration.get_access_token(self.repo_installation_id, repositories=[object()])
+        self.assertEqual(raisedRepositoriesExp.exception.status, 400)
+
+    def testGetAccessTokenWithInvalidRepositories(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(self.org_installation_id, repositories=["invalid-repo"])
+
+        self.assertEqual(raisedexp.exception.status, 422)
+
+    def testGetAccessTokenWithInvalidRepositoryIds(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(self.org_installation_id, repositories=[123456, 7891011])
+
+        self.assertEqual(raisedexp.exception.status, 422)
 
     def testGetApp(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
