@@ -41,6 +41,7 @@
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Jonas Maurus <jdelic@users.noreply.github.com>                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -242,7 +243,7 @@ class Team(CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/members/{member._identity}")
 
-    def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
+    def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> Membership:
         """
         :calls: `PUT /teams/{id}/memberships/{user} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -260,6 +261,7 @@ class Team(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/memberships/{member._identity}", input=put_parameters
         )
+        return github.Membership.Membership(self._requester, headers, data, completed=True)
 
     def get_team_membership(self, member: str | NamedUser) -> Membership:
         """
