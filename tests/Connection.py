@@ -63,9 +63,9 @@ PARAMETERS = itertools.product(
 
 
 class RecordingMockConnection(Framework.RecordingConnection):
-    def __init__(self, file, protocol, host, port, realConnection):
+    def __init__(self, protocol, host, port, realConnection):
         self._realConnection = realConnection
-        super().__init__(file, protocol, host, port)
+        super().__init__(protocol, host, port)
 
 
 @pytest.mark.parametrize(
@@ -88,7 +88,8 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
     connection.getresponse.return_value = response
 
     # write mock response to buffer
-    recording_connection = RecordingMockConnection(file, protocol, host, None, lambda *args, **kwds: connection)
+    RecordingMockConnection.setOpenFile(lambda slf, mode: file)
+    recording_connection = RecordingMockConnection(protocol, host, None, lambda *args, **kwds: connection)
     recording_connection.request(verb, url, None, headers)
     recording_connection.getresponse()
     recording_connection.close()
@@ -106,7 +107,8 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
 
     # rewind buffer and attempt to replay response from it
     file.seek(0)
-    replaying_connection = replaying_connection_class(file, host=host, port=None)
+    replaying_connection_class.setOpenFile(lambda slf, mode: file)
+    replaying_connection = replaying_connection_class(host=host, port=None)
     replaying_connection.request(verb, url, None, headers)
     replaying_connection.getresponse()
 

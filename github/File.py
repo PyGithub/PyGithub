@@ -46,6 +46,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class File(NonCompletableGithubObject):
     """
     This class represents Files.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/diff-entry
+
     """
 
     def _initAttributes(self) -> None:

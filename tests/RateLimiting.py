@@ -65,10 +65,23 @@ class RateLimiting(Framework.TestCase):
         self.assertEqual(rateLimit.core.used, 12)
         self.assertEqual(rateLimit.core.reset, datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc))
 
-        self.assertEqual(rateLimit.search.remaining, 30)
-        self.assertEqual(rateLimit.graphql.remaining, 4808)
-        self.assertEqual(rateLimit.actions_runner_registration.remaining, 10000)
-        self.assertEqual(rateLimit.code_scanning_upload.remaining, 1000)
-        self.assertEqual(rateLimit.dependency_snapshots.remaining, 100)
-        self.assertEqual(rateLimit.integration_manifest.remaining, 5000)
-        self.assertEqual(rateLimit.code_search.remaining, 10)
+        self.assertEqual(
+            repr(rateLimit.actions_runner_registration),
+            "Rate(reset=2024-12-13 07:28:18+00:00, remaining=10000, limit=10000)",
+        )
+        self.assertEqual(
+            repr(rateLimit.code_scanning_upload), "Rate(reset=2024-12-13 07:28:18+00:00, remaining=1000, limit=1000)"
+        )
+        self.assertEqual(repr(rateLimit.code_search), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=10, limit=10)")
+        self.assertEqual(
+            repr(rateLimit.dependency_snapshots), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)"
+        )
+        self.assertEqual(repr(rateLimit.graphql), "Rate(reset=2024-12-13 06:43:42+00:00, remaining=4808, limit=5000)")
+        self.assertEqual(
+            repr(rateLimit.integration_manifest), "Rate(reset=2024-12-13 07:28:18+00:00, remaining=5000, limit=5000)"
+        )
+        self.assertEqual(repr(rateLimit.scim), "Rate(reset=2024-12-13 07:28:18+00:00, remaining=15000, limit=15000)")
+        self.assertEqual(repr(rateLimit.search), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=30, limit=30)")
+        self.assertEqual(
+            repr(rateLimit.source_import), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)"
+        )

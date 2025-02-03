@@ -62,6 +62,8 @@ import warnings
 from typing import Optional
 
 import httpretty  # type: ignore
+import urllib3
+from packaging.version import Version
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url  # type: ignore
 
@@ -85,6 +87,22 @@ m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
 eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
+
+
+# patch httpretty against urllib3>=2.3.0 https://github.com/PyGithub/PyGithub/issues/3101
+if Version(urllib3.__version__) >= Version("2.3.0"):
+    getattr = httpretty.core.fakesock.socket.__getattr__
+
+    def patched_getattr(self, name):
+        def shutdown(how: int):
+            pass
+
+        if name == "shutdown" and not httpretty.core.httpretty.allow_net_connect and not self.truesock:
+            return shutdown
+
+        return getattr(self, name)
+
+    httpretty.core.fakesock.socket.__getattr__ = patched_getattr
 
 
 def readLine(file_):
@@ -124,10 +142,16 @@ def fixAuthorizationHeader(headers):
 
 
 class RecordingConnection:
-    def __init__(self, file, protocol, host, port, *args, **kwds):
+    __openFile = None
+
+    @staticmethod
+    def setOpenFile(func):
+        RecordingConnection.__openFile = func
+
+    def __init__(self, protocol, host, port, *args, **kwds):
+        self.__file = self.__openFile("w")
         # write operations make the assumption that the file is not in binary mode
-        assert isinstance(file, io.TextIOBase)
-        self.__file = file
+        assert isinstance(self.__file, io.TextIOBase)
         self.__protocol = protocol
         self.__host = host
         self.__port = port
@@ -176,20 +200,26 @@ class RecordingConnection:
 class RecordingHttpConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "http", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("http", *args, **kwds)
 
 
 class RecordingHttpsConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "https", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("https", *args, **kwds)
 
 
 class ReplayingConnection:
-    def __init__(self, file, protocol, host, port, *args, **kwds):
-        self.__file = file
+    __openFile = None
+
+    @staticmethod
+    def setOpenFile(func):
+        ReplayingConnection.__openFile = func
+
+    def __init__(self, protocol, host, port, *args, **kwds):
+        self.__file = self.__openFile("r")
         self.__protocol = protocol
         self.__host = host
         self.__port = port
@@ -197,12 +227,19 @@ class ReplayingConnection:
 
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
-    def request(self, verb, url, input, headers):
+    def request(
+        self,
+        verb,
+        url,
+        input,
+        headers,
+        stream: bool = False,
+    ):
         full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
 
         httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
 
-        self.__cnx.request(verb, url, input, headers)
+        self.__cnx.request(verb, url, input, headers, stream=stream)
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
@@ -265,15 +302,15 @@ class ReplayingConnection:
 class ReplayingHttpConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "http", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("http", *args, **kwds)
 
 
 class ReplayingHttpsConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "https", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("https", *args, **kwds)
 
 
 class BasicTestCase(unittest.TestCase):
@@ -294,9 +331,10 @@ class BasicTestCase(unittest.TestCase):
         if (
             self.recordMode
         ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
+            RecordingConnection.setOpenFile(self.__openFile)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("w"), *args, **kwds),
-                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("w"), *args, **kwds),
+                RecordingHttpConnection,
+                RecordingHttpsConnection,
             )
             import GithubCredentials  # type: ignore
 
@@ -315,9 +353,10 @@ class BasicTestCase(unittest.TestCase):
                 else None
             )
         else:
+            ReplayingConnection.setOpenFile(self.__openFile)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(self.__openFile("r"), *args, **kwds),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self.__openFile("r"), *args, **kwds),
+                ReplayingHttpConnection,
+                ReplayingHttpsConnection,
             )
             self.login = github.Auth.Login("login", "password")
             self.oauth_token = github.Auth.Token("oauth_token")

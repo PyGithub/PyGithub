@@ -38,6 +38,9 @@ class OrganizationDependabotAlert(DependabotAlert):
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
 
+    The OpenAPI schema can be found at
+    - /components/schemas/dependabot-alert-with-repository
+
     """
 
     def _initAttributes(self) -> None:
