@@ -760,7 +760,7 @@ class Organization(Framework.TestCase):
     def testAttachDetachSecurityConfig(self):
         config = self.org.create_code_security_config(name="test1", description="This is a description")
         repo = self.org.get_repo("test1")
-        repo.attach_security_config_to_repo(id=config.id)
+        repo.attach_security_config(id=config.id)
         status = "unknown"
         while status != "enforced":
             repo_config = repo.get_security_config()
