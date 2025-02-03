@@ -42,13 +42,13 @@ class OrganizationVariable(Variable):
     """
 
     def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._visibility: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
         self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
         self._selected_repositories_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._visibility: Attribute[str] = NotSet
 
     @property
     def visibility(self) -> str:
@@ -119,15 +119,15 @@ class OrganizationVariable(Variable):
         return True
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "visibility" in attributes:
-            self._visibility = self._makeStringAttribute(attributes["visibility"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
         if "selected_repositories_url" in attributes:
             self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+        if "visibility" in attributes:
+            self._visibility = self._makeStringAttribute(attributes["visibility"])

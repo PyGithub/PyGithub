@@ -56,20 +56,25 @@ class Hook(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#webhooks
 
+    The OpenAPI schema can be found at
+    - /components/schemas/hook
+
     """
 
     def _initAttributes(self) -> None:
         self._active: Attribute[bool] = NotSet
         self._config: Attribute[dict] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._deliveries_url: Attribute[str] = NotSet
         self._events: Attribute[list[str]] = NotSet
         self._id: Attribute[int] = NotSet
         self._last_response: Attribute[github.HookResponse.HookResponse] = NotSet
         self._name: Attribute[str] = NotSet
+        self._ping_url: Attribute[str] = NotSet
         self._test_url: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._ping_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
@@ -88,6 +93,11 @@ class Hook(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def deliveries_url(self) -> str:
+        self._completeIfNotSet(self._deliveries_url)
+        return self._deliveries_url.value
 
     @property
     def events(self) -> list[str]:
@@ -110,9 +120,19 @@ class Hook(CompletableGithubObject):
         return self._name.value
 
     @property
+    def ping_url(self) -> str:
+        self._completeIfNotSet(self._ping_url)
+        return self._ping_url.value
+
+    @property
     def test_url(self) -> str:
         self._completeIfNotSet(self._test_url)
         return self._test_url.value
+
+    @property
+    def type(self) -> str:
+        self._completeIfNotSet(self._type)
+        return self._type.value
 
     @property
     def updated_at(self) -> datetime:
@@ -123,11 +143,6 @@ class Hook(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def ping_url(self) -> str:
-        self._completeIfNotSet(self._ping_url)
-        return self._ping_url.value
 
     def delete(self) -> None:
         """
@@ -186,6 +201,8 @@ class Hook(CompletableGithubObject):
             self._config = self._makeDictAttribute(attributes["config"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "deliveries_url" in attributes:  # pragma no branch
+            self._deliveries_url = self._makeStringAttribute(attributes["deliveries_url"])
         if "events" in attributes:  # pragma no branch
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "id" in attributes:  # pragma no branch
@@ -196,11 +213,13 @@ class Hook(CompletableGithubObject):
             )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "ping_url" in attributes:  # pragma no branch
+            self._ping_url = self._makeStringAttribute(attributes["ping_url"])
         if "test_url" in attributes:  # pragma no branch
             self._test_url = self._makeStringAttribute(attributes["test_url"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "ping_url" in attributes:  # pragma no branch
-            self._ping_url = self._makeStringAttribute(attributes["ping_url"])

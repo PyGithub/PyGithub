@@ -51,6 +51,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 class GistHistoryState(CompletableGithubObject):
     """
     This class represents GistHistoryStates.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/gist-history
+
     """
 
     def _initAttributes(self) -> None:
