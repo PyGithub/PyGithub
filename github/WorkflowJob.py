@@ -84,7 +84,7 @@ class WorkflowJob(CompletableGithubObject):
         return self._completed_at.value
 
     @property
-    def conclusion(self) -> str:
+    def conclusion(self) -> str | None:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
