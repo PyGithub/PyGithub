@@ -4,6 +4,29 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.6.0 (XXXXX)
+---------------------
+
+Breaking Changes
+^^^^^^^^^^^^^^^^
+
+* View and clones traffic information returned by ``Repository.get_views_traffic`` and ``Repository.get_clones_traffic``
+  now return proper PyGithub objects, instead of a ``dict``, with all information that used to be provided by the ``dict``:
+
+Code like
+
+.. code-block:: python
+
+  repo.get_views_traffic().["views"].timestamp
+  repo.get_clones_traffic().["clones"].timestamp
+
+should be replaced with
+
+.. code-block:: python
+
+  repo.get_views_traffic().views.timestamp
+  repo.get_clones_traffic().clones.timestamp
+
 Version 2.5.0 (November 06, 2024)
 ---------------------------------
 

@@ -64,6 +64,9 @@ class Project(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects
 
+    The OpenAPI schema can be found at
+    - /components/schemas/project
+
     """
 
     def _initAttributes(self) -> None:

@@ -51,6 +51,9 @@ class RepositoryAdvisory(AdvisoryBase):
     The reference can be found here
     https://docs.github.com/en/rest/security-advisories/repository-advisories
 
+    The OpenAPI schema can be found at
+    - /components/schemas/repository-advisory
+
     """
 
     def _initAttributes(self) -> None:

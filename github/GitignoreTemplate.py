@@ -48,25 +48,28 @@ class GitignoreTemplate(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gitignore
 
+    The OpenAPI schema can be found at
+    - /components/schemas/gitignore-template
+
     """
 
     def _initAttributes(self) -> None:
-        self._source: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
+        self._source: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def source(self) -> str:
-        return self._source.value
-
-    @property
     def name(self) -> str:
         return self._name.value
 
+    @property
+    def source(self) -> str:
+        return self._source.value
+
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "source" in attributes:  # pragma no branch
-            self._source = self._makeStringAttribute(attributes["source"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "source" in attributes:  # pragma no branch
+            self._source = self._makeStringAttribute(attributes["source"])

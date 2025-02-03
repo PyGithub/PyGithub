@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -42,37 +44,61 @@ from . import Framework
 class PullRequestComment(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.comment = self.g.get_user().get_repo("PyGithub").get_pull(31).get_comment(886298)
+        self.comment = self.g.get_repo("PyGithub/PyGithub").get_pull(31).get_comment(1580134)
 
     def testAttributes(self):
-        self.assertEqual(self.comment.body, "Comment created by PyGithub")
+        self.assertEqual(
+            self.comment._links,
+            {
+                "html": {"href": "https://github.com/PyGithub/PyGithub/pull/31#discussion_r1580134"},
+                "pull_request": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/31"},
+                "self": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments/1580134"},
+            },
+        )
+        self.assertEqual(self.comment.author_association, "MEMBER")
+        self.assertEqual(self.comment.body, "Review comment created for PyGithub\n")
+        self.assertIsNone(self.comment.body_html)
+        self.assertIsNone(self.comment.body_text)
         self.assertEqual(self.comment.commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")
-        self.assertEqual(
-            self.comment.created_at,
-            datetime(2012, 5, 27, 9, 40, 12, tzinfo=timezone.utc),
-        )
-        self.assertEqual(self.comment.id, 886298)
+        self.assertEqual(self.comment.created_at, datetime(2012, 9, 11, 20, 6, 32, tzinfo=timezone.utc))
+        self.assertEqual(len(self.comment.diff_hunk), 434)
+        self.assertEqual(self.comment.html_url, "https://github.com/PyGithub/PyGithub/pull/31#discussion_r1580134")
+        self.assertEqual(self.comment.id, 1580134)
+        self.assertIsNone(self.comment.in_reply_to_id)
+        self.assertEqual(self.comment.line, 73)
+        self.assertEqual(self.comment.node_id, "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDE1ODAxMzQ=")
         self.assertEqual(self.comment.original_commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")
+        self.assertIsNone(self.comment.original_line)
         self.assertEqual(self.comment.original_position, 5)
-        self.assertEqual(self.comment.path, "src/github/Issue.py")
+        self.assertIsNone(self.comment.original_start_line)
+        self.assertEqual(self.comment.path, "codegen/templates/GithubObject.py")
         self.assertEqual(self.comment.position, 5)
+        self.assertIsNone(self.comment.pull_request_review_id)
+        self.assertEqual(self.comment.pull_request_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31")
         self.assertEqual(
-            self.comment.updated_at,
-            datetime(2012, 5, 27, 9, 40, 12, tzinfo=timezone.utc),
+            self.comment.reactions,
+            {
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments/1580134/reactions",
+                "total_count": 2,
+                "+1": 1,
+                "-1": 0,
+                "laugh": 0,
+                "hooray": 1,
+                "confused": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0,
+            },
         )
-        self.assertEqual(
-            self.comment.url,
-            "https://api.github.com/repos/jacquev6/PyGithub/pulls/comments/886298",
-        )
+        self.assertEqual(self.comment.side, "RIGHT")
+        self.assertIsNone(self.comment.start_line)
+        self.assertIsNone(self.comment.start_side)
+        self.assertEqual(self.comment.subject_type, "line")
+        self.assertEqual(self.comment.updated_at, datetime(2012, 9, 11, 20, 6, 32, tzinfo=timezone.utc))
+        self.assertEqual(self.comment.url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments/1580134")
         self.assertEqual(self.comment.user.login, "jacquev6")
-        self.assertEqual(
-            self.comment.html_url,
-            "https://github.com/jacquev6/PyGithub/pull/170#issuecomment-18637907",
-        )
-        self.assertEqual(
-            repr(self.comment),
-            'PullRequestComment(user=NamedUser(login="jacquev6"), id=886298)',
-        )
+        self.assertEqual(self.comment.html_url, "https://github.com/PyGithub/PyGithub/pull/31#discussion_r1580134")
+        self.assertEqual(repr(self.comment), 'PullRequestComment(user=NamedUser(login="jacquev6"), id=1580134)')
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
