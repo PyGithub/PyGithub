@@ -255,7 +255,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_org_installation(org="GithubApp-Test-Org")
-
+        self.assertEqual(raisedexp.exception.message, "'Expiration time' claim ('exp') must be a numeric value representing the future time at which the assertion expires")
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenWithExpiredJWT(self):
@@ -263,7 +263,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id)
-
+        self.assertEqual(raisedexp.exception.message, "'Expiration time' claim ('exp') must be a numeric value representing the future time at which the assertion expires")
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenForNoInstallation(self):
@@ -279,7 +279,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id, permissions={"test-permissions": "read"})
-
+        self.assertEqual(raisedexp.exception.message, "The permissions requested are not granted to this installation.")
         self.assertEqual(raisedexp.exception.status, 422)
 
     def testGetAccessTokenWithInvalidData(self):
@@ -287,7 +287,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id, permissions="invalid_data")
-
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 400)
 
     def testGetApp(self):
