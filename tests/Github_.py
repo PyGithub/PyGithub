@@ -22,6 +22,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Greg <31892308+jmgreg31@users.noreply.github.com>    #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -280,6 +282,7 @@ class Github(Framework.TestCase):
         self.assertEqual(delivery.duration, 0.27)
         self.assertEqual(delivery.status, "OK")
         self.assertEqual(delivery.status_code, 200)
+        self.assertIsNone(delivery.throttled_at)
         self.assertEqual(delivery.event, "issues")
         self.assertEqual(delivery.action, "opened")
         self.assertEqual(delivery.installation_id, 123)

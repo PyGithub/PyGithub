@@ -48,6 +48,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
+# Copyright 2024 Eduardo Ramírez <edu.rh90@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 #                                                                              #
@@ -172,10 +173,10 @@ class AuthenticatedUser(CompletableGithubObject):
         self._starred_url: Attribute[str] = NotSet
         self._subscriptions_url: Attribute[str] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
+        self._two_factor_authentication: Attribute[bool] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._two_factor_authentication: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
@@ -351,6 +352,11 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._total_private_repos.value
 
     @property
+    def two_factor_authentication(self) -> bool:
+        self._completeIfNotSet(self._two_factor_authentication)
+        return self._two_factor_authentication.value
+
+    @property
     def type(self) -> str:
         self._completeIfNotSet(self._type)
         return self._type.value
@@ -364,11 +370,6 @@ class AuthenticatedUser(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def two_factor_authentication(self) -> bool:
-        self._completeIfNotSet(self._two_factor_authentication)
-        return self._two_factor_authentication.value
 
     def add_to_emails(self, *emails: str) -> None:
         """
@@ -1155,11 +1156,11 @@ class AuthenticatedUser(CompletableGithubObject):
             self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
+        if "two_factor_authentication" in attributes:
+            self._two_factor_authentication = self._makeBoolAttribute(attributes["two_factor_authentication"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "two_factor_authentication" in attributes:
-            self._two_factor_authentication = self._makeBoolAttribute(attributes["two_factor_authentication"])

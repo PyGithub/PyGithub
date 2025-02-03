@@ -18,6 +18,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Bernhard M. Wiedemann <githubbmwprimary@lsmod.de>             #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -335,7 +337,7 @@ class Authentication(Framework.BasicTestCase):
     def testAddingCustomHeaders(self):
         requester = github.Github(auth=CustomAuth())._Github__requester
 
-        def requestRaw(cnx, verb, url, requestHeaders, encoded_input):
+        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False):
             self.modifiedHeaders = requestHeaders
             return Mock(), {}, Mock()
 

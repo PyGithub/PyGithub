@@ -39,6 +39,7 @@
 ################################################################################
 
 import pickle
+from unittest import mock
 
 import github
 
@@ -152,5 +153,5 @@ class SpecificExceptions(Framework.TestCase):
 
     def testIncompletableObject(self):
         github.UserKey.UserKey.setCheckAfterInitFlag(False)
-        obj = github.UserKey.UserKey(None, {}, {}, False)
+        obj = github.UserKey.UserKey(mock.MagicMock(), {}, {}, False)
         self.assertRaises(github.IncompletableObject, obj._completeIfNeeded)

@@ -52,20 +52,20 @@ class RequiredStatusChecks(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-status-checks-protection
 
+    The OpenAPI schema can be found at
+    - /components/schemas/protected-branch-pull-request-review
+    - /components/schemas/protected-branch-required-status-check
+    - /components/schemas/status-check-policy
+
     """
 
     def _initAttributes(self) -> None:
-        self._strict: Attribute[bool] = NotSet
         self._contexts: Attribute[list[str]] = NotSet
+        self._strict: Attribute[bool] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"strict": self._strict.value, "url": self._url.value})
-
-    @property
-    def strict(self) -> bool:
-        self._completeIfNotSet(self._strict)
-        return self._strict.value
 
     @property
     def contexts(self) -> list[str]:
@@ -73,14 +73,19 @@ class RequiredStatusChecks(CompletableGithubObject):
         return self._contexts.value
 
     @property
+    def strict(self) -> bool:
+        self._completeIfNotSet(self._strict)
+        return self._strict.value
+
+    @property
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "strict" in attributes:  # pragma no branch
-            self._strict = self._makeBoolAttribute(attributes["strict"])
         if "contexts" in attributes:  # pragma no branch
             self._contexts = self._makeListOfStringsAttribute(attributes["contexts"])
+        if "strict" in attributes:  # pragma no branch
+            self._strict = self._makeBoolAttribute(attributes["strict"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
