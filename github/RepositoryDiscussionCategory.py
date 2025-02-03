@@ -92,16 +92,16 @@ class RepositoryDiscussionCategory(GraphQlObject, NonCompletableGithubObject):
         return self._id.value
 
     @property
-    def node_id(self) -> str:
-        return self.id
-
-    @property
     def is_answerable(self) -> bool:
         return self._is_answerable.value
 
     @property
     def name(self) -> str:
         return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        return self.id
 
     @property
     def repository(self) -> Repository:

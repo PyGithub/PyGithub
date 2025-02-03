@@ -62,6 +62,8 @@ import warnings
 from typing import Optional
 
 import httpretty  # type: ignore
+import urllib3
+from packaging.version import Version
 from requests.structures import CaseInsensitiveDict
 from urllib3.util import Url  # type: ignore
 
@@ -85,6 +87,22 @@ m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
 eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
+
+
+# patch httpretty against urllib3>=2.3.0 https://github.com/PyGithub/PyGithub/issues/3101
+if Version(urllib3.__version__) >= Version("2.3.0"):
+    getattr = httpretty.core.fakesock.socket.__getattr__
+
+    def patched_getattr(self, name):
+        def shutdown(how: int):
+            pass
+
+        if name == "shutdown" and not httpretty.core.httpretty.allow_net_connect and not self.truesock:
+            return shutdown
+
+        return getattr(self, name)
+
+    httpretty.core.fakesock.socket.__getattr__ = patched_getattr
 
 
 def readLine(file_):
@@ -209,12 +227,19 @@ class ReplayingConnection:
 
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
-    def request(self, verb, url, input, headers):
+    def request(
+        self,
+        verb,
+        url,
+        input,
+        headers,
+        stream: bool = False,
+    ):
         full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
 
         httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
 
-        self.__cnx.request(verb, url, input, headers)
+        self.__cnx.request(verb, url, input, headers, stream=stream)
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
