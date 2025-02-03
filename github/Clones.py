@@ -16,6 +16,7 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -36,38 +37,45 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
-from typing import Any, Dict
+from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any
+
+import github.Traffic
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Traffic import Traffic
 
 
 class Clones(NonCompletableGithubObject):
     """
-    This class represents a popular Path for a GitHub repository.
+    This class represents the total number of clones and breakdown per day or week for a GitHub repository.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/repos#get-repository-clones
+    https://docs.github.com/en/rest/metrics/traffic#get-repository-clones
+
+    The OpenAPI schema can be found at
+    - /components/schemas/clone-traffic
 
     """
 
     def _initAttributes(self) -> None:
-        self._timestamp: Attribute[datetime] = NotSet
+        self._clones: Attribute[list[Traffic]] = NotSet
         self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
             {
-                "timestamp": self._timestamp.value,
                 "count": self._count.value,
                 "uniques": self._uniques.value,
             }
         )
 
     @property
-    def timestamp(self) -> datetime:
-        return self._timestamp.value
+    def clones(self) -> list[Traffic]:
+        return self._clones.value
 
     @property
     def count(self) -> int:
@@ -77,9 +85,9 @@ class Clones(NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "timestamp" in attributes:  # pragma no branch
-            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "clones" in attributes:  # pragma no branch
+            self._clones = self._makeListOfClassesAttribute(github.Traffic.Traffic, attributes["clones"])
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch

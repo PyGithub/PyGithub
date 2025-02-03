@@ -2,7 +2,7 @@ https
 DELETE
 api.github.com
 None
-/repos/jacquev6/PyGithub/comments/1361949/reactions/85737646
+/repos/PyGithub/PyGithub/comments/1362000/reactions/85737646
 {'Accept': 'application/vnd.github.squirrel-girl-preview', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204

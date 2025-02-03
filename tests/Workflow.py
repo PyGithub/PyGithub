@@ -16,6 +16,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Thomas Burghout <thomas.burghout@nedap.com>                   #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,6 +36,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -50,8 +53,15 @@ class Workflow(Framework.TestCase):
             repr(self.workflow),
             'Workflow(url="https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390", name="check")',
         )
+        self.assertEqual(self.workflow.badge_url, "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg")
+        self.assertEqual(self.workflow.created_at, datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc))
+        self.assertIsNone(self.workflow.deleted_at)
+        self.assertEqual(
+            self.workflow.html_url, "https://github.com/PyGithub/PyGithub/blob/master/.github/workflows/check.yml"
+        )
         self.assertEqual(self.workflow.id, 1026390)
         self.assertEqual(self.workflow.name, "check")
+        self.assertEqual(self.workflow.node_id, "MDg6V29ya2Zsb3cxMDI2Mzkw")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
         timestamp = datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc)

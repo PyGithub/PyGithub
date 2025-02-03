@@ -42,6 +42,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -50,55 +52,61 @@ from . import Framework
 class Issue(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user().get_repo("PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.issue = self.repo.get_issue(28)
 
     def testAttributes(self):
+        self.assertIsNone(self.issue.active_lock_reason)
         self.assertEqual(self.issue.assignee.login, "jacquev6")
-        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
-        self.assertEqual(self.issue.body, "Body edited by PyGithub")
-        self.assertEqual(
-            self.issue.closed_at,
-            datetime(2012, 5, 26, 14, 59, 33, tzinfo=timezone.utc),
-        )
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
+        self.assertEqual(self.issue.author_association, "MEMBER")
+        self.assertEqual(self.issue.body, "Body edited by PyGithub\n")
+        self.assertIsNone(self.issue.body_html)
+        self.assertIsNone(self.issue.body_text)
+        self.assertEqual(self.issue.closed_at, datetime(2012, 5, 26, 14, 59, 33, tzinfo=timezone.utc))
         self.assertEqual(self.issue.closed_by.login, "jacquev6")
-        self.assertEqual(self.issue.comments, 0)
-        self.assertEqual(
-            self.issue.comments_url,
-            "https://github.com/jacquev6/PyGithub/issues/28/comments",
-        )
-        self.assertEqual(
-            self.issue.created_at,
-            datetime(2012, 5, 19, 10, 38, 23, tzinfo=timezone.utc),
-        )
-        self.assertEqual(
-            self.issue.events_url,
-            "https://github.com/jacquev6/PyGithub/issues/28/events",
-        )
-        self.assertEqual(self.issue.html_url, "https://github.com/jacquev6/PyGithub/issues/28")
+        self.assertEqual(self.issue.comments, 3)
+        self.assertEqual(self.issue.comments_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/comments")
+        self.assertEqual(self.issue.created_at, datetime(2012, 5, 19, 10, 38, 23, tzinfo=timezone.utc))
+        self.assertIsNone(self.issue.draft)
+        self.assertEqual(self.issue.events_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/events")
+        self.assertEqual(self.issue.html_url, "https://github.com/PyGithub/PyGithub/issues/28")
         self.assertEqual(self.issue.id, 4653757)
-        self.assertListKeyEqual(
-            self.issue.labels,
-            lambda lb: lb.name,
-            ["Bug", "Project management", "Question"],
-        )
+        self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["bug", "question"])
         self.assertEqual(
-            self.issue.labels_url,
-            "https://github.com/jacquev6/PyGithub/issues/28/labels{/name}",
+            self.issue.labels_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/labels{/name}"
         )
-        self.assertEqual(self.issue.milestone.title, "Version 0.4")
+        self.assertEqual(self.issue.locked, False)
+        self.assertEqual(self.issue.milestone.title, "Version 1.4")
+        self.assertEqual(self.issue.node_id, "MDU6SXNzdWU0NjUzNzU3")
         self.assertEqual(self.issue.number, 28)
-        self.assertEqual(self.issue.pull_request.diff_url, None)
-        self.assertEqual(self.issue.pull_request.patch_url, None)
-        self.assertEqual(self.issue.pull_request.html_url, None)
+        self.assertIsNone(self.issue.performed_via_github_app)
+        self.assertIsNone(self.issue.pull_request)
+        self.assertEqual(
+            self.issue.reactions,
+            {
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/28/reactions",
+                "total_count": 2,
+                "+1": 0,
+                "-1": 0,
+                "laugh": 0,
+                "hooray": 2,
+                "confused": 0,
+                "heart": 0,
+                "rocket": 0,
+                "eyes": 0,
+            },
+        )
+        self.assertEqual(self.issue.repository.full_name, "PyGithub/PyGithub")
+        self.assertEqual(self.issue.repository_url, "https://api.github.com/repos/PyGithub/PyGithub")
+        self.assertEqual(self.issue.score, None)
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
+        self.assertIsNone(self.issue.text_matches)
+        self.assertEqual(self.issue.timeline_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/timeline")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
-        self.assertEqual(
-            self.issue.updated_at,
-            datetime(2012, 5, 26, 14, 59, 33, tzinfo=timezone.utc),
-        )
-        self.assertEqual(self.issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/28")
+        self.assertEqual(self.issue.updated_at, datetime(2019, 5, 3, 9, 44, 22, tzinfo=timezone.utc))
+        self.assertEqual(self.issue.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28")
         self.assertFalse(self.issue.locked)
         self.assertIsNone(self.issue.active_lock_reason)
         self.assertEqual(self.issue.user.login, "jacquev6")
@@ -107,16 +115,16 @@ class Issue(Framework.TestCase):
         self.assertEqual(
             self.issue.reactions,
             {
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/28/reactions",
+                "total_count": 2,
                 "+1": 0,
                 "-1": 0,
-                "confused": 0,
-                "eyes": 0,
-                "heart": 0,
-                "hooray": 2,
                 "laugh": 0,
+                "hooray": 2,
+                "confused": 0,
+                "heart": 0,
                 "rocket": 0,
-                "total_count": 2,
-                "url": "https://api.github.com/repos/PyGithub/PyGithub/issues/28/reactions",
+                "eyes": 0,
             },
         )
 
@@ -133,17 +141,17 @@ class Issue(Framework.TestCase):
             "open",
             milestone,
             ["Bug"],
-            ["jacquev6", "stuglaser"],
+            ["jacquev6"],
         )
         self.assertEqual(self.issue.assignee.login, "jacquev6")
-        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.state, "open")
         self.assertEqual(self.issue.title, "Title edited by PyGithub")
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["Bug"])
 
     def testEditResetMilestone(self):
-        self.assertEqual(self.issue.milestone.title, "Version 0.4")
+        self.assertEqual(self.issue.milestone.title, "Version 1.4")
         self.issue.edit(milestone=None)
         self.assertEqual(self.issue.milestone, None)
 
@@ -195,15 +203,15 @@ class Issue(Framework.TestCase):
     def testAddAndRemoveAssignees(self):
         user1 = "jayfk"
         user2 = self.g.get_user("jzelinskie")
-        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
         self.issue.add_to_assignees(user1, user2)
         self.assertListKeyEqual(
             self.issue.assignees,
             lambda a: a.login,
-            ["jacquev6", "stuglaser", "jayfk", "jzelinskie"],
+            ["jacquev6", "jayfk", "jzelinskie"],
         )
         self.issue.remove_from_assignees(user1, user2)
-        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
 
     def testAddAndRemoveLabels(self):
         bug = self.repo.get_label("Bug")

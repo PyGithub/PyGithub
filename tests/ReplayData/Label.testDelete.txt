@@ -2,7 +2,7 @@ https
 DELETE
 api.github.com
 None
-/repos/jacquev6/PyGithub/labels/Bug
+/repos/PyGithub/PyGithub/labels/bug
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204

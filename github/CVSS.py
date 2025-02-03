@@ -17,6 +17,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -53,8 +54,8 @@ class CVSS(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._vector_string: Attribute[str] = NotSet
         self._score: Attribute[Decimal] = NotSet
+        self._vector_string: Attribute[str] = NotSet
         self._version: Attribute[Decimal] = NotSet
 
     @property
@@ -62,12 +63,12 @@ class CVSS(NonCompletableGithubObject):
         return self._score.value
 
     @property
-    def version(self) -> Decimal:
-        return self._version.value
-
-    @property
     def vector_string(self) -> str:
         return self._vector_string.value
+
+    @property
+    def version(self) -> Decimal:
+        return self._version.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "score" in attributes and attributes["score"] is not None:  # pragma no branch

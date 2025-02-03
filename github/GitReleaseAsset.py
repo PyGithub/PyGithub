@@ -18,6 +18,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -41,7 +42,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Iterator
 
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -54,74 +55,28 @@ class GitReleaseAsset(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#releases
 
+    The OpenAPI schema can be found at
+    - /components/schemas/release-asset
+
     """
 
     def _initAttributes(self) -> None:
-        self._url: Attribute[str] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._label: Attribute[str] = NotSet
-        self._content_type: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._size: Attribute[int] = NotSet
-        self._download_count: Attribute[int] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
         self._browser_download_url: Attribute[str] = NotSet
+        self._content_type: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._download_count: Attribute[int] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._label: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._size: Attribute[int] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._uploader: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self.url})
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
-
-    @property
-    def id(self) -> int:
-        self._completeIfNotSet(self._id)
-        return self._id.value
-
-    @property
-    def name(self) -> str:
-        self._completeIfNotSet(self._name)
-        return self._name.value
-
-    @property
-    def label(self) -> str:
-        self._completeIfNotSet(self._label)
-        return self._label.value
-
-    @property
-    def content_type(self) -> str:
-        self._completeIfNotSet(self._content_type)
-        return self._content_type.value
-
-    @property
-    def state(self) -> str:
-        self._completeIfNotSet(self._state)
-        return self._state.value
-
-    @property
-    def size(self) -> int:
-        self._completeIfNotSet(self._size)
-        return self._size.value
-
-    @property
-    def download_count(self) -> int:
-        self._completeIfNotSet(self._download_count)
-        return self._download_count.value
-
-    @property
-    def created_at(self) -> datetime:
-        self._completeIfNotSet(self._created_at)
-        return self._created_at.value
-
-    @property
-    def updated_at(self) -> datetime:
-        self._completeIfNotSet(self._updated_at)
-        return self._updated_at.value
 
     @property
     def browser_download_url(self) -> str:
@@ -129,9 +84,64 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._browser_download_url.value
 
     @property
+    def content_type(self) -> str:
+        self._completeIfNotSet(self._content_type)
+        return self._content_type.value
+
+    @property
+    def created_at(self) -> datetime:
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    def download_count(self) -> int:
+        self._completeIfNotSet(self._download_count)
+        return self._download_count.value
+
+    @property
+    def id(self) -> int:
+        self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
+    def label(self) -> str:
+        self._completeIfNotSet(self._label)
+        return self._label.value
+
+    @property
+    def name(self) -> str:
+        self._completeIfNotSet(self._name)
+        return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
+    def size(self) -> int:
+        self._completeIfNotSet(self._size)
+        return self._size.value
+
+    @property
+    def state(self) -> str:
+        self._completeIfNotSet(self._state)
+        return self._state.value
+
+    @property
+    def updated_at(self) -> datetime:
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
+
+    @property
     def uploader(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._uploader)
         return self._uploader.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
 
     def delete_asset(self) -> bool:
         """
@@ -139,6 +149,17 @@ class GitReleaseAsset(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
+
+    def download_asset(
+        self, path: None | str = None, chunk_size: int | None = 1
+    ) -> tuple[int, dict[str, Any], Iterator] | None:
+        """
+        Download asset to the path or return an iterator for the stream.
+        """
+        if path is None:
+            return self._requester.getStream(self.url, chunk_size=chunk_size)
+        self._requester.getFile(self.url, path=path, chunk_size=chunk_size)
+        return None
 
     def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
         """
@@ -151,27 +172,29 @@ class GitReleaseAsset(CompletableGithubObject):
         return GitReleaseAsset(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "name" in attributes:  # pragma no branch
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "label" in attributes:  # pragma no branch
-            self._label = self._makeStringAttribute(attributes["label"])
-        if "uploader" in attributes:  # pragma no branch
-            self._uploader = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["uploader"])
-        if "content_type" in attributes:  # pragma no branch
-            self._content_type = self._makeStringAttribute(attributes["content_type"])
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "size" in attributes:  # pragma no branch
-            self._size = self._makeIntAttribute(attributes["size"])
-        if "download_count" in attributes:  # pragma no branch
-            self._download_count = self._makeIntAttribute(attributes["download_count"])
-        if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "browser_download_url" in attributes:  # pragma no branch
             self._browser_download_url = self._makeStringAttribute(attributes["browser_download_url"])
+        if "content_type" in attributes:  # pragma no branch
+            self._content_type = self._makeStringAttribute(attributes["content_type"])
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "download_count" in attributes:  # pragma no branch
+            self._download_count = self._makeIntAttribute(attributes["download_count"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "label" in attributes:  # pragma no branch
+            self._label = self._makeStringAttribute(attributes["label"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "size" in attributes:  # pragma no branch
+            self._size = self._makeIntAttribute(attributes["size"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "uploader" in attributes:  # pragma no branch
+            self._uploader = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["uploader"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

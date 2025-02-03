@@ -16,6 +16,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -52,22 +53,14 @@ class Secret(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._name: Attribute[str] = NotSet
         self._secrets_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self.name})
-
-    @property
-    def name(self) -> str:
-        """
-        :type: string
-        """
-        self._completeIfNotSet(self._name)
-        return self._name.value
 
     @property
     def created_at(self) -> datetime:
@@ -78,12 +71,12 @@ class Secret(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self) -> datetime:
+    def name(self) -> str:
         """
-        :type: datetime.datetime
+        :type: string
         """
-        self._completeIfNotSet(self._updated_at)
-        return self._updated_at.value
+        self._completeIfNotSet(self._name)
+        return self._name.value
 
     @property
     def secrets_url(self) -> str:
@@ -91,6 +84,14 @@ class Secret(CompletableGithubObject):
         :type: string
         """
         return self._secrets_url.value
+
+    @property
+    def updated_at(self) -> datetime:
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self) -> str:
@@ -110,13 +111,13 @@ class Secret(CompletableGithubObject):
         self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
         if "secrets_url" in attributes:
             self._secrets_url = self._makeStringAttribute(attributes["secrets_url"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])

@@ -62,11 +62,10 @@ class ApplicationOAuth(NonCompletableGithubObject):
         requester: Requester,
         headers: dict[str, Any],
         attributes: Any,
-        completed: bool,
     ) -> None:
         # this object requires a request without authentication
         requester = requester.withAuth(auth=None)
-        super().__init__(requester, headers, attributes, completed)
+        super().__init__(requester, headers, attributes)
 
     def __repr__(self) -> str:
         return self.get__repr__({"client_id": self._client_id.value})
@@ -78,12 +77,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
     @property
     def client_secret(self) -> str:
         return self._client_secret.value
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "client_id" in attributes:  # pragma no branch
-            self._client_id = self._makeStringAttribute(attributes["client_id"])
-        if "client_secret" in attributes:  # pragma no branch
-            self._client_secret = self._makeStringAttribute(attributes["client_secret"])
 
     def get_oauth_url(self, path: str) -> str:
         if not path.startswith("/"):
@@ -146,7 +139,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
             requester=self._requester,
             headers=headers,
             attributes=data,
-            completed=False,
         )
 
     def get_app_user_auth(self, token: AccessToken) -> AppUserAuth:
@@ -187,7 +179,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
             requester=self._requester,
             headers=headers,
             attributes=data,
-            completed=False,
         )
 
     @staticmethod
@@ -198,3 +189,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
             raise GithubException(200, data, headers)
 
         return headers, data
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "client_id" in attributes:  # pragma no branch
+            self._client_id = self._makeStringAttribute(attributes["client_id"])
+        if "client_secret" in attributes:  # pragma no branch
+            self._client_secret = self._makeStringAttribute(attributes["client_secret"])

@@ -4,6 +4,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -45,69 +46,69 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._ref: Attribute[str] = NotSet
         self._analysis_key: Attribute[str] = NotSet
-        self._environment: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._commit_sha: Attribute[str] = NotSet
-        self._message: Attribute[dict[str, Any]] = NotSet
-        self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
         self._classifications: Attribute[list[str]] = NotSet
+        self._commit_sha: Attribute[str] = NotSet
+        self._environment: Attribute[str] = NotSet
+        self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
+        self._message: Attribute[dict[str, Any]] = NotSet
+        self._ref: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"ref": self.ref, "analysis_key": self.analysis_key})
-
-    @property
-    def ref(self) -> str:
-        return self._ref.value
 
     @property
     def analysis_key(self) -> str:
         return self._analysis_key.value
 
     @property
-    def environment(self) -> str:
-        return self._environment.value
-
-    @property
-    def state(self) -> str:
-        return self._state.value
+    def classifications(self) -> list[str]:
+        return self._classifications.value
 
     @property
     def commit_sha(self) -> str:
         return self._commit_sha.value
 
     @property
-    def message(self) -> dict[str, Any]:
-        return self._message.value
+    def environment(self) -> str:
+        return self._environment.value
 
     @property
     def location(self) -> CodeScanAlertInstanceLocation:
         return self._location.value
 
     @property
-    def classifications(self) -> list[str]:
-        return self._classifications.value
+    def message(self) -> dict[str, Any]:
+        return self._message.value
+
+    @property
+    def ref(self) -> str:
+        return self._ref.value
+
+    @property
+    def state(self) -> str:
+        return self._state.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "ref" in attributes:  # pragma no branch
-            self._ref = self._makeStringAttribute(attributes["ref"])
         if "analysis_key" in attributes:  # pragma no branch
             self._analysis_key = self._makeStringAttribute(attributes["analysis_key"])
-        if "environment" in attributes:  # pragma no branch
-            self._environment = self._makeStringAttribute(attributes["environment"])
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "environment" in attributes:  # pragma no branch
-            self._environment = self._makeStringAttribute(attributes["environment"])
+        if "classifications" in attributes:  # pragma no branch
+            self._classifications = self._makeListOfStringsAttribute(attributes["classifications"])
         if "commit_sha" in attributes:  # pragma no branch
             self._commit_sha = self._makeStringAttribute(attributes["commit_sha"])
-        if "message" in attributes:  # pragma no branch
-            self._message = self._makeDictAttribute(attributes["message"])
+        if "environment" in attributes:  # pragma no branch
+            self._environment = self._makeStringAttribute(attributes["environment"])
+        if "environment" in attributes:  # pragma no branch
+            self._environment = self._makeStringAttribute(attributes["environment"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeClassAttribute(
                 github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation,
                 attributes["location"],
             )
-        if "classifications" in attributes:  # pragma no branch
-            self._classifications = self._makeListOfStringsAttribute(attributes["classifications"])
+        if "message" in attributes:  # pragma no branch
+            self._message = self._makeDictAttribute(attributes["message"])
+        if "ref" in attributes:  # pragma no branch
+            self._ref = self._makeStringAttribute(attributes["ref"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])

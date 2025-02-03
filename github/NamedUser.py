@@ -31,6 +31,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -88,6 +89,15 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/users#get-a-user
 
+    The OpenAPI schema can be found at
+    - /components/schemas/actor
+    - /components/schemas/collaborator
+    - /components/schemas/contributor
+    - /components/schemas/nullable-simple-user
+    - /components/schemas/public-user
+    - /components/schemas/simple-user
+    - /components/schemas/user-search-result-item
+
     """
 
     def _initAttributes(self) -> None:
@@ -99,6 +109,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._contributions: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._disk_usage: Attribute[int] = NotSet
+        self._display_login: Attribute[str] = NotSet
         self._email: Attribute[str | None] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._followers: Attribute[int] = NotSet
@@ -116,6 +127,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._login: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._notification_email: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
@@ -126,35 +138,34 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._received_events_url: Attribute[str] = NotSet
         self._repos_url: Attribute[str] = NotSet
         self._role: Attribute[str] = NotSet
+        self._role_name: Attribute[str] = NotSet
+        self._score: Attribute[float] = NotSet
         self._site_admin: Attribute[bool] = NotSet
+        self._starred_at: Attribute[str] = NotSet
         self._starred_url: Attribute[str] = NotSet
         self._subscriptions_url: Attribute[str] = NotSet
         self._suspended_at: Attribute[datetime | None] = NotSet
         self._team_count: Attribute[int] = NotSet
+        self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
         self._twitter_username: Attribute[str | None] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._user_view_type: Attribute[str] = NotSet
+
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, type(self)) and self.login == other.login and self.id == other.id
+
+    def __hash__(self) -> int:
+        return hash((self.id, self.login))
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
 
     @property
-    def node_id(self) -> str:
-        self._completeIfNotSet(self._node_id)
-        return self._node_id.value
-
-    @property
-    def twitter_username(self) -> str | None:
-        self._completeIfNotSet(self._twitter_username)
-        return self._twitter_username.value
-
-    def __hash__(self) -> int:
-        return hash((self.id, self.login))
-
-    def __eq__(self, other: Any) -> bool:
-        return isinstance(other, type(self)) and self.login == other.login and self.id == other.id
+    def _identity(self) -> str:
+        return self.login
 
     @property
     def avatar_url(self) -> str:
@@ -195,6 +206,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def disk_usage(self) -> int:
         self._completeIfNotSet(self._disk_usage)
         return self._disk_usage.value
+
+    @property
+    def display_login(self) -> str:
+        return self._display_login.value
 
     @property
     def email(self) -> str | None:
@@ -277,6 +292,15 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
+    def notification_email(self) -> str:
+        return self._notification_email.value
+
+    @property
     def organizations_url(self) -> str:
         self._completeIfNotSet(self._organizations_url)
         return self._organizations_url.value
@@ -327,9 +351,21 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._role.value
 
     @property
+    def role_name(self) -> str:
+        return self._role_name.value
+
+    @property
+    def score(self) -> float:
+        return self._score.value
+
+    @property
     def site_admin(self) -> bool:
         self._completeIfNotSet(self._site_admin)
         return self._site_admin.value
+
+    @property
+    def starred_at(self) -> str:
+        return self._starred_at.value
 
     @property
     def starred_url(self) -> str:
@@ -352,9 +388,18 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._team_count.value
 
     @property
+    def text_matches(self) -> dict[str, Any]:
+        return self._text_matches.value
+
+    @property
     def total_private_repos(self) -> int | None:
         self._completeIfNotSet(self._total_private_repos)
         return self._total_private_repos.value
+
+    @property
+    def twitter_username(self) -> str | None:
+        self._completeIfNotSet(self._twitter_username)
+        return self._twitter_username.value
 
     @property
     def type(self) -> str:
@@ -370,6 +415,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    @property
+    def user_view_type(self) -> str:
+        return self._user_view_type.value
 
     def get_events(self) -> PaginatedList[Event]:
         """
@@ -525,10 +574,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/following/{following._identity}")
         return status == 204
 
-    @property
-    def _identity(self) -> str:
-        return self.login
-
     def get_organization_membership(self, org: str | Organization) -> Membership:
         """
         :calls: `GET /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#check-organization-membership-for-a-user>`_
@@ -557,6 +602,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "disk_usage" in attributes:  # pragma no branch
             self._disk_usage = self._makeIntAttribute(attributes["disk_usage"])
+        if "display_login" in attributes:  # pragma no branch
+            self._display_login = self._makeStringAttribute(attributes["display_login"])
         if "email" in attributes:  # pragma no branch
             self._email = self._makeStringAttribute(attributes["email"])
         if "events_url" in attributes:  # pragma no branch
@@ -591,6 +638,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "notification_email" in attributes:  # pragma no branch
+            self._notification_email = self._makeStringAttribute(attributes["notification_email"])
         if "organizations_url" in attributes:  # pragma no branch
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
@@ -611,8 +660,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
         if "role" in attributes:  # pragma no branch
             self._role = self._makeStringAttribute(attributes["role"])
+        if "role_name" in attributes:  # pragma no branch
+            self._role_name = self._makeStringAttribute(attributes["role_name"])
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])
         if "site_admin" in attributes:  # pragma no branch
             self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
+        if "starred_at" in attributes:  # pragma no branch
+            self._starred_at = self._makeStringAttribute(attributes["starred_at"])
         if "starred_url" in attributes:  # pragma no branch
             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch
@@ -621,6 +676,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._suspended_at = self._makeDatetimeAttribute(attributes["suspended_at"])
         if "team_count" in attributes:
             self._team_count = self._makeIntAttribute(attributes["team_count"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "twitter_username" in attributes:  # pragma no branch
@@ -631,3 +688,5 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "user_view_type" in attributes:  # pragma no branch
+            self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])

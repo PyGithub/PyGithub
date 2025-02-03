@@ -18,6 +18,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Bernhard M. Wiedemann <githubbmwprimary@lsmod.de>             #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,10 +44,12 @@ import os
 from datetime import datetime, timezone
 from tempfile import NamedTemporaryFile
 from unittest import mock
+from unittest.mock import Mock
 
 import jwt
 
 import github
+from github.Auth import Auth
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
@@ -173,16 +178,15 @@ class Authentication(Framework.BasicTestCase):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
 
-        # test token expiry
         # token expires 2024-11-25 01:00:02
         token = installation_auth.token
-        self.assertFalse(installation_auth._is_expired)
         self.assertEqual(
             installation_auth._AppInstallationAuth__installation_authorization.expires_at,
             datetime(2024, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
         )
 
-        # forward the clock so token expires
+        # test token expiry
+        # control the current time used by _is_expired
         with mock.patch("github.Auth.datetime") as dt:
             # just before expiry
             dt.now = mock.Mock(return_value=datetime(2024, 11, 25, 0, 59, 3, tzinfo=timezone.utc))
@@ -201,9 +205,9 @@ class Authentication(Framework.BasicTestCase):
                 datetime(2025, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
             )
 
-        # use the token
-        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
-        self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
+            # use the token
+            self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+            self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
 
     def testAppInstallationAuthAuthenticationRequesterArgs(self):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
@@ -329,3 +333,32 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(auth=github.Auth.Token("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk"))
         with self.assertRaises(github.GithubException):
             g.get_user().name
+
+    def testAddingCustomHeaders(self):
+        requester = github.Github(auth=CustomAuth())._Github__requester
+
+        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False):
+            self.modifiedHeaders = requestHeaders
+            return Mock(), {}, Mock()
+
+        requester._Requester__requestRaw = requestRaw
+        requestHeaders = {"Custom key": "secret"}
+        requester._Requester__requestEncode(None, "GET", "http://github.com", None, requestHeaders, None, Mock())
+
+        self.assertEqual("Custom token", self.modifiedHeaders["Custom key"])
+
+
+class CustomAuth(Auth):
+    @property
+    def token_type(self) -> str:
+        return "custom auth"
+
+    @property
+    def token(self) -> str:
+        return "Custom token"
+
+    def authentication(self, headers):
+        headers["Custom key"] = self.token
+
+    def mask_authentication(self, headers):
+        headers["Custom key"] = "Masked custom header"

@@ -15,6 +15,7 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -49,29 +50,32 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-the-last-year-of-commit-activity
 
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-activity
+
     """
 
     def _initAttributes(self) -> None:
-        self._week: Attribute[datetime] = github.GithubObject.NotSet
-        self._total: Attribute[int] = github.GithubObject.NotSet
         self._days: Attribute[int] = github.GithubObject.NotSet
+        self._total: Attribute[int] = github.GithubObject.NotSet
+        self._week: Attribute[datetime] = github.GithubObject.NotSet
 
     @property
-    def week(self) -> datetime:
-        return self._week.value
+    def days(self) -> int:
+        return self._days.value
 
     @property
     def total(self) -> int:
         return self._total.value
 
     @property
-    def days(self) -> int:
-        return self._days.value
+    def week(self) -> datetime:
+        return self._week.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "week" in attributes:  # pragma no branch
-            self._week = self._makeTimestampAttribute(attributes["week"])
-        if "total" in attributes:  # pragma no branch
-            self._total = self._makeIntAttribute(attributes["total"])
         if "days" in attributes:  # pragma no branch
             self._days = self._makeListOfIntsAttribute(attributes["days"])
+        if "total" in attributes:  # pragma no branch
+            self._total = self._makeIntAttribute(attributes["total"])
+        if "week" in attributes:  # pragma no branch
+            self._week = self._makeTimestampAttribute(attributes["week"])

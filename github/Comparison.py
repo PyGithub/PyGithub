@@ -91,11 +91,11 @@ class Comparison(CompletableGithubObject):
             self._requester,
             self.url,
             {},
-            None,
-            "commits",
-            "total_commits",
-            self.raw_data,
-            self.raw_headers,
+            headers=None,
+            list_item="commits",
+            total_count_item="total_commits",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
         )
 
     @property

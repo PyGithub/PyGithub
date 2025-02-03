@@ -22,6 +22,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -63,59 +64,38 @@ class Migration(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/migrations
 
+    The OpenAPI schema can be found at
+    - /components/schemas/migration
+
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._guid: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._lock_repositories: Attribute[bool] = NotSet
+        self._archive_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._exclude: Attribute[list[str]] = NotSet
         self._exclude_attachments: Attribute[bool] = NotSet
+        self._exclude_git_data: Attribute[bool] = NotSet
+        self._exclude_metadata: Attribute[bool] = NotSet
+        self._exclude_owner_projects: Attribute[bool] = NotSet
+        self._exclude_releases: Attribute[bool] = NotSet
+        self._guid: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._lock_repositories: Attribute[bool] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._org_metadata_only: Attribute[bool] = NotSet
+        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
         self._repositories: Attribute[list[github.Repository.Repository]] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"state": self._state.value, "url": self._url.value})
 
     @property
-    def id(self) -> int:
-        return self._id.value
-
-    @property
-    def owner(self) -> github.NamedUser.NamedUser:
-        self._completeIfNotSet(self._owner)
-        return self._owner.value
-
-    @property
-    def guid(self) -> str:
-        self._completeIfNotSet(self._guid)
-        return self._guid.value
-
-    @property
-    def state(self) -> str:
-        self._completeIfNotSet(self._guid)
-        return self._state.value
-
-    @property
-    def lock_repositories(self) -> bool:
-        self._completeIfNotSet(self._repositories)
-        return self._lock_repositories.value
-
-    @property
-    def exclude_attachments(self) -> bool:
-        self._completeIfNotSet(self._exclude_attachments)
-        return self._exclude_attachments.value
-
-    @property
-    def repositories(self) -> list[github.Repository.Repository]:
-        self._completeIfNotSet(self._repositories)
-        return self._repositories.value
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
+    def archive_url(self) -> str:
+        self._completeIfNotSet(self._archive_url)
+        return self._archive_url.value
 
     @property
     def created_at(self) -> datetime:
@@ -123,9 +103,83 @@ class Migration(CompletableGithubObject):
         return self._created_at.value
 
     @property
+    def exclude(self) -> list[str]:
+        self._completeIfNotSet(self._exclude)
+        return self._exclude.value
+
+    @property
+    def exclude_attachments(self) -> bool:
+        self._completeIfNotSet(self._exclude_attachments)
+        return self._exclude_attachments.value
+
+    @property
+    def exclude_git_data(self) -> bool:
+        self._completeIfNotSet(self._exclude_git_data)
+        return self._exclude_git_data.value
+
+    @property
+    def exclude_metadata(self) -> bool:
+        self._completeIfNotSet(self._exclude_metadata)
+        return self._exclude_metadata.value
+
+    @property
+    def exclude_owner_projects(self) -> bool:
+        self._completeIfNotSet(self._exclude_owner_projects)
+        return self._exclude_owner_projects.value
+
+    @property
+    def exclude_releases(self) -> bool:
+        self._completeIfNotSet(self._exclude_releases)
+        return self._exclude_releases.value
+
+    @property
+    def guid(self) -> str:
+        self._completeIfNotSet(self._guid)
+        return self._guid.value
+
+    @property
+    def id(self) -> int:
+        return self._id.value
+
+    @property
+    def lock_repositories(self) -> bool:
+        self._completeIfNotSet(self._repositories)
+        return self._lock_repositories.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
+    def org_metadata_only(self) -> bool:
+        self._completeIfNotSet(self._org_metadata_only)
+        return self._org_metadata_only.value
+
+    @property
+    def owner(self) -> github.NamedUser.NamedUser:
+        self._completeIfNotSet(self._owner)
+        return self._owner.value
+
+    @property
+    def repositories(self) -> list[github.Repository.Repository]:
+        self._completeIfNotSet(self._repositories)
+        return self._repositories.value
+
+    @property
+    def state(self) -> str:
+        self._completeIfNotSet(self._guid)
+        return self._state.value
+
+    @property
     def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
 
     def get_status(self) -> str:
         """
@@ -171,25 +225,41 @@ class Migration(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "id" in attributes:
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "owner" in attributes:
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
-        if "guid" in attributes:
-            self._guid = self._makeStringAttribute(attributes["guid"])
-        if "state" in attributes:
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "lock_repositories" in attributes:
-            self._lock_repositories = self._makeBoolAttribute(attributes["lock_repositories"])
+        if "archive_url" in attributes:  # pragma no branch
+            self._archive_url = self._makeStringAttribute(attributes["archive_url"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "exclude" in attributes:  # pragma no branch
+            self._exclude = self._makeListOfStringsAttribute(attributes["exclude"])
         if "exclude_attachments" in attributes:
             self._exclude_attachments = self._makeBoolAttribute(attributes["exclude_attachments"])
+        if "exclude_git_data" in attributes:  # pragma no branch
+            self._exclude_git_data = self._makeBoolAttribute(attributes["exclude_git_data"])
+        if "exclude_metadata" in attributes:  # pragma no branch
+            self._exclude_metadata = self._makeBoolAttribute(attributes["exclude_metadata"])
+        if "exclude_owner_projects" in attributes:  # pragma no branch
+            self._exclude_owner_projects = self._makeBoolAttribute(attributes["exclude_owner_projects"])
+        if "exclude_releases" in attributes:  # pragma no branch
+            self._exclude_releases = self._makeBoolAttribute(attributes["exclude_releases"])
+        if "guid" in attributes:
+            self._guid = self._makeStringAttribute(attributes["guid"])
+        if "id" in attributes:
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "lock_repositories" in attributes:
+            self._lock_repositories = self._makeBoolAttribute(attributes["lock_repositories"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "org_metadata_only" in attributes:  # pragma no branch
+            self._org_metadata_only = self._makeBoolAttribute(attributes["org_metadata_only"])
+        if "owner" in attributes:
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "repositories" in attributes:
             self._repositories = self._makeListOfClassesAttribute(
                 github.Repository.Repository, attributes["repositories"]
             )
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "state" in attributes:
+            self._state = self._makeStringAttribute(attributes["state"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])

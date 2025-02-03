@@ -14,6 +14,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -42,6 +43,12 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class GistFile(NonCompletableGithubObject):
     """
     This class represents GistFiles.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/base-gist/properties/files
+    - /components/schemas/gist-simple/properties/files
+    - /components/schemas/gist-simple/properties/fork_of/properties/files
+
     """
 
     def _initAttributes(self) -> None:

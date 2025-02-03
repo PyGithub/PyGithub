@@ -15,6 +15,7 @@
 # Copyright 2020 Victor Zeng <zacker150@users.noreply.github.com>              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -49,22 +50,34 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
 
+    The OpenAPI schema can be found at
+    - /components/schemas/runner
+
     """
 
     def _initAttributes(self) -> None:
+        self._busy: Attribute[bool] = NotSet
         self._id: Attribute[int] = NotSet
+        self._labels: Attribute[list[dict[str, int | str]]] = NotSet
         self._name: Attribute[str] = NotSet
         self._os: Attribute[str] = NotSet
+        self._runner_group_id: Attribute[int] = NotSet
         self._status: Attribute[str] = NotSet
-        self._busy: Attribute[bool] = NotSet
-        self._labels: Attribute[list[dict[str, int | str]]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
+    def busy(self) -> bool:
+        return self._busy.value
+
+    @property
     def id(self) -> int:
         return self._id.value
+
+    @property
+    def labels(self) -> list[dict[str, int | str]]:
+        return self._labels.value
 
     @property
     def name(self) -> str:
@@ -75,26 +88,25 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
         return self._os.value
 
     @property
+    def runner_group_id(self) -> int:
+        return self._runner_group_id.value
+
+    @property
     def status(self) -> str:
         return self._status.value
 
-    @property
-    def busy(self) -> bool:
-        return self._busy.value
-
-    def labels(self) -> list[dict[str, int | str]]:
-        return self._labels.value
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "busy" in attributes:
+            self._busy = self._makeBoolAttribute(attributes["busy"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "labels" in attributes:
+            self._labels = self._makeListOfDictsAttribute(attributes["labels"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "os" in attributes:  # pragma no branch
             self._os = self._makeStringAttribute(attributes["os"])
+        if "runner_group_id" in attributes:  # pragma no branch
+            self._runner_group_id = self._makeIntAttribute(attributes["runner_group_id"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
-        if "busy" in attributes:
-            self._busy = self._makeBoolAttribute(attributes["busy"])
-        if "labels" in attributes:
-            self._labels = self._makeListOfDictsAttribute(attributes["labels"])

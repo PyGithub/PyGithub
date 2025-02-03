@@ -16,6 +16,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -54,15 +55,27 @@ class GitTree(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#trees
 
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-search-result-item/properties/commit/properties/tree
+    - /components/schemas/commit/properties/commit/properties/tree
+    - /components/schemas/file-commit/properties/commit/properties/tree
+    - /components/schemas/git-commit/properties/tree
+    - /components/schemas/git-tree
+
     """
 
     def _initAttributes(self) -> None:
         self._sha: Attribute[str] = NotSet
         self._tree: Attribute[list[GitTreeElement]] = NotSet
+        self._truncated: Attribute[bool] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
+
+    @property
+    def _identity(self) -> str:
+        return self.sha
 
     @property
     def sha(self) -> str:
@@ -75,18 +88,21 @@ class GitTree(CompletableGithubObject):
         return self._tree.value
 
     @property
+    def truncated(self) -> bool:
+        self._completeIfNotSet(self._truncated)
+        return self._truncated.value
+
+    @property
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
-
-    @property
-    def _identity(self) -> str:
-        return self.sha
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch
             self._tree = self._makeListOfClassesAttribute(github.GitTreeElement.GitTreeElement, attributes["tree"])
+        if "truncated" in attributes:  # pragma no branch
+            self._truncated = self._makeBoolAttribute(attributes["truncated"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
