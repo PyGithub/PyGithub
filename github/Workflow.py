@@ -214,7 +214,7 @@ class Workflow(CompletableGithubObject):
             list_item="workflow_runs",
         )
 
-    def disable(self):
+    def disable(self) -> bool:
         """
         :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#disable-a-workflow>`_
         :rtype: bool
@@ -222,7 +222,7 @@ class Workflow(CompletableGithubObject):
         status, _, _ = self._requester.requestJson("PUT", f"{self.url}/disable")
         return status == 204
 
-    def enable(self):
+    def enable(self) -> bool:
         """
         :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#enable-a-workflow>`_
         :rtype: bool
