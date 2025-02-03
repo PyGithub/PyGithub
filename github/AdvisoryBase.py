@@ -35,7 +35,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class AdvisoryBase(NonCompletableGithubObject):
     """
-    This class represents a the shared attributes between GlobalAdvisory, RepositoryAdvisory and DependabotAdvisory
+    This class represents the shared attributes between GlobalAdvisory, RepositoryAdvisory and DependabotAdvisory
     https://docs.github.com/en/rest/security-advisories/global-advisories
     https://docs.github.com/en/rest/security-advisories/repository-advisories
     https://docs.github.com/en/rest/dependabot/alerts

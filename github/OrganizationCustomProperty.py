@@ -76,6 +76,9 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/orgs/custom-properties
 
+    The OpenAPI schema can be found at
+    - /components/schemas/custom-property
+
     """
 
     def _initAttributes(self) -> None:
@@ -84,6 +87,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         self._description: Attribute[str] = NotSet
         self._property_name: Attribute[str] = NotSet
         self._required: Attribute[bool] = NotSet
+        self._url: Attribute[str] = NotSet
         self._value_type: Attribute[str] = NotSet
         self._values_editable_by: Attribute[str] = NotSet
 
@@ -108,6 +112,10 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._required.value
 
     @property
+    def url(self) -> str:
+        return self._url.value
+
+    @property
     def value_type(self) -> str:
         return self._value_type.value
 
@@ -116,16 +124,20 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._values_editable_by.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        self._property_name = self._makeStringAttribute(attributes["property_name"])
-        self._value_type = self._makeStringAttribute(attributes["value_type"])
         if "allowed_values" in attributes:
             self._allowed_values = self._makeListOfStringsAttribute(attributes["allowed_values"])
         if "default_value" in attributes:
             self._default_value = self._makeStringAttribute(attributes["default_value"])
         if "description" in attributes:
             self._description = self._makeStringAttribute(attributes["description"])
+        if "property_name" in attributes:  # pragma no branch
+            self._property_name = self._makeStringAttribute(attributes["property_name"])
         if "required" in attributes:
             self._required = self._makeBoolAttribute(attributes["required"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
+        if "value_type" in attributes:  # pragma no branch
+            self._value_type = self._makeStringAttribute(attributes["value_type"])
         if "values_editable_by" in attributes:
             self._values_editable_by = self._makeStringAttribute(attributes["values_editable_by"])
 

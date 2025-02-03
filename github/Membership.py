@@ -61,11 +61,15 @@ class Membership(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/orgs
 
+    The OpenAPI schema can be found at
+    - /components/schemas/org-membership
+
     """
 
     def _initAttributes(self) -> None:
         self._organization: Attribute[Organization] = NotSet
         self._organization_url: Attribute[str] = NotSet
+        self._permissions: Attribute[dict[str, Any]] = NotSet
         self._role: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
@@ -83,6 +87,11 @@ class Membership(CompletableGithubObject):
     def organization_url(self) -> str:
         self._completeIfNotSet(self._organization_url)
         return self._organization_url.value
+
+    @property
+    def permissions(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._permissions)
+        return self._permissions.value
 
     @property
     def role(self) -> str:
@@ -109,6 +118,8 @@ class Membership(CompletableGithubObject):
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "organization_url" in attributes:  # pragma no branch
             self._organization_url = self._makeStringAttribute(attributes["organization_url"])
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "role" in attributes:  # pragma no branch
             self._role = self._makeStringAttribute(attributes["role"])
         if "state" in attributes:  # pragma no branch

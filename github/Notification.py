@@ -61,6 +61,9 @@ class Notification(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#notifications
 
+    The OpenAPI schema can be found at
+    - /components/schemas/thread
+
     """
 
     def _initAttributes(self) -> None:

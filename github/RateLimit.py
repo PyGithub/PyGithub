@@ -56,6 +56,9 @@ class RateLimit(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/rate-limit
 
+    The OpenAPI schema can be found at
+    - /components/schemas/rate-limit-overview/properties/resources
+
     """
 
     def _initAttributes(self) -> None:
@@ -66,7 +69,9 @@ class RateLimit(NonCompletableGithubObject):
         self._dependency_snapshots: Attribute[Rate] = NotSet
         self._graphql: Attribute[Rate] = NotSet
         self._integration_manifest: Attribute[Rate] = NotSet
+        self._scim: Attribute[Rate] = NotSet
         self._search: Attribute[Rate] = NotSet
+        self._source_import: Attribute[Rate] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
@@ -121,11 +126,19 @@ class RateLimit(NonCompletableGithubObject):
         return self._integration_manifest.value
 
     @property
+    def scim(self) -> github.Rate.Rate:
+        return self._scim.value
+
+    @property
     def search(self) -> Rate:
         """
         Rate limit for the Search API.
         """
         return self._search.value
+
+    @property
+    def source_import(self) -> github.Rate.Rate:
+        return self._source_import.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actions_runner_registration" in attributes:  # pragma no branch
@@ -144,5 +157,9 @@ class RateLimit(NonCompletableGithubObject):
             self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])
         if "integration_manifest" in attributes:  # pragma no branch
             self._integration_manifest = self._makeClassAttribute(github.Rate.Rate, attributes["integration_manifest"])
+        if "scim" in attributes:  # pragma no branch
+            self._scim = self._makeClassAttribute(github.Rate.Rate, attributes["scim"])
         if "search" in attributes:  # pragma no branch
             self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
+        if "source_import" in attributes:  # pragma no branch
+            self._source_import = self._makeClassAttribute(github.Rate.Rate, attributes["source_import"])

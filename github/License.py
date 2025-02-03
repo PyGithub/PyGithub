@@ -55,6 +55,11 @@ class License(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/licenses
 
+    The OpenAPI schema can be found at
+    - /components/schemas/license-simple
+    - /components/schemas/minimal-repository/properties/license
+    - /components/schemas/nullable-license-simple
+
     """
 
     def _initAttributes(self) -> None:
@@ -66,6 +71,7 @@ class License(CompletableGithubObject):
         self._key: Attribute[str] = NotSet
         self._limitations: Attribute[list[str]] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._permissions: Attribute[list[str]] = NotSet
         self._spdx_id: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
@@ -114,6 +120,11 @@ class License(CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def permissions(self) -> list[str]:
         self._completeIfNotSet(self._permissions)
         return self._permissions.value
@@ -145,6 +156,8 @@ class License(CompletableGithubObject):
             self._limitations = self._makeListOfStringsAttribute(attributes["limitations"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "permissions" in attributes:  # pragma no branch
             self._permissions = self._makeListOfStringsAttribute(attributes["permissions"])
         if "spdx_id" in attributes:  # pragma no branch

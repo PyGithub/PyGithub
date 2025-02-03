@@ -48,23 +48,36 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class Topic(NonCompletableGithubObject):
     """
     This class represents topics as used by https://github.com/topics. The object reference can be found here https://docs.github.com/en/rest/reference/search#search-topics
+
+    The OpenAPI schema can be found at
+    - /components/schemas/topic-search-result-item
+
     """
 
     def _initAttributes(self) -> None:
+        self._aliases: Attribute[list[dict[str, Any]]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._created_by: Attribute[str] = NotSet
         self._curated: Attribute[bool] = NotSet
         self._description: Attribute[str] = NotSet
         self._display_name: Attribute[str] = NotSet
         self._featured: Attribute[bool] = NotSet
+        self._logo_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
+        self._related: Attribute[list[dict[str, Any]]] = NotSet
         self._released: Attribute[str] = NotSet
+        self._repository_count: Attribute[int] = NotSet
         self._score: Attribute[float] = NotSet
         self._short_description: Attribute[str] = NotSet
+        self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
+
+    @property
+    def aliases(self) -> list[dict[str, Any]]:
+        return self._aliases.value
 
     @property
     def created_at(self) -> datetime:
@@ -91,12 +104,24 @@ class Topic(NonCompletableGithubObject):
         return self._featured.value
 
     @property
+    def logo_url(self) -> str:
+        return self._logo_url.value
+
+    @property
     def name(self) -> str:
         return self._name.value
 
     @property
+    def related(self) -> list[dict[str, Any]]:
+        return self._related.value
+
+    @property
     def released(self) -> str:
         return self._released.value
+
+    @property
+    def repository_count(self) -> int:
+        return self._repository_count.value
 
     @property
     def score(self) -> float:
@@ -107,10 +132,16 @@ class Topic(NonCompletableGithubObject):
         return self._short_description.value
 
     @property
+    def text_matches(self) -> dict[str, Any]:
+        return self._text_matches.value
+
+    @property
     def updated_at(self) -> datetime:
         return self._updated_at.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "aliases" in attributes:  # pragma no branch
+            self._aliases = self._makeListOfDictsAttribute(attributes["aliases"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "created_by" in attributes:  # pragma no branch
@@ -123,13 +154,21 @@ class Topic(NonCompletableGithubObject):
             self._display_name = self._makeStringAttribute(attributes["display_name"])
         if "featured" in attributes:  # pragma no branch
             self._featured = self._makeBoolAttribute(attributes["featured"])
+        if "logo_url" in attributes:  # pragma no branch
+            self._logo_url = self._makeStringAttribute(attributes["logo_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "related" in attributes:  # pragma no branch
+            self._related = self._makeListOfDictsAttribute(attributes["related"])
         if "released" in attributes:  # pragma no branch
             self._released = self._makeStringAttribute(attributes["released"])
+        if "repository_count" in attributes:  # pragma no branch
+            self._repository_count = self._makeIntAttribute(attributes["repository_count"])
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
         if "short_description" in attributes:  # pragma no branch
             self._short_description = self._makeStringAttribute(attributes["short_description"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])

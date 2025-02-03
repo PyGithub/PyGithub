@@ -37,12 +37,23 @@ class DependabotAlertDependency(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts
 
+    The OpenAPI schema can be found at
+    - /components/schemas/dependabot-alert/properties/dependency
+
     """
 
     def _initAttributes(self) -> None:
         self._manifest_path: Attribute[str] = NotSet
         self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
         self._scope: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "package": self.package,
+                "manifest_path": self.manifest_path,
+            }
+        )
 
     @property
     def manifest_path(self) -> str:

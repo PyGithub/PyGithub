@@ -50,6 +50,9 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
 
+    The OpenAPI schema can be found at
+    - /components/schemas/runner
+
     """
 
     def _initAttributes(self) -> None:
@@ -58,6 +61,7 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
         self._labels: Attribute[list[dict[str, int | str]]] = NotSet
         self._name: Attribute[str] = NotSet
         self._os: Attribute[str] = NotSet
+        self._runner_group_id: Attribute[int] = NotSet
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -72,6 +76,10 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
         return self._id.value
 
     @property
+    def labels(self) -> list[dict[str, int | str]]:
+        return self._labels.value
+
+    @property
     def name(self) -> str:
         return self._name.value
 
@@ -80,11 +88,12 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
         return self._os.value
 
     @property
+    def runner_group_id(self) -> int:
+        return self._runner_group_id.value
+
+    @property
     def status(self) -> str:
         return self._status.value
-
-    def labels(self) -> list[dict[str, int | str]]:
-        return self._labels.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "busy" in attributes:
@@ -97,5 +106,7 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "os" in attributes:  # pragma no branch
             self._os = self._makeStringAttribute(attributes["os"])
+        if "runner_group_id" in attributes:  # pragma no branch
+            self._runner_group_id = self._makeIntAttribute(attributes["runner_group_id"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
