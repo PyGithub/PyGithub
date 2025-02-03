@@ -23,16 +23,17 @@
 ################################################################################
 
 import pickle
-import unittest
 
 import github
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
+from . import Framework
+
 REPO_NAME = "PyGithub/PyGithub"
 
 
-class Pickle(unittest.TestCase):
+class Pickle(Framework.TestCase):
     def testPickleGithub(self):
         gh = github.Github()
         gh2 = pickle.loads(pickle.dumps(gh))

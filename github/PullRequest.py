@@ -104,8 +104,19 @@ from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.Commit import Commit
+    from github.File import File
     from github.GitRef import GitRef
+    from github.IssueComment import IssueComment
+    from github.IssueEvent import IssueEvent
+    from github.Label import Label
+    from github.Milestone import Milestone
     from github.NamedUser import NamedUser
+    from github.PullRequestComment import PullRequestComment
+    from github.PullRequestMergeStatus import PullRequestMergeStatus
+    from github.PullRequestPart import PullRequestPart
+    from github.PullRequestReview import PullRequestReview
+    from github.Team import Team
 
 
 class ReviewComment(TypedDict):
@@ -125,13 +136,22 @@ class PullRequest(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/pulls
 
+    The OpenAPI schema can be found at
+    - /components/schemas/pull-request
+    - /components/schemas/pull-request-minimal
+    - /components/schemas/pull-request-simple
+
     """
 
     def _initAttributes(self) -> None:
+        self.__links: Attribute[dict[str, Any]] = NotSet
+        self._active_lock_reason: Attribute[str] = NotSet
         self._additions: Attribute[int] = NotSet
-        self._assignee: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._assignee: Attribute[NamedUser] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
-        self._base: Attribute[github.PullRequestPart.PullRequestPart] = NotSet
+        self._author_association: Attribute[str] = NotSet
+        self._auto_merge: Attribute[dict[str, Any]] = NotSet
+        self._base: Attribute[PullRequestPart] = NotSet
         self._body: Attribute[str] = NotSet
         self._changed_files: Attribute[int] = NotSet
         self._closed_at: Attribute[datetime | None] = NotSet
@@ -143,35 +163,48 @@ class PullRequest(CompletableGithubObject):
         self._deletions: Attribute[int] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._draft: Attribute[bool] = NotSet
-        self._head: Attribute[github.PullRequestPart.PullRequestPart] = NotSet
+        self._head: Attribute[PullRequestPart] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
-        self._labels: Attribute[list[github.Label.Label]] = NotSet
+        self._labels: Attribute[list[Label]] = NotSet
+        self._locked: Attribute[bool] = NotSet
+        self._maintainer_can_modify: Attribute[bool] = NotSet
         self._merge_commit_sha: Attribute[str] = NotSet
         self._mergeable: Attribute[bool] = NotSet
         self._mergeable_state: Attribute[str] = NotSet
         self._merged: Attribute[bool] = NotSet
         self._merged_at: Attribute[datetime | None] = NotSet
-        self._merged_by: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._milestone: Attribute[github.Milestone.Milestone] = NotSet
+        self._merged_by: Attribute[NamedUser] = NotSet
+        self._milestone: Attribute[Milestone] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
         self._patch_url: Attribute[str] = NotSet
         self._rebaseable: Attribute[bool] = NotSet
         self._requested_reviewers: Attribute[list[NamedUser]] = NotSet
+        self._requested_teams: Attribute[list[Team]] = NotSet
         self._review_comment_url: Attribute[str] = NotSet
         self._review_comments: Attribute[int] = NotSet
         self._review_comments_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
+        self._statuses_url: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._maintainer_can_modify: Attribute[bool] = NotSet
-        self._node_id: Attribute[str] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
+
+    @property
+    def _links(self) -> dict[str, Any]:
+        self._completeIfNotSet(self.__links)
+        return self.__links.value
+
+    @property
+    def active_lock_reason(self) -> str:
+        self._completeIfNotSet(self._active_lock_reason)
+        return self._active_lock_reason.value
 
     @property
     def additions(self) -> int:
@@ -179,17 +212,27 @@ class PullRequest(CompletableGithubObject):
         return self._additions.value
 
     @property
-    def assignee(self) -> github.NamedUser.NamedUser:
+    def assignee(self) -> NamedUser:
         self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    def assignees(self) -> list[github.NamedUser.NamedUser]:
+    def assignees(self) -> list[NamedUser]:
         self._completeIfNotSet(self._assignees)
         return self._assignees.value
 
     @property
-    def base(self) -> github.PullRequestPart.PullRequestPart:
+    def author_association(self) -> str:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
+
+    @property
+    def auto_merge(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._auto_merge)
+        return self._auto_merge.value
+
+    @property
+    def base(self) -> PullRequestPart:
         self._completeIfNotSet(self._base)
         return self._base.value
 
@@ -249,7 +292,7 @@ class PullRequest(CompletableGithubObject):
         return self._draft.value
 
     @property
-    def head(self) -> github.PullRequestPart.PullRequestPart:
+    def head(self) -> PullRequestPart:
         self._completeIfNotSet(self._head)
         return self._head.value
 
@@ -269,9 +312,19 @@ class PullRequest(CompletableGithubObject):
         return self._issue_url.value
 
     @property
-    def labels(self) -> list[github.Label.Label]:
+    def labels(self) -> list[Label]:
         self._completeIfNotSet(self._labels)
         return self._labels.value
+
+    @property
+    def locked(self) -> bool:
+        self._completeIfNotSet(self._locked)
+        return self._locked.value
+
+    @property
+    def maintainer_can_modify(self) -> bool:
+        self._completeIfNotSet(self._maintainer_can_modify)
+        return self._maintainer_can_modify.value
 
     @property
     def merge_commit_sha(self) -> str:
@@ -299,14 +352,19 @@ class PullRequest(CompletableGithubObject):
         return self._merged_at.value
 
     @property
-    def merged_by(self) -> github.NamedUser.NamedUser:
+    def merged_by(self) -> NamedUser:
         self._completeIfNotSet(self._merged_by)
         return self._merged_by.value
 
     @property
-    def milestone(self) -> github.Milestone.Milestone:
+    def milestone(self) -> Milestone:
         self._completeIfNotSet(self._milestone)
         return self._milestone.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def number(self) -> int:
@@ -322,6 +380,16 @@ class PullRequest(CompletableGithubObject):
     def rebaseable(self) -> bool:
         self._completeIfNotSet(self._rebaseable)
         return self._rebaseable.value
+
+    @property
+    def requested_reviewers(self) -> list[NamedUser]:
+        self._completeIfNotSet(self._requested_reviewers)
+        return self._requested_reviewers.value
+
+    @property
+    def requested_teams(self) -> list[Team]:
+        self._completeIfNotSet(self._requested_teams)
+        return self._requested_teams.value
 
     @property
     def review_comment_url(self) -> str:
@@ -344,6 +412,11 @@ class PullRequest(CompletableGithubObject):
         return self._state.value
 
     @property
+    def statuses_url(self) -> str:
+        self._completeIfNotSet(self._statuses_url)
+        return self._statuses_url.value
+
+    @property
     def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
@@ -352,16 +425,6 @@ class PullRequest(CompletableGithubObject):
     def updated_at(self) -> datetime | None:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
-
-    @property
-    def requested_reviewers(self) -> list[github.NamedUser.NamedUser]:
-        self._completeIfNotSet(self._requested_reviewers)
-        return self._requested_reviewers.value
-
-    @property
-    def requested_teams(self) -> list[github.Team.Team]:
-        self._completeIfNotSet(self._requested_teams)
-        return self._requested_teams.value
 
     @property
     def url(self) -> str:
@@ -373,16 +436,6 @@ class PullRequest(CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    @property
-    def maintainer_can_modify(self) -> bool:
-        self._completeIfNotSet(self._maintainer_can_modify)
-        return self._maintainer_can_modify.value
-
-    @property
-    def node_id(self) -> str:
-        self._completeIfNotSet(self._node_id)
-        return self._node_id.value
-
     def as_issue(self) -> Issue:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
@@ -390,9 +443,7 @@ class PullRequest(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_comment(
-        self, body: str, commit: github.Commit.Commit, path: str, position: int
-    ) -> github.PullRequestComment.PullRequestComment:
+    def create_comment(self, body: str, commit: github.Commit.Commit, path: str, position: int) -> PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -411,7 +462,7 @@ class PullRequest(CompletableGithubObject):
         in_reply_to: Opt[int] = NotSet,
         subject_type: Opt[str] = NotSet,
         as_suggestion: bool = False,
-    ) -> github.PullRequestComment.PullRequestComment:
+    ) -> PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -452,7 +503,7 @@ class PullRequest(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/comments", input=post_parameters)
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
-    def create_review_comment_reply(self, comment_id: int, body: str) -> github.PullRequestComment.PullRequestComment:
+    def create_review_comment_reply(self, comment_id: int, body: str) -> PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -466,7 +517,7 @@ class PullRequest(CompletableGithubObject):
         )
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
-    def create_issue_comment(self, body: str) -> github.IssueComment.IssueComment:
+    def create_issue_comment(self, body: str) -> IssueComment:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -483,7 +534,7 @@ class PullRequest(CompletableGithubObject):
         body: Opt[str] = NotSet,
         event: Opt[str] = NotSet,
         comments: Opt[list[ReviewComment]] = NotSet,
-    ) -> github.PullRequestReview.PullRequestReview:
+    ) -> PullRequestReview:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/free-pro-team@latest/rest/pulls/reviews?apiVersion=2022-11-28#create-a-review-for-a-pull-request>`_
         """
@@ -569,13 +620,13 @@ class PullRequest(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def get_comment(self, id: int) -> github.PullRequestComment.PullRequestComment:
+    def get_comment(self, id: int) -> PullRequestComment:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         return self.get_review_comment(id)
 
-    def get_review_comment(self, id: int) -> github.PullRequestComment.PullRequestComment:
+    def get_review_comment(self, id: int) -> PullRequestComment:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -588,7 +639,7 @@ class PullRequest(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
+    ) -> PaginatedList[PullRequestComment]:
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
 
@@ -606,7 +657,7 @@ class PullRequest(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
+    ) -> PaginatedList[PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
@@ -628,7 +679,7 @@ class PullRequest(CompletableGithubObject):
             url_parameters,
         )
 
-    def get_single_review_comments(self, id: int) -> PaginatedList[github.PullRequestComment.PullRequestComment]:
+    def get_single_review_comments(self, id: int) -> PaginatedList[PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/review/{id}/comments <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         """
@@ -640,19 +691,19 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    def get_commits(self) -> PaginatedList[github.Commit.Commit]:
+    def get_commits(self) -> PaginatedList[Commit]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/commits <https://docs.github.com/en/rest/reference/pulls>`_
         """
         return PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", None)
 
-    def get_files(self) -> PaginatedList[github.File.File]:
+    def get_files(self) -> PaginatedList[File]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/files <https://docs.github.com/en/rest/reference/pulls>`_
         """
         return PaginatedList(github.File.File, self._requester, f"{self.url}/files", None)
 
-    def get_issue_comment(self, id: int) -> github.IssueComment.IssueComment:
+    def get_issue_comment(self, id: int) -> IssueComment:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -660,7 +711,7 @@ class PullRequest(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.issue_url)}/comments/{id}")
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
-    def get_issue_comments(self) -> PaginatedList[github.IssueComment.IssueComment]:
+    def get_issue_comments(self) -> PaginatedList[IssueComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -671,7 +722,7 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    def get_issue_events(self) -> PaginatedList[github.IssueEvent.IssueEvent]:
+    def get_issue_events(self) -> PaginatedList[IssueEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/events <https://docs.github.com/en/rest/reference/issues#events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
@@ -684,7 +735,7 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    def get_review(self, id: int) -> github.PullRequestReview.PullRequestReview:
+    def get_review(self, id: int) -> PullRequestReview:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews/{id} <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :param id: integer
@@ -697,7 +748,7 @@ class PullRequest(CompletableGithubObject):
         )
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
-    def get_reviews(self) -> PaginatedList[github.PullRequestReview.PullRequestReview]:
+    def get_reviews(self) -> PaginatedList[PullRequestReview]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestReview.PullRequestReview`
@@ -709,7 +760,7 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    def get_review_requests(self) -> tuple[PaginatedList[NamedUser], PaginatedList[github.Team.Team]]:
+    def get_review_requests(self) -> tuple[PaginatedList[NamedUser], PaginatedList[Team]]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         :rtype: tuple of :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser` and of :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
@@ -731,7 +782,7 @@ class PullRequest(CompletableGithubObject):
             ),
         )
 
-    def get_labels(self) -> PaginatedList[github.Label.Label]:
+    def get_labels(self) -> PaginatedList[Label]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
@@ -865,7 +916,7 @@ class PullRequest(CompletableGithubObject):
         merge_method: Opt[str] = NotSet,
         sha: Opt[str] = NotSet,
         delete_branch: bool = False,
-    ) -> github.PullRequestMergeStatus.PullRequestMergeStatus:
+    ) -> PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
         """
@@ -931,6 +982,10 @@ class PullRequest(CompletableGithubObject):
         return status == 202
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "_links" in attributes:  # pragma no branch
+            self.__links = self._makeDictAttribute(attributes["_links"])
+        if "active_lock_reason" in attributes:  # pragma no branch
+            self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "assignee" in attributes:  # pragma no branch
@@ -942,6 +997,10 @@ class PullRequest(CompletableGithubObject):
                 self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
             else:
                 self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
+        if "auto_merge" in attributes:  # pragma no branch
+            self._auto_merge = self._makeDictAttribute(attributes["auto_merge"])
         if "base" in attributes:  # pragma no branch
             self._base = self._makeClassAttribute(github.PullRequestPart.PullRequestPart, attributes["base"])
         if "body" in attributes:  # pragma no branch
@@ -976,6 +1035,8 @@ class PullRequest(CompletableGithubObject):
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
         if "labels" in attributes:  # pragma no branch
             self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
+        if "locked" in attributes:  # pragma no branch
+            self._locked = self._makeBoolAttribute(attributes["locked"])
         if "maintainer_can_modify" in attributes:  # pragma no branch
             self._maintainer_can_modify = self._makeBoolAttribute(attributes["maintainer_can_modify"])
         if "merge_commit_sha" in attributes:  # pragma no branch
@@ -992,12 +1053,20 @@ class PullRequest(CompletableGithubObject):
             self._merged_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["merged_by"])
         if "milestone" in attributes:  # pragma no branch
             self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "rebaseable" in attributes:  # pragma no branch
             self._rebaseable = self._makeBoolAttribute(attributes["rebaseable"])
+        if "requested_reviewers" in attributes:
+            self._requested_reviewers = self._makeListOfClassesAttribute(
+                github.NamedUser.NamedUser, attributes["requested_reviewers"]
+            )
+        if "requested_teams" in attributes:
+            self._requested_teams = self._makeListOfClassesAttribute(github.Team.Team, attributes["requested_teams"])
         if "review_comment_url" in attributes:  # pragma no branch
             self._review_comment_url = self._makeStringAttribute(attributes["review_comment_url"])
         if "review_comments" in attributes:  # pragma no branch
@@ -1006,6 +1075,8 @@ class PullRequest(CompletableGithubObject):
             self._review_comments_url = self._makeStringAttribute(attributes["review_comments_url"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "statuses_url" in attributes:  # pragma no branch
+            self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch
@@ -1014,11 +1085,3 @@ class PullRequest(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
-        if "requested_reviewers" in attributes:
-            self._requested_reviewers = self._makeListOfClassesAttribute(
-                github.NamedUser.NamedUser, attributes["requested_reviewers"]
-            )
-        if "requested_teams" in attributes:
-            self._requested_teams = self._makeListOfClassesAttribute(github.Team.Team, attributes["requested_teams"])
-        if "node_id" in attributes:  # pragma no branch
-            self._node_id = self._makeStringAttribute(attributes["node_id"])

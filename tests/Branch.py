@@ -38,6 +38,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github
 
 from . import Framework
@@ -52,14 +54,26 @@ class Branch(Framework.TestCase):
         self.organization_branch = self.g.get_repo("PyGithub/PyGithub", lazy=True).get_branch("master")
 
     def testAttributes(self):
+        self.assertEqual(
+            self.branch._links,
+            {
+                "self": "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode",
+                "html": "https://github.com/jacquev6/PyGithub/tree/topic/RewriteWithGeneratedCode",
+            },
+        )
+        self.assertEqual(self.branch.commit.sha, "f23da453917a36c8bd48ab8d99e5fa7221884342")
         self.assertEqual(self.branch.name, "topic/RewriteWithGeneratedCode")
-        self.assertEqual(self.branch.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
+        self.assertEqual(self.branch.commit.sha, "f23da453917a36c8bd48ab8d99e5fa7221884342")
+        self.assertIsNone(self.branch.pattern)
+        self.assertEqual(self.branch.protected, False)
+        self.assertIsNone(self.branch.protection.url)
         self.assertEqual(
             self.branch.protection_url,
             "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode/protection",
         )
         self.assertFalse(self.branch.protected)
         self.assertEqual(repr(self.branch), 'Branch(name="topic/RewriteWithGeneratedCode")')
+        self.assertIsNone(self.branch.required_approving_review_count)
 
     def testEditProtection(self):
         self.protected_branch.edit_protection(

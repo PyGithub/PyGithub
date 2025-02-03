@@ -54,7 +54,24 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/security-advisories/repository-advisories
 
+    The OpenAPI schema can be found at
+    - /components/schemas/global-advisory/properties/credits/items
+    - /components/schemas/repository-advisory-credit
+
     """
+
+    def _initAttributes(self) -> None:
+        self._state: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "user": self.user,
+                "type": self.type,
+            }
+        )
 
     @property
     def state(self) -> str:
@@ -76,11 +93,6 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
         :type: :class:`github.NamedUser.NamedUser`
         """
         return self._user.value
-
-    def _initAttributes(self) -> None:
-        self._state: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "state" in attributes:  # pragma no branch

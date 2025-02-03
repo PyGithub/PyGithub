@@ -2,7 +2,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/issues/28/timeline
+/repos/PyGithub/PyGithub/issues/28/timeline
 {'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.mockingbird-preview', 'User-Agent': 'PyGithub/Python'}
 None
 200

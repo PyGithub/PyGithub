@@ -45,34 +45,44 @@ from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.PaginatedList
+import github.Repository
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
+    from github.Repository import Repository
 
 
 class InstallationAuthorization(NonCompletableGithubObject):
     """
     This class represents InstallationAuthorizations.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/installation-token
+
     """
 
     def _initAttributes(self) -> None:
-        self._token: Attribute[str] = NotSet
         self._expires_at: Attribute[datetime] = NotSet
+        self._has_multiple_single_files: Attribute[bool] = NotSet
         self._on_behalf_of: Attribute[NamedUser] = NotSet
         self._permissions: Attribute[dict] = NotSet
+        self._repositories: Attribute[list[Repository]] = NotSet
         self._repository_selection: Attribute[str] = NotSet
+        self._single_file: Attribute[str] = NotSet
+        self._single_file_paths: Attribute[list[str]] = NotSet
+        self._token: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"expires_at": self._expires_at.value})
 
     @property
-    def token(self) -> str:
-        return self._token.value
-
-    @property
     def expires_at(self) -> datetime:
         return self._expires_at.value
+
+    @property
+    def has_multiple_single_files(self) -> bool:
+        return self._has_multiple_single_files.value
 
     @property
     def on_behalf_of(self) -> NamedUser:
@@ -83,17 +93,43 @@ class InstallationAuthorization(NonCompletableGithubObject):
         return self._permissions.value
 
     @property
+    def repositories(self) -> list[Repository]:
+        return self._repositories.value
+
+    @property
     def repository_selection(self) -> str:
         return self._repository_selection.value
 
+    @property
+    def single_file(self) -> str:
+        return self._single_file.value
+
+    @property
+    def single_file_paths(self) -> list[str]:
+        return self._single_file_paths.value
+
+    @property
+    def token(self) -> str:
+        return self._token.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "token" in attributes:  # pragma no branch
-            self._token = self._makeStringAttribute(attributes["token"])
         if "expires_at" in attributes:  # pragma no branch
             self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
+        if "has_multiple_single_files" in attributes:  # pragma no branch
+            self._has_multiple_single_files = self._makeBoolAttribute(attributes["has_multiple_single_files"])
         if "on_behalf_of" in attributes:  # pragma no branch
             self._on_behalf_of = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["on_behalf_of"])
         if "permissions" in attributes:  # pragma no branch
             self._permissions = self._makeDictAttribute(attributes["permissions"])
+        if "repositories" in attributes:  # pragma no branch
+            self._repositories = self._makeListOfClassesAttribute(
+                github.Repository.Repository, attributes["repositories"]
+            )
         if "repository_selection" in attributes:  # pragma no branch
             self._repository_selection = self._makeStringAttribute(attributes["repository_selection"])
+        if "single_file" in attributes:  # pragma no branch
+            self._single_file = self._makeStringAttribute(attributes["single_file"])
+        if "single_file_paths" in attributes:  # pragma no branch
+            self._single_file_paths = self._makeListOfStringsAttribute(attributes["single_file_paths"])
+        if "token" in attributes:  # pragma no branch
+            self._token = self._makeStringAttribute(attributes["token"])

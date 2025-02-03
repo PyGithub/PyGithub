@@ -56,6 +56,9 @@ class Event(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#events
 
+    The OpenAPI schema can be found at
+    - /components/schemas/event
+
     """
 
     def _initAttributes(self) -> None:
