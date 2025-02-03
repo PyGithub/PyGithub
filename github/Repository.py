@@ -4379,7 +4379,7 @@ class Repository(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
 
-    def attach_security_config_to_repo(self, id: int) -> None:
+    def attach_security_config(self, id: int) -> None:
         """
         :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
         """
@@ -4387,7 +4387,7 @@ class Repository(CompletableGithubObject):
             id=id, scope="selected", selected_repository_ids=[self.id]
         )
 
-    def detach_security_config_from_repo(self) -> None:
+    def detach_security_config(self) -> None:
         """
         :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
         """
