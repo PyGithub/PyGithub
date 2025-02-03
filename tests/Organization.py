@@ -770,4 +770,4 @@ class Organization(Framework.TestCase):
                 status = "unknown"
 
         self.assertEqual(config.id, repo_config.configuration.id)
-        repo.detach_security_config_from_repo()
+        repo.detach_security_config()
