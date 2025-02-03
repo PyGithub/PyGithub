@@ -44,10 +44,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.GithubApp
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.GithubApp import GithubApp
+    from github.NamedUser import NamedUser
 
 
 class DeploymentStatus(CompletableGithubObject):
@@ -57,17 +62,22 @@ class DeploymentStatus(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#deployments
 
+    The OpenAPI schema can be found at
+    - /components/schemas/deployment-status
+
     """
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._creator: Attribute[NamedUser] = NotSet
         self._deployment_url: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
         self._environment_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._log_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp] = NotSet
         self._repository_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
@@ -83,7 +93,7 @@ class DeploymentStatus(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> github.NamedUser.NamedUser:
+    def creator(self) -> NamedUser:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
@@ -113,9 +123,19 @@ class DeploymentStatus(CompletableGithubObject):
         return self._id.value
 
     @property
+    def log_url(self) -> str:
+        self._completeIfNotSet(self._log_url)
+        return self._log_url.value
+
+    @property
     def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
+
+    @property
+    def performed_via_github_app(self) -> GithubApp:
+        self._completeIfNotSet(self._performed_via_github_app)
+        return self._performed_via_github_app.value
 
     @property
     def repository_url(self) -> str:
@@ -157,8 +177,14 @@ class DeploymentStatus(CompletableGithubObject):
             self._environment_url = self._makeStringAttribute(attributes["environment_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "log_url" in attributes:  # pragma no branch
+            self._log_url = self._makeStringAttribute(attributes["log_url"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "performed_via_github_app" in attributes:  # pragma no branch
+            self._performed_via_github_app = self._makeClassAttribute(
+                github.GithubApp.GithubApp, attributes["performed_via_github_app"]
+            )
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "state" in attributes:  # pragma no branch

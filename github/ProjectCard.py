@@ -69,6 +69,12 @@ class ProjectCard(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects#cards
 
+    The OpenAPI schema can be found at
+    - /components/schemas/project-card
+    - /components/schemas/validation-error
+    - /components/schemas/validation-error-simple
+    - /paths/"/projects/columns/{column_id}/cards"/post/responses/503/content/"application/json"/schema
+
     """
 
     def _initAttributes(self) -> None:

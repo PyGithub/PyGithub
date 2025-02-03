@@ -49,6 +49,9 @@ class Path(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#traffic
 
+    The OpenAPI schema can be found at
+    - /components/schemas/content-traffic
+
     """
 
     def _initAttributes(self) -> None:

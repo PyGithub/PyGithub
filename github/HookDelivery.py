@@ -25,8 +25,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any
 
 import github.GithubObject
 from github.GithubObject import Attribute, NotSet
@@ -35,6 +37,10 @@ from github.GithubObject import Attribute, NotSet
 class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a Summary of HookDeliveries.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery-item
+
     """
 
     def _initAttributes(self) -> None:
@@ -55,54 +61,54 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def action(self) -> Optional[str]:
+    def action(self) -> str | None:
         return self._action.value
 
     @property
-    def delivered_at(self) -> Optional[datetime]:
+    def delivered_at(self) -> datetime | None:
         return self._delivered_at.value
 
     @property
-    def duration(self) -> Optional[float]:
+    def duration(self) -> float | None:
         return self._duration.value
 
     @property
-    def event(self) -> Optional[str]:
+    def event(self) -> str | None:
         return self._event.value
 
     @property
-    def guid(self) -> Optional[str]:
+    def guid(self) -> str | None:
         return self._guid.value
 
     @property
-    def id(self) -> Optional[int]:
+    def id(self) -> int | None:
         return self._id.value
 
     @property
-    def installation_id(self) -> Optional[int]:
+    def installation_id(self) -> int | None:
         return self._installation_id.value
 
     @property
-    def redelivery(self) -> Optional[bool]:
+    def redelivery(self) -> bool | None:
         return self._redelivery.value
 
     @property
-    def repository_id(self) -> Optional[int]:
+    def repository_id(self) -> int | None:
         return self._repository_id.value
 
     @property
-    def status(self) -> Optional[str]:
+    def status(self) -> str | None:
         return self._status.value
 
     @property
-    def status_code(self) -> Optional[int]:
+    def status_code(self) -> int | None:
         return self._status_code.value
 
     @property
-    def url(self) -> Optional[str]:
+    def url(self) -> str | None:
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "action" in attributes:  # pragma no branch
             self._action = self._makeStringAttribute(attributes["action"])
         if "delivered_at" in attributes:  # pragma no branch
@@ -132,24 +138,28 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
 class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a HookDeliveryRequest.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery/properties/request
+
     """
 
     def _initAttributes(self) -> None:
-        self._payload: Attribute[Dict] = NotSet
-        self._request_headers: Attribute[Dict] = NotSet
+        self._payload: Attribute[dict] = NotSet
+        self._request_headers: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
 
     @property
-    def headers(self) -> Optional[dict]:
+    def headers(self) -> dict | None:
         return self._request_headers.value
 
     @property
-    def payload(self) -> Optional[dict]:
+    def payload(self) -> dict | None:
         return self._payload.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "headers" in attributes:  # pragma no branch
             self._request_headers = self._makeDictAttribute(attributes["headers"])
         if "payload" in attributes:  # pragma no branch
@@ -159,24 +169,28 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
 class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents a HookDeliveryResponse.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery/properties/response
+
     """
 
     def _initAttributes(self) -> None:
         self._payload: Attribute[str] = NotSet
-        self._response_headers: Attribute[Dict] = NotSet
+        self._response_headers: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
 
     @property
-    def headers(self) -> Optional[dict]:
+    def headers(self) -> dict | None:
         return self._response_headers.value
 
     @property
-    def payload(self) -> Optional[str]:
+    def payload(self) -> str | None:
         return self._payload.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "headers" in attributes:  # pragma no branch
             self._response_headers = self._makeDictAttribute(attributes["headers"])
         if "payload" in attributes:  # pragma no branch
@@ -186,28 +200,39 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
 class HookDelivery(HookDeliverySummary):
     """
     This class represents a HookDelivery.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/hook-delivery
+
     """
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
         self._request: Attribute[HookDeliveryRequest] = NotSet
         self._response: Attribute[HookDeliveryResponse] = NotSet
+        self._throttled_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def request(self) -> Optional[HookDeliveryRequest]:
+    def request(self) -> HookDeliveryRequest | None:
         return self._request.value
 
     @property
-    def response(self) -> Optional[HookDeliveryResponse]:
+    def response(self) -> HookDeliveryResponse | None:
         return self._response.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    @property
+    def throttled_at(self) -> datetime:
+        return self._throttled_at.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "request" in attributes:  # pragma no branch
             self._request = self._makeClassAttribute(HookDeliveryRequest, attributes["request"])
         if "response" in attributes:  # pragma no branch
             self._response = self._makeClassAttribute(HookDeliveryResponse, attributes["response"])
             # self._response = self._makeDictAttribute(attributes["response"])
+        if "throttled_at" in attributes:  # pragma no branch
+            self._throttled_at = self._makeDatetimeAttribute(attributes["throttled_at"])

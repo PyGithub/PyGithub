@@ -2,7 +2,7 @@ https
 DELETE
 api.github.com
 None
-/repos/jacquev6/PyGithub/comments/1361949
+/repos/PyGithub/PyGithub/comments/1362000
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204

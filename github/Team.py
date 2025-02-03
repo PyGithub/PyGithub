@@ -63,6 +63,7 @@
 from __future__ import annotations
 
 import urllib.parse
+from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from deprecated import deprecated
@@ -70,6 +71,7 @@ from deprecated import deprecated
 import github.NamedUser
 import github.Organization
 import github.PaginatedList
+import github.Permissions
 import github.Repository
 import github.TeamDiscussion
 from github import Consts
@@ -93,23 +95,34 @@ class Team(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/teams
 
+    The OpenAPI schema can be found at
+    - /components/schemas/nullable-team-simple
+    - /components/schemas/team
+    - /components/schemas/team-full
+    - /components/schemas/team-simple
+
     """
 
     def _initAttributes(self) -> None:
+        self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._ldap_dn: Attribute[str] = NotSet
         self._members_count: Attribute[int] = NotSet
         self._members_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._notification_setting: Attribute[str] = NotSet
-        self._organization: Attribute[github.Organization.Organization] = NotSet
+        self._organization: Attribute[Organization] = NotSet
         self._parent: Attribute[github.Team.Team] = NotSet
         self._permission: Attribute[str] = NotSet
+        self._permissions: Attribute[Permissions] = NotSet
         self._privacy: Attribute[str] = NotSet
         self._repos_count: Attribute[int] = NotSet
         self._repositories_url: Attribute[str] = NotSet
         self._slug: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -118,6 +131,11 @@ class Team(CompletableGithubObject):
     @property
     def _identity(self) -> int:
         return self.id
+
+    @property
+    def created_at(self) -> datetime:
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def description(self) -> str:
@@ -135,6 +153,11 @@ class Team(CompletableGithubObject):
         return self._id.value
 
     @property
+    def ldap_dn(self) -> str:
+        self._completeIfNotSet(self._ldap_dn)
+        return self._ldap_dn.value
+
+    @property
     def members_count(self) -> int:
         self._completeIfNotSet(self._members_count)
         return self._members_count.value
@@ -148,6 +171,11 @@ class Team(CompletableGithubObject):
     def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def notification_setting(self) -> str:
@@ -170,6 +198,11 @@ class Team(CompletableGithubObject):
         return self._permission.value
 
     @property
+    def permissions(self) -> Permissions:
+        self._completeIfNotSet(self._permissions)
+        return self._permissions.value
+
+    @property
     def privacy(self) -> str:
         self._completeIfNotSet(self._privacy)
         return self._privacy.value
@@ -188,6 +221,11 @@ class Team(CompletableGithubObject):
     def slug(self) -> str:
         self._completeIfNotSet(self._slug)
         return self._slug.value
+
+    @property
+    def updated_at(self) -> datetime:
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self) -> str:
@@ -440,18 +478,24 @@ class Team(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repos/{repo._identity}")
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "html_url" in attributes:
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "ldap_dn" in attributes:  # pragma no branch
+            self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
         if "members_count" in attributes:  # pragma no branch
             self._members_count = self._makeIntAttribute(attributes["members_count"])
         if "members_url" in attributes:  # pragma no branch
             self._members_url = self._makeStringAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "notification_setting" in attributes:  # pragma no branch
             self._notification_setting = self._makeStringAttribute(attributes["notification_setting"])
         if "organization" in attributes:  # pragma no branch
@@ -460,6 +504,8 @@ class Team(CompletableGithubObject):
             self._parent = self._makeClassAttribute(github.Team.Team, attributes["parent"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeClassAttribute(github.Permissions.Permissions, attributes["permissions"])
         if "privacy" in attributes:  # pragma no branch
             self._privacy = self._makeStringAttribute(attributes["privacy"])
         if "repos_count" in attributes:  # pragma no branch
@@ -468,5 +514,7 @@ class Team(CompletableGithubObject):
             self._repositories_url = self._makeStringAttribute(attributes["repositories_url"])
         if "slug" in attributes:  # pragma no branch
             self._slug = self._makeStringAttribute(attributes["slug"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

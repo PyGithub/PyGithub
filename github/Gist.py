@@ -69,6 +69,12 @@ class Gist(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gists
 
+    The OpenAPI schema can be found at
+    - /components/schemas/base-gist
+    - /components/schemas/gist-simple
+    - /components/schemas/gist-simple/properties/fork_of
+    - /components/schemas/gist-simple/properties/forks/items
+
     """
 
     def _initAttributes(self) -> None:
@@ -86,8 +92,10 @@ class Gist(CompletableGithubObject):
         self._history: Attribute[list[GistHistoryState]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
         self._public: Attribute[bool] = NotSet
+        self._truncated: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
@@ -166,6 +174,11 @@ class Gist(CompletableGithubObject):
         return self._id.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def owner(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._owner)
         return self._owner.value
@@ -174,6 +187,11 @@ class Gist(CompletableGithubObject):
     def public(self) -> bool:
         self._completeIfNotSet(self._public)
         return self._public.value
+
+    @property
+    def truncated(self) -> bool:
+        self._completeIfNotSet(self._truncated)
+        return self._truncated.value
 
     @property
     def updated_at(self) -> datetime:
@@ -300,10 +318,14 @@ class Gist(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
+        if "truncated" in attributes:  # pragma no branch
+            self._truncated = self._makeBoolAttribute(attributes["truncated"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch

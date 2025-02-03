@@ -42,7 +42,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Iterator
 
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -55,6 +55,9 @@ class GitReleaseAsset(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#releases
 
+    The OpenAPI schema can be found at
+    - /components/schemas/release-asset
+
     """
 
     def _initAttributes(self) -> None:
@@ -65,6 +68,7 @@ class GitReleaseAsset(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._label: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -110,6 +114,11 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def size(self) -> int:
         self._completeIfNotSet(self._size)
         return self._size.value
@@ -141,6 +150,17 @@ class GitReleaseAsset(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
 
+    def download_asset(
+        self, path: None | str = None, chunk_size: int | None = 1
+    ) -> tuple[int, dict[str, Any], Iterator] | None:
+        """
+        Download asset to the path or return an iterator for the stream.
+        """
+        if path is None:
+            return self._requester.getStream(self.url, chunk_size=chunk_size)
+        self._requester.getFile(self.url, path=path, chunk_size=chunk_size)
+        return None
+
     def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
         """
         Update asset metadata.
@@ -166,6 +186,8 @@ class GitReleaseAsset(CompletableGithubObject):
             self._label = self._makeStringAttribute(attributes["label"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "state" in attributes:  # pragma no branch

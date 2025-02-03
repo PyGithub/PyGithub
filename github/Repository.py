@@ -321,6 +321,16 @@ class Repository(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos
 
+    The OpenAPI schema can be found at
+    - /components/schemas/event/properties/repo
+    - /components/schemas/full-repository
+    - /components/schemas/minimal-repository
+    - /components/schemas/nullable-repository
+    - /components/schemas/pull-request-minimal/properties/base/properties/repo
+    - /components/schemas/pull-request-minimal/properties/head/properties/repo
+    - /components/schemas/repository
+    - /components/schemas/simple-repository
+
     """
 
     def _initAttributes(self) -> None:
@@ -330,12 +340,14 @@ class Repository(CompletableGithubObject):
         self._allow_rebase_merge: Attribute[bool] = NotSet
         self._allow_squash_merge: Attribute[bool] = NotSet
         self._allow_update_branch: Attribute[bool] = NotSet
+        self._anonymous_access_enabled: Attribute[bool] = NotSet
         self._archive_url: Attribute[str] = NotSet
         self._archived: Attribute[bool] = NotSet
         self._assignees_url: Attribute[str] = NotSet
         self._blobs_url: Attribute[str] = NotSet
         self._branches_url: Attribute[str] = NotSet
         self._clone_url: Attribute[str] = NotSet
+        self._code_of_conduct: Attribute[dict[str, Any]] = NotSet
         self._collaborators_url: Attribute[str] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commits_url: Attribute[str] = NotSet
@@ -348,6 +360,7 @@ class Repository(CompletableGithubObject):
         self._delete_branch_on_merge: Attribute[bool] = NotSet
         self._deployments_url: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
+        self._disabled: Attribute[bool] = NotSet
         self._downloads_url: Attribute[str] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._fork: Attribute[bool] = NotSet
@@ -386,6 +399,7 @@ class Repository(CompletableGithubObject):
         self._mirror_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._network_count: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._notifications_url: Attribute[str] = NotSet
         self._open_issues: Attribute[int] = NotSet
         self._open_issues_count: Attribute[int] = NotSet
@@ -397,6 +411,7 @@ class Repository(CompletableGithubObject):
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
+        self._role_name: Attribute[str] = NotSet
         self._security_and_analysis: Attribute[SecurityAndAnalysis] = NotSet
         self._size: Attribute[int] = NotSet
         self._source: Attribute[Repository] = NotSet
@@ -405,6 +420,7 @@ class Repository(CompletableGithubObject):
         self._ssh_url: Attribute[str] = NotSet
         self._stargazers_count: Attribute[int] = NotSet
         self._stargazers_url: Attribute[str] = NotSet
+        self._starred_at: Attribute[str] = NotSet
         self._statuses_url: Attribute[str] = NotSet
         self._subscribers_count: Attribute[int] = NotSet
         self._subscribers_url: Attribute[str] = NotSet
@@ -412,6 +428,8 @@ class Repository(CompletableGithubObject):
         self._svn_url: Attribute[str] = NotSet
         self._tags_url: Attribute[str] = NotSet
         self._teams_url: Attribute[str] = NotSet
+        self._temp_clone_token: Attribute[str] = NotSet
+        self._template_repository: Attribute[Repository] = NotSet
         self._topics: Attribute[list[str]] = NotSet
         self._trees_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -478,6 +496,11 @@ class Repository(CompletableGithubObject):
         return self._allow_update_branch.value
 
     @property
+    def anonymous_access_enabled(self) -> bool:
+        self._completeIfNotSet(self._anonymous_access_enabled)
+        return self._anonymous_access_enabled.value
+
+    @property
     def archive_url(self) -> str:
         """
         :type: string
@@ -524,6 +547,11 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._clone_url)
         return self._clone_url.value
+
+    @property
+    def code_of_conduct(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._code_of_conduct)
+        return self._code_of_conduct.value
 
     @property
     def collaborators_url(self) -> str:
@@ -620,6 +648,11 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._description)
         return self._description.value
+
+    @property
+    def disabled(self) -> bool:
+        self._completeIfNotSet(self._disabled)
+        return self._disabled.value
 
     @property
     def downloads_url(self) -> str:
@@ -920,6 +953,11 @@ class Repository(CompletableGithubObject):
         return self._network_count.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def notifications_url(self) -> str:
         """
         :type: string
@@ -1008,6 +1046,11 @@ class Repository(CompletableGithubObject):
         return self._releases_url.value
 
     @property
+    def role_name(self) -> str:
+        self._completeIfNotSet(self._role_name)
+        return self._role_name.value
+
+    @property
     def security_and_analysis(self) -> SecurityAndAnalysis:
         """
         :type: :class:`github.SecurityAndAnalysis.SecurityAndAnalysis`
@@ -1072,6 +1115,11 @@ class Repository(CompletableGithubObject):
         return self._stargazers_url.value
 
     @property
+    def starred_at(self) -> str:
+        self._completeIfNotSet(self._starred_at)
+        return self._starred_at.value
+
+    @property
     def statuses_url(self) -> str:
         """
         :type: string
@@ -1126,6 +1174,16 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._teams_url)
         return self._teams_url.value
+
+    @property
+    def temp_clone_token(self) -> str:
+        self._completeIfNotSet(self._temp_clone_token)
+        return self._temp_clone_token.value
+
+    @property
+    def template_repository(self) -> github.Repository.Repository:
+        self._completeIfNotSet(self._template_repository)
+        return self._template_repository.value
 
     @property
     def topics(self) -> list[str]:
@@ -2538,10 +2596,11 @@ class Repository(CompletableGithubObject):
         if isinstance(data, list):
             return [github.Path.Path(self._requester, headers, item) for item in data]
 
-    def get_views_traffic(self, per: Opt[str] = NotSet) -> None | dict[str, int | list[View]]:
+    def get_views_traffic(self, per: Opt[str] = NotSet) -> View | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
+        :rtype: None or list of :class:`github.View.View`
         """
         assert per in ["day", "week", NotSet], "per must be day or week, day by default"
         url_parameters = dict()
@@ -2550,11 +2609,9 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/views", parameters=url_parameters
         )
-        if (isinstance(data, dict)) and ("views" in data) and (isinstance(data["views"], list)):
-            data["views"] = [github.View.View(self._requester, headers, item) for item in data["views"]]
-            return data
+        return github.View.View(self._requester, headers, data)
 
-    def get_clones_traffic(self, per: Opt[str] = NotSet) -> dict[str, int | list[Clones]] | None:
+    def get_clones_traffic(self, per: Opt[str] = NotSet) -> Clones | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/clones <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
@@ -2565,9 +2622,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/traffic/clones", parameters=url_parameters
         )
-        if (isinstance(data, dict)) and ("clones" in data) and (isinstance(data["clones"], list)):
-            data["clones"] = [github.Clones.Clones(self._requester, headers, item) for item in data["clones"]]
-            return data
+        return github.Clones.Clones(self._requester, headers, data)
 
     def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project]:
         """
@@ -4334,6 +4389,8 @@ class Repository(CompletableGithubObject):
             self._allow_squash_merge = self._makeBoolAttribute(attributes["allow_squash_merge"])
         if "allow_update_branch" in attributes:  # pragma no branch
             self._allow_update_branch = self._makeBoolAttribute(attributes["allow_update_branch"])
+        if "anonymous_access_enabled" in attributes:  # pragma no branch
+            self._anonymous_access_enabled = self._makeBoolAttribute(attributes["anonymous_access_enabled"])
         if "archive_url" in attributes:  # pragma no branch
             self._archive_url = self._makeStringAttribute(attributes["archive_url"])
         if "archived" in attributes:  # pragma no branch
@@ -4346,6 +4403,8 @@ class Repository(CompletableGithubObject):
             self._branches_url = self._makeStringAttribute(attributes["branches_url"])
         if "clone_url" in attributes:  # pragma no branch
             self._clone_url = self._makeStringAttribute(attributes["clone_url"])
+        if "code_of_conduct" in attributes:  # pragma no branch
+            self._code_of_conduct = self._makeDictAttribute(attributes["code_of_conduct"])
         if "collaborators_url" in attributes:  # pragma no branch
             self._collaborators_url = self._makeStringAttribute(attributes["collaborators_url"])
         if "comments_url" in attributes:  # pragma no branch
@@ -4370,6 +4429,8 @@ class Repository(CompletableGithubObject):
             self._deployments_url = self._makeStringAttribute(attributes["deployments_url"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "disabled" in attributes:  # pragma no branch
+            self._disabled = self._makeBoolAttribute(attributes["disabled"])
         if "downloads_url" in attributes:  # pragma no branch
             self._downloads_url = self._makeStringAttribute(attributes["downloads_url"])
         if "events_url" in attributes:  # pragma no branch
@@ -4446,6 +4507,8 @@ class Repository(CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "network_count" in attributes:  # pragma no branch
             self._network_count = self._makeIntAttribute(attributes["network_count"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "notifications_url" in attributes:  # pragma no branch
             self._notifications_url = self._makeStringAttribute(attributes["notifications_url"])
         if "open_issues" in attributes:  # pragma no branch
@@ -4468,6 +4531,8 @@ class Repository(CompletableGithubObject):
             self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
         if "releases_url" in attributes:  # pragma no branch
             self._releases_url = self._makeStringAttribute(attributes["releases_url"])
+        if "role_name" in attributes:  # pragma no branch
+            self._role_name = self._makeStringAttribute(attributes["role_name"])
         if "security_and_analysis" in attributes:  # pragma no branch
             self._security_and_analysis = self._makeClassAttribute(
                 github.SecurityAndAnalysis.SecurityAndAnalysis, attributes["security_and_analysis"]
@@ -4486,6 +4551,8 @@ class Repository(CompletableGithubObject):
             self._stargazers_count = self._makeIntAttribute(attributes["stargazers_count"])
         if "stargazers_url" in attributes:  # pragma no branch
             self._stargazers_url = self._makeStringAttribute(attributes["stargazers_url"])
+        if "starred_at" in attributes:  # pragma no branch
+            self._starred_at = self._makeStringAttribute(attributes["starred_at"])
         if "statuses_url" in attributes:  # pragma no branch
             self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
         if "subscribers_count" in attributes:  # pragma no branch
@@ -4500,6 +4567,12 @@ class Repository(CompletableGithubObject):
             self._tags_url = self._makeStringAttribute(attributes["tags_url"])
         if "teams_url" in attributes:  # pragma no branch
             self._teams_url = self._makeStringAttribute(attributes["teams_url"])
+        if "temp_clone_token" in attributes:  # pragma no branch
+            self._temp_clone_token = self._makeStringAttribute(attributes["temp_clone_token"])
+        if "template_repository" in attributes:  # pragma no branch
+            self._template_repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["template_repository"]
+            )
         if "topics" in attributes:  # pragma no branch
             self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "trees_url" in attributes:  # pragma no branch

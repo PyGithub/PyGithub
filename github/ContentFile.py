@@ -44,13 +44,17 @@
 from __future__ import annotations
 
 import base64
+from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.GitCommit
 import github.GithubObject
+import github.License
 import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, _ValuedAttribute
 
 if TYPE_CHECKING:
+    from github.GitCommit import GitCommit
     from github.License import License
     from github.Repository import Repository
 
@@ -62,26 +66,54 @@ class ContentFile(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#contents
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-search-result-item
+    - /components/schemas/content-directory
+    - /components/schemas/content-file
+    - /components/schemas/content-submodule
+    - /components/schemas/content-symlink
+    - /components/schemas/file-commit
+    - /components/schemas/license-content
+
     """
 
     def _initAttributes(self) -> None:
+        self.__links: Attribute[dict[str, Any]] = NotSet
+        self._commit: Attribute[GitCommit] = NotSet
         self._content: Attribute[str] = NotSet
         self._download_url: Attribute[str] = NotSet
         self._encoding: Attribute[str] = NotSet
+        self._file_size: Attribute[int] = NotSet
         self._git_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._language: Attribute[str] = NotSet
+        self._last_modified_at: Attribute[datetime] = NotSet
         self._license: Attribute[License] = NotSet
+        self._line_numbers: Attribute[list[str]] = NotSet
         self._name: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._repository: Attribute[Repository] = NotSet
+        self._score: Attribute[float] = NotSet
         self._sha: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
+        self._submodule_git_url: Attribute[str] = NotSet
+        self._target: Attribute[str] = NotSet
         self._text_matches: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"path": self._path.value})
+
+    @property
+    def _links(self) -> dict[str, Any]:
+        self._completeIfNotSet(self.__links)
+        return self.__links.value
+
+    @property
+    def commit(self) -> GitCommit:
+        self._completeIfNotSet(self._commit)
+        return self._commit.value
 
     @property
     def content(self) -> str:
@@ -104,6 +136,11 @@ class ContentFile(CompletableGithubObject):
         return self._encoding.value
 
     @property
+    def file_size(self) -> int:
+        self._completeIfNotSet(self._file_size)
+        return self._file_size.value
+
+    @property
     def git_url(self) -> str:
         self._completeIfNotSet(self._git_url)
         return self._git_url.value
@@ -114,9 +151,24 @@ class ContentFile(CompletableGithubObject):
         return self._html_url.value
 
     @property
+    def language(self) -> str:
+        self._completeIfNotSet(self._language)
+        return self._language.value
+
+    @property
+    def last_modified_at(self) -> datetime:
+        self._completeIfNotSet(self._last_modified_at)
+        return self._last_modified_at.value
+
+    @property
     def license(self) -> License:
         self._completeIfNotSet(self._license)
         return self._license.value
+
+    @property
+    def line_numbers(self) -> list[str]:
+        self._completeIfNotSet(self._line_numbers)
+        return self._line_numbers.value
 
     @property
     def name(self) -> str:
@@ -139,6 +191,11 @@ class ContentFile(CompletableGithubObject):
         return self._repository.value
 
     @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    @property
     def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
@@ -147,6 +204,16 @@ class ContentFile(CompletableGithubObject):
     def size(self) -> int:
         self._completeIfNotSet(self._size)
         return self._size.value
+
+    @property
+    def submodule_git_url(self) -> str:
+        self._completeIfNotSet(self._submodule_git_url)
+        return self._submodule_git_url.value
+
+    @property
+    def target(self) -> str:
+        self._completeIfNotSet(self._target)
+        return self._target.value
 
     @property
     def text_matches(self) -> str:
@@ -164,28 +231,46 @@ class ContentFile(CompletableGithubObject):
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "_links" in attributes:  # pragma no branch
+            self.__links = self._makeDictAttribute(attributes["_links"])
+        if "commit" in attributes:  # pragma no branch
+            self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "download_url" in attributes:  # pragma no branch
             self._download_url = self._makeStringAttribute(attributes["download_url"])
         if "encoding" in attributes:  # pragma no branch
             self._encoding = self._makeStringAttribute(attributes["encoding"])
+        if "file_size" in attributes:  # pragma no branch
+            self._file_size = self._makeIntAttribute(attributes["file_size"])
         if "git_url" in attributes:  # pragma no branch
             self._git_url = self._makeStringAttribute(attributes["git_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "language" in attributes:  # pragma no branch
+            self._language = self._makeStringAttribute(attributes["language"])
+        if "last_modified_at" in attributes:  # pragma no branch
+            self._last_modified_at = self._makeDatetimeAttribute(attributes["last_modified_at"])
         if "license" in attributes:  # pragma no branch
             self._license = self._makeClassAttribute(github.License.License, attributes["license"])
+        if "line_numbers" in attributes:  # pragma no branch
+            self._line_numbers = self._makeListOfStringsAttribute(attributes["line_numbers"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
+        if "submodule_git_url" in attributes:  # pragma no branch
+            self._submodule_git_url = self._makeStringAttribute(attributes["submodule_git_url"])
+        if "target" in attributes:  # pragma no branch
+            self._target = self._makeStringAttribute(attributes["target"])
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])
         if "type" in attributes:  # pragma no branch
