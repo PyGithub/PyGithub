@@ -502,7 +502,6 @@ class PullRequest(Framework.TestCase):
 
     def testConvertToDraft(self):
         ready_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(1)
-
         self.assertFalse(ready_pr.draft)
         response = ready_pr.convert_to_draft()
         self.assertTrue(ready_pr.draft)
