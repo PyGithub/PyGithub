@@ -217,7 +217,10 @@ class Branch(Framework.TestCase):
     def testEditRequiredPullRequestReviewsWithUserBranchAndDismissalUsers(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_required_pull_request_reviews(dismissal_users=["jacquev6"])
-        self.assertEqual(raisedexp.exception.message, "Dismissal restrictions are supported only for repositories owned by an organization.")
+        self.assertEqual(
+            raisedexp.exception.message,
+            "Dismissal restrictions are supported only for repositories owned by an organization.",
+        )
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,

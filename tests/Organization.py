@@ -64,7 +64,6 @@
 
 from __future__ import annotations
 
-from audioop import error
 from datetime import datetime, timezone
 from unittest import mock
 
@@ -555,7 +554,9 @@ class Organization(Framework.TestCase):
     def testInviteUserAsNonOwner(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.org.invite_user(email="bar@example.com")
-        self.assertEqual(raisedexp.exception.message, "You must be an admin to create an invitation to an organization.")
+        self.assertEqual(
+            raisedexp.exception.message, "You must be an admin to create an invitation to an organization."
+        )
         self.assertEqual(raisedexp.exception.status, 403)
         self.assertEqual(
             raisedexp.exception.data,
