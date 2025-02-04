@@ -1753,9 +1753,11 @@ class Repository(Framework.TestCase):
         # Use fork for being able to update it
         repo = self.g.get_repo("Felixoid/PyGithub")
         # First one to sync with upstream
-        repo.merge_upstream("main")
+        result = repo.merge_upstream("main")
+        self.assertEqual(result.message, "Successfully fetched and fast-forwarded from upstream PyGithub:main.")
         # Second one to check it's already synced
-        repo.merge_upstream("main")
+        result = repo.merge_upstream("main")
+        self.assertEqual(result.message, "This branch is not behind the upstream PyGithub:main.")
 
     def testMergeUpstreamFailure(self):
         # Use fork for being able to update it
