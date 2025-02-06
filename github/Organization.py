@@ -1590,6 +1590,19 @@ class Organization(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
 
+    def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
+        """
+        :calls: `GET /orgs/{owner}/{repo}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runner-groups#list-self-hosted-runner-groups-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            f"{self.url}/actions/runners",
+            None,
+            list_item="runners",
+        )
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "advanced_security_enabled_for_new_repositories" in attributes:  # pragma no branch
             self._advanced_security_enabled_for_new_repositories = self._makeBoolAttribute(
