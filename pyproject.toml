@@ -12,7 +12,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -24,7 +23,7 @@ description = "Use the full Github API v3"
 keywords = ["github"]
 name = "PyGithub"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 
 dynamic = ["version"]
 
@@ -54,7 +53,7 @@ packages = ["github"]
 github = ["py.typed", '*.pyi']
 
 [tool.mypy]
-python_version = '3.8'
+python_version = '3.9'
 ignore_missing_imports = true
 namespace_packages = true
 
