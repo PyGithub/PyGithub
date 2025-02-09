@@ -2,7 +2,7 @@ https
 POST
 api.github.com
 None
-/repos/jacquev6/PyGithub/issues/28/reactions
+/repos/PyGithub/PyGithub/issues/28/reactions
 {'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.squirrel-girl-preview', 'User-Agent': 'PyGithub/Python'}
 {"content": "hooray"}
 201
