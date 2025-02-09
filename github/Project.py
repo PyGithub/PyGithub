@@ -64,6 +64,9 @@ class Project(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects
 
+    The OpenAPI schema can be found at
+    - /components/schemas/project
+
     """
 
     def _initAttributes(self) -> None:
@@ -201,7 +204,7 @@ class Project(CompletableGithubObject):
             self._requester,
             self.columns_url,
             None,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def create_column(self, name: str) -> github.ProjectColumn.ProjectColumn:

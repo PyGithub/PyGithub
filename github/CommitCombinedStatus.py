@@ -57,57 +57,57 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._state: Attribute[str] = NotSet
-        self._sha: Attribute[str] = NotSet
-        self._total_count: Attribute[int] = NotSet
         self._commit_url: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
         self._repository: Attribute[github.Repository.Repository] = NotSet
+        self._sha: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
         self._statuses: Attribute[list[github.CommitStatus.CommitStatus]] = NotSet
+        self._total_count: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "state": self._state.value})
-
-    @property
-    def state(self) -> str:
-        return self._state.value
-
-    @property
-    def sha(self) -> str:
-        return self._sha.value
-
-    @property
-    def total_count(self) -> int:
-        return self._total_count.value
 
     @property
     def commit_url(self) -> str:
         return self._commit_url.value
 
     @property
-    def url(self) -> str:
-        return self._url.value
-
-    @property
     def repository(self) -> github.Repository.Repository:
         return self._repository.value
+
+    @property
+    def sha(self) -> str:
+        return self._sha.value
+
+    @property
+    def state(self) -> str:
+        return self._state.value
 
     @property
     def statuses(self) -> list[github.CommitStatus.CommitStatus]:
         return self._statuses.value
 
+    @property
+    def total_count(self) -> int:
+        return self._total_count.value
+
+    @property
+    def url(self) -> str:
+        return self._url.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "sha" in attributes:  # pragma no branch
-            self._sha = self._makeStringAttribute(attributes["sha"])
-        if "total_count" in attributes:  # pragma no branch
-            self._total_count = self._makeIntAttribute(attributes["total_count"])
         if "commit_url" in attributes:  # pragma no branch
             self._commit_url = self._makeStringAttribute(attributes["commit_url"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+        if "sha" in attributes:  # pragma no branch
+            self._sha = self._makeStringAttribute(attributes["sha"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
         if "statuses" in attributes:  # pragma no branch
             self._statuses = self._makeListOfClassesAttribute(github.CommitStatus.CommitStatus, attributes["statuses"])
+        if "total_count" in attributes:  # pragma no branch
+            self._total_count = self._makeIntAttribute(attributes["total_count"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

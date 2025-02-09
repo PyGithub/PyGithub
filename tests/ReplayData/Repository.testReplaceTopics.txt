@@ -2,7 +2,7 @@ https
 PUT
 api.github.com
 None
-/repos/jacquev6/PyGithub/topics
+/repos/PyGithub/PyGithub/topics
 {'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.mercy-preview+json', 'User-Agent': 'PyGithub/Python'}
 {"names": ["github", "testing"]}
 200

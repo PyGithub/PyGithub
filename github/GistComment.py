@@ -55,18 +55,28 @@ class GistComment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gists#comments
 
+    The OpenAPI schema can be found at
+    - /components/schemas/gist-comment
+
     """
 
     def _initAttributes(self) -> None:
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
+
+    @property
+    def author_association(self) -> str:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
 
     @property
     def body(self) -> str:
@@ -82,6 +92,11 @@ class GistComment(CompletableGithubObject):
     def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def updated_at(self) -> datetime:
@@ -116,12 +131,16 @@ class GistComment(CompletableGithubObject):
         self._useAttributes(data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
