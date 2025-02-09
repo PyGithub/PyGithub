@@ -1,8 +1,0 @@
-# This file is needed for generating release notes for the Repository::testGenerateReleaseNotesWithAllArguments test
-# See https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
-
-changelog:
-  categories:
-    - title: Features
-      labels:
-        - '*'
