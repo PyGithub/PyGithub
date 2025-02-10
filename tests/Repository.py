@@ -534,11 +534,11 @@ class Repository(Framework.TestCase):
         notes = self.repo.generate_release_notes("vX.Y.Z-by-PyGithub-acctest")
         self.assertEqual(notes.name, None)
         self.assertEqual(
-            notes.body, "**Full Changelog**: https://github.com/jacquev6/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest"
+            notes.body, "**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest"
         )
         self.assertEqual(
             repr(notes),
-            'GeneratedReleaseNotes(name=None, body="**Full Changelog**: https://github.com/jacquev6/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest")',
+            'GeneratedReleaseNotes(name=None, body="**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest")',
         )
 
     def testGenerateReleaseNotesWithAllArguments(self):
@@ -551,7 +551,7 @@ class Repository(Framework.TestCase):
             tag_name="vX.Y.Z-by-PyGithub-acctest",
             previous_tag_name="vX.Y.Z-by-PyGithub-acctest-previous",
             target_commitish="main",
-            configuration_file_path=".github/test_release_notes.yml",
+            configuration_file_path="tests/test_release_notes.yml",
         )
         self.assertEqual(notes.name, None)
         self.assertIn(
