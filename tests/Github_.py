@@ -326,6 +326,19 @@ class Github(Framework.TestCase):
             "Python library implementing the full Github API v3",
         )
 
+    def testGetOrganizationFromLogin(self):
+        self.assertEqual(
+            self.g.get_organization("PyGithubTestOrg").description,
+            "Blackbird Interactive is an independent game development studio dedicated to creating world-class, immersive, compelling and stylish interactive experiences.",
+        )
+
+    def testGetOrganizationFromId(self):
+        self.assertEqual(
+            self.g.get_organization(16930092).description,
+            "Blackbird Interactive is an independent game development studio dedicated to creating world-class, immersive, compelling and stylish interactive experiences.",
+        )
+
+
     def testGetGitignoreTemplates(self):
         self.assertEqual(
             self.g.get_gitignore_templates(),
