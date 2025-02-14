@@ -228,7 +228,6 @@ class AppAuth(JWT):
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
 
         self._app_id = app_id
-        self._private_key = private_key
         self._sign_func = sign_func
         self._jwt_expiry = jwt_expiry
         self._jwt_issued_at = jwt_issued_at
@@ -236,14 +235,6 @@ class AppAuth(JWT):
     @property
     def app_id(self) -> Union[int, str]:
         return self._app_id
-
-    @property
-    def private_key(self) -> Optional[Union[str, bytes]]:
-        if callable(self._private_key):
-            return self._private_key()
-        if isinstance(self._private_key, str):
-            return self._private_key
-        return None
 
     @property
     def token(self) -> str:
@@ -356,10 +347,6 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     @property
     def app_id(self) -> Union[int, str]:
         return self._app_auth.app_id
-
-    @property
-    def private_key(self) -> Optional[Union[str, bytes]]:
-        return self._app_auth.private_key
 
     @property
     def installation_id(self) -> int:
