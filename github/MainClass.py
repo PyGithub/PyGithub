@@ -423,13 +423,13 @@ class Github:
             url_parameters["since"] = since
         return PaginatedList(github.NamedUser.NamedUser, self.__requester, "/users", url_parameters)
 
-    def get_organization(self, login: str) -> Organization:
+    def get_organization(self, org: str) -> Organization:
         """
         :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
-        assert isinstance(login, str), login
-        login = urllib.parse.quote(login)
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{login}")
+        assert isinstance(org, str), org
+        org = urllib.parse.quote(org)
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{org}")
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
     def get_organizations(self, since: Opt[int] = NotSet) -> PaginatedList[Organization]:

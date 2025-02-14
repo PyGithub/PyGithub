@@ -458,7 +458,7 @@ class PullRequest(CompletableGithubObject):
         line: Opt[int] = NotSet,
         side: Opt[str] = NotSet,
         start_line: Opt[int] = NotSet,
-        start_side: Opt[int] = NotSet,
+        start_side: Opt[str] = NotSet,
         in_reply_to: Opt[int] = NotSet,
         subject_type: Opt[str] = NotSet,
         as_suggestion: bool = False,
@@ -564,6 +564,11 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
 
+        if isinstance(reviewers, str):
+            reviewers = [reviewers]
+        if isinstance(team_reviewers, str):
+            team_reviewers = [team_reviewers]
+
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -580,6 +585,11 @@ class PullRequest(CompletableGithubObject):
         """
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
+
+        if isinstance(reviewers, str):
+            reviewers = [reviewers]
+        if isinstance(team_reviewers, str):
+            team_reviewers = [team_reviewers]
 
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 
@@ -970,6 +980,56 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.updateBranchPreview},
         )
         return status == 202
+
+    def convert_to_draft(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to convert pull request to draft
+        <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
+        """
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="convertPullRequestToDraft",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="clientMutationId pullRequest { isDraft }",
+        )
+        self._useAttributes({"draft": data["pullRequest"]["isDraft"]})
+        return data
+
+    def mark_ready_for_review(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to mark pull request ready for review
+        <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
+        """
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="markPullRequestReadyForReview",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="clientMutationId pullRequest { isDraft }",
+        )
+        self._useAttributes({"draft": data["pullRequest"]["isDraft"]})
+        return data
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "_links" in attributes:  # pragma no branch
