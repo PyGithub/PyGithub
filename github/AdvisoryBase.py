@@ -68,7 +68,7 @@ class AdvisoryBase(NonCompletableGithubObject):
     def cvss(self) -> CVSS:
         return self._cvss.value
 
-    @ property
+    @property
     def cvss_severities(self) -> dict[str, Any]:
         return self._cvss_severities.value
 

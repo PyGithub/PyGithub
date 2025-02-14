@@ -42,7 +42,6 @@ class GlobalAdvisory(AdvisoryBase):
     https://docs.github.com/en/rest/security-advisories/global-advisories
 
     The OpenAPI schema can be found at
-    - /components/schemas/basic-error
     - /components/schemas/global-advisory
 
     """
