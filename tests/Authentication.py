@@ -91,8 +91,8 @@ class Authentication(Framework.BasicTestCase):
     def testAppAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
             app_auth = github.AppAuthentication(
-                app_id=self.app_auth.app_id,
-                private_key=self.app_auth.private_key,
+                app_id=APP_ID,
+                private_key=PRIVATE_KEY,
                 installation_id=29782936,
             )
             g = github.Github(app_auth=app_auth)
@@ -337,7 +337,7 @@ class Authentication(Framework.BasicTestCase):
     def testAddingCustomHeaders(self):
         requester = github.Github(auth=CustomAuth())._Github__requester
 
-        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False):
+        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False, follow_302_redirect=False):
             self.modifiedHeaders = requestHeaders
             return Mock(), {}, Mock()
 

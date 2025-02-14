@@ -72,6 +72,7 @@
 # Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Tan, An Nie <121005973+tanannie22@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -751,6 +752,7 @@ class Repository(Framework.TestCase):
     def testCollaboratorPermissionNoPushAccess(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.get_collaborator_permission("lyloa")
+        self.assertEqual(raisedexp.exception.message, "Must have push access to view collaborator permission.")
         self.assertEqual(raisedexp.exception.status, 403)
         self.assertEqual(
             raisedexp.exception.data,
@@ -1746,8 +1748,36 @@ class Repository(Framework.TestCase):
     def testMergeWithConflict(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.merge("branchForBase", "branchForHead")
+        self.assertEqual(raisedexp.exception.message, "Merge conflict")
         self.assertEqual(raisedexp.exception.status, 409)
         self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
+
+    def testMergeUpstreamSuccess(self):
+        # Use fork for being able to update it
+        repo = self.g.get_repo("Felixoid/PyGithub")
+        # First one to sync with upstream
+        result = repo.merge_upstream("main")
+        self.assertEqual(result.message, "Successfully fetched and fast-forwarded from upstream PyGithub:main.")
+        self.assertEqual(result.base_branch, "PyGithub:main")
+        self.assertEqual(result.merge_type, "fast-forward")
+        # Second one to check it's already synced
+        result = repo.merge_upstream("main")
+        self.assertEqual(result.message, "This branch is not behind the upstream PyGithub:main.")
+        self.assertEqual(result.base_branch, "PyGithub:main")
+        self.assertEqual(result.merge_type, "none")
+
+    def testMergeUpstreamFailure(self):
+        # Use fork for being able to update it
+        repo = self.g.get_repo("Felixoid/PyGithub")
+        with self.assertRaises(github.GithubException) as raisedexp:
+            repo.merge_upstream("doesNotExist")
+        self.assertEqual(raisedexp.exception.status, 404)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
+
+        with self.assertRaises(github.GithubException) as raisedexp:
+            repo.merge_upstream("merge-conflict")
+        self.assertEqual(raisedexp.exception.status, 409)
+        self.assertEqual(raisedexp.exception.message, "There are merge conflicts")
 
     def testGetIssuesComments(self):
         self.assertListKeyEqual(
@@ -1908,6 +1938,7 @@ class Repository(Framework.TestCase):
     def testBadSubscribePubSubHubbub(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.subscribe_to_hub("non-existing-event", "http://requestb.in/1bc1sc61")
+        self.assertEqual(raisedexp.exception.message, 'Invalid event: "non-existing-event"')
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(raisedexp.exception.data, {"message": 'Invalid event: "non-existing-event"'})
 
@@ -2151,6 +2182,23 @@ class Repository(Framework.TestCase):
     def testUpdateCustomProperties(self):
         custom_properties = {"foo": "bar"}
         self.repo.update_custom_properties(custom_properties)
+
+    def testTransferOwnership(self):
+        status = self.repo.transfer_ownership(new_owner="An-Nie-Tan-99", new_name="PyGithub-test")
+        self.assertTrue(status)
+
+    def testTransferOwnershipInvalidOwner(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.repo.transfer_ownership("new_owner")
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "message": "Invalid new_owner",
+                "documentation_url": "https://docs.github.com/rest/repos/repos#transfer-a-repository",
+                "status": "422",
+            },
+        )
 
 
 class LazyRepository(Framework.TestCase):

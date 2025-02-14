@@ -82,7 +82,7 @@ class Commit(CompletableGithubObject):
     This class represents Commits.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/git#commits
+    https://docs.github.com/en/rest/commits/commits#get-a-commit-object
 
     The OpenAPI schema can be found at
     - /components/schemas/branch-short/properties/commit
