@@ -183,6 +183,7 @@ class ApplicationOAuth(Framework.TestCase):
     def testGetAccessTokenBadCode(self):
         with self.assertRaises(github.BadCredentialsException) as exc:
             self.app.get_access_token("oauth_code_removed", state="state_removed")
+        self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "bad_verification_code")
@@ -190,6 +191,7 @@ class ApplicationOAuth(Framework.TestCase):
     def testGetAccessTokenUnknownError(self):
         with self.assertRaises(github.GithubException) as exc:
             self.app.get_access_token("oauth_code_removed", state="state_removed")
+        self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "some_unknown_error")
@@ -197,6 +199,7 @@ class ApplicationOAuth(Framework.TestCase):
     def testRefreshAccessTokenBadCode(self):
         with self.assertRaises(github.BadCredentialsException) as exc:
             self.app.refresh_access_token("oauth_code_removed")
+        self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "bad_verification_code")
@@ -204,6 +207,7 @@ class ApplicationOAuth(Framework.TestCase):
     def testRefreshAccessTokenUnknownError(self):
         with self.assertRaises(github.GithubException) as exc:
             self.app.refresh_access_token("oauth_code_removed")
+        self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "some_unknown_error")
@@ -222,12 +226,14 @@ class ApplicationOAuth(Framework.TestCase):
 
         with self.assertRaises(github.BadCredentialsException) as exc:
             aoa._checkError({}, {"error": "bad_verification_code"})
+        self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "bad_verification_code")
 
         with self.assertRaises(github.GithubException) as exc:
             aoa._checkError({}, {"error": "other"})
+        self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "other")
