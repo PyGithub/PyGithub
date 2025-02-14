@@ -31,8 +31,8 @@ import itertools
 from io import StringIO
 from unittest.mock import Mock
 
-import responses  # type: ignore
-import pytest  # type: ignore
+import pytest
+import responses
 
 from . import Framework
 

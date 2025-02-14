@@ -61,9 +61,9 @@ import unittest
 import warnings
 from typing import Optional
 
-import responses  # type: ignore
+import responses
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url  # type: ignore
+from urllib3.util import Url
 
 import github
 from github import Consts

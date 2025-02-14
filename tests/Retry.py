@@ -30,8 +30,8 @@
 ################################################################################
 
 import requests
-import urllib3  # type: ignore
-import responses  # type: ignore
+import responses
+import urllib3
 
 import github
 
