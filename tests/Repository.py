@@ -1771,12 +1771,12 @@ class Repository(Framework.TestCase):
         with self.assertRaises(github.GithubException) as raisedexp:
             repo.merge_upstream("doesNotExist")
         self.assertEqual(raisedexp.exception.status, 404)
-        self.assertIsNone(raisedexp.exception.message, "Branch not found")
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
 
         with self.assertRaises(github.GithubException) as raisedexp:
             repo.merge_upstream("merge-conflict")
         self.assertEqual(raisedexp.exception.status, 409)
-        self.assertIsNone(raisedexp.exception.message, "There are merge conflicts")
+        self.assertEqual(raisedexp.exception.message, "There are merge conflicts")
 
     def testGetIssuesComments(self):
         self.assertListKeyEqual(
