@@ -134,6 +134,7 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Tan, An Nie <121005973+tanannie22@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -202,6 +203,7 @@ import github.IssueComment
 import github.IssueEvent
 import github.Label
 import github.License
+import github.MergedUpstream
 import github.Milestone
 import github.NamedUser
 import github.Notification
@@ -265,7 +267,9 @@ if TYPE_CHECKING:
     from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
+    from github.EnvironmentDeploymentBranchPolicy import (
+        EnvironmentDeploymentBranchPolicyParams,
+    )
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
     from github.GitBlob import GitBlob
@@ -284,6 +288,7 @@ if TYPE_CHECKING:
     from github.IssueEvent import IssueEvent
     from github.Label import Label
     from github.License import License
+    from github.MergedUpstream import MergedUpstream
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
     from github.Notification import Notification
@@ -3857,6 +3862,18 @@ class Repository(CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
+    def merge_upstream(self, branch: str) -> MergedUpstream:
+        """
+        :calls: `POST /repos/{owner}/{repo}/merge-upstream <https://docs.github.com/en/rest/branches/branches#sync-a-fork-branch-with-the-upstream-repository>`_
+        :param branch: string
+        :rtype: :class:`github.MergedUpstream.MergedUpstream`
+        :raises: :class:`GithubException` for error status codes
+        """
+        assert isinstance(branch, str), branch
+        post_parameters = {"branch": branch}
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/merge-upstream", input=post_parameters)
+        return github.MergedUpstream.MergedUpstream(self._requester, headers, data)
+
     def replace_topics(self, topics: list[str]) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/topics <https://docs.github.com/en/rest/reference/repos>`_
@@ -4375,6 +4392,24 @@ class Repository(CompletableGithubObject):
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
+
+    def transfer_ownership(self, new_owner: str, new_name: Opt[str] = NotSet, teams: Opt[list[int]] = NotSet) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/transfer <https://docs.github.com/en/rest/repos/repos#transfer-a-repository>`_
+        :param new_owner: string
+        :param new_name: Optional string
+        :param teams: Optional list of int
+        :rtype: bool
+        """
+        assert isinstance(new_owner, str), new_owner
+        assert is_optional(new_name, str), new_name
+        assert is_optional_list(teams, int), teams
+
+        post_parameters = NotSet.remove_unset_items({"new_owner": new_owner, "new_name": new_name, "team_ids": teams})
+
+        _, _ = self._requester.requestJsonAndCheck("POST", f"{self.url}/transfer", input=post_parameters)
+
+        return True
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
