@@ -48,7 +48,7 @@ class WorkflowJob(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._check_run_url: Attribute[str] = NotSet
         self._completed_at: Attribute[datetime] = NotSet
-        self._conclusion: Attribute[str] = NotSet
+        self._conclusion: Attribute[str | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._head_branch: Attribute[str] = NotSet
         self._head_sha: Attribute[str] = NotSet
@@ -84,7 +84,7 @@ class WorkflowJob(CompletableGithubObject):
         return self._completed_at.value
 
     @property
-    def conclusion(self) -> str:
+    def conclusion(self) -> str | None:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 

@@ -607,6 +607,7 @@ class Requester:
         parameters: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
         input: Optional[Any] = None,
+        follow_302_redirect: bool = False,
     ) -> Tuple[Dict[str, Any], Any]:
         """
         Send a request with JSON body.
@@ -617,7 +618,17 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__check(
+            *self.requestJson(
+                verb,
+                url,
+                parameters,
+                headers,
+                input,
+                self.__customConnection(url),
+                follow_302_redirect=follow_302_redirect,
+            )
+        )
 
     def requestMultipartAndCheck(
         self,
@@ -929,6 +940,7 @@ class Requester:
         headers: Optional[Dict[str, Any]] = None,
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+        follow_302_redirect: bool = False,
     ) -> Tuple[int, Dict[str, Any], str]:
         """
         Send a request with JSON input.
@@ -941,7 +953,9 @@ class Requester:
         def encode(input: Any) -> Tuple[str, str]:
             return "application/json", json.dumps(input)
 
-        status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        status, responseHeaders, output = self.__requestEncode(
+            cnx, verb, url, parameters, headers, input, encode, follow_302_redirect=follow_302_redirect
+        )
         if isinstance(output, str):
             return status, responseHeaders, output
         raise ValueError("requestJson() Expected a str, should never happen")
