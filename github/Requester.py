@@ -814,21 +814,26 @@ class Requester:
         headers: Dict[str, Any],
         output: Dict[str, Any],
     ) -> GithubException.GithubException:
-        message = output.get("message", "").lower() if output is not None else ""
+        message = output.get("message") if output else None
+        lc_message = message.lower() if message else ""
 
+        msg = None
         exc = GithubException.GithubException
-        if status == 401 and message == "bad credentials":
+        if status == 401 and lc_message == "bad credentials":
             exc = GithubException.BadCredentialsException
         elif status == 401 and Consts.headerOTP in headers and re.match(r".*required.*", headers[Consts.headerOTP]):
             exc = GithubException.TwoFactorException
-        elif status == 403 and message.startswith("missing or invalid user agent string"):
+        elif status == 403 and lc_message.startswith("missing or invalid user agent string"):
             exc = GithubException.BadUserAgentException
-        elif status == 403 and cls.isRateLimitError(message):
+        elif status == 403 and cls.isRateLimitError(lc_message):
             exc = GithubException.RateLimitExceededException
-        elif status == 404 and (message == "not found" or "no object found" in message):
+        elif status == 404 and (lc_message == "not found" or "no object found" in lc_message):
             exc = GithubException.UnknownObjectException
+        else:
+            # for general GithubException, provide the actual message
+            msg = message
 
-        return exc(status, output, headers)
+        return exc(status, output, headers, msg)
 
     @classmethod
     def isRateLimitError(cls, message: str) -> bool:
