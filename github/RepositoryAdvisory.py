@@ -38,13 +38,13 @@ import github.AdvisoryVulnerability
 import github.NamedUser
 import github.Repository
 import github.Team
+from github.AdvisoryBase import AdvisoryBase
+from github.GithubObject import Attribute, NotSet, Opt
 
 if TYPE_CHECKING:
-    from github.AdvisoryBase import AdvisoryBase
     from github.AdvisoryCredit import AdvisoryCredit, Credit
     from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
     from github.AdvisoryVulnerability import AdvisoryVulnerability, AdvisoryVulnerabilityInput
-    from github.GithubObject import Attribute, NotSet, Opt
     from github.NamedUser import NamedUser
     from github.Repository import Repository
     from github.Team import Team

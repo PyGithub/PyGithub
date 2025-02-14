@@ -27,12 +27,17 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.AdvisoryBase
+import github.AdvisoryCreditDetailed
+import github.AdvisoryVulnerability
 from github.AdvisoryBase import AdvisoryBase
-from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
-from github.AdvisoryVulnerability import AdvisoryVulnerability
 from github.GithubObject import Attribute, NotSet
+
+if TYPE_CHECKING:
+    from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
+    from github.AdvisoryVulnerability import AdvisoryVulnerability
 
 
 class GlobalAdvisory(AdvisoryBase):
@@ -102,7 +107,7 @@ class GlobalAdvisory(AdvisoryBase):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "credits" in attributes:  # pragma no branch
             self._credits = self._makeListOfClassesAttribute(
-                AdvisoryCreditDetailed,
+                github.AdvisoryCreditDetailed.AdvisoryCreditDetailed,
                 attributes["credits"],
             )
         if "epss" in attributes:  # pragma no branch
@@ -127,7 +132,7 @@ class GlobalAdvisory(AdvisoryBase):
             self._type = self._makeStringAttribute(attributes["type"])
         if "vulnerabilities" in attributes:
             self._vulnerabilities = self._makeListOfClassesAttribute(
-                AdvisoryVulnerability,
+                github.AdvisoryVulnerability.AdvisoryVulnerability,
                 attributes["vulnerabilities"],
             )
         super()._useAttributes(attributes)
