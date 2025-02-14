@@ -54,8 +54,8 @@ class CVSS(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._vector_string: Attribute[str] = NotSet
         self._score: Attribute[Decimal] = NotSet
+        self._vector_string: Attribute[str] = NotSet
         self._version: Attribute[Decimal] = NotSet
 
     @property
@@ -63,12 +63,12 @@ class CVSS(NonCompletableGithubObject):
         return self._score.value
 
     @property
-    def version(self) -> Decimal:
-        return self._version.value
-
-    @property
     def vector_string(self) -> str:
         return self._vector_string.value
+
+    @property
+    def version(self) -> Decimal:
+        return self._version.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "score" in attributes and attributes["score"] is not None:  # pragma no branch

@@ -29,6 +29,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
+# Copyright 2024 Eduardo Ramírez <edu.rh90@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 #                                                                              #
@@ -761,11 +762,13 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(invitation.permissions, "write")
         created_at = datetime(2019, 6, 27, 11, 47, tzinfo=timezone.utc)
         self.assertEqual(invitation.created_at, created_at)
+        self.assertEqual(invitation.expired, True)
         self.assertEqual(
             invitation.url,
             "https://api.github.com/user/repository_invitations/17285388",
         )
         self.assertEqual(invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations")
+        self.assertEqual(invitation.node_id, "MDIwOlJlcG9zaXRvcnlJbnZpdGF0aW9uMTcyODUzODg=")
         self.assertEqual(invitation.repository.name, "PyGithub")
         self.assertEqual(invitation.invitee.login, "foobar-test1")
         self.assertEqual(invitation.inviter.login, "jacquev6")
@@ -783,3 +786,14 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
+
+    def testGetMemberships(self):
+        membership_data = self.user.get_organization_memberships()
+        self.assertListKeyEqual(
+            membership_data,
+            lambda e: e.organization.login,
+            ["aneyem-github", "nko4", "geoservel", "iic2154-uc-cl", "nnodes", "sushiclm"],
+        )
+        self.assertListKeyEqual(
+            membership_data, lambda e: e.role, ["member", "member", "admin", "member", "member", "admin"]
+        )

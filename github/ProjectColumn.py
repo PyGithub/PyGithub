@@ -67,6 +67,9 @@ class ProjectColumn(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects#columns
 
+    The OpenAPI schema can be found at
+    - /components/schemas/project-column
+
     """
 
     def _initAttributes(self) -> None:
@@ -129,7 +132,7 @@ class ProjectColumn(CompletableGithubObject):
             self._requester,
             f"{self.url}/cards",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def create_card(

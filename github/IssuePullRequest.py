@@ -35,7 +35,10 @@
 ################################################################################
 
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -43,12 +46,20 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class IssuePullRequest(NonCompletableGithubObject):
     """
     This class represents IssuePullRequests.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/issue-search-result-item/properties/pull_request
+    - /components/schemas/issue/properties/pull_request
+    - /components/schemas/nullable-issue/properties/pull_request
+
     """
 
     def _initAttributes(self) -> None:
         self._diff_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._merged_at: Attribute[datetime] = NotSet
         self._patch_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     @property
     def diff_url(self) -> str:
@@ -59,13 +70,25 @@ class IssuePullRequest(NonCompletableGithubObject):
         return self._html_url.value
 
     @property
+    def merged_at(self) -> datetime:
+        return self._merged_at.value
+
+    @property
     def patch_url(self) -> str:
         return self._patch_url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    @property
+    def url(self) -> str:
+        return self._url.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "merged_at" in attributes:  # pragma no branch
+            self._merged_at = self._makeDatetimeAttribute(attributes["merged_at"])
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
