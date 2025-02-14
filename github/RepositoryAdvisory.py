@@ -209,10 +209,13 @@ class RepositoryAdvisory(AdvisoryBase):
         """
         assert isinstance(credited, Iterable), credited
         for credit in credited:
-            AdvisoryCredit._validate_credit(credit)
+            github.AdvisoryCredit.AdvisoryCredit._validate_credit(credit)
 
         patch_parameters = {
-            "credits": [AdvisoryCredit._to_github_dict(credit) for credit in (self.credits + list(credited))]
+            "credits": [
+                github.AdvisoryCredit.AdvisoryCredit._to_github_dict(credit)
+                for credit in (self.credits + list(credited))
+            ]
         }
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
@@ -394,12 +397,12 @@ class RepositoryAdvisory(AdvisoryBase):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "credits" in attributes:  # pragma no branch
             self._credits = self._makeListOfClassesAttribute(
-                AdvisoryCredit,
+                github.AdvisoryCredit.AdvisoryCredit,
                 attributes["credits"],
             )
         if "credits_detailed" in attributes:  # pragma no branch
             self._credits_detailed = self._makeListOfClassesAttribute(
-                AdvisoryCreditDetailed,
+                github.AdvisoryCreditDetailed.AdvisoryCreditDetailed,
                 attributes["credits_detailed"],
             )
         if "cwe_ids" in attributes:  # pragma no branch
