@@ -23,6 +23,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from decimal import Decimal
 
@@ -54,6 +56,13 @@ class GlobalAdvisory(Framework.TestCase):
         self.assertEqual(self.advisory.cvss.version, Decimal("3.1"))
         self.assertEqual(self.advisory.cvss.score, Decimal("8.4"))
         self.assertEqual(self.advisory.cvss.vector_string, "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:L")
+        self.assertEqual(
+            self.advisory.cvss_severities,
+            {
+                "cvss_v3": {"vector_string": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:L", "score": 8.4},
+                "cvss_v4": {"vector_string": None, "score": 0.0},
+            },
+        )
         self.assertListKeyEqual(
             self.advisory.cwes,
             lambda e: (e.cwe_id, e.name),
@@ -62,14 +71,12 @@ class GlobalAdvisory(Framework.TestCase):
             ],
         )
         self.assertEqual(
-            self.advisory.description,
-            "### Impact\n\nRestrictedPython does not check access to stack frames...",
+            self.advisory.description[:100],
+            "### Impact\n\nRestrictedPython does not check access to stack frames and their attributes. Stack frame",
         )
+        self.assertEqual(self.advisory.epss, {"percentage": 0.00156, "percentile": 0.52841})
         self.assertEqual(self.advisory.ghsa_id, "GHSA-wqc8-x2pr-7jqh")
-        self.assertEqual(
-            self.advisory.github_reviewed_at,
-            datetime(2023, 7, 10, 21, 53, 22, tzinfo=timezone.utc),
-        )
+        self.assertEqual(self.advisory.github_reviewed_at, datetime(2023, 7, 10, 21, 53, 22, tzinfo=timezone.utc))
         self.assertEqual(
             self.advisory.html_url,
             "https://github.com/advisories/GHSA-wqc8-x2pr-7jqh",
@@ -78,7 +85,7 @@ class GlobalAdvisory(Framework.TestCase):
             self.advisory.identifiers,
             [{"type": "GHSA", "value": "GHSA-wqc8-x2pr-7jqh"}, {"type": "CVE", "value": "CVE-2023-37271"}],
         )
-        self.assertEqual(self.advisory.nvd_published_at, None)
+        self.assertEqual(self.advisory.nvd_published_at, datetime(2023, 7, 11, 18, 15, 20, tzinfo=timezone.utc))
         self.assertEqual(
             self.advisory.published_at,
             datetime(2023, 7, 10, 21, 53, 22, tzinfo=timezone.utc),
@@ -110,14 +117,8 @@ class GlobalAdvisory(Framework.TestCase):
             self.advisory.type,
             "reviewed",
         )
-        self.assertEqual(
-            self.advisory.updated_at,
-            datetime(2023, 7, 20, 18, 59, 27, tzinfo=timezone.utc),
-        )
-        self.assertEqual(
-            self.advisory.url,
-            "https://api.github.com/advisories/GHSA-wqc8-x2pr-7jqh",
-        )
+        self.assertEqual(self.advisory.updated_at, datetime(2023, 11, 7, 5, 5, 13, tzinfo=timezone.utc))
+        self.assertEqual(self.advisory.url, "https://api.github.com/advisories/GHSA-wqc8-x2pr-7jqh")
         self.assertListKeyEqual(
             self.advisory.vulnerabilities,
             lambda e: (

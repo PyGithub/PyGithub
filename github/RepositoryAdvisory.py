@@ -38,15 +38,13 @@ import github.AdvisoryVulnerability
 import github.NamedUser
 import github.Repository
 import github.Team
-from github.AdvisoryBase import AdvisoryBase
-from github.AdvisoryCredit import AdvisoryCredit, Credit
-from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
-from github.GithubObject import Attribute, NotSet, Opt
 
 if TYPE_CHECKING:
-    from github.AdvisoryCredit import AdvisoryCredit
+    from github.AdvisoryBase import AdvisoryBase
+    from github.AdvisoryCredit import AdvisoryCredit, Credit
     from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
     from github.AdvisoryVulnerability import AdvisoryVulnerability, AdvisoryVulnerabilityInput
+    from github.GithubObject import Attribute, NotSet, Opt
     from github.NamedUser import NamedUser
     from github.Repository import Repository
     from github.Team import Team
@@ -65,6 +63,7 @@ class RepositoryAdvisory(AdvisoryBase):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._author: Attribute[NamedUser] = NotSet
         self._closed_at: Attribute[datetime] = NotSet
         self._collaborating_teams: Attribute[list[Team]] = NotSet

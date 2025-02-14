@@ -47,6 +47,7 @@ class GlobalAdvisory(AdvisoryBase):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._credits: Attribute[list[AdvisoryCreditDetailed]] = NotSet
         self._epss: Attribute[dict[str, Any]] = NotSet
         self._github_reviewed_at: Attribute[datetime] = NotSet
