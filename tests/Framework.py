@@ -52,6 +52,7 @@
 #                                                                              #
 ################################################################################
 
+import base64
 import contextlib
 import io
 import json
@@ -59,6 +60,7 @@ import os
 import traceback
 import unittest
 import warnings
+from io import BytesIO
 from typing import Optional
 
 import httpretty  # type: ignore
@@ -124,6 +126,12 @@ class FakeHttpResponse:
     def read(self):
         return self.__output
 
+    def iter_content(self, chunk_size=1):
+        return iter([self.__output[i : i + chunk_size] for i in range(0, len(self.__output), chunk_size)])
+
+    def raise_for_status(self):
+        pass
+
 
 def fixAuthorizationHeader(headers):
     if "Authorization" in headers:
@@ -156,9 +164,15 @@ class RecordingConnection:
         self.__host = host
         self.__port = port
         self.__cnx = self._realConnection(host, port, *args, **kwds)
+        self.__stream = False
 
-    def request(self, verb, url, input, headers):
+    @property
+    def host(self):
+        return self.__host
+
+    def request(self, verb, url, input, headers, stream=False):
         self.__cnx.request(verb, url, input, headers)
+        self.__stream = stream
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
         # since we are writing here *before* doing the actual request.
@@ -181,16 +195,23 @@ class RecordingConnection:
 
         status = res.status
         headers = res.getheaders()
-        output = res.read()
+        output = res if self.__stream else res.read()
 
         self.__writeLine(status)
         self.__writeLine(list(headers))
-        self.__writeLine(output)
+        if self.__stream:
+            chunks = [chunk for chunk in output.iter_content(chunk_size=64)]
+            output = b"".join(chunks)
+            for chunk in chunks:
+                self.__writeLine(base64.b64encode(chunk).decode("ascii"))
+            self.__writeLine("")
+        else:
+            self.__writeLine(output)
+        self.__writeLine("")
 
         return FakeHttpResponse(status, headers, output)
 
     def close(self):
-        self.__writeLine("")
         return self.__cnx.close()
 
     def __writeLine(self, line):
@@ -223,9 +244,14 @@ class ReplayingConnection:
         self.__protocol = protocol
         self.__host = host
         self.__port = port
+        self.__stream = False
         self.response_headers = CaseInsensitiveDict()
 
         self.__cnx = self._realConnection(host, port, *args, **kwds)
+
+    @property
+    def host(self):
+        return self.__host
 
     def request(
         self,
@@ -239,6 +265,7 @@ class ReplayingConnection:
 
         httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
 
+        self.__stream = stream
         self.__cnx.request(verb, url, input, headers, stream=stream)
 
     def __readNextRequest(self, verb, url, input, headers):
@@ -274,7 +301,16 @@ class ReplayingConnection:
 
         status = int(readLine(self.__file))
         self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
-        output = bytearray(readLine(self.__file), "utf-8")
+        if self.__stream:
+            output = BytesIO()
+            while True:
+                line = readLine(self.__file)
+                if not line:
+                    break
+                output.write(base64.b64decode(line))
+            output = output.getvalue()
+        else:
+            output = bytearray(readLine(self.__file), "utf-8")
         readLine(self.__file)
 
         # make a copy of the headers and remove the ones that interfere with the response handling
