@@ -63,11 +63,9 @@ import warnings
 from io import BytesIO
 from typing import Optional
 
-import httpretty  # type: ignore
-import urllib3
-from packaging.version import Version
+import responses
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url  # type: ignore
+from urllib3.util import Url
 
 import github
 from github import Consts
@@ -89,22 +87,6 @@ m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
 eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
-
-
-# patch httpretty against urllib3>=2.3.0 https://github.com/PyGithub/PyGithub/issues/3101
-if Version(urllib3.__version__) >= Version("2.3.0"):
-    getattr = httpretty.core.fakesock.socket.__getattr__
-
-    def patched_getattr(self, name):
-        def shutdown(how: int):
-            pass
-
-        if name == "shutdown" and not httpretty.core.httpretty.allow_net_connect and not self.truesock:
-            return shutdown
-
-        return getattr(self, name)
-
-    httpretty.core.fakesock.socket.__getattr__ = patched_getattr
 
 
 def readLine(file_):
@@ -261,9 +243,15 @@ class ReplayingConnection:
         headers,
         stream: bool = False,
     ):
-        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
+        port = self.__port if self.__port else 443 if self.__protocol == "https" else 80
+        full_url = Url(scheme=self.__protocol, host=self.__host, port=port, path=url)
 
-        httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
+        response_headers = self.response_headers.copy()
+        responses.add_callback(
+            method=verb,
+            url=full_url.url,
+            callback=lambda request: self.__request_callback(verb, full_url.url, response_headers),
+        )
 
         self.__stream = stream
         self.__cnx.request(verb, url, input, headers, stream=stream)
@@ -320,10 +308,10 @@ class ReplayingConnection:
         adding_headers.pop("content-encoding", None)
 
         response_headers.update(adding_headers)
+
         return [status, response_headers, output]
 
     def getresponse(self):
-        # call original connection, this will go all the way down to the python socket and will be intercepted by httpretty
         response = self.__cnx.getresponse()
 
         # restore original headers to the response
@@ -399,7 +387,7 @@ class BasicTestCase(unittest.TestCase):
             self.jwt = github.Auth.AppAuthToken("jwt")
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
-            httpretty.enable(allow_net_connect=False)
+            responses.start()
 
     @property
     def thisTestFailed(self) -> bool:
@@ -415,9 +403,8 @@ class BasicTestCase(unittest.TestCase):
 
     def tearDown(self):
         super().tearDown()
-        httpretty.disable()
-        httpretty.reset()
-
+        responses.stop()
+        responses.reset()
         self.__closeReplayFileIfNeeded(silent=self.thisTestFailed)
         github.Requester.Requester.resetConnectionClasses()
 
