@@ -751,6 +751,7 @@ class Repository(Framework.TestCase):
     def testCollaboratorPermissionNoPushAccess(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.get_collaborator_permission("lyloa")
+        self.assertEqual(raisedexp.exception.message, "Must have push access to view collaborator permission.")
         self.assertEqual(raisedexp.exception.status, 403)
         self.assertEqual(
             raisedexp.exception.data,
@@ -1746,6 +1747,7 @@ class Repository(Framework.TestCase):
     def testMergeWithConflict(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.merge("branchForBase", "branchForHead")
+        self.assertEqual(raisedexp.exception.message, "Merge conflict")
         self.assertEqual(raisedexp.exception.status, 409)
         self.assertEqual(raisedexp.exception.data, {"message": "Merge conflict"})
 
@@ -1929,6 +1931,7 @@ class Repository(Framework.TestCase):
     def testBadSubscribePubSubHubbub(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.repo.subscribe_to_hub("non-existing-event", "http://requestb.in/1bc1sc61")
+        self.assertEqual(raisedexp.exception.message, 'Invalid event: "non-existing-event"')
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(raisedexp.exception.data, {"message": 'Invalid event: "non-existing-event"'})
 
