@@ -22,8 +22,10 @@
 
 from __future__ import annotations
 
+import os
 from datetime import datetime, timezone
 from tempfile import NamedTemporaryFile
+from unittest import skipIf
 
 from . import Framework
 
@@ -51,6 +53,7 @@ class GitReleaseAsset(Framework.TestCase):
         self.assertEqual(self.asset.uploader.login, "EnricoMi")
         self.assertEqual(self.asset.url, "https://api.github.com/repos/EnricoMi/PyGithub/releases/assets/224868540")
 
+    @skipIf(os.name == "nt", "not working on Windows")
     def testDownloadAssetFile(self):
         with NamedTemporaryFile(mode="rb") as file:
             self.asset.download_asset(file.name)

@@ -291,8 +291,12 @@ class Requester(Framework.TestCase):
         for message in self.OtherErrors + self.PrimaryRateLimitErrors:
             self.assertFalse(github.Requester.Requester.isSecondaryRateLimitError(message), message)
 
-    def assertException(self, exception, exception_type, status, data, headers, string):
+    def assertException(self, exception, exception_type, message, status, data, headers, string):
         self.assertIsInstance(exception, exception_type)
+        if message is None:
+            self.assertIsNone(exception.message)
+        else:
+            self.assertEqual(exception.message, message)
         self.assertEqual(exception.status, status)
         if data is None:
             self.assertIsNone(exception.data)
@@ -306,6 +310,7 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.BadCredentialsException,
+            None,
             401,
             {"message": "Bad credentials"},
             {"header": "value"},
@@ -324,6 +329,7 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.TwoFactorException,
+            None,
             401,
             {
                 "message": "Must specify two-factor authentication OTP code.",
@@ -342,6 +348,7 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.BadUserAgentException,
+            None,
             403,
             {"message": "Missing or invalid User Agent string"},
             {"header": "value"},
@@ -355,6 +362,7 @@ class Requester(Framework.TestCase):
                 self.assertException(
                     exc,
                     github.RateLimitExceededException,
+                    None,
                     403,
                     {"message": message},
                     {"header": "value"},
@@ -366,10 +374,25 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.UnknownObjectException,
+            None,
             404,
             {"message": "Not Found"},
             {"header": "value"},
             '404 {"message": "Not Found"}',
+        )
+
+    def testShouldCreateUnknownObjectException2(self):
+        exc = self.g._Github__requester.createException(
+            404, {"header": "value"}, {"message": "No object found for the path some-nonexistent-file"}
+        )
+        self.assertException(
+            exc,
+            github.UnknownObjectException,
+            None,
+            404,
+            {"message": "No object found for the path some-nonexistent-file"},
+            {"header": "value"},
+            '404 {"message": "No object found for the path some-nonexistent-file"}',
         )
 
     def testShouldCreateGithubException(self):
@@ -381,23 +404,24 @@ class Requester(Framework.TestCase):
                 self.assertException(
                     exc,
                     github.GithubException,
+                    "Something unknown",
                     status,
                     {"message": "Something unknown"},
                     {"header": "value"},
-                    f'{status} {{"message": "Something unknown"}}',
+                    f'Something unknown: {status} {{"message": "Something unknown"}}',
                 )
 
     def testShouldCreateExceptionWithoutMessage(self):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.createException(status, {}, {})
-                self.assertException(exc, github.GithubException, status, {}, {}, f"{status} {{}}")
+                self.assertException(exc, github.GithubException, None, status, {}, {}, f"{status} {{}}")
 
     def testShouldCreateExceptionWithoutOutput(self):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.createException(status, {}, None)
-                self.assertException(exc, github.GithubException, status, None, {}, f"{status}")
+                self.assertException(exc, github.GithubException, None, status, None, {}, f"{status}")
 
 
 class RequesterThrottleTestCase(Framework.TestCase):

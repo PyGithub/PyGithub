@@ -99,6 +99,7 @@ class Branch(Framework.TestCase):
     def testEditProtectionDismissalUsersWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_protection(dismissal_users=["jacquev6"])
+        self.assertEqual(raisedexp.exception.message, "Validation Failed")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -112,6 +113,7 @@ class Branch(Framework.TestCase):
     def testEditProtectionPushRestrictionsWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_protection(user_push_restrictions=["jacquev6"], team_push_restrictions=[])
+        self.assertEqual(raisedexp.exception.message, "Validation Failed")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -149,6 +151,7 @@ class Branch(Framework.TestCase):
         self.assertFalse(protected_branch.protected)
         with self.assertRaises(github.GithubException) as raisedexp:
             protected_branch.get_protection()
+        self.assertEqual(raisedexp.exception.message, "Branch not protected")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -178,6 +181,7 @@ class Branch(Framework.TestCase):
         self.protected_branch.remove_required_status_checks()
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.get_required_status_checks()
+        self.assertEqual(raisedexp.exception.message, "Required status checks not enabled")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -200,6 +204,7 @@ class Branch(Framework.TestCase):
     def testEditRequiredPullRequestReviewsWithTooLargeApprovingReviewCount(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_required_pull_request_reviews(required_approving_review_count=9)
+        self.assertEqual(raisedexp.exception.message, "Invalid request.\n\n9 must be less than or equal to 6.")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -212,6 +217,10 @@ class Branch(Framework.TestCase):
     def testEditRequiredPullRequestReviewsWithUserBranchAndDismissalUsers(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_required_pull_request_reviews(dismissal_users=["jacquev6"])
+        self.assertEqual(
+            raisedexp.exception.message,
+            "Dismissal restrictions are supported only for repositories owned by an organization.",
+        )
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -303,6 +312,7 @@ class Branch(Framework.TestCase):
         self.organization_branch.remove_push_restrictions()
         with self.assertRaises(github.GithubException) as raisedexp:
             list(self.organization_branch.get_user_push_restrictions())
+        self.assertEqual(raisedexp.exception.message, "Push restrictions not enabled")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
