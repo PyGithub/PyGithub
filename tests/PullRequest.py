@@ -508,6 +508,7 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.delete_restore_pull.is_merged())
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(
             raisedexp.exception.data,
             {
@@ -519,6 +520,7 @@ class PullRequest(Framework.TestCase):
     def testRestoreBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -535,6 +537,7 @@ class PullRequest(Framework.TestCase):
         self.delete_restore_pull.delete_branch(force=False)
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -549,6 +552,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -592,7 +596,7 @@ class PullRequest(Framework.TestCase):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
         with pytest.raises(github.GithubException) as error:
             self.pull.enable_automerge()
-
+        assert error.value.message is None
         assert error.value.status == 400
         assert error.value.data == {
             "data": {"enablePullRequestAutoMerge": None},

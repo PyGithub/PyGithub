@@ -43,6 +43,7 @@ class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub
         g = github.Github(auth=self.oauth_token)
         with self.assertRaises(github.GithubException) as raisedexp:
             list(g.get_user().get_authorizations())
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetAuthorizationsSucceedsWhenAutenticatedThroughLoginPassword(self):
