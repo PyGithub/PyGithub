@@ -72,6 +72,7 @@
 # Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Tan, An Nie <121005973+tanannie22@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -2181,6 +2182,23 @@ class Repository(Framework.TestCase):
     def testUpdateCustomProperties(self):
         custom_properties = {"foo": "bar"}
         self.repo.update_custom_properties(custom_properties)
+
+    def testTransferOwnership(self):
+        status = self.repo.transfer_ownership(new_owner="An-Nie-Tan-99", new_name="PyGithub-test")
+        self.assertTrue(status)
+
+    def testTransferOwnershipInvalidOwner(self):
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.repo.transfer_ownership("new_owner")
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(
+            raisedexp.exception.data,
+            {
+                "message": "Invalid new_owner",
+                "documentation_url": "https://docs.github.com/rest/repos/repos#transfer-a-repository",
+                "status": "422",
+            },
+        )
 
 
 class LazyRepository(Framework.TestCase):

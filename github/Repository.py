@@ -134,6 +134,7 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2024 Tan, An Nie <121005973+tanannie22@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -4391,6 +4392,24 @@ class Repository(CompletableGithubObject):
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()]
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
+
+    def transfer_ownership(self, new_owner: str, new_name: Opt[str] = NotSet, teams: Opt[list[int]] = NotSet) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/transfer <https://docs.github.com/en/rest/repos/repos#transfer-a-repository>`_
+        :param new_owner: string
+        :param new_name: Optional string
+        :param teams: Optional list of int
+        :rtype: bool
+        """
+        assert isinstance(new_owner, str), new_owner
+        assert is_optional(new_name, str), new_name
+        assert is_optional_list(teams, int), teams
+
+        post_parameters = NotSet.remove_unset_items({"new_owner": new_owner, "new_name": new_name, "team_ids": teams})
+
+        _, _ = self._requester.requestJsonAndCheck("POST", f"{self.url}/transfer", input=post_parameters)
+
+        return True
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
