@@ -1757,9 +1757,13 @@ class Repository(Framework.TestCase):
         # First one to sync with upstream
         result = repo.merge_upstream("main")
         self.assertEqual(result.message, "Successfully fetched and fast-forwarded from upstream PyGithub:main.")
+        self.assertEqual(result.base_branch, "PyGithub:main")
+        self.assertEqual(result.merge_type, "fast-forward")
         # Second one to check it's already synced
         result = repo.merge_upstream("main")
         self.assertEqual(result.message, "This branch is not behind the upstream PyGithub:main.")
+        self.assertEqual(result.base_branch, "PyGithub:main")
+        self.assertEqual(result.merge_type, "none")
 
     def testMergeUpstreamFailure(self):
         # Use fork for being able to update it
@@ -1767,10 +1771,12 @@ class Repository(Framework.TestCase):
         with self.assertRaises(github.GithubException) as raisedexp:
             repo.merge_upstream("doesNotExist")
         self.assertEqual(raisedexp.exception.status, 404)
+        self.assertIsNone(raisedexp.exception.message, "Branch not found")
 
         with self.assertRaises(github.GithubException) as raisedexp:
             repo.merge_upstream("merge-conflict")
         self.assertEqual(raisedexp.exception.status, 409)
+        self.assertIsNone(raisedexp.exception.message, "There are merge conflicts")
 
     def testGetIssuesComments(self):
         self.assertListKeyEqual(
