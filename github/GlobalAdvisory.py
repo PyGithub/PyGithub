@@ -48,6 +48,7 @@ class GlobalAdvisory(AdvisoryBase):
 
     def _initAttributes(self) -> None:
         self._credits: Attribute[list[AdvisoryCreditDetailed]] = NotSet
+        self._epss: Attribute[dict[str, Any]] = NotSet
         self._github_reviewed_at: Attribute[datetime] = NotSet
         self._nvd_published_at: Attribute[datetime] = NotSet
         self._references: Attribute[list[str]] = NotSet
@@ -64,6 +65,10 @@ class GlobalAdvisory(AdvisoryBase):
         self,
     ) -> list[AdvisoryCreditDetailed]:
         return self._credits.value
+
+    @property
+    def epss(self) -> dict[str, Any]:
+        return self._epss.value
 
     @property
     def github_reviewed_at(self) -> datetime:
@@ -99,6 +104,8 @@ class GlobalAdvisory(AdvisoryBase):
                 AdvisoryCreditDetailed,
                 attributes["credits"],
             )
+        if "epss" in attributes:  # pragma no branch
+            self._epss = self._makeDictAttribute(attributes["epss"])
         if "github_reviewed_at" in attributes:  # pragma no branch
             assert attributes["github_reviewed_at"] is None or isinstance(
                 attributes["github_reviewed_at"], str

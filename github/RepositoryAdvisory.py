@@ -32,16 +32,24 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Iterable
 
+import github.AdvisoryCredit
+import github.AdvisoryCreditDetailed
 import github.AdvisoryVulnerability
 import github.NamedUser
+import github.Repository
+import github.Team
 from github.AdvisoryBase import AdvisoryBase
 from github.AdvisoryCredit import AdvisoryCredit, Credit
 from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
 from github.GithubObject import Attribute, NotSet, Opt
 
 if TYPE_CHECKING:
+    from github.AdvisoryCredit import AdvisoryCredit
+    from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
     from github.AdvisoryVulnerability import AdvisoryVulnerability, AdvisoryVulnerabilityInput
     from github.NamedUser import NamedUser
+    from github.Repository import Repository
+    from github.Team import Team
 
 
 class RepositoryAdvisory(AdvisoryBase):
@@ -59,11 +67,16 @@ class RepositoryAdvisory(AdvisoryBase):
     def _initAttributes(self) -> None:
         self._author: Attribute[NamedUser] = NotSet
         self._closed_at: Attribute[datetime] = NotSet
+        self._collaborating_teams: Attribute[list[Team]] = NotSet
+        self._collaborating_users: Attribute[list[NamedUser]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._credits: Attribute[list[AdvisoryCredit]] = NotSet
         self._credits_detailed: Attribute[list[AdvisoryCreditDetailed]] = NotSet
         self._cwe_ids: Attribute[list[str]] = NotSet
+        self._private_fork: Attribute[Repository] = NotSet
+        self._publisher: Attribute[NamedUser] = NotSet
         self._state: Attribute[str] = NotSet
+        self._submission: Attribute[dict[str, Any]] = NotSet
         self._vulnerabilities: Attribute[list[AdvisoryVulnerability]] = NotSet
         super()._initAttributes()
 
@@ -74,6 +87,14 @@ class RepositoryAdvisory(AdvisoryBase):
     @property
     def closed_at(self) -> datetime:
         return self._closed_at.value
+
+    @property
+    def collaborating_teams(self) -> list[Team]:
+        return self._collaborating_teams.value
+
+    @property
+    def collaborating_users(self) -> list[NamedUser]:
+        return self._collaborating_users.value
 
     @property
     def created_at(self) -> datetime:
@@ -96,8 +117,20 @@ class RepositoryAdvisory(AdvisoryBase):
         return self._cwe_ids.value
 
     @property
+    def private_fork(self) -> Repository:
+        return self._private_fork.value
+
+    @property
+    def publisher(self) -> NamedUser:
+        return self._publisher.value
+
+    @property
     def state(self) -> str:
         return self._state.value
+
+    @property
+    def submission(self) -> dict[str, Any]:
+        return self._submission.value
 
     @property
     def vulnerabilities(self) -> list[AdvisoryVulnerability]:
@@ -347,6 +380,14 @@ class RepositoryAdvisory(AdvisoryBase):
         if "closed_at" in attributes:  # pragma no branch
             assert attributes["closed_at"] is None or isinstance(attributes["closed_at"], str), attributes["closed_at"]
             self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
+        if "collaborating_teams" in attributes:  # pragma no branch
+            self._collaborating_teams = self._makeListOfClassesAttribute(
+                github.Team.Team, attributes["collaborating_teams"]
+            )
+        if "collaborating_users" in attributes:  # pragma no branch
+            self._collaborating_users = self._makeListOfClassesAttribute(
+                github.NamedUser.NamedUser, attributes["collaborating_users"]
+            )
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], str), attributes[
                 "created_at"
@@ -364,8 +405,14 @@ class RepositoryAdvisory(AdvisoryBase):
             )
         if "cwe_ids" in attributes:  # pragma no branch
             self._cwe_ids = self._makeListOfStringsAttribute(attributes["cwe_ids"])
+        if "private_fork" in attributes:  # pragma no branch
+            self._private_fork = self._makeClassAttribute(github.Repository.Repository, attributes["private_fork"])
+        if "publisher" in attributes:  # pragma no branch
+            self._publisher = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["publisher"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "submission" in attributes:  # pragma no branch
+            self._submission = self._makeDictAttribute(attributes["submission"])
         if "vulnerabilities" in attributes:
             self._vulnerabilities = self._makeListOfClassesAttribute(
                 github.AdvisoryVulnerability.AdvisoryVulnerability,
