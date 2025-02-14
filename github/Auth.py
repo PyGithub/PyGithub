@@ -31,7 +31,7 @@ import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Dict, Optional, Union, Callable
+from typing import TYPE_CHECKING, Callable, Dict, Optional, Union
 
 import jwt
 from requests import utils
@@ -42,6 +42,9 @@ from github.Requester import Requester, WithRequester
 
 if TYPE_CHECKING:
     from github.GithubIntegration import GithubIntegration
+
+PrivateKeyGenerator = Callable[[], Union[str, bytes]]
+DictSignFunction = Callable[[dict], Union[str, bytes]]
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
@@ -189,24 +192,25 @@ class AppAuth(JWT):
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
 
     """
+
     @staticmethod
-    def create_jwt_sign(private_key_or_func: Union[str, Callable[[], str]], jwt_algorithm: str) -> Callable[[dict], str]:
-        def jwt_sign(payload: dict) -> str:
-            if isinstance(private_key_or_func, Callable):
+    def create_jwt_sign(private_key_or_func: Union[str, PrivateKeyGenerator], jwt_algorithm: str) -> DictSignFunction:
+        def jwt_sign(payload: dict) -> Union[str, bytes]:
+            if callable(private_key_or_func):
                 private_key = private_key_or_func()
             else:
                 private_key = private_key_or_func
             return jwt.encode(payload, key=private_key, algorithm=jwt_algorithm)
 
-        return jwt_sign;
+        return jwt_sign
 
     # v3: move * above private_key
     def __init__(
         self,
         app_id: Union[int, str],
-        private_key: Optional[Union[str, Callable[[], str]]] = None,
+        private_key: Optional[Union[str, PrivateKeyGenerator]] = None,
         *,
-        sign_func: Optional[Callable[[dict], Union[str, bytes]]] = None,
+        sign_func: Optional[DictSignFunction] = None,
         jwt_expiry: int = Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
     ):
@@ -216,7 +220,7 @@ class AppAuth(JWT):
         assert private_key is not None or sign_func is not None, "either private_key or sign_func must be given"
         assert private_key is None or sign_func is None, "private_key or sign_func cannot both be given"
         if private_key is not None:
-            assert isinstance(private_key, (str, Callable))
+            assert isinstance(private_key, str) or callable(private_key)
             if isinstance(private_key, str):
                 assert len(private_key) > 0, "private_key must not be empty"
             sign_func = AppAuth.create_jwt_sign(private_key, Consts.DEFAULT_JWT_ALGORITHM)
@@ -234,8 +238,8 @@ class AppAuth(JWT):
         return self._app_id
 
     @property
-    def private_key(self) -> Optional[str]:
-        if isinstance(self._private_key, Callable):
+    def private_key(self) -> Optional[Union[str, bytes]]:
+        if callable(self._private_key):
             return self._private_key()
         if isinstance(self._private_key, str):
             return self._private_key
@@ -279,6 +283,7 @@ class AppAuth(JWT):
             "exp": now + (expiration if expiration is not None else self._jwt_expiry),
             "iss": self._app_id,
         }
+        assert self._sign_func is not None
         encrypted = self._sign_func(payload)
 
         if isinstance(encrypted, bytes):
@@ -353,7 +358,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         return self._app_auth.app_id
 
     @property
-    def private_key(self) -> Optional[str]:
+    def private_key(self) -> Optional[Union[str, bytes]]:
         return self._app_auth.private_key
 
     @property

@@ -141,7 +141,7 @@ class GithubIntegration:
                 auth = AppAuth(
                     integration_id,  # type: ignore
                     private_key=None,  # type: ignore
-                    sign_func=AppAuth.create_jwt_sign(private_key, jwt_algorithm),
+                    sign_func=AppAuth.create_jwt_sign(private_key, jwt_algorithm),  # type: ignore
                     jwt_expiry=jwt_expiry,
                     jwt_issued_at=jwt_issued_at,
                 )
