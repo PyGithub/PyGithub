@@ -564,6 +564,11 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
 
+        if isinstance(reviewers, str):
+            reviewers = [reviewers]
+        if isinstance(team_reviewers, str):
+            team_reviewers = [team_reviewers]
+
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -580,6 +585,11 @@ class PullRequest(CompletableGithubObject):
         """
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
+
+        if isinstance(reviewers, str):
+            reviewers = [reviewers]
+        if isinstance(team_reviewers, str):
+            team_reviewers = [team_reviewers]
 
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 

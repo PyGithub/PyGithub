@@ -4,7 +4,7 @@ api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
 {'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
-{"reviewers":"sfdye","team_reviewers":"pygithub-owners"}
+{"reviewers":["sfdye"],"team_reviewers":["pygithub-owners"]}
 201
 ''
 
@@ -37,7 +37,7 @@ api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
 {'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
-{"reviewers":"sfdye"}
+{"reviewers":["sfdye"]}
 204
 ''
 
