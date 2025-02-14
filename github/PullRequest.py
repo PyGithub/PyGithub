@@ -971,6 +971,56 @@ class PullRequest(CompletableGithubObject):
         )
         return status == 202
 
+    def convert_to_draft(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to convert pull request to draft
+        <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
+        """
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="convertPullRequestToDraft",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="clientMutationId pullRequest { isDraft }",
+        )
+        self._useAttributes({"draft": data["pullRequest"]["isDraft"]})
+        return data
+
+    def mark_ready_for_review(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to mark pull request ready for review
+        <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
+        """
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="markPullRequestReadyForReview",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="clientMutationId pullRequest { isDraft }",
+        )
+        self._useAttributes({"draft": data["pullRequest"]["isDraft"]})
+        return data
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "_links" in attributes:  # pragma no branch
             self.__links = self._makeDictAttribute(attributes["_links"])
