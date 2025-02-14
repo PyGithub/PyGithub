@@ -202,6 +202,7 @@ import github.IssueComment
 import github.IssueEvent
 import github.Label
 import github.License
+import github.MergedUpstream
 import github.Milestone
 import github.NamedUser
 import github.Notification
@@ -265,7 +266,9 @@ if TYPE_CHECKING:
     from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
+    from github.EnvironmentDeploymentBranchPolicy import (
+        EnvironmentDeploymentBranchPolicyParams,
+    )
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
     from github.GitBlob import GitBlob
@@ -284,6 +287,7 @@ if TYPE_CHECKING:
     from github.IssueEvent import IssueEvent
     from github.Label import Label
     from github.License import License
+    from github.MergedUpstream import MergedUpstream
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
     from github.Notification import Notification
@@ -3856,6 +3860,18 @@ class Repository(CompletableGithubObject):
             return None
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
+
+    def merge_upstream(self, branch: str) -> MergedUpstream:
+        """
+        :calls: `POST /repos/{owner}/{repo}/merge-upstream <https://docs.github.com/en/rest/branches/branches#sync-a-fork-branch-with-the-upstream-repository>`_
+        :param branch: string
+        :rtype: :class:`github.MergedUpstream.MergedUpstream`
+        :raises: :class:`GithubException` for error status codes
+        """
+        assert isinstance(branch, str), branch
+        post_parameters = {"branch": branch}
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/merge-upstream", input=post_parameters)
+        return github.MergedUpstream.MergedUpstream(self._requester, headers, data)
 
     def replace_topics(self, topics: list[str]) -> None:
         """
