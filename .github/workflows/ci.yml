@@ -39,6 +39,12 @@ jobs:
           pip install tox tox-gh-actions
       - name: Run tests
         run: tox
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test Results (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
+          path: pytest.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
 
@@ -58,6 +64,16 @@ jobs:
         if: needs.test.result != 'success'
         run: false
         shell: bash
+
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: Event File
+          path: ${{ github.event_path }}
 
   draft:
     runs-on: ubuntu-latest

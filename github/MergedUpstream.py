@@ -1,17 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
-# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,14 +20,45 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+
+from typing import Any, Dict
+
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class Issue174(Framework.TestCase):
-    def setUp(self):
-        super().setUp()
-        self.repo = self.g.get_repo("twbs/bootstrap")
+class MergedUpstream(NonCompletableGithubObject):
+    """
+    This class represents a result of merge-upstream call.
 
-    def testGetDirContentsWithHttpRedirect(self):
-        contents = self.repo.get_contents("js/")
-        self.assertEqual(len(contents), 5)
+    The OpenAPI schema can be found at
+    - /components/schemas/merged-upstream
+
+    """
+
+    def _initAttributes(self) -> None:
+        self._merge_type: Attribute[str] = NotSet
+        self._base_branch: Attribute[str] = NotSet
+        self._message: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"message": self._message.value})
+
+    @property
+    def merge_type(self) -> str:
+        return self._merge_type.value
+
+    @property
+    def base_branch(self) -> str:
+        return self._base_branch.value
+
+    @property
+    def message(self) -> str:
+        return self._message.value
+
+    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+        if "merge_type" in attributes:  # pragma no branch
+            self._merge_type = self._makeStringAttribute(attributes["merge_type"])
+        if "base_branch" in attributes:  # pragma no branch
+            self._base_branch = self._makeStringAttribute(attributes["base_branch"])
+        if "message" in attributes:  # pragma no branch
+            self._message = self._makeStringAttribute(attributes["message"])

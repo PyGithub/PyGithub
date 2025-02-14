@@ -1,17 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 AetherDeity <aetherdeity+github@gmail.com>                    #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
-# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Bill Napier <napier@pobox.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,14 +20,49 @@
 #                                                                              #
 ################################################################################
 
-from . import Framework
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+import github.CodeSecurityConfig
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    pass
 
 
-class Issue174(Framework.TestCase):
-    def setUp(self):
-        super().setUp()
-        self.repo = self.g.get_repo("twbs/bootstrap")
+class RepoCodeSecurityConfig(NonCompletableGithubObject):
+    """
+    This class represents Configurations for Code Security for a Repository.
 
-    def testGetDirContentsWithHttpRedirect(self):
-        contents = self.repo.get_contents("js/")
-        self.assertEqual(len(contents), 5)
+    The reference can be found here
+    https://docs.github.com/en/rest/code-security/configurations.
+
+    """
+
+    def _initAttributes(self) -> None:
+        self._configuration: Attribute[github.CodeSecurityConfig.CodeSecurityConfig] = NotSet
+        self._status: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "configuration": self.configuration,
+            }
+        )
+
+    @property
+    def configuration(self) -> github.CodeSecurityConfig.CodeSecurityConfig:
+        return self._configuration.value
+
+    @property
+    def status(self) -> str:
+        return self._status.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "configuration" in attributes:  # pragma no branch
+            self._configuration = self._makeClassAttribute(
+                github.CodeSecurityConfig.CodeSecurityConfig, attributes["configuration"]
+            )
+        if "status" in attributes:  # pragma no branch
+            self._status = self._makeStringAttribute(attributes["status"])
