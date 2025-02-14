@@ -431,8 +431,7 @@ class Github:
         assert isinstance(login, (str, int)), login
         url_base = "/organizations/" if isinstance(login, int) else "/orgs/"
         login = urllib.parse.quote(str(login))
-        url = f"{url_base}{login}"
-        headers, data = self.__requester.requestJsonAndCheck("GET", url)
+        headers, data = self.__requester.requestJsonAndCheck("GET", f"{url_base}{login}")
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
     def get_organizations(self, since: Opt[int] = NotSet) -> PaginatedList[Organization]:
