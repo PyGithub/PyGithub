@@ -130,12 +130,15 @@
 # Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Sebastien NICOT <sebastien.nicot@gmail.com>                   #
 # Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
-# Copyright 2024 Bill Napier <napier@pobox.com>                                #
-# Copyright 2024 Tan, An Nie <121005973+tanannie22@users.noreply.github.com>   #
+# Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
