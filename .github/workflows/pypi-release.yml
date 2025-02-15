@@ -19,7 +19,7 @@ jobs:
           name: package
           path: dist
       - name: Install twine
-        run: pip install -q twine
+        run: pip install -q -U twine
       - name: Publish 📦 to PyPI
         # only run this for tags
         if: startsWith(github.event.ref, 'refs/tags/')
