@@ -31,6 +31,7 @@ class CommitVerification(Framework.TestCase):
     def testAttributes(self):
         verification = self.commit.commit.verification
         self.assertEqual(verification.verified, True)
+        self.assertIsNone(verification.verified_at)
         self.assertEqual(verification.reason, "valid")
         self.assertRegex(verification.signature, ".*PGP.*")
         self.assertRegex(verification.payload, ".*tree.*")

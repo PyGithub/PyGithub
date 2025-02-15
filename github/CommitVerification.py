@@ -22,6 +22,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -38,6 +39,7 @@ class CommitVerification(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._verified: Attribute[bool] = NotSet
+        self._verified_at: Attribute[datetime] = NotSet
         self._reason: Attribute[str] = NotSet
         self._signature: Attribute[str] = NotSet
         self._payload: Attribute[str] = NotSet
@@ -45,6 +47,10 @@ class CommitVerification(CompletableGithubObject):
     @property
     def verified(self) -> bool:
         return self._verified.value
+
+    @property
+    def verified_at(self) -> datetime:
+        return self._verified_at.value
 
     @property
     def reason(self) -> str:
@@ -61,6 +67,8 @@ class CommitVerification(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "verified" in attributes:  # pragma no branch
             self._verified = self._makeBoolAttribute(attributes["verified"])
+        if "verified_at" in attributes:  # pragma no branch
+            self._verified_at = self._makeDatetimeAttribute(attributes["verified_at"])
         if "reason" in attributes:  # pragma no branch
             self._reason = self._makeStringAttribute(attributes["reason"])
         if "signature" in attributes:  # pragma no branch
