@@ -25,10 +25,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CommitVerification(CompletableGithubObject):
+class CommitVerification(NonCompletableGithubObject):
     """
     This class represents CommitVerifications.
 
