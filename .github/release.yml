@@ -14,6 +14,6 @@ changelog:
     - title: Dependencies
       labels: ['dependencies']
     - title: Maintenance
-      labels: ['documentation', 'ci']
+      labels: ['ci', 'documentation', 'maintenance']
     - title: Others
       labels: ['*']
