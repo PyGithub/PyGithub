@@ -35,7 +35,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 class AdvisoryBase(NonCompletableGithubObject):
     """
-    This class represents a the shared attributes between GlobalAdvisory, RepositoryAdvisory and DependabotAdvisory
+    This class represents the shared attributes between GlobalAdvisory, RepositoryAdvisory and DependabotAdvisory
     https://docs.github.com/en/rest/security-advisories/global-advisories
     https://docs.github.com/en/rest/security-advisories/repository-advisories
     https://docs.github.com/en/rest/dependabot/alerts
@@ -44,6 +44,7 @@ class AdvisoryBase(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._cve_id: Attribute[str] = NotSet
         self._cvss: Attribute[CVSS] = NotSet
+        self._cvss_severities: Attribute[dict[str, Any]] = NotSet
         self._cwes: Attribute[list[CWE]] = NotSet
         self._description: Attribute[str] = NotSet
         self._ghsa_id: Attribute[str] = NotSet
@@ -66,6 +67,10 @@ class AdvisoryBase(NonCompletableGithubObject):
     @property
     def cvss(self) -> CVSS:
         return self._cvss.value
+
+    @property
+    def cvss_severities(self) -> dict[str, Any]:
+        return self._cvss_severities.value
 
     @property
     def cwes(self) -> list[CWE]:
@@ -116,6 +121,8 @@ class AdvisoryBase(NonCompletableGithubObject):
             self._cve_id = self._makeStringAttribute(attributes["cve_id"])
         if "cvss" in attributes:  # pragma no branch
             self._cvss = self._makeClassAttribute(CVSS, attributes["cvss"])
+        if "cvss_severities" in attributes:  # pragma no branch
+            self._cvss_severities = self._makeDictAttribute(attributes["cvss_severities"])
         if "cwes" in attributes:  # pragma no branch
             self._cwes = self._makeListOfClassesAttribute(CWE, attributes["cwes"])
         if "description" in attributes:  # pragma no branch

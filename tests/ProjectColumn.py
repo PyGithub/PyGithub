@@ -33,6 +33,29 @@ class ProjectColumn(Framework.TestCase):
         super().setUp()
         self.get_project_column = self.g.get_project_column(8700460)
         self.move_project_column = self.g.get_project_column(8748065)
+        proj = self.g.get_project(1682941)
+        self.col = proj.get_columns()[0]
+
+    # See https://developer.github.com/v3/projects/columns/#get-a-project-column
+    def testAttributes(self):
+        col = self.col
+        self.assertEqual(col.id, 3138830)
+        self.assertEqual(col.node_id, "MDEzOlByb2plY3RDb2x1bW4zMTM4ODMw")
+        self.assertEqual(col.name, "To Do")
+        self.assertEqual(col.url, "https://api.github.com/projects/columns/3138830")
+        self.assertEqual(col.project_url, "https://api.github.com/projects/1682941")
+        self.assertEqual(col.cards_url, "https://api.github.com/projects/columns/3138830/cards")
+        self.assertEqual(col.created_at.year, 2018)
+        self.assertTrue(col.updated_at >= col.created_at)
+        self.assertEqual(repr(col), 'ProjectColumn(name="To Do")')
+
+    def testCreate(self):
+        repo = self.g.get_user().get_repo("PyGithub")
+        project = repo.create_project("Project created by PyGithub", "Project Body")
+        column = project.create_column(
+            "Project Column created by PyGithub",
+        )
+        self.assertEqual(column.id, 3999333)
 
     def testGetProjectColumn(self):
         self.assertEqual(self.get_project_column.id, 8700460)

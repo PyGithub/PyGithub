@@ -2,7 +2,7 @@ https
 PATCH
 api.github.com
 None
-/repos/jacquev6/PyGithub/properties/values
+/repos/PyGithub/PyGithub/properties/values
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {"properties": [{"property_name": "foo", "value": "bar"}]}
 204

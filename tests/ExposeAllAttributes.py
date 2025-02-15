@@ -29,6 +29,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+import github.GithubObject
 
 from . import Framework
 
@@ -142,7 +143,7 @@ class ExposeAllAttributes(Framework.TestCase):
         self.assertEqual(sum(len(attrs) for attrs in missingAttributes.values()), 0)
 
     def findMissingAttributes(self, obj):
-        if hasattr(obj, "update"):
+        if isinstance(obj, github.GithubObject.CompletableGithubObject):
             obj.update()
         className = obj.__class__.__name__
         missingAttributes = {}

@@ -52,6 +52,7 @@
 #                                                                              #
 ################################################################################
 
+import base64
 import contextlib
 import io
 import json
@@ -59,11 +60,12 @@ import os
 import traceback
 import unittest
 import warnings
+from io import BytesIO
 from typing import Optional
 
-import httpretty  # type: ignore
+import responses
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url  # type: ignore
+from urllib3.util import Url
 
 import github
 from github import Consts
@@ -106,6 +108,12 @@ class FakeHttpResponse:
     def read(self):
         return self.__output
 
+    def iter_content(self, chunk_size=1):
+        return iter([self.__output[i : i + chunk_size] for i in range(0, len(self.__output), chunk_size)])
+
+    def raise_for_status(self):
+        pass
+
 
 def fixAuthorizationHeader(headers):
     if "Authorization" in headers:
@@ -124,17 +132,29 @@ def fixAuthorizationHeader(headers):
 
 
 class RecordingConnection:
-    def __init__(self, file, protocol, host, port, *args, **kwds):
+    __openFile = None
+
+    @staticmethod
+    def setOpenFile(func):
+        RecordingConnection.__openFile = func
+
+    def __init__(self, protocol, host, port, *args, **kwds):
+        self.__file = self.__openFile("w")
         # write operations make the assumption that the file is not in binary mode
-        assert isinstance(file, io.TextIOBase)
-        self.__file = file
+        assert isinstance(self.__file, io.TextIOBase)
         self.__protocol = protocol
         self.__host = host
         self.__port = port
         self.__cnx = self._realConnection(host, port, *args, **kwds)
+        self.__stream = False
 
-    def request(self, verb, url, input, headers):
+    @property
+    def host(self):
+        return self.__host
+
+    def request(self, verb, url, input, headers, stream=False):
         self.__cnx.request(verb, url, input, headers)
+        self.__stream = stream
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
         # since we are writing here *before* doing the actual request.
@@ -157,16 +177,23 @@ class RecordingConnection:
 
         status = res.status
         headers = res.getheaders()
-        output = res.read()
+        output = res if self.__stream else res.read()
 
         self.__writeLine(status)
         self.__writeLine(list(headers))
-        self.__writeLine(output)
+        if self.__stream:
+            chunks = [chunk for chunk in output.iter_content(chunk_size=64)]
+            output = b"".join(chunks)
+            for chunk in chunks:
+                self.__writeLine(base64.b64encode(chunk).decode("ascii"))
+            self.__writeLine("")
+        else:
+            self.__writeLine(output)
+        self.__writeLine("")
 
         return FakeHttpResponse(status, headers, output)
 
     def close(self):
-        self.__writeLine("")
         return self.__cnx.close()
 
     def __writeLine(self, line):
@@ -176,33 +203,58 @@ class RecordingConnection:
 class RecordingHttpConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "http", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("http", *args, **kwds)
 
 
 class RecordingHttpsConnection(RecordingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "https", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("https", *args, **kwds)
 
 
 class ReplayingConnection:
-    def __init__(self, file, protocol, host, port, *args, **kwds):
-        self.__file = file
+    __openFile = None
+
+    @staticmethod
+    def setOpenFile(func):
+        ReplayingConnection.__openFile = func
+
+    def __init__(self, protocol, host, port, *args, **kwds):
+        self.__file = self.__openFile("r")
         self.__protocol = protocol
         self.__host = host
         self.__port = port
+        self.__stream = False
         self.response_headers = CaseInsensitiveDict()
 
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
-    def request(self, verb, url, input, headers):
-        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
+    @property
+    def host(self):
+        return self.__host
 
-        httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
+    def request(
+        self,
+        verb,
+        url,
+        input,
+        headers,
+        stream: bool = False,
+    ):
+        port = self.__port if self.__port else 443 if self.__protocol == "https" else 80
+        full_url = Url(scheme=self.__protocol, host=self.__host, port=port, path=url)
 
-        self.__cnx.request(verb, url, input, headers)
+        response_headers = self.response_headers.copy()
+        responses.add_callback(
+            method=verb,
+            url=full_url.url,
+            callback=lambda request: self.__request_callback(verb, full_url.url, response_headers),
+        )
+
+        self.__stream = stream
+        self.__cnx.request(verb, url, input, headers, stream=stream)
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
@@ -237,7 +289,16 @@ class ReplayingConnection:
 
         status = int(readLine(self.__file))
         self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
-        output = bytearray(readLine(self.__file), "utf-8")
+        if self.__stream:
+            output = BytesIO()
+            while True:
+                line = readLine(self.__file)
+                if not line:
+                    break
+                output.write(base64.b64decode(line))
+            output = output.getvalue()
+        else:
+            output = bytearray(readLine(self.__file), "utf-8")
         readLine(self.__file)
 
         # make a copy of the headers and remove the ones that interfere with the response handling
@@ -247,10 +308,10 @@ class ReplayingConnection:
         adding_headers.pop("content-encoding", None)
 
         response_headers.update(adding_headers)
+
         return [status, response_headers, output]
 
     def getresponse(self):
-        # call original connection, this will go all the way down to the python socket and will be intercepted by httpretty
         response = self.__cnx.getresponse()
 
         # restore original headers to the response
@@ -265,15 +326,15 @@ class ReplayingConnection:
 class ReplayingHttpConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "http", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("http", *args, **kwds)
 
 
 class ReplayingHttpsConnection(ReplayingConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
 
-    def __init__(self, file, *args, **kwds):
-        super().__init__(file, "https", *args, **kwds)
+    def __init__(self, *args, **kwds):
+        super().__init__("https", *args, **kwds)
 
 
 class BasicTestCase(unittest.TestCase):
@@ -294,9 +355,10 @@ class BasicTestCase(unittest.TestCase):
         if (
             self.recordMode
         ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
+            RecordingConnection.setOpenFile(self.__openFile)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("w"), *args, **kwds),
-                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("w"), *args, **kwds),
+                RecordingHttpConnection,
+                RecordingHttpsConnection,
             )
             import GithubCredentials  # type: ignore
 
@@ -315,16 +377,17 @@ class BasicTestCase(unittest.TestCase):
                 else None
             )
         else:
+            ReplayingConnection.setOpenFile(self.__openFile)
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(self.__openFile("r"), *args, **kwds),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self.__openFile("r"), *args, **kwds),
+                ReplayingHttpConnection,
+                ReplayingHttpsConnection,
             )
             self.login = github.Auth.Login("login", "password")
             self.oauth_token = github.Auth.Token("oauth_token")
             self.jwt = github.Auth.AppAuthToken("jwt")
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
-            httpretty.enable(allow_net_connect=False)
+            responses.start()
 
     @property
     def thisTestFailed(self) -> bool:
@@ -340,9 +403,8 @@ class BasicTestCase(unittest.TestCase):
 
     def tearDown(self):
         super().tearDown()
-        httpretty.disable()
-        httpretty.reset()
-
+        responses.stop()
+        responses.reset()
         self.__closeReplayFileIfNeeded(silent=self.thisTestFailed)
         github.Requester.Requester.resetConnectionClasses()
 

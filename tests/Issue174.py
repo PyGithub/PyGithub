@@ -37,8 +37,8 @@ from . import Framework
 class Issue174(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("twitter/bootstrap")
+        self.repo = self.g.get_repo("twbs/bootstrap")
 
-    def testGetDirContentsWhithHttpRedirect(self):
+    def testGetDirContentsWithHttpRedirect(self):
         contents = self.repo.get_contents("js/")
-        self.assertEqual(len(contents), 15)
+        self.assertEqual(len(contents), 5)

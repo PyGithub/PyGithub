@@ -390,6 +390,7 @@ class GithubRetry(unittest.TestCase):
         with mock.patch.object(retry, "_GithubRetry__log") as log:
             with self.assertRaises(github.GithubException) as exp:
                 retry.increment("TEST", "URL", response)
+            self.assertIsNone(exp.exception.message)
             self.assertEqual(403, exp.exception.status)
             self.assertEqual("NOT GOOD", exp.exception.data)
             self.assertEqual({}, exp.exception.headers)

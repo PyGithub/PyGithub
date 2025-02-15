@@ -49,33 +49,21 @@ class CodeScanAlert(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._number: Attribute[int] = NotSet
-        self._rule: Attribute[github.CodeScanRule.CodeScanRule] = NotSet
-        self._tool: Attribute[github.CodeScanTool.CodeScanTool] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
         self._dismissed_by: Attribute[github.NamedUser.NamedUser | None] = NotSet
         self._dismissed_reason: Attribute[str | None] = NotSet
-        self._url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._instances_url: Attribute[str] = NotSet
         self._most_recent_instance: Attribute[github.CodeScanAlertInstance.CodeScanAlertInstance] = NotSet
+        self._number: Attribute[int] = NotSet
+        self._rule: Attribute[github.CodeScanRule.CodeScanRule] = NotSet
         self._state: Attribute[str] = NotSet
+        self._tool: Attribute[github.CodeScanTool.CodeScanTool] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self.number})
-
-    @property
-    def number(self) -> int:
-        return self._number.value
-
-    @property
-    def rule(self) -> github.CodeScanRule.CodeScanRule:
-        return self._rule.value
-
-    @property
-    def tool(self) -> github.CodeScanTool.CodeScanTool:
-        return self._tool.value
 
     @property
     def created_at(self) -> datetime:
@@ -94,10 +82,6 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._dismissed_reason.value
 
     @property
-    def url(self) -> str:
-        return self._url.value
-
-    @property
     def html_url(self) -> str:
         return self._html_url.value
 
@@ -110,8 +94,24 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._most_recent_instance.value
 
     @property
+    def number(self) -> int:
+        return self._number.value
+
+    @property
+    def rule(self) -> github.CodeScanRule.CodeScanRule:
+        return self._rule.value
+
+    @property
     def state(self) -> str:
         return self._state.value
+
+    @property
+    def tool(self) -> github.CodeScanTool.CodeScanTool:
+        return self._tool.value
+
+    @property
+    def url(self) -> str:
+        return self._url.value
 
     def get_instances(self) -> PaginatedList[github.CodeScanAlertInstance.CodeScanAlertInstance]:
         """
@@ -128,13 +128,6 @@ class CodeScanAlert(NonCompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "number" in attributes:  # pragma no branch
-            self._number = self._makeIntAttribute(attributes["number"])
-        if "rule" in attributes:  # pragma no branch
-            self._rule = self._makeClassAttribute(github.CodeScanRule.CodeScanRule, attributes["rule"])
-        if "tool" in attributes:  # pragma no branch
-            self._tool = self._makeClassAttribute(github.CodeScanTool.CodeScanTool, attributes["tool"])
-
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "dismissed_at" in attributes:  # pragma no branch
@@ -143,9 +136,6 @@ class CodeScanAlert(NonCompletableGithubObject):
             self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
         if "dismissed_reason" in attributes:  # pragma no branch
             self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
-
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "instances_url" in attributes:  # pragma no branch
@@ -156,5 +146,14 @@ class CodeScanAlert(NonCompletableGithubObject):
                 github.CodeScanAlertInstance.CodeScanAlertInstance,
                 attributes["most_recent_instance"],
             )
+        if "number" in attributes:  # pragma no branch
+            self._number = self._makeIntAttribute(attributes["number"])
+        if "rule" in attributes:  # pragma no branch
+            self._rule = self._makeClassAttribute(github.CodeScanRule.CodeScanRule, attributes["rule"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "tool" in attributes:  # pragma no branch
+            self._tool = self._makeClassAttribute(github.CodeScanTool.CodeScanTool, attributes["tool"])
+
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

@@ -18,6 +18,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Bill Napier <napier@pobox.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -55,15 +56,46 @@ class RateLimit(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/rate-limit
 
+    The OpenAPI schema can be found at
+    - /components/schemas/rate-limit-overview/properties/resources
+
     """
 
     def _initAttributes(self) -> None:
+        self._actions_runner_registration: Attribute[Rate] = NotSet
+        self._code_scanning_upload: Attribute[Rate] = NotSet
+        self._code_search: Attribute[Rate] = NotSet
         self._core: Attribute[Rate] = NotSet
-        self._search: Attribute[Rate] = NotSet
+        self._dependency_snapshots: Attribute[Rate] = NotSet
         self._graphql: Attribute[Rate] = NotSet
+        self._integration_manifest: Attribute[Rate] = NotSet
+        self._scim: Attribute[Rate] = NotSet
+        self._search: Attribute[Rate] = NotSet
+        self._source_import: Attribute[Rate] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
+
+    @property
+    def actions_runner_registration(self) -> Rate:
+        """
+        Rate limit for registering self-hosted runners in GitHub Actions.
+        """
+        return self._actions_runner_registration.value
+
+    @property
+    def code_scanning_upload(self) -> Rate:
+        """
+        Rate limit for uploading SARIF results to code scanning.
+        """
+        return self._code_scanning_upload.value
+
+    @property
+    def code_search(self) -> Rate:
+        """
+        Rate limit for the REST API for searching code.
+        """
+        return self._code_search.value
 
     @property
     def core(self) -> Rate:
@@ -73,11 +105,11 @@ class RateLimit(NonCompletableGithubObject):
         return self._core.value
 
     @property
-    def search(self) -> Rate:
+    def dependency_snapshots(self) -> Rate:
         """
-        Rate limit for the Search API.
+        Rate limit for submitting snapshots to the dependency graph.
         """
-        return self._search.value
+        return self._dependency_snapshots.value
 
     @property
     def graphql(self) -> Rate:
@@ -86,10 +118,48 @@ class RateLimit(NonCompletableGithubObject):
         """
         return self._graphql.value
 
+    @property
+    def integration_manifest(self) -> Rate:
+        """
+        Rate limit for POST /app-manifests/{code}/conversions operation.
+        """
+        return self._integration_manifest.value
+
+    @property
+    def scim(self) -> github.Rate.Rate:
+        return self._scim.value
+
+    @property
+    def search(self) -> Rate:
+        """
+        Rate limit for the Search API.
+        """
+        return self._search.value
+
+    @property
+    def source_import(self) -> github.Rate.Rate:
+        return self._source_import.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "actions_runner_registration" in attributes:  # pragma no branch
+            self._actions_runner_registration = self._makeClassAttribute(
+                github.Rate.Rate, attributes["actions_runner_registration"]
+            )
+        if "code_scanning_upload" in attributes:  # pragma no branch
+            self._code_scanning_upload = self._makeClassAttribute(github.Rate.Rate, attributes["code_scanning_upload"])
+        if "code_search" in attributes:  # pragma no branch
+            self._code_search = self._makeClassAttribute(github.Rate.Rate, attributes["code_search"])
         if "core" in attributes:  # pragma no branch
             self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
-        if "search" in attributes:  # pragma no branch
-            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
+        if "dependency_snapshots" in attributes:  # pragma no branch
+            self._dependency_snapshots = self._makeClassAttribute(github.Rate.Rate, attributes["dependency_snapshots"])
         if "graphql" in attributes:  # pragma no branch
             self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])
+        if "integration_manifest" in attributes:  # pragma no branch
+            self._integration_manifest = self._makeClassAttribute(github.Rate.Rate, attributes["integration_manifest"])
+        if "scim" in attributes:  # pragma no branch
+            self._scim = self._makeClassAttribute(github.Rate.Rate, attributes["scim"])
+        if "search" in attributes:  # pragma no branch
+            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
+        if "source_import" in attributes:  # pragma no branch
+            self._source_import = self._makeClassAttribute(github.Rate.Rate, attributes["source_import"])

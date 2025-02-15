@@ -48,6 +48,8 @@
 ################################################################################
 
 
+from __future__ import annotations
+
 import warnings
 from datetime import datetime, timezone
 
@@ -58,20 +60,36 @@ class Team(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.org = self.g.get_organization("BeaverSoftware")
-        self.team = self.org.get_team(189850)
+        self.team = self.org.get_team(12345678)
 
     def testAttributes(self):
-        self.assertEqual(self.team.id, 189850)
-        self.assertEqual(self.team.members_count, 0)
-        self.assertEqual(self.team.name, "Team created by PyGithub")
+        self.assertEqual(self.team.created_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
+        self.assertEqual(self.team.description, "a team")
+        self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
+        self.assertEqual(self.team.id, 12345678)
+        self.assertIsNone(self.team.ldap_dn)
+        self.assertEqual(self.team.members_count, 1)
+        self.assertEqual(
+            self.team.members_url, "https://api.github.com/organizations/1234567/team/12345678/members{/member}"
+        )
+        self.assertEqual(self.team.name, "Team")
+        self.assertEqual(self.team.node_id, "AbCdEfG")
+        self.assertEqual(self.team.notification_setting, "notifications_disabled")
+        self.assertEqual(self.team.organization.login, "BeaverSoftware")
+        self.assertIsNone(self.team.parent)
         self.assertEqual(self.team.permission, "pull")
+        self.assertIsNone(self.team.permissions)
+        self.assertEqual(self.team.privacy, "closed")
         self.assertEqual(self.team.repos_count, 0)
-        self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
+        self.assertEqual(self.team.repositories_url, "https://api.github.com/organizations/1234567/team/12345678/repos")
+        self.assertEqual(self.team.slug, "team-slug")
+        self.assertEqual(self.team.updated_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
+        self.assertEqual(self.team.url, "https://api.github.com/organizations/1234567/team/12345678")
         self.assertEqual(self.team.organization, self.org)
         self.assertEqual(self.team.privacy, "closed")
         self.assertEqual(self.team.parent, None)
-        self.assertEqual(repr(self.team), 'Team(name="Team created by PyGithub", id=189850)')
-        self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/core")
+        self.assertEqual(repr(self.team), 'Team(name="Team", id=12345678)')
+        self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
 
     def testDiscussions(self):
         discussions = list(self.team.get_discussions())
@@ -83,7 +101,9 @@ class Team(Framework.TestCase):
         self.assertEqual(d.body_html, "<p>BODY</p>")
         self.assertEqual(d.body_version, "bedf0740b01d2d758cff9873c2387817")
         self.assertEqual(d.comments_count, 0)
-        self.assertEqual(d.comments_url, "https://api.github.com/teams/189850/discussions/1/comments")
+        self.assertEqual(
+            d.comments_url, "https://api.github.com/organizations/1234567/team/12345678/discussions/1/comments"
+        )
         self.assertEqual(d.created_at, datetime(2019, 10, 8, 21, 3, 36, tzinfo=timezone.utc))
         self.assertEqual(
             d.html_url,
@@ -94,10 +114,10 @@ class Team(Framework.TestCase):
         self.assertEqual(d.number, 1)
         self.assertEqual(d.pinned, True)
         self.assertEqual(d.private, False)
-        self.assertEqual(d.team_url, "https://api.github.com/teams/189850")
+        self.assertEqual(d.team_url, "https://api.github.com/organizations/1234567/team/12345678")
         self.assertEqual(d.title, "TITLE")
         self.assertEqual(d.updated_at, datetime(2019, 10, 8, 21, 3, 36, tzinfo=timezone.utc))
-        self.assertEqual(d.url, "https://api.github.com/teams/189850/discussions/1")
+        self.assertEqual(d.url, "https://api.github.com/organizations/1234567/team/12345678/discussions/1")
         self.assertEqual(repr(d), 'TeamDiscussion(title="TITLE", number=1)')
 
     def testMembers(self):
