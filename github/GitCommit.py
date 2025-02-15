@@ -43,14 +43,14 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import github.CommitVerification
 import github.GitAuthor
+import github.GitCommitVerification
 import github.GitTree
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, is_defined, is_undefined
 
 if TYPE_CHECKING:
-    from github.CommitVerification import CommitVerification
     from github.GitAuthor import GitAuthor
+    from github.GitCommitVerification import GitCommitVerification
     from github.GitTree import GitTree
 
 
@@ -87,7 +87,7 @@ class GitCommit(CompletableGithubObject):
         self._tree: Attribute[GitTree] = NotSet
         self._tree_id: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._verification: Attribute[CommitVerification] = NotSet
+        self._verification: Attribute[GitCommitVerification] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -168,7 +168,7 @@ class GitCommit(CompletableGithubObject):
         return self._url.value
 
     @property
-    def verification(self) -> CommitVerification:
+    def verification(self) -> GitCommitVerification:
         self._completeIfNotSet(self._verification)
         return self._verification.value
 
@@ -201,5 +201,5 @@ class GitCommit(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "verification" in attributes:  # pragma no branch
             self._verification = self._makeClassAttribute(
-                github.CommitVerification.CommitVerification, attributes["verification"]
+                github.GitCommitVerification.GitCommitVerification, attributes["verification"]
             )

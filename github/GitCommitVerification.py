@@ -28,9 +28,9 @@ from typing import Any
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class CommitVerification(NonCompletableGithubObject):
+class GitCommitVerification(NonCompletableGithubObject):
     """
-    This class represents CommitVerifications.
+    This class represents commit verifications.
 
     The reference can be found here
     https://docs.github.com/en/rest/commits/commits
