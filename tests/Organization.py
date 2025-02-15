@@ -43,6 +43,8 @@
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

@@ -28,6 +28,8 @@
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

@@ -49,6 +49,10 @@
 # Copyright 2024 Evan Fetsko <emfetsko@gmail.com>                              #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
+# Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Ryan Peach <github.essential257@passmail.net>                 #
+# Copyright 2025 a-sido <andrei.sidorenko.1993@gmail.com>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

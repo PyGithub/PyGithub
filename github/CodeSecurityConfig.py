@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2024 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
