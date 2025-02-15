@@ -35,6 +35,9 @@ class CommitVerification(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/commits/commits
 
+    The OpenAPI schema can be found at
+    - /components/schemas/git-commit/properties/verification
+
     """
 
     def _initAttributes(self) -> None:
