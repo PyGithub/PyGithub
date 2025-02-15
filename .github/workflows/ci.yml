@@ -74,12 +74,3 @@ jobs:
         with:
           name: Event File
           path: ${{ github.event_path }}
-
-  draft:
-    runs-on: ubuntu-latest
-    needs: test_success
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: release-drafter/release-drafter@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
