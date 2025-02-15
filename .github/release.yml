@@ -1,0 +1,19 @@
+changelog:
+  exclude:
+    labels: []
+    authors: []
+  categories:
+    - title: Breaking Changes
+      labels: ['breaking']
+    - title: New Features
+      labels: ['feature']
+    - title: Improvement
+      labels: ['improvement']
+    - title: Bug Fixes
+      labels: ['bugfix']
+    - title: Dependencies
+      labels: ['dependencies']
+    - title: Maintenance
+      labels: ['documentation', 'ci']
+    - title: Others
+      labels: ['*']
