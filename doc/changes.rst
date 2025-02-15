@@ -4,13 +4,15 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 2.6.0 (XXXXX)
----------------------
+Version 2.6.0 (February 15, 2025)
+---------------------------------
 
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 
-* View and clones traffic information returned by ``Repository.get_views_traffic`` and ``Repository.get_clones_traffic``
+* Rework ``Views`` and ``Clones`` (`#3168 <https://github.com/PyGithub/PyGithub/pull/3168>`_) (`f7d52249 <https://github.com/PyGithub/PyGithub/commit/f7d52249>`_):
+
+  View and clones traffic information returned by ``Repository.get_views_traffic`` and ``Repository.get_clones_traffic``
   now return proper PyGithub objects, instead of a ``dict``, with all information that used to be provided by the ``dict``:
 
 Code like
@@ -26,6 +28,116 @@ should be replaced with
 
   repo.get_views_traffic().views.timestamp
   repo.get_clones_traffic().clones.timestamp
+
+* Fix typos (`#3086 <https://github.com/PyGithub/PyGithub/pull/3086>`_) (`a50ae51b <https://github.com/PyGithub/PyGithub/commit/a50ae51b>`_):
+
+  Property ``OrganizationCustomProperty.respository_id`` renamed to ``OrganizationCustomProperty.repository_id``.
+
+New Features
+^^^^^^^^^^^^
+* Add capability for global laziness (`#2746 <https://github.com/PyGithub/PyGithub/pull/2746>`_) (`f23da453 <https://github.com/PyGithub/PyGithub/commit/f23da453>`_)
+* Add Support for GitHub Copilot Seat Management in Organizations (`#3082 <https://github.com/PyGithub/PyGithub/pull/3082>`_) (`b5f8f078 <https://github.com/PyGithub/PyGithub/commit/b5f8f078>`_)
+* Get branches where commit is head (`#3083 <https://github.com/PyGithub/PyGithub/pull/3083>`_) (`3d84a47a <https://github.com/PyGithub/PyGithub/commit/3d84a47a>`_)
+* Support downloading a Release Asset (`#3060 <https://github.com/PyGithub/PyGithub/pull/3060>`_) (`67cfdb21 <https://github.com/PyGithub/PyGithub/commit/67cfdb21>`_)
+* Add ``Repository.merge_upstream`` method (`#3175 <https://github.com/PyGithub/PyGithub/pull/3175>`_) (`2f95352e <https://github.com/PyGithub/PyGithub/commit/2f95352e>`_)
+* Support updating pull request draft status (`#3104 <https://github.com/PyGithub/PyGithub/pull/3104>`_) (`5ec7b775 <https://github.com/PyGithub/PyGithub/commit/5ec7b775>`_)
+* Add transfer ownership method to Repository (`#3091 <https://github.com/PyGithub/PyGithub/pull/3091>`_) (`b3ccd105 <https://github.com/PyGithub/PyGithub/commit/b3ccd105>`_)
+* Add enable and disable a Workflow (`#3088 <https://github.com/PyGithub/PyGithub/pull/3088>`_) (`7f7d2282 <https://github.com/PyGithub/PyGithub/commit/7f7d2282>`_)
+* Add support for managing Code Security Configurations (`#3095 <https://github.com/PyGithub/PyGithub/pull/3095>`_) (`ee5d1da3 <https://github.com/PyGithub/PyGithub/commit/ee5d1da3>`_)
+* Allow for private_key / sign function in AppAuth (`#3065 <https://github.com/PyGithub/PyGithub/pull/3065>`_) (`36697b22 <https://github.com/PyGithub/PyGithub/commit/36697b22>`_)
+* Add ``GitCommitVerification`` class (`#3028 <https://github.com/PyGithub/PyGithub/pull/3028>`_) (`822e6d71 <https://github.com/PyGithub/PyGithub/commit/822e6d71>`_)
+
+Improvements
+^^^^^^^^^^^^
+* Update RateLimit object with all the new categories GitHub added. (`#3096 <https://github.com/PyGithub/PyGithub/pull/3096>`_) (`152429d9 <https://github.com/PyGithub/PyGithub/commit/152429d9>`_)
+* Add support for make-latest to create_git_release and create_git_tag_and_release (`#3067 <https://github.com/PyGithub/PyGithub/pull/3067>`_) (`8ed5635f <https://github.com/PyGithub/PyGithub/commit/8ed5635f>`_)
+* Add branch protection support for ``required_status_checks.checks`` object (`#2884 <https://github.com/PyGithub/PyGithub/pull/2884>`_) (`764540d3 <https://github.com/PyGithub/PyGithub/commit/764540d3>`_)
+* Use id and tree_id from simple-commit to populate GitCommit.sha and GitCommit.tree (`#3167 <https://github.com/PyGithub/PyGithub/pull/3167>`_) (`04887640 <https://github.com/PyGithub/PyGithub/commit/04887640>`_)
+* Use message of response in GithubException (`#3185 <https://github.com/PyGithub/PyGithub/pull/3185>`_) (`bd35f7dd <https://github.com/PyGithub/PyGithub/commit/bd35f7dd>`_)
+* Sync Advisory classes with API spec (`#3193 <https://github.com/PyGithub/PyGithub/pull/3193>`_) (`d9d93c03 <https://github.com/PyGithub/PyGithub/commit/d9d93c03>`_)
+* Sync Branch class with API spec (`#3109 <https://github.com/PyGithub/PyGithub/pull/3109>`_) (`5570eba1 <https://github.com/PyGithub/PyGithub/commit/5570eba1>`_)
+* Sync BranchProtection class with API spec (`#3110 <https://github.com/PyGithub/PyGithub/pull/3110>`_) (`936b3ef5 <https://github.com/PyGithub/PyGithub/commit/936b3ef5>`_)
+* Sync CheckRunAnnotation class with API spec (`#3112 <https://github.com/PyGithub/PyGithub/pull/3112>`_) (`29eb0f58 <https://github.com/PyGithub/PyGithub/commit/29eb0f58>`_)
+* Sync CheckRun class with API spec (`#3111 <https://github.com/PyGithub/PyGithub/pull/3111>`_) (`3837c7df <https://github.com/PyGithub/PyGithub/commit/3837c7df>`_)
+* Sync CheckSuite class with API spec (`#3113 <https://github.com/PyGithub/PyGithub/pull/3113>`_) (`fa75d667 <https://github.com/PyGithub/PyGithub/commit/fa75d667>`_)
+* Sync Commit class with API spec (`#3116 <https://github.com/PyGithub/PyGithub/pull/3116>`_) (`b2748ed9 <https://github.com/PyGithub/PyGithub/commit/b2748ed9>`_)
+* Sync CommitComment class with API spec (`#3117 <https://github.com/PyGithub/PyGithub/pull/3117>`_) (`51945360 <https://github.com/PyGithub/PyGithub/commit/51945360>`_)
+* Sync CommitStatus class with API spec (`#3118 <https://github.com/PyGithub/PyGithub/pull/3118>`_) (`9a455056 <https://github.com/PyGithub/PyGithub/commit/9a455056>`_)
+* Sync ContentFile class with API spec (`#3119 <https://github.com/PyGithub/PyGithub/pull/3119>`_) (`a9aa872f <https://github.com/PyGithub/PyGithub/commit/a9aa872f>`_)
+* Sync DependabotAlert class with API spec (`#3120 <https://github.com/PyGithub/PyGithub/pull/3120>`_) (`79b4fc7c <https://github.com/PyGithub/PyGithub/commit/79b4fc7c>`_)
+* Sync Deployment class with API spec (`#3121 <https://github.com/PyGithub/PyGithub/pull/3121>`_) (`c2d3b5e2 <https://github.com/PyGithub/PyGithub/commit/c2d3b5e2>`_)
+* Sync DeploymentStatus class with API spec (`#3122 <https://github.com/PyGithub/PyGithub/pull/3122>`_) (`b3a06f07 <https://github.com/PyGithub/PyGithub/commit/b3a06f07>`_)
+* Sync Gist class with API spec (`#3123 <https://github.com/PyGithub/PyGithub/pull/3123>`_) (`6764017b <https://github.com/PyGithub/PyGithub/commit/6764017b>`_)
+* Sync GistComment class with API spec (`#3124 <https://github.com/PyGithub/PyGithub/pull/3124>`_) (`eb6019a4 <https://github.com/PyGithub/PyGithub/commit/eb6019a4>`_)
+* Sync GitBlob class with API spec (`#3125 <https://github.com/PyGithub/PyGithub/pull/3125>`_) (`876ff10d <https://github.com/PyGithub/PyGithub/commit/876ff10d>`_)
+* Sync GitCommit class with API spec (`#3126 <https://github.com/PyGithub/PyGithub/pull/3126>`_) (`6276e20f <https://github.com/PyGithub/PyGithub/commit/6276e20f>`_)
+* Sync GithubApp class with API spec (`#3127 <https://github.com/PyGithub/PyGithub/pull/3127>`_) (`5327617e <https://github.com/PyGithub/PyGithub/commit/5327617e>`_)
+* Sync GitRef class with API spec (`#3128 <https://github.com/PyGithub/PyGithub/pull/3128>`_) (`a69f1d6f <https://github.com/PyGithub/PyGithub/commit/a69f1d6f>`_)
+* Sync GitReleaseAsset class with API spec (`#3130 <https://github.com/PyGithub/PyGithub/pull/3130>`_) (`c5ab18f1 <https://github.com/PyGithub/PyGithub/commit/c5ab18f1>`_)
+* Sync GitRelease class with API spec (`#3129 <https://github.com/PyGithub/PyGithub/pull/3129>`_) (`ebf3fe8e <https://github.com/PyGithub/PyGithub/commit/ebf3fe8e>`_)
+* Sync GitTag class with API spec (`#3131 <https://github.com/PyGithub/PyGithub/pull/3131>`_) (`58f26d85 <https://github.com/PyGithub/PyGithub/commit/58f26d85>`_)
+* Sync GitTree class with API spec (`#3132 <https://github.com/PyGithub/PyGithub/pull/3132>`_) (`a38cb5ad <https://github.com/PyGithub/PyGithub/commit/a38cb5ad>`_)
+* Sync Hook class with API spec (`#3133 <https://github.com/PyGithub/PyGithub/pull/3133>`_) (`2e477f8c <https://github.com/PyGithub/PyGithub/commit/2e477f8c>`_)
+* Sync HookDelivery class with API spec (`#3134 <https://github.com/PyGithub/PyGithub/pull/3134>`_) (`15d57595 <https://github.com/PyGithub/PyGithub/commit/15d57595>`_)
+* Sync InstallationAuthorization class with API spec (`#3136 <https://github.com/PyGithub/PyGithub/pull/3136>`_) (`649de20b <https://github.com/PyGithub/PyGithub/commit/649de20b>`_)
+* Sync Installation class with API spec (`#3135 <https://github.com/PyGithub/PyGithub/pull/3135>`_) (`3e4185d8 <https://github.com/PyGithub/PyGithub/commit/3e4185d8>`_)
+* Sync Invitation class with API spec (`#3139 <https://github.com/PyGithub/PyGithub/pull/3139>`_) (`0df2e394 <https://github.com/PyGithub/PyGithub/commit/0df2e394>`_)
+* Sync Issue class with API spec (`#3140 <https://github.com/PyGithub/PyGithub/pull/3140>`_) (`769c6967 <https://github.com/PyGithub/PyGithub/commit/769c6967>`_)
+* Sync IssueComment class with API spec (`#3141 <https://github.com/PyGithub/PyGithub/pull/3141>`_) (`bb3353b4 <https://github.com/PyGithub/PyGithub/commit/bb3353b4>`_)
+* Sync IssueEvent class with API spec (`#3142 <https://github.com/PyGithub/PyGithub/pull/3142>`_) (`be44bb58 <https://github.com/PyGithub/PyGithub/commit/be44bb58>`_)
+* Sync IssuePullRequest class with API spec (`#3143 <https://github.com/PyGithub/PyGithub/pull/3143>`_) (`1836b073 <https://github.com/PyGithub/PyGithub/commit/1836b073>`_)
+* Sync Label class with API spec (`#3144 <https://github.com/PyGithub/PyGithub/pull/3144>`_) (`4535b9e1 <https://github.com/PyGithub/PyGithub/commit/4535b9e1>`_)
+* Sync License class with API spec (`#3145 <https://github.com/PyGithub/PyGithub/pull/3145>`_) (`dda13366 <https://github.com/PyGithub/PyGithub/commit/dda13366>`_)
+* Sync Membership class with API spec (`#3146 <https://github.com/PyGithub/PyGithub/pull/3146>`_) (`bc643cc8 <https://github.com/PyGithub/PyGithub/commit/bc643cc8>`_)
+* Sync Migration class with API spec (`#3147 <https://github.com/PyGithub/PyGithub/pull/3147>`_) (`dabc1fb2 <https://github.com/PyGithub/PyGithub/commit/dabc1fb2>`_)
+* Sync Milestone class with API spec (`#3148 <https://github.com/PyGithub/PyGithub/pull/3148>`_) (`12aee396 <https://github.com/PyGithub/PyGithub/commit/12aee396>`_)
+* Sync NamedUser class with API spec (`#3149 <https://github.com/PyGithub/PyGithub/pull/3149>`_) (`b481fab0 <https://github.com/PyGithub/PyGithub/commit/b481fab0>`_)
+* Sync Organization class with API spec (`#3150 <https://github.com/PyGithub/PyGithub/pull/3150>`_) (`5b36bc40 <https://github.com/PyGithub/PyGithub/commit/5b36bc40>`_)
+* Sync OrganizationCustomProperty class with API spec (`#3151 <https://github.com/PyGithub/PyGithub/pull/3151>`_) (`519b61b0 <https://github.com/PyGithub/PyGithub/commit/519b61b0>`_)
+* Sync Project class with API spec (`#3194 <https://github.com/PyGithub/PyGithub/pull/3194>`_) (`6ed83964 <https://github.com/PyGithub/PyGithub/commit/6ed83964>`_)
+* Sync PublicKey class with API spec (`#3152 <https://github.com/PyGithub/PyGithub/pull/3152>`_) (`26c284bc <https://github.com/PyGithub/PyGithub/commit/26c284bc>`_)
+* Sync PullRequest class with API spec (`#3153 <https://github.com/PyGithub/PyGithub/pull/3153>`_) (`563bdbb4 <https://github.com/PyGithub/PyGithub/commit/563bdbb4>`_)
+* Sync PullRequestComment class with API spec (`#3154 <https://github.com/PyGithub/PyGithub/pull/3154>`_) (`e262c2ee <https://github.com/PyGithub/PyGithub/commit/e262c2ee>`_)
+* Sync RateLimit class with API spec (`#3155 <https://github.com/PyGithub/PyGithub/pull/3155>`_) (`db1e8797 <https://github.com/PyGithub/PyGithub/commit/db1e8797>`_)
+* Sync Repository class with API spec (`#3156 <https://github.com/PyGithub/PyGithub/pull/3156>`_) (`f03b3163 <https://github.com/PyGithub/PyGithub/commit/f03b3163>`_)
+* Sync RepositoryKey class with API spec (`#3157 <https://github.com/PyGithub/PyGithub/pull/3157>`_) (`365f9899 <https://github.com/PyGithub/PyGithub/commit/365f9899>`_)
+* Sync SecurityAndAnalysis class with API spec (`#3158 <https://github.com/PyGithub/PyGithub/pull/3158>`_) (`65546abd <https://github.com/PyGithub/PyGithub/commit/65546abd>`_)
+* Sync SelfHostedActionsRunner class with API spec (`#3159 <https://github.com/PyGithub/PyGithub/pull/3159>`_) (`ea4a8d1d <https://github.com/PyGithub/PyGithub/commit/ea4a8d1d>`_)
+* Sync SourceImport class with API spec (`#3160 <https://github.com/PyGithub/PyGithub/pull/3160>`_) (`4d989733 <https://github.com/PyGithub/PyGithub/commit/4d989733>`_)
+* Sync Tag class with API spec (`#3161 <https://github.com/PyGithub/PyGithub/pull/3161>`_) (`a0a25bce <https://github.com/PyGithub/PyGithub/commit/a0a25bce>`_)
+* Sync Team class with API spec (`#3162 <https://github.com/PyGithub/PyGithub/pull/3162>`_) (`a1e68550 <https://github.com/PyGithub/PyGithub/commit/a1e68550>`_)
+* Sync Topic class with API spec (`#3163 <https://github.com/PyGithub/PyGithub/pull/3163>`_) (`67eced78 <https://github.com/PyGithub/PyGithub/commit/67eced78>`_)
+* Sync UserKey class with API spec (`#3164 <https://github.com/PyGithub/PyGithub/pull/3164>`_) (`9d04305a <https://github.com/PyGithub/PyGithub/commit/9d04305a>`_)
+* Sync Workflow class with API spec (`#3165 <https://github.com/PyGithub/PyGithub/pull/3165>`_) (`b656a311 <https://github.com/PyGithub/PyGithub/commit/b656a311>`_)
+* Sync WorkflowRun class with API spec (`#3166 <https://github.com/PyGithub/PyGithub/pull/3166>`_) (`468fa1b3 <https://github.com/PyGithub/PyGithub/commit/468fa1b3>`_)
+
+Bug Fixes
+^^^^^^^^^
+* Patch httpretty socket for latest urllib3 release (`#3102 <https://github.com/PyGithub/PyGithub/pull/3102>`_) (`81f8f05b <https://github.com/PyGithub/PyGithub/commit/81f8f05b>`_)
+* Fix API break when contents not found (`#3181 <https://github.com/PyGithub/PyGithub/pull/3181>`_) (`d90323fa <https://github.com/PyGithub/PyGithub/commit/d90323fa>`_)
+* Change ``start_side`` argument of ``PullRequest.create_review_comment`` from ``int`` to ``str`` (`#3170 <https://github.com/PyGithub/PyGithub/pull/3170>`_) (`f814de7d <https://github.com/PyGithub/PyGithub/commit/f814de7d>`_)
+* Create Review Request - transform string params to a list (`#3099 <https://github.com/PyGithub/PyGithub/pull/3099>`_) (`8aef11c0 <https://github.com/PyGithub/PyGithub/commit/8aef11c0>`_)
+* Fix ``Repository.get_contents`` redirection (`#3183 <https://github.com/PyGithub/PyGithub/pull/3183>`_) (`193f6991 <https://github.com/PyGithub/PyGithub/commit/193f6991>`_)
+
+Others
+^^^^^^
+* Fix typos (`#3086 <https://github.com/PyGithub/PyGithub/pull/3086>`_) (`a50ae51b <https://github.com/PyGithub/PyGithub/commit/a50ae51b>`_)
+* Make ``conclusion`` nullable in ``WorkflowJob.py`` (`#3171 <https://github.com/PyGithub/PyGithub/pull/3171>`_) (`8d8eb06d <https://github.com/PyGithub/PyGithub/commit/8d8eb06d>`_)
+* Rename ``Github.get_organization`` argument ``login`` to ``org`` (`#3187 <https://github.com/PyGithub/PyGithub/pull/3187>`_) (`9e3cf209 <https://github.com/PyGithub/PyGithub/commit/9e3cf209>`_)
+* Make ``NotSet`` an ``Attribute[Any]`` (`#3057 <https://github.com/PyGithub/PyGithub/pull/3057>`_)
+
+Maintenance
+^^^^^^^^^^^
+* Sort attributes and properties in GitHub classes (`#3105 <https://github.com/PyGithub/PyGithub/pull/3105>`_) (`f3986b57 <https://github.com/PyGithub/PyGithub/commit/f3986b57>`_)
+* Preparations for maintaining Github classes by code (`#3106 <https://github.com/PyGithub/PyGithub/pull/3106>`_) (`842a1b02 <https://github.com/PyGithub/PyGithub/commit/842a1b02>`_)
+* Annotate Github classes with API schemas (`#3107 <https://github.com/PyGithub/PyGithub/pull/3107>`_) (`d092f478 <https://github.com/PyGithub/PyGithub/commit/d092f478>`_)
+* Make Pickle test use recorded data (`#3137 <https://github.com/PyGithub/PyGithub/pull/3137>`_) (`1990eb92 <https://github.com/PyGithub/PyGithub/commit/1990eb92>`_)
+* Add tests for file and stream downloads (`#3182 <https://github.com/PyGithub/PyGithub/pull/3182>`_) (`d483fe25 <https://github.com/PyGithub/PyGithub/commit/d483fe25>`_)
+* Use ``responses`` instead of ``httpretty`` in tests (`#3087 <https://github.com/PyGithub/PyGithub/pull/3087>`_) (`9b293d44 <https://github.com/PyGithub/PyGithub/commit/9b293d44>`_)
+* [CI] Publish test results (`#3195 <https://github.com/PyGithub/PyGithub/pull/3195>`_)
+* Link Commit to correct upstream documentation (`#2936 <https://github.com/PyGithub/PyGithub/pull/2936>`_) (`4d307a7c <https://github.com/PyGithub/PyGithub/commit/4d307a7c>`_)
+* Replace release drafter with Github release note generation (`#3196 <https://github.com/PyGithub/PyGithub/pull/3196>`_) (`6f9a2983 <https://github.com/PyGithub/PyGithub/commit/6f9a2983>`_)
+* Add maintenance label to release.yml (`#3197 <https://github.com/PyGithub/PyGithub/pull/3197>`_) (`cab8d078 <https://github.com/PyGithub/PyGithub/commit/cab8d078>`_)
 
 Version 2.5.0 (November 06, 2024)
 ---------------------------------
