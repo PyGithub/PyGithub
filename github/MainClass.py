@@ -115,6 +115,7 @@ import github.GithubIntegration
 import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
+import github.Issue
 import github.License
 import github.NamedUser
 import github.Topic
@@ -139,7 +140,7 @@ if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.GitignoreTemplate import GitignoreTemplate
     from github.GlobalAdvisory import GlobalAdvisory
-    from github.Issue import Issue
+    from github.Issue import IssueSearchResult
     from github.License import License
     from github.NamedUser import NamedUser
     from github.Organization import Organization
@@ -741,14 +742,14 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[Issue]:
+    ) -> PaginatedList[IssueSearchResult]:
         """
         :calls: `GET /search/issues <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('comments', 'created', 'updated')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
+        :rtype: :class:`PaginatedList` of :class:`github.Issue.IssueSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -769,7 +770,7 @@ class Github:
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
 
-        return PaginatedList(github.Issue.Issue, self.__requester, "/search/issues", url_parameters)
+        return PaginatedList(github.Issue.IssueSearchResult, self.__requester, "/search/issues", url_parameters)
 
     def search_code(
         self,
