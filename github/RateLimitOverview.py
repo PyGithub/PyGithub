@@ -45,7 +45,6 @@ class RateLimitOverview(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        super()._initAttributes()
         self._rate: Attribute[Rate] = NotSet
         self._resources: Attribute[RateLimit] = NotSet
 
@@ -61,7 +60,6 @@ class RateLimitOverview(NonCompletableGithubObject):
         return self._resources.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        super()._useAttributes(attributes)
         if "rate" in attributes:  # pragma no branch
             self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])
         if "resources" in attributes:  # pragma no branch
