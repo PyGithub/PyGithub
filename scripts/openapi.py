@@ -1617,7 +1617,7 @@ class OpenApi:
                 schemas_of_path = [
                     components.lstrip("#")
                     for status, response in responses_of_path.items()
-                    if "content" in response
+                    if status.isnumeric() and int(status) < 400 and "content" in response
                     for schema in [response.get("content").get("application/json", {}).get("schema", {})]
                     for components in self.get_inner_spec_types(
                         schema, schema_path + [str(status), "content", '"application/json"', "schema"]
