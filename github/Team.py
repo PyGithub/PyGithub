@@ -81,7 +81,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 
 if TYPE_CHECKING:
     from github.Membership import Membership
-    from github.NamedUser import NamedUser
+    from github.NamedUser import NamedUser, OrganizationInvitation
     from github.Organization import Organization
     from github.PaginatedList import PaginatedList
     from github.Permissions import Permissions
@@ -426,12 +426,12 @@ class Team(CompletableGithubObject):
             github.Repository.Repository, self._requester, f"{self.url}/repos", None
         )
 
-    def invitations(self) -> PaginatedList[NamedUser]:
+    def invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
         :calls: `GET /teams/{id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
         """
         return github.PaginatedList.PaginatedList(
-            github.NamedUser.NamedUser,
+            github.NamedUser.OrganizationInvitation,
             self._requester,
             f"{self.url}/invitations",
             None,
