@@ -21,12 +21,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from github.GithubObject import NonCompletableGithubObject
-from github.GithubObject import Attribute, NotSet
-import github.RateLimit
 import github.Rate
+import github.RateLimit
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Rate import Rate
+    from github.RateLimit import RateLimit
 
 
 class RateLimitOverview(NonCompletableGithubObject):
@@ -47,9 +50,7 @@ class RateLimitOverview(NonCompletableGithubObject):
         self._resources: Attribute[RateLimit] = NotSet
 
     def __repr__(self) -> str:
-        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
-        #   pre-commit run --all-files
-        return self.get__repr__({"some_attribute": self._some_attribute.value})
+        return self.get__repr__({"rate": self._rate.value})
 
     @property
     def rate(self) -> Rate:
@@ -65,4 +66,3 @@ class RateLimitOverview(NonCompletableGithubObject):
             self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])
         if "resources" in attributes:  # pragma no branch
             self._resources = self._makeClassAttribute(github.RateLimit.RateLimit, attributes["resources"])
-
