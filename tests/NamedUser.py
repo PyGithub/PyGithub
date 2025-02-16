@@ -465,3 +465,38 @@ class NamedUser(Framework.TestCase):
         self.assertTrue(u1 == u2)
         self.assertEqual(u1, u2)
         self.assertEqual(u1.__hash__(), u2.__hash__())
+
+class OrganizationInvitation(Framework.TestCase):
+    def setUp(self):
+        super().setUp()
+        # TODO: create an instance of type OrganizationInvitation and assign to self.attr, then run:
+        #   pytest tests/OrganizationInvitation.py -k testAttributes --record --auth_with_token
+        #   sed -i -e "s/token private_token_removed/Basic login_and_password_removed/" tests/ReplayData/OrganizationInvitation.setUp.txt
+        #   ./scripts/update-assertions.sh tests/OrganizationInvitation.py testAttributes
+        self.org = self.g.get_organization("TestOrganization2072")
+        self.invitations = list(self.org.invitations())
+        self.assertGreater(len(self.invitations), 0)
+        self.invitation = self.invitations[0]
+
+    def testAttributes(self):
+        self.assertIsNotNone(self.invitation)
+        self.assertEqual(self.invitation.created_at, "")
+        self.assertEqual(self.invitation.email, 'foo@bar.org')
+        self.assertEqual(self.invitation.failed_at, "")
+        self.assertEqual(self.invitation.failed_reason, "")
+        self.assertEqual(self.invitation.id, 0)
+        self.assertEqual(self.invitation.invitation_source, "")
+        self.assertEqual(self.invitation.invitation_teams_url, "")
+        self.assertEqual(self.invitation.inviter.login, "")
+        self.assertEqual(self.invitation.login, "")
+        self.assertEqual(self.invitation.node_id, "")
+        self.assertEqual(self.invitation.role, "")
+        self.assertEqual(self.invitation.team_count, 0)
+        self.assertEqual(self.invitation.url, "")
+
+    def testCancel(self):
+        self.assertFalse(any([i for i in self.org.invitations() if i.email == "foo@bar.org"]))
+        self.org.invite_user(email="foo@bar.org")
+        self.assertTrue(any([i for i in self.org.invitations() if i.email == "foo@bar.org"]))
+        invitation = [i for i in self.org.invitations() if i.email == "foo@bar.org"][0]
+        self.assertTrue(self.org.cancel_invitation(invitation))
