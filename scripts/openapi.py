@@ -27,6 +27,7 @@ import argparse
 import dataclasses
 import difflib
 import json
+import os.path
 import sys
 from collections import Counter
 from json import JSONEncoder
@@ -1328,17 +1329,20 @@ class OpenApi:
         return transformer.schema_added
 
     @staticmethod
-    def write_code(orig_code: str, updated_code: str, filename: str, dry_run: bool):
+    def write_code(orig_code: str, updated_code: str, filename: str, dry_run: bool) -> bool:
         if dry_run:
             diff = difflib.unified_diff(orig_code.splitlines(1), updated_code.splitlines(1))
+            changes = "".join(diff)
             print("Diff:")
-            print("".join(diff))
+            print(changes)
+            return len(changes) > 0
         else:
             if updated_code != orig_code:
                 with open(filename, "w") as w:
                     w.write(updated_code)
+            return True
 
-    def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool):
+    def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool) -> bool:
         with open(index_filename) as r:
             index = json.load(r)
         classes = index.get("classes", {})
@@ -1397,7 +1401,7 @@ class OpenApi:
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
-                self.write_code(code, tree_updated.code, filename, dry_run)
+                changed = self.write_code(code, tree_updated.code, filename, dry_run)
 
                 if tests:
                     with open(test_filename) as r:
@@ -1408,9 +1412,11 @@ class OpenApi:
                     )
                     tree = cst.parse_module(code)
                     tree_updated = tree.visit(transformer)
-                    self.write_code(code, tree_updated.code, test_filename, dry_run)
+                    changed = self.write_code(code, tree_updated.code, test_filename, dry_run) or changed
 
-    def index(self, github_path: str, index_filename: str):
+                return changed
+
+    def index(self, github_path: str, index_filename: str, dry_run: bool) -> bool:
         import multiprocessing
 
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
@@ -1484,10 +1490,20 @@ class OpenApi:
                 },
             }
 
-            with open(index_filename, "w") as w:
-                json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+            if dry_run:
+                if os.path.exists(index_filename):
+                    with open(index_filename, "r") as w:
+                        orig_json = w.read()
+                    # compare the serialized json for stability, not the dict
+                    data_json = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+                    return orig_json != data_json
+            else:
+                with open(index_filename, "w") as w:
+                    json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
 
-    def suggest(self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool):
+            return True
+
+    def suggest(self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
             spec = json.load(r)
@@ -1495,6 +1511,7 @@ class OpenApi:
             index = json.load(r)
 
         schemas_added = 0
+        schemas_suggested = 0
 
         if class_names:
             if len(class_names) == 1:
@@ -1605,6 +1622,7 @@ class OpenApi:
                     print(f"Adding schemas to {cls}")
                     added = self.add_schema_to_class(clazz_name, filename, schemas_to_implement, dry_run)
                     schemas_added += added
+            schemas_suggested += len(schemas_to_implement)
 
         # suggest schemas based on API calls
         available_schemas = {}
@@ -1679,14 +1697,20 @@ class OpenApi:
                     print(f"Adding schemas to {cls}")
                     added = self.add_schema_to_class(cls, filename, schemas_to_implement, dry_run)
                     schemas_added += added
+            schemas_suggested += len(schemas_to_implement)
 
         print(f"Added {schemas_added} schemas")
+        print(f"Suggested {schemas_suggested} schemas")
+        return schemas_suggested > 0
 
     @staticmethod
     def parse_args():
         args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
         args_parser.add_argument(
             "--dry-run", default=False, action="store_true", help="Show prospect changes and do not modify any files"
+        )
+        args_parser.add_argument(
+            "--exit-code", default=False, action="store_true", help="Indicate changes via non-zeor exit code"
         )
         args_parser.add_argument("--verbose", default=False, action="store_true", help="Provide more information")
 
@@ -1715,18 +1739,23 @@ class OpenApi:
         return args_parser.parse_args()
 
     def main(self):
+        changes = False
         if args.subcommand == "index":
-            self.index(self.args.github_path, self.args.index_filename)
+            changes = self.index(self.args.github_path, self.args.index_filename, self.args.dry_run)
         elif self.args.subcommand == "suggest":
-            self.suggest(
+            changes = self.suggest(
                 self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
             )
         elif self.args.subcommand == "apply":
-            self.apply(
+            changes = self.apply(
                 self.args.spec, self.args.index_filename, self.args.class_name, self.args.dry_run, self.args.tests
             )
         else:
             raise RuntimeError("Subcommand not implemented " + args.subcommand)
+
+        # indicate changes via exit code
+        if self.args.exit_code and changes:
+            sys.exit(1)
 
 
 if __name__ == "__main__":
