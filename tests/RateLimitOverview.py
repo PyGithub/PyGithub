@@ -21,22 +21,14 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
 from . import Framework
 
 
 class RateLimitOverview(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        # TODO: create an instance of type RateLimitOverview and assign to self.attr, then run:
-        #   pytest tests/RateLimitOverview.py -k testAttributes --record --auth_with_token
-        #   sed -i -e "s/token private_token_removed/Basic login_and_password_removed/" tests/ReplayData/RateLimitOverview.setUp.txt
-        #   ./scripts/update-assertions.sh tests/RateLimitOverview.py testAttributes
-        #   pre-commit run --all-files
-        self.attr = None
+        self.rate_limit_overview = self.g.get_rate_limit()
 
     def testAttributes(self):
-        self.assertEqual(self.attr.rate.limit, "")
-        self.assertEqual(self.attr.resources.core, "")
-        self.assertEqual(self.attr.url, "")
+        self.assertEqual(self.rate_limit_overview.rate.limit, "")
+        self.assertEqual(self.rate_limit_overview.resources.core, "")
