@@ -70,6 +70,54 @@ class GithubClass:
     def __repr__(self):
         return ".".join([self.package, self.module, self.name])
 
+    @property
+    def short_class_name(self) -> str:
+        return self.name.split(".")[-1]
+
+    @property
+    def full_class_name(self) -> str:
+        return f'{self.package}.{self.module}.{self.name}'
+
+    @property
+    def test_filename(self) -> str:
+        return f"tests/{self.module}.py"
+
+    @staticmethod
+    def from_class_name(class_name: str, index: dict[str, Any] | None = None) -> GithubClass:
+        if "." in class_name:
+            full_class_name = class_name
+            package, module, class_name = full_class_name.split(".", 2)
+            if index is not None:
+                clazz = GithubClass.from_class_name(class_name, index)
+                if clazz.package != package or clazz.module != module or clazz.name != class_name:
+                    raise ValueError(f"Class mismatch: {full_class_name} vs {clazz}")
+                return clazz
+            else:
+                return GithubClass(
+                    ids=[],
+                    package="github",
+                    module=class_name,
+                    name=class_name,
+                    filename=f"{package}/{module}.py",
+                    bases=[],
+                    inheritance=[],
+                    methods={},
+                    properties={},
+                    schemas=[],
+                    docstring=""
+                )
+        else:
+            if index is not None:
+                classes = index.get("classes", {})
+                if class_name not in classes:
+                    raise ValueError(f"Unknown class {class_name}")
+                cls = classes.get(class_name)
+                if any(key not in cls for key in ["package", "module", "name"]):
+                    raise KeyError(f"Missing package, module or name in {cls}")
+                return GithubClass(**cls)
+            else:
+                return GithubClass.from_class_name(f"github.{class_name}.{class_name}")
+
 
 @dataclasses.dataclass(frozen=True)
 class Property:
@@ -1348,26 +1396,13 @@ class OpenApi:
         classes = index.get("classes", {})
 
         for class_name in class_names:
-            full_class_name = class_name
-            if "." not in class_name:
-                if class_name not in classes:
-                    raise ValueError(f"Unknown class {class_name}")
-                cls = classes.get(class_name)
-                if any(key not in cls for key in ["package", "module", "name"]):
-                    raise KeyError(f"Missing package, module or name in {cls}")
-                full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
-            package, module, class_name = full_class_name.split(".", maxsplit=2)
-            class_name_short = class_name.split(".")[-1]
-            filename = f"{package}/{module}.py"
-            test_filename = f"tests/{module}.py"
+            clazz = GithubClass.from_class_name(class_name, index)
 
-            print(f"Applying spec {spec_file} to {full_class_name} ({filename})")
+            print(f"Applying spec {spec_file} to {clazz.full_class_name} ({clazz.filename})")
             with open(spec_file) as r:
                 spec = json.load(r)
-            with open(index_filename) as r:
-                index = json.load(r)
 
-            cls = classes.get(class_name_short, {})
+            cls = classes.get(clazz.short_class_name, {})
             irrelevant_bases = {
                 inheritance
                 for base in ["GithubObject", "CompletableGithubObject", "NonCompletableGithubObject"]
@@ -1393,26 +1428,26 @@ class OpenApi:
                     if k not in inherited_properties
                 }
 
-                with open(filename) as r:
+                with open(clazz.filename) as r:
                     code = "".join(r.readlines())
 
                 transformer = ApplySchemaTransformer(
-                    module, class_name, genuine_properties.copy(), completable=completable, deprecate=False
+                    clazz.module, class_name, genuine_properties.copy(), completable=completable, deprecate=False
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
-                changed = self.write_code(code, tree_updated.code, filename, dry_run)
+                changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
 
                 if tests:
-                    with open(test_filename) as r:
+                    with open(clazz.test_filename) as r:
                         code = "".join(r.readlines())
 
                     transformer = ApplySchemaTestTransformer(
-                        cls.get("ids", []), module, class_name, all_properties.copy(), deprecate=False
+                        cls.get("ids", []), clazz.module, class_name, all_properties.copy(), deprecate=False
                     )
                     tree = cst.parse_module(code)
                     tree_updated = tree.visit(transformer)
-                    changed = self.write_code(code, tree_updated.code, test_filename, dry_run) or changed
+                    changed = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or changed
 
                 return changed
 
