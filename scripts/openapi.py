@@ -422,6 +422,17 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         decorators.append(cst.Decorator(decorator=cst.Name(value="deprecated")))
         return node.with_changes(decorators=decorators)
 
+    def inner_github_type(self, data_type: PythonType | GithubClass | list[PythonType | GithubClass]) -> [GithubClass]:
+        if data_type is None:
+            return []
+        if isinstance(data_type, list):
+            return [ght for dt in data_type for ght in self.inner_github_type(dt)]
+        if isinstance(data_type, PythonType):
+            return self.inner_github_type(data_type.inner_types)
+        if isinstance(data_type, GithubClass):
+            return [data_type]
+        raise ValueError(f"Unsupported data type", data_type)
+
     def leave_Module(self, original_node: Module, updated_node: Module) -> Module:
         i = 0
         node = updated_node
@@ -430,11 +441,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         node = self.add_future_import(node)
 
         property_classes = {
-            p.data_type
+            ghc
             for p in self.all_properties
-            if isinstance(p.data_type, GithubClass)
-            and p.data_type.module != self.module_name
-            and p.data_type.name != self.class_name
+            for ghc in self.inner_github_type(p.data_type)
+            if ghc.module != self.module_name and ghc.name != self.class_name
         }
         import_classes = sorted(property_classes, key=lambda c: c.module)
         typing_classes = sorted(property_classes, key=lambda c: c.module)
@@ -614,7 +624,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             decorators=[cst.Decorator(decorator=cst.Name(value="property"))],
             name=cst.Name(value=name),
             params=cst.Parameters(params=[cst.Param(cst.Name("self"))]),
-            returns=cst.Annotation(annotation=self.create_type(data_type)),
+            returns=cst.Annotation(annotation=self.create_type(data_type, short_class_name=True)),
             body=cst.IndentedBlock(body=stmts),
         )
 
@@ -1117,8 +1127,11 @@ class IndexFileWorker:
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
-        tree = cst.parse_module(code)
-        tree.visit(visitor)
+        try:
+            tree = cst.parse_module(code)
+            tree.visit(visitor)
+        except Exception as e:
+            raise RuntimeError(f"Failed to parse {filename}", e)
 
 
 class OpenApi:
@@ -1182,6 +1195,8 @@ class OpenApi:
                 for idx, component in enumerate(schema.get("oneOf"))
                 for spec_type in self.get_inner_spec_types(component, schema_path + ["oneOf", str(idx)])
             ]
+        if "allOf" in schema and len(schema.get("allOf")) == 1:
+            return [schema.get("allOf")[0].get("$ref")]
         if schema.get("type") == "object":
             # extract the inner type of pagination objects
             if "properties" in schema:
@@ -1202,6 +1217,8 @@ class OpenApi:
         data_type = schema_type.get("type")
         if "$ref" in schema_type:
             schema = schema_type.get("$ref").strip("# ")
+        elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
+            return self.as_python_type(schema_type.get("allOf")[0], schema_path + ["allOf", "0"])
         if data_type == "object":
             schema = "/".join([""] + schema_path)
         if schema is not None:
@@ -1362,9 +1379,13 @@ class OpenApi:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
 
-                properties = {
+                all_properties = {
                     k: (self.as_python_type(v, schema_path + ["properties", k]), v.get("deprecated", False))
                     for k, v in schema.get("properties", {}).items()
+                }
+                genuine_properties = {
+                    k: v
+                    for k, v in all_properties.items()
                     if k not in inherited_properties
                 }
 
@@ -1372,7 +1393,7 @@ class OpenApi:
                     code = "".join(r.readlines())
 
                 transformer = ApplySchemaTransformer(
-                    module, class_name, properties.copy(), completable=completable, deprecate=False
+                    module, class_name, genuine_properties.copy(), completable=completable, deprecate=False
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
@@ -1383,7 +1404,7 @@ class OpenApi:
                         code = "".join(r.readlines())
 
                     transformer = ApplySchemaTestTransformer(
-                        cls.get("ids", []), module, class_name, properties.copy(), deprecate=False
+                        cls.get("ids", []), module, class_name, all_properties.copy(), deprecate=False
                     )
                     tree = cst.parse_module(code)
                     tree_updated = tree.visit(transformer)
