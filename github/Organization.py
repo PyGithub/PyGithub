@@ -127,7 +127,7 @@ if TYPE_CHECKING:
     from github.Issue import Issue
     from github.Label import Label
     from github.Migration import Migration
-    from github.NamedUser import NamedUser
+    from github.NamedUser import NamedUser, OrganizationInvitation
     from github.OrganizationCustomProperty import (
         CustomProperty,
         OrganizationCustomProperty,
@@ -1264,12 +1264,12 @@ class Organization(CompletableGithubObject):
         """
         return PaginatedList(github.Team.Team, self._requester, f"{self.url}/teams", None)
 
-    def invitations(self) -> PaginatedList[NamedUser]:
+    def invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
         :calls: `GET /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
         """
         return PaginatedList(
-            github.NamedUser.NamedUser,
+            github.NamedUser.OrganizationInvitation,
             self._requester,
             f"{self.url}/invitations",
             None,
