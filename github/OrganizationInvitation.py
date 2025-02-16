@@ -44,8 +44,7 @@ class OrganizationInvitation(NamedUser):
         self._invitation_source: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict
-        return self.get__repr__({"some_attribute": self._some_attribute.value})
+        return self.get__repr__({"id": self._id.value})
 
     @property
     def failed_at(self) -> str:
