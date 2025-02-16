@@ -33,6 +33,7 @@ from collections import Counter
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
+from tempfile import NamedTemporaryFile
 from typing import Any, Sequence
 
 import libcst as cst
@@ -1737,9 +1738,150 @@ class OpenApi:
         print(f"Suggested {schemas_suggested} schemas")
         return schemas_suggested > 0
 
+    def create(self, github_path: str, spec_file: str, index_filename: str, class_name: str, parent_name: str, docs_url: str, schemas: list[str], dry_run: bool, tests: bool) -> bool:
+        with open(spec_file) as r:
+            spec = json.load(r)
+        with open(index_filename) as r:
+            index = json.load(r)
+
+        clazz = GithubClass.from_class_name(class_name)
+        parent_class = GithubClass.from_class_name(parent_name, index)
+        print(f"Creating class {clazz.full_class_name} with parent {parent_class.full_class_name} in {clazz.filename}")
+        if os.path.exists(clazz.filename):
+            raise ValueError(f"File exists already: {clazz.filename}")
+        if tests and os.path.exists(clazz.test_filename):
+            raise ValueError(f"File exists already: {clazz.test_filename}")
+
+        source = (
+            f'############################ Copyrights and license ############################\n'
+            f'#                                                                              #\n'
+            f'#                                                                              #\n'
+            f'# This file is part of PyGithub.                                               #\n'
+            f'# http://pygithub.readthedocs.io/                                              #\n'
+            f'#                                                                              #\n'
+            f'# PyGithub is free software: you can redistribute it and/or modify it under    #\n'
+            f'# the terms of the GNU Lesser General Public License as published by the Free  #\n'
+            f'# Software Foundation, either version 3 of the License, or (at your option)    #\n'
+            f'# any later version.                                                           #\n'
+            f'#                                                                              #\n'
+            f'# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n'
+            f'# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n'
+            f'# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n'
+            f'# details.                                                                     #\n'
+            f'#                                                                              #\n'
+            f'# You should have received a copy of the GNU Lesser General Public License     #\n'
+            f'# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n'
+            f'#                                                                              #\n'
+            f'################################################################################\n'
+            f'\n'
+            f'from {parent_class.package}.{parent_class.module} import {parent_class.name}\n'
+            f'from github.GithubObject import Attribute\n'
+            f'\n'
+            f'\n'
+            f'class {clazz.name}({parent_class.name}):\n'
+            f'    """\n'
+            f'    This class represents {clazz.name}.\n'
+            f'\n'
+            f'    The reference can be found here\n'
+            f'    {docs_url}\n'
+            f'\n'
+            f'    The OpenAPI schema can be found at\n'
+            + ''.join(f'    - {schema}\n' for schema in schemas) +
+            f'\n'
+            f'    """\n'
+            f'\n'
+            f'    def _initAttributes(self) -> None:\n'
+            f'        super._initAttributes()\n'
+            f'\n'
+            f'    def __repr__(self) -> str:\n'
+            f'        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict\n'
+            f'        return self.get__repr__({{"some_attribute": self._some_attribute.value}})\n'
+            f'\n'
+            f'    def _useAttributes(self, attributes: dict[str, Any]) -> None:\n'
+            f'        super._useAttributes(attributes)\n'
+            f'\n'
+        )
+        self.write_code("", source, clazz.filename, dry_run=False)
+
+        if tests:
+            source = (
+                    f'############################ Copyrights and license ############################\n'
+                    f'#                                                                              #\n'
+                    f'#                                                                              #\n'
+                    f'# This file is part of PyGithub.                                               #\n'
+                    f'# http://pygithub.readthedocs.io/                                              #\n'
+                    f'#                                                                              #\n'
+                    f'# PyGithub is free software: you can redistribute it and/or modify it under    #\n'
+                    f'# the terms of the GNU Lesser General Public License as published by the Free  #\n'
+                    f'# Software Foundation, either version 3 of the License, or (at your option)    #\n'
+                    f'# any later version.                                                           #\n'
+                    f'#                                                                              #\n'
+                    f'# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n'
+                    f'# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n'
+                    f'# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n'
+                    f'# details.                                                                     #\n'
+                    f'#                                                                              #\n'
+                    f'# You should have received a copy of the GNU Lesser General Public License     #\n'
+                    f'# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n'
+                    f'#                                                                              #\n'
+                    f'################################################################################\n'
+                    f'\n'
+                    f'from {parent_class.package}.{parent_class.module} import {parent_class.name}\n'
+                    f'\n'
+                    f'from . import Framework\n'
+                    f'\n'
+                    f'\n'
+                    f'class {clazz.name}(Framework.TestCase):\n'
+                    f'    def setUp(self):\n'
+                    f'        super().setUp()\n'
+                    f'        # TODO: create an instance of type {clazz.name} and assign to self.attr, then run:\n'
+                    f'        #   pytest {clazz.test_filename} -k testAttributes --record --auth_with_token\n'
+                    f'        #   sed -i -e "s/token private_token_removed/Basic login_and_password_removed/" tests/ReplayData/{clazz.name}.setUp.txt\n'
+                    f'        #   ./scripts/update-assertions.sh {clazz.test_filename} testAttributes\n'
+                    f'        self.attr = None\n'
+                    f'\n'
+                    f'    def testAttributes(self):\n'
+                    f'        self.assertIsNotNone(self.attr)\n'
+                    f'        self.assertIsNotNone(self.attr.url)\n'
+            )
+            self.write_code("", source, clazz.test_filename, dry_run=False)
+
+        success = True
+        try:
+            if dry_run:
+                with NamedTemporaryFile(delete_on_close=False) as f:
+                    f.close()
+                    print(f"Updating temporary index {f.name}")
+                    self.index(github_path, f.name, dry_run=False)
+                    self.apply(spec_file, f.name, [clazz.name], dry_run=False, tests=tests)
+            else:
+                print("Updating index")
+                self.index(github_path, index_filename, dry_run=False)
+                self.apply(spec_file, index_filename, [clazz.name], dry_run=False, tests=tests)
+        except Exception as e:
+            success = False
+            raise e
+        finally:
+            if dry_run:
+                if success:
+                    # print created files
+                    files = [clazz.filename] + ([clazz.test_filename] if tests else [])
+                    for filename in files:
+                        print()
+                        print(f"{filename}:")
+                        with open(filename) as r:
+                            for line in r.readlines():
+                                print(f"+{line}", end="")
+
+                # Remove created files
+                os.unlink(clazz.filename)
+                if tests:
+                    os.unlink(clazz.test_filename)
+        return True
+
     @staticmethod
     def parse_args():
-        args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to GithubObject classes")
+        args_parser = argparse.ArgumentParser(description="Applies OpenAPI spec to PyGithub GithubObject classes", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         args_parser.add_argument(
             "--dry-run", default=False, action="store_true", help="Show prospect changes and do not modify any files"
         )
@@ -1750,7 +1892,7 @@ class OpenApi:
 
         subparsers = args_parser.add_subparsers(dest="subcommand")
         index_parser = subparsers.add_parser("index")
-        index_parser.add_argument("github_path", help="Path to Github Python files")
+        index_parser.add_argument("github_path", help="Path to PyGithub Python files")
         index_parser.add_argument("index_filename", help="Path of index file")
 
         suggest_parser = subparsers.add_parser("suggest")
@@ -1766,6 +1908,17 @@ class OpenApi:
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("index_filename", help="Path of index file")
         apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
+
+        create_parser = subparsers.add_parser("create", description="Create PyGithub classes")
+        create_parser.add_argument("--completable", help="New PyGithub class is completable, implies --parent CompletableGithubObject", dest="parent", action="store_const", const="CompletableGithubObject", default="NonCompletableGithubObject")
+        create_parser.add_argument("--parent", help="A parent PyGithub class")
+        create_parser.add_argument("--tests", help="Also create test file", action="store_true")
+        create_parser.add_argument("github_path", help="Path to PyGithub Python files")
+        create_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        create_parser.add_argument("index_filename", help="Path of index file")
+        create_parser.add_argument("class_name", help="PyGithub GithubObject class name")
+        create_parser.add_argument("docs_url", help="Github REST API documentation URL, for instance https://docs.github.com/en/rest/commits/commits#get-a-commit-object")
+        create_parser.add_argument("schema", help="Github API OpenAPI schema name", nargs="*")
 
         if len(sys.argv) == 1:
             args_parser.print_help()
@@ -1783,6 +1936,10 @@ class OpenApi:
         elif self.args.subcommand == "apply":
             changes = self.apply(
                 self.args.spec, self.args.index_filename, self.args.class_name, self.args.dry_run, self.args.tests
+            )
+        elif self.args.subcommand == "create":
+            changes = self.create(
+                self.args.github_path, self.args.spec, self.args.index_filename, self.args.class_name, self.args.parent, self.args.docs_url, self.args.schema, self.args.dry_run, self.args.tests
             )
         else:
             raise RuntimeError("Subcommand not implemented " + args.subcommand)
