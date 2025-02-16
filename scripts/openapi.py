@@ -1391,6 +1391,8 @@ class OpenApi:
             return True
 
     def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool) -> bool:
+        with open(spec_file) as r:
+            spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
         classes = index.get("classes", {})
@@ -1399,9 +1401,6 @@ class OpenApi:
             clazz = GithubClass.from_class_name(class_name, index)
 
             print(f"Applying spec {spec_file} to {clazz.full_class_name} ({clazz.filename})")
-            with open(spec_file) as r:
-                spec = json.load(r)
-
             cls = classes.get(clazz.short_class_name, {})
             irrelevant_bases = {
                 inheritance
