@@ -499,3 +499,5 @@ class OrganizationInvitation(Framework.TestCase):
         self.assertTrue(any([i for i in self.org.invitations() if i.email == "foo@bar.org"]))
         invitation = [i for i in self.org.invitations() if i.email == "foo@bar.org"][0]
         self.assertTrue(self.org.cancel_invitation(invitation))
+        # copy replay data of self.org.cancel_invitation(invitation) call, fix HTTP path
+        self.assertTrue(invitation.cancel())

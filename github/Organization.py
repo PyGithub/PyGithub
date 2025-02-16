@@ -1316,7 +1316,7 @@ class Organization(CompletableGithubObject):
         """
         :calls: `DELETE /orgs/{org}/invitations/{invitation_id} <https://docs.github.com/en/rest/reference/orgs#cancel-an-organization-invitation>`_
         :param invitee: :class:`github.NamedUser.NamedUser`
-        :rtype: None
+        :rtype: bool
         """
         assert isinstance(invitee, github.NamedUser.NamedUser), invitee
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/invitations/{invitee.id}")

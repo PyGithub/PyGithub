@@ -68,7 +68,7 @@ import github.Permissions
 import github.Plan
 import github.Repository
 from github import Consts
-from github.GithubObject import Attribute, NotSet, Opt, is_defined
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -727,6 +727,14 @@ class OrganizationInvitation(NamedUser):
     def invitation_source(self) -> str:
         return self._invitation_source.value
 
+    def cancel(self) -> bool:
+        """
+        :calls: `DELETE /orgs/{org}/invitations/{invitation_id} <https://docs.github.com/en/rest/reference/orgs#cancel-an-organization-invitation>`_
+        :rtype: bool
+        """
+        status, headers, data = self._requester.requestJson("DELETE", self.url)
+        return status == 204
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "failed_at" in attributes:  # pragma no branch
@@ -735,3 +743,6 @@ class OrganizationInvitation(NamedUser):
             self._failed_reason = self._makeStringAttribute(attributes["failed_reason"])
         if "invitation_source" in attributes:  # pragma no branch
             self._invitation_source = self._makeStringAttribute(attributes["invitation_source"])
+        if "invitation_teams_url" in attributes and is_undefined(self._url):  # pragma no branch
+            url = "/".join(attributes["invitation_teams_url"].split("/")[:-1])
+            self._url = self._makeStringAttribute(url)
