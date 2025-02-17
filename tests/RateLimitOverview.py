@@ -32,6 +32,8 @@ class RateLimitOverview(Framework.TestCase):
         self.rate_limit_overview = self.g.get_rate_limit()
 
     def testAttributes(self):
+        self.assertIsNotNone(self.rate_limit_overview.rate)
+        self.assertIsNotNone(self.rate_limit_overview.resources)
         self.assertEqual(self.rate_limit_overview.rate.limit, 5000)
         self.assertEqual(self.rate_limit_overview.rate.remaining, 4988)
         self.assertEqual(self.rate_limit_overview.rate.reset, datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc))
