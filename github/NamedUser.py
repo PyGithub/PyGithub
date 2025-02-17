@@ -713,7 +713,7 @@ class NamedUserSearchResult(NamedUser):
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
 
-            
+
 # A better place would be github.OrganizationInvitation.OrganizationInvitation
 # but that causes an import cycle. This is a specialization of NamedUser any way.
 class OrganizationInvitation(NamedUser):
@@ -768,16 +768,3 @@ class OrganizationInvitation(NamedUser):
         if "invitation_teams_url" in attributes and is_undefined(self._url):  # pragma no branch
             url = "/".join(attributes["invitation_teams_url"].split("/")[:-1])
             self._url = self._makeStringAttribute(url)
-        self._score: Attribute[float] = NotSet
-
-    def __repr__(self) -> str:
-        return self.get__repr__({"login": self._login.value, "score": self._score.value})
-
-    @property
-    def score(self) -> float:
-        return self._score.value
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        super()._useAttributes(attributes)
-        if "score" in attributes:  # pragma no branch
-            self._score = self._makeFloatAttribute(attributes["score"])
