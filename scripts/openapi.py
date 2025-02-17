@@ -1440,7 +1440,7 @@ class OpenApi:
                 tree_updated = tree.visit(transformer)
                 changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
 
-                if tests:
+                if tests and os.path.exists(clazz.test_filename):
                     with open(clazz.test_filename) as r:
                         code = "".join(r.readlines())
 
@@ -1736,8 +1736,8 @@ class OpenApi:
                     schemas_added += added
             schemas_suggested += len(schemas_to_implement)
 
-        print(f"Added {schemas_added} schemas")
         print(f"Suggested {schemas_suggested} schemas")
+        print(f"Added {schemas_added} schemas")
         return schemas_suggested > 0
 
     def create(self, github_path: str, spec_file: str, index_filename: str, class_name: str, parent_name: str, docs_url: str, schemas: list[str], dry_run: bool, tests: bool) -> bool:
