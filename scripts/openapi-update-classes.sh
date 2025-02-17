@@ -10,8 +10,10 @@ sort_class="$scripts_path/sort_class.py"
 pre_commit_conf="$scripts_path/openapi-update-classes.pre-commit-config.yaml"
 update_assertions="$scripts_path/update-assertions.sh"
 spec=api.github.com.2022-11-28.json
-python_bin="$scripts_path/../../venv-PyGithub/bin"
-python="$python_bin/python3"
+python="$(which python3)"
+pytest_bin="$(which pytest)"
+pre_commit_bin="$(which pre-commit)"
+mypy_bin="$(which mypy)"
 git=git
 jq=jq
 
@@ -78,8 +80,8 @@ commit() {
 
   # run linting
   if [[ "$do_lint" == "true" ]]; then
-    "$python_bin"/mypy github tests 1>&2
-    "$python_bin"/pre-commit run --all-files --show-diff-on-failure 1>&2 || true
+    "$mypy_bin" github tests 1>&2
+    "$pre_commit_bin" run --all-files --show-diff-on-failure 1>&2 || true
   fi
 
   # skip if there are no changes after linting
@@ -226,7 +228,7 @@ update() {
   # run tests
   if [ ${#test_files[@]} -gt 0 ]; then
     code=0
-    "$python_bin"/pytest "${test_files[@]}" -k testAttributes 1>&2 || code=$?
+    "$pytest_bin" "${test_files[@]}" -k testAttributes 1>&2 || code=$?
     if [ $code -eq 5 ]; then
       skip "pass"
     elif [ $code -eq 0 ]; then
