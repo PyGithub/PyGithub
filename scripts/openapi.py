@@ -1311,6 +1311,7 @@ class OpenApi:
         data_types = {
             "boolean": {None: "bool"},
             "integer": {None: "int"},
+            "number": {None: "float"},
             "string": {
                 None: "str",
                 "date-time": "datetime",
@@ -1567,8 +1568,8 @@ class OpenApi:
             if return_type.startswith("list[") and return_type.endswith("]"):
                 return inner_return_type(return_type[5:-1])
             if return_type.startswith("dict[") and "," in return_type and return_type.endswith("]"):
-                # inner type of dicts is the value type
-                return inner_return_type(return_type[return_type.index(",") + 1 : -1])
+                # a dict of types indicates a wrapping object containing these types
+                return []
 
             # now that we have removed outer types, we can look for alternatives
             if "|" in return_type:
@@ -1774,8 +1775,15 @@ class OpenApi:
             f'#                                                                              #\n'
             f'################################################################################\n'
             f'\n'
+            f'from __future__ import annotations\n'
+            f'\n'
+            f'from typing import Any, TYPE_CHECKING\n'
+            f'\n'
             f'from {parent_class.package}.{parent_class.module} import {parent_class.name}\n'
-            f'from github.GithubObject import Attribute\n'
+            f'from github.GithubObject import Attribute, NotSet\n'
+            f'\n'
+            f'if TYPE_CHECKING:\n'
+            f'    from {parent_class.package}.{parent_class.module} import {parent_class.name}\n'
             f'\n'
             f'\n'
             f'class {clazz.name}({parent_class.name}):\n'
@@ -1791,14 +1799,16 @@ class OpenApi:
             f'    """\n'
             f'\n'
             f'    def _initAttributes(self) -> None:\n'
-            f'        super._initAttributes()\n'
+            f'        # TODO: remove if parent does not implement this\n'
+            f'        super()._initAttributes()\n'
             f'\n'
             f'    def __repr__(self) -> str:\n'
-            f'        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict\n'
+            f'        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:\n'
             f'        return self.get__repr__({{"some_attribute": self._some_attribute.value}})\n'
             f'\n'
             f'    def _useAttributes(self, attributes: dict[str, Any]) -> None:\n'
-            f'        super._useAttributes(attributes)\n'
+            f'        # TODO: remove if parent does not implement this\n'
+            f'        super()._useAttributes(attributes)\n'
             f'\n'
         )
         self.write_code("", source, clazz.filename, dry_run=False)
@@ -1826,7 +1836,9 @@ class OpenApi:
                     f'#                                                                              #\n'
                     f'################################################################################\n'
                     f'\n'
-                    f'from {parent_class.package}.{parent_class.module} import {parent_class.name}\n'
+                    f'from __future__ import annotations\n'
+                    f'\n'
+                    f'from datetime import datetime, timezone\n'
                     f'\n'
                     f'from . import Framework\n'
                     f'\n'
@@ -1838,11 +1850,11 @@ class OpenApi:
                     f'        #   pytest {clazz.test_filename} -k testAttributes --record --auth_with_token\n'
                     f'        #   sed -i -e "s/token private_token_removed/Basic login_and_password_removed/" tests/ReplayData/{clazz.name}.setUp.txt\n'
                     f'        #   ./scripts/update-assertions.sh {clazz.test_filename} testAttributes\n'
+                    f'        #   pre-commit run --all-files\n'
                     f'        self.attr = None\n'
                     f'\n'
                     f'    def testAttributes(self):\n'
-                    f'        self.assertIsNotNone(self.attr)\n'
-                    f'        self.assertIsNotNone(self.attr.url)\n'
+                    f'        self.assertEqual(self.attr.url, "")\n'
             )
             self.write_code("", source, clazz.test_filename, dry_run=False)
 
