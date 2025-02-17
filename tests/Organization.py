@@ -778,12 +778,14 @@ class Organization(Framework.TestCase):
         repo.detach_security_config()
 
     def testGetSelfHostedRunnerApplications(self):
-        self.assertListKeyEqual(self.org.get_self_hosted_runner_applications(), lambda h: h.os,
-          ["osx", "linux", "linux", "win", "linux", "osx", "win"])
+        self.assertListKeyEqual(
+            self.org.get_self_hosted_runner_applications(),
+            lambda h: h.os,
+            ["osx", "linux", "linux", "win", "linux", "osx", "win"],
+        )
 
     def testSelfHostedRunnerJitConfig(self):
-        runner = self.org.create_self_hosted_runner_jitconfig(name="self_hosted", runner_group_id=1,
-          labels=["default"])
+        runner = self.org.create_self_hosted_runner_jitconfig(name="self_hosted", runner_group_id=1, labels=["default"])
         # Now remove the runner
         for runner in self.org.get_self_hosted_runners():
             if runner.name == "self_hosted":
