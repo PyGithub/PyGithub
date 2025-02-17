@@ -33,19 +33,15 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
 
     The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
+
     """
 
     def _initAttributes(self) -> None:
         self._expires_at: Attribute[str] = NotSet
-        self._expires_at: Attribute[str] = NotSet
         self._token: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"token": self._os.value})
-
-    @property
-    def expires_at(self) -> str:
-        return self._expires_at.value
+        return self.get__repr__({"token": self._token.value})
 
     @property
     def expires_at(self) -> str:
@@ -60,6 +56,3 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
             self._token = self._makeStringAttribute(attributes["token"])
         if "expires_at" in attributes:  # pragma no branch
             self._expires_at = self._makeStringAttribute(attributes["expires_at"])
-        if "expires_at" in attributes:  # pragma no branch
-            self._expires_at = self._makeStringAttribute(attributes["expires_at"])
-

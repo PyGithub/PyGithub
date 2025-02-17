@@ -1869,7 +1869,9 @@ class Organization(CompletableGithubObject):
             f"{self.url}/actions/runners/downloads",
         )
 
-    def create_self_hosted_runner_jitconfig(self, name: str, runner_group_id: int, labels: list[str], work_folder: Opt[str] = NotSet) -> SelfHostedActionsRunner:
+    def create_self_hosted_runner_jitconfig(
+        self, name: str, runner_group_id: int, labels: list[str], work_folder: Opt[str] = NotSet
+    ) -> SelfHostedActionsRunner:
         """
         :calls: `GET /orgs/{org}/actions/runners/generate-jitconfig <https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization>`_
         """
@@ -1888,7 +1890,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
         return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data)
-    
+
     def create_self_hosted_runner_registration_token(self) -> SelfHostedActionsRunnerToken:
         """
         :calls: `GET /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization>`_

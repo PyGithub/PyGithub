@@ -33,6 +33,7 @@ class SelfHostedActionsRunnerApplication(NonCompletableGithubObject):
 
     The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
+
     """
 
     def _initAttributes(self) -> None:
@@ -83,4 +84,3 @@ class SelfHostedActionsRunnerApplication(NonCompletableGithubObject):
             self._sha256_checksum = self._makeStringAttribute(attributes["sha256_checksum"])
         if "temp_download_token" in attributes:  # pragma no branch
             self._temp_download_token = self._makeStringAttribute(attributes["temp_download_token"])
-
