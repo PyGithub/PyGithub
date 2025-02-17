@@ -107,6 +107,7 @@ from urllib3.util import Retry
 import github.ApplicationOAuth
 import github.Auth
 import github.AuthenticatedUser
+import github.Commit
 import github.Enterprise
 import github.Event
 import github.Gist
@@ -116,7 +117,6 @@ import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
 import github.Issue
-import github.Commit
 import github.License
 import github.NamedUser
 import github.Topic
@@ -134,7 +134,8 @@ if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
     from github.AuthenticatedUser import AuthenticatedUser
-    from github.ContentFile import ContentFile, ContentFileSearchResult
+    from github.Commit import CommitSearchResult
+    from github.ContentFile import ContentFileSearchResult
     from github.Event import Event
     from github.Gist import Gist
     from github.GithubApp import GithubApp
