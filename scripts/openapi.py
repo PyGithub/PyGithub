@@ -1252,7 +1252,8 @@ class OpenApi:
             if "properties" in schema:
                 props = schema.get("properties")
                 list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
-                if "total_count" in props and len(list_items) == 1:
+                total_count_items = [n for n, p in props.items() if n.startswith("total_") and p.get("type") == "integer"]
+                if len(list_items) == 1 and len(total_count_items) == 1:
                     list_item = list_items[0]
                     return self.get_inner_spec_types(
                         props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
