@@ -8,7 +8,6 @@ on:
   merge_group:
 
 jobs:
-
   build:
     uses: "./.github/workflows/_build-pkg.yml"
     with:
@@ -64,6 +63,47 @@ jobs:
         if: needs.test.result != 'success'
         run: false
         shell: bash
+
+  schemas:
+    name: "Schema suggestions"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Suggest schemas
+        run: |
+          python head/scripts/openapi.py fetch api.github.com 2022-11-28 api.github.com.2022-11-28.json
+
+          python head/scripts/openapi.py index head/github openapi.head.index
+          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.head.index > schemas.head.txt
+
+          python head/scripts/openapi.py index base/github openapi.base.index
+          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.base.index > schemas.base.txt
+          echo -e "\n"
+
+          echo "Head schema suggestions:"
+          cat schemas.head.txt
+          echo -e "\n"
+
+          echo "Base schema suggestions:"
+          cat schemas.base.txt
+          echo -e "\n"
+
+          echo "Difference:"
+          diff schemas.base.txt schemas.head.txt
 
   event_file:
     name: "Event File"

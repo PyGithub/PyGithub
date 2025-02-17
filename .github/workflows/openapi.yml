@@ -1,0 +1,47 @@
+name: OpenAPI
+on:
+  push:
+  schedule:
+    - cron: '10 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  open-api:
+    name: Sync with OpenAPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Git
+        uses: actions/checkout@v3
+      - name: Set up Git
+        run: |
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r requirements/scripts.txt
+      - name: Fetching OpenAPI spec
+        run: |
+          python scripts/openapi.py fetch api.github.com 2022-11-28 api.github.com.2022-11-28.json
+      - name: Sync with OpenAPI spec
+        run: |
+          ./scripts/openapi-update-classes.sh --branch openapi/sync-cron 2> openapi-update-classes.log
+      - name: Changes
+        run: |
+          git log
+          git diff openapi/sync-cron main
+      - name: Log on error
+        if: failure()
+        run: |
+          cat openapi-update-classes.log
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Logs
+          path: |
+            *.log
+
