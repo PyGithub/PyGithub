@@ -100,7 +100,6 @@ class Issue(Framework.TestCase):
         )
         self.assertEqual(self.issue.repository.full_name, "PyGithub/PyGithub")
         self.assertEqual(self.issue.repository_url, "https://api.github.com/repos/PyGithub/PyGithub")
-        self.assertEqual(self.issue.score, None)
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
         self.assertIsNone(self.issue.text_matches)

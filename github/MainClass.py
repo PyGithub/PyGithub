@@ -116,10 +116,10 @@ import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
 import github.Issue
+import github.Commit
 import github.License
 import github.NamedUser
 import github.Topic
-from Commit import CommitSearchResult
 from github import Consts
 from github.GithubIntegration import GithubIntegration
 from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined
@@ -134,7 +134,6 @@ if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
     from github.AuthenticatedUser import AuthenticatedUser
-    from github.Commit import Commit
     from github.ContentFile import ContentFile, ContentFileSearchResult
     from github.Event import Event
     from github.Gist import Gist
