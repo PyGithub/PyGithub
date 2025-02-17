@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-python_bin="../venv-PyGithub/bin"
+python_bin="$(dirname "$(which python3)")"
 pytest="$python_bin/pytest"
 
 if [ $# -ne 2 ]; then
