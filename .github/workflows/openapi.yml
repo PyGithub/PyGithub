@@ -28,11 +28,16 @@ jobs:
           python scripts/openapi.py fetch api.github.com 2022-11-28 api.github.com.2022-11-28.json
       - name: Sync with OpenAPI spec
         run: |
-          ./scripts/openapi-update-classes.sh --branch openapi/sync-cron 2> openapi-update-classes.log
+          git checkout -b openapi/main
+          ./scripts/openapi-update-classes.sh 2> openapi-update-classes.log
       - name: Changes
         run: |
-          git log
-          git diff openapi/sync-cron main
+          git branch -a | grep openapi/update | while read branch; do
+            echo "$branch"
+            git log --oneline "$branch...openapi/main"
+            git diff "$branch openapi/main"
+            echo
+          done
       - name: Log on error
         if: failure()
         run: |
