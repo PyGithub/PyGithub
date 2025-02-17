@@ -25,6 +25,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -79,7 +80,9 @@ class Project(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
+        self._organization_permission: Attribute[str] = NotSet
         self._owner_url: Attribute[str] = NotSet
+        self._private: Attribute[bool] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -133,9 +136,19 @@ class Project(CompletableGithubObject):
         return self._number.value
 
     @property
+    def organization_permission(self) -> str:
+        self._completeIfNotSet(self._organization_permission)
+        return self._organization_permission.value
+
+    @property
     def owner_url(self) -> str:
         self._completeIfNotSet(self._owner_url)
         return self._owner_url.value
+
+    @property
+    def private(self) -> bool:
+        self._completeIfNotSet(self._private)
+        return self._private.value
 
     @property
     def state(self) -> str:
@@ -238,8 +251,12 @@ class Project(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        if "organization_permission" in attributes:  # pragma no branch
+            self._organization_permission = self._makeStringAttribute(attributes["organization_permission"])
         if "owner_url" in attributes:  # pragma no branch
             self._owner_url = self._makeStringAttribute(attributes["owner_url"])
+        if "private" in attributes:  # pragma no branch
+            self._private = self._makeBoolAttribute(attributes["private"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "updated_at" in attributes:  # pragma no branch

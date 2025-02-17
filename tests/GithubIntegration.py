@@ -14,6 +14,7 @@
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -255,7 +256,10 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_org_installation(org="GithubApp-Test-Org")
-
+        self.assertEqual(
+            raisedexp.exception.message,
+            "'Expiration time' claim ('exp') must be a numeric value representing the future time at which the assertion expires",
+        )
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenWithExpiredJWT(self):
@@ -263,7 +267,10 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id)
-
+        self.assertEqual(
+            raisedexp.exception.message,
+            "'Expiration time' claim ('exp') must be a numeric value representing the future time at which the assertion expires",
+        )
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenForNoInstallation(self):
@@ -279,7 +286,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id, permissions={"test-permissions": "read"})
-
+        self.assertEqual(raisedexp.exception.message, "The permissions requested are not granted to this installation.")
         self.assertEqual(raisedexp.exception.status, 422)
 
     def testGetAccessTokenWithInvalidData(self):
@@ -287,7 +294,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id, permissions="invalid_data")
-
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 400)
 
     def testGetApp(self):

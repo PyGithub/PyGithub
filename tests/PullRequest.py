@@ -28,6 +28,8 @@
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -500,6 +502,30 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
         self.assertTrue(self.pull.update_branch())
 
+    def testConvertToDraft(self):
+        ready_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(1)
+        self.assertFalse(ready_pr.draft)
+        response = ready_pr.convert_to_draft()
+        self.assertTrue(ready_pr.draft)
+        assert response == {
+            "clientMutationId": None,
+            "pullRequest": {
+                "isDraft": True,
+            },
+        }
+
+    def testMarkReadyForReview(self):
+        draft_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(2)
+        self.assertTrue(draft_pr.draft)
+        response = draft_pr.mark_ready_for_review()
+        self.assertFalse(draft_pr.draft)
+        assert response == {
+            "clientMutationId": None,
+            "pullRequest": {
+                "isDraft": False,
+            },
+        }
+
     def testDeleteOnMerge(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.assertFalse(self.delete_restore_pull.is_merged())
@@ -508,6 +534,7 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.delete_restore_pull.is_merged())
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(
             raisedexp.exception.data,
             {
@@ -519,6 +546,7 @@ class PullRequest(Framework.TestCase):
     def testRestoreBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -535,6 +563,7 @@ class PullRequest(Framework.TestCase):
         self.delete_restore_pull.delete_branch(force=False)
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -549,6 +578,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
         with self.assertRaises(github.GithubException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -592,7 +622,7 @@ class PullRequest(Framework.TestCase):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
         with pytest.raises(github.GithubException) as error:
             self.pull.enable_automerge()
-
+        assert error.value.message is None
         assert error.value.status == 400
         assert error.value.data == {
             "data": {"enablePullRequestAutoMerge": None},

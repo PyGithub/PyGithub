@@ -14,6 +14,7 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -68,7 +69,6 @@ class ContentFile(Framework.TestCase):
         self.assertIsNone(self.file.line_numbers)
         self.assertEqual(self.file.name, "README.md")
         self.assertEqual(self.file.path, "README.md")
-        self.assertEqual(self.file.score, None)
         self.assertEqual(self.file.sha, "0d9df5bfb7d4b93443c130bc8f4eea5dd3f01205")
         self.assertEqual(self.file.size, 2524)
         self.assertIsNone(self.file.submodule_git_url)

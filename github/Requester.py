@@ -57,6 +57,9 @@
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
+# Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -129,14 +132,13 @@ class RequestsResponse:
     def __init__(self, r: requests.Response):
         self.status = r.status_code
         self.headers = r.headers
-        self.text = r.text
         self.response = r
 
     def getheaders(self) -> ItemsView[str, str]:
         return self.headers.items()
 
     def read(self) -> str:
-        return self.text
+        return self.response.text
 
     def iter_content(self, chunk_size: Union[int, None] = 1) -> Iterator:
         return self.response.iter_content(chunk_size=chunk_size)
@@ -603,6 +605,7 @@ class Requester:
         parameters: Optional[dict[str, Any]] = None,
         headers: Optional[dict[str, str]] = None,
         input: Optional[Any] = None,
+        follow_302_redirect: bool = False,
     ) -> tuple[dict[str, Any], Any]:
         """
         Send a request with JSON body.
@@ -613,7 +616,17 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__check(
+            *self.requestJson(
+                verb,
+                url,
+                parameters,
+                headers,
+                input,
+                self.__customConnection(url),
+                follow_302_redirect=follow_302_redirect,
+            )
+        )
 
     def requestMultipartAndCheck(
         self,
@@ -810,21 +823,26 @@ class Requester:
         headers: dict[str, Any],
         output: dict[str, Any],
     ) -> GithubException.GithubException:
-        message = output.get("message", "").lower() if output is not None else ""
+        message = output.get("message") if output else None
+        lc_message = message.lower() if message else ""
 
+        msg = None
         exc = GithubException.GithubException
-        if status == 401 and message == "bad credentials":
+        if status == 401 and lc_message == "bad credentials":
             exc = GithubException.BadCredentialsException
         elif status == 401 and Consts.headerOTP in headers and re.match(r".*required.*", headers[Consts.headerOTP]):
             exc = GithubException.TwoFactorException
-        elif status == 403 and message.startswith("missing or invalid user agent string"):
+        elif status == 403 and lc_message.startswith("missing or invalid user agent string"):
             exc = GithubException.BadUserAgentException
-        elif status == 403 and cls.isRateLimitError(message):
+        elif status == 403 and cls.isRateLimitError(lc_message):
             exc = GithubException.RateLimitExceededException
-        elif status == 404 and (message == "not found" or "no object found" in message):
+        elif status == 404 and (lc_message == "not found" or "no object found" in lc_message):
             exc = GithubException.UnknownObjectException
+        else:
+            # for general GithubException, provide the actual message
+            msg = message
 
-        return exc(status, output, headers)
+        return exc(status, output, headers, msg)
 
     @classmethod
     def isRateLimitError(cls, message: str) -> bool:
@@ -903,12 +921,14 @@ class Requester:
             return "", ""
 
         status, responseHeaders, output = self.__requestEncode(
-            cnx, "GET", url, parameters, headers, None, encode, stream=True
+            cnx, "GET", url, parameters, headers, None, encode, stream=True, follow_302_redirect=True
         )
-        if isinstance(output, RequestsResponse):
+        if isinstance(output, RequestsResponse) or (
+            hasattr(output, "iter_content") and hasattr(output, "raise_for_status")
+        ):
             output.raise_for_status()
             return status, responseHeaders, output.iter_content(chunk_size=chunk_size)
-        raise ValueError("getStream() Expected a RequestsResponse object, should never happen")
+        raise TypeError(f"Expected a RequestsResponse object: {type(output)}")
 
     def requestJson(
         self,
@@ -918,6 +938,7 @@ class Requester:
         headers: Optional[dict[str, Any]] = None,
         input: Optional[Any] = None,
         cnx: Optional[Union[HTTPRequestsConnectionClass, HTTPSRequestsConnectionClass]] = None,
+        follow_302_redirect: bool = False,
     ) -> tuple[int, dict[str, Any], str]:
         """
         Send a request with JSON input.
@@ -930,7 +951,9 @@ class Requester:
         def encode(input: Any) -> tuple[str, str]:
             return "application/json", json.dumps(input)
 
-        status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+        status, responseHeaders, output = self.__requestEncode(
+            cnx, verb, url, parameters, headers, input, encode, follow_302_redirect=follow_302_redirect
+        )
         if isinstance(output, str):
             return status, responseHeaders, output
         raise ValueError("requestJson() Expected a str, should never happen")
@@ -1046,6 +1069,7 @@ class Requester:
         input: Optional[T],
         encode: Callable[[T], tuple[str, Any]],
         stream: bool = False,
+        follow_302_redirect: bool = False,
     ) -> tuple[int, dict[str, Any], Union[str, object]]:
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
@@ -1067,7 +1091,7 @@ class Requester:
         self.NEW_DEBUG_FRAME(requestHeaders)
 
         status, responseHeaders, output = self.__requestRaw(
-            cnx, verb, url, requestHeaders, encoded_input, stream=stream
+            cnx, verb, url, requestHeaders, encoded_input, stream=stream, follow_302_redirect=follow_302_redirect
         )
 
         if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
@@ -1095,6 +1119,7 @@ class Requester:
         requestHeaders: dict[str, str],
         input: Optional[Any],
         stream: bool = False,
+        follow_302_redirect: bool = False,
     ) -> tuple[int, dict[str, Any], Union[str, object]]:
         self.__deferRequest(verb)
 
@@ -1102,11 +1127,11 @@ class Requester:
             original_cnx = cnx
             if cnx is None:
                 cnx = self.__createConnection()
-            _ = cnx.request(verb, url, input, requestHeaders, stream)
+            cnx.request(verb, url, input, requestHeaders, stream)
             response = cnx.getresponse()
             output = response if stream else response.read()
             status = response.status
-            responseHeaders = {k.lower(): v for k, v in response.headers.items()}
+            responseHeaders = {k.lower(): v for k, v in response.getheaders()}
 
             if input:
                 if isinstance(input, IOBase):
@@ -1120,19 +1145,6 @@ class Requester:
                 time.sleep(Consts.PROCESSING_202_WAIT_TIME)
                 return self.__requestRaw(original_cnx, verb, url, requestHeaders, input, stream=stream)
 
-            if (
-                status == 302
-                and "location" in responseHeaders
-                and (isinstance(original_cnx, (HTTPSRequestsConnectionClass, HTTPRequestsConnectionClass)))
-            ):
-                location = responseHeaders["location"]
-                o = urllib.parse.urlparse(location)
-                if o.hostname != cnx.host:
-                    cnx = self.__createConnection(o.hostname)
-                path = o.path if o.query is None else f"{o.path}?{o.query}"
-                if self._logger.isEnabledFor(logging.DEBUG):
-                    self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
-                return self.__requestRaw(cnx, verb, path, requestHeaders, input, stream=stream)
             if status == 301 and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
@@ -1157,6 +1169,19 @@ class Requester:
                 if self._logger.isEnabledFor(logging.INFO):
                     self._logger.info(f"Following Github server redirection from {url} to {o.path}")
                 return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input, stream=stream)
+            if status == 302 and follow_302_redirect and "location" in responseHeaders:
+                location = responseHeaders["location"]
+                o = urllib.parse.urlparse(location)
+                cnx = self.__customConnection(location)
+                path = self.__makeAbsoluteUrl(location)
+                if self._logger.isEnabledFor(logging.DEBUG):
+                    self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
+                # remove auth to not leak authentication to redirection location
+                if o.hostname != self.__hostname:
+                    del requestHeaders["Authorization"]
+                return self.__requestRaw(
+                    cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
+                )
             return status, responseHeaders, output
         finally:
             # we record the time of this request after it finished
@@ -1200,6 +1225,7 @@ class Requester:
                 "uploads.github.com",
                 "status.github.com",
                 "github.com",
+                "objects.githubusercontent.com",
             ], o.hostname
             assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
             assert o.port == self.__port, o.port
@@ -1218,7 +1244,9 @@ class Requester:
             if self.__connection is not None and hostname is not None and hostname == self.__hostname:
                 if self.__persist:
                     return self.__connection
+            if self.__connection is not None:
                 self.__connection.close()
+                self.__connection = None
             self.__connection = self.__connectionClass(
                 hostname if hostname is not None else self.__hostname,
                 self.__port,

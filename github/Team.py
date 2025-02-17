@@ -41,6 +41,7 @@
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -80,7 +81,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 
 if TYPE_CHECKING:
     from github.Membership import Membership
-    from github.NamedUser import NamedUser
+    from github.NamedUser import NamedUser, OrganizationInvitation
     from github.Organization import Organization
     from github.PaginatedList import PaginatedList
     from github.Permissions import Permissions
@@ -425,12 +426,12 @@ class Team(CompletableGithubObject):
             github.Repository.Repository, self._requester, f"{self.url}/repos", None
         )
 
-    def invitations(self) -> PaginatedList[NamedUser]:
+    def invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
         :calls: `GET /teams/{id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
         """
         return github.PaginatedList.PaginatedList(
-            github.NamedUser.NamedUser,
+            github.NamedUser.OrganizationInvitation,
             self._requester,
             f"{self.url}/invitations",
             None,

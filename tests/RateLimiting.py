@@ -16,6 +16,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Nikolay Yurin <yurinnick93@gmail.com>                         #
 # Copyright 2024 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -51,7 +52,19 @@ class RateLimiting(Framework.TestCase):
         self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
 
     def testGetRateLimit(self):
-        rateLimit = self.g.get_rate_limit()
+        rateLimitOverview = self.g.get_rate_limit()
+
+        rate = rateLimitOverview.rate
+        self.assertEqual(
+            repr(rate),
+            "Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000)",
+        )
+        self.assertEqual(rate.limit, 5000)
+        self.assertEqual(rate.remaining, 4988)
+        self.assertEqual(rate.used, 12)
+        self.assertEqual(rate.reset, datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc))
+
+        rateLimit = rateLimitOverview.resources
         self.assertEqual(
             repr(rateLimit),
             "RateLimit(core=Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000))",

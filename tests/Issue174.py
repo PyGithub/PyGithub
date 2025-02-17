@@ -12,6 +12,7 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,8 +38,8 @@ from . import Framework
 class Issue174(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("twitter/bootstrap")
+        self.repo = self.g.get_repo("twbs/bootstrap")
 
-    def testGetDirContentsWhithHttpRedirect(self):
+    def testGetDirContentsWithHttpRedirect(self):
         contents = self.repo.get_contents("js/")
-        self.assertEqual(len(contents), 15)
+        self.assertEqual(len(contents), 5)

@@ -23,6 +23,7 @@
 # Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -99,7 +100,6 @@ class Issue(Framework.TestCase):
         )
         self.assertEqual(self.issue.repository.full_name, "PyGithub/PyGithub")
         self.assertEqual(self.issue.repository_url, "https://api.github.com/repos/PyGithub/PyGithub")
-        self.assertEqual(self.issue.score, None)
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
         self.assertIsNone(self.issue.text_matches)

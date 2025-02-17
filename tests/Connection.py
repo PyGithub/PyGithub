@@ -7,6 +7,8 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Maja Massarini <2678400+majamassarini@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,8 +33,8 @@ import itertools
 from io import StringIO
 from unittest.mock import Mock
 
-import httpretty  # type: ignore
-import pytest  # type: ignore
+import pytest
+import responses
 
 from . import Framework
 
@@ -72,6 +74,7 @@ class RecordingMockConnection(Framework.RecordingConnection):
     ("replaying_connection_class", "protocol", "response_body", "expected_recording"),
     list(tuple(itertools.chain(*p)) for p in PARAMETERS),
 )
+@responses.activate
 def testRecordAndReplay(replaying_connection_class, protocol, response_body, expected_recording):
     file = StringIO()
     host = "api.github.com"
@@ -102,16 +105,9 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
     # dict literal, so keys not in guaranteed order
     assert file_value_lines[6:] == expected_recording_lines[6:]
 
-    # required for replay to work as expected
-    httpretty.enable(allow_net_connect=False)
-
     # rewind buffer and attempt to replay response from it
     file.seek(0)
     replaying_connection_class.setOpenFile(lambda slf, mode: file)
     replaying_connection = replaying_connection_class(host=host, port=None)
     replaying_connection.request(verb, url, None, headers)
     replaying_connection.getresponse()
-
-    # not necessarily required for subsequent tests
-    httpretty.disable()
-    httpretty.reset()
