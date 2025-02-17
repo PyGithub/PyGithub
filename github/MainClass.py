@@ -135,7 +135,7 @@ if TYPE_CHECKING:
     from github.ApplicationOAuth import ApplicationOAuth
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Commit import Commit
-    from github.ContentFile import ContentFile
+    from github.ContentFile import ContentFile, ContentFileSearchResult
     from github.Event import Event
     from github.Gist import Gist
     from github.GithubApp import GithubApp
@@ -780,7 +780,7 @@ class Github:
         order: Opt[str] = NotSet,
         highlight: bool = False,
         **qualifiers: Any,
-    ) -> PaginatedList[ContentFile]:
+    ) -> PaginatedList[ContentFileSearchResult]:
         """
         :calls: `GET /search/code <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
@@ -788,7 +788,7 @@ class Github:
         :param order: string ('asc', 'desc')
         :param highlight: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.ContentFile.ContentFile`
+        :rtype: :class:`PaginatedList` of :class:`github.ContentFile.ContentFileSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -812,7 +812,7 @@ class Github:
         headers = {"Accept": Consts.highLightSearchPreview} if highlight else None
 
         return PaginatedList(
-            github.ContentFile.ContentFile,
+            github.ContentFile.ContentFileSearchResult,
             self.__requester,
             "/search/code",
             url_parameters,
