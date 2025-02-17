@@ -3,4 +3,3 @@ mypy
 pre-commit
 pytest
 requests
-

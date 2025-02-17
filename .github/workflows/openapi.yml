@@ -44,4 +44,3 @@ jobs:
           name: Logs
           path: |
             *.log
-

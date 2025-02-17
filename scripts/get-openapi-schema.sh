@@ -9,4 +9,3 @@ api_path="$1"
 api_path="${api_path/\//.\"}"
 api_path="${api_path//\//\".\"}\""
 cat | jq "${api_path}"
-
