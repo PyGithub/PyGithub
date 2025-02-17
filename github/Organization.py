@@ -105,6 +105,7 @@ import github.Project
 import github.Repository
 import github.SelfHostedActionsRunner
 import github.SelfHostedActionsRunnerApplication
+import github.SelfHostedActionsRunnerJitConfig
 import github.SelfHostedActionsRunnerToken
 import github.Team
 from github import Consts
@@ -145,6 +146,7 @@ if TYPE_CHECKING:
     from github.Repository import Repository
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SelfHostedActionsRunnerApplication import SelfHostedActionsRunnerApplication
+    from github.SelfHostedActionsRunnerJitConfig import SelfHostedActionsRunnerJitConfig
     from github.SelfHostedActionsRunnerToken import SelfHostedActionsRunnerToken
     from github.Team import Team
 
@@ -1857,6 +1859,7 @@ class Organization(CompletableGithubObject):
             f"{self.url}/actions/runners",
             url_parameters,
             headers={"Accept": Consts.repoVisibilityPreview},
+            list_item="runners",
         )
 
     def get_self_hosted_runner_applications(self) -> PaginatedList[SelfHostedActionsRunnerApplication]:
@@ -1871,7 +1874,7 @@ class Organization(CompletableGithubObject):
 
     def create_self_hosted_runner_jitconfig(
         self, name: str, runner_group_id: int, labels: list[str], work_folder: Opt[str] = NotSet
-    ) -> SelfHostedActionsRunner:
+    ) -> SelfHostedActionsRunnerJitConfig:
         """
         :calls: `GET /orgs/{org}/actions/runners/generate-jitconfig <https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization>`_
         """
@@ -1889,7 +1892,7 @@ class Organization(CompletableGithubObject):
             input=body_parameters,
             headers={"Accept": Consts.repoVisibilityPreview},
         )
-        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data)
+        return github.SelfHostedActionsRunnerJitConfig.SelfHostedActionsRunnerJitConfig(self._requester, headers, data)
 
     def create_self_hosted_runner_registration_token(self) -> SelfHostedActionsRunnerToken:
         """
