@@ -42,8 +42,6 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
         self._advanced_security: Attribute[str] = NotSet
         self._code_scanning_default_setup: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -54,6 +52,8 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         self._description: Attribute[str] = NotSet
         self._enforcement: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
         self._private_vulnerability_reporting: Attribute[str] = NotSet
         self._secret_scanning: Attribute[str] = NotSet
         self._secret_scanning_delegated_bypass: Attribute[str] = NotSet
@@ -61,8 +61,8 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         self._secret_scanning_push_protection: Attribute[str] = NotSet
         self._secret_scanning_validity_checks: Attribute[str] = NotSet
         self._target_type: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
