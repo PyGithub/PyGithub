@@ -692,6 +692,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "user_view_type" in attributes:  # pragma no branch
             self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])
 
+
 # A better place would be github.OrganizationInvitation.OrganizationInvitation
 # but that causes an import cycle. This is a specialization of NamedUser any way.
 class OrganizationInvitation(NamedUser):

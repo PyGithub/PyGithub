@@ -466,6 +466,7 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(u1, u2)
         self.assertEqual(u1.__hash__(), u2.__hash__())
 
+
 class OrganizationInvitation(Framework.TestCase):
     def setUp(self):
         super().setUp()
@@ -481,16 +482,19 @@ class OrganizationInvitation(Framework.TestCase):
     def testAttributes(self):
         self.assertIsNotNone(self.invitation)
         self.assertEqual(self.invitation.created_at, datetime(2021, 10, 12, 13, 32, 33, tzinfo=timezone.utc))
-        self.assertEqual(self.invitation.email, 'foo@bar.org')
+        self.assertEqual(self.invitation.email, "foo@bar.org")
         self.assertIsNone(self.invitation.failed_at)
         self.assertIsNone(self.invitation.failed_reason)
         self.assertEqual(self.invitation.id, 28984230)
         self.assertIsNone(self.invitation.invitation_source)
-        self.assertEqual(self.invitation.invitation_teams_url, 'https://api.github.com/organizations/92288976/invitations/28984230/teams')
-        self.assertEqual(self.invitation.inviter.login, 'jsimpso')
+        self.assertEqual(
+            self.invitation.invitation_teams_url,
+            "https://api.github.com/organizations/92288976/invitations/28984230/teams",
+        )
+        self.assertEqual(self.invitation.inviter.login, "jsimpso")
         self.assertIsNone(self.invitation.login)
-        self.assertEqual(self.invitation.node_id, 'OI_kwDOBYA30M4BukOm')
-        self.assertEqual(self.invitation.role, 'direct_member')
+        self.assertEqual(self.invitation.node_id, "OI_kwDOBYA30M4BukOm")
+        self.assertEqual(self.invitation.role, "direct_member")
         self.assertEqual(self.invitation.team_count, 0)
 
     def testCancel(self):
