@@ -103,6 +103,9 @@ import github.OrganizationVariable
 import github.Plan
 import github.Project
 import github.Repository
+import github.SelfHostedActionsRunner
+import github.SelfHostedActionsRunnerApplication
+import github.SelfHostedActionsRunnerToken
 import github.Team
 from github import Consts
 from github.GithubObject import (
@@ -140,6 +143,9 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.PublicKey import PublicKey
     from github.Repository import Repository
+    from github.SelfHostedActionsRunner import SelfHostedActionsRunner
+    from github.SelfHostedActionsRunnerApplication import SelfHostedActionsRunnerApplication
+    from github.SelfHostedActionsRunnerToken import SelfHostedActionsRunnerToken
     from github.Team import Team
 
 
@@ -1835,6 +1841,93 @@ class Organization(CompletableGithubObject):
             f"{self.url}/code-security/configurations/{id}/repositories",
             url_parameters,
             headers={"Accept": Consts.repoVisibilityPreview},
+        )
+
+    def get_self_hosted_runners(self, name: Opt[str] = NotSet) -> PaginatedList[SelfHostedActionsRunner]:
+        """
+        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runners#list-self-hosted-runners-for-an-organization>`_
+        """
+        assert is_optional(name, str), name
+
+        url_parameters = NotSet.remove_unset_items({"name": name})
+
+        return PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            f"{self.url}/actions/runners",
+            url_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
+        )
+
+    def get_self_hosted_runner_applications(self) -> PaginatedList[SelfHostedActionsRunnerApplication]:
+        """
+        :calls: `GET /orgs/{org}/actions/runners/downloads <https://docs.github.com/en/rest/actions/self-hosted-runners#list-runner-applications-for-an-organization>`_
+        """
+        return PaginatedList(
+            github.SelfHostedActionsRunnerApplication.SelfHostedActionsRunnerApplication,
+            self._requester,
+            f"{self.url}/actions/runners/downloads",
+        )
+
+    def create_self_hosted_runner_jitconfig(self, name: str, runner_group_id: int, labels: list[str], work_folder: Opt[str] = NotSet) -> SelfHostedActionsRunner:
+        """
+        :calls: `GET /orgs/{org}/actions/runners/generate-jitconfig <https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization>`_
+        """
+        body_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "runner_group_id": runner_group_id,
+                "labels": labels,
+                "work_folder": work_folder,
+            }
+        )
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            f"{self.url}/actions/runners/generate-jitconfig",
+            input=body_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
+        )
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data)
+    
+    def create_self_hosted_runner_registration_token(self) -> SelfHostedActionsRunnerToken:
+        """
+        :calls: `GET /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            f"{self.url}/actions/runners/registration-token",
+        )
+        return github.SelfHostedActionsRunnerToken.SelfHostedActionsRunnerToken(self._requester, headers, data)
+
+    def create_self_hosted_runner_remove_token(self) -> SelfHostedActionsRunnerToken:
+        """
+        :calls: `GET /orgs/{org}/actions/runners/remove-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-remove-token-for-an-organization>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            f"{self.url}/actions/runners/remove-token",
+        )
+        return github.SelfHostedActionsRunnerToken.SelfHostedActionsRunnerToken(self._requester, headers, data)
+
+    def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner:
+        """
+        :calls: `GET /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-an-organization>`_
+        """
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"{self.url}/actions/runners/{runner_id}",
+        )
+        return github.SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data)
+
+    def delete_self_hosted_runner(self, runner_id: int) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-an-organization>`_
+        """
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/actions/runners/{runner_id}",
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
