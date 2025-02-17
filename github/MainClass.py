@@ -143,7 +143,7 @@ if TYPE_CHECKING:
     from github.GlobalAdvisory import GlobalAdvisory
     from github.Issue import IssueSearchResult
     from github.License import License
-    from github.NamedUser import NamedUser
+    from github.NamedUser import NamedUser, NamedUserSearchResult
     from github.Organization import Organization
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
@@ -702,14 +702,14 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[NamedUser]:
+    ) -> PaginatedList[NamedUserSearchResult]:
         """
         :calls: `GET /search/users <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('followers', 'repositories', 'joined')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUserSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -731,7 +731,7 @@ class Github:
         assert url_parameters["q"], "need at least one qualifier"
 
         return PaginatedList(
-            github.NamedUser.NamedUser,
+            github.NamedUser.NamedUserSearchResult,
             self.__requester,
             "/search/users",
             url_parameters,
