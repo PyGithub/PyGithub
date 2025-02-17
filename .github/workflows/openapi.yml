@@ -22,6 +22,9 @@ jobs:
           python-version: "3.12"
       - name: Set up dependencies
         run: |
+          pip install -e .
+          pip install -r requirements/test.txt
+          pip install -r requirements/types.txt
           pip install -r requirements/scripts.txt
       - name: Fetching OpenAPI spec
         run: |
@@ -32,11 +35,11 @@ jobs:
           ./scripts/openapi-update-classes.sh 2> openapi-update-classes.log
       - name: Changes
         run: |
-          git branch -a | grep openapi/update | while read branch; do
-            echo "$branch"
+          git branch -a | grep openapi/update | grep -v -E -e "-[0-9]+$" | while read branch; do
+            echo "::group::$branch"
             git log --oneline "$branch...openapi/main"
-            git diff "$branch openapi/main"
-            echo
+            git diff openapi/main "$branch"
+            echo "::endgroup::"
           done
       - name: Log on error
         if: failure()
