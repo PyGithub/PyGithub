@@ -89,7 +89,6 @@ class Commit(CompletableGithubObject):
     The OpenAPI schema can be found at
     - /components/schemas/branch-short/properties/commit
     - /components/schemas/commit
-    - /components/schemas/commit-search-result-item
     - /components/schemas/commit-search-result-item/properties/parents/items
     - /components/schemas/commit/properties/parents/items
     - /components/schemas/short-branch/properties/commit
@@ -107,7 +106,6 @@ class Commit(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
         self._repository: Attribute[Repository] = NotSet
-        self._score: Attribute[float] = NotSet
         self._sha: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
@@ -175,11 +173,6 @@ class Commit(CompletableGithubObject):
     def repository(self) -> Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
-
-    @property
-    def score(self) -> float:
-        self._completeIfNotSet(self._score)
-        return self._score.value
 
     @property
     def sha(self) -> str:
@@ -358,8 +351,6 @@ class Commit(CompletableGithubObject):
             self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
-        if "score" in attributes:  # pragma no branch
-            self._score = self._makeFloatAttribute(attributes["score"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "stats" in attributes:  # pragma no branch
@@ -368,3 +359,33 @@ class Commit(CompletableGithubObject):
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+
+
+class CommitSearchResult(Commit):
+    """
+    This class represents CommitSearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-commits
+
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"sha": self._sha.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])

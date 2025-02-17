@@ -119,6 +119,7 @@ import github.Issue
 import github.License
 import github.NamedUser
 import github.Topic
+from Commit import CommitSearchResult
 from github import Consts
 from github.GithubIntegration import GithubIntegration
 from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined
@@ -824,14 +825,14 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[Commit]:
+    ) -> PaginatedList[CommitSearchResult]:
         """
         :calls: `GET /search/commits <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('author-date', 'committer-date')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.Commit.Commit`
+        :rtype: :class:`PaginatedList` of :class:`github.Commit.CommitSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -853,7 +854,7 @@ class Github:
         assert url_parameters["q"], "need at least one qualifier"
 
         return PaginatedList(
-            github.Commit.Commit,
+            github.Commit.CommitSearchResult,
             self.__requester,
             "/search/commits",
             url_parameters,
