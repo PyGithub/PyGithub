@@ -147,7 +147,7 @@ if TYPE_CHECKING:
     from github.Organization import Organization
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
-    from github.Repository import Repository
+    from github.Repository import Repository, RepositorySearchResult
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
 
@@ -662,7 +662,7 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[Repository]:
+    ) -> PaginatedList[RepositorySearchResult]:
         """
         :calls: `GET /search/repositories <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
@@ -690,7 +690,7 @@ class Github:
         assert url_parameters["q"], "need at least one qualifier"
 
         return PaginatedList(
-            github.Repository.Repository,
+            github.Repository.RepositorySearchResult,
             self.__requester,
             "/search/repositories",
             url_parameters,
