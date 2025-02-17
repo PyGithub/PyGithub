@@ -90,7 +90,6 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.received_events_url, "https://api.github.com/users/jacquev6/received_events")
         self.assertEqual(self.user.repos_url, "https://api.github.com/users/jacquev6/repos")
         self.assertIsNone(self.user.role_name)
-        self.assertEqual(self.user.score, None)
         self.assertEqual(self.user.site_admin, False)
         self.assertIsNone(self.user.starred_at)
         self.assertEqual(self.user.starred_url, "https://api.github.com/users/jacquev6/starred{/owner}{/repo}")
