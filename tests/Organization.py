@@ -152,7 +152,7 @@ class Organization(Framework.TestCase):
         lyloa = self.g.get_user("lyloa")
         self.assertFalse(self.org.has_in_members(lyloa))
         self.org.add_to_members(lyloa, role="member")
-        # 'Pending' members won't be in /orgs/:org/members/:user
+        # "Pending" members won"t be in /orgs/:org/members/:user
         self.assertFalse(self.org.has_in_members(lyloa))
         self.org.remove_from_membership(lyloa)
         self.assertFalse(self.org.has_in_members(lyloa))
@@ -161,7 +161,7 @@ class Organization(Framework.TestCase):
         lyloa = self.g.get_user("lyloa")
         self.assertFalse(self.org.has_in_members(lyloa))
         self.org.add_to_members(lyloa, role="admin")
-        # 'Pending' members won't be in /orgs/:org/members/:user
+        # "Pending" members won"t be in /orgs/:org/members/:user
         self.assertFalse(self.org.has_in_members(lyloa))
         self.org.remove_from_membership(lyloa)
         self.assertFalse(self.org.has_in_members(lyloa))
@@ -776,3 +776,16 @@ class Organization(Framework.TestCase):
 
         self.assertEqual(config.id, repo_config.configuration.id)
         repo.detach_security_config()
+
+    def testGetSelfHostedRunnerApplications(self):
+        self.assertListKeyEqual(self.org.get_self_hosted_runner_applications(), lambda h: h.os,
+          ["osx", "linux", "linux", "win", "linux", "osx", "win"])
+
+    def testSelfHostedRunnerJitConfig(self):
+        runner = self.org.create_self_hosted_runner_jitconfig(name="self_hosted", runner_group_id=1,
+          labels=["default"])
+        # Now remove the runner
+        for runner in self.org.get_self_hosted_runners():
+            if runner.name == "self_hosted":
+                runner = self.org.get_self_hosted_runner(runner_id=runner.id)
+                self.org.delete_self_hosted_runner(runner_id=runner.id)
