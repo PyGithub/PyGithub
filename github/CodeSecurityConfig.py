@@ -188,7 +188,9 @@ class CodeSecurityConfig(NonCompletableGithubObject):
                 attributes["dependency_graph_autosubmit_action"]
             )
         if "dependency_graph_autosubmit_action_options" in attributes:  # pragma no branch
-            self._dependency_graph_autosubmit_action_options = self._makeDictAttribute(attributes["dependency_graph_autosubmit_action_options"])
+            self._dependency_graph_autosubmit_action_options = self._makeDictAttribute(
+                attributes["dependency_graph_autosubmit_action_options"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "enforcement" in attributes:  # pragma no branch
@@ -210,7 +212,9 @@ class CodeSecurityConfig(NonCompletableGithubObject):
                 attributes["secret_scanning_delegated_bypass"]
             )
         if "secret_scanning_delegated_bypass_options" in attributes:  # pragma no branch
-            self._secret_scanning_delegated_bypass_options = self._makeDictAttribute(attributes["secret_scanning_delegated_bypass_options"])
+            self._secret_scanning_delegated_bypass_options = self._makeDictAttribute(
+                attributes["secret_scanning_delegated_bypass_options"]
+            )
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
             self._secret_scanning_non_provider_patterns = self._makeStringAttribute(
                 attributes["secret_scanning_non_provider_patterns"]
