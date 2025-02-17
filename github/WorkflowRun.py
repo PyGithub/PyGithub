@@ -67,6 +67,7 @@ class TimingData(NamedTuple):
     - /components/schemas/workflow-run-usage
 
     """
+
     billable: dict[str, dict[str, int]]
     run_duration_ms: int
 
