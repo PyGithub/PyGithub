@@ -37,6 +37,7 @@ from tempfile import NamedTemporaryFile
 from typing import Any, Sequence
 
 import libcst as cst
+import requests
 from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
 
 
@@ -1453,6 +1454,22 @@ class OpenApi:
 
                 return changed
 
+    def fetch(self, api: str, api_version: str, spec_file: str) -> bool:
+        base_url = "https://github.com/github/rest-api-description/raw/refs/heads/main/descriptions"
+        url = f"{base_url}/{api}/{api}.{api_version}.json"
+        response = requests.get(url)
+        response.raise_for_status()
+        written = 0
+        with open(spec_file, "wb") as w:
+            print(f"fetching {url}")
+            for chunk in response.iter_content(131072):
+                w.write(chunk)
+                print(".", end="")
+                written += len(chunk)
+            print()
+            print(f"written {written // 1024 / 1024:.3f} MBytes")
+        return True
+
     def index(self, github_path: str, index_filename: str, dry_run: bool) -> bool:
         import multiprocessing
 
@@ -1904,6 +1921,11 @@ class OpenApi:
         args_parser.add_argument("--verbose", default=False, action="store_true", help="Provide more information")
 
         subparsers = args_parser.add_subparsers(dest="subcommand")
+        fetch_parser = subparsers.add_parser("fetch")
+        fetch_parser.add_argument("api", help="Github API, e.g. api.github.com, ghec, ghes-3.15. See https://github.com/github/rest-api-description/tree/main/descriptions")
+        fetch_parser.add_argument("api_version", help="Github API version date, e.g. 2022-11-28")
+        fetch_parser.add_argument("spec", help="Github API OpenAPI spec file to be written")
+
         index_parser = subparsers.add_parser("index")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
         index_parser.add_argument("index_filename", help="Path of index file")
@@ -1940,7 +1962,9 @@ class OpenApi:
 
     def main(self):
         changes = False
-        if args.subcommand == "index":
+        if args.subcommand == "fetch":
+            changes = self.fetch(self.args.api, self.args.api_version, self.args.spec)
+        elif args.subcommand == "index":
             changes = self.index(self.args.github_path, self.args.index_filename, self.args.dry_run)
         elif self.args.subcommand == "suggest":
             changes = self.suggest(
