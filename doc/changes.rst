@@ -10,7 +10,7 @@ Version 2.7.0 (XXXXXXX)
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 
-* Mehod ``Github.get_rate_limit()`` now returns ``RateLimitOverview`` rather than ``RateLimit``.
+* Method ``Github.get_rate_limit()`` now returns ``RateLimitOverview`` rather than ``RateLimit``.
 
   Code like
 

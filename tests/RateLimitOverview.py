@@ -37,13 +37,43 @@ class RateLimitOverview(Framework.TestCase):
         self.assertEqual(self.rate_limit_overview.rate.reset, datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc))
         self.assertEqual(self.rate_limit_overview.rate.used, 12)
 
-        self.assertEqual(str(self.rate_limit_overview.resources.actions_runner_registration), 'Rate(reset=2024-12-13 07:28:18+00:00, remaining=10000, limit=10000)')
-        self.assertEqual(str(self.rate_limit_overview.resources.code_scanning_upload), 'Rate(reset=2024-12-13 07:28:18+00:00, remaining=1000, limit=1000)')
-        self.assertEqual(str(self.rate_limit_overview.resources.code_search), 'Rate(reset=2024-12-13 06:29:18+00:00, remaining=10, limit=10)')
-        self.assertEqual(str(self.rate_limit_overview.resources.core), "Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000)")
-        self.assertEqual(str(self.rate_limit_overview.resources.dependency_snapshots), 'Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)')
-        self.assertEqual(str(self.rate_limit_overview.resources.graphql), 'Rate(reset=2024-12-13 06:43:42+00:00, remaining=4808, limit=5000)')
-        self.assertEqual(str(self.rate_limit_overview.resources.integration_manifest), 'Rate(reset=2024-12-13 07:28:18+00:00, remaining=5000, limit=5000)')
-        self.assertEqual(str(self.rate_limit_overview.resources.scim), 'Rate(reset=2024-12-13 07:28:18+00:00, remaining=15000, limit=15000)')
-        self.assertEqual(str(self.rate_limit_overview.resources.search), 'Rate(reset=2024-12-13 06:29:18+00:00, remaining=30, limit=30)')
-        self.assertEqual(str(self.rate_limit_overview.resources.source_import), 'Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)')
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.actions_runner_registration),
+            "Rate(reset=2024-12-13 07:28:18+00:00, remaining=10000, limit=10000)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.code_scanning_upload),
+            "Rate(reset=2024-12-13 07:28:18+00:00, remaining=1000, limit=1000)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.code_search),
+            "Rate(reset=2024-12-13 06:29:18+00:00, remaining=10, limit=10)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.core),
+            "Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.dependency_snapshots),
+            "Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.graphql),
+            "Rate(reset=2024-12-13 06:43:42+00:00, remaining=4808, limit=5000)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.integration_manifest),
+            "Rate(reset=2024-12-13 07:28:18+00:00, remaining=5000, limit=5000)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.scim),
+            "Rate(reset=2024-12-13 07:28:18+00:00, remaining=15000, limit=15000)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.search),
+            "Rate(reset=2024-12-13 06:29:18+00:00, remaining=30, limit=30)",
+        )
+        self.assertEqual(
+            str(self.rate_limit_overview.resources.source_import),
+            "Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)",
+        )
