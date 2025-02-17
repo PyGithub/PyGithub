@@ -37,6 +37,10 @@ class CopilotSeat(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/copilot/copilot-user-management
+
+    The OpenAPI schema can be found at
+    - /components/schemas/copilot-seat-details
+
     """
 
     def _initAttributes(self) -> None:
