@@ -25,7 +25,6 @@ from __future__ import annotations
 from typing import Any
 
 import github.SelfHostedActionsRunner
-
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -40,22 +39,23 @@ class SelfHostedActionsRunnerJitConfig(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._encoded_jit_config: Attribute[str] = NotSet
-        self._runner: Attribute[SelfHostedActionsRunner] = NotSet
+        self._runner: Attribute[github.SelfHostedActionsRunner.SelfHostedActionsRunner] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"encoded_jit_config": self._token.value})
+        return self.get__repr__({"encoded_jit_config": self._encoded_jit_config.value})
 
     @property
     def encoded_jit_config(self) -> str:
         return self._encoded_jit_config.value
 
     @property
-    def runner(self) -> SelfHostedActionsRunner:
-        return self_runner.value
-
+    def runner(self) -> github.SelfHostedActionsRunner.SelfHostedActionsRunner:
+        return self._runner.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "encoded_jit_config" in attributes:  # pragma no branch
             self._encoded_jit_config = self._makeStringAttribute(attributes["encoded_jit_config"])
         if "runner" in attributes:  # pragma no branch
-            self._runner = self._makeClassAttribute(github.SelfHostedActionsRunner.SelfHostedActionsRunner, attributes["runner"])
+            self._runner = self._makeClassAttribute(
+                github.SelfHostedActionsRunner.SelfHostedActionsRunner, attributes["runner"]
+            )
