@@ -127,7 +127,7 @@ from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.HookDescription import HookDescription
 from github.PaginatedList import PaginatedList
-from github.RateLimit import RateLimit
+from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 if TYPE_CHECKING:
@@ -347,15 +347,15 @@ class Github:
             self.get_rate_limit()
         return self.__requester.rate_limiting_resettime
 
-    def get_rate_limit(self) -> RateLimit:
+    def get_rate_limit(self) -> RateLimitOverview:
         """
-        Rate limit status for different resources (core/search/graphql).
+        Rate limit overview that provides general status and status for different resources (core/search/graphql).
 
         :calls:`GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
-        return RateLimit(self.__requester, headers, data["resources"])
+        return RateLimitOverview(self.__requester, headers, data)
 
     @property
     def oauth_scopes(self) -> list[str] | None:
