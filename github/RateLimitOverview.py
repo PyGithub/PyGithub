@@ -1,18 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2019 Adam Baratz <adam.baratz@gmail.com>                           #
-# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
-# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,12 +19,48 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
 
-import github
+from typing import TYPE_CHECKING, Any
 
-from . import Framework
+import github.Rate
+import github.RateLimit
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Rate import Rate
+    from github.RateLimit import RateLimit
 
 
-class Issue142(Framework.TestCase):
-    def testDecodeJson(self):
-        self.assertEqual(github.Github().get_rate_limit().resources.core.limit, 60)
+class RateLimitOverview(NonCompletableGithubObject):
+    """
+    This class represents RateLimitOverview.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/rate-limit
+
+    The OpenAPI schema can be found at
+    - /components/schemas/rate-limit-overview
+
+    """
+
+    def _initAttributes(self) -> None:
+        self._rate: Attribute[Rate] = NotSet
+        self._resources: Attribute[RateLimit] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"rate": self._rate.value})
+
+    @property
+    def rate(self) -> Rate:
+        return self._rate.value
+
+    @property
+    def resources(self) -> RateLimit:
+        return self._resources.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "rate" in attributes:  # pragma no branch
+            self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])
+        if "resources" in attributes:  # pragma no branch
+            self._resources = self._makeClassAttribute(github.RateLimit.RateLimit, attributes["resources"])
