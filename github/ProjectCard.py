@@ -51,6 +51,7 @@ from typing import Any
 
 import github.Issue
 import github.NamedUser
+import github.Organization
 import github.ProjectColumn
 import github.PullRequest
 from github import Consts
@@ -77,6 +78,7 @@ class ProjectCard(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._archived: Attribute[bool] = NotSet
+        self._column_name: Attribute[str] = NotSet
         self._column_url: Attribute[str] = NotSet
         self._content_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -84,6 +86,8 @@ class ProjectCard(NonCompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._note: Attribute[str] = NotSet
+        self._project_id: Attribute[str] = NotSet
+        self._project_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -93,6 +97,10 @@ class ProjectCard(NonCompletableGithubObject):
     @property
     def archived(self) -> bool:
         return self._archived.value
+
+    @property
+    def column_name(self) -> str:
+        return self._column_name.value
 
     @property
     def column_url(self) -> str:
@@ -121,6 +129,14 @@ class ProjectCard(NonCompletableGithubObject):
     @property
     def note(self) -> str:
         return self._note.value
+
+    @property
+    def project_id(self) -> str:
+        return self._project_id.value
+
+    @property
+    def project_url(self) -> str:
+        return self._project_url.value
 
     @property
     def updated_at(self) -> datetime:
@@ -202,6 +218,8 @@ class ProjectCard(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
+        if "column_name" in attributes:  # pragma no branch
+            self._column_name = self._makeStringAttribute(attributes["column_name"])
         if "column_url" in attributes:  # pragma no branch
             self._column_url = self._makeStringAttribute(attributes["column_url"])
         if "content_url" in attributes:  # pragma no branch
@@ -216,6 +234,10 @@ class ProjectCard(NonCompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "note" in attributes:  # pragma no branch
             self._note = self._makeStringAttribute(attributes["note"])
+        if "project_id" in attributes:  # pragma no branch
+            self._project_id = self._makeStringAttribute(attributes["project_id"])
+        if "project_url" in attributes:  # pragma no branch
+            self._project_url = self._makeStringAttribute(attributes["project_url"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
