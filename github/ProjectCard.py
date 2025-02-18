@@ -72,9 +72,6 @@ class ProjectCard(CompletableGithubObject):
 
     The OpenAPI schema can be found at
     - /components/schemas/project-card
-    - /components/schemas/validation-error
-    - /components/schemas/validation-error-simple
-    - /paths/"/projects/columns/{column_id}/cards"/post/responses/503/content/"application/json"/schema
 
     """
 
