@@ -25,6 +25,11 @@ update_assertion() {
   read -r assertion_line
   read line_number_line
   if [[ -z "$assertion_line" ]]; then return; fi
+  if [[ "$assertion_line" == *"AssertionError: assert {'Authorizati"* ]]; then
+    echo "Failed due to authorization error" >&2
+    return
+  fi
+
   line_number="${line_number_line/$test_file:/}"
   line_number="${line_number/%: */}"
   echo "$line_number"
