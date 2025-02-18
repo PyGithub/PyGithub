@@ -22,6 +22,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -34,6 +36,9 @@ class GitCommitVerification(Framework.TestCase):
 
     def testAttributes(self):
         verification = self.commit.commit.verification
+        self.assertEqual(verification.payload, "")
+        self.assertEqual(verification.reason, "")
+        self.assertEqual(verification.signature, "")
         self.assertEqual(verification.verified, True)
         self.assertIsNone(verification.verified_at)
         self.assertEqual(verification.reason, "valid")
