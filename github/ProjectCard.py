@@ -54,7 +54,7 @@ import github.NamedUser
 import github.ProjectColumn
 import github.PullRequest
 from github import Consts
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
 
 # NOTE: There is currently no way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
@@ -63,7 +63,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 # which may point the way to where the API is likely headed and what might come back to v3. E.g. ProjectCard.content member.
 
 
-class ProjectCard(CompletableGithubObject):
+class ProjectCard(NonCompletableGithubObject):
     """
     This class represents Project Cards.
 
