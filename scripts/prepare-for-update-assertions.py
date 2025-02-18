@@ -44,6 +44,16 @@ class SingleLineStatementTransformer(cst.CSTTransformer):
             )
         return updated_node
 
+    def leave_LeftParen(self, original_node: cst.LeftParen, updated_node: cst.LeftParen) -> cst.LeftParen:
+        if self.in_function:
+            return updated_node.with_changes(whitespace_after=SimpleWhitespace(""))
+        return updated_node
+
+    def leave_RightParen(self, original_node: cst.RightParen, updated_node: cst.RightParen) -> cst.RightParen:
+        if self.in_function:
+            return updated_node.with_changes(whitespace_before=SimpleWhitespace(""))
+        return updated_node
+
     def leave_LeftCurlyBrace(
         self, original_node: cst.LeftCurlyBrace, updated_node: cst.LeftCurlyBrace
     ) -> cst.LeftCurlyBrace:
@@ -54,6 +64,20 @@ class SingleLineStatementTransformer(cst.CSTTransformer):
     def leave_RightCurlyBrace(
         self, original_node: cst.RightCurlyBrace, updated_node: cst.RightCurlyBrace
     ) -> cst.RightCurlyBrace:
+        if self.in_function:
+            return updated_node.with_changes(whitespace_before=SimpleWhitespace(""))
+        return updated_node
+
+    def leave_LeftSquareBracket(
+        self, original_node: cst.LeftSquareBracket, updated_node: cst.LeftSquareBracket
+    ) -> cst.LeftSquareBracket:
+        if self.in_function:
+            return updated_node.with_changes(whitespace_after=SimpleWhitespace(""))
+        return updated_node
+
+    def leave_RightSquareBracket(
+        self, original_node: cst.RightSquareBracket, updated_node: cst.RightSquareBracket
+    ) -> cst.RightSquareBracket:
         if self.in_function:
             return updated_node.with_changes(whitespace_before=SimpleWhitespace(""))
         return updated_node
