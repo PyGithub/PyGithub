@@ -7,7 +7,7 @@ scripts_path="$(cd "$(dirname "$0")"; pwd)"
 source_path="$scripts_path/../github"
 openapi="$scripts_path/openapi.py"
 sort_class="$scripts_path/sort_class.py"
-pre_commit_conf="$scripts_path/openapi-update-classes.pre-commit-config.yaml"
+prepare_for_update_assertions="$scripts_path/prepare-for-update-assertions.py"
 update_assertions="$scripts_path/update-assertions.sh"
 spec=api.github.com.2022-11-28.json
 python="$(which python3)"
@@ -203,22 +203,21 @@ update() {
 
   # apply schemas to test class
   ("$python" "$openapi" apply --tests "$spec" "$index" "${classes_with_tests[@]}" && echo) 1>&2 || failed "tests" || return 0
-  commit --no-linting "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
+  commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
 
   # fix test assertions
   if [[ "$(git log -1 --pretty=%B HEAD)" == "Updated test $class according to API spec"* ]]; then
     for test_file in "${test_files[@]}"; do
-      # reconstruct long lines
-      #sed -i -z 's/,\s*)/)/g' "$filename"
-      #black --line-length 1000 --line-ranges 108-108 tests/ApplicationOAuth.py
-      #"$python_bin"/pre-commit run --config "$pre_commit_conf" --file "$filename" 1>&2 || true
-      ("$update_assertions" "$test_file" testAttributes 2>&1 | while read line; do echo "$test_file: $line"; done 1>&2 || true) &
-      # record test data for testAttributes, fix assertions, commit as separate commit
-      # do not record for other tests (might delete things)
+      (
+        # reconstruct long lines
+        "$python" "$prepare_for_update_assertions" "$test_file" testAttributes 1>&2 || true
+        # update assertions
+        "$update_assertions" "$test_file" testAttributes 2>&1 | while read line; do echo "$test_file: $line"; done 1>&2 || true
+      ) &
       echo 1>&2
     done
     wait
-    commit --no-linting "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
+    commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
     commit "Linting tests" && unchanged "linting" || changed "linting" "linting" || return 0
   else
     skip "assertions"
