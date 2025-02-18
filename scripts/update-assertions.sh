@@ -22,11 +22,9 @@ def pytest_configure(config):
 EOF
 
 update_assertion() {
-  read assertion_line
+  read -r assertion_line
   read line_number_line
   if [[ -z "$assertion_line" ]]; then return; fi
-  #echo $assertion_line
-  #echo $line_number_line
   line_number="${line_number_line/$test_file:/}"
   line_number="${line_number/%: */}"
   echo "$line_number"
@@ -43,9 +41,6 @@ update_assertion() {
     actual="${assertion_line/% != */}"
     expected="${assertion_line/#* != /}"
     actual="${actual//datetime\./}"
-    #echo "$actual" >&2
-    #echo "$expected" >&2
-    #echo "$line_number" >&2
     if [ "$actual" == "None" ]; then
       sed -i -e "${line_number}s/\S*[(]\([^,]*\),.*/self.assertIsNone(\1)/" "$test_file"
     elif [[ "$actual" == "'"*"["*" chars]"*"'" ]]; then
