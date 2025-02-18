@@ -36,9 +36,15 @@ class GitCommitVerification(Framework.TestCase):
 
     def testAttributes(self):
         verification = self.commit.commit.verification
-        self.assertEqual(verification.payload, "")
-        self.assertEqual(verification.reason, "")
-        self.assertEqual(verification.signature, "")
+        self.assertEqual(
+            verification.payload,
+            "tree 4f502b4c4e5f0bdc7ee611f914bbdef51aef5efa\nparent 85087354078e426125dbbf88041bbaa6f35d8199\nauthor Tim Gates <tim.gates@iress.com> 1724830907 +1000\ncommitter Tim Gates <tim.gates@iress.com> 1724830915 +1000\n\nCommit verification support\n\nAdd support for verification component of Commit API response to see if\ncommit has been signed and the signature has been checked by Github\n",
+        )
+        self.assertEqual(verification.reason, "valid")
+        self.assertEqual(
+            verification.signature,
+            "-----BEGIN PGP SIGNATURE-----\n\niMgEAAEKADIWIQRbWfY9TlELdM/5UaauO+DVOCPPBQUCZs7U0RQcdGltLmdhdGVz\nQGlyZXNzLmNvbQAKCRCuO+DVOCPPBQ2tBACAaRNONEWlDDNyYkAnIv8bZ55BuIuy\nTvbxVPjI8KLDqKLzgHO60HhQ3h/hCiug6g5fvVzyIrmayj3eEzaWAfa3+f37f3xK\nflZRMtNFUBYQoLTuyTkKvW85UA2AkUvKp3bHT5W6ZoCKqR5xw6pwKxuYQi7eJG9h\nNPrZTezkL6EDng==\n=Ng9G\n-----END PGP SIGNATURE-----",
+        )
         self.assertEqual(verification.verified, True)
         self.assertIsNone(verification.verified_at)
         self.assertEqual(verification.reason, "valid")
