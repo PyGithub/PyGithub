@@ -791,3 +791,13 @@ class Organization(Framework.TestCase):
             if runner.name == "self_hosted":
                 runner = self.org.get_self_hosted_runner(runner_id=runner.id)
                 self.org.delete_self_hosted_runner(runner_id=runner.id)
+
+    def testSelfHostedRunnerGetRegistrationToken(self):
+        token = self.org.create_self_hosted_runner_registration_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(token.expires_at, "2025-02-17T21:11:49.260-08:00")
+
+    def testSelfHostedRunnerGetRemoveToken(self):
+        token = self.org.create_self_hosted_runner_remove_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(token.expires_at, "2025-02-17T21:12:28.308-08:00")
