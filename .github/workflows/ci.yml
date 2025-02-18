@@ -87,20 +87,15 @@ jobs:
         run: |
           python head/scripts/openapi.py fetch api.github.com 2022-11-28 api.github.com.2022-11-28.json
 
+          echo "::group::Head schema suggestions:"
           python head/scripts/openapi.py index head/github openapi.head.index
-          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.head.index > schemas.head.txt
+          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.head.index | tee schemas.head.txt
+          echo "::endgroup::"
 
+          echo "::group::Base schema suggestions:"
           python head/scripts/openapi.py index base/github openapi.base.index
-          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.base.index > schemas.base.txt
-          echo -e "\n"
-
-          echo "Head schema suggestions:"
-          cat schemas.head.txt
-          echo -e "\n"
-
-          echo "Base schema suggestions:"
-          cat schemas.base.txt
-          echo -e "\n"
+          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.base.index | tee schemas.base.txt
+          echo "::endgroup::"
 
           echo "Difference:"
           diff schemas.base.txt schemas.head.txt
