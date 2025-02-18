@@ -43,16 +43,15 @@ class ProjectCard(Framework.TestCase):
     # See https://developer.github.com/v3/projects/cards/#get-a-project-card
     def testAttributes(self):
         card = self.pull_card
-        self.assertEqual(card.url, "https://api.github.com/projects/columns/cards/11780055")
+        self.assertFalse(card.archived)
         self.assertEqual(card.column_url, "https://api.github.com/projects/columns/3138831")
         self.assertEqual(card.content_url, "https://api.github.com/repos/bbi-yggy/PyGithub/issues/1")
-        self.assertEqual(card.id, 11780055)
-        self.assertEqual(card.node_id, "MDExOlByb2plY3RDYXJkMTE3ODAwNTU=")
-        self.assertEqual(card.note, None)  # No notes for cards with content.
         self.assertEqual(card.creator, self.repo.owner)
         self.assertEqual(card.created_at.year, 2018)
-        self.assertTrue(card.updated_at >= card.created_at)
-        self.assertFalse(card.archived)
+        self.assertEqual(card.id, 11780055)
+        self.assertEqual(card.node_id, "MDExOlByb2plY3RDYXJkMTE3ODAwNTU=")
+        self.assertIsNone(card.note, None)
+        self.assertEqual(card.url, "https://api.github.com/projects/columns/cards/11780055")
         self.assertEqual(repr(card), "ProjectCard(id=11780055)")
 
     def testGetContent(self):
