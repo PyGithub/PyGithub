@@ -1,5 +1,5 @@
 libcst
 mypy
-pre-commit
+pre-commit<4
 pytest
 requests
