@@ -1769,8 +1769,6 @@ class OpenApi:
         dry_run: bool,
         tests: bool,
     ) -> bool:
-        with open(spec_file) as r:
-            spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
 
