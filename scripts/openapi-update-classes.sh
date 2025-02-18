@@ -68,12 +68,20 @@ commit() {
     do_lint=false
     shift
   fi
+  force_lint=false
+  if [ $# -gt 0 ] && [ "$1" == "--force-linting" ]; then
+    force_lint=true
+    shift
+  fi
   if [ $# -lt 1 ]; then
     echo "Cannot commit without message"
     exit 1
   fi
   message="$1"
   shift
+
+  # skip if there are no changes, unless linting is forced
+  if [[ "$force_lint" != "true" ]] && "$git" diff --quiet; then return 0; fi
 
   # run linting
   if [[ "$do_lint" == "true" ]]; then
@@ -217,10 +225,8 @@ update() {
       echo 1>&2
     done
     wait
-    commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
-  else
-    skip "assertions"
   fi
+  commit --force-linting "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
 
   # run tests
   if [ ${#test_files[@]} -gt 0 ]; then
