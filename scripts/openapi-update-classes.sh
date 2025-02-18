@@ -75,9 +75,6 @@ commit() {
   message="$1"
   shift
 
-  # skip if there are no changes
-  if "$git" diff --quiet; then return 0; fi
-
   # run linting
   if [[ "$do_lint" == "true" ]]; then
     "$mypy_bin" github tests 1>&2
@@ -203,7 +200,10 @@ update() {
 
   # apply schemas to test class
   ("$python" "$openapi" apply --tests "$spec" "$index" "${classes_with_tests[@]}" && echo) 1>&2 || failed "tests" || return 0
-  commit "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
+  # do not perform linting as part of the commit as this step
+  # introduces imports that might be needed by assertions
+  # committing assertions will run linting to clean this up
+  commit --no-linting "Updated test $class according to API spec" && unchanged "tests" || changed "tests" "tests" || return 0
 
   # fix test assertions
   if [[ "$(git log -1 --pretty=%B HEAD)" == "Updated test $class according to API spec"* ]]; then
@@ -218,10 +218,8 @@ update() {
     done
     wait
     commit "Updated test assertions" && unchanged "assertions" || changed "assertions" "assertions" || return 0
-    commit "Linting tests" && unchanged "linting" || changed "linting" "linting" || return 0
   else
     skip "assertions"
-    skip "linting"
   fi
 
   # run tests
