@@ -39,7 +39,7 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -94,7 +94,7 @@ class WorkflowStep(CompletableGithubObject):
         self._completeIfNotSet(self._status)
         return self._status.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch

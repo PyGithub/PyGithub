@@ -25,7 +25,7 @@
 ################################################################################
 
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -59,7 +59,7 @@ class MergedUpstream(NonCompletableGithubObject):
     def message(self) -> str:
         return self._message.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "merge_type" in attributes:  # pragma no branch
             self._merge_type = self._makeStringAttribute(attributes["merge_type"])
         if "base_branch" in attributes:  # pragma no branch

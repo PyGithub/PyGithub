@@ -436,7 +436,7 @@ class GithubObject(ABC):
         Converts the object to a nicely printable string.
         """
 
-        def format_params(params: dict[str, Any]) -> typing.Generator[str, None, None]:
+        def format_params(params: dict[str, Any]) -> typing.Generator[str]:
             items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 if isinstance(v, bytes):

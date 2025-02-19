@@ -32,7 +32,7 @@ import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Callable, Dict, Optional, Union
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 import jwt
 from requests import utils
@@ -244,7 +244,7 @@ class AppAuth(JWT):
     def get_installation_auth(
         self,
         installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
+        token_permissions: Optional[dict[str, str]] = None,
         requester: Optional[Requester] = None,
     ) -> "AppInstallationAuth":
         """
@@ -317,7 +317,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         self,
         app_auth: AppAuth,
         installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
+        token_permissions: Optional[dict[str, str]] = None,
         requester: Optional[Requester] = None,
     ):
         super().__init__()
@@ -354,7 +354,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         return self._installation_id
 
     @property
-    def token_permissions(self) -> Optional[Dict[str, str]]:
+    def token_permissions(self) -> Optional[dict[str, str]]:
         return self._token_permissions
 
     @property
