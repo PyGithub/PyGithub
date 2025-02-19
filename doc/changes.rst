@@ -49,6 +49,8 @@ Breaking Changes
     repo.get_views_traffic().views.timestamp
     repo.get_clones_traffic().clones.timestamp
 
+* Property ``AppAuth.private_key`` has been removed (`#3065 <https://github.com/PyGithub/PyGithub/pull/3065>`_) (`36697b22 <https://github.com/PyGithub/PyGithub/commit/36697b22>`_)
+
 * Fix typos (`#3086 <https://github.com/PyGithub/PyGithub/pull/3086>`_) (`a50ae51b <https://github.com/PyGithub/PyGithub/commit/a50ae51b>`_):
 
   Property ``OrganizationCustomProperty.respository_id`` renamed to ``OrganizationCustomProperty.repository_id``.
