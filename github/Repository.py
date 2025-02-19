@@ -162,6 +162,7 @@ from __future__ import annotations
 
 import collections
 import urllib.parse
+import sys
 from base64 import b64encode
 from collections.abc import Iterable
 from datetime import date, datetime, timezone
@@ -256,7 +257,7 @@ from github.GithubObject import (
 )
 from github.PaginatedList import PaginatedList
 
-if TYPE_CHECKING:
+if TYPE_CHECKING or 'sphinx' in sys.modules:
     from github.Artifact import Artifact
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Autolink import Autolink
@@ -1259,9 +1260,8 @@ class Repository(CompletableGithubObject):
     def add_to_collaborators(self, collaborator: str | NamedUser, permission: Opt[str] = NotSet) -> Invitation | None:
         """
         :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
-        :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :param collaborator:
         :param permission: string 'pull', 'push', 'admin', 'maintain', 'triage', or a custom repository role name, if the owning organization has defined any
-        :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
         assert is_optional(permission, str), permission
@@ -1288,8 +1288,7 @@ class Repository(CompletableGithubObject):
     def get_collaborator_permission(self, collaborator: str | NamedUser) -> str:
         """
         :calls: `GET /repos/{owner}/{repo}/collaborators/{username}/permission <https://docs.github.com/en/rest/reference/repos#collaborators>`_
-        :param collaborator: string or :class:`github.NamedUser.NamedUser`
-        :rtype: string
+        :param collaborator:
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, str), collaborator
         if isinstance(collaborator, github.NamedUser.NamedUser):
@@ -1305,7 +1304,6 @@ class Repository(CompletableGithubObject):
     def get_pending_invitations(self) -> PaginatedList[Invitation]:
         """
         :calls: `GET /repos/{owner}/{repo}/invitations <https://docs.github.com/en/rest/reference/repos#invitations>`_
-        :rtype: :class:`PaginatedList` of :class:`github.Invitation.Invitation`
         """
         return PaginatedList(
             github.Invitation.Invitation,
@@ -1317,7 +1315,7 @@ class Repository(CompletableGithubObject):
     def remove_invitation(self, invite_id: int) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/invitations/{invitation_id} <https://docs.github.com/en/rest/reference/repos#invitations>`_
-        :rtype: None
+        :param invite_id:
         """
         assert isinstance(invite_id, int), invite_id
 
@@ -1326,9 +1324,8 @@ class Repository(CompletableGithubObject):
     def compare(self, base: str, head: str) -> Comparison:
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
-        :param base: string
-        :param head: string
-        :rtype: :class:`github.Comparison.Comparison`
+        :param base:
+        :param head:
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
@@ -1346,10 +1343,9 @@ class Repository(CompletableGithubObject):
     ) -> github.Autolink.Autolink:
         """
         :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
-        :param key_prefix: string
-        :param url_template: string
-        :param is_alphanumeric: bool
-        :rtype: :class:`github.Autolink.Autolink`
+        :param key_prefix:
+        :param url_template:
+        :param is_alphanumeric:
         """
         assert isinstance(key_prefix, str), key_prefix
         assert isinstance(url_template, str), url_template
@@ -1366,9 +1362,8 @@ class Repository(CompletableGithubObject):
     def create_git_blob(self, content: str, encoding: str) -> GitBlob:
         """
         :calls: `POST /repos/{owner}/{repo}/git/blobs <https://docs.github.com/en/rest/reference/git#blobs>`_
-        :param content: string
-        :param encoding: string
-        :rtype: :class:`github.GitBlob.GitBlob`
+        :param content:
+        :param encoding:
         """
         assert isinstance(content, str), content
         assert isinstance(encoding, str), encoding
