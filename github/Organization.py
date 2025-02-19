@@ -90,6 +90,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.CodeSecurityConfig
+import github.CodeSecurityConfigRepository
 import github.Copilot
 import github.DefaultCodeSecurityConfig
 import github.Event
@@ -119,6 +120,7 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.CodeSecurityConfig import CodeSecurityConfig
+    from github.CodeSecurityConfigRepository import CodeSecurityConfigRepository
     from github.Copilot import Copilot
     from github.DefaultCodeSecurityConfig import DefaultCodeSecurityConfig
     from github.Event import Event
@@ -1821,7 +1823,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
-    def get_repos_for_code_security_config(self, id: int, status: Opt[str] = NotSet) -> PaginatedList[Repository]:
+    def get_repos_for_code_security_config(self, id: int, status: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfigRepository]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories <https://docs.github.com/en/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration>`_
         """
@@ -1831,7 +1833,7 @@ class Organization(CompletableGithubObject):
         url_parameters = NotSet.remove_unset_items({"status": status})
 
         return PaginatedList(
-            github.Repository.Repository,
+            github.CodeSecurityConfigRepository.CodeSecurityConfigRepository,
             self._requester,
             f"{self.url}/code-security/configurations/{id}/repositories",
             url_parameters,
