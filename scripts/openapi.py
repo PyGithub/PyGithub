@@ -658,17 +658,20 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
     def create_property_function(
         self, name: str, data_type: PythonType | GithubClass | None, deprecated: bool
     ) -> cst.FunctionDef:
+        # we need to make the 'headers' attribute truly private,
+        # otherwise it conflicts with GithubObject._headers
+        attr_name = f"__{name}" if name == "headers" else f"_{name}"
         complete_if_completable_stmt = cst.SimpleStatementLine(
             body=[
                 cst.Expr(
                     cst.Call(
                         func=self.create_attribute(["self", "_completeIfNotSet"]),
-                        args=[cst.Arg(self.create_attribute(["self", f"_{name}"]))],
+                        args=[cst.Arg(self.create_attribute(["self", attr_name]))],
                     )
                 )
             ]
         )
-        return_stmt = cst.SimpleStatementLine(body=[cst.Return(self.create_attribute(["self", f"_{name}", "value"]))])
+        return_stmt = cst.SimpleStatementLine(body=[cst.Return(self.create_attribute(["self", attr_name, "value"]))])
         stmts = ([complete_if_completable_stmt] if self.completable else []) + [return_stmt]
 
         return cst.FunctionDef(
@@ -710,10 +713,13 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
     @classmethod
     def create_init_attr(cls, prop: Property) -> cst.SimpleStatementLine:
+        # we need to make the 'headers' attribute truly private,
+        # otherwise it conflicts with GithubObject._headers
+        attr_name = f"__{prop.name}" if prop.name == "headers" else f"_{prop.name}"
         return cst.SimpleStatementLine(
             [
                 cst.AnnAssign(
-                    target=cls.create_attribute(["self", f"_{prop.name}"]),
+                    target=cls.create_attribute(["self", attr_name]),
                     annotation=cst.Annotation(
                         annotation=cst.Subscript(
                             value=cst.Name("Attribute"),
@@ -802,6 +808,9 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
     @classmethod
     def create_use_attr(cls, prop: Property) -> cst.BaseStatement:
+        # we need to make the 'headers' attribute truly private,
+        # otherwise it conflicts with GithubObject._headers
+        attr_name = f"__{prop.name}" if prop.name == "headers" else f"_{prop.name}"
         return cst.If(
             test=cst.Comparison(
                 left=cst.SimpleString(f'"{prop.name}"'),
@@ -815,7 +824,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     cst.SimpleStatementLine(
                         [
                             cst.Assign(
-                                targets=[cst.AssignTarget(cls.create_attribute(["self", f"_{prop.name}"]))],
+                                targets=[cst.AssignTarget(cls.create_attribute(["self", attr_name]))],
                                 value=cls.make_attribute(prop),
                             )
                         ]
