@@ -1069,6 +1069,23 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 attribute = list(Counter(candidates).items())[0][0]
                 self_attribute = True
 
+            # now we detect all properties that are already tested
+            # this is done in case properties are not tested in alphabetical order,
+            # otherwise we would duplicate tests
+            # this is the same logic as is used to come up with 'asserted_property' below
+            existing_properties = {attrs[1]
+                                   for node in updated_node.body.body
+                                   if isinstance(node.body[0].value, cst.Call) and node.body[0].value.args
+                                   for attr_nodes in [self.find_nodes(node.body[0].value.args[0].value, cst.Attribute)]
+                                   if attr_nodes
+                                   for attr_node in [attr_nodes[0]]
+                                   for attrs_with_self in [self.parse_attribute(attr_node) if isinstance(attr_node, cst.Attribute) else []]
+                                   for attrs in [attrs_with_self[1:] if attrs_with_self and self_attribute and attrs_with_self[0] == "self" else attrs_with_self]
+                                   if len(attrs) >= 2 and attrs[0] == attribute}
+
+            # we can remove all properties that already exist in the test file
+            self.properties = [property for property in self.properties if property.name not in existing_properties]
+
             i = 0
             while i < len(updated_node.body.body):
                 if (
