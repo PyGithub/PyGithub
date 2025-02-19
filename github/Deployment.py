@@ -52,12 +52,14 @@ import github.Consts
 import github.DeploymentStatus
 import github.GithubApp
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
 class Deployment(CompletableGithubObject):
@@ -76,7 +78,7 @@ class Deployment(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[NamedUser] = NotSet
+        self._creator: Attribute[NamedUser | Organization] = NotSet
         self._description: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
@@ -104,7 +106,7 @@ class Deployment(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> NamedUser:
+    def creator(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
@@ -268,7 +270,15 @@ class Deployment(CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+            self._creator = self._makeUnionClassAttributeFromTypeKey(
+                github.NamedUser.NamedUser,
+                "User",
+                github.Organization.Organization,
+                "Organization",
+                "type",
+                "User",
+                attributes["creator"],
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "environment" in attributes:  # pragma no branch
