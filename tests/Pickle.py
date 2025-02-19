@@ -24,9 +24,13 @@
 #                                                                              #
 ################################################################################
 
+import inspect
 import pickle
+import sys
+from abc import ABC
 
 import github
+from github.Auth import AppAuth, AppAuthToken, AppInstallationAuth, AppUserAuth, Auth, Login, NetrcAuth, Token
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
@@ -59,3 +63,30 @@ class Pickle(Framework.TestCase):
         branches = repo.get_branches()
         branches2 = pickle.loads(pickle.dumps(branches))
         self.assertIsInstance(branches2, PaginatedList)
+
+    auths = [
+        Login("login", "password"),
+        Token("token"),
+        AppAuth("id", "key"),
+        AppAuthToken("token"),
+        AppInstallationAuth(AppAuth("id", "key"), 123),
+        AppUserAuth("client_id", "client_secret", "access_token"),
+        NetrcAuth(),
+    ]
+
+    def testPickleAuthSetup(self):
+        # check we are testing *all* exiting auth classes
+        auth_module = sys.modules[github.Auth.__name__]
+        existing_auths = [
+            clazz_type.__name__
+            for clazz, clazz_type in inspect.getmembers(auth_module, inspect.isclass)
+            if Auth in clazz_type.mro() and ABC not in clazz_type.__bases__
+        ]
+        tested_auths = [type(auth).__name__ for auth in self.auths]
+        self.assertSequenceEqual(sorted(existing_auths), sorted(tested_auths))
+
+    def testPickleAuth(self):
+        for auth in self.auths:
+            with self.subTest(auth=type(auth).__name__):
+                auth2 = pickle.loads(pickle.dumps(auth))
+                self.assertIsInstance(auth2, type(auth))
