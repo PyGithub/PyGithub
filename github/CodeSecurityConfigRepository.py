@@ -21,14 +21,12 @@
 
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from github.GithubObject import NonCompletableGithubObject
-from github.GithubObject import Attribute, NotSet
 import github.Repository
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
-    from github.GithubObject import NonCompletableGithubObject
     from github.Repository import Repository
 
 
