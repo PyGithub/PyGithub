@@ -698,10 +698,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             if len(data_type.inner_types) == 1:
                 return cls.create_type(data_type.inner_types[0], short_class_name)
             result = cst.BinaryOperation(
-                cls.create_type(data_type.inner_types[0]), cst.BitOr(), cls.create_type(data_type.inner_types[1])
+                cls.create_type(data_type.inner_types[0], short_class_name), cst.BitOr(), cls.create_type(data_type.inner_types[1], short_class_name)
             )
             for dt in data_type.inner_types[2:]:
-                result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt))
+                result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt, short_class_name))
             return result
         if data_type.inner_types:
             elems = [
