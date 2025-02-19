@@ -48,7 +48,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
@@ -57,6 +57,10 @@ import github.ProjectColumn
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
 class Project(CompletableGithubObject):
@@ -75,7 +79,7 @@ class Project(CompletableGithubObject):
         self._body: Attribute[str] = NotSet
         self._columns_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._creator: Attribute[NamedUser | Organization] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
@@ -107,7 +111,7 @@ class Project(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> github.NamedUser.NamedUser:
+    def creator(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
@@ -241,7 +245,15 @@ class Project(CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+            self._creator = self._makeUnionClassAttributeFromTypeKey(
+                github.NamedUser.NamedUser,
+                "User",
+                github.Organization.Organization,
+                "Organization",
+                "type",
+                "User",
+                attributes["creator"],
+            )
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
