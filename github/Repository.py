@@ -333,7 +333,6 @@ class Repository(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos
 
     The OpenAPI schema can be found at
-    - /components/schemas/code-security-configuration-repositories
     - /components/schemas/event/properties/repo
     - /components/schemas/full-repository
     - /components/schemas/minimal-repository
