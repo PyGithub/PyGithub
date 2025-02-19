@@ -7,7 +7,7 @@ changelog:
       labels: ['breaking']
     - title: New Features
       labels: ['feature']
-    - title: Improvement
+    - title: Improvements
       labels: ['improvement']
     - title: Bug Fixes
       labels: ['bugfix']
