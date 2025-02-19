@@ -146,15 +146,15 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self.__headers: Attribute[dict] = NotSet
         self._payload: Attribute[dict] = NotSet
-        self._request_headers: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
 
     @property
     def headers(self) -> dict | None:
-        return self._request_headers.value
+        return self.__headers.value
 
     @property
     def payload(self) -> dict | None:
@@ -162,7 +162,7 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "headers" in attributes:  # pragma no branch
-            self._request_headers = self._makeDictAttribute(attributes["headers"])
+            self.__headers = self._makeDictAttribute(attributes["headers"])
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeDictAttribute(attributes["payload"])
 
@@ -177,15 +177,15 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self.__headers: Attribute[dict] = NotSet
         self._payload: Attribute[str] = NotSet
-        self._response_headers: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
 
     @property
     def headers(self) -> dict | None:
-        return self._response_headers.value
+        return self.__headers.value
 
     @property
     def payload(self) -> str | None:
@@ -193,7 +193,7 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "headers" in attributes:  # pragma no branch
-            self._response_headers = self._makeDictAttribute(attributes["headers"])
+            self.__headers = self._makeDictAttribute(attributes["headers"])
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeStringAttribute(attributes["payload"])
 
