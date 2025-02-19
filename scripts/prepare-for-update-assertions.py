@@ -21,13 +21,6 @@ class SingleLineStatementTransformer(cst.CSTTransformer):
         self.in_function = False
         return updated_node
 
-    def leave_SimpleStatementLine(self, original_node: cst.SimpleStatementLine, updated_node: cst.SimpleStatementLine):
-        if self.in_function:
-            return updated_node.with_changes(
-                leading_lines=(), trailing_whitespace=TrailingWhitespace(whitespace=SimpleWhitespace(""))
-            )
-        return updated_node
-
     def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.BaseExpression:
         if self.in_function:
             return updated_node.with_changes(
