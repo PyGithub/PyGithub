@@ -85,7 +85,7 @@ jobs:
           pip install -r head/requirements/scripts.txt
       - name: Suggest schemas
         run: |
-          python head/scripts/openapi.py fetch api.github.com 2022-11-28 api.github.com.2022-11-28.json
+          python head/scripts/openapi.py fetch --commit 531ec66 api.github.com 2022-11-28 api.github.com.2022-11-28.json
 
           echo "::group::Head schema suggestions:"
           python head/scripts/openapi.py index head/github openapi.head.index

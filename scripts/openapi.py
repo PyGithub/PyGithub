@@ -1478,8 +1478,9 @@ class OpenApi:
 
                 return changed
 
-    def fetch(self, api: str, api_version: str, spec_file: str) -> bool:
-        base_url = "https://github.com/github/rest-api-description/raw/refs/heads/main/descriptions"
+    def fetch(self, api: str, api_version: str, commit: str | None, spec_file: str) -> bool:
+        ref = "refs/heads/main" if commit is None else commit
+        base_url = f"https://github.com/github/rest-api-description/raw/{ref}/descriptions"
         url = f"{base_url}/{api}/{api}.{api_version}.json"
         response = requests.get(url)
         response.raise_for_status()
@@ -1962,6 +1963,7 @@ class OpenApi:
             "api",
             help="Github API, e.g. api.github.com, ghec, ghes-3.15. See https://github.com/github/rest-api-description/tree/main/descriptions",
         )
+        fetch_parser.add_argument("--commit", help="Specific commit to fetch file from", nargs="?")
         fetch_parser.add_argument("api_version", help="Github API version date, e.g. 2022-11-28")
         fetch_parser.add_argument("spec", help="Github API OpenAPI spec file to be written")
 
@@ -2012,7 +2014,7 @@ class OpenApi:
     def main(self):
         changes = False
         if args.subcommand == "fetch":
-            changes = self.fetch(self.args.api, self.args.api_version, self.args.spec)
+            changes = self.fetch(self.args.api, self.args.api_version, self.args.commit, self.args.spec)
         elif args.subcommand == "index":
             changes = self.index(self.args.github_path, self.args.index_filename, self.args.dry_run)
         elif self.args.subcommand == "suggest":
