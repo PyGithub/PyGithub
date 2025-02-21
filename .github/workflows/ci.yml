@@ -100,6 +100,28 @@ jobs:
           echo "Difference:"
           diff schemas.base.txt schemas.head.txt
 
+  sort:
+    name: "Sort classes"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r requirements/scripts.txt
+      - name: Sort classes
+        run: |
+          echo "::group::Sort classes"
+          python scripts/openapi.py index github openapi.index
+          python scripts/sort_class.py openapi.index $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
+          echo "::endgroup::"
+
+          echo "Changes:"
+          git diff
+
   event_file:
     name: "Event File"
     runs-on: ubuntu-latest
