@@ -24,6 +24,12 @@ Breaking Changes
 
     gh.get_rate_limit().resources.core.remaining
 
+Deprecations
+^^^^^^^^^^^^
+
+* Methods ``dismissal_users`` and ``dismissal_teams`` of ``RequiredPullRequestReviews`` are deprecated,
+  use ``dismissal_restrictions.users`` and ``dismissal_restrictions.teams`` instead.
+
 Version 2.6.0 (February 15, 2025)
 ---------------------------------
 
