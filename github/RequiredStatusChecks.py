@@ -60,7 +60,10 @@ class RequiredStatusChecks(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._checks: Attribute[list[dict[str, Any]]] = NotSet
         self._contexts: Attribute[list[str]] = NotSet
+        self._contexts_url: Attribute[str] = NotSet
+        self._enforcement_level: Attribute[str] = NotSet
         self._strict: Attribute[bool] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -68,9 +71,24 @@ class RequiredStatusChecks(CompletableGithubObject):
         return self.get__repr__({"strict": self._strict.value, "url": self._url.value})
 
     @property
+    def checks(self) -> list[dict[str, Any]]:
+        self._completeIfNotSet(self._checks)
+        return self._checks.value
+
+    @property
     def contexts(self) -> list[str]:
         self._completeIfNotSet(self._contexts)
         return self._contexts.value
+
+    @property
+    def contexts_url(self) -> str:
+        self._completeIfNotSet(self._contexts_url)
+        return self._contexts_url.value
+
+    @property
+    def enforcement_level(self) -> str:
+        self._completeIfNotSet(self._enforcement_level)
+        return self._enforcement_level.value
 
     @property
     def strict(self) -> bool:
@@ -83,8 +101,14 @@ class RequiredStatusChecks(CompletableGithubObject):
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "checks" in attributes:  # pragma no branch
+            self._checks = self._makeListOfDictsAttribute(attributes["checks"])
         if "contexts" in attributes:  # pragma no branch
             self._contexts = self._makeListOfStringsAttribute(attributes["contexts"])
+        if "contexts_url" in attributes:  # pragma no branch
+            self._contexts_url = self._makeStringAttribute(attributes["contexts_url"])
+        if "enforcement_level" in attributes:  # pragma no branch
+            self._enforcement_level = self._makeStringAttribute(attributes["enforcement_level"])
         if "strict" in attributes:  # pragma no branch
             self._strict = self._makeBoolAttribute(attributes["strict"])
         if "url" in attributes:  # pragma no branch
