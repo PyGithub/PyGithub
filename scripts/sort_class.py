@@ -75,28 +75,37 @@ class SortMethodsTransformer(cst.CSTTransformer):
             # noinspection PyTypeChecker
             function_defs: list[cst.FunctionDef] = statements[first:last]
             prolog = statements[:first]
+
+            init = self.find_func(function_defs, "__init__")
+            init = [init] if init is not None else []
+
             init_attrs = self.find_func(function_defs, "_initAttributes")
-            dunders = list(s for s in function_defs if s.name.value.startswith("__") and s.name.value.endswith("__"))
+            init_attrs = [init_attrs] if init_attrs is not None else []
+
+            dunders = list(s for s in function_defs if s.name.value.startswith("__") and s.name.value.endswith("__") and s.name.value != "__init__")
             properties = list(s for s in function_defs if self.contains_decorator(s.decorators, "property"))
+
             use_attrs = self.find_func(function_defs, "_useAttributes")
-            funcs = list(s for s in function_defs if s not in [init_attrs, use_attrs] + dunders + properties)
+            use_attrs = [use_attrs] if use_attrs is not None else []
+
+            funcs = list(s for s in function_defs if s not in init + init_attrs + use_attrs + dunders + properties)
             epilog = statements[last:]
 
             sorted_dunders = self.sort_func_defs(dunders)
             sorted_properties = self.sort_func_defs(properties)
             maybe_sorted_funcs = self.sort_func_defs(funcs) if self.sort_funcs else funcs
             sorted_functions = (
-                prolog + [init_attrs] + sorted_dunders + sorted_properties + maybe_sorted_funcs + [use_attrs] + epilog
+                prolog + init + init_attrs + sorted_dunders + sorted_properties + maybe_sorted_funcs + use_attrs + epilog
             )
             return updated_node.with_changes(body=updated_node.body.with_changes(body=sorted_functions))
 
         finally:
             self.visit_class_name.pop()
 
-    def find_func(self, funcs: Sequence[cst.FunctionDef], func_name: str) -> cst.FunctionDef:
+    def find_func(self, funcs: Sequence[cst.FunctionDef], func_name: str) -> cst.FunctionDef | None:
         funcs = list(s for s in funcs if s.name.value == func_name)
         if len(funcs) == 0:
-            raise ValueError(f"Function {func_name} does not exist in class {self.current_class_name}")
+            return None
         if len(funcs) > 1:
             raise ValueError(f"Multiple functions {func_name} exist in class {self.current_class_name}")
         return funcs[0]
