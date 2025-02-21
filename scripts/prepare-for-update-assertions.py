@@ -4,7 +4,7 @@ import sys
 from typing import Union
 
 import libcst as cst
-from libcst import SimpleWhitespace, TrailingWhitespace
+from libcst import SimpleWhitespace
 
 
 class SingleLineStatementTransformer(cst.CSTTransformer):

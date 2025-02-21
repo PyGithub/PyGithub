@@ -82,7 +82,11 @@ class SortMethodsTransformer(cst.CSTTransformer):
             init_attrs = self.find_func(function_defs, "_initAttributes")
             init_attrs = [init_attrs] if init_attrs is not None else []
 
-            dunders = list(s for s in function_defs if s.name.value.startswith("__") and s.name.value.endswith("__") and s.name.value != "__init__")
+            dunders = list(
+                s
+                for s in function_defs
+                if s.name.value.startswith("__") and s.name.value.endswith("__") and s.name.value != "__init__"
+            )
             properties = list(s for s in function_defs if self.contains_decorator(s.decorators, "property"))
 
             use_attrs = self.find_func(function_defs, "_useAttributes")
@@ -95,7 +99,14 @@ class SortMethodsTransformer(cst.CSTTransformer):
             sorted_properties = self.sort_func_defs(properties)
             maybe_sorted_funcs = self.sort_func_defs(funcs) if self.sort_funcs else funcs
             sorted_functions = (
-                prolog + init + init_attrs + sorted_dunders + sorted_properties + maybe_sorted_funcs + use_attrs + epilog
+                prolog
+                + init
+                + init_attrs
+                + sorted_dunders
+                + sorted_properties
+                + maybe_sorted_funcs
+                + use_attrs
+                + epilog
             )
             return updated_node.with_changes(body=updated_node.body.with_changes(body=sorted_functions))
 
