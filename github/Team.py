@@ -97,6 +97,7 @@ class Team(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/teams
 
     The OpenAPI schema can be found at
+    - /components/schemas/enterprise-team
     - /components/schemas/nullable-team-simple
     - /components/schemas/team
     - /components/schemas/team-full

@@ -152,6 +152,7 @@ class Organization(CompletableGithubObject):
 
     The OpenAPI schema can be found at
     - /components/schemas/actor
+    - /components/schemas/nullable-simple-user
     - /components/schemas/organization-full
     - /components/schemas/organization-simple
     - /components/schemas/team-organization
