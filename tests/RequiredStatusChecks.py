@@ -47,9 +47,12 @@ class RequiredStatusChecks(Framework.TestCase):
         )
 
     def testAttributes(self):
-        self.assertEqual(self.required_status_checks.checks, "list[dict[str, Any]]")
-        self.assertEqual(self.required_status_checks.contexts_url, "")
-        self.assertEqual(self.required_status_checks.enforcement_level, "")
+        self.assertIsNone(self.required_status_checks.checks)
+        self.assertEqual(
+            self.required_status_checks.contexts_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks/contexts",
+        )
+        self.assertIsNone(self.required_status_checks.enforcement_level)
         self.assertTrue(self.required_status_checks.strict)
         self.assertEqual(self.required_status_checks.contexts, ["foo/bar"])
         self.assertEqual(
