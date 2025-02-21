@@ -4,11 +4,14 @@ on:
   schedule:
     - cron: '10 8 * * *'
   workflow_dispatch:
+permissions: {}
 
 jobs:
   open-api:
     name: Sync with OpenAPI
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Git
         uses: actions/checkout@v3
