@@ -14,6 +14,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Set up Git
         run: |
+          # Set up Git
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
       - name: Set up Python
@@ -22,20 +23,24 @@ jobs:
           python-version: "3.12"
       - name: Set up dependencies
         run: |
+          # Set up dependencies
           pip install -e .
           pip install -r requirements/test.txt
           pip install -r requirements/types.txt
           pip install -r requirements/scripts.txt
       - name: Fetching OpenAPI spec
         run: |
+          # Fetching OpenAPI spec
           python scripts/openapi.py fetch --commit 531ec66 api.github.com 2022-11-28 api.github.com.2022-11-28.json
       - name: Sync with OpenAPI spec
         run: |
+          # Sync with OpenAPI spec
           git checkout -b openapi/main
-          ./scripts/openapi-update-classes.sh 2> openapi-update-classes.log
+          ./scripts/openapi-update-classes.sh --branch-prefix openapi/autosync 2> openapi-update-classes.log
       - name: Changes
         run: |
-          git branch -a | grep openapi/update | grep -v -E -e "-[0-9]+$" | while read branch; do
+          # Show changes
+          git branch -a | grep openapi/autosync- | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git log --oneline "$branch...openapi/main"
             git diff openapi/main "$branch"
@@ -52,3 +57,26 @@ jobs:
           name: Logs
           path: |
             *.log
+      - name: Commit changes
+        run: |
+          # Commit changes
+          git checkout -b openapi/autosync
+          git branch -a | grep openapi/autosync- | grep -v -E -e "-[0-9]+$" | while read branch; do
+            echo "::group::$branch"
+            git merge --squash "$branch"
+            git commit --no-edit
+            echo "::endgroup::"
+          done
+
+          # push --force if there are changes
+          if ! git diff --quiet openapi/main; then
+            echo "Pushing changes to origin openapi/autosync"
+            git push --force origin openapi/autosync
+          fi
+      - name: Fail on changes
+        run: |
+          # Fail on changes
+          if ! git diff --quiet openapi/main; then
+            echo "Changes exist, please investigate branch openapi/autosync"
+            exit 1
+          fi

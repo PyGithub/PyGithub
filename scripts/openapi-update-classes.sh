@@ -32,12 +32,19 @@ fi
 
 # check for some options
 single_branch=
-if [ $# -ge 2 ]; then
+branch_prefix="openapi/update"
+while [ $# -ge 2 ]; do
   if [ "$1" == "--branch" ]; then
     single_branch="$2"
     shift 2
+  elif [ "$1" == "--branch-prefix" ]; then
+    branch_prefix="$2"
+    shift 2
+  else
+    echo "Unknown option: $*"
+    exit 1
   fi
-fi
+done
 
 # update index
 echo -n "Updating index ($index)" | tee >(cat 1>&2)
@@ -145,7 +152,7 @@ update_in_branch() {
     branch="$1"; shift
     if [ $# -eq 1 ]; then class="class"; else class="classes"; fi
   else
-    branch="openapi/update-$1"
+    branch="$branch_prefix-$1"
     class="class"
   fi
 
