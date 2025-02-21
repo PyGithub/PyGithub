@@ -40,29 +40,29 @@ class MergedUpstream(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._merge_type: Attribute[str] = NotSet
         self._base_branch: Attribute[str] = NotSet
+        self._merge_type: Attribute[str] = NotSet
         self._message: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"message": self._message.value})
 
     @property
-    def merge_type(self) -> str:
-        return self._merge_type.value
-
-    @property
     def base_branch(self) -> str:
         return self._base_branch.value
+
+    @property
+    def merge_type(self) -> str:
+        return self._merge_type.value
 
     @property
     def message(self) -> str:
         return self._message.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "merge_type" in attributes:  # pragma no branch
-            self._merge_type = self._makeStringAttribute(attributes["merge_type"])
         if "base_branch" in attributes:  # pragma no branch
             self._base_branch = self._makeStringAttribute(attributes["base_branch"])
+        if "merge_type" in attributes:  # pragma no branch
+            self._merge_type = self._makeStringAttribute(attributes["merge_type"])
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
