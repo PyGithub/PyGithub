@@ -4,6 +4,21 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.6.1 (February 21, 2025)
+---------------------------------
+
+Bug Fixes
+^^^^^^^^^
+* Fix broken pickle support for ``Auth`` classes (`#3211 <https://github.com/PyGithub/PyGithub/pull/3211>`_) (`f975552a <https://github.com/PyGithub/PyGithub/commit/f975552a>`_)
+* Remove schema from ``Deployment``, remove ``message`` attribute (`#3223 <https://github.com/PyGithub/PyGithub/pull/3223>`_) (`d12e7d4c <https://github.com/PyGithub/PyGithub/commit/d12e7d4c>`_)
+* Fix incorrect deprecated import (`#3225 <https://github.com/PyGithub/PyGithub/pull/3225>`_) (`93297440 <https://github.com/PyGithub/PyGithub/commit/93297440>`_)
+* Add ``CodeSecurityConfigRepository`` returned by ``get_repos_for_code_security_config`` (`#3219 <https://github.com/PyGithub/PyGithub/pull/3219>`_) (`f997a2f6 <https://github.com/PyGithub/PyGithub/commit/f997a2f6>`_)
+* Make ``GitTag.verification`` return ``GitCommitVerification`` (`#3226 <https://github.com/PyGithub/PyGithub/pull/3226>`_) (`048a1a38 <https://github.com/PyGithub/PyGithub/commit/048a1a38>`_)
+
+Maintenance
+^^^^^^^^^^^
+* Mention removal of ``AppAuth.private_key`` in changelog (`#3212 <https://github.com/PyGithub/PyGithub/pull/3212>`_) (`f5dc1c76 <https://github.com/PyGithub/PyGithub/commit/f5dc1c76>`_)
+
 Version 2.6.0 (February 15, 2025)
 ---------------------------------
 
