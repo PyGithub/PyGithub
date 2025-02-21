@@ -50,6 +50,13 @@ class CheckRunOutput(NonCompletableGithubObject):
     The OpenAPI schema can be found at
     - /components/schemas/check-run/properties/output
 
+    .. warning::
+
+        As of Feb 2025 according to GitHub Support
+        "The Checks API does not support Fine-Grained PATs or classic PATs,
+        only GitHub Apps can use the Checks API". Because of this you may see
+        empty ``.summary``, ``.text`` or ``.title`` attributes. See
+        https://github.com/PyGithub/PyGithub/issues/3227
     """
 
     def _initAttributes(self) -> None:
