@@ -65,7 +65,4 @@ class GitTag(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c",
         )
         self.assertEqual(repr(self.tag), 'GitTag(tag="v0.6", sha="f5f37322407b02a80de4526ad88d5f188977bc3c")')
-        self.assertEqual(
-            self.tag.verification,
-            {"verified": False, "reason": "unsigned", "signature": None, "payload": None, "verified_at": None},
-        )
+        self.assertEqual(self.tag.verification.reason, "unsigned")
