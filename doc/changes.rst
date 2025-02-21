@@ -49,6 +49,24 @@ Breaking Changes
     repo.get_views_traffic().views.timestamp
     repo.get_clones_traffic().clones.timestamp
 
+* Add ``GitCommitVerification`` class (`#3028 <https://github.com/PyGithub/PyGithub/pull/3028>`_) (`822e6d71 <https://github.com/PyGithub/PyGithub/commit/822e6d71>`_):
+
+  Changes the return value of ``GitTag.verification`` and ``GitCommit.verification`` from ``dict`` to ``GitCommitVerification``.
+
+  Code like
+
+  .. code-block:: python
+
+    tag.verification["reason"]
+    commit.verification["reason"]
+
+  should be replaced with
+
+  .. code-block:: python
+
+    tag.verification.reason
+    commit.verification.reason
+
 * Property ``AppAuth.private_key`` has been removed (`#3065 <https://github.com/PyGithub/PyGithub/pull/3065>`_) (`36697b22 <https://github.com/PyGithub/PyGithub/commit/36697b22>`_)
 
 * Fix typos (`#3086 <https://github.com/PyGithub/PyGithub/pull/3086>`_) (`a50ae51b <https://github.com/PyGithub/PyGithub/commit/a50ae51b>`_):
