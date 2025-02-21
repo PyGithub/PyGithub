@@ -24,11 +24,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
+import github.Organization
 import github.Team
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, _NotSetType
+
+if TYPE_CHECKING:
+    from github.Organization import Organization
 
 
 class CopilotSeat(NonCompletableGithubObject):
@@ -49,6 +53,7 @@ class CopilotSeat(NonCompletableGithubObject):
         self._created_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_editor: Attribute[str] | _NotSetType = NotSet
+        self._organization: Attribute[Organization] = NotSet
         self._pending_cancellation_date: Attribute[datetime] | _NotSetType = NotSet
         self._plan_type: Attribute[str] | _NotSetType = NotSet
         self._updated_at: Attribute[datetime] | _NotSetType = NotSet
@@ -77,6 +82,10 @@ class CopilotSeat(NonCompletableGithubObject):
         return self._last_activity_editor.value
 
     @property
+    def organization(self) -> Organization:
+        return self._organization.value
+
+    @property
     def pending_cancellation_date(self) -> datetime:
         return self._pending_cancellation_date.value
 
@@ -99,6 +108,8 @@ class CopilotSeat(NonCompletableGithubObject):
             self._last_activity_at = self._makeDatetimeAttribute(attributes["last_activity_at"])
         if "last_activity_editor" in attributes:
             self._last_activity_editor = self._makeStringAttribute(attributes["last_activity_editor"])
+        if "organization" in attributes:  # pragma no branch
+            self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "pending_cancellation_date" in attributes:
             self._pending_cancellation_date = self._makeDatetimeAttribute(attributes["pending_cancellation_date"])
         if "plan_type" in attributes:
