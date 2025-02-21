@@ -34,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -45,6 +47,9 @@ class RequiredStatusChecks(Framework.TestCase):
         )
 
     def testAttributes(self):
+        self.assertEqual(self.required_status_checks.checks, "list[dict[str, Any]]")
+        self.assertEqual(self.required_status_checks.contexts_url, "")
+        self.assertEqual(self.required_status_checks.enforcement_level, "")
         self.assertTrue(self.required_status_checks.strict)
         self.assertEqual(self.required_status_checks.contexts, ["foo/bar"])
         self.assertEqual(
