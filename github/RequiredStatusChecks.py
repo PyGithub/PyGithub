@@ -54,7 +54,6 @@ class RequiredStatusChecks(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-status-checks-protection
 
     The OpenAPI schema can be found at
-    - /components/schemas/protected-branch-pull-request-review
     - /components/schemas/protected-branch-required-status-check
     - /components/schemas/status-check-policy
 
