@@ -73,6 +73,38 @@ class RequiredPullRequestReviews(Framework.TestCase):
             .get_branch("integrations")
             .get_required_pull_request_reviews()
         )
+        self.assertIsNone(required_pull_request_reviews.bypass_pull_request_allowances.apps)
+        self.assertListKeyEqual(
+            required_pull_request_reviews.bypass_pull_request_allowances.users,
+            lambda u: u.login,
+            ["jacquev6"],
+        )
+        self.assertListKeyEqual(
+            required_pull_request_reviews.bypass_pull_request_allowances.teams,
+            lambda t: t.slug,
+            ["pygithub-owners"],
+        )
+
+        self.assertIsNone(required_pull_request_reviews.dismissal_restrictions.apps)
+        self.assertListKeyEqual(
+            required_pull_request_reviews.dismissal_restrictions.users,
+            lambda u: u.login,
+            ["jacquev6"],
+        )
+        self.assertListKeyEqual(
+            required_pull_request_reviews.dismissal_restrictions.teams,
+            lambda t: t.slug,
+            ["pygithub-owners"],
+        )
+        self.assertEqual(
+            required_pull_request_reviews.dismissal_restrictions.users_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/branches/integrations/protection/dismissal_restrictions/users",
+        )
+        self.assertEqual(
+            required_pull_request_reviews.dismissal_restrictions.teams_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/branches/integrations/protection/dismissal_restrictions/teams",
+        )
+
         self.assertListKeyEqual(
             required_pull_request_reviews.dismissal_users,
             lambda u: u.login,

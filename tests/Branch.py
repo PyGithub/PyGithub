@@ -97,6 +97,10 @@ class Branch(Framework.TestCase):
             2,
         )
         self.assertTrue(branch_protection.required_pull_request_reviews.require_last_push_approval)
+        self.assertEqual(
+            branch_protection.required_pull_request_reviews.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_pull_request_reviews",
+        )
 
     def testEditProtectionDismissalUsersWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
