@@ -31,11 +31,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-import github.GithubObject
-from github.GithubObject import Attribute, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
+class HookDeliverySummary(NonCompletableGithubObject):
     """
     This class represents a Summary of HookDeliveries.
 
@@ -143,7 +142,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
 
 
-class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
+class HookDeliveryRequest(NonCompletableGithubObject):
     """
     This class represents a HookDeliveryRequest.
 
@@ -174,7 +173,7 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
             self._payload = self._makeDictAttribute(attributes["payload"])
 
 
-class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
+class HookDeliveryResponse(NonCompletableGithubObject):
     """
     This class represents a HookDeliveryResponse.
 
@@ -218,7 +217,6 @@ class HookDelivery(HookDeliverySummary):
         super()._initAttributes()
         self._request: Attribute[HookDeliveryRequest] = NotSet
         self._response: Attribute[HookDeliveryResponse] = NotSet
-        self._throttled_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -231,10 +229,6 @@ class HookDelivery(HookDeliverySummary):
     def response(self) -> HookDeliveryResponse | None:
         return self._response.value
 
-    @property
-    def throttled_at(self) -> datetime:
-        return self._throttled_at.value
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "request" in attributes:  # pragma no branch
@@ -242,5 +236,3 @@ class HookDelivery(HookDeliverySummary):
         if "response" in attributes:  # pragma no branch
             self._response = self._makeClassAttribute(HookDeliveryResponse, attributes["response"])
             # self._response = self._makeDictAttribute(attributes["response"])
-        if "throttled_at" in attributes:  # pragma no branch
-            self._throttled_at = self._makeDatetimeAttribute(attributes["throttled_at"])

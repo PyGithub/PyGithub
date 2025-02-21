@@ -309,6 +309,7 @@ class Github(Framework.TestCase):
         self.assertEqual(deliveries[0].duration, 0.27)
         self.assertEqual(deliveries[0].status, "OK")
         self.assertEqual(deliveries[0].status_code, 200)
+        self.assertIsNone(deliveries[0].throttled_at)
         self.assertEqual(deliveries[0].event, "issues")
         self.assertEqual(deliveries[0].action, "opened")
         self.assertEqual(deliveries[0].installation_id, 123)
