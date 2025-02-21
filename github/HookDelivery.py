@@ -56,6 +56,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         self._repository_id: Attribute[int] = NotSet
         self._status: Attribute[str] = NotSet
         self._status_code: Attribute[int] = NotSet
+        self._throttled_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -106,6 +107,10 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         return self._status_code.value
 
     @property
+    def throttled_at(self) -> datetime:
+        return self._throttled_at.value
+
+    @property
     def url(self) -> str | None:
         return self._url.value
 
@@ -132,6 +137,8 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "status_code" in attributes:  # pragma no branch
             self._status_code = self._makeIntAttribute(attributes["status_code"])
+        if "throttled_at" in attributes:  # pragma no branch
+            self._throttled_at = self._makeDatetimeAttribute(attributes["throttled_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
 
