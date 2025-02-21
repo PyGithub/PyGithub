@@ -43,7 +43,42 @@ from __future__ import annotations
 
 from typing import Any
 
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObject, NonCompletableGithubObject, NotSet
+
+
+class Check(NonCompletableGithubObject):
+    """
+    This class represents Check.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#get-status-checks-protection
+
+    The OpenAPI schema can be found at
+    - /components/schemas/protected-branch-required-status-check/properties/checks/items
+    - /components/schemas/status-check-policy/properties/checks/items
+
+    """
+
+    def _initAttributes(self) -> None:
+        self._app_id: Attribute[int] = NotSet
+        self._context: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"app_id": self._app_id.value, "context": self._context.value})
+
+    @property
+    def app_id(self) -> int:
+        return self._app_id.value
+
+    @property
+    def context(self) -> str:
+        return self._context.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "app_id" in attributes:  # pragma no branch
+            self._app_id = self._makeIntAttribute(attributes["app_id"])
+        if "context" in attributes:  # pragma no branch
+            self._context = self._makeStringAttribute(attributes["context"])
 
 
 class RequiredStatusChecks(CompletableGithubObject):
@@ -60,7 +95,7 @@ class RequiredStatusChecks(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._checks: Attribute[list[dict[str, Any]]] = NotSet
+        self._checks: Attribute[list[Check]] = NotSet
         self._contexts: Attribute[list[str]] = NotSet
         self._contexts_url: Attribute[str] = NotSet
         self._enforcement_level: Attribute[str] = NotSet
@@ -71,7 +106,7 @@ class RequiredStatusChecks(CompletableGithubObject):
         return self.get__repr__({"strict": self._strict.value, "url": self._url.value})
 
     @property
-    def checks(self) -> list[dict[str, Any]]:
+    def checks(self) -> list[Check]:
         self._completeIfNotSet(self._checks)
         return self._checks.value
 
@@ -102,7 +137,7 @@ class RequiredStatusChecks(CompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "checks" in attributes:  # pragma no branch
-            self._checks = self._makeListOfDictsAttribute(attributes["checks"])
+            self._checks = self._makeListOfClassesAttribute(Check, attributes["checks"])
         if "contexts" in attributes:  # pragma no branch
             self._contexts = self._makeListOfStringsAttribute(attributes["contexts"])
         if "contexts_url" in attributes:  # pragma no branch
