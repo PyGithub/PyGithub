@@ -50,9 +50,9 @@ class RequiredPullRequestReviews(Framework.TestCase):
         )
 
     def testAttributes(self):
-        self.assertEqual(self.required_pull_request_reviews.bypass_pull_request_allowances, "dict[str, Any]")
+        self.assertIsNone(self.required_pull_request_reviews.bypass_pull_request_allowances)
         self.assertTrue(self.required_pull_request_reviews.dismiss_stale_reviews)
-        self.assertEqual(self.required_pull_request_reviews.dismissal_restrictions, "dict[str, Any]")
+        self.assertIsNone(self.required_pull_request_reviews.dismissal_restrictions)
         self.assertTrue(self.required_pull_request_reviews.require_code_owner_reviews)
         self.assertIsNone(self.required_pull_request_reviews.require_last_push_approval)
         self.assertEqual(self.required_pull_request_reviews.required_approving_review_count, 3)
