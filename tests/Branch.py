@@ -86,7 +86,12 @@ class Branch(Framework.TestCase):
         )
         branch_protection = self.protected_branch.get_protection()
         self.assertTrue(branch_protection.required_status_checks.strict)
+        self.assertEqual(branch_protection.required_status_checks.checks, [])
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
+        self.assertEqual(
+            branch_protection.required_status_checks.contexts_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks/contexts",
+        )
         self.assertTrue(branch_protection.enforce_admins)
         self.assertFalse(branch_protection.required_linear_history)
         self.assertFalse(branch_protection.allow_deletions)
