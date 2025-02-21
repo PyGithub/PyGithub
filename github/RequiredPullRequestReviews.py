@@ -69,11 +69,14 @@ class RequiredPullRequestReviews(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._bypass_pull_request_allowances: Attribute[dict[str, Any]] = NotSet
         self._dismiss_stale_reviews: Attribute[bool] = NotSet
+        self._dismissal_restrictions: Attribute[dict[str, Any]] = NotSet
         self._require_code_owner_reviews: Attribute[bool] = NotSet
         self._require_last_push_approval: Attribute[bool] = NotSet
         self._required_approving_review_count: Attribute[int] = NotSet
         self._teams: Attribute[list[Team]] = NotSet
+        self._url: Attribute[str] = NotSet
         self._users: Attribute[list[NamedUser]] = NotSet
 
     def __repr__(self) -> str:
@@ -87,9 +90,19 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         )
 
     @property
+    def bypass_pull_request_allowances(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._bypass_pull_request_allowances)
+        return self._bypass_pull_request_allowances.value
+
+    @property
     def dismiss_stale_reviews(self) -> bool:
         self._completeIfNotSet(self._dismiss_stale_reviews)
         return self._dismiss_stale_reviews.value
+
+    @property
+    def dismissal_restrictions(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._dismissal_restrictions)
+        return self._dismissal_restrictions.value
 
     @property
     def dismissal_teams(self) -> list[Team]:
@@ -122,6 +135,8 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "bypass_pull_request_allowances" in attributes:  # pragma no branch
+            self._bypass_pull_request_allowances = self._makeDictAttribute(attributes["bypass_pull_request_allowances"])
         if "dismiss_stale_reviews" in attributes:  # pragma no branch
             self._dismiss_stale_reviews = self._makeBoolAttribute(attributes["dismiss_stale_reviews"])
         if "dismissal_restrictions" in attributes:  # pragma no branch
