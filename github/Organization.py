@@ -1822,7 +1822,9 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
-    def get_repos_for_code_security_config(self, id: int, status: Opt[str] = NotSet) -> PaginatedList[RepoCodeSecurityAssociation]:
+    def get_repos_for_code_security_config(
+        self, id: int, status: Opt[str] = NotSet
+    ) -> PaginatedList[RepoCodeSecurityAssociation]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories <https://docs.github.com/en/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration>`_
         """

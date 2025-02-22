@@ -37,6 +37,7 @@ class RepoCodeSecurityAssociation(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/code-security/configurations?apiVersion=2022-11-28#get-repositories-associated-with-a-code-security-configuration
+
     """
 
     def _initAttributes(self) -> None:
@@ -44,8 +45,7 @@ class RepoCodeSecurityAssociation(NonCompletableGithubObject):
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"repo": self._repository.value,
-                                 "status": self._status.value})
+        return self.get__repr__({"repo": self._repository.value, "status": self._status.value})
 
     @property
     def repository(self) -> Repository:
@@ -60,4 +60,3 @@ class RepoCodeSecurityAssociation(NonCompletableGithubObject):
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
-

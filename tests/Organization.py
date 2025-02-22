@@ -779,7 +779,7 @@ class Organization(Framework.TestCase):
 
     def test_get_repos_for_code_security_config(self):
         # 17 is GitHub recommended configuration
-        repo_statuses = self.org.get_repos_for_code_security_config(id=182032)
+        repo_statuses = self.org.get_repos_for_code_security_config(id=17)
         for status in repo_statuses:
             self.assertEqual(status.status, "enforced")
             break
