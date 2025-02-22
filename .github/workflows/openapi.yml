@@ -7,9 +7,24 @@ on:
 permissions: {}
 
 jobs:
+  openapi-sync-branch:
+    name: OpenAPI sync branch
+    runs-on: ubuntu-latest
+    outputs:
+      autosync-branch-exists: ${{ steps.checkout.outcome == 'success' }}
+    steps:
+      - name: Checkout Git
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          ref: openapi/autosync
+        continue-on-error: true
+
   open-api:
     name: Sync with OpenAPI
     runs-on: ubuntu-latest
+    needs: openapi-sync-branch
+    if: needs.openapi-sync-branch.outputs.autosync-branch-exists == 'false'
     permissions:
       contents: write
     steps:
@@ -71,10 +86,10 @@ jobs:
             echo "::endgroup::"
           done
 
-          # push --force if there are changes
+          # push if there are changes
           if ! git diff --quiet openapi/main; then
             echo "Pushing changes to origin openapi/autosync"
-            git push --force origin openapi/autosync
+            git push origin openapi/autosync
           fi
       - name: Fail on changes
         run: |
