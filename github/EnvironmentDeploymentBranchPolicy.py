@@ -25,8 +25,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -55,7 +56,7 @@ class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
     def protected_branches(self) -> bool:
         return self._protected_branches.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "custom_branch_policies" in attributes:  # pragma no branch
             self._custom_branch_policies = self._makeBoolAttribute(attributes["custom_branch_policies"])
         if "protected_branches" in attributes:  # pragma no branch
