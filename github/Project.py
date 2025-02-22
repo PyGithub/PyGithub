@@ -230,7 +230,7 @@ class Project(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/columns", headers=import_header, input=post_parameters
         )
-        return github.ProjectColumn.ProjectColumn(self._requester, headers, data, completed=True)
+        return github.ProjectColumn.ProjectColumn(self._requester, headers, data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:  # pragma no branch

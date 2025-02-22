@@ -1,10 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
-# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
-# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,45 +19,46 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any
 
+import github.Repository
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
-class MergedUpstream(NonCompletableGithubObject):
+
+class CodeSecurityConfigRepository(NonCompletableGithubObject):
     """
-    This class represents a result of merge-upstream call.
+    This class represents CodeSecurityConfigRepository.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/code-security/configurations
 
     The OpenAPI schema can be found at
-    - /components/schemas/merged-upstream
+    - /components/schemas/code-security-configuration-repositories
 
     """
 
     def _initAttributes(self) -> None:
-        self._base_branch: Attribute[str] = NotSet
-        self._merge_type: Attribute[str] = NotSet
-        self._message: Attribute[str] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"message": self._message.value})
+        return self.repository.__repr__()
 
     @property
-    def base_branch(self) -> str:
-        return self._base_branch.value
+    def repository(self) -> Repository:
+        return self._repository.value
 
     @property
-    def merge_type(self) -> str:
-        return self._merge_type.value
+    def status(self) -> str:
+        return self._status.value
 
-    @property
-    def message(self) -> str:
-        return self._message.value
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "base_branch" in attributes:  # pragma no branch
-            self._base_branch = self._makeStringAttribute(attributes["base_branch"])
-        if "merge_type" in attributes:  # pragma no branch
-            self._merge_type = self._makeStringAttribute(attributes["merge_type"])
-        if "message" in attributes:  # pragma no branch
-            self._message = self._makeStringAttribute(attributes["message"])
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "repository" in attributes:  # pragma no branch
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+        if "status" in attributes:  # pragma no branch
+            self._status = self._makeStringAttribute(attributes["status"])

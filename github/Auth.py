@@ -186,6 +186,19 @@ class JWT(Auth, ABC):
         return "Bearer"
 
 
+class JwtSigner:
+    def __init__(self, private_key_or_func: Union[str, PrivateKeyGenerator], jwt_algorithm: str):
+        self._private_key_or_func = private_key_or_func
+        self._jwt_algorithm = jwt_algorithm
+
+    def jwt_sign(self, payload: dict) -> Union[str, bytes]:
+        if callable(self._private_key_or_func):
+            private_key = self._private_key_or_func()
+        else:
+            private_key = self._private_key_or_func
+        return jwt.encode(payload, key=private_key, algorithm=self._jwt_algorithm)
+
+
 class AppAuth(JWT):
     """
     This class is used to authenticate as a GitHub App.
@@ -196,14 +209,7 @@ class AppAuth(JWT):
 
     @staticmethod
     def create_jwt_sign(private_key_or_func: Union[str, PrivateKeyGenerator], jwt_algorithm: str) -> DictSignFunction:
-        def jwt_sign(payload: dict) -> Union[str, bytes]:
-            if callable(private_key_or_func):
-                private_key = private_key_or_func()
-            else:
-                private_key = private_key_or_func
-            return jwt.encode(payload, key=private_key, algorithm=jwt_algorithm)
-
-        return jwt_sign
+        return JwtSigner(private_key_or_func, jwt_algorithm).jwt_sign
 
     # v3: move * above private_key
     def __init__(
