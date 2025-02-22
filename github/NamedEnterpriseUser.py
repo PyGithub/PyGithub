@@ -24,7 +24,7 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -151,7 +151,7 @@ class NamedEnterpriseUser(CompletableGithubObject):
         self._completeIfNotSet(self._visual_studio_subscription_user)
         return self._visual_studio_subscription_user.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "enterprise_server_primary_emails" in attributes:  # pragma no branch
             self._enterprise_server_primary_emails = self._makeListOfStringsAttribute(
                 attributes["enterprise_server_primary_emails"]

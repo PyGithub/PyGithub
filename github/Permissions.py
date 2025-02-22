@@ -37,7 +37,7 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -95,7 +95,7 @@ class Permissions(NonCompletableGithubObject):
     def triage(self) -> bool:
         return self._triage.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "admin" in attributes:  # pragma no branch
             self._admin = self._makeBoolAttribute(attributes["admin"])
         if "maintain" in attributes:  # pragma no branch

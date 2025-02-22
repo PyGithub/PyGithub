@@ -38,7 +38,7 @@
 ################################################################################
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 import github.GithubObject
 from github.GithubObject import Attribute
@@ -73,7 +73,7 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     def week(self) -> datetime:
         return self._week.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "days" in attributes:  # pragma no branch
             self._days = self._makeListOfIntsAttribute(attributes["days"])
         if "total" in attributes:  # pragma no branch

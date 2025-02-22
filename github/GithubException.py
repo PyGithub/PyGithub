@@ -38,7 +38,7 @@
 ################################################################################
 
 import json
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Optional, Union
 
 
 class GithubException(Exception):
@@ -54,7 +54,7 @@ class GithubException(Exception):
         self,
         status: int,
         data: Any = None,
-        headers: Optional[Dict[str, str]] = None,
+        headers: Optional[dict[str, str]] = None,
         message: Optional[str] = None,
     ):
         super().__init__()
@@ -83,7 +83,7 @@ class GithubException(Exception):
         return self.__data
 
     @property
-    def headers(self) -> Optional[Dict[str, str]]:
+    def headers(self) -> Optional[dict[str, str]]:
         """
         The headers returned by the Github API.
         """
@@ -139,10 +139,10 @@ class BadAttributeException(Exception):
         self,
         actualValue: Any,
         expectedType: Union[
-            Dict[Tuple[Type[str], Type[str]], Type[dict]],
-            Tuple[Type[str], Type[str]],
-            List[Type[dict]],
-            List[Tuple[Type[str], Type[str]]],
+            dict[tuple[type[str], type[str]], type[dict]],
+            tuple[type[str], type[str]],
+            list[type[dict]],
+            list[tuple[type[str], type[str]]],
         ],
         transformationException: Optional[Exception],
     ):
@@ -161,10 +161,10 @@ class BadAttributeException(Exception):
     def expected_type(
         self,
     ) -> Union[
-        List[Type[dict]],
-        Tuple[Type[str], Type[str]],
-        Dict[Tuple[Type[str], Type[str]], Type[dict]],
-        List[Tuple[Type[str], Type[str]]],
+        list[type[dict]],
+        tuple[type[str], type[str]],
+        dict[tuple[type[str], type[str]], type[dict]],
+        list[tuple[type[str], type[str]]],
     ]:
         """
         The type PyGithub expected.

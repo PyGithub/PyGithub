@@ -34,7 +34,7 @@
 ################################################################################
 
 
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
 import deprecated
 
@@ -48,7 +48,7 @@ class AppAuthentication(AppInstallationAuth):
         app_id: Union[int, str],
         private_key: str,
         installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
+        token_permissions: Optional[dict[str, str]] = None,
     ):
         super().__init__(
             app_auth=AppAuth(app_id, private_key),

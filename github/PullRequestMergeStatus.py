@@ -38,7 +38,7 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -72,7 +72,7 @@ class PullRequestMergeStatus(NonCompletableGithubObject):
     def sha(self) -> str:
         return self._sha.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "merged" in attributes:  # pragma no branch
             self._merged = self._makeBoolAttribute(attributes["merged"])
         if "message" in attributes:  # pragma no branch
