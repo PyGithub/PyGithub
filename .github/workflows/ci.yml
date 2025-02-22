@@ -6,6 +6,10 @@ on:
       - release-v*
   pull_request:
   merge_group:
+env:
+  openapi_api: api.github.com
+  openapi_version: 2022-11-28
+  openapi_commit: 531ec66
 
 jobs:
   build:
@@ -65,7 +69,8 @@ jobs:
         shell: bash
 
   schemas:
-    name: "Schema suggestions"
+    name: "Add schemas"
+    needs: "test_success"
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -83,25 +88,63 @@ jobs:
       - name: Set up dependencies
         run: |
           pip install -r head/requirements/scripts.txt
-      - name: Suggest schemas
+      - name: Add schemas
         run: |
-          python head/scripts/openapi.py fetch --commit 531ec66 api.github.com 2022-11-28 api.github.com.2022-11-28.json
+          python head/scripts/openapi.py fetch --commit ${{ env.openapi_commit }} ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head schema suggestions:"
           python head/scripts/openapi.py index head/github openapi.head.index
-          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.head.index | tee schemas.head.txt
+          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.head.index | tee schemas.head.txt
           echo "::endgroup::"
 
           echo "::group::Base schema suggestions:"
           python head/scripts/openapi.py index base/github openapi.base.index
-          python head/scripts/openapi.py --dry-run suggest api.github.com.2022-11-28.json openapi.base.index | tee schemas.base.txt
+          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.base.index | tee schemas.base.txt
           echo "::endgroup::"
 
           echo "Difference:"
           diff schemas.base.txt schemas.head.txt
 
+  implementations:
+    name: "Add implementations"
+    needs: "test_success"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Add implementations
+        run: |
+          python head/scripts/openapi.py fetch --commit ${{ env.openapi_commit }} ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+
+          echo "::group::Head implementations:"
+          python head/scripts/openapi.py index head/github openapi.head.index
+          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.head.index | tee implementation.head.txt
+          echo "::endgroup::"
+
+          echo "::group::Base implementations:"
+          python head/scripts/openapi.py index base/github openapi.base.index
+          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.base.index | tee implementation.base.txt
+          echo "::endgroup::"
+
+          echo "Difference:"
+          diff implementation.base.txt implementation.head.txt
+
   sort:
     name: "Sort classes"
+    needs: "test_success"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -121,6 +164,23 @@ jobs:
 
           echo "Changes:"
           git diff
+
+  openapi_success:
+    # this aggregates success state of all jobs listed in `needs`
+    # this is the only required check to pass CI
+    name: "OpenAPI success"
+    if: always()
+    runs-on: ubuntu-latest
+    needs: [schemas, implementations, sort]
+    steps:
+      - name: "Success"
+        if: needs.schemas.result == 'success' && needs.implementations.result == 'success' && needs.sort.result == 'success'
+        run: true
+        shell: bash
+      - name: "Failure"
+        if: needs.schemas.result != 'success' || needs.implementations.result != 'success' || needs.sort.result != 'success'
+        run: false
+        shell: bash
 
   event_file:
     name: "Event File"
