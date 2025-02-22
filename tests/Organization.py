@@ -777,9 +777,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(config.id, repo_config.configuration.id)
         repo.detach_security_config()
 
-    def test_get_repos_for_code_security_config(self):
+    def testGetReposForCodeSecurityConfig(self):
         # 17 is GitHub recommended configuration
         repo_statuses = self.org.get_repos_for_code_security_config(id=182032)
-        for status in repo_statuses:
-            self.assertEqual(status.status, "enforced")
-            break
+        status = repo_statuses[0]
+        self.assertEqual(status.status, "enforced")
+        self.assertIsNotNone(status.repository)
+        self.assertEqual(status.repository.full_name, "BeaverSoftware/truth")
