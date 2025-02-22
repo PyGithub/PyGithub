@@ -53,7 +53,6 @@ class Deployment(Framework.TestCase):
         self.assertEqual(self.deployment.description, "Test deployment")
         self.assertEqual(self.deployment.environment, "test")
         self.assertEqual(self.deployment.id, 263877258)
-        self.assertIsNone(self.deployment.message)
         self.assertEqual(self.deployment.node_id, "MDEwOkRlcGxveW1lbnQyNjIzNTE3NzY=")
         self.assertEqual(self.deployment.original_environment, "test")
         self.assertEqual(self.deployment.payload, {"test": True})

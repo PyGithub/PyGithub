@@ -41,10 +41,6 @@ class Copilot(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._org_name: Attribute[str] = NotSet
 
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "org_name" in attributes:  # pragma no branch
-            self._org_name = self._makeStringAttribute(attributes["org_name"])
-
     def __repr__(self) -> str:
         return self.get__repr__({"org_name": self._org_name.value if self._org_name is not NotSet else NotSet})
 
@@ -94,3 +90,7 @@ class Copilot(NonCompletableGithubObject):
             input={"selected_usernames": selected_usernames},
         )
         return data["seats_cancelled"]
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "org_name" in attributes:  # pragma no branch
+            self._org_name = self._makeStringAttribute(attributes["org_name"])

@@ -50,6 +50,7 @@ class Permissions(NonCompletableGithubObject):
     - /components/schemas/collaborator/properties/permissions
     - /components/schemas/full-repository/properties/permissions
     - /components/schemas/minimal-repository/properties/permissions
+    - /components/schemas/nullable-repository/properties/permissions
     - /components/schemas/repo-search-result-item/properties/permissions
     - /components/schemas/repository/properties/permissions
     - /components/schemas/team/properties/permissions

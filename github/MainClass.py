@@ -522,7 +522,7 @@ class Github:
             "/projects/columns/%d" % id,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
-        return github.ProjectColumn.ProjectColumn(self.__requester, headers, data, completed=True)
+        return github.ProjectColumn.ProjectColumn(self.__requester, headers, data)
 
     def get_gist(self, id: str) -> Gist:
         """

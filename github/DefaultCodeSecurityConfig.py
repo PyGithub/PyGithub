@@ -54,6 +54,9 @@ class DefaultCodeSecurityConfig(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/code-security/configurations.
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-security-default-configurations
+
     """
 
     def _initAttributes(self) -> None:

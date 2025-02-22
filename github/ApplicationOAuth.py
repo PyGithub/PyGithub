@@ -54,10 +54,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
 
     """
 
-    def _initAttributes(self) -> None:
-        self._client_id: Attribute[str] = NotSet
-        self._client_secret: Attribute[str] = NotSet
-
     def __init__(
         self,
         requester: Requester,
@@ -67,6 +63,10 @@ class ApplicationOAuth(NonCompletableGithubObject):
         # this object requires a request without authentication
         requester = requester.withAuth(auth=None)
         super().__init__(requester, headers, attributes)
+
+    def _initAttributes(self) -> None:
+        self._client_id: Attribute[str] = NotSet
+        self._client_secret: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"client_id": self._client_id.value})

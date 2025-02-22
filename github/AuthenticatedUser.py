@@ -126,6 +126,17 @@ if TYPE_CHECKING:
 
 
 class EmailData(NamedTuple):
+    """
+    This class represents EmailData.
+
+    The reference can be found here
+    http://docs.github.com/en/rest/reference/users#emails
+
+    The OpenAPI schema can be found at
+    - /components/schemas/email
+
+    """
+
     email: str
     primary: bool
     verified: bool

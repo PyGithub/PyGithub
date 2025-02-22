@@ -55,13 +55,13 @@ from typing import Any
 import github.GithubObject
 import github.Project
 import github.ProjectCard
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
 
 from . import Consts
 
 
-class ProjectColumn(CompletableGithubObject):
+class ProjectColumn(NonCompletableGithubObject):
     """
     This class represents Project Columns.
 
@@ -159,7 +159,7 @@ class ProjectColumn(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/cards", headers=import_header, input=post_parameters
         )
-        return github.ProjectCard.ProjectCard(self._requester, headers, data, completed=True)
+        return github.ProjectCard.ProjectCard(self._requester, headers, data)
 
     def move(self, position: str) -> bool:
         """

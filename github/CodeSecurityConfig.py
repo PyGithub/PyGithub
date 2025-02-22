@@ -36,11 +36,12 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/code-security/configurations.
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-security-configuration
+
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
         self._advanced_security: Attribute[str] = NotSet
         self._code_scanning_default_setup: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -48,18 +49,22 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         self._dependabot_security_updates: Attribute[str] = NotSet
         self._dependency_graph: Attribute[str] = NotSet
         self._dependency_graph_autosubmit_action: Attribute[str] = NotSet
+        self._dependency_graph_autosubmit_action_options: Attribute[dict[str, Any]] = NotSet
         self._description: Attribute[str] = NotSet
         self._enforcement: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
         self._private_vulnerability_reporting: Attribute[str] = NotSet
         self._secret_scanning: Attribute[str] = NotSet
         self._secret_scanning_delegated_bypass: Attribute[str] = NotSet
+        self._secret_scanning_delegated_bypass_options: Attribute[dict[str, Any]] = NotSet
         self._secret_scanning_non_provider_patterns: Attribute[str] = NotSet
         self._secret_scanning_push_protection: Attribute[str] = NotSet
         self._secret_scanning_validity_checks: Attribute[str] = NotSet
         self._target_type: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -99,6 +104,10 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         return self._dependency_graph_autosubmit_action.value
 
     @property
+    def dependency_graph_autosubmit_action_options(self) -> dict[str, Any]:
+        return self._dependency_graph_autosubmit_action_options.value
+
+    @property
     def description(self) -> str:
         return self._description.value
 
@@ -129,6 +138,10 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     @property
     def secret_scanning_delegated_bypass(self) -> str:
         return self._secret_scanning_delegated_bypass.value
+
+    @property
+    def secret_scanning_delegated_bypass_options(self) -> dict[str, Any]:
+        return self._secret_scanning_delegated_bypass_options.value
 
     @property
     def secret_scanning_non_provider_patterns(self) -> str:
@@ -174,6 +187,10 @@ class CodeSecurityConfig(NonCompletableGithubObject):
             self._dependency_graph_autosubmit_action = self._makeStringAttribute(
                 attributes["dependency_graph_autosubmit_action"]
             )
+        if "dependency_graph_autosubmit_action_options" in attributes:  # pragma no branch
+            self._dependency_graph_autosubmit_action_options = self._makeDictAttribute(
+                attributes["dependency_graph_autosubmit_action_options"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "enforcement" in attributes:  # pragma no branch
@@ -193,6 +210,10 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         if "secret_scanning_delegated_bypass" in attributes:  # pragma no branch
             self._secret_scanning_delegated_bypass = self._makeStringAttribute(
                 attributes["secret_scanning_delegated_bypass"]
+            )
+        if "secret_scanning_delegated_bypass_options" in attributes:  # pragma no branch
+            self._secret_scanning_delegated_bypass_options = self._makeDictAttribute(
+                attributes["secret_scanning_delegated_bypass_options"]
             )
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
             self._secret_scanning_non_provider_patterns = self._makeStringAttribute(

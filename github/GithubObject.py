@@ -534,6 +534,22 @@ class CompletableGithubObject(GithubObject, ABC):
     def completed(self) -> bool:
         return self.__completed
 
+    @property
+    def raw_data(self) -> dict[str, Any]:
+        """
+        :type: dict
+        """
+        self._completeIfNeeded()
+        return super().raw_data
+
+    @property
+    def raw_headers(self) -> dict[str, str | int]:
+        """
+        :type: dict
+        """
+        self._completeIfNeeded()
+        return super().raw_headers
+
     def complete(self) -> Self:
         self._completeIfNeeded()
         return self
@@ -552,22 +568,6 @@ class CompletableGithubObject(GithubObject, ABC):
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value, headers=self.__completeHeaders)
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
-
-    @property
-    def raw_data(self) -> dict[str, Any]:
-        """
-        :type: dict
-        """
-        self._completeIfNeeded()
-        return super().raw_data
-
-    @property
-    def raw_headers(self) -> dict[str, str | int]:
-        """
-        :type: dict
-        """
-        self._completeIfNeeded()
-        return super().raw_headers
 
     def update(self, additional_headers: dict[str, Any] | None = None) -> bool:
         """
