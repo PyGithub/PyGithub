@@ -102,6 +102,7 @@ import github.OrganizationSecret
 import github.OrganizationVariable
 import github.Plan
 import github.Project
+import github.RepoCodeSecurityAssociation
 import github.Repository
 import github.Team
 from github import Consts
@@ -139,6 +140,7 @@ if TYPE_CHECKING:
     from github.Plan import Plan
     from github.Project import Project
     from github.PublicKey import PublicKey
+    from github.RepoCodeSecurityAssociation import RepoCodeSecurityAssociation
     from github.Repository import Repository
     from github.Team import Team
 
@@ -1820,7 +1822,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
-    def get_repos_for_code_security_config(self, id: int, status: Opt[str] = NotSet) -> PaginatedList[Repository]:
+    def get_repos_for_code_security_config(self, id: int, status: Opt[str] = NotSet) -> PaginatedList[RepoCodeSecurityAssociation]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories <https://docs.github.com/en/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration>`_
         """
@@ -1830,7 +1832,7 @@ class Organization(CompletableGithubObject):
         url_parameters = NotSet.remove_unset_items({"status": status})
 
         return PaginatedList(
-            github.Repository.Repository,
+            github.RepoCodeSecurityAssociation.RepoCodeSecurityAssociation,
             self._requester,
             f"{self.url}/code-security/configurations/{id}/repositories",
             url_parameters,
