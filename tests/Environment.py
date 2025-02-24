@@ -76,16 +76,14 @@ class Environment(Framework.TestCase):
         self.assertEqual(protection_rules[0].id, 216323)
         self.assertEqual(protection_rules[0].node_id, "GA_kwDOHKhL9c4AA00D")
         self.assertEqual(protection_rules[0].type, "branch_policy")
-        self.assertFalse(protection_rules[0].prevent_self_review)
         self.assertEqual(protection_rules[1].id, 216324)
         self.assertEqual(protection_rules[1].node_id, "GA_kwDOHKhL9c4AA00E")
         self.assertEqual(protection_rules[1].type, "required_reviewers")
-        self.assertFalse(protection_rules[0].prevent_self_review)
+        self.assertFalse(protection_rules[1].prevent_self_review)
         self.assertEqual(protection_rules[2].id, 216325)
         self.assertEqual(protection_rules[2].node_id, "GA_kwDOHKhL9c4AA00F")
         self.assertEqual(protection_rules[2].type, "wait_timer")
         self.assertEqual(protection_rules[2].wait_timer, 15)
-        self.assertFalse(protection_rules[0].prevent_self_review)
 
     def testReviewers(self):
         # This is necessary so we can maintain our own expectations, which have been manually edited, for this test.
