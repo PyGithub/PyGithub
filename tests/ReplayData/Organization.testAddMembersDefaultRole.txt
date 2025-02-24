@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '1136'), ('x-runtime-rack', '0.059358'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete_repo, gist, notifications, repo, user, write:discussion'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"XXX"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4974'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'FFFF:ffff:ffFFff:fffffff:FFFFFFFF'), ('last-modified', 'Thu, 05 Apr 2018 00:55:17 GMT'), ('date', 'Thu, 05 Apr 2018 17:09:05 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1522950939')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/members/lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('content-length', '157'), ('x-github-media-type', 'github.v3; format=json'), ('content-security-policy', "default-src 'none'"), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-ratelimit-remaining', '4973'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-runtime-rack', '0.035748'), ('x-xss-protection', '1; mode=block'), ('date', 'Thu, 05 Apr 2018 17:09:06 GMT'), ('x-frame-options', 'deny'), ('x-oauth-scopes', 'admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete_repo, gist, notifications, repo, user, write:discussion'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-type', 'application/json; charset=utf-8'), ('x-accepted-oauth-scopes', 'read:org, repo, user'), ('x-ratelimit-reset', '1522950939')]
@@ -25,7 +25,7 @@ PUT
 api.github.com
 None
 /orgs/BeaverSoftware/memberships/lyloa
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"role": "member"}
 200
 [('content-length', '1718'), ('x-runtime-rack', '0.352123'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete_repo, gist, notifications, repo, user, write:discussion'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', 'admin:org, repo'), ('etag', '"92186"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4972'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'), ('date', 'Thu, 05 Apr 2018 17:09:06 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1522950939')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/members/lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('content-length', '157'), ('x-github-media-type', 'github.v3; format=json'), ('content-security-policy', "default-src 'none'"), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-ratelimit-remaining', '4969'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-runtime-rack', '0.032600'), ('x-xss-protection', '1; mode=block'), ('date', 'Thu, 05 Apr 2018 17:09:08 GMT'), ('x-frame-options', 'deny'), ('x-oauth-scopes', 'admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete_repo, gist, notifications, repo, user, write:discussion'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-type', 'application/json; charset=utf-8'), ('x-accepted-oauth-scopes', 'read:org, repo, user'), ('x-ratelimit-reset', '1522950939')]
@@ -47,7 +47,7 @@ DELETE
 api.github.com
 None
 /orgs/BeaverSoftware/memberships/lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4970'), ('x-github-media-type', 'github.v3; format=json'), ('content-security-policy', "default-src 'none'"), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-runtime-rack', '0.140419'), ('x-xss-protection', '1; mode=block'), ('date', 'Thu, 05 Apr 2018 17:09:07 GMT'), ('x-frame-options', 'deny'), ('x-oauth-scopes', 'admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete_repo, gist, notifications, repo, user, write:discussion'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-type', 'application/octet-stream'), ('x-accepted-oauth-scopes', 'admin:org, repo'), ('x-ratelimit-reset', '1522950939')]
@@ -58,7 +58,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/members/lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('content-length', '157'), ('x-github-media-type', 'github.v3; format=json'), ('content-security-policy', "default-src 'none'"), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('x-ratelimit-remaining', '4969'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-runtime-rack', '0.032600'), ('x-xss-protection', '1; mode=block'), ('date', 'Thu, 05 Apr 2018 17:09:08 GMT'), ('x-frame-options', 'deny'), ('x-oauth-scopes', 'admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete_repo, gist, notifications, repo, user, write:discussion'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('content-type', 'application/json; charset=utf-8'), ('x-accepted-oauth-scopes', 'read:org, repo, user'), ('x-ratelimit-reset', '1522950939')]

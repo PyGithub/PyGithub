@@ -83,7 +83,7 @@ class Retry(Framework.TestCase):
 
     def testReturnsRepoAfterSettingRetryHttp(self):
         g = github.Github(
-            auth=self.login,
+            auth=self.oauth_token,
             base_url="http://my.enterprise.com",
             retry=0,
         )  # http here

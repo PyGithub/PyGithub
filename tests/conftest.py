@@ -38,14 +38,15 @@ from . import Framework
 
 def pytest_addoption(parser):
     parser.addoption("--record", action="store_true", help="record mode")
-    parser.addoption("--auth_with_token", action="store_true", help="auth using a token")
+    parser.addoption(
+        "--auth_with_token", action="store_true", help="auth using a token, deprecated: this is the default"
+    )
     parser.addoption("--auth_with_jwt", action="store_true", help="auth using JWT")
 
 
 def pytest_configure(config):
     if config.getoption("record"):
         Framework.activateRecordMode()
-    if config.getoption("auth_with_token"):
-        Framework.activateTokenAuthMode()
     if config.getoption("auth_with_jwt"):
         Framework.activateJWTAuthMode()
+    # auth_with_token is being ignored, it is the default

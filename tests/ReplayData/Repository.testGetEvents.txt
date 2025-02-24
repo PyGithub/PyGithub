@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/events
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4965'), ('content-length', '44412'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/PyGithub/PyGithub/events?page=2>; rel="next"'), ('etag', '"a0d405b3f385bd0d26640c75b50c95dd"'), ('date', 'Sun, 27 May 2012 06:57:59 GMT'), ('content-type', 'application/json; charset=utf-8')]

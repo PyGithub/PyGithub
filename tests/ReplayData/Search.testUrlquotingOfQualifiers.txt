@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /search/issues?q=repo%3Asaltstack%2Fsalt-api+type%3AIssues+updated%3A%3E2014-03-04T18%3A28%3A11Z
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '29'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '62E81E32:3849:237BB3A:5325E38F'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept-Encoding'), ('content-length', '19065'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '30'), ('cache-control', 'no-cache'), ('date', 'Sun, 16 Mar 2014 17:46:56 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1394992076')]
