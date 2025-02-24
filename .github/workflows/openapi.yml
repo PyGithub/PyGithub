@@ -49,7 +49,7 @@ jobs:
       - name: Fetching OpenAPI spec
         run: |
           # Fetching OpenAPI spec
-          python scripts/openapi.py fetch --commit 531ec66 api.github.com 2022-11-28 api.github.com.2022-11-28.json
+          python scripts/openapi.py fetch api.github.com 2022-11-28 api.github.com.2022-11-28.json
       - name: Sync with OpenAPI spec
         run: |
           # Sync with OpenAPI spec

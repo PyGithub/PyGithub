@@ -9,7 +9,6 @@ on:
 env:
   openapi_api: api.github.com
   openapi_version: 2022-11-28
-  openapi_commit: 531ec66
 
 jobs:
   build:
@@ -90,7 +89,7 @@ jobs:
           pip install -r head/requirements/scripts.txt
       - name: Add schemas
         run: |
-          python head/scripts/openapi.py fetch --commit ${{ env.openapi_commit }} ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head schema suggestions:"
           python head/scripts/openapi.py index head/github openapi.head.index
@@ -127,7 +126,7 @@ jobs:
           pip install -r head/requirements/scripts.txt
       - name: Add implementations
         run: |
-          python head/scripts/openapi.py fetch --commit ${{ env.openapi_commit }} ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head implementations:"
           python head/scripts/openapi.py index head/github openapi.head.index
