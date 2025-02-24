@@ -35,6 +35,7 @@
 ################################################################################
 
 import github
+from github.Auth import Login
 
 from . import Framework
 
@@ -48,7 +49,7 @@ class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetAuthorizationsSucceedsWhenAutenticatedThroughLoginPassword(self):
-        g = github.Github(auth=self.login)
+        g = github.Github(auth=Login("login", "password"))
         self.assertListKeyEqual(
             g.get_user().get_authorizations(),
             lambda a: a.note,

@@ -3,7 +3,7 @@ PATCH
 api.github.com
 None
 /repos/PyGithub/PyGithub
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"name": "PyGithub"}
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4956'), ('content-length', '1129'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"97977b426859a02f4d2a3fa4764b1a8e"'), ('date', 'Sat, 26 May 2012 11:21:43 GMT'), ('content-type', 'application/json; charset=utf-8')]

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues/32
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4986'), ('content-length', '2141'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"f88aca2b371ce28f651166ed9c5a2525"'), ('date', 'Fri, 01 Jun 2012 20:10:41 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"head": "BeaverSoftware:master", "base": "topic/RewriteWithGeneratedCode", "issue": 32}
 201
 [('status', '201 Created'), ('x-ratelimit-remaining', '4933'), ('content-length', '4501'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"2b035f5260fe63dd611156fea3049af0"'), ('date', 'Sun, 27 May 2012 10:58:42 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/repos/PyGithub/PyGithub/pulls/32')]

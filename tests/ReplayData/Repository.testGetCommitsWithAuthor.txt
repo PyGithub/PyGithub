@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/AKFish
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4949'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:68E1:4062816:52802976'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '1221'), ('server', 'GitHub.com'), ('last-modified', 'Sun, 10 Nov 2013 11:54:56 GMT'), ('x-ratelimit-limit', '5000'), ('etag', '"186b66d7835a31a33ee1a092f17ca035"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Nov 2013 00:48:54 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384130958')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits?per_page=5&author=jacquev6
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4948'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:68E1:40629A3:52802977'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '16274'), ('server', 'GitHub.com'), ('last-modified', 'Mon, 21 Oct 2013 03:45:43 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/3544490/commits?per_page=5&author=jacquev6&top=master&last_sha=748793b7ac34dcf4b70f8b4494f9fe71c4609a07>; rel="next", <https://api.github.com/repositories/3544490/commits?per_page=5&author=jacquev6&sha=master>; rel="first"'), ('etag', '"e33a86ac77b0de1ff6664d425434cb37"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Nov 2013 00:48:55 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384130958')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits?per_page=5&author=akfish
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4947'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:68E1:4062C37:52802978'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '15564'), ('server', 'GitHub.com'), ('last-modified', 'Fri, 23 Aug 2013 23:21:41 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/3544490/commits?per_page=5&author=akfish&top=master&last_sha=5b09f6c82191601cad92076ad4761fe927c511ed>; rel="next", <https://api.github.com/repositories/3544490/commits?per_page=5&author=akfish&sha=master>; rel="first"'), ('etag', '"70e018e18acd7212d83ab7f79a00c0c1"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Nov 2013 00:48:57 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384130958')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits?per_page=5&author=m.ki2%40laposte.net
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4946'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:68E1:4062E83:5280297A'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '15839'), ('server', 'GitHub.com'), ('last-modified', 'Tue, 04 Jun 2013 13:35:09 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/3544490/commits?per_page=5&author=m.ki2%40laposte.net&top=master&last_sha=5ce5f5c68418bf45797f19cb0a50c03d429c90b5>; rel="next", <https://api.github.com/repositories/3544490/commits?per_page=5&author=m.ki2%40laposte.net&sha=master>; rel="first"'), ('etag', '"3ed1804969c8b056bbf4ac0098e42f18"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Nov 2013 00:48:58 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384130958')]

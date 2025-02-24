@@ -51,7 +51,7 @@ from unittest.mock import Mock
 import jwt
 
 import github
-from github.Auth import Auth
+from github.Auth import Auth, Login
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
@@ -64,7 +64,7 @@ class Authentication(Framework.BasicTestCase):
 
     def testBasicAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
-            g = github.Github(self.login.login, self.login.password)
+            g = github.Github("login", "password")
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
         self.assertWarning(
             warning,
@@ -107,7 +107,7 @@ class Authentication(Framework.BasicTestCase):
 
     def testLoginAuthentication(self):
         # test data copied from testBasicAuthentication to test parity
-        g = github.Github(auth=self.login)
+        g = github.Github(auth=Login("login", "password"))
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testTokenAuthentication(self):
