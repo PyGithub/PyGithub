@@ -50,7 +50,7 @@
 ################################################################################
 from __future__ import annotations
 
-from typing import Any, Callable, Generic, Iterator, TypeVar
+from typing import Any, Callable, Generic, Iterator, TypeVar, overload
 from urllib.parse import parse_qs
 
 from github.GithubObject import GithubObject
@@ -71,7 +71,15 @@ class PaginatedListBase(Generic[T]):
     def __init__(self, elements: list[T] | None = None) -> None:
         self.__elements = [] if elements is None else elements
 
-    def __getitem__(self, index: int | slice) -> Any:
+    @overload
+    def __getitem__(self, index: int) -> T:
+        ...
+
+    @overload
+    def __getitem__(self, index: slice) -> _Slice:
+        ...
+
+    def __getitem__(self, index: int | slice) -> T | _Slice:
         assert isinstance(index, (int, slice))
         if isinstance(index, int):
             self.__fetchToIndex(index)
@@ -108,7 +116,7 @@ class PaginatedListBase(Generic[T]):
             index = self.__start
             while not self.__finished(index):
                 if self.__list._isBiggerThan(index):
-                    yield self.__list[index]
+                    yield self.__list[index]  # type: ignore
                     index += self.__step
                 else:
                     return
