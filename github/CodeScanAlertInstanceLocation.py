@@ -26,8 +26,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -82,7 +83,7 @@ class CodeScanAlertInstanceLocation(NonCompletableGithubObject):
     def start_line(self) -> int:
         return self._start_line.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "end_column" in attributes:  # pragma no branch
             self._end_column = self._makeIntAttribute(attributes["end_column"])
         if "end_line" in attributes:  # pragma no branch
