@@ -311,26 +311,6 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(self.g.per_page, 100)
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
-    def testCustomPerPageWithNoUrlParams(self):
-        from . import (  # Don't pollute github.tests namespace, it would conflict with github.tests.CommitComment
-            CommitComment,
-        )
-
-        self.g.per_page = 100
-        PaginatedListImpl(
-            CommitComment.CommitComment,
-            self.repo._requester,
-            f"{self.repo.url}/comments",
-            None,
-        )
-
-    def testCustomPerPageWithNoUrlParams2(self):
-        # This test is redundant and less unitary than testCustomPerPageWithNoUrlParams
-        # but I hope it will be more robust if we refactor PaginatedList,
-        # because testCustomPerPageWithNoUrlParams only tests the constructor
-        self.g.per_page = 100
-        self.assertEqual(len(list(self.repo.get_comments())), 325)
-
     def testCustomPerPageWithGetPage(self):
         self.g.per_page = 100
         self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)

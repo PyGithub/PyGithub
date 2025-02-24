@@ -39,7 +39,33 @@ class Issue33(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
         self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
 
     def testOpenIssues(self):
+        # reduce the size of the record data file by executing the following:
+        """
+        cat -n tests/ReplayData/Issue33.testOpenIssues.txt | while read -r lineno line
+        do
+          if [[ $(( lineno % 11 )) -eq 10 ]]
+          then
+            jq -c "[.[] | { id: .id }]" <<< "$line"
+          else
+            echo "$line"
+          fi
+        done > tests/ReplayData/Issue33.testOpenIssues.txt.new
+        mv tests/ReplayData/Issue33.testOpenIssues.txt.new tests/ReplayData/Issue33.testOpenIssues.txt
+        """
         self.assertEqual(len(list(self.repo.get_issues())), 338)
 
     def testClosedIssues(self):
+        # reduce the size of the record data file by executing the following:
+        """
+        cat -n tests/ReplayData/Issue33.testClosedIssues.txt | while read -r lineno line
+        do
+          if [[ $(( lineno % 11 )) -eq 10 ]]
+          then
+            jq -c "[.[] | { id: .id }]" <<< "$line"
+          else
+            echo "$line"
+          fi
+        done > tests/ReplayData/Issue33.testClosedIssues.txt.new
+        mv tests/ReplayData/Issue33.testClosedIssues.txt.new tests/ReplayData/Issue33.testClosedIssues.txt
+        """
         self.assertEqual(len(list(self.repo.get_issues(state="closed"))), 950)
