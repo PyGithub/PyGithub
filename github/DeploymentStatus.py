@@ -49,6 +49,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.GithubApp
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
