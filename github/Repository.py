@@ -4228,19 +4228,22 @@ class Repository(CompletableGithubObject):
         environment_name: str,
         wait_timer: int = 0,
         reviewers: list[ReviewerParams] = [],
+        prevent_self_review: bool = False,
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
     ) -> Environment:
         """
         :calls: `PUT /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
         :param wait_timer: int
-        :param reviews: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
+        :param reviewers: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
+        :param prevent_self_review: bool
         :param deployment_branch_policy: Optional[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams`]
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
         assert isinstance(wait_timer, int)
         assert isinstance(reviewers, list)
+        assert isinstance(prevent_self_review, bool)
         assert all(
             [isinstance(reviewer, github.EnvironmentProtectionRuleReviewer.ReviewerParams) for reviewer in reviewers]
         )
@@ -4256,6 +4259,7 @@ class Repository(CompletableGithubObject):
         put_parameters = {
             "wait_timer": wait_timer,
             "reviewers": [reviewer._asdict() for reviewer in reviewers],
+            "prevent_self_review": prevent_self_review,
             "deployment_branch_policy": deployment_branch_policy._asdict() if deployment_branch_policy else None,
         }
 
