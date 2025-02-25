@@ -34,8 +34,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -62,7 +63,7 @@ class AuthorizationApplication(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch

@@ -49,4 +49,4 @@ def pytest_configure(config):
         Framework.activateRecordMode()
     if config.getoption("auth_with_jwt"):
         Framework.activateJWTAuthMode()
-    # auth_with_token is being ignored, it is the default
+    # auth_with_token is being ignored, it is the default, here for backward compatibility

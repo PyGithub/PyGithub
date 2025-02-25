@@ -72,6 +72,7 @@ import github.IssuePullRequest
 import github.Label
 import github.Milestone
 import github.NamedUser
+import github.Organization
 import github.PullRequest
 import github.Reaction
 import github.Repository

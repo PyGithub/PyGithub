@@ -36,9 +36,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any
 
 
 class GithubException(Exception):
@@ -54,8 +55,8 @@ class GithubException(Exception):
         self,
         status: int,
         data: Any = None,
-        headers: Optional[Dict[str, str]] = None,
-        message: Optional[str] = None,
+        headers: dict[str, str] | None = None,
+        message: str | None = None,
     ):
         super().__init__()
         self.__status = status
@@ -65,7 +66,7 @@ class GithubException(Exception):
         self.args = (status, data, headers, message)
 
     @property
-    def message(self) -> Optional[str]:
+    def message(self) -> str | None:
         return self.__message
 
     @property
@@ -83,7 +84,7 @@ class GithubException(Exception):
         return self.__data
 
     @property
-    def headers(self) -> Optional[Dict[str, str]]:
+    def headers(self) -> dict[str, str] | None:
         """
         The headers returned by the Github API.
         """
@@ -138,13 +139,13 @@ class BadAttributeException(Exception):
     def __init__(
         self,
         actualValue: Any,
-        expectedType: Union[
-            Dict[Tuple[Type[str], Type[str]], Type[dict]],
-            Tuple[Type[str], Type[str]],
-            List[Type[dict]],
-            List[Tuple[Type[str], Type[str]]],
-        ],
-        transformationException: Optional[Exception],
+        expectedType: (
+            dict[tuple[type[str], type[str]], type[dict]]
+            | tuple[type[str], type[str]]
+            | list[type[dict]]
+            | list[tuple[type[str], type[str]]]
+        ),
+        transformationException: Exception | None,
     ):
         self.__actualValue = actualValue
         self.__expectedType = expectedType
@@ -160,19 +161,19 @@ class BadAttributeException(Exception):
     @property
     def expected_type(
         self,
-    ) -> Union[
-        List[Type[dict]],
-        Tuple[Type[str], Type[str]],
-        Dict[Tuple[Type[str], Type[str]], Type[dict]],
-        List[Tuple[Type[str], Type[str]]],
-    ]:
+    ) -> (
+        list[type[dict]]
+        | tuple[type[str], type[str]]
+        | dict[tuple[type[str], type[str]], type[dict]]
+        | list[tuple[type[str], type[str]]]
+    ):
         """
         The type PyGithub expected.
         """
         return self.__expectedType
 
     @property
-    def transformation_exception(self) -> Optional[Exception]:
+    def transformation_exception(self) -> Exception | None:
         """
         The exception raised when PyGithub tried to parse the value.
         """

@@ -37,8 +37,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -78,7 +79,7 @@ class CodeScanTool(NonCompletableGithubObject):
     def version(self) -> str:
         return self._version.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "guid" in attributes:  # pragma no branch
             self._guid = self._makeStringAttribute(attributes["guid"])
         if "name" in attributes:  # pragma no branch
