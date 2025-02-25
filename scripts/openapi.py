@@ -29,7 +29,7 @@ import difflib
 import json
 import os.path
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
@@ -1268,9 +1268,9 @@ class OpenApi:
                 schema = schema.get(step, {})
         return steps, schema
 
-    def get_inner_spec_types(self, schema: dict, schema_path: list[str | int]) -> list[str]:
+    def get_spec_types(self, schema: dict, schema_path: list[str | int]) -> list[str]:
         """
-        Returns inner spec type, ignores outer datastructures like lists or pagination.
+        Returns spec types.
         """
         if "$ref" in schema:
             return [schema.get("$ref")]
@@ -1283,22 +1283,27 @@ class OpenApi:
         if "allOf" in schema and len(schema.get("allOf")) == 1:
             return [schema.get("allOf")[0].get("$ref")]
         if schema.get("type") == "object":
-            # extract the inner type of pagination objects
-            if "properties" in schema:
-                props = schema.get("properties")
-                list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
-                total_count_items = [
-                    n for n, p in props.items() if n.startswith("total_") and p.get("type") == "integer"
-                ]
-                if len(list_items) == 1 and len(total_count_items) == 1:
-                    list_item = list_items[0]
-                    return self.get_inner_spec_types(
-                        props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
-                    )
             return ["/".join(["#"] + schema_path)]
+        return []
+
+    def get_inner_spec_types(self, schema: dict, schema_path: list[str | int]) -> list[str]:
+        """
+        Returns inner spec type, ignores outer datastructures like lists or pagination.
+        """
+        # extract the inner type of pagination objects
+        if "properties" in schema:
+            props = schema.get("properties")
+            list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
+            total_count_items = [n for n, p in props.items() if n.startswith("total_") and p.get("type") == "integer"]
+            if len(list_items) == 1 and len(total_count_items) == 1:
+                list_item = list_items[0]
+                return self.get_inner_spec_types(
+                    props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
+                )
         if schema.get("type") == "array" and "items" in schema:
             return self.get_inner_spec_types(schema.get("items"), schema_path + ["items"])
-        return []
+
+        return self.get_spec_types(schema, schema_path)
 
     def as_python_type(self, schema_type: dict[str, Any], schema_path: list[str]) -> PythonType | GithubClass | None:
         schema = None
@@ -1503,7 +1508,7 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, index_filename: str, dry_run: bool) -> bool:
+    def index(self, github_path: str, spec_file: str, index_filename: str, dry_run: bool) -> bool:
         import multiprocessing
 
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
@@ -1517,78 +1522,101 @@ class OpenApi:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
 
-            # construct inheritance list
-            while self.extend_inheritance(classes):
-                pass
+        # construct inheritance list
+        while self.extend_inheritance(classes):
+            pass
 
-            # propagate ids of base classes to derived classes
-            while self.propagate_ids(classes):
-                pass
+        # propagate ids of base classes to derived classes
+        while self.propagate_ids(classes):
+            pass
 
-            # construct class_to_descendants
-            class_to_descendants = {}
-            for name, descendant in classes.items():
-                for cls in descendant.get("inheritance", []):
-                    if cls not in class_to_descendants:
-                        class_to_descendants[cls] = []
-                    class_to_descendants[cls].append(name)
-            class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
+        # construct class_to_descendants
+        class_to_descendants = {}
+        for name, descendant in classes.items():
+            for cls in descendant.get("inheritance", []):
+                if cls not in class_to_descendants:
+                    class_to_descendants[cls] = []
+                class_to_descendants[cls].append(name)
+        class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
 
-            path_to_classes = {}
-            schema_to_classes = {}
-            for name, cls in classes.items():
-                # construct path-to-class index
-                for method in cls.get("methods", {}).values():
-                    path = method.get("call", {}).get("path")
-                    if not path:
-                        continue
-                    verb = method.get("call", {}).get("method", "").lower()
-                    if not verb:
-                        if self.verbose:
-                            print(f"Unknown verb for path {path} of class {name}")
-                        continue
+        path_to_classes = {}
+        schema_to_classes = {}
+        for name, cls in classes.items():
+            # construct path-to-class index
+            for method in cls.get("methods", {}).values():
+                path = method.get("call", {}).get("path")
+                if not path:
+                    continue
+                verb = method.get("call", {}).get("method", "").lower()
+                if not verb:
+                    if self.verbose:
+                        print(f"Unknown verb for path {path} of class {name}")
+                    continue
 
-                    if not path.startswith("/") and self.verbose:
-                        print(f"Unsupported path: {path}")
-                    returns = method.get("returns", [])
-                    if path not in path_to_classes:
-                        path_to_classes[path] = {}
-                    if verb not in path_to_classes[path]:
-                        path_to_classes[path][verb] = set()
-                    path_to_classes[path][verb] = sorted(list(set(path_to_classes[path][verb]).union(set(returns))))
+                if not path.startswith("/") and self.verbose:
+                    print(f"Unsupported path: {path}")
+                returns = method.get("returns", [])
+                if path not in path_to_classes:
+                    path_to_classes[path] = {}
+                if verb not in path_to_classes[path]:
+                    path_to_classes[path][verb] = set()
+                path_to_classes[path][verb] = sorted(list(set(path_to_classes[path][verb]).union(set(returns))))
 
-                # construct schema-to-class index
-                for schema in cls.get("schemas"):
-                    if schema not in schema_to_classes:
-                        schema_to_classes[schema] = []
-                    schema_to_classes[schema].append(name)
+            # construct schema-to-class index
+            for schema in cls.get("schemas"):
+                if schema not in schema_to_classes:
+                    schema_to_classes[schema] = []
+                schema_to_classes[schema].append(name)
 
-            print(f"Indexed {len(classes)} classes")
-            print(f"Indexed {len(path_to_classes)} paths")
-            print(f"Indexed {len(schema_to_classes)} schemas")
+        print(f"Indexed {len(classes)} classes")
+        print(f"Indexed {len(path_to_classes)} paths")
+        print(f"Indexed {len(schema_to_classes)} schemas")
 
-            data = {
-                "sources": github_path,
-                "classes": classes,
-                "indices": {
-                    "class_to_descendants": class_to_descendants,
-                    "path_to_classes": path_to_classes,
-                    "schema_to_classes": schema_to_classes,
-                },
-            }
+        print("Indexing OpenAPI spec")
+        with open(spec_file) as r:
+            spec = json.load(r)
 
-            if dry_run:
-                if os.path.exists(index_filename):
-                    with open(index_filename) as w:
-                        orig_json = w.read()
-                    # compare the serialized json for stability, not the dict
-                    data_json = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
-                    return orig_json != data_json
-            else:
-                with open(index_filename, "w") as w:
-                    json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+        # construct schema to path index
+        schema_to_paths = defaultdict(list)
+        for path, path_spec in spec.get("paths", {}).items():
+            spec_type = (
+                path_spec.get("get", {})
+                .get("responses", {})
+                .get("200", {})
+                .get("content", {})
+                .get("application/json", {})
+                .get("schema", {})
+            )
+            if spec_type:
+                for schema in self.get_spec_types(
+                    spec_type, [f'"{path}"', "get", "responses", '"200"', "content", '"application/json"', "schema"]
+                ):
+                    if schema.startswith("#/components/"):
+                        schema_to_paths[schema[1:]].append(path)
 
-            return True
+        data = {
+            "sources": github_path,
+            "classes": classes,
+            "indices": {
+                "class_to_descendants": class_to_descendants,
+                "path_to_classes": path_to_classes,
+                "schema_to_classes": schema_to_classes,
+                "schema_to_paths": schema_to_paths,
+            },
+        }
+
+        if dry_run:
+            if os.path.exists(index_filename):
+                with open(index_filename) as w:
+                    orig_json = w.read()
+                # compare the serialized json for stability, not the dict
+                data_json = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+                return orig_json != data_json
+        else:
+            with open(index_filename, "w") as w:
+                json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+
+        return True
 
     def suggest(
         self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool
@@ -1977,6 +2005,7 @@ class OpenApi:
 
         index_parser = subparsers.add_parser("index")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
+        index_parser.add_argument("spec", help="Github API OpenAPI spec file")
         index_parser.add_argument("index_filename", help="Path of index file")
 
         suggest_parser = subparsers.add_parser("suggest")
@@ -2024,7 +2053,7 @@ class OpenApi:
         if args.subcommand == "fetch":
             changes = self.fetch(self.args.api, self.args.api_version, self.args.commit, self.args.spec)
         elif args.subcommand == "index":
-            changes = self.index(self.args.github_path, self.args.index_filename, self.args.dry_run)
+            changes = self.index(self.args.github_path, self.args.spec, self.args.index_filename, self.args.dry_run)
         elif self.args.subcommand == "suggest":
             changes = self.suggest(
                 self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
