@@ -311,6 +311,10 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(self.g.per_page, 100)
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
+    def testCustomPerPageWithNoUrlParams(self):
+        self.g.per_page = 100
+        self.assertEqual(len(list(self.repo.get_comments())), 325)
+
     def testCustomPerPageWithGetPage(self):
         self.g.per_page = 100
         self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)
