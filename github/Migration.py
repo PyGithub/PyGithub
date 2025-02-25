@@ -52,6 +52,7 @@ from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 import github.PaginatedList
 import github.Repository
 from github import Consts

@@ -33,6 +33,7 @@ import github.DependabotAlertAdvisory
 import github.DependabotAlertDependency
 import github.DependabotAlertVulnerability
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
