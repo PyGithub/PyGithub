@@ -41,7 +41,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts
-from github.Auth import AppInstallationAuth
+from github.Auth import AppInstallationAuth, Login
 
 from . import Framework
 
@@ -95,7 +95,7 @@ class GithubIntegration(Framework.BasicTestCase):
 
     def testRequiredAppAuth(self):
         # GithubIntegration requires AppAuth authentication.
-        for auth in [self.oauth_token, self.jwt, self.login]:
+        for auth in [self.oauth_token, self.jwt, Login("login", "password")]:
             with self.assertRaises(AssertionError) as r:
                 github.GithubIntegration(auth=auth)
             self.assertEqual(

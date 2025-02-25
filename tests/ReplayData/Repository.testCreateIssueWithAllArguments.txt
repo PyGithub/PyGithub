@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/jacquev6
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4991'), ('content-length', '801'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"0c1724d7560338bc2f2579af6e8ec545"'), ('date', 'Fri, 01 Jun 2012 20:09:23 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/milestones/2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4990'), ('content-length', '899'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"5fc4dbe5fd444fd2ea9f90c698b432cf"'), ('date', 'Fri, 01 Jun 2012 20:09:24 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/labels/Question
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4989'), ('content-length', '107'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"931e58d337b2290717303141eda89cd7"'), ('date', 'Fri, 01 Jun 2012 20:09:25 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ POST
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"body": "Body created by PyGithub", "assignee": "jacquev6", "assignees": ["jacquev6", "stuglaser"], "labels": ["Question"], "milestone": 2, "title": "Issue also created by PyGithub"}
 201
 [('status', '201 Created'), ('x-ratelimit-remaining', '4943'), ('content-length', '2069'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d131a11b793937127bf7d0ce56e2805e"'), ('date', 'Sun, 27 May 2012 05:40:15 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/repos/PyGithub/PyGithub/issues/30')]

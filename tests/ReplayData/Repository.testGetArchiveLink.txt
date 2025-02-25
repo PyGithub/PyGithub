@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/tarball
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 302
 [('status', '302 Found'), ('content-length', '0'), ('x-content-type-options', 'nosniff'), ('expires', 'Sat, 08 Sep 2012 11:03:00 GMT'), ('x-ratelimit-remaining', '4990'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('location', 'https://nodeload.github.com/PyGithub/PyGithub/tarball/master'), ('cache-control', 'public, must-revalidate, max-age=0'), ('date', 'Sat, 08 Sep 2012 11:03:00 GMT'), ('content-type', 'text/html;charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/zipball
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 302
 [('status', '302 Found'), ('x-ratelimit-remaining', '4989'), ('x-content-type-options', 'nosniff'), ('expires', 'Sat, 08 Sep 2012 11:03:01 GMT'), ('content-length', '0'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('location', 'https://nodeload.github.com/PyGithub/PyGithub/zipball/master'), ('cache-control', 'public, must-revalidate, max-age=0'), ('date', 'Sat, 08 Sep 2012 11:03:01 GMT'), ('content-type', 'text/html;charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/zipball/master
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 302
 [('status', '302 Found'), ('content-length', '0'), ('x-content-type-options', 'nosniff'), ('expires', 'Sat, 08 Sep 2012 11:03:01 GMT'), ('x-ratelimit-remaining', '4988'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('location', 'https://nodeload.github.com/PyGithub/PyGithub/zipball/master'), ('cache-control', 'public, must-revalidate, max-age=0'), ('date', 'Sat, 08 Sep 2012 11:03:01 GMT'), ('content-type', 'text/html;charset=utf-8')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/tarball/develop
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 302
 [('status', '302 Found'), ('x-ratelimit-remaining', '4987'), ('x-content-type-options', 'nosniff'), ('expires', 'Sat, 08 Sep 2012 11:03:01 GMT'), ('content-length', '0'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('location', 'https://nodeload.github.com/PyGithub/PyGithub/tarball/develop'), ('cache-control', 'public, must-revalidate, max-age=0'), ('date', 'Sat, 08 Sep 2012 11:03:01 GMT'), ('content-type', 'text/html;charset=utf-8')]

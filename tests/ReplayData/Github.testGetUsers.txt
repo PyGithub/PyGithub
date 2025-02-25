@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4997'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('cache-control', 'max-age=0, private, must-revalidate'), ('vary', 'Accept-Encoding'), ('content-length', '98606'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/users?since=135>; rel="next", <https://api.github.com/users{?since}>; rel="first"'), ('etag', '"324912429a6c8d7f41cb480e07da772a"'), ('access-control-allow-credentials', 'true'), ('date', 'Tue, 18 Jun 2013 15:43:07 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /users?since=135
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4996'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('cache-control', 'max-age=0, private, must-revalidate'), ('vary', 'Accept-Encoding'), ('content-length', '99066'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/users?since=237>; rel="next", <https://api.github.com/users{?since}>; rel="first"'), ('etag', '"041061592b07c3c1b5b3063baec8316c"'), ('access-control-allow-credentials', 'true'), ('date', 'Tue, 18 Jun 2013 15:43:09 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8')]

@@ -470,8 +470,7 @@ class OrganizationInvitation(Framework.TestCase):
     def setUp(self):
         super().setUp()
         # TODO: create an instance of type OrganizationInvitation and assign to self.attr, then run:
-        #   pytest tests/OrganizationInvitation.py -k testAttributes --record --auth_with_token
-        #   sed -i -e "s/token private_token_removed/Basic login_and_password_removed/" tests/ReplayData/OrganizationInvitation.setUp.txt
+        #   pytest tests/OrganizationInvitation.py -k testAttributes --record
         #   ./scripts/update-assertions.sh tests/OrganizationInvitation.py testAttributes
         self.org = self.g.get_organization("TestOrganization2072")
         self.invitations = list(self.org.invitations())

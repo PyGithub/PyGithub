@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /orgs/TestOrganization2072/invitations
-{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Tue, 12 Oct 2021 05:32:32 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '2'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"5c630c6c596d65b5a9953f65c07259ecf58c131e8ee0a60fee72772cfee9ca50"'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook'), ('X-Accepted-OAuth-Scopes', 'admin:org, repo'), ('github-authentication-token-expiration', '2021-10-18 05:11:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; param=dazzler-preview; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4976'), ('X-RateLimit-Reset', '1634019426'), ('X-RateLimit-Used', '24'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'ADB4:057F:44AD24:4B0F03:61651DF0')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /orgs/TestOrganization2072/invitations
-{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {"email": "foo@bar.org"}
 201
 [('Server', 'GitHub.com'), ('Date', 'Tue, 12 Oct 2021 05:32:33 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '1203'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"fd548c290791934f62fbc9f7bb04ed6a0af779377f3aa5122e0460ef20d75725"'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook'), ('X-Accepted-OAuth-Scopes', 'admin:org'), ('github-authentication-token-expiration', '2021-10-18 05:11:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; param=dazzler-preview; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4975'), ('X-RateLimit-Reset', '1634019426'), ('X-RateLimit-Used', '25'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'ADB6:057A:39FF:65433:61651DF0')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /orgs/TestOrganization2072/invitations
-{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Tue, 12 Oct 2021 05:32:33 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"da2a9a62ed895da63af620e18d93b07f09c1511c7f08df957a1bbe33ba67ed7c"'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook'), ('X-Accepted-OAuth-Scopes', 'admin:org, repo'), ('github-authentication-token-expiration', '2021-10-18 05:11:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; param=dazzler-preview; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4974'), ('X-RateLimit-Reset', '1634019426'), ('X-RateLimit-Used', '26'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'ADB8:4907:F9EFD9:10E5C87:61651DF1')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /orgs/TestOrganization2072/invitations
-{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.dazzler-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Tue, 12 Oct 2021 05:32:34 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"da2a9a62ed895da63af620e18d93b07f09c1511c7f08df957a1bbe33ba67ed7c"'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook'), ('X-Accepted-OAuth-Scopes', 'admin:org, repo'), ('github-authentication-token-expiration', '2021-10-18 05:11:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; param=dazzler-preview; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4973'), ('X-RateLimit-Reset', '1634019426'), ('X-RateLimit-Used', '27'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'ADBA:4906:3B6198:4F41C8:61651DF2')]
@@ -47,7 +47,7 @@ DELETE
 api.github.com
 None
 /orgs/TestOrganization2072/invitations/28984230
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('Server', 'GitHub.com'), ('Date', 'Tue, 12 Oct 2021 05:32:34 GMT'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook'), ('X-Accepted-OAuth-Scopes', 'admin:org'), ('github-authentication-token-expiration', '2021-10-18 05:11:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4972'), ('X-RateLimit-Reset', '1634019426'), ('X-RateLimit-Used', '28'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'ADBC:057F:44AD76:4B0F5B:61651DF2')]
@@ -58,7 +58,7 @@ DELETE
 api.github.com
 None
 /organizations/92288976/invitations/28984230
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('Server', 'GitHub.com'), ('Date', 'Tue, 12 Oct 2021 05:32:34 GMT'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook'), ('X-Accepted-OAuth-Scopes', 'admin:org'), ('github-authentication-token-expiration', '2021-10-18 05:11:21 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4972'), ('X-RateLimit-Reset', '1634019426'), ('X-RateLimit-Used', '28'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'ADBC:057F:44AD76:4B0F5B:61651DF2')]

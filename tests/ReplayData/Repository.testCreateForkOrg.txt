@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /orgs/prtg-dev
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4960'), ('content-length', '928'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('date', 'Sat, 26 May 2012 20:23:33 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/PyGithub/PyGithub/forks
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {"organization": "prtg-dev"}
 202
 [('Date', 'Wed, 27 Nov 2019 23:00:13 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '16034'), ('Server', 'GitHub.com'), ('Status', '202 Accepted'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4932'), ('X-RateLimit-Reset', '1574899126'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'E2F5:3ECF:1DE67F:229B58:5DDEFFFC')]

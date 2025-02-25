@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4987'), ('x-ratelimit-limit', '5000'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '806'), ('server', 'nginx/1.0.13'), ('last-modified', 'Tue, 14 Aug 2012 18:41:03 GMT'), ('connection', 'keep-alive'), ('etag', '"a16173bc016f1c15e3e635051c76c388"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Thu, 23 Aug 2012 07:30:50 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/TestPyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4986'), ('x-ratelimit-limit', '5000'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1176'), ('server', 'nginx/1.0.13'), ('last-modified', 'Thu, 23 Aug 2012 07:30:19 GMT'), ('connection', 'keep-alive'), ('etag', '"b997e723dda2e6baea587ef9b5b94e73"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Thu, 23 Aug 2012 07:30:51 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ DELETE
 api.github.com
 None
 /repos/jacquev6/TestPyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4985'), ('x-content-type-options', 'nosniff'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Thu, 23 Aug 2012 07:30:52 GMT')]

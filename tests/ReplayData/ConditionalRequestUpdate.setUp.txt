@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/akfish/PyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4988'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '13698'), ('server', 'GitHub.com'), ('last-modified', 'Thu, 22 Aug 2013 02:09:11 GMT'), ('x-ratelimit-limit', '5000'), ('etag', '"8600bedcb7fed1d8065e1693e05529ce"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Thu, 22 Aug 2013 02:13:08 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1377140429')]

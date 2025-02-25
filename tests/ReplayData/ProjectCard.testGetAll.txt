@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/bbi-yggy/PyGithub/projects
-{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Mon, 13 Aug 2018 05:39:12 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4969'), ('X-RateLimit-Reset', '1534141409'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"b0ea2d53fb5efdd6747efd4f3624c4b7"'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.076096'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'DFA6:5F7A:7E00E:F625D:5B711980')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /projects/1682941/columns
-{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Mon, 13 Aug 2018 05:39:13 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4968'), ('X-RateLimit-Reset', '1534141409'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"8dd5e78506cda4651bd07cd8fa379ee4"'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.070470'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'DFA7:5F78:53816:C752C:5B711981')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /projects/columns/3138830/cards?archived_state=all
-{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Mon, 13 Aug 2018 05:39:13 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4967'), ('X-RateLimit-Reset', '1534141409'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"faf8aa258c610a3c75793f891cae5663"'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.067177'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'DFA8:5F78:53826:C7559:5B711981')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /projects/columns/3138831/cards?archived_state=all
-{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Mon, 13 Aug 2018 05:39:14 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4966'), ('X-RateLimit-Reset', '1534141409'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"1f2154027a27c2b24b5ebc62a686678a"'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.122778'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'DFA9:5F71:1803F:413A2:5B711981')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /projects/columns/3138832/cards?archived_state=all
-{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Mon, 13 Aug 2018 05:39:14 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4965'), ('X-RateLimit-Reset', '1534141409'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"d07e05df9d6ccede8df4f7bf63454aab"'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', 'public_repo, repo'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.071735'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'DFAA:5F7A:7E094:F6359:5B711982')]
