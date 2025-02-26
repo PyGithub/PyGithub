@@ -140,9 +140,19 @@ class Workflow(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _create_dispatch(
-        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
-    ) -> None:
+    # v3: default throw to True
+    def create_dispatch(
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+    ) -> bool:
+        """
+        Call Create Dispatch, raises or return False without details on error, depending on the "throw" parameter.
+
+        :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
+
+        """
         assert (
             isinstance(ref, github.Branch.Branch)
             or isinstance(ref, github.Tag.Tag)
@@ -158,22 +168,8 @@ class Workflow(CompletableGithubObject):
             ref = ref.name
         if inputs is NotSet:
             inputs = {}
-        self._requester.requestJsonAndCheck("POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs})
-
-    def create_dispatch(
-        self,
-        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
-        inputs: Opt[dict] = NotSet,
-        throw: bool = False,
-    ) -> bool:
-        """
-        Call Create Dispatch, raises or return False without details on error, depending on the "throw" parameter.
-
-        :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
-
-        """
         try:
-            self._create_dispatch(ref, inputs)
+            self._requester.requestJsonAndCheck("POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs})
         except GithubException.GithubException:
             if throw:
                 raise
