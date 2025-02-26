@@ -33,6 +33,9 @@
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Maja Massarini <2678400+majamassarini@users.noreply.github.com>#
+# Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -51,7 +54,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
+import base64
 import contextlib
 import io
 import json
@@ -59,13 +64,11 @@ import os
 import traceback
 import unittest
 import warnings
-from typing import Optional
+from io import BytesIO
 
-import httpretty  # type: ignore
-import urllib3
-from packaging.version import Version
+import responses
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url  # type: ignore
+from urllib3.util import Url
 
 import github
 from github import Consts
@@ -89,22 +92,6 @@ eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 """
 
 
-# patch httpretty against urllib3>=2.3.0 https://github.com/PyGithub/PyGithub/issues/3101
-if Version(urllib3.__version__) >= Version("2.3.0"):
-    getattr = httpretty.core.fakesock.socket.__getattr__
-
-    def patched_getattr(self, name):
-        def shutdown(how: int):
-            pass
-
-        if name == "shutdown" and not httpretty.core.httpretty.allow_net_connect and not self.truesock:
-            return shutdown
-
-        return getattr(self, name)
-
-    httpretty.core.fakesock.socket.__getattr__ = patched_getattr
-
-
 def readLine(file_):
     line = file_.readline()
     if isinstance(line, bytes):
@@ -123,6 +110,12 @@ class FakeHttpResponse:
 
     def read(self):
         return self.__output
+
+    def iter_content(self, chunk_size=1):
+        return iter([self.__output[i : i + chunk_size] for i in range(0, len(self.__output), chunk_size)])
+
+    def raise_for_status(self):
+        pass
 
 
 def fixAuthorizationHeader(headers):
@@ -156,9 +149,15 @@ class RecordingConnection:
         self.__host = host
         self.__port = port
         self.__cnx = self._realConnection(host, port, *args, **kwds)
+        self.__stream = False
 
-    def request(self, verb, url, input, headers):
+    @property
+    def host(self):
+        return self.__host
+
+    def request(self, verb, url, input, headers, stream=False):
         self.__cnx.request(verb, url, input, headers)
+        self.__stream = stream
         # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
         # however, this is the real dictionary that *will be sent* by "requests",
         # since we are writing here *before* doing the actual request.
@@ -181,16 +180,23 @@ class RecordingConnection:
 
         status = res.status
         headers = res.getheaders()
-        output = res.read()
+        output = res if self.__stream else res.read()
 
         self.__writeLine(status)
         self.__writeLine(list(headers))
-        self.__writeLine(output)
+        if self.__stream:
+            chunks = [chunk for chunk in output.iter_content(chunk_size=64)]
+            output = b"".join(chunks)
+            for chunk in chunks:
+                self.__writeLine(base64.b64encode(chunk).decode("ascii"))
+            self.__writeLine("")
+        else:
+            self.__writeLine(output)
+        self.__writeLine("")
 
         return FakeHttpResponse(status, headers, output)
 
     def close(self):
-        self.__writeLine("")
         return self.__cnx.close()
 
     def __writeLine(self, line):
@@ -223,16 +229,35 @@ class ReplayingConnection:
         self.__protocol = protocol
         self.__host = host
         self.__port = port
+        self.__stream = False
         self.response_headers = CaseInsensitiveDict()
 
         self.__cnx = self._realConnection(host, port, *args, **kwds)
 
-    def request(self, verb, url, input, headers):
-        full_url = Url(scheme=self.__protocol, host=self.__host, port=self.__port, path=url)
+    @property
+    def host(self):
+        return self.__host
 
-        httpretty.register_uri(verb, full_url.url, body=self.__request_callback)
+    def request(
+        self,
+        verb,
+        url,
+        input,
+        headers,
+        stream: bool = False,
+    ):
+        port = self.__port if self.__port else 443 if self.__protocol == "https" else 80
+        full_url = Url(scheme=self.__protocol, host=self.__host, port=port, path=url)
 
-        self.__cnx.request(verb, url, input, headers)
+        response_headers = self.response_headers.copy()
+        responses.add_callback(
+            method=verb,
+            url=full_url.url,
+            callback=lambda request: self.__request_callback(verb, full_url.url, response_headers),
+        )
+
+        self.__stream = stream
+        self.__cnx.request(verb, url, input, headers, stream=stream)
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
@@ -267,7 +292,16 @@ class ReplayingConnection:
 
         status = int(readLine(self.__file))
         self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
-        output = bytearray(readLine(self.__file), "utf-8")
+        if self.__stream:
+            output = BytesIO()
+            while True:
+                line = readLine(self.__file)
+                if not line:
+                    break
+                output.write(base64.b64decode(line))
+            output = output.getvalue()
+        else:
+            output = bytearray(readLine(self.__file), "utf-8")
         readLine(self.__file)
 
         # make a copy of the headers and remove the ones that interfere with the response handling
@@ -277,10 +311,10 @@ class ReplayingConnection:
         adding_headers.pop("content-encoding", None)
 
         response_headers.update(adding_headers)
+
         return [status, response_headers, output]
 
     def getresponse(self):
-        # call original connection, this will go all the way down to the python socket and will be intercepted by httpretty
         response = self.__cnx.getresponse()
 
         # restore original headers to the response
@@ -308,13 +342,12 @@ class ReplayingHttpsConnection(ReplayingConnection):
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
-    tokenAuthMode = False
-    jwtAuthMode = False
+    authMode = "token"
     per_page = Consts.DEFAULT_PER_PAGE
     retry = None
     pool_size = None
-    seconds_between_requests: Optional[float] = None
-    seconds_between_writes: Optional[float] = None
+    seconds_between_requests: float | None = None
+    seconds_between_writes: float | None = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
@@ -331,11 +364,6 @@ class BasicTestCase(unittest.TestCase):
             )
             import GithubCredentials  # type: ignore
 
-            self.login = (
-                github.Auth.Login(GithubCredentials.login, GithubCredentials.password)
-                if GithubCredentials.login and GithubCredentials.password
-                else None
-            )
             self.oauth_token = (
                 github.Auth.Token(GithubCredentials.oauth_token) if GithubCredentials.oauth_token else None
             )
@@ -351,12 +379,11 @@ class BasicTestCase(unittest.TestCase):
                 ReplayingHttpConnection,
                 ReplayingHttpsConnection,
             )
-            self.login = github.Auth.Login("login", "password")
             self.oauth_token = github.Auth.Token("oauth_token")
             self.jwt = github.Auth.AppAuthToken("jwt")
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
-            httpretty.enable(allow_net_connect=False)
+            responses.start()
 
     @property
     def thisTestFailed(self) -> bool:
@@ -372,9 +399,8 @@ class BasicTestCase(unittest.TestCase):
 
     def tearDown(self):
         super().tearDown()
-        httpretty.disable()
-        httpretty.reset()
-
+        responses.stop()
+        responses.reset()
         self.__closeReplayFileIfNeeded(silent=self.thisTestFailed)
         github.Requester.Requester.resetConnectionClasses()
 
@@ -445,45 +471,29 @@ class TestCase(BasicTestCase):
         self.g = self.get_github(self.retry, self.pool_size)
 
     def get_github(self, retry, pool_size):
-        if self.tokenAuthMode:
-            return github.Github(
-                auth=self.oauth_token,
-                per_page=self.per_page,
-                retry=retry,
-                pool_size=pool_size,
-                seconds_between_requests=self.seconds_between_requests,
-                seconds_between_writes=self.seconds_between_writes,
-            )
-        elif self.jwtAuthMode:
-            return github.Github(
-                auth=self.jwt,
-                per_page=self.per_page,
-                retry=retry,
-                pool_size=pool_size,
-                seconds_between_requests=self.seconds_between_requests,
-                seconds_between_writes=self.seconds_between_writes,
-            )
+        if self.authMode == "token":
+            auth = self.oauth_token
+        elif self.authMode == "jwt":
+            auth = self.jwt
         else:
-            return github.Github(
-                auth=self.login,
-                per_page=self.per_page,
-                retry=retry,
-                pool_size=pool_size,
-                seconds_between_requests=self.seconds_between_requests,
-                seconds_between_writes=self.seconds_between_writes,
-            )
+            raise ValueError(f"Unsupported test auth mode: {self.authMode}")
+
+        return github.Github(
+            auth=auth,
+            per_page=self.per_page,
+            retry=retry,
+            pool_size=pool_size,
+            seconds_between_requests=self.seconds_between_requests,
+            seconds_between_writes=self.seconds_between_writes,
+        )
 
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
 
 
-def activateTokenAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
-    BasicTestCase.tokenAuthMode = True
-
-
 def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
-    BasicTestCase.jwtAuthMode = True
+    BasicTestCase.authMode = "jwt"
 
 
 def enableRetry(retry):

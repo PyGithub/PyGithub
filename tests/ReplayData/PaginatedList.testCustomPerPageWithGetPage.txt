@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues?per_page=100&page=3
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4990'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '326617'), ('server', 'GitHub.com'), ('last-modified', 'Mon, 11 Mar 2013 11:03:21 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/345337/issues?page=4&per_page=100>; rel="next", <https://api.github.com/repositories/345337/issues?page=5&per_page=100>; rel="last", <https://api.github.com/repositories/345337/issues?page=1&per_page=100>; rel="first", <https://api.github.com/repositories/345337/issues?page=2&per_page=100>; rel="prev"'), ('etag', '"e04ce5dc75d825e86180fb3da5e1f5b1"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Mar 2013 11:04:36 GMT'), ('content-type', 'application/json; charset=utf-8')]

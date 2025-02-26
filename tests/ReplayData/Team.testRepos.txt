@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/BeaverSoftware/FatherBeaver
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.nebula-preview+json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.nebula-preview+json'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4963'), ('content-length', '1431'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"c9b98209a51840e6710aa96cb2e4eb56"'), ('date', 'Sat, 26 May 2012 21:12:35 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4962'), ('content-length', '2'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d751713988987e9331980363e24189ce"'), ('date', 'Sat, 26 May 2012 21:12:35 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4961'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sat, 26 May 2012 21:12:36 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
-{'Accept': 'application/vnd.github.v3.repository+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.v3.repository+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('Date', 'Thu, 12 Mar 2020 09:53:56 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '404 Not Found'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4957'), ('X-RateLimit-Reset', '1584009061'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook, admin:repo_hook, gist, notifications, repo'), ('X-Accepted-OAuth-Scopes', 'admin:org, read:org, repo, user, write:org'), ('X-GitHub-Media-Type', 'github.v3; param=repository; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '7531:2AC71:113BA58:14377AF:5E6A06B4')]
@@ -47,7 +47,7 @@ PUT
 api.github.com
 None
 /organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4960'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sat, 26 May 2012 21:12:36 GMT')]
@@ -58,7 +58,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4959'), ('content-length', '1107'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"f29ca00cf809ab0ca2bc42a50e067637"'), ('date', 'Sat, 26 May 2012 21:12:37 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -69,7 +69,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4958'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sat, 26 May 2012 21:12:38 GMT')]
@@ -80,7 +80,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
-{'Accept': 'application/vnd.github.v3.repository+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.v3.repository+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Date', 'Thu, 12 Mar 2020 09:53:58 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4953'), ('X-RateLimit-Reset', '1584009062'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"a31a36f26f6f48310a2ce1ad5ec9c01e"'), ('X-OAuth-Scopes', 'admin:org, admin:org_hook, admin:repo_hook, gist, notifications, repo'), ('X-Accepted-OAuth-Scopes', 'admin:org, read:org, repo, user, write:org'), ('X-GitHub-Media-Type', 'github.v3; param=repository; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '7535:2AC72:191F312:1D8B844:5E6A06B5')]
@@ -91,7 +91,7 @@ DELETE
 api.github.com
 None
 /organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4957'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sat, 26 May 2012 21:12:38 GMT')]
@@ -102,7 +102,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4956'), ('content-length', '2'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d751713988987e9331980363e24189ce"'), ('date', 'Sat, 26 May 2012 21:12:39 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -113,7 +113,7 @@ GET
 api.github.com
 None
 /organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4955'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sat, 26 May 2012 21:12:39 GMT'), ('content-type', 'application/json; charset=utf-8')]

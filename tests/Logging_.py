@@ -37,6 +37,7 @@
 ################################################################################
 
 import github
+from github.Auth import Login
 
 from . import Framework
 from .Authentication import CustomAuth
@@ -96,7 +97,7 @@ class Logging(Framework.BasicTestCase):
         self.assertEqual(self.logger.output, output)
 
     def testLoggingWithBasicAuthentication(self):
-        self.assertEqual(github.Github(auth=self.login).get_user().name, "Vincent Jacques")
+        self.assertEqual(github.Github(auth=Login("login", "password")).get_user().name, "Vincent Jacques")
         url = "https://api.github.com/user"
         requestHeaders = {
             "Authorization": "Basic (login and password removed)",

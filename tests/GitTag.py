@@ -14,6 +14,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -64,7 +65,4 @@ class GitTag(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c",
         )
         self.assertEqual(repr(self.tag), 'GitTag(tag="v0.6", sha="f5f37322407b02a80de4526ad88d5f188977bc3c")')
-        self.assertEqual(
-            self.tag.verification,
-            {"verified": False, "reason": "unsigned", "signature": None, "payload": None, "verified_at": None},
-        )
+        self.assertEqual(self.tag.verification.reason, "unsigned")

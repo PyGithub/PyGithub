@@ -17,6 +17,8 @@
 # Copyright 2023 Thomas Burghout <thomas.burghout@nedap.com>                   #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Nick McClorey <32378821+nickrmcclorey@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -148,3 +150,19 @@ class Workflow(Framework.TestCase):
             workflow.create_dispatch("main", throw=True)
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(raisedexp.exception.data["message"], "Required input 'mandatory-parameter' not provided")
+
+    def testDisable(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.disable())
+
+    def testDisabledWhenAlreadyDisabled(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertFalse(workflow.disable())
+
+    def testEnable(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.enable())
+
+    def testEnableWhenAlreadyEnabled(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.enable())

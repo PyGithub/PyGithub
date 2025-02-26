@@ -32,9 +32,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
-
-from typing import Dict, Optional, Union
+from __future__ import annotations
 
 import deprecated
 
@@ -45,10 +43,10 @@ from github.Auth import AppAuth, AppInstallationAuth
 class AppAuthentication(AppInstallationAuth):
     def __init__(
         self,
-        app_id: Union[int, str],
+        app_id: int | str,
         private_key: str,
         installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
+        token_permissions: dict[str, str] | None = None,
     ):
         super().__init__(
             app_auth=AppAuth(app_id, private_key),

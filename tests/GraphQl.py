@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -19,8 +20,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 import github
 import github.GithubException
@@ -38,7 +40,7 @@ class GraphQl(Framework.TestCase):
     def setUp(self):
         super().setUp()
 
-    def expected(self, base_url: str = "https://github.com") -> Dict[Any, Any]:
+    def expected(self, base_url: str = "https://github.com") -> dict[Any, Any]:
         return {
             "actor": {
                 "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
@@ -109,9 +111,9 @@ class GraphQl(Framework.TestCase):
         # wrong type should throw an exception
         with self.assertRaises(github.GithubException) as e:
             requester.graphql_node("D_kwDOADYVqs4ATJZD", "login", "User")
+        self.assertEqual(e.exception.message, "Retrieved User object is of different type: Discussion")
         self.assertEqual(e.exception.status, 400)
         self.assertEqual(e.exception.data, {"data": {"node": {"__typename": "Discussion"}}})
-        self.assertEqual(e.exception.message, "Retrieved User object is of different type: Discussion")
 
     def testNodeClass(self):
         requester = self.g._Github__requester
@@ -147,9 +149,9 @@ class GraphQl(Framework.TestCase):
             requester.graphql_node_class(
                 "D_kwDOADYVqs4ATJZD", "login", github.RepositoryDiscussion.RepositoryDiscussion, "User"
             )
+        self.assertEqual(e.exception.message, "Retrieved User object is of different type: Discussion")
         self.assertEqual(e.exception.status, 400)
         self.assertEqual(e.exception.data, {"data": {"node": {"__typename": "Discussion"}}})
-        self.assertEqual(e.exception.message, "Retrieved User object is of different type: Discussion")
 
     def testQuery(self):
         requester = self.g._Github__requester

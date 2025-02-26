@@ -51,6 +51,7 @@
 # Copyright 2024 Eduardo Ramírez <edu.rh90@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -125,6 +126,17 @@ if TYPE_CHECKING:
 
 
 class EmailData(NamedTuple):
+    """
+    This class represents EmailData.
+
+    The reference can be found here
+    http://docs.github.com/en/rest/reference/users#emails
+
+    The OpenAPI schema can be found at
+    - /components/schemas/email
+
+    """
+
     email: str
     primary: bool
     verified: bool

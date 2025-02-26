@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/twitter/bootstrap/contents/js
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4976'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '10514'), ('server', 'GitHub.com'), ('last-modified', 'Sat, 16 Feb 2013 17:39:19 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"1bae4e11b2e038d9086f79ccf6828879"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Sat, 16 Feb 2013 17:59:08 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/twitter/bootstrap/contents/js/bootstrap-affix.js
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4975'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '5532'), ('server', 'GitHub.com'), ('last-modified', 'Fri, 08 Feb 2013 06:13:13 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"23daa8e0f42915d5ce84a6a117122afa"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Sat, 16 Feb 2013 17:59:15 GMT'), ('content-type', 'application/json; charset=utf-8')]

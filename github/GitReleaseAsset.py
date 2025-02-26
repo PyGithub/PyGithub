@@ -20,6 +20,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,9 +44,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Iterator
 
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -149,6 +152,17 @@ class GitReleaseAsset(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
+
+    def download_asset(
+        self, path: None | str = None, chunk_size: int | None = 1
+    ) -> tuple[int, dict[str, Any], Iterator] | None:
+        """
+        Download asset to the path or return an iterator for the stream.
+        """
+        if path is None:
+            return self._requester.getStream(self.url, chunk_size=chunk_size)
+        self._requester.getFile(self.url, path=path, chunk_size=chunk_size)
+        return None
 
     def update_asset(self, name: str, label: str = "") -> GitReleaseAsset:
         """
