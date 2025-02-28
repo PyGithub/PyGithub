@@ -448,7 +448,9 @@ class PullRequest(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_comment(self, body: str, commit: github.Commit.Commit, path: str, position: int) -> PullRequestComment:
+    def create_comment(
+        self, body: str, commit: github.Commit.Commit | str, path: str, position: int
+    ) -> PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -457,7 +459,7 @@ class PullRequest(CompletableGithubObject):
     def create_review_comment(
         self,
         body: str,
-        commit: github.Commit.Commit,
+        commit: github.Commit.Commit | str,
         path: str,
         # line replaces deprecated position argument, so we put it between path and side
         line: Opt[int] = NotSet,
@@ -472,7 +474,7 @@ class PullRequest(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(body, str), body
-        assert isinstance(commit, github.Commit.Commit), commit
+        assert isinstance(commit, (github.Commit.Commit, str)), commit
         assert isinstance(path, str), path
         assert is_optional(line, int), line
         assert is_undefined(side) or side in ["LEFT", "RIGHT"], side
@@ -494,7 +496,7 @@ class PullRequest(CompletableGithubObject):
         post_parameters = NotSet.remove_unset_items(
             {
                 "body": body,
-                "commit_id": commit._identity,
+                "commit_id": commit._identity if isinstance(commit, github.Commit.Commit) else commit,
                 "path": path,
                 "line": line,
                 "side": side,
