@@ -91,6 +91,7 @@ import time
 import urllib
 import urllib.parse
 from collections import deque
+from collections.abc import ItemsView, Iterator
 from datetime import datetime, timezone
 from io import IOBase
 from typing import (
@@ -100,8 +101,6 @@ from typing import (
     Callable,
     Deque,
     Generic,
-    ItemsView,
-    Iterator,
     TypeVar,
 )
 
