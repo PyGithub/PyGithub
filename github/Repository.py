@@ -167,8 +167,6 @@ from collections.abc import Iterable
 from datetime import date, datetime, timezone
 from typing import TYPE_CHECKING, Any
 
-from deprecated import deprecated
-
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability
 import github.Artifact
@@ -249,6 +247,7 @@ from github.GithubObject import (
     NotSet,
     Opt,
     _NotSetType,
+    deprecated,
     is_defined,
     is_optional,
     is_optional_list,
@@ -2852,7 +2851,7 @@ class Repository(CompletableGithubObject):
         }
 
     @deprecated(
-        reason="""
+        """
         Repository.get_dir_contents() is deprecated, use
         Repository.get_contents() instead.
         """

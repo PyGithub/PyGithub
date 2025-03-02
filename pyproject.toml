@@ -33,7 +33,7 @@ dependencies = [
   "pyjwt[crypto]>=2.4.0",
   "typing-extensions>=4.0.0",
   "urllib3>=1.26.0",
-  "Deprecated",
+  "Deprecated>=1.2.15; python_version < '3.13'",
 ]
 
 [project.urls]

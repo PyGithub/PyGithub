@@ -67,8 +67,6 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from deprecated import deprecated
-
 import github.NamedUser
 import github.Organization
 import github.PaginatedList
@@ -77,7 +75,7 @@ import github.Repository
 import github.TeamDiscussion
 from github import Consts
 from github.GithubException import UnknownObjectException
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, deprecated
 
 if TYPE_CHECKING:
     from github.Membership import Membership
@@ -314,7 +312,7 @@ class Team(CompletableGithubObject):
             return None
 
     @deprecated(
-        reason="""
+        """
         Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
         """
     )

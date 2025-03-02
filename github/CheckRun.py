@@ -34,8 +34,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import deprecated
-
 import github.CheckRunAnnotation
 import github.CheckRunOutput
 import github.CheckSuite
@@ -48,6 +46,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
+    deprecated,
     is_defined,
     is_optional,
     is_optional_list,
@@ -109,7 +108,7 @@ class CheckRun(CompletableGithubObject):
         return self._check_suite.value
 
     @property
-    @deprecated.deprecated("Use property check_suite.id instead")
+    @deprecated("Use property check_suite.id instead")
     def check_suite_id(self) -> int:
         self._completeIfNotSet(self._check_suite_id)
         return self._check_suite_id.value

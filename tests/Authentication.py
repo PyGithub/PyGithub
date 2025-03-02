@@ -91,19 +91,18 @@ class Authentication(Framework.BasicTestCase):
         )
 
     def testAppAuthentication(self):
-        with self.assertWarns(DeprecationWarning) as warning:
+        with self.assertWarnsRegex(DeprecationWarning, r"Use github.Auth.AppInstallationAuth instead"):
             app_auth = github.AppAuthentication(
                 app_id=APP_ID,
                 private_key=PRIVATE_KEY,
                 installation_id=29782936,
             )
+        with self.assertWarns(
+            DeprecationWarning,
+            msg="Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
+        ):
             g = github.Github(app_auth=app_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
-        self.assertWarnings(
-            warning,
-            "Call to deprecated class AppAuthentication. (Use github.Auth.AppInstallationAuth instead)",
-            "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
-        )
 
     def testLoginAuthentication(self):
         # test data copied from testBasicAuthentication to test parity

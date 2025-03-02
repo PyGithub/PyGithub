@@ -34,12 +34,11 @@
 ################################################################################
 from __future__ import annotations
 
-import deprecated
-
 from github.Auth import AppAuth, AppInstallationAuth
+from github.GithubObject import deprecated
 
 
-@deprecated.deprecated("Use github.Auth.AppInstallationAuth instead")
+@deprecated("Use github.Auth.AppInstallationAuth instead")
 class AppAuthentication(AppInstallationAuth):
     def __init__(
         self,

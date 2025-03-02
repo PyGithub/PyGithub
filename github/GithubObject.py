@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import email.utils
 import re
+import sys
 import typing
 from abc import ABC
 from datetime import datetime, timezone
@@ -72,6 +73,26 @@ T = typing.TypeVar("T")
 K = typing.TypeVar("K")
 T_co = typing.TypeVar("T_co", covariant=True)
 T_gh = typing.TypeVar("T_gh", bound="GithubObject")
+
+
+if sys.version_info < (3, 13):
+    # For older Python we provide a decorator with the same interface as the new
+    # stdlib one. Note that there are some differences in the warning message
+    # though, for example when decorating classes.
+    from deprecated import deprecated as _thirdparty_deprecated
+
+    _F = typing.TypeVar("_F", bound=Callable[..., Any])
+
+    def deprecated(
+        msg: str, *, category: type[Warning] | None = DeprecationWarning, stacklevel: int = 1
+    ) -> Callable[[_F], _F]:
+        if category is None:
+            return lambda thing: thing
+        # XXX: ignore type error until https://github.com/python/typeshed/pull/13573 is fixed
+        return _thirdparty_deprecated(reason=msg, category=category, extra_stacklevel=stacklevel - 1)  # type: ignore
+
+else:
+    from warnings import deprecated as deprecated
 
 
 class Attribute(Protocol[T_co]):
