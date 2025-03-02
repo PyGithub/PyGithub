@@ -36,8 +36,8 @@ import urllib.parse
 import warnings
 from typing import Any
 
-import deprecated
 import urllib3
+from typing_extensions import deprecated
 from urllib3 import Retry
 
 import github
@@ -241,7 +241,7 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated.deprecated(
+    @deprecated(
         "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
     )
     def create_jwt(self, expiration: int | None = None) -> str:
@@ -277,7 +277,7 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated.deprecated("Use get_repo_installation")
+    @deprecated("Use get_repo_installation")
     def get_installation(self, owner: str, repo: str) -> Installation:
         """
         Deprecated by get_repo_installation.

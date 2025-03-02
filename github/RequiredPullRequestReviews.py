@@ -46,7 +46,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import deprecated
+from typing_extensions import deprecated
 
 import github.GithubApp
 import github.NamedUser
@@ -212,12 +212,12 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         return self._dismissal_restrictions.value
 
     @property
-    @deprecated.deprecated("Use dismissal_restrictions.teams")
+    @deprecated("Use dismissal_restrictions.teams")
     def dismissal_teams(self) -> list[Team]:
         return self.dismissal_restrictions.teams if self.dismissal_restrictions is not None else None
 
     @property
-    @deprecated.deprecated("Use dismissal_restrictions.users")
+    @deprecated("Use dismissal_restrictions.users")
     def dismissal_users(self) -> list[NamedUser]:
         return self.dismissal_restrictions.users if self.dismissal_restrictions is not None else None
 
