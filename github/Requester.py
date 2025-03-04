@@ -867,6 +867,8 @@ class Requester:
         )
 
     def __structuredFromJson(self, data: str) -> Any:
+        print(data)
+        
         if len(data) == 0:
             return None
         else:
