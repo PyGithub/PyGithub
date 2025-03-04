@@ -179,3 +179,13 @@ DEFAULT_JWT_ALGORITHM = "RS256"
 # https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
 DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
 DEFAULT_SECONDS_BETWEEN_WRITES = 1.0
+
+mediaTypeProjectsPreview = "application/vnd.github.inertia-preview+json"
+mediaTypeRequiredStatusChecksPreview = "application/vnd.github.sailor-v-preview+json"
+mediaTypeReactionsPreview = "application/vnd.github.squirrel-girl-preview"
+mediaTypeRepositoryConfigPreview = "application/vnd.github.config.template-preview+json"
+mediaTypeRepositoryVulnerabilityAlertsPreview = "application/vnd.github.dorian-preview+json"
+mediaTypeRequiredApprovingReviewsPreview = "application/vnd.github.luke-cage-preview+json"
+mediaTypeSignaturePreview = "application/vnd.github.cryptographer-preview"
+mediaTypeTopicsPreview = "application/vnd.github.mercy-preview+json"
+mediaTypeV3 = "application/vnd.github.v3+json"

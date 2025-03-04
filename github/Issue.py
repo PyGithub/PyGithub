@@ -543,7 +543,68 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    def create_reaction(self, reaction_type: str) -> Reaction:
+    def get_sub_issues(self) -> PaginatedList[Issue]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{number}/sub-issues <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+        return PaginatedList(
+            SubIssue,
+            self._requester,
+            f"{self.url}/sub-issues",
+            None,
+            headers={"Accept": Consts.mediaTypeV3},
+        )
+
+    def add_sub_issue(self, issue_id: int) -> Issue:
+        """
+        :calls: `POST /repos/{owner}/{repo}/issues/{number}/sub-issues <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param issue_id: int
+        :rtype: :class:`github.Issue.Issue`
+        """
+        assert isinstance(issue_id, int), issue_id
+        post_parameters = {"issue_id": issue_id}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            f"{self.url}/sub-issues",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaTypeV3},
+        )
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
+
+    def remove_sub_issue(self, issue_id):
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/sub-issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param issue_id: int
+        :rtype: :class:`github.Issue.Issue`
+        """
+        assert isinstance(issue_id, int), issue_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/sub-issues/{issue_id}",
+            headers={"Accept": Consts.mediaTypeV3},
+        )
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
+
+    def reprioritize_sub_issue(self, issue_id, after_issue_id):
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub-issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param issue_id: int
+        :param after_issue_id: int
+        :rtype: :class:`github.Issue.Issue`
+        """
+        assert isinstance(issue_id, int), issue_id
+        assert isinstance(after_issue_id, int), after_issue_id
+        patch_parameters = {"after_issue_id": after_issue_id}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            f"{self.url}/sub-issues/{issue_id}",
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaTypeV3},
+        )
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
+
+    def create_reaction(self, reaction_type):
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/reactions <https://docs.github.com/en/rest/reference/reactions>`_
         """
@@ -695,3 +756,62 @@ class IssueSearchResult(Issue):
         super()._useAttributes(attributes)
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
+
+
+class SubIssue(Issue):
+    """
+    This class represents a Sub-issue in GitHub's REST API.
+    Sub-issues are issues that are linked to a parent issue.
+    
+    See https://docs.github.com/en/rest/issues/sub-issues for more details.
+    """
+    
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        # Sub-issue specific attributes
+        self._parent_issue = github.GithubObject.NotSet
+        self._priority_position = github.GithubObject.NotSet
+    
+    def __repr__(self) -> str:
+        return self.get__repr__({"number": self._number.value, "title": self._title.value})
+    
+    @property
+    def parent_issue(self) -> Issue:
+        """
+        :type: :class:`github.Issue.Issue`
+        """
+        self._completeIfNotSet(self._parent_issue)
+        return self._parent_issue.value
+    
+    @property
+    def priority_position(self) -> int:
+        """
+        :type: int
+        """
+        self._completeIfNotSet(self._priority_position)
+        return self._priority_position.value
+    
+    def get_parent_issue(self) -> Issue:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{number}`
+        :rtype: :class:`github.Issue.Issue`
+        """
+        # Method to retrieve parent issue information
+        if self._parent_issue is github.GithubObject.NotSet:
+            # Logic to fetch parent issue information from the API
+            # Actual implementation may vary depending on GitHub API response
+            pass
+        return self.parent_issue
+    
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        
+        # Process sub-issue specific attributes
+        if "parent_issue" in attributes:
+            self._parent_issue = self._makeClassAttribute(
+                github.Issue.Issue, attributes["parent_issue"]
+            )
+        
+        if "priority_position" in attributes:
+            self._priority_position = self._makeIntAttribute(attributes["priority_position"])
+    
