@@ -556,53 +556,62 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeV3},
         )
 
-    def add_sub_issue(self, issue_id: int) -> Issue:
+    def add_sub_issue(self, sub_issue_id: int) -> Issue:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues>`_
-        :param issue_id: int
-        :rtype: :class:`github.Issue.Issue`
+        :param sub_issue_id: int
+        :rtype: :class:`github.Issue.SubIssue`
         """
-        assert isinstance(issue_id, int), issue_id
-        post_parameters = {"issue_id": issue_id}
+        assert isinstance(self.number, int), self.number
+        post_parameters: dict[str, Any] = {
+            "sub_issue_id": sub_issue_id,
+            }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             f"{self.url}/sub_issues",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeV3},
         )
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        return SubIssue(self._requester, headers, data, completed=True)
 
-    def remove_sub_issue(self, issue_id):
+    def remove_sub_issue(self, sub_issue_id: int):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/sub_issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
-        :param issue_id: int
-        :rtype: :class:`github.Issue.Issue`
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/sub_issue <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param sub_issue_id: int
+        :rtype: :class:`github.Issue.SubIssue`
         """
-        assert isinstance(issue_id, int), issue_id
+        assert isinstance(sub_issue_id, int), sub_issue_id
+        post_parameters: dict[str, Any] = {
+            "sub_issue_id": sub_issue_id,
+            }
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            f"{self.url}/sub_issues/{issue_id}",
+            f"{self.url}/sub_issue",
+            input=post_parameters,
             headers={"Accept": Consts.mediaTypeV3},
         )
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        return SubIssue(self._requester, headers, data, completed=True)
 
-    def reprioritize_sub_issue(self, issue_id, after_issue_id):
+    def reprioritize_sub_issue(self, sub_issue_id: int, after_id: int):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub_issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
-        :param issue_id: int
-        :param after_issue_id: int
-        :rtype: :class:`github.Issue.Issue`
+        :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub_issues/priority <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param sub_issue_id: int
+        :param after_id: int
+        :rtype: :class:`github.Issue.SubIssue`
         """
-        assert isinstance(issue_id, int), issue_id
-        assert isinstance(after_issue_id, int), after_issue_id
-        patch_parameters = {"after_issue_id": after_issue_id}
+        assert isinstance(sub_issue_id, int), sub_issue_id
+        assert isinstance(after_id, int), after_id
+        patch_parameters = {
+            "sub_issue_id": sub_issue_id,
+            "after_id": after_id
+            }
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
-            f"{self.url}/sub_issues/{issue_id}",
+            f"{self.url}/sub_issues/priority",
             input=patch_parameters,
             headers={"Accept": Consts.mediaTypeV3},
         )
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        return SubIssue(self._requester, headers, data, completed=True)
 
     def create_reaction(self, reaction_type):
         """
