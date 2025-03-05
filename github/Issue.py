@@ -545,20 +545,20 @@ class Issue(CompletableGithubObject):
 
     def get_sub_issues(self) -> PaginatedList[Issue]:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number}/sub-issues <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues?apiVersion=2022-11-28>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         return PaginatedList(
             SubIssue,
             self._requester,
-            f"{self.url}/sub-issues",
+            f"{self.url}/sub_issues",
             None,
             headers={"Accept": Consts.mediaTypeV3},
         )
 
     def add_sub_issue(self, issue_id: int) -> Issue:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{number}/sub-issues <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues>`_
         :param issue_id: int
         :rtype: :class:`github.Issue.Issue`
         """
@@ -566,7 +566,7 @@ class Issue(CompletableGithubObject):
         post_parameters = {"issue_id": issue_id}
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            f"{self.url}/sub-issues",
+            f"{self.url}/sub_issues",
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeV3},
         )
@@ -574,21 +574,21 @@ class Issue(CompletableGithubObject):
 
     def remove_sub_issue(self, issue_id):
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/sub-issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/sub_issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
         :param issue_id: int
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(issue_id, int), issue_id
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            f"{self.url}/sub-issues/{issue_id}",
+            f"{self.url}/sub_issues/{issue_id}",
             headers={"Accept": Consts.mediaTypeV3},
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
     def reprioritize_sub_issue(self, issue_id, after_issue_id):
         """
-        :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub-issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub_issues/{issue_id} <https://docs.github.com/en/rest/issues/sub-issues>`_
         :param issue_id: int
         :param after_issue_id: int
         :rtype: :class:`github.Issue.Issue`
@@ -598,7 +598,7 @@ class Issue(CompletableGithubObject):
         patch_parameters = {"after_issue_id": after_issue_id}
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
-            f"{self.url}/sub-issues/{issue_id}",
+            f"{self.url}/sub_issues/{issue_id}",
             input=patch_parameters,
             headers={"Accept": Consts.mediaTypeV3},
         )
