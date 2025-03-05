@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 ############################ Copyrights and license ############################
 #                                                                              #
@@ -29,8 +28,8 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timezone
 from . import Framework
+
 
 class SubIssue(Framework.TestCase):
     def setUp(self):
@@ -38,46 +37,46 @@ class SubIssue(Framework.TestCase):
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.issue = self.repo.get_issue(28)
         print("setup done")
-        
+
     def testListSubIssues(self):
         """
-        Test listing sub-issues of an issue
+        Test listing sub-issues of an issue.
         """
         sub_issues = self.issue.get_sub_issues()
         _sub_issues = [v for i, v in enumerate(sub_issues)]
         print(_sub_issues)
-        
+
         self.assertEqual(_sub_issues[0].number, 30)
         self.assertEqual(_sub_issues[0].title, "Sub-issue title")
         self.assertEqual(len(_sub_issues), 2)
-        
+
     def testAddSubIssue(self):
         """
-        Test adding a sub-issue to an issue
+        Test adding a sub-issue to an issue.
         """
         sub_issue = self.repo.get_issue(31)
         result = self.issue.add_sub_issue(sub_issue.id)
         self.assertEqual(result.id, sub_issue.id)
         self.assertEqual(result.number, sub_issue.number)
         self.assertEqual(result.title, sub_issue.title)
-        
+
     def testRemoveSubIssue(self):
         """
-        Test removing a sub-issue from an issue
+        Test removing a sub-issue from an issue.
         """
         sub_issue = self.repo.get_issue(30)
         result = self.issue.remove_sub_issue(sub_issue.id)
         self.assertEqual(result.id, sub_issue.id)
         self.assertEqual(result.number, sub_issue.number)
         self.assertEqual(result.title, sub_issue.title)
-        
+
     def testReprioritizeSubIssue(self):
         """
-        Test changing the priority of a sub-issue
+        Test changing the priority of a sub-issue.
         """
         sub_issue = self.repo.get_issue(30)
         after_issue = self.repo.get_issue(31)
         result = self.issue.reprioritize_sub_issue(sub_issue.id, after_issue.id)
         self.assertEqual(result.id, sub_issue.id)
         self.assertEqual(result.number, sub_issue.number)
-        self.assertEqual(result.title, sub_issue.title) 
+        self.assertEqual(result.title, sub_issue.title)
