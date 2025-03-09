@@ -303,6 +303,28 @@ class PullRequest(Framework.TestCase):
             [16349963, 16350729, 16350730, 16350731, 28469043, 98136335],
         )
 
+    def testGetIssueTimeline(self):
+        self.assertListKeyEqual(
+            self.pull.get_issue_timeline(),
+            lambda t: t.event,
+            [
+                "committed",
+                "committed",
+                "committed",
+                "subscribed",
+                "referenced",
+                "merged",
+                "closed",
+                "commented",
+                "line-commented",
+                "assigned",
+                "labeled",
+                "cross-referenced",
+                "reviewed",
+                "reviewed",
+            ],
+        )
+
     def testGetReviewComments(self):
         epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
