@@ -302,6 +302,10 @@ class PaginatedList(PaginatedListBase[T]):
                         if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
                     }
 
+    # To support Python's built-in `reversed()` method
+    def __reversed__(self) -> PaginatedList[T]:
+        return self.reversed
+
     def _couldGrow(self) -> bool:
         return (
             self.is_rest
