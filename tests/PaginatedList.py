@@ -21,6 +21,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <me@mfocko.xyz>                                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -93,6 +94,12 @@ class PaginatedList(Framework.TestCase):
     def testReversedIterationSupportsIterator(self):
         r = self.list.reversed
         for i in r:
+            self.assertEqual(i.id, 4286936)
+            return
+        self.fail("empty iterator")
+
+    def testReversedIterationSupportsBuiltinReversed(self):
+        for i in reversed(self.list):
             self.assertEqual(i.id, 4286936)
             return
         self.fail("empty iterator")
