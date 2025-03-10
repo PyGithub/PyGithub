@@ -7,13 +7,13 @@ changelog:
       labels: ['breaking']
     - title: New Features
       labels: ['feature']
-    - title: Improvement
+    - title: Improvements
       labels: ['improvement']
     - title: Bug Fixes
       labels: ['bugfix']
     - title: Dependencies
       labels: ['dependencies']
     - title: Maintenance
-      labels: ['ci', 'documentation', 'maintenance']
+      labels: ['ci', 'documentation', 'maintenance', 'OpenAPI']
     - title: Others
       labels: ['*']
