@@ -28,6 +28,7 @@ import dataclasses
 import difflib
 import json
 import os.path
+import re
 import sys
 from collections import Counter, defaultdict
 from json import JSONEncoder
@@ -152,6 +153,21 @@ def get_class_docstring(node: cst.ClassDef) -> str | None:
             return node.body.body[0].body[0].value.value
     except Exception as e:
         print(f"Extracting docstring of class {node.name.value} failed", e)
+
+
+def merge_paths(paths: list[dict[str, Any]]) -> dict[str, Any]:
+    merged_paths = {}
+    for path_dict in paths:
+        for path, verbs in path_dict.items():
+            for verb, methods in verbs.items():
+                if path not in merged_paths:
+                    merged_paths[path] = {}
+                if verb not in merged_paths[path]:
+                    merged_paths[path][verb] = {}
+                if "methods" not in merged_paths[path][verb]:
+                    merged_paths[path][verb]["methods"] = []
+                merged_paths[path][verb]["methods"].extend(methods.get("methods", []))
+    return merged_paths
 
 
 class CstMethods(abc.ABC):
@@ -306,12 +322,13 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
 
 
 class IndexPythonClassesVisitor(CstVisitorBase):
-    def __init__(self, classes: dict[str, Any] | None = None):
+    def __init__(self, classes: dict[str, Any] | None = None, paths: dict[str, Any] | None = None):
         super().__init__()
         self._module = None
         self._package = None
         self._filename = None
         self._classes = classes if classes is not None else {}
+        self._paths = paths if paths is not None else {}
         self._ids = []
         self._properties = {}
         self._methods = {}
@@ -324,10 +341,6 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
     def filename(self, filename: str):
         self._filename = filename
-
-    @property
-    def classes(self) -> dict[str, Any]:
-        return self._classes
 
     def leave_ClassDef(self, node: cst.ClassDef) -> bool | None:
         class_name = self.current_class_name
@@ -410,12 +423,25 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                 self._methods[method_name] = {
                     "name": method_name,
                     "call": {
-                        "method": fields[0] if len(fields) > 0 else None,
+                        "verb": fields[0] if len(fields) > 0 else None,
                         "path": fields[1] if len(fields) > 1 else None,
                         "docs": fields[2] if len(fields) > 2 else None,
                     },
                     "returns": returns,
                 }
+                if len(fields) > 1:
+                    verb = fields[0]
+                    path = fields[1]
+                    if path not in self._paths:
+                        self._paths[path] = {}
+                    if verb not in self._paths[path]:
+                        self._paths[path][verb] = {"methods": []}
+                    self._paths[path][verb]["methods"].append({
+                            "class": self.current_class_name,
+                            "name": method_name,
+                            "returns": returns,
+                        }
+                    )
 
         if method_name == "__repr__":
             # extract properties used here as ids
@@ -1199,8 +1225,9 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any]):
+    def __init__(self, classes: dict[str, Any], paths: list[dict[str, Any]]):
         self.classes = classes
+        self.paths = paths
 
     def index_file(self, filename: str):
         with open(filename) as r:
@@ -1208,13 +1235,16 @@ class IndexFileWorker:
 
         from pathlib import Path
 
-        visitor = IndexPythonClassesVisitor(self.classes)
+        paths = {}
+        visitor = IndexPythonClassesVisitor(self.classes, paths)
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
         try:
             tree = cst.parse_module(code)
             tree.visit(visitor)
+            # return path dict populated by this worker through 'paths' argument
+            self.paths.append(paths)
         except Exception as e:
             raise RuntimeError(f"Failed to parse {filename}", e)
 
@@ -1517,10 +1547,12 @@ class OpenApi:
         # index files in parallel
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
-            indexer = IndexFileWorker(classes)
+            paths = manager.list()
+            indexer = IndexFileWorker(classes, paths)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
+            paths = merge_paths(paths)
 
         # construct inheritance list
         while self.extend_inheritance(classes):
@@ -1539,7 +1571,7 @@ class OpenApi:
                 class_to_descendants[cls].append(name)
         class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
 
-        path_to_classes = {}
+        path_to_return_classes = {}
         schema_to_classes = {}
         for name, cls in classes.items():
             # construct path-to-class index
@@ -1547,7 +1579,7 @@ class OpenApi:
                 path = method.get("call", {}).get("path")
                 if not path:
                     continue
-                verb = method.get("call", {}).get("method", "").lower()
+                verb = method.get("call", {}).get("verb", "").lower()
                 if not verb:
                     if self.verbose:
                         print(f"Unknown verb for path {path} of class {name}")
@@ -1556,11 +1588,11 @@ class OpenApi:
                 if not path.startswith("/") and self.verbose:
                     print(f"Unsupported path: {path}")
                 returns = method.get("returns", [])
-                if path not in path_to_classes:
-                    path_to_classes[path] = {}
-                if verb not in path_to_classes[path]:
-                    path_to_classes[path][verb] = set()
-                path_to_classes[path][verb] = sorted(list(set(path_to_classes[path][verb]).union(set(returns))))
+                if path not in path_to_return_classes:
+                    path_to_return_classes[path] = {}
+                if verb not in path_to_return_classes[path]:
+                    path_to_return_classes[path][verb] = set()
+                path_to_return_classes[path][verb] = sorted(list(set(path_to_return_classes[path][verb]).union(set(returns))))
 
             # construct schema-to-class index
             for schema in cls.get("schemas"):
@@ -1569,7 +1601,7 @@ class OpenApi:
                 schema_to_classes[schema].append(name)
 
         print(f"Indexed {len(classes)} classes")
-        print(f"Indexed {len(path_to_classes)} paths")
+        print(f"Indexed {len(path_to_return_classes)} paths")
         print(f"Indexed {len(schema_to_classes)} schemas")
 
         print("Indexing OpenAPI spec")
@@ -1577,7 +1609,7 @@ class OpenApi:
             spec = json.load(r)
 
         # construct schema to path index
-        schema_to_paths = defaultdict(list)
+        return_schema_to_paths = defaultdict(list)
         for path, path_spec in spec.get("paths", {}).items():
             spec_type = (
                 path_spec.get("get", {})
@@ -1592,16 +1624,17 @@ class OpenApi:
                     spec_type, [f'"{path}"', "get", "responses", '"200"', "content", '"application/json"', "schema"]
                 ):
                     if schema.startswith("#/components/"):
-                        schema_to_paths[schema[1:]].append(path)
+                        return_schema_to_paths[schema[1:]].append(path)
 
         data = {
             "sources": github_path,
             "classes": classes,
+            "paths": paths,
             "indices": {
                 "class_to_descendants": class_to_descendants,
-                "path_to_classes": path_to_classes,
+                "path_to_return_classes": path_to_return_classes,
                 "schema_to_classes": schema_to_classes,
-                "schema_to_paths": schema_to_paths,
+                "return_schema_to_paths": return_schema_to_paths,
             },
         }
 
@@ -1618,7 +1651,152 @@ class OpenApi:
 
         return True
 
-    def suggest(
+    def suggest_paths(
+        self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool
+    ) -> bool:
+        if add:
+            raise RuntimeError("Adding paths is not supported")
+
+        print(f"Using spec {spec_file}")
+        with open(spec_file) as r:
+            spec = json.load(r)
+        with open(index_filename) as r:
+            index = json.load(r)
+
+        if not class_names:
+            class_names = index.get("classes", {}).keys()
+
+        if len(class_names) == 1:
+            print(f"Suggesting API paths for PyGithub class {class_names[0]}")
+        else:
+            print(f"Suggesting API paths for {len(class_names)} PyGithub classes")
+        print()
+
+        paths = spec.get("paths", {})
+        classes = index.get("classes", {})
+        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths", {})
+        implemented_paths = index.get("paths", {})
+
+        self.suggest_path_corrections(paths, implemented_paths)
+
+        for cls in class_names:
+            clazz = classes.get(cls)
+            print(f"Class {cls}")
+            for schema in clazz.get("schemas", []):
+                print(f"- Implements schema {schema}")
+                for path in return_schema_to_paths.get(schema, []):
+                    print(f"  - Returned by path {path}")
+                    for candidate_path in paths:
+                        verbs = paths[candidate_path].keys()
+                        if len(candidate_path) > len(path) and candidate_path.startswith(f"{path}/"):
+                            rel_path = candidate_path[len(path)+1:]
+                            rel_path_fields = rel_path.split("/")
+                            rel_path_params = [field.startswith("{") and field.endswith("}") for field in rel_path_fields]
+                            # we skip paths where multiple path parameters exist, or
+                            # the path parameter is not at the end of the path
+                            if sum(rel_path_params) > 1 or sum(rel_path_params) == 1 and not rel_path_params[-1]:
+                                continue
+
+                            skip = False
+                            rel_subpath = []
+                            for rel_field in rel_path_fields:
+                                rel_subpath.append(rel_field)
+                                subpath = "/".join([path] + rel_subpath)
+                                for method in implemented_paths.get(subpath, {}).get("GET", {}).get("methods", []):
+                                    for return_type in method.get("returns", []):
+                                        if return_type in classes:
+                                            if self.verbose:
+                                                print(f"\n      - Parent path {subpath} returns {return_type}", end="")
+                                            skip = True
+                            if skip:
+                                continue
+
+                            for verb in verbs:
+                                if implemented_paths.get(candidate_path, {}).get(verb.upper, {}).get("methods", []):
+                                    methods = [f"{method.get("class")}.{method.get("name")}"
+                                               for method in
+                                               implemented_paths.get(candidate_path, {}).get("GET", {}).get("methods")]
+                                    if self.verbose:
+                                        print(f"    - {verb} {candidate_path} implemented by {", ".join(methods)}")
+                                    continue
+
+                                suggested_methods = self.suggest_method_names(verb, path, candidate_path)
+                                if suggested_methods:
+                                    implementations = " or ".join([f"{cls}.{suggested_method}" for suggested_method in suggested_methods])
+                                    print(f"    - {verb} {candidate_path} should be implemented as {implementations}")
+                            print()
+            print()
+
+        return False
+
+    def suggest_path_corrections(self, paths: dict[str, Any], implemented_paths: dict[str, Any]):
+        spec_paths = set((verb, path) for path, verbs in paths.items() for verb in verbs)
+        impl_paths = set((verb.lower(), path) for path, verbs in implemented_paths.items() for verb in verbs)
+        unspec_paths = impl_paths - spec_paths
+        impl_spec_paths = spec_paths.intersection(impl_paths)
+        print(f"There are {len(impl_spec_paths)} out of {len(spec_paths)} verbs ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented")
+        print(f"There are {len(unspec_paths)} verbs unknown to the OpenAPI spec")
+        if self.verbose:
+            for verb, path in sorted(list(unspec_paths)):
+                print(f"- {verb} {path}")
+        print()
+
+        spec_paths = set(path for (verb, path) in spec_paths)
+        impl_paths = set(path for (verb, path) in impl_paths)
+        unspec_paths = impl_paths - spec_paths
+        impl_spec_paths = spec_paths.intersection(impl_paths)
+        print(f"There are {len(impl_spec_paths)} out of {len(spec_paths)} paths ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented")
+        print(f"There are {len(unspec_paths)} paths unknown to the OpenAPI spec")
+        if self.verbose:
+            def fingerprint(path: str) -> str:
+                return re.sub("[{][^}]+[}]", "{}", path.rstrip("/"))
+
+            spec_fingerprints = {fingerprint(path): path for path in spec_paths}
+            for path in sorted(list(unspec_paths)):
+                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), "")}")
+        print()
+
+    def suggest_method_names(self, verb: str, prefix_path: str, path: str) -> list[str]:
+        suffix_path = path.replace("-", "_")[len(prefix_path)+1:]
+        fields = suffix_path.split("/")
+        context = "_".join(fields[:-1])
+        last_field = fields[-1]
+        # verb == "get": get_ method on the nearst object
+        # verb == "patch": .edit method on the object that is constructed by the url (get)
+        # verb == "put": .set_ method on the nearst object
+        # verb == "post": .create_ method on the nearst object
+        # verb == "delete": .delete method on the object that is constructed by the url (get)
+        if verb == "post":
+            actions = ["create", ""]
+        elif verb == "put":
+            actions = ["set"]
+        else:
+            actions = [verb]
+
+        method_names = []
+        for action in actions:
+            action = f"{action}_" if action else ""
+            context = f"{context}_" if context else ""
+            if last_field.startswith("{") and last_field.endswith("}"):
+                last_field = last_field[1:-1]
+                if last_field.endswith("_id"):
+                    method_names.append(f"{action}{context}{last_field[:-3]}(id)")
+                    continue
+                if len(fields) > 1 and not fields[-2].startswith("{"):
+                    object_name = fields[-2]
+                    if object_name.endswith("es"):
+                        object_name = object_name[:-2]
+                    elif object_name.endswith("s"):
+                        object_name = object_name[:-1]
+                    method_names.append(f"{action}{context}{object_name}({last_field})")
+                    continue
+                method_names.append(f"{action}{context}({last_field})")
+                continue
+            method_names.append(f"{action}{context}{fields[-1]}()")
+
+        return method_names
+
+    def suggest_schemas(
         self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool
     ) -> bool:
         print(f"Using spec {spec_file}")
@@ -1634,7 +1812,7 @@ class OpenApi:
             if len(class_names) == 1:
                 print(f"Suggesting API schemas for PyGithub class {class_names[0]}")
             else:
-                print(f"Suggesting API schemas for PyGithub {len(class_names)} classes")
+                print(f"Suggesting API schemas for {len(class_names)} PyGithub classes")
         else:
             print("Suggesting API schemas for PyGithub classes")
 
@@ -1743,7 +1921,7 @@ class OpenApi:
 
         # suggest schemas based on API calls
         available_schemas = {}
-        paths = set(spec.get("paths", {}).keys()).union(index.get("indices", {}).get("path_to_classes", {}).keys())
+        paths = set(spec.get("paths", {}).keys()).union(index.get("indices", {}).get("path_to_return_classes", {}).keys())
         for path in paths:
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
@@ -1758,7 +1936,7 @@ class OpenApi:
                         schema, schema_path + [str(status), "content", '"application/json"', "schema"]
                     )
                 ]
-                classes_of_path = index.get("indices", {}).get("path_to_classes", {}).get(path, {}).get(verb, [])
+                classes_of_path = index.get("indices", {}).get("path_to_return_classes", {}).get(path, {}).get(verb, [])
 
                 for cls in classes_of_path:
                     # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
@@ -2010,8 +2188,9 @@ class OpenApi:
 
         suggest_parser = subparsers.add_parser("suggest")
         suggest_parser.add_argument(
-            "--add", default=False, action="store_true", help="Add suggested schemas to source code"
+            "--add", default=False, action="store_true", help="Add suggestions to source code"
         )
+        suggest_parser.add_argument("component", help="Component to suggest", choices=["paths", "schemas"])
         suggest_parser.add_argument("spec", help="Github API OpenAPI spec file")
         suggest_parser.add_argument("index_filename", help="Path of index file")
         suggest_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="*")
@@ -2055,9 +2234,14 @@ class OpenApi:
         elif args.subcommand == "index":
             changes = self.index(self.args.github_path, self.args.spec, self.args.index_filename, self.args.dry_run)
         elif self.args.subcommand == "suggest":
-            changes = self.suggest(
-                self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
-            )
+            if self.args.component == "paths":
+                changes = self.suggest_paths(
+                    self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
+                )
+            if self.args.component == "schemas":
+                changes = self.suggest_schemas(
+                    self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
+                )
         elif self.args.subcommand == "apply":
             changes = self.apply(
                 self.args.spec, self.args.index_filename, self.args.class_name, self.args.dry_run, self.args.tests

@@ -93,12 +93,12 @@ jobs:
 
           echo "::group::Head schema suggestions:"
           python head/scripts/openapi.py index head/github openapi.head.index
-          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.head.index | tee schemas.head.txt
+          python head/scripts/openapi.py --dry-run suggest schema openapi.json openapi.head.index | tee schemas.head.txt
           echo "::endgroup::"
 
           echo "::group::Base schema suggestions:"
           python head/scripts/openapi.py index base/github openapi.base.index
-          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.base.index | tee schemas.base.txt
+          python head/scripts/openapi.py --dry-run suggest schema openapi.json openapi.base.index | tee schemas.base.txt
           echo "::endgroup::"
 
           echo "Difference:"
