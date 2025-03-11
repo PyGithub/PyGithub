@@ -1456,7 +1456,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 ])
             else:
                 result_stmt = cst.SimpleStatementLine(body=[cst.Return(cst.Name("data"))], trailing_whitespace=cst.TrailingWhitespace(
-                    whitespace=cst.SimpleWhitespace("  "), comment=cst.Comment(f"# TODO: Check this is really returns the {self.api_content}")
+                    whitespace=cst.SimpleWhitespace("  "), comment=cst.Comment(f"# TODO: Check this really returns the {self.api_content}")
                 ))
             result_stmt = (result_stmt, )
 
@@ -1464,14 +1464,6 @@ class CreateClassMethodTransformer(CstTransformerBase):
         returns = cst.Annotation(annotation=self.create_type(self.api_content, short_class_name=True))
         body = cst.IndentedBlock(body=(docstring_stmt,) + assertion_stmts + (parameter_stmt, request_stmt) + result_stmt)
 
-        """
-        assert is_optional(branch, str), new_name
-        assert isinstance(new_name, str), new_name
-
-        parameters = {"new_name": new_name}
-        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/branches/{branch}"", input=parameters)
-        return github.Branch.Branch(self._requester, headers, data)
-        """
         return cst.FunctionDef(
             name=cst.Name(value=self.method_name),
             params=params,
