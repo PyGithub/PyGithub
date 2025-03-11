@@ -1918,8 +1918,10 @@ class OpenApi:
 
                                 suggested_methods = self.suggest_method_names(verb, path, candidate_path, spec)
                                 if suggested_methods:
-                                    implementations = " or ".join([f"{cls}.{suggested_method}" for suggested_method in suggested_methods])
+                                    implementations = " or ".join([f"{cls}.{suggested_method}()" for suggested_method in suggested_methods])
                                     print(f"    - {verb} {candidate_path} should be implemented as {implementations}")
+                                    for suggested_method in suggested_methods:
+                                      print(f"      {sys.executable} {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}")
                             print()
             print()
 
@@ -1994,7 +1996,7 @@ class OpenApi:
                     continue
                 method_names.append(f"{action}{context}({last_field})")
                 continue
-            method_names.append(f"{action}{context}{fields[-1]}()")
+            method_names.append(f"{action}{context}{fields[-1]}")
 
         return method_names
 
@@ -2483,6 +2485,7 @@ class OpenApi:
         create_method_parser.add_argument("api_verb", help="OpenAPI verb")
         create_method_parser.add_argument("api_path", help="OpenAPI path")
         create_method_parser.add_argument("api_response", help="OpenAPI response, e.g. 200", nargs="?")
+        create_method_parser.add_argument("return_property", help="Return the value of this response property only, instead of the entire response object", nargs="?")
 
         if len(sys.argv) == 1:
             args_parser.print_help()
