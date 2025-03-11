@@ -4251,7 +4251,7 @@ class Repository(CompletableGithubObject):
             )
             or deployment_branch_policy is None
         )
-        environment_name = urllib.parse.quote_plus(environment_name)
+        environment_name = urllib.parse.quote(environment_name, safe='')
 
         put_parameters = {
             "wait_timer": wait_timer,
