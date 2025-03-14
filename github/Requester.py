@@ -91,18 +91,10 @@ import time
 import urllib
 import urllib.parse
 from collections import deque
-from collections.abc import ItemsView, Iterator
+from collections.abc import Callable, ItemsView, Iterator
 from datetime import datetime, timezone
 from io import IOBase
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    BinaryIO,
-    Callable,
-    Deque,
-    Generic,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
 
 import requests
 import requests.adapters
