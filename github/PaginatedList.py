@@ -50,8 +50,8 @@
 ################################################################################
 from __future__ import annotations
 
-from collections.abc import Iterator
-from typing import Any, Callable, Generic, TypeVar, overload
+from collections.abc import Callable, Iterator
+from typing import Any, Generic, TypeVar, overload
 from urllib.parse import parse_qs
 
 from github.GithubObject import GithubObject
