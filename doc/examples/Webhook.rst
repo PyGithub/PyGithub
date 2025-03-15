@@ -37,20 +37,20 @@ For reference, this example is adapted from `GitHub's platform samples <https://
             self.payload = self.request.json
 
         @view_config(header="X-Github-Event:push")
-        def handle_push_event(self):
+        def payload_push(self):
             """Handles push events."""
             print("Number of commits in push:", len(self.payload['commits']))
             return Response("success")
 
         @view_config(header="X-Github-Event:pull_request")
-        def handle_pull_request_event(self):
+        def payload_pull_request(self):
             """Handles pull request events."""
             print("Pull Request action:", self.payload['action'])
             print("Number of commits in PR:", self.payload['pull_request']['commits'])
             return Response("success")
 
         @view_config(header="X-Github-Event:ping")
-        def handle_ping_event(self):
+        def payload_else(self):
             """Handles GitHub's ping event when a webhook is created."""
             print("Webhook created with ID {}!".format(self.payload["hook"]["id"]))
             return {"status": 200}
