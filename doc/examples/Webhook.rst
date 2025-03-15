@@ -4,15 +4,15 @@ Webhook
 Creating and Listening to Webhooks with PyGithub and Pyramid
 ------------------------------------------------------------
 
-To receive a continuous stream of events, one can set up a wsgiref app using Pyramid to handle
-incoming POST requests.
+To receive a continuous stream of events from GitHub, you can set up a WSGI app using Pyramid to handle incoming POST requests. This allows you to automate responses to GitHub events, such as push or pull request updates.
 
-The below code sets up a listener which creates and utilizes a webhook. Using
-'pull_request' and 'push' for the EVENT attributes, any time a PR is opened, closed, merged, or synced, or a commit is pushed,
-Github sends a POST containing a payload with information about the PR/push and its state.
+### Overview
 
-The below example was drawn largely from `Github's Examples <https://github.com/github/platform-samples/blob/master/api/python/building-a-ci-server/server.py>`__
-on working with Webhooks. A list of all applicable event types for Webhooks can be found in `Github's documentation <https://developer.github.com/v3/issues/events/>`__
+The example below demonstrates how to create a webhook listener using Pyramid and PyGithub. This webhook will listen for `pull_request` and `push` events, triggering specific actions when a PR is opened, closed, merged, or synced, or when a commit is pushed.
+
+For reference, this example is adapted from `GitHub's platform samples <https://github.com/github/platform-samples/blob/master/api/python/building-a-ci-server/server.py>`__. A comprehensive list of event types that GitHub webhooks support is available in the `GitHub Webhooks documentation <https://developer.github.com/v3/issues/events/>`__.
+
+### Setting Up the Webhook Listener
 
 .. code-block:: python
 
@@ -27,47 +27,44 @@ on working with Webhooks. A list of all applicable event types for Webhooks can 
     @view_defaults(
         route_name=ENDPOINT, renderer="json", request_method="POST"
     )
-    class PayloadView(object):
+    class PayloadView:
         """
-        View receiving of Github payload. By default, this view it's fired only if
-        the request is json and method POST.
+        Handles incoming GitHub webhook payloads.
+        The view is triggered only for JSON payloads sent via POST requests.
         """
-
         def __init__(self, request):
             self.request = request
-            # Payload from Github, it's a dict
             self.payload = self.request.json
 
         @view_config(header="X-Github-Event:push")
-        def payload_push(self):
-            """This method is a continuation of PayloadView process, triggered if
-            header HTTP-X-Github-Event type is Push"""
-            print("No. commits in push:", len(self.payload['commits']))
+        def handle_push_event(self):
+            """Handles push events."""
+            print("Number of commits in push:", len(self.payload['commits']))
             return Response("success")
 
         @view_config(header="X-Github-Event:pull_request")
-        def payload_pull_request(self):
-            """This method is a continuation of PayloadView process, triggered if
-            header HTTP-X-Github-Event type is Pull Request"""
-            print("PR", self.payload['action'])
-            print("No. Commits in PR:", self.payload['pull_request']['commits'])
-
+        def handle_pull_request_event(self):
+            """Handles pull request events."""
+            print("Pull Request action:", self.payload['action'])
+            print("Number of commits in PR:", self.payload['pull_request']['commits'])
             return Response("success")
 
         @view_config(header="X-Github-Event:ping")
-        def payload_else(self):
-            print("Pinged! Webhook created with id {}!".format(self.payload["hook"]["id"]))
+        def handle_ping_event(self):
+            """Handles GitHub's ping event when a webhook is created."""
+            print("Webhook created with ID {}!".format(self.payload["hook"]["id"]))
             return {"status": 200}
 
+### Creating a Webhook Programmatically
+
+Instead of manually configuring a webhook via GitHub's UI, you can create it programmatically using PyGithub:
+
+.. code-block:: python
 
     def create_webhook():
-        """ Creates a webhook for the specified repository.
-
-        This is a programmatic approach to creating webhooks with PyGithub's API. If you wish, this can be done
-        manually at your repository's page on Github in the "Settings" section. There is a option there to work with
-        and configure Webhooks.
         """
-
+        Creates a webhook for a specified GitHub repository.
+        """
         USERNAME = ""
         PASSWORD = ""
         OWNER = ""
@@ -84,18 +81,25 @@ on working with Webhooks. A list of all applicable event types for Webhooks can 
         repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
         repo.create_hook("web", config, EVENTS, active=True)
 
+### Running the Webhook Server
+
+.. code-block:: python
 
     if __name__ == "__main__":
         config = Configurator()
-
         create_webhook()
-
         config.add_route(ENDPOINT, "/{}".format(ENDPOINT))
         config.scan()
-
         app = config.make_wsgi_app()
         server = make_server("0.0.0.0", 80, app)
         server.serve_forever()
+
+### Testing the Webhook
+
+To test the webhook, you can use API debugging tools such as:
+
+- **Beeceptor** (`https://beeceptor.com/ <https://beeceptor.com/>`__): Allows you to inspect webhook requests and simulate responses.
+- **PostBin** (`https://www.postb.in/ <https://www.postb.in/>`__): Provides an endpoint to capture incoming webhook data for debugging.
 
 
 Outputs from a server configured as above:
