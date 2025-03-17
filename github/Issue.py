@@ -554,7 +554,7 @@ class Issue(CompletableGithubObject):
             self._requester,
             f"{self.url}/sub_issues",
             None,
-            headers={"Accept": Consts.mediaTypeV3},
+            headers={"Accept": Consts.mediaType},
         )
 
     def add_sub_issue(self, sub_issue_id: int) -> SubIssue:
@@ -571,7 +571,7 @@ class Issue(CompletableGithubObject):
             "POST",
             f"{self.url}/sub_issues",
             input=post_parameters,
-            headers={"Accept": Consts.mediaTypeV3},
+            headers={"Accept": Consts.mediaType},
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
@@ -589,7 +589,7 @@ class Issue(CompletableGithubObject):
             "DELETE",
             f"{self.url}/sub_issue",
             input=post_parameters,
-            headers={"Accept": Consts.mediaTypeV3},
+            headers={"Accept": Consts.mediaType},
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
@@ -607,11 +607,11 @@ class Issue(CompletableGithubObject):
             "PATCH",
             f"{self.url}/sub_issues/priority",
             input=patch_parameters,
-            headers={"Accept": Consts.mediaTypeV3},
+            headers={"Accept": Consts.mediaType},
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
-    def create_reaction(self, reaction_type):
+    def create_reaction(self, reaction_type: str) -> Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/reactions <https://docs.github.com/en/rest/reference/reactions>`_
         """
@@ -802,12 +802,8 @@ class SubIssue(Issue):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number}` :rtype: :class:`github.Issue.Issue`
         """
-        # Method to retrieve parent issue information
-        if self._parent_issue is NotSet:
-            # Logic to fetch parent issue information from the API
-            # Actual implementation may vary depending on GitHub API response
-            pass
-        return self.parent_issue
+        #TODO: Need to implement this
+        ...
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
