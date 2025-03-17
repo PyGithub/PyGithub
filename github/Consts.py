@@ -34,6 +34,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Changyong Um <eum6211@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -154,6 +155,9 @@ deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json
 # https://developer.github.com/changes/2019-12-03-internal-visibility-changes/
 repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
 
+# https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api?apiVersion=2022-11-28#media-types
+mediaType = "application/vnd.github+json"
+
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_OAUTH_URL = "https://github.com/login/oauth"
 DEFAULT_STATUS_URL = "https://status.github.com"
@@ -180,12 +184,3 @@ DEFAULT_JWT_ALGORITHM = "RS256"
 DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
 DEFAULT_SECONDS_BETWEEN_WRITES = 1.0
 
-mediaTypeProjectsPreview = "application/vnd.github.inertia-preview+json"
-mediaTypeRequiredStatusChecksPreview = "application/vnd.github.sailor-v-preview+json"
-mediaTypeReactionsPreview = "application/vnd.github.squirrel-girl-preview"
-mediaTypeRepositoryConfigPreview = "application/vnd.github.config.template-preview+json"
-mediaTypeRepositoryVulnerabilityAlertsPreview = "application/vnd.github.dorian-preview+json"
-mediaTypeRequiredApprovingReviewsPreview = "application/vnd.github.luke-cage-preview+json"
-mediaTypeSignaturePreview = "application/vnd.github.cryptographer-preview"
-mediaTypeTopicsPreview = "application/vnd.github.mercy-preview+json"
-mediaTypeV3 = "application/vnd.github.v3+json"
