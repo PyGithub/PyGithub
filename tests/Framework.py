@@ -435,7 +435,8 @@ class BasicTestCase(unittest.TestCase):
         else:
             for _, _, functionName, _ in traceback.extract_stack():
                 if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
-                    if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+                    # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+                    if functionName != "test":
                         fileName = f"{self.__class__.__name__}.{functionName}.txt"
         fileName = os.path.join(self.replayDataFolder, fileName) if fileName else None
         if fileName != self.__fileName:
