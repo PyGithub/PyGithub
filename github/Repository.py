@@ -2777,8 +2777,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Ruleset.Ruleset`
         """
         assert isinstance(ruleset_id, int), ruleset_id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/rulesets/{ruleset_id}")
-        return github.Ruleset.Ruleset(self._requester, headers, data, completed=True)
+        attrs = {"id": ruleset_id, "url": f"{self.url}/rulesets/{ruleset_id}"}
+        return github.Ruleset.Ruleset(self._requester, attributes=attrs)
 
     def create_ruleset(
         self,
