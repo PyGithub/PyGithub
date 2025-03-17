@@ -99,10 +99,12 @@ class PaginatedList(Framework.TestCase):
         self.fail("empty iterator")
 
     def testReversedIterationSupportsBuiltinReversed(self):
-        for i in reversed(self.list):
-            self.assertEqual(i.id, 4286936)
-            return
-        self.fail("empty iterator")
+        # reuse test data of testReversedIterationSupportsIterator
+        with self.replayData("PaginatedList.testReversedIterationSupportsIterator.txt"):
+            for i in reversed(self.list):
+                self.assertEqual(i.id, 4286936)
+                return
+            self.fail("empty iterator")
 
     def testGettingTheReversedListDoesNotModifyTheOriginalList(self):
         self.assertEqual(self.list[0].id, 18345408)
