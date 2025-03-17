@@ -105,7 +105,7 @@ class OrganizationSecret(Secret):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name}` <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -116,7 +116,7 @@ class OrganizationSecret(Secret):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name}` <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """

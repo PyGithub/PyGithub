@@ -418,25 +418,25 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_events(self) -> PaginatedList[Event]:
         """
-        :calls: `GET /users/{user}/events <https://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{username}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         """
         return github.PaginatedList.PaginatedList(github.Event.Event, self._requester, f"{self.url}/events", None)
 
     def get_followers(self) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /users/{user}/followers <https://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `GET /users/{username}/followers <https://docs.github.com/en/rest/reference/users#followers>`_
         """
         return github.PaginatedList.PaginatedList(NamedUser, self._requester, f"{self.url}/followers", None)
 
     def get_following(self) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /users/{user}/following <https://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `GET /users/{username}/following <https://docs.github.com/en/rest/reference/users#followers>`_
         """
         return github.PaginatedList.PaginatedList(NamedUser, self._requester, f"{self.url}/following", None)
 
     def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
         """
-        :calls: `GET /users/{user}/gists <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /users/{username}/gists <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert since is NotSet or isinstance(since, datetime), since
         url_parameters = dict()
@@ -448,13 +448,13 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_keys(self) -> PaginatedList[UserKey]:
         """
-        :calls: `GET /users/{user}/keys <https://docs.github.com/en/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user>`_
+        :calls: `GET /users/{username}/keys <https://docs.github.com/en/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user>`_
         """
         return github.PaginatedList.PaginatedList(github.UserKey.UserKey, self._requester, f"{self.url}/keys", None)
 
     def get_orgs(self) -> PaginatedList[Organization]:
         """
-        :calls: `GET /users/{user}/orgs <https://docs.github.com/en/rest/reference/orgs>`_
+        :calls: `GET /users/{username}/orgs <https://docs.github.com/en/rest/reference/orgs>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Organization.Organization, self._requester, f"{self.url}/orgs", None
@@ -462,7 +462,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_projects(self, state: str = "open") -> PaginatedList[Project]:
         """
-        :calls: `GET /users/{user}/projects <https://docs.github.com/en/rest/reference/projects#list-user-projects>`_
+        :calls: `GET /users/{username}/projects <https://docs.github.com/en/rest/reference/projects#list-user-projects>`_
         """
         assert isinstance(state, str), state
         url_parameters = {"state": state}
@@ -476,7 +476,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_public_events(self) -> PaginatedList[Event]:
         """
-        :calls: `GET /users/{user}/events/public <https://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{username}/events/public <https://docs.github.com/en/rest/reference/activity#events>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Event.Event, self._requester, f"{self.url}/events/public", None
@@ -484,7 +484,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_public_received_events(self) -> PaginatedList[Event]:
         """
-        :calls: `GET /users/{user}/received_events/public <https://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{username}/received_events/public <https://docs.github.com/en/rest/reference/activity#events>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
@@ -495,7 +495,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_received_events(self) -> PaginatedList[Event]:
         """
-        :calls: `GET /users/{user}/received_events <https://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{username}/received_events <https://docs.github.com/en/rest/reference/activity#events>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Event.Event, self._requester, f"{self.url}/received_events", None
@@ -516,7 +516,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         direction: Opt[str] = NotSet,
     ) -> PaginatedList[Repository]:
         """
-        :calls: `GET /users/{user}/repos <https://docs.github.com/en/rest/reference/repos>`_
+        :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
         """
         assert type is NotSet or isinstance(type, str), type
         assert sort is NotSet or isinstance(sort, str), sort
@@ -537,7 +537,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_starred(self) -> PaginatedList[Repository]:
         """
-        :calls: `GET /users/{user}/starred <https://docs.github.com/en/rest/reference/activity#starring>`_
+        :calls: `GET /users/{username}/starred <https://docs.github.com/en/rest/reference/activity#starring>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository, self._requester, f"{self.url}/starred", None
@@ -545,7 +545,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_subscriptions(self) -> PaginatedList[Repository]:
         """
-        :calls: `GET /users/{user}/subscriptions <https://docs.github.com/en/rest/reference/activity#watching>`_
+        :calls: `GET /users/{username}/subscriptions <https://docs.github.com/en/rest/reference/activity#watching>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
@@ -556,7 +556,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_watched(self) -> PaginatedList[Repository]:
         """
-        :calls: `GET /users/{user}/watched <https://docs.github.com/en/rest/reference/activity#starring>`_
+        :calls: `GET /users/{username}/watched <https://docs.github.com/en/rest/reference/activity#starring>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository, self._requester, f"{self.url}/watched", None
@@ -564,7 +564,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_following(self, following: NamedUser) -> bool:
         """
-        :calls: `GET /users/{user}/following/{target_user} <https://docs.github.com/en/rest/reference/users#check-if-a-user-follows-another-user>`_
+        :calls: `GET /users/{username}/following/{target_user} <https://docs.github.com/en/rest/reference/users#check-if-a-user-follows-another-user>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/following/{following._identity}")

@@ -104,7 +104,7 @@ class Variable(CompletableGithubObject):
 
     def edit(self, value: str) -> bool:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
+        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
         :param variable_name: string
         :param value: string
         :rtype: bool

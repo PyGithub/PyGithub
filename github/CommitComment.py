@@ -164,14 +164,14 @@ class CommitComment(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -182,7 +182,7 @@ class CommitComment(CompletableGithubObject):
 
     def get_reactions(self) -> PaginatedList[Reaction]:
         """
-        :calls: `GET /repos/{owner}/{repo}/comments/{id}/reactions
+        :calls: `GET /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-commit-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
@@ -196,7 +196,7 @@ class CommitComment(CompletableGithubObject):
 
     def create_reaction(self, reaction_type: str) -> Reaction:
         """
-        :calls: `POST /repos/{owner}/{repo}/comments/{id}/reactions
+        :calls: `POST /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-commit-comment>`_
         """
         assert isinstance(reaction_type, str), reaction_type
