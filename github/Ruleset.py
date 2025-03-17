@@ -42,8 +42,7 @@ if TYPE_CHECKING:
 
 class Ruleset(CompletableGithubObject):
     """
-    This class represents Rulesets. A ruleset is a set of rules that are applied when specified conditions
-    are met.
+    This class represents Rulesets. A ruleset is a set of rules that are applied when specified conditions are met.
 
     The reference can be found here https://docs.github.com/en/rest/repos/rules
 
@@ -284,7 +283,9 @@ class Ruleset(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "current_user_can_bypass" in attributes:  # pragma no branch
             self._current_user_can_bypass = self._makeStringAttribute(attributes["current_user_can_bypass"])
-        if (
-            "_links" in attributes and "self" in attributes["_links"] and "href" in attributes["_links"]["self"]
-        ):  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["_links"]["self"]["href"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
+
+        href = attributes.get("_links", {}).get("self", {}).get("href")
+        if href and "url" not in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(href)
