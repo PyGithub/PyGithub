@@ -811,10 +811,8 @@ class SubIssue(Issue):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
-
         # Process sub-issue specific attributes
         if "parent_issue" in attributes:
             self._parent_issue = self._makeClassAttribute(github.Issue.Issue, attributes["parent_issue"])
-
         if "priority_position" in attributes:
             self._priority_position = self._makeIntAttribute(attributes["priority_position"])
