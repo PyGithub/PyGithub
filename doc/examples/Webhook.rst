@@ -58,6 +58,7 @@ Setting Up the Webhook Listener
             return {"status": 200}
 
 Creating a Webhook Programmatically
+-----------------------------------
 
 Instead of manually configuring a webhook via GitHub's UI, you can create it programmatically using PyGithub:
 
