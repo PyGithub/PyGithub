@@ -28,7 +28,7 @@ from . import Framework
 class SubIssue(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         self.issue = self.repo.get_issue(28)
         print("setup done")
 
