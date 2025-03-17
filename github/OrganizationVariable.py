@@ -77,7 +77,7 @@ class OrganizationVariable(Variable):
         visibility: str = "all",
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
+        :calls: `PATCH /orgs/{org}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
@@ -101,7 +101,7 @@ class OrganizationVariable(Variable):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: `PUT /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT {org_url}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -112,7 +112,7 @@ class OrganizationVariable(Variable):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE {org_url}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """

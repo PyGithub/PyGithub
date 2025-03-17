@@ -266,14 +266,14 @@ class Team(CompletableGithubObject):
         This API call is deprecated. Use `add_membership` instead.
         https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
-        :calls: `PUT /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/members/{member._identity}")
 
     def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
         """
-        :calls: `PUT /teams/{id}/memberships/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/memberships/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         assert role is NotSet or isinstance(role, str), role
@@ -304,7 +304,7 @@ class Team(CompletableGithubObject):
 
     def add_to_repos(self, repo: str | Repository) -> None:
         """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         headers, data = self._requester.requestJsonAndCheck(
@@ -313,7 +313,7 @@ class Team(CompletableGithubObject):
 
     def get_repo_permission(self, repo: str | Repository) -> Permissions | None:
         """
-        :calls: `GET /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         try:
@@ -333,7 +333,7 @@ class Team(CompletableGithubObject):
     )
     def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
         """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
         :rtype: None
@@ -364,7 +364,7 @@ class Team(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /teams/{id} <https://docs.github.com/en/rest/reference/teams#delete-a-team>`_
+        :calls: `DELETE /teams/{team_id} <https://docs.github.com/en/rest/reference/teams#delete-a-team>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -378,7 +378,7 @@ class Team(CompletableGithubObject):
         notification_setting: Opt[str] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /teams/{id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
+        :calls: `PATCH /teams/{team_id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
         """
         assert isinstance(name, str), name
         assert description is NotSet or isinstance(description, str), description
@@ -402,7 +402,7 @@ class Team(CompletableGithubObject):
 
     def get_teams(self) -> PaginatedList[Team]:
         """
-        :calls: `GET /teams/{id}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
+        :calls: `GET /teams/{team_id}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Team.Team,
@@ -413,7 +413,7 @@ class Team(CompletableGithubObject):
 
     def get_discussions(self) -> PaginatedList[TeamDiscussion]:
         """
-        :calls: `GET /teams/{id}/discussions <https://docs.github.com/en/rest/reference/teams#list-discussions>`_
+        :calls: `GET /teams/{team_id}/discussions <https://docs.github.com/en/rest/reference/teams#list-discussions>`_
         """
         return github.PaginatedList.PaginatedList(
             github.TeamDiscussion.TeamDiscussion,
@@ -425,7 +425,7 @@ class Team(CompletableGithubObject):
 
     def get_members(self, role: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /teams/{id}/members <https://docs.github.com/en/rest/reference/teams#list-team-members>`_
+        :calls: `GET /teams/{team_id}/members <https://docs.github.com/en/rest/reference/teams#list-team-members>`_
         """
         assert role is NotSet or isinstance(role, str), role
         url_parameters: dict[str, Any] = {}
@@ -441,7 +441,7 @@ class Team(CompletableGithubObject):
 
     def get_repos(self) -> PaginatedList[Repository]:
         """
-        :calls: `GET /teams/{id}/repos <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/repos <https://docs.github.com/en/rest/reference/teams>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository, self._requester, f"{self.url}/repos", None
@@ -449,7 +449,7 @@ class Team(CompletableGithubObject):
 
     def invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
-        :calls: `GET /teams/{id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
+        :calls: `GET /teams/{team_id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
         """
         return github.PaginatedList.PaginatedList(
             github.NamedUser.OrganizationInvitation,
@@ -461,7 +461,7 @@ class Team(CompletableGithubObject):
 
     def has_in_members(self, member: NamedUser) -> bool:
         """
-        :calls: `GET /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
@@ -469,7 +469,7 @@ class Team(CompletableGithubObject):
 
     def has_in_repos(self, repo: str | Repository) -> bool:
         """
-        :calls: `GET /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         status, headers, data = self._requester.requestJson(
@@ -489,14 +489,14 @@ class Team(CompletableGithubObject):
         This API call is deprecated. Use `remove_membership` instead:
         https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
-        :calls: `DELETE /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `DELETE /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/members/{member._identity}")
 
     def remove_from_repos(self, repo: str | Repository) -> None:
         """
-        :calls: `DELETE /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `DELETE /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         headers, data = self._requester.requestJsonAndCheck(
