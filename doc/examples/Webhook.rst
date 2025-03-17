@@ -6,13 +6,15 @@ Creating and Listening to Webhooks with PyGithub and Pyramid
 
 To receive a continuous stream of events from GitHub, you can set up a WSGI app using Pyramid to handle incoming POST requests. This allows you to automate responses to GitHub events, such as push or pull request updates.
 
-### Overview
+Overview
+--------
 
 The example below demonstrates how to create a webhook listener using Pyramid and PyGithub. This webhook will listen for `pull_request` and `push` events, triggering specific actions when a PR is opened, closed, merged, or synced, or when a commit is pushed.
 
 For reference, this example is adapted from `GitHub's platform samples <https://github.com/github/platform-samples/blob/master/api/python/building-a-ci-server/server.py>`__. A comprehensive list of event types that GitHub webhooks support is available in the `GitHub Webhooks documentation <https://developer.github.com/v3/issues/events/>`__.
 
-### Setting Up the Webhook Listener
+Setting Up the Webhook Listener
+-------------------------------
 
 .. code-block:: python
 
@@ -55,7 +57,7 @@ For reference, this example is adapted from `GitHub's platform samples <https://
             print("Webhook created with ID {}!".format(self.payload["hook"]["id"]))
             return {"status": 200}
 
-### Creating a Webhook Programmatically
+Creating a Webhook Programmatically
 
 Instead of manually configuring a webhook via GitHub's UI, you can create it programmatically using PyGithub:
 
@@ -81,7 +83,8 @@ Instead of manually configuring a webhook via GitHub's UI, you can create it pro
         repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
         repo.create_hook("web", config, EVENTS, active=True)
 
-### Running the Webhook Server
+Running the Webhook Server
+--------------------------
 
 .. code-block:: python
 
@@ -94,7 +97,8 @@ Instead of manually configuring a webhook via GitHub's UI, you can create it pro
         server = make_server("0.0.0.0", 80, app)
         server.serve_forever()
 
-### Testing the Webhook
+Testing the Webhook
+-------------------
 
 To test the webhook, you can use API debugging tools such as:
 
