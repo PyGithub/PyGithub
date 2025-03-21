@@ -38,6 +38,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -71,6 +72,7 @@ import github.IssuePullRequest
 import github.Label
 import github.Milestone
 import github.NamedUser
+import github.Organization
 import github.PullRequest
 import github.Reaction
 import github.Repository
@@ -111,7 +113,6 @@ class Issue(CompletableGithubObject):
 
     The OpenAPI schema can be found at
     - /components/schemas/issue
-    - /components/schemas/issue-search-result-item
     - /components/schemas/nullable-issue
 
     """
@@ -144,7 +145,6 @@ class Issue(CompletableGithubObject):
         self._reactions: Attribute[dict] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._repository_url: Attribute[str] = NotSet
-        self._score: Attribute[float] = NotSet
         self._state: Attribute[str] = NotSet
         self._state_reason: Attribute[str | None] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
@@ -301,11 +301,6 @@ class Issue(CompletableGithubObject):
     def repository_url(self) -> str:
         self._completeIfNotSet(self._repository_url)
         return self._repository_url.value
-
-    @property
-    def score(self) -> float:
-        self._completeIfNotSet(self._score)
-        return self._score.value
 
     @property
     def state(self) -> str:
@@ -652,8 +647,6 @@ class Issue(CompletableGithubObject):
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
-        if "score" in attributes:  # pragma no branch
-            self._score = self._makeFloatAttribute(attributes["score"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "state_reason" in attributes:  # pragma no branch
@@ -670,3 +663,35 @@ class Issue(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+
+
+class IssueSearchResult(Issue):
+    """
+    This class represents IssueSearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-issues-and-pull-requests
+
+    The OpenAPI schema can be found at
+    - /components/schemas/issue-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        # TODO: remove if parent does not implement this
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"number": self._number.value, "title": self._title.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        # TODO: remove if parent does not implement this
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])

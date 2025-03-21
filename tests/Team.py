@@ -28,6 +28,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -65,6 +66,7 @@ class Team(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.team.created_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.description, "a team")
+        self.assertIsNone(self.team.group_id)
         self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
         self.assertEqual(self.team.id, 12345678)
         self.assertIsNone(self.team.ldap_dn)
@@ -83,6 +85,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.repos_count, 0)
         self.assertEqual(self.team.repositories_url, "https://api.github.com/organizations/1234567/team/12345678/repos")
         self.assertEqual(self.team.slug, "team-slug")
+        self.assertIsNone(self.team.sync_to_organizations)
         self.assertEqual(self.team.updated_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.url, "https://api.github.com/organizations/1234567/team/12345678")
         self.assertEqual(self.team.organization, self.org)

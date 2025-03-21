@@ -18,6 +18,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,6 +43,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import github.GitAuthor
+import github.GitCommitVerification
 import github.GithubObject
 import github.GitObject
 import github.GitTreeElement
@@ -49,6 +51,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.GitAuthor import GitAuthor
+    from github.GitCommitVerification import GitCommitVerification
     from github.GitObject import GitObject
 
 
@@ -72,7 +75,7 @@ class GitTag(CompletableGithubObject):
         self._tag: Attribute[str] = NotSet
         self._tagger: Attribute[GitAuthor] = NotSet
         self._url: Attribute[str] = NotSet
-        self._verification: Attribute[dict[str, Any]] = NotSet
+        self._verification: Attribute[GitCommitVerification] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
@@ -113,7 +116,7 @@ class GitTag(CompletableGithubObject):
         return self._url.value
 
     @property
-    def verification(self) -> dict[str, Any]:
+    def verification(self) -> GitCommitVerification:
         self._completeIfNotSet(self._verification)
         return self._verification.value
 
@@ -133,4 +136,6 @@ class GitTag(CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "verification" in attributes:  # pragma no branch
-            self._verification = self._makeDictAttribute(attributes["verification"])
+            self._verification = self._makeClassAttribute(
+                github.GitCommitVerification.GitCommitVerification, attributes["verification"]
+            )

@@ -21,6 +21,8 @@
 # Copyright 2024 Bernhard M. Wiedemann <githubbmwprimary@lsmod.de>             #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -49,7 +51,7 @@ from unittest.mock import Mock
 import jwt
 
 import github
-from github.Auth import Auth
+from github.Auth import Auth, Login
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
@@ -62,7 +64,7 @@ class Authentication(Framework.BasicTestCase):
 
     def testBasicAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
-            g = github.Github(self.login.login, self.login.password)
+            g = github.Github("login", "password")
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
         self.assertWarning(
             warning,
@@ -91,21 +93,21 @@ class Authentication(Framework.BasicTestCase):
     def testAppAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
             app_auth = github.AppAuthentication(
-                app_id=self.app_auth.app_id,
-                private_key=self.app_auth.private_key,
+                app_id=APP_ID,
+                private_key=PRIVATE_KEY,
                 installation_id=29782936,
             )
             g = github.Github(app_auth=app_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
         self.assertWarnings(
             warning,
-            "Call to deprecated class AppAuthentication. (Use github.Auth.AppInstallationAuth instead)",
+            "Use github.Auth.AppInstallationAuth instead",
             "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
         )
 
     def testLoginAuthentication(self):
         # test data copied from testBasicAuthentication to test parity
-        g = github.Github(auth=self.login)
+        g = github.Github(auth=Login("login", "password"))
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testTokenAuthentication(self):
@@ -337,7 +339,7 @@ class Authentication(Framework.BasicTestCase):
     def testAddingCustomHeaders(self):
         requester = github.Github(auth=CustomAuth())._Github__requester
 
-        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False):
+        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False, follow_302_redirect=False):
             self.modifiedHeaders = requestHeaders
             return Mock(), {}, Mock()
 

@@ -15,6 +15,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Nevins <nevins-b@users.noreply.github.com>                    #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -52,7 +53,6 @@ class Deployment(Framework.TestCase):
         self.assertEqual(self.deployment.description, "Test deployment")
         self.assertEqual(self.deployment.environment, "test")
         self.assertEqual(self.deployment.id, 263877258)
-        self.assertIsNone(self.deployment.message)
         self.assertEqual(self.deployment.node_id, "MDEwOkRlcGxveW1lbnQyNjIzNTE3NzY=")
         self.assertEqual(self.deployment.original_environment, "test")
         self.assertEqual(self.deployment.payload, {"test": True})

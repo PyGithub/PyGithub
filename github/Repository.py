@@ -130,10 +130,15 @@
 # Copyright 2024 Heitor de Bittencourt <heitorpbittencourt@gmail.com>          #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Sebastien NICOT <sebastien.nicot@gmail.com>                   #
 # Copyright 2024 Sebastián Ramírez <tiangolo@gmail.com>                        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -162,7 +167,7 @@ from collections.abc import Iterable
 from datetime import date, datetime, timezone
 from typing import TYPE_CHECKING, Any
 
-from deprecated import deprecated
+from typing_extensions import deprecated
 
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability
@@ -202,6 +207,7 @@ import github.IssueComment
 import github.IssueEvent
 import github.Label
 import github.License
+import github.MergedUpstream
 import github.Milestone
 import github.NamedUser
 import github.Notification
@@ -214,6 +220,7 @@ import github.PublicKey
 import github.PullRequest
 import github.PullRequestComment
 import github.Referrer
+import github.RepoCodeSecurityConfig
 import github.RepositoryAdvisory
 import github.RepositoryDiscussion
 import github.RepositoryKey
@@ -265,7 +272,9 @@ if TYPE_CHECKING:
     from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
-    from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicyParams
+    from github.EnvironmentDeploymentBranchPolicy import (
+        EnvironmentDeploymentBranchPolicyParams,
+    )
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
     from github.GitBlob import GitBlob
@@ -284,6 +293,7 @@ if TYPE_CHECKING:
     from github.IssueEvent import IssueEvent
     from github.Label import Label
     from github.License import License
+    from github.MergedUpstream import MergedUpstream
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
     from github.Notification import Notification
@@ -295,6 +305,7 @@ if TYPE_CHECKING:
     from github.PullRequest import PullRequest
     from github.PullRequestComment import PullRequestComment
     from github.Referrer import Referrer
+    from github.RepoCodeSecurityConfig import RepoCodeSecurityConfig
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
@@ -2379,11 +2390,8 @@ class Repository(CompletableGithubObject):
             "GET",
             f"{self.url}/contents/{urllib.parse.quote(path)}",
             parameters=url_parameters,
+            follow_302_redirect=True,
         )
-
-        # Handle 302 redirect response
-        if headers.get("status") == "302 Found" and headers.get("location"):
-            headers, data = self._requester.requestJsonAndCheck("GET", headers["location"], parameters=url_parameters)
 
         if isinstance(data, list):
             return [
@@ -2844,7 +2852,7 @@ class Repository(CompletableGithubObject):
         }
 
     @deprecated(
-        reason="""
+        """
         Repository.get_dir_contents() is deprecated, use
         Repository.get_contents() instead.
         """
@@ -3857,6 +3865,18 @@ class Repository(CompletableGithubObject):
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
 
+    def merge_upstream(self, branch: str) -> MergedUpstream:
+        """
+        :calls: `POST /repos/{owner}/{repo}/merge-upstream <https://docs.github.com/en/rest/branches/branches#sync-a-fork-branch-with-the-upstream-repository>`_
+        :param branch: string
+        :rtype: :class:`github.MergedUpstream.MergedUpstream`
+        :raises: :class:`GithubException` for error status codes
+        """
+        assert isinstance(branch, str), branch
+        post_parameters = {"branch": branch}
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/merge-upstream", input=post_parameters)
+        return github.MergedUpstream.MergedUpstream(self._requester, headers, data)
+
     def replace_topics(self, topics: list[str]) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/topics <https://docs.github.com/en/rest/reference/repos>`_
@@ -4376,6 +4396,49 @@ class Repository(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PATCH", url, input=patch_parameters)
 
+    def attach_security_config(self, id: int) -> None:
+        """
+        :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
+        """
+        self.organization.attach_security_config_to_repositories(
+            id=id, scope="selected", selected_repository_ids=[self.id]
+        )
+
+    def detach_security_config(self) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
+        """
+        self.organization.detach_security_config_from_repositories(selected_repository_ids=[self.id])
+
+    def get_security_config(self) -> RepoCodeSecurityConfig | None:
+        """
+        :calls: `GET /repos/{owner}/{repo}/code-security-configuration <https://docs.github.com/en/rest/code-security/configurations?apiVersion=2022-11-28#get-the-code-security-configuration-associated-with-a-repository>`_
+        :rtype: RepoCodeSecurityConfig | None
+        """
+        #### TODO(napier): this is actually a special type not CodeSecurityConfig
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-security-configuration")
+        if data is None:
+            return None
+        return github.RepoCodeSecurityConfig.RepoCodeSecurityConfig(self._requester, headers, data)
+
+    def transfer_ownership(self, new_owner: str, new_name: Opt[str] = NotSet, teams: Opt[list[int]] = NotSet) -> bool:
+        """
+        :calls: `POST /repos/{owner}/{repo}/transfer <https://docs.github.com/en/rest/repos/repos#transfer-a-repository>`_
+        :param new_owner: string
+        :param new_name: Optional string
+        :param teams: Optional list of int
+        :rtype: bool
+        """
+        assert isinstance(new_owner, str), new_owner
+        assert is_optional(new_name, str), new_name
+        assert is_optional_list(teams, int), teams
+
+        post_parameters = NotSet.remove_unset_items({"new_owner": new_owner, "new_name": new_name, "team_ids": teams})
+
+        _, _ = self._requester.requestJsonAndCheck("POST", f"{self.url}/transfer", input=post_parameters)
+
+        return True
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "allow_auto_merge" in attributes:  # pragma no branch
             self._allow_auto_merge = self._makeBoolAttribute(attributes["allow_auto_merge"])
@@ -4591,3 +4654,41 @@ class Repository(CompletableGithubObject):
             self._watchers_count = self._makeIntAttribute(attributes["watchers_count"])
         if "web_commit_signoff_required" in attributes:  # pragma no branch
             self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
+
+
+class RepositorySearchResult(Repository):
+    """
+    This class represents RepositorySearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-repositories
+
+    The OpenAPI schema can be found at
+    - /components/schemas/repo-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+        self._text_matches: Attribute[dict[str, Any]] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"full_name": self._full_name.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    @property
+    def text_matches(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._text_matches)
+        return self._text_matches.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeDictAttribute(attributes["text_matches"])

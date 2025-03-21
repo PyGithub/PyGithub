@@ -22,6 +22,8 @@
 # Copyright 2023 sd-kialo <138505487+sd-kialo@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Nick McClorey <32378821+nickrmcclorey@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -213,6 +215,22 @@ class Workflow(CompletableGithubObject):
             headers=None,
             list_item="workflow_runs",
         )
+
+    def disable(self) -> bool:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#disable-a-workflow>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson("PUT", f"{self.url}/disable")
+        return status == 204
+
+    def enable(self) -> bool:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#enable-a-workflow>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson("PUT", f"{self.url}/enable")
+        return status == 204
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "badge_url" in attributes:  # pragma no branch

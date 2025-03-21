@@ -1,6 +1,8 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
+# Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -166,12 +168,12 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
         return self._repository_full_name.value
 
     @property
-    def repository_name(self) -> str:
-        return self._repository_name.value
-
-    @property
     def repository_id(self) -> int:
         return self._repository_id.value
+
+    @property
+    def repository_name(self) -> str:
+        return self._repository_name.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._repository_id = self._makeIntAttribute(attributes["repository_id"])

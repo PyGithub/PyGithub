@@ -14,6 +14,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Geoffrey <geoffrey@moveparallel.com>                          #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -56,6 +57,17 @@ if TYPE_CHECKING:
 
 
 class TimingData(NamedTuple):
+    """
+    This class represents workflow run usage.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/actions/workflows#get-workflow-usage
+
+    The OpenAPI schema can be found at
+    - /components/schemas/workflow-run-usage
+
+    """
+
     billable: dict[str, dict[str, int]]
     run_duration_ms: int
 

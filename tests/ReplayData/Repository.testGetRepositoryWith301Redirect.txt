@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/protoncoin/protoncoin
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 301
 [('content-length', '155'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept-Encoding'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('location', 'https://api.github.com/repositories/112116543'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '301 Moved Permanently'), ('x-ratelimit-remaining', '4989'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '91C2:0E1E:35F25D0:44D48B0:5BB6117E'), ('date', 'Thu, 04 Oct 2018 13:11:27 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('x-runtime-rack', '0.033039'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1538660372')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repositories/112116543
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('x-runtime-rack', '0.065478'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', 'W/"f251b5b9c42514b43eb0afe3c76cf8de"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('referrer-policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('status', '200 OK'), ('x-ratelimit-remaining', '4986'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('transfer-encoding', 'chunked'), ('x-github-request-id', '934E:0E1F:3F93A9C:517C35B:5BB6137F'), ('last-modified', 'Thu, 05 Jul 2018 07:15:14 GMT'), ('date', 'Thu, 04 Oct 2018 13:20:02 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('content-encoding', 'gzip'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1538660372')]

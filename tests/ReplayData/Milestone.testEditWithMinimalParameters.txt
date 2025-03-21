@@ -3,7 +3,7 @@ PATCH
 api.github.com
 None
 /repos/PyGithub/PyGithub/milestones/1
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"title": "Title edited by PyGithub"}
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4954'), ('content-length', '599'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"df00dd4d1183f48c313b9cf04330623b"'), ('date', 'Sat, 19 May 2012 10:29:02 GMT'), ('content-type', 'application/json; charset=utf-8')]

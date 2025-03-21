@@ -3,6 +3,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Patryk Szulczyk <therealsoulcheck@gmail.com>                  #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -390,6 +391,7 @@ class GithubRetry(unittest.TestCase):
         with mock.patch.object(retry, "_GithubRetry__log") as log:
             with self.assertRaises(github.GithubException) as exp:
                 retry.increment("TEST", "URL", response)
+            self.assertIsNone(exp.exception.message)
             self.assertEqual(403, exp.exception.status)
             self.assertEqual("NOT GOOD", exp.exception.data)
             self.assertEqual({}, exp.exception.headers)
