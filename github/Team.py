@@ -283,7 +283,7 @@ class Team(CompletableGithubObject):
         if isinstance(member, github.NamedUser.NamedUser):
             member = member._identity
         else:
-            member = urllib.parse.quote(member)
+            member = urllib.parse.quote(member, safe='')
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/memberships/{member}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
@@ -302,7 +302,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo = repo._identity  # type: ignore
         else:
-            repo = urllib.parse.quote(repo)
+            repo = urllib.parse.quote(repo, safe='')
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
@@ -343,7 +343,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo_url_param = repo._identity
         else:
-            repo_url_param = urllib.parse.quote(repo)
+            repo_url_param = urllib.parse.quote(repo, safe='')
         put_parameters = {
             "permission": permission,
         }
