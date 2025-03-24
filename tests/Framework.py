@@ -344,7 +344,7 @@ class BasicTestCase(unittest.TestCase):
     recordMode = False
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
-    def __init__(self, methodName='runTest'):
+    def __init__(self, methodName="runTest") -> None:
         super().__init__(methodName)
         self.authMode = "token"
         self.per_page = Consts.DEFAULT_PER_PAGE
