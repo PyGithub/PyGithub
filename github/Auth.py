@@ -235,7 +235,7 @@ class AppAuth(JWT):
         assert isinstance(jwt_expiry, int), jwt_expiry
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
 
-        self._app_id = app_id
+        self._app_id = str(app_id)
         self._sign_func = sign_func
         self._jwt_expiry = jwt_expiry
         self._jwt_issued_at = jwt_issued_at
@@ -280,7 +280,7 @@ class AppAuth(JWT):
         payload = {
             "iat": now + self._jwt_issued_at,
             "exp": now + (expiration if expiration is not None else self._jwt_expiry),
-            "iss": str(self._app_id),
+            "iss": self._app_id,
         }
         assert self._sign_func is not None
         encrypted = self._sign_func(payload)
