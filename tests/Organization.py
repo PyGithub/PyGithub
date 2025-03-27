@@ -741,6 +741,13 @@ class Organization(Framework.TestCase):
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
 
+    def testGetSelfHostedRunners(self):
+        # XXX: Organization BeaverSoftware does not exist
+        # https://api.github.com/orgs/BeaverSoftware
+        org = self.g.get_organization("ClickHouse")
+        runners = org.get_self_hosted_runners()
+        self.assertEqual(runners.totalCount, 602)
+
     def testGetCodeSecurityConfigs(self):
         configs = list(self.org.get_code_security_configs())
         self.assertEqual(configs.pop().id, 17)
