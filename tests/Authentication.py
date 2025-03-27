@@ -303,7 +303,6 @@ class Authentication(Framework.BasicTestCase):
             algorithms=["RS256"],
             options={"verify_exp": False},
             issuer=str(APP_ID),
-            
         )
         self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": str(APP_ID)})
 
