@@ -302,8 +302,10 @@ class Authentication(Framework.BasicTestCase):
             key=PUBLIC_KEY,
             algorithms=["RS256"],
             options={"verify_exp": False},
+            issuer=str(APP_ID),
+            
         )
-        self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID})
+        self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": str(APP_ID)})
 
     def testCreateJWTWithExpiration(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30)
@@ -317,8 +319,9 @@ class Authentication(Framework.BasicTestCase):
             key=PUBLIC_KEY,
             algorithms=["RS256"],
             options={"verify_exp": False},
+            issuer=str(APP_ID),
         )
-        self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID})
+        self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": str(APP_ID)})
 
     def testUserAgent(self):
         g = github.Github(user_agent="PyGithubTester")
