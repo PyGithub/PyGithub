@@ -1601,6 +1601,19 @@ class Organization(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
 
+    def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
+        """
+        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runner-groups#list-self-hosted-runner-groups-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            f"{self.url}/actions/runners",
+            None,
+            list_item="runners",
+        )
+
     def get_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#get-code-security-configurations-for-an-organization>`_

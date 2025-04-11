@@ -741,6 +741,10 @@ class Organization(Framework.TestCase):
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
 
+    def testGetSelfHostedRunners(self):
+        runners = self.org.get_self_hosted_runners()
+        self.assertEqual(runners.totalCount, 602)
+
     def testGetCodeSecurityConfigs(self):
         configs = list(self.org.get_code_security_configs())
         self.assertEqual(configs.pop().id, 17)
