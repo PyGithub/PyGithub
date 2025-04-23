@@ -215,6 +215,121 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertIsNone(user_installation_authorization.has_multiple_single_files)
         self.assertIsNone(user_installation_authorization.single_file_paths)
 
+    def testGetAccessTokenWithSelectedRepositories(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+
+        # Get repo installation access token
+        repo_installation_authorization = github_integration.get_access_token(
+            self.repo_installation_id, repositories=["repo1", "repo2"]
+        )
+        self.assertEqual(
+            repo_installation_authorization.token,
+            "ghs_1llwuELtXN5HDOB99XhpcTXdJxbOuF0ZlSmj",
+        )
+        self.assertDictEqual(
+            repo_installation_authorization.permissions,
+            {"issues": "read", "metadata": "read"},
+        )
+        self.assertEqual(repo_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(repo_installation_authorization.repositories)
+        self.assertIsNone(repo_installation_authorization.single_file)
+        self.assertIsNone(repo_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(repo_installation_authorization.single_file_paths)
+
+        repo_installation_authorization = github_integration.get_access_token(
+            self.repo_installation_id, repository_ids=[1, 2]
+        )
+        self.assertEqual(
+            repo_installation_authorization.token,
+            "ghs_1llwuELtXN5HDOB99XhpcTXdJxbOuF0ZlSmj",
+        )
+        self.assertDictEqual(
+            repo_installation_authorization.permissions,
+            {"issues": "read", "metadata": "read"},
+        )
+        self.assertEqual(repo_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(repo_installation_authorization.repositories)
+        self.assertIsNone(repo_installation_authorization.single_file)
+        self.assertIsNone(repo_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(repo_installation_authorization.single_file_paths)
+
+        # Get org installation access token
+        org_installation_authorization = github_integration.get_access_token(
+            self.org_installation_id, repositories=["repo1", "repo2"]
+        )
+        self.assertEqual(
+            org_installation_authorization.token,
+            "ghs_V0xygF8yACXSDz5FM65QWV1BT2vtxw0cbgPw",
+        )
+        org_permissions = {
+            "administration": "write",
+            "issues": "write",
+            "metadata": "read",
+            "organization_administration": "read",
+        }
+        self.assertDictEqual(org_installation_authorization.permissions, org_permissions)
+        self.assertEqual(org_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(org_installation_authorization.repositories)
+        self.assertIsNone(org_installation_authorization.single_file)
+        self.assertIsNone(org_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(org_installation_authorization.single_file_paths)
+
+        org_installation_authorization = github_integration.get_access_token(
+            self.org_installation_id, repository_ids=[1, 2]
+        )
+        self.assertEqual(
+            org_installation_authorization.token,
+            "ghs_V0xygF8yACXSDz5FM65QWV1BT2vtxw0cbgPw",
+        )
+        org_permissions = {
+            "administration": "write",
+            "issues": "write",
+            "metadata": "read",
+            "organization_administration": "read",
+        }
+        self.assertDictEqual(org_installation_authorization.permissions, org_permissions)
+        self.assertEqual(org_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(org_installation_authorization.repositories)
+        self.assertIsNone(org_installation_authorization.single_file)
+        self.assertIsNone(org_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(org_installation_authorization.single_file_paths)
+
+        # Get user installation access token
+        user_installation_authorization = github_integration.get_access_token(
+            self.user_installation_id, repositories=["repo1", "repo2"]
+        )
+        self.assertEqual(
+            user_installation_authorization.token,
+            "ghs_1llwuELtXN5HDOB99XhpcTXdJxbOuF0ZlSmj",
+        )
+        self.assertDictEqual(
+            user_installation_authorization.permissions,
+            {"issues": "read", "metadata": "read"},
+        )
+        self.assertEqual(user_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(user_installation_authorization.repositories)
+        self.assertIsNone(user_installation_authorization.single_file)
+        self.assertIsNone(user_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(user_installation_authorization.single_file_paths)
+
+        user_installation_authorization = github_integration.get_access_token(
+            self.user_installation_id, repository_ids=[1, 2]
+        )
+        self.assertEqual(
+            user_installation_authorization.token,
+            "ghs_1llwuELtXN5HDOB99XhpcTXdJxbOuF0ZlSmj",
+        )
+        self.assertDictEqual(
+            user_installation_authorization.permissions,
+            {"issues": "read", "metadata": "read"},
+        )
+        self.assertEqual(user_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(user_installation_authorization.repositories)
+        self.assertIsNone(user_installation_authorization.single_file)
+        self.assertIsNone(user_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(user_installation_authorization.single_file_paths)
+
     def testGetUserInstallation(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         github_integration = github.GithubIntegration(auth=auth)
