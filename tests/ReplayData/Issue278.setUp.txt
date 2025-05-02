@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/openframeworks
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4929'), ('content-length', '564'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"cddd0710dc9490553aecd937e15d1136"'), ('date', 'Tue, 29 May 2012 19:36:56 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4928'), ('content-length', '1253'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e7459f63683768d5b53fc4b246d13a10"'), ('date', 'Tue, 29 May 2012 19:36:56 GMT'), ('content-type', 'application/json; charset=utf-8')]

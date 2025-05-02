@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4983'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '100300'), ('server', 'GitHub.com'), ('last-modified', 'Wed, 21 Aug 2013 10:42:46 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/345337/issues?page=2>; rel="next", <https://api.github.com/repositories/345337/issues?page=17>; rel="last"'), ('etag', '"ff413c4ac1c8950a3c117d577119cd9e"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 21 Aug 2013 10:54:13 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1377085393')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repositories/345337/issues?page=2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4982'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '90328'), ('server', 'GitHub.com'), ('last-modified', 'Wed, 21 Aug 2013 10:42:46 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/345337/issues?page=3>; rel="next", <https://api.github.com/repositories/345337/issues?page=17>; rel="last", <https://api.github.com/repositories/345337/issues?page=1>; rel="first", <https://api.github.com/repositories/345337/issues?page=1>; rel="prev"'), ('etag', '"ff413c4ac1c8950a3c117d577119cd9e"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 21 Aug 2013 10:54:14 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1377085393')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4981'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '100300'), ('server', 'GitHub.com'), ('last-modified', 'Wed, 21 Aug 2013 10:42:46 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/345337/issues?page=2>; rel="next", <https://api.github.com/repositories/345337/issues?page=17>; rel="last"'), ('etag', '"ff413c4ac1c8950a3c117d577119cd9e"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 21 Aug 2013 10:54:16 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1377085393')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repositories/345337/issues?page=17
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4980'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '77244'), ('server', 'GitHub.com'), ('last-modified', 'Wed, 21 Aug 2013 10:42:46 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/345337/issues?page=1>; rel="last", <https://api.github.com/repositories/345337/issues?page=1>; rel="first", <https://api.github.com/repositories/345337/issues?page=16>; rel="prev"'), ('etag', '"ff413c4ac1c8950a3c117d577119cd9e"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 21 Aug 2013 10:54:17 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1377085393')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /repositories/345337/issues?page=16
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4979'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '74557'), ('server', 'GitHub.com'), ('last-modified', 'Wed, 21 Aug 2013 10:42:46 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/345337/issues?page=17>; rel="next", <https://api.github.com/repositories/345337/issues?page=17>; rel="last", <https://api.github.com/repositories/345337/issues?page=1>; rel="first", <https://api.github.com/repositories/345337/issues?page=15>; rel="prev"'), ('etag', '"ff413c4ac1c8950a3c117d577119cd9e"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 21 Aug 2013 10:54:19 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1377085393')]

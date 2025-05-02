@@ -3,7 +3,7 @@ POST
 api.github.com
 None
 /gists
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"files": {"foobar.txt": {"content": "File created by PyGithub"}}, "public": true}
 201
 [('status', '201 Created'), ('x-ratelimit-remaining', '4981'), ('content-length', '1424'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"7abbb6858d17ad64e3d5874676725694"'), ('date', 'Sat, 26 May 2012 09:50:03 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/gists/2793179')]

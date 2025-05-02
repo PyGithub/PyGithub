@@ -14,6 +14,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +35,7 @@
 ################################################################################
 
 import github
+from github.Auth import Login
 
 from . import Framework
 
@@ -43,10 +45,11 @@ class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub
         g = github.Github(auth=self.oauth_token)
         with self.assertRaises(github.GithubException) as raisedexp:
             list(g.get_user().get_authorizations())
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 404)
 
     def testGetAuthorizationsSucceedsWhenAutenticatedThroughLoginPassword(self):
-        g = github.Github(auth=self.login)
+        g = github.Github(auth=Login("login", "password"))
         self.assertListKeyEqual(
             g.get_user().get_authorizations(),
             lambda a: a.note,

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '1330'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'e724c57ebb9961c772a91e2dd7421c8d'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"1b171bef9da5a5bcca9799131499edae"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4925'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'AE1E5031:14B57:766BC21:568E7104'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Wed, 06 Jan 2016 19:09:00 GMT'), ('date', 'Thu, 07 Jan 2016 14:07:00 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452177625')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/khornberg/PyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '13870'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'a30e6f9aa7cf5731b87dfb3b9992202d'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"c874b56da60decc8687ee4ed43dcd3aa"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4924'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'AE1E5031:14B61:23FC1AEB:568E7104'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Thu, 31 Dec 2015 15:01:40 GMT'), ('date', 'Thu, 07 Jan 2016 14:07:01 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452177625')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/khornberg/PyGithub/branches/master
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '3589'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'b0ef53392caa42315c6206737946d931'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"62bfcfb47e26986d4c1a6db0bcf43cb6"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4923'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'AE1E5031:14B59:AE47571:568E7105'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Thu, 07 Jan 2016 14:07:01 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452177625')]

@@ -18,6 +18,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,38 +38,41 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
-from typing import Any, Dict
+from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any
+
+import github.Traffic
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Traffic import Traffic
 
 
 class View(NonCompletableGithubObject):
     """
-    This class represents a popular Path for a GitHub repository.
+    This class represents the total number of views and breakdown per day or week for a GitHub repository.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/repos#traffic
+    https://docs.github.com/en/rest/metrics/traffic#get-page-views
+
+    The OpenAPI schema can be found at
+    - /components/schemas/view-traffic
 
     """
 
     def _initAttributes(self) -> None:
-        self._timestamp: Attribute[datetime] = NotSet
         self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
+        self._views: Attribute[list[Traffic]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
             {
-                "timestamp": self._timestamp.value,
                 "count": self._count.value,
                 "uniques": self._uniques.value,
             }
         )
-
-    @property
-    def timestamp(self) -> datetime:
-        return self._timestamp.value
 
     @property
     def count(self) -> int:
@@ -78,10 +82,14 @@ class View(NonCompletableGithubObject):
     def uniques(self) -> int:
         return self._uniques.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "timestamp" in attributes:  # pragma no branch
-            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
+    @property
+    def views(self) -> list[Traffic]:
+        return self._views.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "count" in attributes:  # pragma no branch
             self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
+        if "views" in attributes:  # pragma no branch
+            self._views = self._makeListOfClassesAttribute(github.Traffic.Traffic, attributes["views"])

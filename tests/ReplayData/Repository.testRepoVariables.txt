@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/AndrewJDawes/PyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Sat, 18 Nov 2023 21:46:39 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"68ec45d743bb1d53f805ddfd5ce767fe4c6f95f825f45853d143e7429d462251"'), ('Last-Modified', 'Sat, 18 Nov 2023 13:36:18 GMT'), ('X-OAuth-Scopes', 'gist, read:org, repo, workflow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('x-oauth-client-id', '178c6fc778ccc68e1d6a'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4793'), ('X-RateLimit-Reset', '1700345195'), ('X-RateLimit-Used', '207'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'ECD0:3AF1:FC6E76:2160B45:655930BF')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/AndrewJDawes/PyGithub/actions/variables
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {"name": "VARIABLE_NAME_ONE", "value": "variable-value-one"}
 201
 [('Server', 'GitHub.com'), ('Date', 'Sat, 18 Nov 2023 21:46:39 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '2'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"a788642757746bcde9de92d247c2259aa7cd5f159df240323d704e110a35a374"'), ('X-OAuth-Scopes', 'gist, read:org, repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('x-oauth-client-id', '178c6fc778ccc68e1d6a'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4792'), ('X-RateLimit-Reset', '1700345195'), ('X-RateLimit-Used', '208'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'ECD1:740F:F26048:200D4CD:655930BF')]
@@ -25,7 +25,7 @@ POST
 api.github.com
 None
 /repos/AndrewJDawes/PyGithub/actions/variables
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {"name": "VARIABLE_NAME_TWO", "value": "variable-value-two"}
 201
 [('Server', 'GitHub.com'), ('Date', 'Sat, 18 Nov 2023 21:46:40 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '2'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"a788642757746bcde9de92d247c2259aa7cd5f159df240323d704e110a35a374"'), ('X-OAuth-Scopes', 'gist, read:org, repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('x-oauth-client-id', '178c6fc778ccc68e1d6a'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4791'), ('X-RateLimit-Reset', '1700345195'), ('X-RateLimit-Used', '209'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'ECD3:60B1:10C5773:2357C6A:655930C0')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/AndrewJDawes/PyGithub
-{'If-None-Match': 'W/"68ec45d743bb1d53f805ddfd5ce767fe4c6f95f825f45853d143e7429d462251"', 'If-Modified-Since': 'Sat, 18 Nov 2023 13:36:18 GMT', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'If-None-Match': 'W/"68ec45d743bb1d53f805ddfd5ce767fe4c6f95f825f45853d143e7429d462251"', 'If-Modified-Since': 'Sat, 18 Nov 2023 13:36:18 GMT', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 304
 [('Server', 'GitHub.com'), ('Date', 'Sat, 18 Nov 2023 21:46:40 GMT'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"68ec45d743bb1d53f805ddfd5ce767fe4c6f95f825f45853d143e7429d462251"'), ('Last-Modified', 'Sat, 18 Nov 2023 13:36:18 GMT'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4791'), ('X-RateLimit-Reset', '1700345195'), ('X-RateLimit-Used', '209'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'ECD4:37FB:10EFC8C:23B0C64:655930C0')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /repos/AndrewJDawes/PyGithub/actions/variables
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Sat, 18 Nov 2023 21:46:40 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"0cf5ddcd51d27c7c91509b5ed5de0393d0b2e07cb507c737b90a67594a2a102f"'), ('X-OAuth-Scopes', 'gist, read:org, repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('x-oauth-client-id', '178c6fc778ccc68e1d6a'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4790'), ('X-RateLimit-Reset', '1700345195'), ('X-RateLimit-Used', '210'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'ECD5:3AF1:FC6F7E:2160D7E:655930C0')]
@@ -58,7 +58,7 @@ DELETE
 api.github.com
 None
 /repos/AndrewJDawes/PyGithub/actions/variables/VARIABLE_NAME_ONE
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('Server', 'GitHub.com'), ('Date', 'Sat, 18 Nov 2023 21:46:41 GMT'), ('X-OAuth-Scopes', 'gist, read:org, repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('x-oauth-client-id', '178c6fc778ccc68e1d6a'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4789'), ('X-RateLimit-Reset', '1700345195'), ('X-RateLimit-Used', '211'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'ECD6:847D:10BCA34:2344E74:655930C0')]
@@ -69,7 +69,7 @@ DELETE
 api.github.com
 None
 /repos/AndrewJDawes/PyGithub/actions/variables/VARIABLE_NAME_TWO
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('Server', 'GitHub.com'), ('Date', 'Sat, 18 Nov 2023 21:46:41 GMT'), ('X-OAuth-Scopes', 'gist, read:org, repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('x-oauth-client-id', '178c6fc778ccc68e1d6a'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4788'), ('X-RateLimit-Reset', '1700345195'), ('X-RateLimit-Used', '212'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'ECD7:4EBE:1058C41:22811D5:655930C1')]

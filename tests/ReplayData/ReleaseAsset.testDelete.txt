@@ -3,7 +3,7 @@ DELETE
 api.github.com
 None
 /api/v3/repos/edhollandAL/PyGithub/releases/assets/16
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('content-length', '0'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '4c8b2d4732c413f4b9aefe394bd65569'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"354bfbe5bc3193b117028111f8d7bf5d"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4969'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '56BCFFD3:70D4:71AB7A0:553A014B'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Thu, 23 Apr 2015 10:29:48 GMT'), ('date', 'Fri, 24 Apr 2015 08:39:39 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1429867683')]

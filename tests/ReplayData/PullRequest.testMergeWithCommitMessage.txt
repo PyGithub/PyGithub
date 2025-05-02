@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/39
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4990'), ('content-length', '4494'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"716935e701e066a56718d7a8b2f409f8"'), ('date', 'Tue, 29 May 2012 18:07:53 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ PUT
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/39/merge
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"commit_message": "Custom commit message created by PyGithub"}
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4989'), ('content-length', '109'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"378c85a4f6b6694e0f7686effbc2c29f"'), ('date', 'Tue, 29 May 2012 18:07:54 GMT'), ('content-type', 'application/json; charset=utf-8')]

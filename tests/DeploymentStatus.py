@@ -15,6 +15,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +35,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -46,6 +49,14 @@ class DeploymentStatus(Framework.TestCase):
         self.status = self.deployment.get_status(388454671)
 
     def testAttributes(self):
+        self.assertEqual(self.status.created_at, datetime(2020, 8, 26, 14, 32, 51, tzinfo=timezone.utc))
+        self.assertEqual(self.status.creator.login, "jacquev6")
+        self.assertEqual(
+            self.status.deployment_url, "https://api.github.com/repos/jacquev6/PyGithub/deployments/263877258"
+        )
+        self.assertEqual(self.status.description, "Deployment queued")
+        self.assertEqual(self.status.environment, "test")
+        self.assertEqual(self.status.environment_url, "https://example.com/environment")
         self.assertEqual(self.status.id, 388454671)
         created_at = datetime(2020, 8, 26, 14, 32, 51, tzinfo=timezone.utc)
         self.assertEqual(self.status.created_at, created_at)
@@ -57,6 +68,9 @@ class DeploymentStatus(Framework.TestCase):
         self.assertEqual(self.status.description, "Deployment queued")
         self.assertEqual(self.status.environment, "test")
         self.assertEqual(self.status.environment_url, "https://example.com/environment")
+        self.assertEqual(self.status.log_url, "https://example.com/deployment.log")
+        self.assertEqual(self.status.node_id, "MDE2OkRlcGxveW1lbnRTdGF0dXMzODg0NTQ2NzE=")
+        self.assertIsNone(self.status.performed_via_github_app)
         self.assertEqual(
             self.status.repository_url,
             "https://api.github.com/repos/jacquev6/PyGithub",

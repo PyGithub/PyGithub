@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/repos?type=public
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.nebula-preview+json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.nebula-preview+json'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4987'), ('content-length', '2291'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"4bcc5321db433ac18171c121303c77d2"'), ('date', 'Tue, 29 May 2012 18:11:16 GMT'), ('content-type', 'application/json; charset=utf-8')]

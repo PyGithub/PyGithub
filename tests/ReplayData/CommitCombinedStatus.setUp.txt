@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/edx/edx-platform/commits/74e70119a23fa3ffb3db19d4590eccfebd72b659
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '18854'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '593010132f82159af0ded24b4932e109'), ('x-oauth-scopes', 'notifications, public_repo, read:org, read:public_key, read:repo_hook, repo:status, repo_deployment'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"8e937a4cbcbaef182ddf483ee99a599f"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4993'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '12B0076B:2073:5CF629E:56A6A81E'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Mon, 14 Dec 2015 12:42:38 GMT'), ('date', 'Mon, 25 Jan 2016 22:56:31 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1453765330')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/edx/edx-platform/commits/74e70119a23fa3ffb3db19d4590eccfebd72b659/status
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '6365'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '3e3b9690823fb031da84658eb58aa83b'), ('x-oauth-scopes', 'notifications, public_repo, read:org, read:public_key, read:repo_hook, repo:status, repo_deployment'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', 'repo, repo:status'), ('etag', '"bfa38f9cceb7ccc231038178037a2013"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4992'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '12B0076B:2074:768909A:56A6A81F'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 25 Jan 2016 22:56:31 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1453765330')]

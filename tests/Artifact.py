@@ -23,6 +23,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github
 
 from . import Framework

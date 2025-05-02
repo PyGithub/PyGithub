@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/members
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('content-length', '886'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"f7f3d1eaa1c0d14d590b09dbb439db2e"'), ('date', 'Sun, 27 May 2012 05:08:20 GMT'), ('content-type', 'application/json; charset=utf-8')]

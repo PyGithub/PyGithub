@@ -29,6 +29,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -110,7 +111,7 @@ def _datetime_from_github_isoformat(value: str) -> datetime:
     return datetime.fromisoformat(value)
 
 
-class _NotSetType:
+class _NotSetType(Attribute[Any]):
     def __repr__(self) -> str:
         return "NotSet"
 
@@ -209,14 +210,14 @@ class _ValuedAttribute(Attribute[T]):
         return self._value
 
 
-class _BadAttribute(Attribute):
+class _BadAttribute(Attribute[T]):
     def __init__(self, value: Any, expectedType: Any, exception: Exception | None = None):
         self.__value = value
         self.__expectedType = expectedType
         self.__exception = exception
 
     @property
-    def value(self) -> Any:
+    def value(self) -> T:
         raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
@@ -533,6 +534,22 @@ class CompletableGithubObject(GithubObject, ABC):
     def completed(self) -> bool:
         return self.__completed
 
+    @property
+    def raw_data(self) -> dict[str, Any]:
+        """
+        :type: dict
+        """
+        self._completeIfNeeded()
+        return super().raw_data
+
+    @property
+    def raw_headers(self) -> dict[str, str | int]:
+        """
+        :type: dict
+        """
+        self._completeIfNeeded()
+        return super().raw_headers
+
     def complete(self) -> Self:
         self._completeIfNeeded()
         return self
@@ -551,22 +568,6 @@ class CompletableGithubObject(GithubObject, ABC):
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value, headers=self.__completeHeaders)
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
-
-    @property
-    def raw_data(self) -> dict[str, Any]:
-        """
-        :type: dict
-        """
-        self._completeIfNeeded()
-        return super().raw_data
-
-    @property
-    def raw_headers(self) -> dict[str, str | int]:
-        """
-        :type: dict
-        """
-        self._completeIfNeeded()
-        return super().raw_headers
 
     def update(self, additional_headers: dict[str, Any] | None = None) -> bool:
         """

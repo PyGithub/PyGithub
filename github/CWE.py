@@ -37,9 +37,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -65,7 +65,7 @@ class CWE(CompletableGithubObject):
     def name(self) -> str:
         return self._name.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "cwe_id" in attributes:  # pragma no branch
             self._cwe_id = self._makeStringAttribute(attributes["cwe_id"])
         if "name" in attributes:  # pragma no branch

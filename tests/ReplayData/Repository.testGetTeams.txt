@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4915'), ('content-length', '714'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"125496cfc78c073ab8bf69c9bc5129d9"'), ('date', 'Sun, 27 May 2012 07:15:54 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/BeaverSoftware/FatherBeaver
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.nebula-preview+json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.nebula-preview+json'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4914'), ('content-length', '1431'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"539a11d46b5bb0db8383306bad48fd1c"'), ('date', 'Sun, 27 May 2012 07:15:55 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/BeaverSoftware/FatherBeaver/teams
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4913'), ('content-length', '76'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"7da40fa4ce70d77b7cddef012cf24607"'), ('date', 'Sun, 27 May 2012 07:15:56 GMT'), ('content-type', 'application/json; charset=utf-8')]

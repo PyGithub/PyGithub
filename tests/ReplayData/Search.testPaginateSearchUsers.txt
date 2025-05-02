@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /search/users?q=location%3ABerlin
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '28'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '62E81E32:3E9B:2DF95ED:5314034D'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept-Encoding'), ('content-length', '26660'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '30'), ('link', '<https://api.github.com/search/users?q=location%3ABerlin&page=2>; rel="next", <https://api.github.com/search/users?q=location%3ABerlin&page=34>; rel="last"'), ('cache-control', 'no-cache'), ('date', 'Mon, 03 Mar 2014 04:21:33 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1393820529')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /search/users?q=location%3ABerlin&page=2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '27'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '62E81E32:3E9D:3FD6319:5314034D'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept-Encoding'), ('content-length', '27211'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '30'), ('link', '<https://api.github.com/search/users?q=location%3ABerlin&page=3>; rel="next", <https://api.github.com/search/users?q=location%3ABerlin&page=34>; rel="last", <https://api.github.com/search/users?q=location%3ABerlin&page=1>; rel="first", <https://api.github.com/search/users?q=location%3ABerlin&page=1>; rel="prev"'), ('cache-control', 'no-cache'), ('date', 'Mon, 03 Mar 2014 04:21:34 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1393820529')]

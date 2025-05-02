@@ -3,6 +3,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,6 +38,9 @@ class OrganizationDependabotAlert(DependabotAlert):
 
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
+
+    The OpenAPI schema can be found at
+    - /components/schemas/dependabot-alert-with-repository
 
     """
 

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits/8a4f306d4b223682dd19410d4a9150636ebe4206
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4989'), ('content-length', '19468'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"54236e7f65246e5fdb1122bd461e4a5d"'), ('date', 'Fri, 01 Jun 2012 19:43:25 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/comments
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"body": "Comment created by PyGithub", "commit_id": "8a4f306d4b223682dd19410d4a9150636ebe4206", "line": 5, "path": "src/github/Issue.py"}
 201
 [('status', '201 Created'), ('x-ratelimit-remaining', '4953'), ('content-length', '937'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"7ca841d45253326d61bee20c809872dc"'), ('date', 'Sun, 27 May 2012 09:40:12 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/repos/PyGithub/PyGithub/pulls/comments/886298')]

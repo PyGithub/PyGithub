@@ -15,6 +15,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +35,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -43,9 +46,26 @@ class BranchProtection(Framework.TestCase):
         self.branch_protection = self.g.get_repo("curvewise-forks/PyGithub").get_branch("master").get_protection()
 
     def testAttributes(self):
+        self.assertEqual(self.branch_protection.allow_deletions, False)
+        self.assertEqual(self.branch_protection.allow_force_pushes, False)
+        self.assertEqual(self.branch_protection.allow_fork_syncing, False)
+        self.assertEqual(self.branch_protection.block_creations, False)
+        self.assertIsNone(self.branch_protection.enabled)
+        self.assertEqual(self.branch_protection.enforce_admins, True)
+        self.assertEqual(self.branch_protection.lock_branch, False)
+        self.assertIsNone(self.branch_protection.name)
+        self.assertIsNone(self.branch_protection.protection_url)
+        self.assertEqual(self.branch_protection.required_conversation_resolution, False)
+        self.assertEqual(self.branch_protection.required_linear_history, True)
+        self.assertEqual(
+            self.branch_protection.required_pull_request_reviews.url,
+            "https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection/required_pull_request_reviews",
+        )
+        self.assertEqual(self.branch_protection.required_signatures, False)
         self.assertTrue(self.branch_protection.required_status_checks.strict)
         self.assertEqual(self.branch_protection.required_status_checks.contexts, ["build (3.10)"])
         self.assertTrue(self.branch_protection.required_linear_history)
+        self.assertIsNone(self.branch_protection.restrictions)
         self.assertEqual(
             self.branch_protection.url,
             "https://api.github.com/repos/curvewise-forks/PyGithub/branches/master/protection",

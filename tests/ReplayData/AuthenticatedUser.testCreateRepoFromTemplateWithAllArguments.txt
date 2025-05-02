@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/actions/hello-world-docker-action
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Tue, 11 Feb 2020 19:18:56 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4996'), ('X-RateLimit-Reset', '1581452316'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept'), ('ETag', 'W/"63c75e6c241c8aa34fa31eaac3091d88"'), ('Last-Modified', 'Fri, 07 Feb 2020 09:28:27 GMT'), ('X-OAuth-Scopes', 'public_repo, read:org, read:user, user:email'), ('X-Accepted-OAuth-Scopes', 'repo'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '1BD6:14E8:BA6CC:1C4CAD:5E42FE20')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '801'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"79f748546e5fc4492505a70de6542183"'), ('date', 'Tue, 08 May 2012 09:51:20 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ POST
 api.github.com
 None
 /repos/actions/hello-world-docker-action/generate
-{'Accept': 'application/vnd.github.v3+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Accept': 'application/vnd.github.v3+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {"name": "hello-world-docker-action-new", "owner": "jacquev6", "description": "My repo from template", "include_all_branches": true, "private": true}
 201
 [('Server', 'GitHub.com'), ('Date', 'Tue, 11 Feb 2020 19:18:59 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '11794'), ('Status', '201 Created'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4994'), ('X-RateLimit-Reset', '1581452316'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept'), ('ETag', '"7fe9f51a711de4ffab9b930e33e3d875"'), ('X-OAuth-Scopes', 'public_repo, read:org, read:user, user:email'), ('X-Accepted-OAuth-Scopes', ''), ('Location', 'https://api.github.com/repos/jacquev6/hello-world-docker-action-new'), ('X-GitHub-Media-Type', 'github.baptiste-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', '3FB4:2492:632B7:FC388:5E42FE21')]

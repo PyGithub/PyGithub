@@ -24,6 +24,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 iarspider <iarspider@gmail.com>                               #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -58,6 +60,7 @@ import github.File
 import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
+import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
@@ -73,6 +76,7 @@ if TYPE_CHECKING:
     from github.GitCommit import GitCommit
     from github.NamedUser import NamedUser
     from github.PullRequest import PullRequest
+    from github.Repository import Repository
 
 
 class Commit(CompletableGithubObject):
@@ -80,7 +84,15 @@ class Commit(CompletableGithubObject):
     This class represents Commits.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/git#commits
+    https://docs.github.com/en/rest/commits/commits#get-a-commit-object
+
+    The OpenAPI schema can be found at
+    - /components/schemas/branch-short/properties/commit
+    - /components/schemas/commit
+    - /components/schemas/commit-search-result-item/properties/parents/items
+    - /components/schemas/commit/properties/parents/items
+    - /components/schemas/short-branch/properties/commit
+    - /components/schemas/tag/properties/commit
 
     """
 
@@ -89,14 +101,22 @@ class Commit(CompletableGithubObject):
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
         self._committer: Attribute[NamedUser] = NotSet
+        self._files: Attribute[list[File]] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
+        self._repository: Attribute[Repository] = NotSet
         self._sha: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
+        self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
+
+    @property
+    def _identity(self) -> str:
+        return self.sha
 
     @property
     def author(self) -> NamedUser:
@@ -140,9 +160,19 @@ class Commit(CompletableGithubObject):
         return self._html_url.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def parents(self) -> list[Commit]:
         self._completeIfNotSet(self._parents)
         return self._parents.value
+
+    @property
+    def repository(self) -> Repository:
+        self._completeIfNotSet(self._repository)
+        return self._repository.value
 
     @property
     def sha(self) -> str:
@@ -153,6 +183,11 @@ class Commit(CompletableGithubObject):
     def stats(self) -> CommitStats:
         self._completeIfNotSet(self._stats)
         return self._stats.value
+
+    @property
+    def text_matches(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._text_matches)
+        return self._text_matches.value
 
     @property
     def url(self) -> str:
@@ -297,10 +332,6 @@ class Commit(CompletableGithubObject):
             list_item="check_suites",
         )
 
-    @property
-    def _identity(self) -> str:
-        return self.sha
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
@@ -310,13 +341,51 @@ class Commit(CompletableGithubObject):
             self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
         if "committer" in attributes:  # pragma no branch
             self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
+        if "files" in attributes:  # pragma no branch
+            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "parents" in attributes:  # pragma no branch
             self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
+        if "repository" in attributes:  # pragma no branch
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "stats" in attributes:  # pragma no branch
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+
+
+class CommitSearchResult(Commit):
+    """
+    This class represents CommitSearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-commits
+
+    The OpenAPI schema can be found at
+    - /components/schemas/commit-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"sha": self._sha.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '1304'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '07ff1c8a09e44b62e277fae50a1b1dc4'), ('x-oauth-scopes', 'gist, repo, user'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"6754cf6361cd6d31646de909f5c90146"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4996'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '6CE875F7:1E63:532872:5514C5BC'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Fri, 27 Mar 2015 02:25:51 GMT'), ('date', 'Fri, 27 Mar 2015 02:51:40 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1427427963')]

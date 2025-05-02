@@ -1,0 +1,21 @@
+https
+POST
+api.github.com
+None
+/projects/columns/cards/11780055/moves
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
+{"column_id": 3138832, "position": "top"}
+201
+[('status', '201 Created'), ('x-ratelimit-remaining', '4982'), ('content-length', '2'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"f79a53550c9b90814f0be2b54ab2cc8e"'), ('date', 'Fri, 17 Jan 2020 02:03:18 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{}
+
+https
+POST
+api.github.com
+None
+/projects/columns/cards/11780055/moves
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
+{"column_id": 3138831, "position": "bottom"}
+201
+[('status', '201 Created'), ('x-ratelimit-remaining', '4982'), ('content-length', '2'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e87658ab0c9b90814f0be2b54ab2cc8e"'), ('date', 'Fri, 17 Jan 2020 02:03:24 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{}

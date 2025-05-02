@@ -19,6 +19,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -92,16 +93,16 @@ class RepositoryDiscussionCategory(GraphQlObject, NonCompletableGithubObject):
         return self._id.value
 
     @property
-    def node_id(self) -> str:
-        return self.id
-
-    @property
     def is_answerable(self) -> bool:
         return self._is_answerable.value
 
     @property
     def name(self) -> str:
         return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        return self.id
 
     @property
     def repository(self) -> Repository:

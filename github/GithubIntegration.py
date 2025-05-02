@@ -10,6 +10,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,8 +36,8 @@ import urllib.parse
 import warnings
 from typing import Any
 
-import deprecated
 import urllib3
+from typing_extensions import deprecated
 from urllib3 import Retry
 
 import github
@@ -137,13 +138,21 @@ class GithubIntegration:
                 "please use auth=github.Auth.AppAuth(...) instead",
                 category=DeprecationWarning,
             )
-            auth = AppAuth(
-                integration_id,  # type: ignore
-                private_key,  # type: ignore
-                jwt_expiry=jwt_expiry,
-                jwt_issued_at=jwt_issued_at,
-                jwt_algorithm=jwt_algorithm,
-            )
+            if jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
+                auth = AppAuth(
+                    integration_id,  # type: ignore
+                    private_key=None,  # type: ignore
+                    sign_func=AppAuth.create_jwt_sign(private_key, jwt_algorithm),  # type: ignore
+                    jwt_expiry=jwt_expiry,
+                    jwt_issued_at=jwt_issued_at,
+                )
+            else:
+                auth = AppAuth(
+                    integration_id,  # type: ignore
+                    private_key,  # type: ignore
+                    jwt_expiry=jwt_expiry,
+                    jwt_issued_at=jwt_issued_at,
+                )
 
         assert isinstance(
             auth, AppAuth
@@ -232,7 +241,7 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated.deprecated(
+    @deprecated(
         "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
     )
     def create_jwt(self, expiration: int | None = None) -> str:
@@ -268,7 +277,7 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated.deprecated("Use get_repo_installation")
+    @deprecated("Use get_repo_installation")
     def get_installation(self, owner: str, repo: str) -> Installation:
         """
         Deprecated by get_repo_installation.

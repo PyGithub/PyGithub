@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /gists/public?since=2018-10-02T10%3A38%3A30Z
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Tue, 02 Oct 2018 10:39:11 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4997'), ('X-RateLimit-Reset', '1538478827'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('ETag', 'W/"5437ff694e11dc6803fe9a1d5665c7ba"'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.063530'), ('Content-Encoding', 'gzip')]

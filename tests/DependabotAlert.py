@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -20,6 +21,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+from __future__ import annotations
 
 from datetime import datetime, timezone
 
@@ -40,7 +43,18 @@ class DependabotAlert(Framework.TestCase):
 
     def testAttributes(self):
         alert = self.repo.get_dependabot_alert(1)
+        self.assertIsNone(alert.auto_dismissed_at)
+        self.assertEqual(alert.created_at, datetime(2024, 1, 20, 17, 12, 38, tzinfo=timezone.utc))
+        self.assertEqual(alert.dependency.package.name, "jinja2")
+        self.assertEqual(alert.dismissed_at, datetime(2024, 1, 21, 3, 35, 38, tzinfo=timezone.utc))
+        self.assertEqual(alert.dismissed_by.login, "coopernetes")
+        self.assertEqual(alert.dismissed_reason, "tolerable_risk")
+        self.assertEqual(alert.dismissed_comment, "Example comment")
+        self.assertIsNone(alert.fixed_at)
+        self.assertEqual(alert.html_url, "https://github.com/coopernetes/PyGithub/security/dependabot/1")
         self.assertEqual(alert.number, 1)
+        self.assertEqual(alert.security_advisory.ghsa_id, "GHSA-h5c8-rqwp-cp95")
+        self.assertEqual(alert.security_vulnerability.package.name, "jinja2")
         self.assertEqual(alert.state, "dismissed")
         self.assertEqual(alert.dependency.package.ecosystem, "pip")
         self.assertEqual(alert.dependency.package.name, "jinja2")
@@ -91,15 +105,9 @@ class DependabotAlert(Framework.TestCase):
         self.assertEqual(alert.security_vulnerability.vulnerable_version_range, "< 3.1.3")
         self.assertEqual(alert.security_vulnerability.severity, "medium")
         self.assertEqual(alert.security_vulnerability.first_patched_version["identifier"], "3.1.3")
+        self.assertEqual(alert.updated_at, datetime(2024, 1, 21, 3, 35, 38, tzinfo=timezone.utc))
         self.assertEqual(alert.url, "https://api.github.com/repos/coopernetes/PyGithub/dependabot/alerts/1")
         self.assertEqual(alert.html_url, "https://github.com/coopernetes/PyGithub/security/dependabot/1")
-        self.assertEqual(alert.created_at, datetime(2024, 1, 20, 17, 12, 38, tzinfo=timezone.utc))
-        self.assertEqual(alert.updated_at, datetime(2024, 1, 21, 3, 35, 38, tzinfo=timezone.utc))
-        self.assertEqual(alert.dismissed_at, datetime(2024, 1, 21, 3, 35, 38, tzinfo=timezone.utc))
-        self.assertEqual(alert.dismissed_by.login, "coopernetes")
-        self.assertEqual(alert.dismissed_reason, "tolerable_risk")
-        self.assertEqual(alert.dismissed_comment, "Example comment")
-        self.assertEqual(alert.fixed_at, None)
 
     def testMultipleAlerts(self):
         multiple_alerts = self.repo.get_dependabot_alerts()

@@ -17,6 +17,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -52,6 +53,15 @@ if TYPE_CHECKING:
 class PullRequestPart(NonCompletableGithubObject):
     """
     This class represents PullRequestParts.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/pull-request-minimal/properties/base
+    - /components/schemas/pull-request-minimal/properties/head
+    - /components/schemas/pull-request-simple/properties/base
+    - /components/schemas/pull-request-simple/properties/head
+    - /components/schemas/pull-request/properties/base
+    - /components/schemas/pull-request/properties/head
+
     """
 
     def _initAttributes(self) -> None:

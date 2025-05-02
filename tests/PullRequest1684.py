@@ -16,6 +16,7 @@
 # Copyright 2020 Victor Zeng <zacker150@users.noreply.github.com>              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -53,7 +54,7 @@ class PullRequest1684(Framework.TestCase):
         self.assertEqual("0D80B14DC506", runner.name)
         self.assertEqual("offline", runner.status)
         self.assertFalse(runner.busy)
-        labels = runner.labels()
+        labels = runner.labels
         self.assertEqual(3, len(labels))
         self.assertEqual("self-hosted", labels[0]["name"])
         self.assertEqual("Windows", labels[1]["name"])

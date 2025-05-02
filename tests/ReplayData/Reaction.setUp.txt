@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/PyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '1110'), ('x-runtime-rack', '0.039944'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'repo, user'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"a87fa0e9fc5123f79ac81a1e80b5077f"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4993'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'DC8E:0DD5:E3ED8:236173:5A26037E'), ('last-modified', 'Sun, 19 Jun 2016 18:27:53 GMT'), ('date', 'Tue, 05 Dec 2017 02:25:03 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1512444081')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '5792'), ('x-runtime-rack', '0.062624'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'repo, user'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', 'repo'), ('etag', '"bb722456f5a2a00b4ba0d0c07c7b53da"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4992'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'DC8F:0DD5:E3F54:2362AB:5A26037F'), ('last-modified', 'Tue, 05 Dec 2017 01:55:21 GMT'), ('date', 'Tue, 05 Dec 2017 02:25:03 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1512444081')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues/28
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '5882'), ('x-runtime-rack', '0.087478'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'repo, user'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', 'repo'), ('etag', '"766493df833023dcca5250bca25c7ca5"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4991'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'DC90:0DD5:E3F96:23634C:5A260380'), ('last-modified', 'Thu, 05 Oct 2017 15:30:52 GMT'), ('date', 'Tue, 05 Dec 2017 02:25:04 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1512444081')]

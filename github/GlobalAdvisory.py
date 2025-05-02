@@ -5,6 +5,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,12 +28,17 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.AdvisoryBase
+import github.AdvisoryCreditDetailed
+import github.AdvisoryVulnerability
 from github.AdvisoryBase import AdvisoryBase
-from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
-from github.AdvisoryVulnerability import AdvisoryVulnerability
 from github.GithubObject import Attribute, NotSet
+
+if TYPE_CHECKING:
+    from github.AdvisoryCreditDetailed import AdvisoryCreditDetailed
+    from github.AdvisoryVulnerability import AdvisoryVulnerability
 
 
 class GlobalAdvisory(AdvisoryBase):
@@ -41,10 +47,15 @@ class GlobalAdvisory(AdvisoryBase):
 
     https://docs.github.com/en/rest/security-advisories/global-advisories
 
+    The OpenAPI schema can be found at
+    - /components/schemas/global-advisory
+
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._credits: Attribute[list[AdvisoryCreditDetailed]] = NotSet
+        self._epss: Attribute[dict[str, Any]] = NotSet
         self._github_reviewed_at: Attribute[datetime] = NotSet
         self._nvd_published_at: Attribute[datetime] = NotSet
         self._references: Attribute[list[str]] = NotSet
@@ -61,6 +72,10 @@ class GlobalAdvisory(AdvisoryBase):
         self,
     ) -> list[AdvisoryCreditDetailed]:
         return self._credits.value
+
+    @property
+    def epss(self) -> dict[str, Any]:
+        return self._epss.value
 
     @property
     def github_reviewed_at(self) -> datetime:
@@ -93,9 +108,11 @@ class GlobalAdvisory(AdvisoryBase):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "credits" in attributes:  # pragma no branch
             self._credits = self._makeListOfClassesAttribute(
-                AdvisoryCreditDetailed,
+                github.AdvisoryCreditDetailed.AdvisoryCreditDetailed,
                 attributes["credits"],
             )
+        if "epss" in attributes:  # pragma no branch
+            self._epss = self._makeDictAttribute(attributes["epss"])
         if "github_reviewed_at" in attributes:  # pragma no branch
             assert attributes["github_reviewed_at"] is None or isinstance(
                 attributes["github_reviewed_at"], str
@@ -116,7 +133,7 @@ class GlobalAdvisory(AdvisoryBase):
             self._type = self._makeStringAttribute(attributes["type"])
         if "vulnerabilities" in attributes:
             self._vulnerabilities = self._makeListOfClassesAttribute(
-                AdvisoryVulnerability,
+                github.AdvisoryVulnerability.AdvisoryVulnerability,
                 attributes["vulnerabilities"],
             )
         super()._useAttributes(attributes)

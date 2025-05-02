@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/nvie
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4996'), ('content-length', '598'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"49141c081e970afc1fbe7f1e260f2fe4"'), ('date', 'Tue, 22 May 2012 17:15:03 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4995'), ('content-length', '1155'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"856c234079ab76fe64e7b99c1f4802fb"'), ('date', 'Tue, 22 May 2012 17:15:04 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /user/subscriptions
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '32854'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/user/subscriptions?page=2>; rel="next", <https://api.github.com/user/subscriptions?page=2>; rel="last"'), ('etag', '"0ead8fdcf36bbf2deb2c08c93e78d2cc"'), ('date', 'Tue, 22 May 2012 17:15:05 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /user/subscriptions?page=2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4986'), ('content-length', '4493'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/users/jacquev6/watched?page=1>; rel="first", <https://api.github.com/users/jacquev6/watched?page=1>; rel="prev"'), ('etag', '"5894e9073dc54de74c439e23fc738fe7"'), ('date', 'Sat, 26 May 2012 10:36:30 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /repos/nvie/gitflow/subscription
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 No Content'), ('x-ratelimit-remaining', '4993'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Tue, 22 May 2012 17:15:06 GMT')]
@@ -58,7 +58,7 @@ DELETE
 api.github.com
 None
 /repos/nvie/gitflow/subscription
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4992'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Tue, 22 May 2012 17:15:07 GMT')]
@@ -69,7 +69,7 @@ GET
 api.github.com
 None
 /repos/nvie/gitflow/subscription
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4991'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Tue, 22 May 2012 17:15:07 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -80,7 +80,7 @@ PUT
 api.github.com
 None
 /repos/nvie/gitflow/subscription
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"subscribed": true}
 200
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4990'), ('x-ratelimit-limit', '5000'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Tue, 22 May 2012 17:15:08 GMT')]
@@ -91,7 +91,7 @@ GET
 api.github.com
 None
 /repos/nvie/gitflow/subscription
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4989'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Tue, 22 May 2012 17:15:09 GMT')]

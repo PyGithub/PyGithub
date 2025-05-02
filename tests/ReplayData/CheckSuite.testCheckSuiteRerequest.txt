@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/wrecker/PySample/check-suites/1004503395
-{'Accept': 'application/vnd.github.v3+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.v3+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Date', 'Sun, 09 Aug 2020 07:47:34 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4996'), ('X-RateLimit-Reset', '1596962853'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', 'W/"ac254b8039de356c97a4172e81b67d57"'), ('X-OAuth-Scopes', 'repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.antiope-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '8178:9A1D:23CDF:3BF94:5F2FAA15')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/wrecker/PySample/check-suites/1004503395/rerequest
-{'Accept': 'application/vnd.github.v3+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.v3+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 201
 [('Date', 'Sun, 09 Aug 2020 07:47:34 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '2'), ('Server', 'GitHub.com'), ('Status', '201 Created'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4995'), ('X-RateLimit-Reset', '1596962853'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding'), ('ETag', '"7aedf6d551d7c9a51ab427aecc33124a"'), ('X-OAuth-Scopes', 'repo, workflow'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.antiope-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', '817A:5947:6EF121:83E68E:5F2FAA16')]

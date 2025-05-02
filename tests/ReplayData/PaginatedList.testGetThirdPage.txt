@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues?page=3
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4925'), ('content-length', '55518'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/openframeworks/openFrameworks/issues?page=4>; rel="next", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=14>; rel="last", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=1>; rel="first", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=2>; rel="prev"'), ('etag', '"b3b3a8bd17d4ed7557040a218c1db573"'), ('date', 'Tue, 29 May 2012 19:36:59 GMT'), ('content-type', 'application/json; charset=utf-8')]

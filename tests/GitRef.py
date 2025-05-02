@@ -13,6 +13,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -41,6 +44,7 @@ class GitRef(Framework.TestCase):
         self.ref = self.g.get_user().get_repo("PyGithub").get_git_ref("heads/BranchCreatedByPyGithub")
 
     def testAttributes(self):
+        self.assertIsNone(self.ref.node_id)
         self.assertEqual(self.ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.ref.object.type, "commit")
         self.assertEqual(

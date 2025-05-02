@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/jacquev6
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4982'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:344A:3DD0CA2:52802148'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '1494'), ('server', 'GitHub.com'), ('last-modified', 'Sun, 10 Nov 2013 23:46:02 GMT'), ('x-ratelimit-limit', '5000'), ('etag', '"fe0984faabdc64453d942c3e3a992a39"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Nov 2013 00:14:01 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384130958')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /users/OddBloke
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4981'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', '4C79374B:3448:4124825:52802149'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '1130'), ('server', 'GitHub.com'), ('last-modified', 'Sat, 09 Nov 2013 21:41:44 GMT'), ('x-ratelimit-limit', '5000'), ('etag', '"13ce14e257e7adc5b376a1f5e03d5c1d"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 11 Nov 2013 00:14:02 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1384130958')]

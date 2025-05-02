@@ -3,6 +3,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -21,6 +22,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+from __future__ import annotations
 
 from datetime import datetime, timezone
 
@@ -42,6 +45,8 @@ class RepositoryAdvisory(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.advisory.author.login, "JLLeitschuh")
         self.assertEqual(self.advisory.closed_at, None)
+        self.assertIsNone(self.advisory.collaborating_teams)
+        self.assertIsNone(self.advisory.collaborating_users)
         self.assertEqual(
             self.advisory.created_at,
             datetime(2023, 3, 28, 21, 41, 40, tzinfo=timezone.utc),
@@ -53,6 +58,8 @@ class RepositoryAdvisory(Framework.TestCase):
             [("octocat", "analyst")],
         )
         self.assertEqual(self.advisory.cve_id, "CVE-2023-00000")
+        self.assertEqual(self.advisory.cvss.vector_string, "CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:C/C:H/I:H/A:H")
+        self.assertIsNone(self.advisory.cvss_severities)
         self.assertListEqual(self.advisory.cwe_ids, ["CWE-400", "CWE-501"])
         self.assertListKeyEqual(
             self.advisory.cwes,
@@ -71,9 +78,16 @@ class RepositoryAdvisory(Framework.TestCase):
             self.advisory.html_url,
             "https://github.com/JLLeitschuh/security-research/security/advisories/GHSA-wmmh-r9w4-hpxx",
         )
+        self.assertEqual(
+            self.advisory.identifiers,
+            [{"value": "GHSA-wmmh-r9w4-hpxx", "type": "GHSA"}, {"value": "CVE-2023-00000", "type": "CVE"}],
+        )
+        self.assertIsNone(self.advisory.private_fork)
         self.assertEqual(self.advisory.published_at, None)
+        self.assertIsNone(self.advisory.publisher)
         self.assertEqual(self.advisory.severity, "high")
         self.assertEqual(self.advisory.state, "draft")
+        self.assertIsNone(self.advisory.submission)
         self.assertEqual(self.advisory.summary, "A test creating a GHSA via the API")
         self.assertEqual(
             self.advisory.updated_at,

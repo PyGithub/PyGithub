@@ -40,7 +40,7 @@ class PoolSize(Framework.TestCase):
 
     def testReturnsRepoAfterSettingPoolSizeHttp(self):
         g = github.Github(
-            auth=self.login,
+            auth=self.oauth_token,
             base_url="http://my.enterprise.com",
             pool_size=20,
         )
