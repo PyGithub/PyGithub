@@ -841,7 +841,7 @@ class Organization(CompletableGithubObject):
         privacy: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
         parent_team_id: Opt[int] = NotSet,
-        maintainers: Opt[list[int]] = NotSet,
+        maintainers: Opt[list[str]] = NotSet,
         notification_setting: Opt[str] = NotSet,
     ) -> Team:
         """
@@ -858,7 +858,7 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert is_optional_list(repo_names, github.Repository.Repository), repo_names
-        assert is_optional_list(maintainers, int), maintainers
+        assert is_optional_list(maintainers, str), maintainers
         assert is_optional(parent_team_id, int), parent_team_id
         assert is_optional(permission, str), permission
         assert is_optional(privacy, str), privacy

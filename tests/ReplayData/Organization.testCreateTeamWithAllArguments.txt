@@ -37,7 +37,7 @@ api.github.com
 None
 /orgs/BeaverSoftware/teams
 {'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-{"repo_names": ["BeaverSoftware/FatherBeaver"], "name": "Team also created by PyGithub", "permission": "push", "privacy": "secret", "description":"Description also created by PyGithub", "parent_team_id":141496, "maintainers": [327146], "notification_setting": "notifications_disabled"}
+{"repo_names": ["BeaverSoftware/FatherBeaver"], "name": "Team also created by PyGithub", "permission": "push", "privacy": "secret", "description":"Description also created by PyGithub", "parent_team_id":141496, "maintainers": ["jacquev6"], "notification_setting": "notifications_disabled"}
 201
 [('status', '201 Created'), ('x-ratelimit-remaining', '4982'), ('content-length', '150'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"6e3fb00de6ca4c112feee3a1438d6f0e"'), ('date', 'Sat, 26 May 2012 21:00:26 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/teams/189852')]
 {"repos_count":1,"url":"https://api.github.com/teams/189852","members_count":0,"name":"Team also created by PyGithub","permission":"push","description":"Description also created by PyGithub","id":189852, "notification_setting": "notifications_disabled", "parent":{"repos_count":1,"permission":"push","url":"https://api.github.com/teams/141496","name":"Members","id":141496,"members_count":1}}
