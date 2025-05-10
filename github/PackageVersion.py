@@ -1,35 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Bill Mill <bill.mill@gmail.com>                               #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 davidbrai <davidbrai@gmail.com>                               #
-# Copyright 2014 Thialfihar <thi@thialfihar.org>                               #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
-# Copyright 2015 Eliot Walker <eliot@lyft.com>                                 #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2018 Gilad Shefer <gshefer@redhat.com>                             #
-# Copyright 2018 Joel Koglin <JoelKoglin@gmail.com>                            #
-# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 netsgnut <284779+netsgnut@users.noreply.github.com>           #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2020 Emir Hodzic <emir.hodzich@gmail.com>                          #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
-# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
-# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
-# Copyright 2023 YugoHino <henom06@gmail.com>                                  #
-# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Henkhogan <henkhogan@gmail.com>                               #
+# Copyright 2025 Harrison Boyd <8950185+hboyd2003@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -51,6 +23,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -70,14 +44,14 @@ class PackageVersion(CompletableGithubObject):
     This class represents PackageVersions.
 
     The reference can be found here
-    https://docs.github.com/en/rest/packages/packages
+    https://docs.github.com/en/rest/packages/packages?apiVersion=latest#about-github-packages
     """
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def id(self) -> str:
+    def id(self) -> int:
         """
         :type: integer
         """
@@ -117,17 +91,17 @@ class PackageVersion(CompletableGithubObject):
         return self._license.value
 
     @property
-    def created_at(self) -> str:
+    def created_at(self) -> datetime:
         """
-        :type: string
+        :type: datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
-    def updated_at(self) -> str:
+    def updated_at(self) -> datetime:
         """
-        :type: string
+        :type: datetime
         """
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -156,6 +130,12 @@ class PackageVersion(CompletableGithubObject):
         self._completeIfNotSet(self._metadata)
         return self._metadata.value
 
+    def delete(self) -> None:
+        self._requester.requestJsonAndCheck("DELETE", self.url)
+
+    def restore(self) -> None:
+        self._requester.requestJsonAndCheck("POST", self.url + "/restore")
+
     def _initAttributes(self):
         self._id: Opt[int] = NotSet
         self._name: Opt[str] = NotSet
@@ -180,9 +160,9 @@ class PackageVersion(CompletableGithubObject):
         if "license" in attributes:
             self._license = self._makeStringAttribute(attributes["license"])
         if "created_at" in attributes:
-            self._created_at = self._makeStringAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "updated_at" in attributes:
-            self._updated_at = self._makeStringAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "description" in attributes:
             self._description = self._makeStringAttribute(attributes["description"])
         if "html_url" in attributes:

@@ -33,7 +33,9 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Henkhogan <henkhogan@gmail.com>                               #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Harrison Boyd <8950185+hboyd2003@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,7 +59,7 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, overload
 
 import github.Event
 import github.Gist
@@ -69,7 +71,8 @@ import github.Permissions
 import github.Plan
 import github.Repository
 from github import Consts
-from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined, is_optional
+from github.PackageVersion import PackageVersion
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -463,20 +466,83 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Organization.Organization, self._requester, f"{self.url}/orgs", None
         )
 
-    def get_package(self) -> Package:
+    def get_packages(self,
+                     package_type: github.Package.PackageType,
+                     visibility: Opt[github.Package.PackageVisibility] = NotSet
+    ) -> PaginatedList[Package]:
         """
-        :calls: `GET /users/{user}/package <https://docs.github.com/en/rest/reference/packages>`_
+        :calls: `GET /user/{username}/packages <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#list-packages-for-the-a-user>`_
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/package")
+        assert isinstance(package_type, github.Package.PackageType), package_type
+        assert is_optional(visibility, github.Package.PackageVisibility), visibility
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "package_type": package_type.value,
+                "visibility": visibility,
+            }
+        )
+        return PaginatedList(github.Package.Package, self._requester, f"{self.url}/packages", url_parameters)
+
+    def get_package(self, package_type: github.Package.PackageType, package_name: str) -> Package:
+        """
+        :calls: `GET /user/{username}/packages/{package_type}/{package_type} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#get-a-package-for-the-a-user>`_
+        """
+        assert isinstance(package_type , github.Package.PackageType), package_type
+        assert isinstance(package_name, str), package_name
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/packages/{package_type.value}/{package_name}")
         return github.Package.Package(self._requester, headers, data, completed=True)
 
-    def get_packages(self) -> PaginatedList[Package]:
+    def delete_package(self, package_type: str, package_name: str) -> None:
         """
-        :calls: `GET /users/{user}/packages <https://docs.github.com/en/rest/reference/packages>`_
+        :calls: `DELETE /user/{username}/packages/{package_type}/{package_name} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#delete-a-package-for-a-user>`_
         """
-        return github.PaginatedList.PaginatedList(
-            github.Package.Package, self._requester, f"{self.url}/packages", None
-        )
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/packages/{package_type}/{package_name}")
+
+    def restore_package(self, package_type: str, package_name: str) -> None:
+        """
+        :calls: `POST /users/{username}/packages/{package_type}/{package_name}/restore <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#restore-a-package-for-a-user>`_
+        """
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/packages/{package_type}/{package_name}/restore")
+
+    def list_package_versions(self, package_type: str, package_name: str) -> PaginatedList[PackageVersion]:
+        """
+        :calls: `GET /user/{username}/packages/{package_type}/{package_name}/versions <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#list-package-versions-for-a-package-owned-by-a-user`_
+        """
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        return PaginatedList(PackageVersion, self._requester, f"{self.url}/packages/{package_type}/{package_name}/versions", None)
+
+    def get_package_version(self, package_type: str, package_name: str, package_version_id: int) -> PackageVersion:
+        """
+        :calls: `GET /user/{username}/packages/{package_type}/{package_name}/versions/{package_version_id} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#get-a-package-version-for-a-user>`_
+        """
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        assert isinstance(package_version_id, int), package_version_id
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}")
+        return PackageVersion(self._requester, headers, data, completed=True)
+
+    def delete_package_version(self, package_type: str, package_name: str, package_version_id: int) -> None:
+        """
+        :calls: `DELETE /user/{username}/packages/{package_type}/{package_name}/versions/{package_version_id} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#delete-a-package-version-for-a-user>`_
+        """
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        assert isinstance(package_version_id, int), package_version_id
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}")
+
+    def restore_package_version(self, package_type: str, package_name: str, package_version_id: int) -> None:
+        """
+        :calls: `POST /user/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#restore-a-package-version-for-a-user>`_
+        """
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        assert isinstance(package_version_id, int), package_version_id
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore")
 
     def get_projects(self, state: str = "open") -> PaginatedList[Project]:
         """
