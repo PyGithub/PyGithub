@@ -67,7 +67,7 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from deprecated import deprecated
+from typing_extensions import deprecated
 
 import github.NamedUser
 import github.Organization
@@ -314,7 +314,7 @@ class Team(CompletableGithubObject):
             return None
 
     @deprecated(
-        reason="""
+        """
         Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
         """
     )
