@@ -650,20 +650,30 @@ class PullRequest(Framework.TestCase):
 
     def test_validate_review_comment_start_side_side_defined_start_side_undefined(self):
         # Use parameters similar to a single-line comment with side defined, start_side undefined
-        result = self.pull.validate_review_comment_start_side('RIGHT', github.GithubObject.NotSet, 5, github.GithubObject.NotSet, github.GithubObject.NotSet)
-        self.assertEqual(result, 'RIGHT')
+        result = self.pull.validate_review_comment_start_side(
+            "RIGHT", github.GithubObject.NotSet, 5, github.GithubObject.NotSet, github.GithubObject.NotSet
+        )
+        self.assertEqual(result, "RIGHT")
 
     def test_validate_review_comment_start_side_multiline_requires_start_side(self):
         # Should raise AssertionError if start_side is undefined and multiline
         with self.assertRaises(AssertionError):
-            self.pull.validate_review_comment_start_side('RIGHT', github.GithubObject.NotSet, 10, 5, github.GithubObject.NotSet)
+            self.pull.validate_review_comment_start_side(
+                "RIGHT", github.GithubObject.NotSet, 10, 5, github.GithubObject.NotSet
+            )
 
     def test_validate_review_comment_start_side_all_undefined(self):
         # All parameters undefined
-        result = self.pull.validate_review_comment_start_side(github.GithubObject.NotSet, github.GithubObject.NotSet, github.GithubObject.NotSet, github.GithubObject.NotSet, github.GithubObject.NotSet)
+        result = self.pull.validate_review_comment_start_side(
+            github.GithubObject.NotSet,
+            github.GithubObject.NotSet,
+            github.GithubObject.NotSet,
+            github.GithubObject.NotSet,
+            github.GithubObject.NotSet,
+        )
         self.assertEqual(result, github.GithubObject.NotSet)
 
     def test_validate_review_comment_start_side_start_side_already_defined(self):
         # start_side already defined
-        result = self.pull.validate_review_comment_start_side('LEFT', 'LEFT', 1, 1, github.GithubObject.NotSet)
-        self.assertEqual(result, 'LEFT')
+        result = self.pull.validate_review_comment_start_side("LEFT", "LEFT", 1, 1, github.GithubObject.NotSet)
+        self.assertEqual(result, "LEFT")

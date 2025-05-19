@@ -513,7 +513,9 @@ class PullRequest(CompletableGithubObject):
     def validate_review_comment_start_side(self, side, start_side, line, start_line, in_reply_to):
         """
         Validates and adjusts start_side for review comments according to GitHub API requirements.
+
         Returns the possibly updated start_side.
+
         """
         if is_defined(side) and is_undefined(start_side):
             # Github API returns a "422" error with the message "pull_request_review_thread.start_line must precede the end line."
@@ -521,7 +523,9 @@ class PullRequest(CompletableGithubObject):
             # with a misleading error message.
             start_side = side
         if is_defined(line) and is_defined(start_line) and line != start_line and is_undefined(in_reply_to):
-            assert is_defined(start_side), "start_side is required for multi-line comments unless using in_reply_to: https://docs.github.com/en/rest/pulls/comments#create-a-review-comment-for-a-pull-request"
+            assert is_defined(
+                start_side
+            ), "start_side is required for multi-line comments unless using in_reply_to: https://docs.github.com/en/rest/pulls/comments#create-a-review-comment-for-a-pull-request"
         return start_side
 
     def create_review_comment_reply(self, comment_id: int, body: str) -> PullRequestComment:
@@ -573,7 +577,9 @@ class PullRequest(CompletableGithubObject):
             post_parameters["comments"] = []
 
         for comment in comments:
-            comment["start_side"] = self.validate_review_comment_start_side(comment["side"], comment["start_side"], comment["line"], comment["start_line"], comment["in_reply_to"])
+            comment["start_side"] = self.validate_review_comment_start_side(
+                comment["side"], comment["start_side"], comment["line"], comment["start_line"], comment["in_reply_to"]
+            )
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
