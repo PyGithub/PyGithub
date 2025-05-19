@@ -128,10 +128,10 @@ class ReviewComment(TypedDict):
     path: str
     position: NotRequired[int]
     body: str
-    line: NotRequired[int]
-    side: NotRequired[str]
     start_line: NotRequired[int]
+    line: NotRequired[int]
     start_side: NotRequired[str]
+    side: NotRequired[str]
 
 
 class PullRequest(CompletableGithubObject):
@@ -489,6 +489,8 @@ class PullRequest(CompletableGithubObject):
         ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
+        start_side = self.validate_review_comment_start_side(side, start_side, line, start_line, in_reply_to)
+
         if as_suggestion:
             body = f"```suggestion\n{body}\n```"
         post_parameters = NotSet.remove_unset_items(
@@ -507,6 +509,20 @@ class PullRequest(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/comments", input=post_parameters)
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
+
+    def validate_review_comment_start_side(self, side, start_side, line, start_line, in_reply_to):
+        """
+        Validates and adjusts start_side for review comments according to GitHub API requirements.
+        Returns the possibly updated start_side.
+        """
+        if is_defined(side) and is_undefined(start_side):
+            # Github API returns a "422" error with the message "pull_request_review_thread.start_line must precede the end line."
+            # when 'side' is defined but 'start_side' is not.  So use the same value for both to avoid confusing the end user
+            # with a misleading error message.
+            start_side = side
+        if is_defined(line) and is_defined(start_line) and line != start_line and is_undefined(in_reply_to):
+            assert is_defined(start_side), "start_side is required for multi-line comments unless using in_reply_to: https://docs.github.com/en/rest/pulls/comments#create-a-review-comment-for-a-pull-request"
+        return start_side
 
     def create_review_comment_reply(self, comment_id: int, body: str) -> PullRequestComment:
         """
@@ -555,6 +571,10 @@ class PullRequest(CompletableGithubObject):
             post_parameters["comments"] = comments
         else:
             post_parameters["comments"] = []
+
+        for comment in comments:
+            comment["start_side"] = self.validate_review_comment_start_side(comment["side"], comment["start_side"], comment["line"], comment["start_line"], comment["in_reply_to"])
+
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
