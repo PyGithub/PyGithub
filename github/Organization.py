@@ -1614,7 +1614,6 @@ class Organization(CompletableGithubObject):
             list_item="runners",
         )
 
-
     def get_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#get-code-security-configurations-for-an-organization>`_
