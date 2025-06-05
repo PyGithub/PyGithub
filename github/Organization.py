@@ -104,6 +104,7 @@ import github.OrganizationVariable
 import github.Plan
 import github.Project
 import github.Repository
+import github.SelfHostedActionsRunner
 import github.Team
 from github import Consts
 from github.GithubObject import (
@@ -142,6 +143,7 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.PublicKey import PublicKey
     from github.Repository import Repository
+    from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.Team import Team
 
 
