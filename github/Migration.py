@@ -48,7 +48,7 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
@@ -57,6 +57,11 @@ import github.PaginatedList
 import github.Repository
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
+    from github.Repository import Repository
 
 
 class Migration(CompletableGithubObject):
@@ -85,8 +90,8 @@ class Migration(CompletableGithubObject):
         self._lock_repositories: Attribute[bool] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._org_metadata_only: Attribute[bool] = NotSet
-        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._repositories: Attribute[list[github.Repository.Repository]] = NotSet
+        self._owner: Attribute[NamedUser | Organization] = NotSet
+        self._repositories: Attribute[list[Repository]] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -159,7 +164,7 @@ class Migration(CompletableGithubObject):
         return self._org_metadata_only.value
 
     @property
-    def owner(self) -> github.NamedUser.NamedUser:
+    def owner(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
@@ -254,7 +259,15 @@ class Migration(CompletableGithubObject):
         if "org_metadata_only" in attributes:  # pragma no branch
             self._org_metadata_only = self._makeBoolAttribute(attributes["org_metadata_only"])
         if "owner" in attributes:
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+            self._owner = self._makeUnionClassAttributeFromTypeKey(
+                github.NamedUser.NamedUser,
+                "User",
+                github.Organization.Organization,
+                "Organization",
+                "type",
+                "User",
+                attributes["owner"],
+            )
         if "repositories" in attributes:
             self._repositories = self._makeListOfClassesAttribute(
                 github.Repository.Repository, attributes["repositories"]
