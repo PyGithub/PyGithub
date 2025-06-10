@@ -50,7 +50,7 @@ class CustomProperty:
     ):
         assert isinstance(property_name, str), property_name
         assert isinstance(value_type, str), value_type
-        assert value_type in ["string", "single_select"], value_type
+        assert value_type in ["string", "single_select", "multi_select", "true_false"], value_type
         assert is_optional(required, bool), required
         assert is_optional(default_value, (type(None), str, list)), default_value
         assert is_optional(description, (str, type(None))), description
