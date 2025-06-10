@@ -63,6 +63,7 @@ import github.Event
 import github.Gist
 import github.GithubObject
 import github.Organization
+import github.Package
 import github.PaginatedList
 import github.Permissions
 import github.Plan
@@ -76,6 +77,7 @@ if TYPE_CHECKING:
     from github.Gist import Gist
     from github.Membership import Membership
     from github.Organization import Organization
+    from github.Package import Package
     from github.Permissions import Permissions
     from github.Plan import Plan
     from github.Project import Project
@@ -131,6 +133,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._notification_email: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
+        self._packages: Attribute[Permissions] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._plan: Attribute[Plan] = NotSet
         self._private_gists: Attribute[int] = NotSet
@@ -458,6 +461,21 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         return github.PaginatedList.PaginatedList(
             github.Organization.Organization, self._requester, f"{self.url}/orgs", None
+        )
+
+    def get_package(self) -> Package:
+        """
+        :calls: `GET /users/{user}/package <https://docs.github.com/en/rest/reference/packages>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/package")
+        return github.Package.Package(self._requester, headers, data, completed=True)
+
+    def get_packages(self) -> PaginatedList[Package]:
+        """
+        :calls: `GET /users/{user}/packages <https://docs.github.com/en/rest/reference/packages>`_
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Package.Package, self._requester, f"{self.url}/packages", None
         )
 
     def get_projects(self, state: str = "open") -> PaginatedList[Project]:
