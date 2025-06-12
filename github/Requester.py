@@ -834,7 +834,7 @@ class Requester:
             exc = GithubException.BadUserAgentException
         elif status == 403 and cls.isRateLimitError(lc_message):
             exc = GithubException.RateLimitExceededException
-        elif status == 404 and (lc_message == "not found" or "no object found" in lc_message):
+        elif status == 404 and ("not found" in lc_message or "no object found" in lc_message):
             exc = GithubException.UnknownObjectException
         else:
             # for general GithubException, provide the actual message
