@@ -263,6 +263,39 @@ class Requester(Framework.TestCase):
             "Following Github server redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub"
         )
 
+    def testMakeAbsoluteUrl(self):
+        class TestAuth(github.Auth.AppAuth):
+            pass
+
+        # create a Requester with non-default arguments
+        auth = TestAuth(123, "key")
+        requester = github.Requester.Requester(
+            auth=auth,
+            base_url="https://base.url",
+            timeout=1,
+            user_agent="user agent",
+            per_page=123,
+            verify=False,
+            retry=3,
+            pool_size=5,
+            seconds_between_requests=1.2,
+            seconds_between_writes=3.4,
+            lazy=True,
+        )
+
+        with self.assertRaises(AssertionError) as exc:
+            requester._Requester__makeAbsoluteUrl("https://github.com.malicious.com"),
+            self.assertEqual(exc.exception.args, "AssertionError: github.com.malicious.com")
+
+        for url in [
+            "github.com",
+            "uploads.github.com",
+            "status.github.com",
+            "objects.githubusercontent.com",
+            "release-assets.githubusercontent.com",
+        ]:
+            self.assertEqual(requester._Requester__makeAbsoluteUrl(f"https://{url}"), "")
+
     PrimaryRateLimitErrors = [
         "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
     ]
