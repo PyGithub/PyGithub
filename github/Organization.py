@@ -1605,7 +1605,7 @@ class Organization(CompletableGithubObject):
 
     def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
         """
-        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runner-groups#list-self-hosted-runner-groups-for-an-organization>`_
+        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#list-self-hosted-runners-for-an-organization>`_
         :rtype: :class:`PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         """
         return PaginatedList(
