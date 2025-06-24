@@ -1616,6 +1616,22 @@ class Organization(CompletableGithubObject):
             list_item="runners",
         )
 
+    def delete_self_hosted_runner(self, runner_id: str) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#delete-a-self-hosted-runner-from-an-organization>`_
+        :param runner_id: string
+        :rtype: None
+        """
+        assert isinstance(runner_id, str), runner_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/actions/runners/{runner_id}",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        )
+
     def get_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#get-code-security-configurations-for-an-organization>`_
