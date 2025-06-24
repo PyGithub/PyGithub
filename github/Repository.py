@@ -4241,6 +4241,16 @@ class Repository(CompletableGithubObject):
             f"{self.url}/code-scanning/alerts",
             url_parameters,
         )
+    
+    def get_codescan_alert(self, number: int) -> CodeScanAlert:
+        """
+        :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number} <https://docs.github.com/en/rest/code-scanning/code-scanning#get-a-code-scanning-alert>`_
+        :param number: int
+        :rtype: :class:`github.CodeScanAlert.CodeScanAlert`
+        """
+        assert isinstance(number, int), number
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-scanning/alerts/{number}")
+        return github.CodeScanAlert.CodeScanAlert(self._requester, headers, data)
 
     def get_secret_scanning_alerts(
         self,
