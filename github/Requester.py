@@ -1224,6 +1224,7 @@ class Requester:
                 "status.github.com",
                 "github.com",
                 "objects.githubusercontent.com",
+                "results-receiver.actions.githubusercontent.com",
             ], o.hostname
             assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
             assert o.port == self.__port, o.port
