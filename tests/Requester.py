@@ -264,13 +264,9 @@ class Requester(Framework.TestCase):
         )
 
     def testMakeAbsoluteUrl(self):
-        class TestAuth(github.Auth.AppAuth):
-            pass
-
         # create a Requester with non-default arguments
-        auth = TestAuth(123, "key")
         requester = github.Requester.Requester(
-            auth=auth,
+            auth=github.Auth.AppAuth(123, "key"),
             base_url="https://base.url",
             timeout=1,
             user_agent="user agent",
