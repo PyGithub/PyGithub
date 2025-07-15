@@ -1211,10 +1211,10 @@ class Requester:
         # Updates self.__last_requests with current timestamp for given verb
         self.__last_requests[verb] = datetime.now(timezone.utc).timestamp()
 
-    def __extractDomainFromHostname(self, hostname: str | None) -> str:
+    def __extractDomainFromHostname(self, hostname: str | None) -> str | None:
         # Extracts the domain from a hostname
         if hostname is None:
-            return ""
+            return None
         return ".".join(hostname.split(".")[-2:])
 
     def __makeAbsoluteUrl(self, url: str) -> str:
