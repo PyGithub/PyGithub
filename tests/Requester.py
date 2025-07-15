@@ -279,10 +279,12 @@ class Requester(Framework.TestCase):
             lazy=True,
         )
 
+        # testing through __makeAbsoluteUrl to ensure it raises an AssertionError
         with self.assertRaises(AssertionError) as exc:
             requester._Requester__makeAbsoluteUrl("https://github.com.malicious.com"),
             self.assertEqual(exc.exception.args, "AssertionError: github.com.malicious.com")
 
+        # valid domains
         for url in [
             "github.com",
             "uploads.github.com",
@@ -290,7 +292,10 @@ class Requester(Framework.TestCase):
             "objects.githubusercontent.com",
             "release-assets.githubusercontent.com",
         ]:
-            self.assertEqual(requester._Requester__makeAbsoluteUrl(f"https://{url}"), "")
+            self.assertIn(requester._Requester__extractDomainFromHostname(url), ["github.com", "githubusercontent.com"])
+
+        # None hostname
+        self.assertEqual(requester._Requester__extractDomainFromHostname(None), None)
 
     PrimaryRateLimitErrors = [
         "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
