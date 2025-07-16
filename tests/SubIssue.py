@@ -30,15 +30,12 @@ class SubIssue(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         self.issue = self.repo.get_issue(28)
-        print("setup done")
 
     def testListSubIssues(self):
         """
         Test listing sub-issues of an issue.
         """
-        sub_issues = self.issue.get_sub_issues()
-        _sub_issues = [v for i, v in enumerate(sub_issues)]
-        print(_sub_issues)
+        sub_issues = [self.issue.get_sub_issues()]
 
         self.assertEqual(_sub_issues[0].number, 30)
         self.assertEqual(_sub_issues[0].title, "Sub-issue title")
