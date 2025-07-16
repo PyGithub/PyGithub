@@ -264,38 +264,32 @@ class Requester(Framework.TestCase):
         )
 
     def testMakeAbsoluteUrl(self):
-        # create a Requester with non-default arguments
-        requester = github.Requester.Requester(
-            auth=github.Auth.AppAuth(123, "key"),
-            base_url="https://base.url",
-            timeout=1,
-            user_agent="user agent",
-            per_page=123,
-            verify=False,
-            retry=3,
-            pool_size=5,
-            seconds_between_requests=1.2,
-            seconds_between_writes=3.4,
-            lazy=True,
-        )
+        requester = self.g.requester
 
         # testing through __makeAbsoluteUrl to ensure it raises an AssertionError
         with self.assertRaises(AssertionError) as exc:
             requester._Requester__makeAbsoluteUrl("https://github.com.malicious.com"),
             self.assertEqual(exc.exception.args, "AssertionError: github.com.malicious.com")
 
+    def testExtractDomainFromHostname(self):
         # valid domains
+        extractDomainFromHostname = github.Requester.Requester._Requester__extractDomainFromHostname
+
         for url in [
             "github.com",
             "uploads.github.com",
             "status.github.com",
+        ]:
+            self.assertEqual(extractDomainFromHostname(url), "github.com")
+
+        for url in [
             "objects.githubusercontent.com",
             "release-assets.githubusercontent.com",
         ]:
-            self.assertIn(requester._Requester__extractDomainFromHostname(url), ["github.com", "githubusercontent.com"])
+            self.assertEqual(extractDomainFromHostname(url), "githubusercontent.com")
 
         # None hostname
-        self.assertEqual(requester._Requester__extractDomainFromHostname(None), None)
+        self.assertEqual(extractDomainFromHostname(None), None)
 
     PrimaryRateLimitErrors = [
         "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
