@@ -798,13 +798,6 @@ class SubIssue(Issue):
         self._completeIfNotSet(self._priority_position)
         return self._priority_position.value
 
-    def get_parent_issue(self) -> Issue:
-        """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number}` :rtype: :class:`github.Issue.Issue`
-        """
-        #TODO: Need to implement this
-        ...
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         # Process sub-issue specific attributes
