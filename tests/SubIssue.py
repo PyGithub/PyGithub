@@ -29,45 +29,50 @@ class SubIssue(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
-        self.issue = self.repo.get_issue(28)
+        self.issue = self.repo.get_issue(5)
 
     def testListSubIssues(self):
         """
         Test listing sub-issues of an issue.
         """
-        sub_issues = [self.issue.get_sub_issues()]
-
-        self.assertEqual(_sub_issues[0].number, 30)
-        self.assertEqual(_sub_issues[0].title, "Sub-issue title")
-        self.assertEqual(len(_sub_issues), 2)
+        self.assertListKeyEqual(self.issue.get_sub_issues(), lambda s: s.number, [34, 35])
 
     def testAddSubIssue(self):
         """
         Test adding a sub-issue to an issue.
         """
-        sub_issue = self.repo.get_issue(31)
-        result = self.issue.add_sub_issue(sub_issue.id)
-        self.assertEqual(result.id, sub_issue.id)
-        self.assertEqual(result.number, sub_issue.number)
-        self.assertEqual(result.title, sub_issue.title)
+        initial_sub_issues = list(self.issue.get_sub_issues())
+        self.assertListKeyEqual(initial_sub_issues, lambda s: s.number, [34, 35, 38])
+
+        sub_issue = self.repo.get_issue(39)
+        self.issue.add_sub_issue(sub_issue)
+
+        updated_sub_issues = list(self.issue.get_sub_issues())
+        self.assertListKeyEqual(updated_sub_issues, lambda s: s.number, [34, 35, 38, 39])
 
     def testRemoveSubIssue(self):
         """
         Test removing a sub-issue from an issue.
         """
-        sub_issue = self.repo.get_issue(30)
-        result = self.issue.remove_sub_issue(sub_issue.id)
-        self.assertEqual(result.id, sub_issue.id)
-        self.assertEqual(result.number, sub_issue.number)
-        self.assertEqual(result.title, sub_issue.title)
+        initial_sub_issues = list(self.issue.get_sub_issues())
+        self.assertListKeyEqual(initial_sub_issues, lambda s: s.number, [34, 35, 38, 39])
+
+        sub_issue = self.repo.get_issue(39)
+        self.issue.remove_sub_issue(sub_issue)
+
+        updated_sub_issues = list(self.issue.get_sub_issues())
+        self.assertListKeyEqual(updated_sub_issues, lambda s: s.number, [34, 35, 38])
 
     def testReprioritizeSubIssue(self):
         """
         Test changing the priority of a sub-issue.
         """
-        sub_issue = self.repo.get_issue(30)
-        after_issue = self.repo.get_issue(31)
-        result = self.issue.reprioritize_sub_issue(sub_issue.id, after_issue.id)
-        self.assertEqual(result.id, sub_issue.id)
-        self.assertEqual(result.number, sub_issue.number)
-        self.assertEqual(result.title, sub_issue.title)
+        initial_sub_issues = list(self.issue.get_sub_issues())
+        self.assertListKeyEqual(initial_sub_issues, lambda s: s.number, [34, 35, 38])
+
+        sub_issue = self.repo.get_issue(35)
+        after_issue = self.repo.get_issue(38)
+        self.issue.reprioritize_sub_issue(sub_issue.id, after_issue.id)
+
+        updated_sub_issues = list(self.issue.get_sub_issues())
+        self.assertListKeyEqual(updated_sub_issues, lambda s: s.number, [34, 38, 35])
