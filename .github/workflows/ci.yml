@@ -6,9 +6,11 @@ on:
       - release-v*
   pull_request:
   merge_group:
+env:
+  openapi_api: api.github.com
+  openapi_version: 2022-11-28
 
 jobs:
-
   build:
     uses: "./.github/workflows/_build-pkg.yml"
     with:
@@ -64,6 +66,103 @@ jobs:
         if: needs.test.result != 'success'
         run: false
         shell: bash
+
+  schemas:
+    name: "Add schemas"
+    needs: "test_success"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Add schemas
+        run: |
+          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+
+          echo "::group::Head schema suggestions:"
+          python head/scripts/openapi.py index head/github openapi.head.index
+          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.head.index | tee schemas.head.txt
+          echo "::endgroup::"
+
+          echo "::group::Base schema suggestions:"
+          python head/scripts/openapi.py index base/github openapi.base.index
+          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.base.index | tee schemas.base.txt
+          echo "::endgroup::"
+
+          echo "Difference:"
+          diff schemas.base.txt schemas.head.txt
+
+  implementations:
+    name: "Implement schemas"
+    needs: "test_success"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Add implementations
+        run: |
+          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+
+          echo "::group::Head implementations:"
+          python head/scripts/openapi.py index head/github openapi.head.index
+          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.head.index | tee implementation.head.txt
+          echo "::endgroup::"
+
+          echo "::group::Base implementations:"
+          python head/scripts/openapi.py index base/github openapi.base.index
+          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.base.index | tee implementation.base.txt
+          echo "::endgroup::"
+
+          echo "Difference:"
+          diff implementation.base.txt implementation.head.txt
+
+  sort:
+    name: "Sort classes"
+    needs: "test_success"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r requirements/scripts.txt
+      - name: Sort classes
+        run: |
+          echo "::group::Sort classes"
+          python scripts/openapi.py index github openapi.index
+          python scripts/sort_class.py openapi.index $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
+          echo "::endgroup::"
+
+          echo "Changes:"
+          git diff
 
   event_file:
     name: "Event File"
