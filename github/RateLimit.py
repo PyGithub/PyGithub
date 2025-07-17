@@ -64,9 +64,11 @@ class RateLimit(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._actions_runner_registration: Attribute[Rate] = NotSet
+        self._code_scanning_autofix: Attribute[Rate] = NotSet
         self._code_scanning_upload: Attribute[Rate] = NotSet
         self._code_search: Attribute[Rate] = NotSet
         self._core: Attribute[Rate] = NotSet
+        self._dependency_sbom: Attribute[Rate] = NotSet
         self._dependency_snapshots: Attribute[Rate] = NotSet
         self._graphql: Attribute[Rate] = NotSet
         self._integration_manifest: Attribute[Rate] = NotSet
@@ -83,6 +85,10 @@ class RateLimit(NonCompletableGithubObject):
         Rate limit for registering self-hosted runners in GitHub Actions.
         """
         return self._actions_runner_registration.value
+
+    @property
+    def code_scanning_autofix(self) -> Rate:
+        return self._code_scanning_autofix.value
 
     @property
     def code_scanning_upload(self) -> Rate:
@@ -104,6 +110,10 @@ class RateLimit(NonCompletableGithubObject):
         Rate limit for the non-search-related API.
         """
         return self._core.value
+
+    @property
+    def dependency_sbom(self) -> Rate:
+        return self._dependency_sbom.value
 
     @property
     def dependency_snapshots(self) -> Rate:
@@ -146,12 +156,18 @@ class RateLimit(NonCompletableGithubObject):
             self._actions_runner_registration = self._makeClassAttribute(
                 github.Rate.Rate, attributes["actions_runner_registration"]
             )
+        if "code_scanning_autofix" in attributes:  # pragma no branch
+            self._code_scanning_autofix = self._makeClassAttribute(
+                github.Rate.Rate, attributes["code_scanning_autofix"]
+            )
         if "code_scanning_upload" in attributes:  # pragma no branch
             self._code_scanning_upload = self._makeClassAttribute(github.Rate.Rate, attributes["code_scanning_upload"])
         if "code_search" in attributes:  # pragma no branch
             self._code_search = self._makeClassAttribute(github.Rate.Rate, attributes["code_search"])
         if "core" in attributes:  # pragma no branch
             self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
+        if "dependency_sbom" in attributes:  # pragma no branch
+            self._dependency_sbom = self._makeClassAttribute(github.Rate.Rate, attributes["dependency_sbom"])
         if "dependency_snapshots" in attributes:  # pragma no branch
             self._dependency_snapshots = self._makeClassAttribute(github.Rate.Rate, attributes["dependency_snapshots"])
         if "graphql" in attributes:  # pragma no branch
