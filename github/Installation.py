@@ -105,6 +105,7 @@ class Installation(NonCompletableGithubObject):
         self._account: Attribute[NamedUser | Organization] = NotSet
         self._app_id: Attribute[int] = NotSet
         self._app_slug: Attribute[str] = NotSet
+        self._client_id: Attribute[str] = NotSet
         self._contact_email: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._events: Attribute[list[str]] = NotSet
@@ -140,6 +141,10 @@ class Installation(NonCompletableGithubObject):
     @property
     def app_slug(self) -> str:
         return self._app_slug.value
+
+    @property
+    def client_id(self) -> str:
+        return self._client_id.value
 
     @property
     def contact_email(self) -> str:
@@ -246,6 +251,8 @@ class Installation(NonCompletableGithubObject):
             self._app_id = self._makeIntAttribute(attributes["app_id"])
         if "app_slug" in attributes:  # pragma no branch
             self._app_slug = self._makeStringAttribute(attributes["app_slug"])
+        if "client_id" in attributes:  # pragma no branch
+            self._client_id = self._makeStringAttribute(attributes["client_id"])
         if "contact_email" in attributes:  # pragma no branch
             self._contact_email = self._makeStringAttribute(attributes["contact_email"])
         if "created_at" in attributes:  # pragma no branch
