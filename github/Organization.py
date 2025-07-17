@@ -104,6 +104,7 @@ import github.OrganizationVariable
 import github.Plan
 import github.Project
 import github.Repository
+import github.SelfHostedActionsRunner
 import github.Team
 from github import Consts
 from github.GithubObject import (
@@ -142,6 +143,7 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.PublicKey import PublicKey
     from github.Repository import Repository
+    from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.Team import Team
 
 
@@ -1600,6 +1602,19 @@ class Organization(CompletableGithubObject):
             "properties": [{"property_name": k, "value": v} for k, v in properties.items()],
         }
         self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
+
+    def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
+        """
+        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runner-groups#list-self-hosted-runner-groups-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            f"{self.url}/actions/runners",
+            None,
+            list_item="runners",
+        )
 
     def get_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
         """
