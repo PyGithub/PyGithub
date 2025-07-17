@@ -41,9 +41,23 @@ import libcst as cst
 import requests
 from docutils.nodes import target
 from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
-from pygments.lexers.webassembly import keywords
+
 
 equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
+
+
+def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
+    if "$ref" in schema_type:
+        schema = schema_type.get("$ref").strip("# ")
+        ref_schema_type = spec
+        for step in schema.split("/"):
+            if step:
+                if step not in ref_schema_type:
+                    raise ValueError(f"Could not find schema in spec: {schema}")
+                ref_schema_type = ref_schema_type[step]
+        return ref_schema_type
+    return schema_type
+
 
 def as_python_type(schema_type: dict[str, Any], schema_path: list[str],
                    schema_to_class: dict[str, str], classes, verbose: bool) -> PythonType | GithubClass | None:
@@ -52,7 +66,7 @@ def as_python_type(schema_type: dict[str, Any], schema_path: list[str],
     if "$ref" in schema_type:
         schema = schema_type.get("$ref").strip("# ")
     elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
-        return as_python_type(schema_type.get("allOf")[0], schema_path + ["allOf", "0"], schema_to_class)
+        return as_python_type(schema_type.get("allOf")[0], schema_path + ["allOf", "0"], schema_to_class, classes, verbose)
     if data_type == "object":
         schema = "/".join([""] + schema_path)
     if schema is not None:
@@ -78,7 +92,7 @@ def as_python_type(schema_type: dict[str, Any], schema_path: list[str],
                 inner_types=[GithubClass(**classes.get(cls)) for cls in classes if cls in classes],
             )
         if verbose:
-            print(f"Schema not implemented: {'.'.join([''] + schema_path)}")
+            print(f"Schema not implemented: {schema or '.'.join([''] + schema_path)}")
         return PythonType(type="dict", inner_types=[PythonType("str"), PythonType("Any")])
 
     if data_type is None:
@@ -89,7 +103,7 @@ def as_python_type(schema_type: dict[str, Any], schema_path: list[str],
     if data_type == "array":
         return PythonType(
             type="list",
-            inner_types=[as_python_type(schema_type.get("items"), schema_path + ["items"], schema_to_class)]
+            inner_types=[as_python_type(schema_type.get("items"), schema_path + ["items"], schema_to_class, classes, verbose)]
         )
 
     format = schema_type.get("format")
@@ -1289,7 +1303,7 @@ class AddSchemasTransformer(CstTransformerBase):
 
 
 class CreateClassMethodTransformer(CstTransformerBase):
-    def __init__(self, spec: dict[str, Any], index: dict[str, Any], clazz: GithubClass, method_name: str, api_verb: str, api_path: str, api_response: str | None, prefix_path):
+    def __init__(self, spec: dict[str, Any], index: dict[str, Any], clazz: GithubClass, method_name: str, api_verb: str, api_path: str, api_response: str | None, prefix_path, return_property: str | None):
         super().__init__()
         self.spec = spec
         self.classes = index.get("classes", {})
@@ -1312,7 +1326,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
             if api_verb in ["get", "patch"]:
                 api_response = "200"
             elif api_verb in ["post", "put"]:
-                api_response = "201"
+                api_response = "200" if "200" in responses else "201"
             elif api_verb == "delete":
                 api_response = "204"
             else:
@@ -1322,6 +1336,15 @@ class CreateClassMethodTransformer(CstTransformerBase):
         self.api_response = api_response
         content_schema = responses.get(api_response).get("content", {}).get("application/json", {}).get("schema", None)
         schema_path = ["paths", self.api_path, self.api_verb, "responses", self.api_response, "content", "application/json", "schema"]
+        self.return_property = return_property
+        if return_property:
+            if content_schema is None:
+                raise ValueError(f"No schema exists for response {api_response} of path {api_path} and verb {api_verb} in spec, cannot extract return property")
+            content_schema = resolve_schema(content_schema, spec)
+            if return_property not in content_schema.get("properties", {}):
+                raise ValueError(f"Property '{return_property}' does not exist in response for path {api_path} and verb {api_verb} in spec")
+            content_schema = content_schema.get("properties", {}).get(return_property, {})
+            schema_path.extend(["properties", return_property])
         self.api_content = as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, True) if content_schema else None
         self.schema_added = 0
 
@@ -1354,10 +1377,10 @@ class CreateClassMethodTransformer(CstTransformerBase):
         return len(statements)
 
     @staticmethod
-    def get_order_elements(function_name: str) -> tuple[str] | tuple[str, str]:
-        for prefix in ["get", "set", "remove", "edit"]:
+    def get_order_elements(function_name: str) -> tuple[str] | tuple[str, int, str]:
+        for idx, prefix in enumerate(["create", "get", "set", "delete", "remove", "edit"]):
             if function_name.startswith(f"{prefix}_"):
-                return function_name[len(prefix)+1:], prefix
+                return function_name[len(prefix)+1:], idx, prefix
         return (function_name, )
 
     def create_method(self) -> cst.FunctionDef:
@@ -1372,6 +1395,12 @@ class CreateClassMethodTransformer(CstTransformerBase):
         request_properties = {prop: as_python_type(desc, list(schema_path + (prop, )), self.schema_to_class, self.classes, True)
                               for prop, desc in request_schema.get("properties", {}).items()} if request_schema else {}
         required_properties = request_schema.get("required") if request_schema else []
+        # TODO: ignore parameters:
+        #       - those covered by prefix_path
+        #       - those referring to pagination
+        #       - add all others to method name, e.g dir in /repos/{owner}/{repo}/readme/{dir}
+
+        stmts = []
 
         docstrings = []
         docstrings.append('"""')
@@ -1388,7 +1417,77 @@ class CreateClassMethodTransformer(CstTransformerBase):
             docstrings.append(self.api_descr)
         docstrings.append('"""')
         docstring = "\n        ".join(docstrings)
-        docstring_stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
+        stmts.append(cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))]))
+
+        assertion_stmts = [
+            cst.SimpleStatementLine(body=[
+                cst.Assert(
+                    test=cst.Call(
+                        func=cst.Name("isinstance") if prop_name in required_properties else cst.Name("is_optional"),
+                        args=[cst.Arg(cst.Name(prop_name)), cst.Arg(self.create_type(prop_type))]
+                    ),
+                    msg=cst.Name(prop_name)
+                )
+            ])
+            for prop_name, prop_type in request_properties.items()
+        ]
+        stmts.extend(assertion_stmts)
+
+        # TODO: add NotSet.remove_notset()
+        if request_properties:
+            parameter_stmt = cst.SimpleStatementLine(
+                body=[cst.Assign(
+                    targets=[cst.AssignTarget(cst.Name("parameters"))],
+                    value=cst.Dict([
+                        cst.DictElement(key=cst.SimpleString(f'"{prop_name}"'), value=cst.Name(prop_name))
+                        for prop_name, prop_type in request_properties.items()
+                    ])
+                )],
+                leading_lines=[cst.EmptyLine()]
+            )
+            stmts.append(parameter_stmt)
+
+        request_stmt = cst.SimpleStatementLine(body=[cst.Assign(
+            targets=[cst.AssignTarget(cst.Tuple(elements=[cst.Element(cst.Name("headers")), cst.Element(cst.Name("data"))], lpar=(), rpar=()))],
+            value=cst.Call(
+                func=self.create_attribute(["self", "_requester", "requestJsonAndCheck"]),
+                args=(
+                    cst.Arg(cst.SimpleString(f'"{self.api_verb.upper()}"')),
+                    cst.Arg(cst.FormattedString([
+                        cst.FormattedStringExpression(self.create_attribute(["self", "url"])),
+                        cst.FormattedStringText(self.relative_path)
+                    ])),
+                ) + (
+                    (cst.Arg(keyword=cst.Name("input"), value=cst.Name("parameters"), equal=equal),) if request_properties else ()
+                )
+            )
+        )])
+        stmts.append(request_stmt)
+
+        if self.api_content:
+            # TODO: return proper pagination instead of list[T]
+            if self.return_property:
+                data = cst.Call(
+                    func=self.create_attribute(["data", "get"]),
+                    args=[cst.Arg(cst.SimpleString(f'"{self.return_property}"'))]
+                )
+            else:
+                data = cst.Name("data")
+
+            if isinstance(self.api_content, GithubClass):
+                result_stmt = cst.SimpleStatementLine(body=[
+                    cst.Return(value=cst.Call(
+                        func=self.create_type(self.api_content),
+                        args=[
+                            cst.Arg(self.create_attribute(["self", "_requester"])),
+                            cst.Arg(cst.Name("headers")),
+                            cst.Arg(data),
+                        ]
+                    ))
+                ])
+            else:
+                result_stmt = cst.SimpleStatementLine(body=[cst.Return(data)])
+            stmts.append(result_stmt)
 
         method_params = [cst.Param(cst.Name("self"))]
         for prop_name, prop_type in request_properties.items():
@@ -1401,68 +1500,9 @@ class CreateClassMethodTransformer(CstTransformerBase):
                     annotation = cst.Annotation(self.create_type(PythonType("union", [prop_type, PythonType("None")])))
             method_params.append(cst.Param(name=cst.Name(prop_name), annotation=annotation))
 
-        assertion_stmts = tuple(
-            cst.SimpleStatementLine(body=[
-                cst.Assert(
-                    test=cst.Call(
-                        func=cst.Name("isinstance") if prop_name in required_properties else cst.Name("is_optional"),
-                        args=[cst.Arg(cst.Name(prop_name)), cst.Arg(self.create_type(prop_type))]
-                    ),
-                    msg=cst.Name(prop_name)
-                )
-            ])
-            for prop_name, prop_type in request_properties.items()
-        )
-
-        # TODO: add NotSet.remove_notset()
-        parameter_stmt = cst.SimpleStatementLine(
-            body=[cst.Assign(
-                targets=[cst.AssignTarget(cst.Name("parameters"))],
-                value=cst.Dict([
-                    cst.DictElement(key=cst.SimpleString(f'"{prop_name}"'), value=cst.Name(prop_name))
-                    for prop_name, prop_type in request_properties.items()
-                ])
-            )],
-            leading_lines=[cst.EmptyLine()]
-        )
-
-        request_stmt = cst.SimpleStatementLine(body=[cst.Assign(
-            targets=[cst.AssignTarget(cst.Tuple(elements=[cst.Element(cst.Name("headers")), cst.Element(cst.Name("data"))], lpar=(), rpar=()))],
-            value=cst.Call(
-                func=self.create_attribute(["self", "_requester", "requestJsonAndCheck"]),
-                args=[
-                    cst.Arg(cst.SimpleString(f'"{self.api_verb.upper()}"')),
-                    cst.Arg(cst.FormattedString([
-                        cst.FormattedStringExpression(self.create_attribute(["self", "url"])),
-                        cst.FormattedStringText(self.relative_path)
-                    ])),
-                    cst.Arg(keyword=cst.Name("input"), value=cst.Name("parameters"), equal=equal),
-                ]
-            )
-        )])
-
-        result_stmt = ()
-        if self.api_content:
-            if isinstance(self.api_content, GithubClass):
-                result_stmt = cst.SimpleStatementLine(body=[
-                    cst.Return(value=cst.Call(
-                        func=self.create_type(self.api_content),
-                        args=[
-                            cst.Arg(self.create_attribute(["self", "_requester"])),
-                            cst.Arg(cst.Name("headers")),
-                            cst.Arg(cst.Name("data")),
-                        ]
-                    ))
-                ])
-            else:
-                result_stmt = cst.SimpleStatementLine(body=[cst.Return(cst.Name("data"))], trailing_whitespace=cst.TrailingWhitespace(
-                    whitespace=cst.SimpleWhitespace("  "), comment=cst.Comment(f"# TODO: Check this really returns the {self.api_content}")
-                ))
-            result_stmt = (result_stmt, )
-
         params = cst.Parameters(params=method_params)
         returns = cst.Annotation(annotation=self.create_type(self.api_content, short_class_name=True))
-        body = cst.IndentedBlock(body=(docstring_stmt,) + assertion_stmts + (parameter_stmt, request_stmt) + result_stmt)
+        body = cst.IndentedBlock(body=stmts)
 
         return cst.FunctionDef(
             name=cst.Name(value=self.method_name),
@@ -2309,8 +2349,7 @@ class OpenApi:
                 f"    def setUp(self):\n"
                 f"        super().setUp()\n"
                 f"        # TODO: create an instance of type {clazz.name} and assign to self.attr, then run:\n"
-                f"        #   pytest {clazz.test_filename} -k testAttributes --record --auth_with_token\n"
-                f'        #   sed -i -e "s/token private_token_removed/Basic login_and_password_removed/" tests/ReplayData/{clazz.name}.setUp.txt\n'
+                f"        #   pytest {clazz.test_filename} -k testAttributes --record\n"
                 f"        #   ./scripts/update-assertions.sh {clazz.test_filename} testAttributes\n"
                 f"        #   pre-commit run --all-files\n"
                 f"        self.attr = None\n"
@@ -2362,6 +2401,7 @@ class OpenApi:
         api_verb: str,
         api_path: str,
         api_response: str | None,
+        return_property: str | None,
         dry_run: bool,
     ) -> bool:
         print(f"Using spec {spec_file}")
@@ -2389,7 +2429,7 @@ class OpenApi:
                 break
 
         transformer = CreateClassMethodTransformer(
-            spec, index, clazz, method_name, api_verb, api_path, api_response, prefix_path
+            spec, index, clazz, method_name, api_verb, api_path, api_response, prefix_path, return_property
         )
         tree = cst.parse_module(code)
         tree_updated = tree.visit(transformer)
@@ -2470,6 +2510,7 @@ class OpenApi:
         create_class_parser.add_argument("schema", help="Github API OpenAPI schema name", nargs="*")
 
         create_method_parser = create_component_parsers.add_parser("method", help="Create a PyGithub method")
+        create_method_parser.add_argument("--return-property", help="Return the value of this response property, instead of the entire response object", nargs="?")
         create_method_parser.add_argument("spec", help="Github API OpenAPI spec file")
         create_method_parser.add_argument("index_filename", help="Path of index file")
         create_method_parser.add_argument("class_name", help="PyGithub GithubObject class name")
@@ -2477,7 +2518,6 @@ class OpenApi:
         create_method_parser.add_argument("api_verb", help="OpenAPI verb")
         create_method_parser.add_argument("api_path", help="OpenAPI path")
         create_method_parser.add_argument("api_response", help="OpenAPI response, e.g. 200", nargs="?")
-        create_method_parser.add_argument("return_property", help="Return the value of this response property only, instead of the entire response object", nargs="?")
 
         if len(sys.argv) == 1:
             args_parser.print_help()
@@ -2525,6 +2565,7 @@ class OpenApi:
                     self.args.api_verb,
                     self.args.api_path,
                     self.args.api_response,
+                    self.args.return_property,
                     self.args.dry_run,
                 )
         else:
