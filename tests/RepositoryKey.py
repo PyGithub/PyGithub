@@ -57,6 +57,7 @@ class RepositoryKey(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.key.added_by, "key-admin-user")
         self.assertEqual(self.key.created_at, datetime(2017, 2, 22, 8, 16, 23, tzinfo=timezone.utc))
+        self.assertIsNone(self.key.enabled)
         self.assertEqual(self.key.id, 21870881)
         self.assertEqual(
             self.key.key,
