@@ -44,6 +44,9 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._advanced_security: Attribute[str] = NotSet
         self._code_scanning_default_setup: Attribute[str] = NotSet
+        self._code_scanning_default_setup_options: Attribute[dict[str, Any]] = NotSet
+        self._code_scanning_delegated_alert_dismissal: Attribute[str] = NotSet
+        self._code_scanning_options: Attribute[dict[str, Any]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._dependabot_alerts: Attribute[str] = NotSet
         self._dependabot_security_updates: Attribute[str] = NotSet
@@ -57,8 +60,10 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._private_vulnerability_reporting: Attribute[str] = NotSet
         self._secret_scanning: Attribute[str] = NotSet
+        self._secret_scanning_delegated_alert_dismissal: Attribute[str] = NotSet
         self._secret_scanning_delegated_bypass: Attribute[str] = NotSet
         self._secret_scanning_delegated_bypass_options: Attribute[dict[str, Any]] = NotSet
+        self._secret_scanning_generic_secrets: Attribute[str] = NotSet
         self._secret_scanning_non_provider_patterns: Attribute[str] = NotSet
         self._secret_scanning_push_protection: Attribute[str] = NotSet
         self._secret_scanning_validity_checks: Attribute[str] = NotSet
@@ -82,6 +87,18 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     @property
     def code_scanning_default_setup(self) -> str:
         return self._code_scanning_default_setup.value
+
+    @property
+    def code_scanning_default_setup_options(self) -> dict[str, Any]:
+        return self._code_scanning_default_setup_options.value
+
+    @property
+    def code_scanning_delegated_alert_dismissal(self) -> str:
+        return self._code_scanning_delegated_alert_dismissal.value
+
+    @property
+    def code_scanning_options(self) -> dict[str, Any]:
+        return self._code_scanning_options.value
 
     @property
     def created_at(self) -> datetime:
@@ -136,12 +153,20 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         return self._secret_scanning.value
 
     @property
+    def secret_scanning_delegated_alert_dismissal(self) -> str:
+        return self._secret_scanning_delegated_alert_dismissal.value
+
+    @property
     def secret_scanning_delegated_bypass(self) -> str:
         return self._secret_scanning_delegated_bypass.value
 
     @property
     def secret_scanning_delegated_bypass_options(self) -> dict[str, Any]:
         return self._secret_scanning_delegated_bypass_options.value
+
+    @property
+    def secret_scanning_generic_secrets(self) -> str:
+        return self._secret_scanning_generic_secrets.value
 
     @property
     def secret_scanning_non_provider_patterns(self) -> str:
@@ -172,6 +197,16 @@ class CodeSecurityConfig(NonCompletableGithubObject):
             self._advanced_security = self._makeStringAttribute(attributes["advanced_security"])
         if "code_scanning_default_setup" in attributes:  # pragma no branch
             self._code_scanning_default_setup = self._makeStringAttribute(attributes["code_scanning_default_setup"])
+        if "code_scanning_default_setup_options" in attributes:  # pragma no branch
+            self._code_scanning_default_setup_options = self._makeDictAttribute(
+                attributes["code_scanning_default_setup_options"]
+            )
+        if "code_scanning_delegated_alert_dismissal" in attributes:  # pragma no branch
+            self._code_scanning_delegated_alert_dismissal = self._makeStringAttribute(
+                attributes["code_scanning_delegated_alert_dismissal"]
+            )
+        if "code_scanning_options" in attributes:  # pragma no branch
+            self._code_scanning_options = self._makeDictAttribute(attributes["code_scanning_options"])
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], str), attributes[
                 "created_at"
@@ -207,6 +242,10 @@ class CodeSecurityConfig(NonCompletableGithubObject):
             )
         if "secret_scanning" in attributes:  # pragma no branch
             self._secret_scanning = self._makeStringAttribute(attributes["secret_scanning"])
+        if "secret_scanning_delegated_alert_dismissal" in attributes:  # pragma no branch
+            self._secret_scanning_delegated_alert_dismissal = self._makeStringAttribute(
+                attributes["secret_scanning_delegated_alert_dismissal"]
+            )
         if "secret_scanning_delegated_bypass" in attributes:  # pragma no branch
             self._secret_scanning_delegated_bypass = self._makeStringAttribute(
                 attributes["secret_scanning_delegated_bypass"]
@@ -214,6 +253,10 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         if "secret_scanning_delegated_bypass_options" in attributes:  # pragma no branch
             self._secret_scanning_delegated_bypass_options = self._makeDictAttribute(
                 attributes["secret_scanning_delegated_bypass_options"]
+            )
+        if "secret_scanning_generic_secrets" in attributes:  # pragma no branch
+            self._secret_scanning_generic_secrets = self._makeStringAttribute(
+                attributes["secret_scanning_generic_secrets"]
             )
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
             self._secret_scanning_non_provider_patterns = self._makeStringAttribute(
