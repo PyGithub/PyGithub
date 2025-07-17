@@ -147,9 +147,11 @@ class Issue(CompletableGithubObject):
         self._repository_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._state_reason: Attribute[str | None] = NotSet
+        self._sub_issues_summary: Attribute[dict[str, Any]] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._timeline_url: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
+        self._type: Attribute[dict[str, Any]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
@@ -313,6 +315,11 @@ class Issue(CompletableGithubObject):
         return self._state_reason.value
 
     @property
+    def sub_issues_summary(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._sub_issues_summary)
+        return self._sub_issues_summary.value
+
+    @property
     def text_matches(self) -> dict[str, Any]:
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
@@ -326,6 +333,11 @@ class Issue(CompletableGithubObject):
     def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
+
+    @property
+    def type(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._type)
+        return self._type.value
 
     @property
     def updated_at(self) -> datetime:
@@ -651,12 +663,16 @@ class Issue(CompletableGithubObject):
             self._state = self._makeStringAttribute(attributes["state"])
         if "state_reason" in attributes:  # pragma no branch
             self._state_reason = self._makeStringAttribute(attributes["state_reason"])
+        if "sub_issues_summary" in attributes:  # pragma no branch
+            self._sub_issues_summary = self._makeDictAttribute(attributes["sub_issues_summary"])
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "timeline_url" in attributes:  # pragma no branch
             self._timeline_url = self._makeStringAttribute(attributes["timeline_url"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeDictAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
