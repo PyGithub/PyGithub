@@ -59,6 +59,7 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._advanced_security: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
+        self._code_security: Attribute[dict[str, Any]] = NotSet
         self._dependabot_security_updates: Attribute[
             github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
         ] = NotSet
@@ -91,6 +92,10 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self._advanced_security.value
 
     @property
+    def code_security(self) -> dict[str, Any]:
+        return self._code_security.value
+
+    @property
     def dependabot_security_updates(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
         return self._dependabot_security_updates.value
 
@@ -119,6 +124,8 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
             self._advanced_security = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
             )
+        if "code_security" in attributes:  # pragma no branch
+            self._code_security = self._makeDictAttribute(attributes["code_security"])
         if "dependabot_security_updates" in attributes:  # pragma no branch
             self._dependabot_security_updates = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["dependabot_security_updates"]
