@@ -23,14 +23,14 @@ jobs:
       fail-fast: false
       matrix:
         # keep in sync with tox.ini [gh-actions] section
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
         os: ["ubuntu-latest"]
         os-label: ["Ubuntu"]
         include:
           - {python-version: "3.8", os: "windows-latest", os-label: "Windows"}
           - {python-version: "3.8", os: "macos-latest", os-label: "macOS"}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:

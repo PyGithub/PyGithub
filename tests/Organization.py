@@ -741,6 +741,10 @@ class Organization(Framework.TestCase):
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
 
+    def testGetSelfHostedRunners(self):
+        runners = self.org.get_self_hosted_runners()
+        self.assertEqual(runners.totalCount, 602)
+
     def testGetCodeSecurityConfigs(self):
         configs = list(self.org.get_code_security_configs())
         self.assertEqual(configs.pop().id, 17)
@@ -776,3 +780,10 @@ class Organization(Framework.TestCase):
 
         self.assertEqual(config.id, repo_config.configuration.id)
         repo.detach_security_config()
+
+    def testGetReposForCodeSecurityConfig(self):
+        repo_statuses = self.org.get_repos_for_code_security_config(id=182032)
+        status = repo_statuses[0]
+        self.assertEqual(status.status, "enforced")
+        self.assertIsNotNone(status.repository)
+        self.assertEqual(status.repository.full_name, "BeaverSoftware/truth")
