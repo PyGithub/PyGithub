@@ -49,8 +49,13 @@ class DependabotAlertAdvisory(AdvisoryBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._epss: Attribute[dict[str, Any]] = NotSet
         self._references: Attribute[list[dict]] = NotSet
         self._vulnerabilities: Attribute[list[DependabotAlertVulnerability]] = NotSet
+
+    @property
+    def epss(self) -> dict[str, Any]:
+        return self._epss.value
 
     @property
     def references(self) -> list[dict]:
@@ -61,6 +66,8 @@ class DependabotAlertAdvisory(AdvisoryBase):
         return self._vulnerabilities.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "epss" in attributes:  # pragma no branch
+            self._epss = self._makeDictAttribute(attributes["epss"])
         if "references" in attributes:
             self._references = self._makeListOfDictsAttribute(
                 attributes["references"],
