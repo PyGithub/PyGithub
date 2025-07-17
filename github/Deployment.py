@@ -71,6 +71,7 @@ class Deployment(CompletableGithubObject):
     The OpenAPI schema can be found at
     - /components/schemas/deployment
     - /components/schemas/deployment-simple
+    - /paths/"/repos/{owner}/{repo}/deployments"/post/responses/202/content/"application/json"/schema
 
     """
 
