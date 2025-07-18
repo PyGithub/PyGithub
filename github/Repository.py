@@ -139,6 +139,7 @@
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
+# Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -3926,6 +3927,18 @@ class Repository(CompletableGithubObject):
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
         return status == 204
+
+    def get_automated_security_fixes(self) -> dict[str, bool]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/automated-security-fixes <https://docs.github.com/en/rest/reference/repos>`_
+        :rtype: dict
+        """
+        _, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"{self.url}/automated-security-fixes",
+            headers={"Accept": Consts.automatedSecurityFixes},
+        )
+        return data
 
     def enable_automated_security_fixes(self) -> bool:
         """
