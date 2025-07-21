@@ -1301,6 +1301,23 @@ class Repository(CompletableGithubObject):
         )
         return data["permission"]
 
+    def get_collaborator_role_name(self, collaborator: str | NamedUser) -> str:
+        """
+        :calls: `GET /repos/{owner}/{repo}/collaborators/{username}/permission <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :rtype: string
+        """
+        assert isinstance(collaborator, (github.NamedUser.NamedUser, str)), collaborator
+        if isinstance(collaborator, github.NamedUser.NamedUser):
+            collaborator = collaborator._identity
+        else:
+            collaborator = urllib.parse.quote(collaborator)
+        _, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"{self.url}/collaborators/{collaborator}/permission",
+        )
+        return data["role_name"]
+
     def get_pending_invitations(self) -> PaginatedList[Invitation]:
         """
         :calls: `GET /repos/{owner}/{repo}/invitations <https://docs.github.com/en/rest/reference/repos#invitations>`_
