@@ -1307,8 +1307,8 @@ class Repository(CompletableGithubObject):
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: string
         """
-        assert isinstance(collaborator, NamedUser) or isinstance(collaborator, str), collaborator
-        if isinstance(collaborator, NamedUser):
+        assert isinstance(collaborator, (github.NamedUser.NamedUser, str)), collaborator
+        if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
         else:
             collaborator = urllib.parse.quote(collaborator)
