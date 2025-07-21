@@ -3599,7 +3599,7 @@ class Repository(CompletableGithubObject):
     def get_release(self, id: int | str) -> GitRelease:
         """
         :calls: `GET /repos/{owner}/{repo}/releases/{id} <https://docs.github.com/en/rest/reference/repos#get-a-release>`_
-        :param id: int (release id), str (tag name)
+        :param id: int (release id), str (tag name or "latest")
         :rtype: None or :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(id, (int, str)), id
@@ -3608,8 +3608,15 @@ class Repository(CompletableGithubObject):
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
         elif isinstance(id, str):
             id = urllib.parse.quote(id)
-            headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/tags/{id}")
-            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+            path = f"{self.url}/releases/tags/{id}"
+            if id == "latest":
+                path = f"{self.url}/releases/latest"
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET", path
+            )
+            return github.GitRelease.GitRelease(
+                self._requester, headers, data, completed=True
+            )
 
     def get_latest_release(self) -> GitRelease:
         """
