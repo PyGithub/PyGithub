@@ -10,6 +10,7 @@ jobs:
   openapi-sync-branch:
     name: OpenAPI sync branch
     runs-on: ubuntu-latest
+    if: ( ! github.event.repository.fork )
     outputs:
       autosync-branch-exists: ${{ steps.checkout.outcome == 'success' }}
     steps:
