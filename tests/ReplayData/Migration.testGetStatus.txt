@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user/migrations/25320
-{'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Thu, 13 Sep 2018 20:12:19 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4974'), ('X-RateLimit-Reset', '1536871398'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"1b6bd1349731bdaaccb858dcffbbaba5"'), ('X-GitHub-Media-Type', 'github.wyandotte-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.111059'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '2C86:20F9:4DD21A:C78CC4:5B9AC4A2')]

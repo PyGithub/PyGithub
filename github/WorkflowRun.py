@@ -57,6 +57,17 @@ if TYPE_CHECKING:
 
 
 class TimingData(NamedTuple):
+    """
+    This class represents workflow run usage.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/actions/workflows#get-workflow-usage
+
+    The OpenAPI schema can be found at
+    - /components/schemas/workflow-run-usage
+
+    """
+
     billable: dict[str, dict[str, int]]
     run_duration_ms: int
 

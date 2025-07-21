@@ -26,13 +26,14 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 import abc
 import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Callable, Dict, Optional, Union
+from typing import TYPE_CHECKING, Callable, Union
 
 import jwt
 from requests import utils
@@ -186,6 +187,19 @@ class JWT(Auth, ABC):
         return "Bearer"
 
 
+class JwtSigner:
+    def __init__(self, private_key_or_func: str | PrivateKeyGenerator, jwt_algorithm: str):
+        self._private_key_or_func = private_key_or_func
+        self._jwt_algorithm = jwt_algorithm
+
+    def jwt_sign(self, payload: dict) -> str | bytes:
+        if callable(self._private_key_or_func):
+            private_key = self._private_key_or_func()
+        else:
+            private_key = self._private_key_or_func
+        return jwt.encode(payload, key=private_key, algorithm=self._jwt_algorithm)
+
+
 class AppAuth(JWT):
     """
     This class is used to authenticate as a GitHub App.
@@ -195,23 +209,16 @@ class AppAuth(JWT):
     """
 
     @staticmethod
-    def create_jwt_sign(private_key_or_func: Union[str, PrivateKeyGenerator], jwt_algorithm: str) -> DictSignFunction:
-        def jwt_sign(payload: dict) -> Union[str, bytes]:
-            if callable(private_key_or_func):
-                private_key = private_key_or_func()
-            else:
-                private_key = private_key_or_func
-            return jwt.encode(payload, key=private_key, algorithm=jwt_algorithm)
-
-        return jwt_sign
+    def create_jwt_sign(private_key_or_func: str | PrivateKeyGenerator, jwt_algorithm: str) -> DictSignFunction:
+        return JwtSigner(private_key_or_func, jwt_algorithm).jwt_sign
 
     # v3: move * above private_key
     def __init__(
         self,
-        app_id: Union[int, str],
-        private_key: Optional[Union[str, PrivateKeyGenerator]] = None,
+        app_id: int | str,
+        private_key: str | PrivateKeyGenerator | None = None,
         *,
-        sign_func: Optional[DictSignFunction] = None,
+        sign_func: DictSignFunction | None = None,
         jwt_expiry: int = Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
     ):
@@ -234,7 +241,7 @@ class AppAuth(JWT):
         self._jwt_issued_at = jwt_issued_at
 
     @property
-    def app_id(self) -> Union[int, str]:
+    def app_id(self) -> int | str:
         return self._app_id
 
     @property
@@ -244,9 +251,9 @@ class AppAuth(JWT):
     def get_installation_auth(
         self,
         installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
-        requester: Optional[Requester] = None,
-    ) -> "AppInstallationAuth":
+        token_permissions: dict[str, str] | None = None,
+        requester: Requester | None = None,
+    ) -> AppInstallationAuth:
         """
         Creates a github.Auth.AppInstallationAuth instance for an installation.
 
@@ -258,7 +265,7 @@ class AppAuth(JWT):
         """
         return AppInstallationAuth(self, installation_id, token_permissions, requester)
 
-    def create_jwt(self, expiration: Optional[int] = None) -> str:
+    def create_jwt(self, expiration: int | None = None) -> str:
         """
         Create a signed JWT
         https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
@@ -310,15 +317,15 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
     """
 
     # used to fetch live access token when calling self.token
-    __integration: Optional["GithubIntegration"] = None
-    __installation_authorization: Optional[InstallationAuthorization] = None
+    __integration: GithubIntegration | None = None
+    __installation_authorization: InstallationAuthorization | None = None
 
     def __init__(
         self,
         app_auth: AppAuth,
         installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
-        requester: Optional[Requester] = None,
+        token_permissions: dict[str, str] | None = None,
+        requester: Requester | None = None,
     ):
         super().__init__()
 
@@ -334,7 +341,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         if requester is not None:
             self.withRequester(requester)
 
-    def withRequester(self, requester: Requester) -> "AppInstallationAuth":
+    def withRequester(self, requester: Requester) -> AppInstallationAuth:
         assert isinstance(requester, Requester), requester
         super().withRequester(requester.withAuth(self._app_auth))
 
@@ -346,7 +353,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         return self
 
     @property
-    def app_id(self) -> Union[int, str]:
+    def app_id(self) -> int | str:
         return self._app_auth.app_id
 
     @property
@@ -354,7 +361,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         return self._installation_id
 
     @property
-    def token_permissions(self) -> Optional[Dict[str, str]]:
+    def token_permissions(self) -> dict[str, str] | None:
         return self._token_permissions
 
     @property
@@ -397,10 +404,10 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
     _client_secret: str
     _token: str
     _type: str
-    _scope: Optional[str]
-    _expires_at: Optional[datetime]
-    _refresh_token: Optional[str]
-    _refresh_expires_at: Optional[datetime]
+    _scope: str | None
+    _expires_at: datetime | None
+    _refresh_token: str | None
+    _refresh_expires_at: datetime | None
 
     # imported here to avoid circular import
     from github.ApplicationOAuth import ApplicationOAuth
@@ -412,11 +419,11 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         client_id: str,
         client_secret: str,
         token: str,
-        token_type: Optional[str] = None,
-        expires_at: Optional[datetime] = None,
-        refresh_token: Optional[str] = None,
-        refresh_expires_at: Optional[datetime] = None,
-        requester: Optional[Requester] = None,
+        token_type: str | None = None,
+        expires_at: datetime | None = None,
+        refresh_token: str | None = None,
+        refresh_expires_at: datetime | None = None,
+        requester: Requester | None = None,
     ) -> None:
         super().__init__()
 
@@ -450,7 +457,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
             self._refresh()
         return self._token
 
-    def withRequester(self, requester: Requester) -> "AppUserAuth":
+    def withRequester(self, requester: Requester) -> AppUserAuth:
         assert isinstance(requester, Requester), requester
         super().withRequester(requester.withAuth(None))
 
@@ -491,15 +498,15 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         self._refresh_expires_at = token.refresh_expires_at
 
     @property
-    def expires_at(self) -> Optional[datetime]:
+    def expires_at(self) -> datetime | None:
         return self._expires_at
 
     @property
-    def refresh_token(self) -> Optional[str]:
+    def refresh_token(self) -> str | None:
         return self._refresh_token
 
     @property
-    def refresh_expires_at(self) -> Optional[datetime]:
+    def refresh_expires_at(self) -> datetime | None:
         return self._refresh_expires_at
 
     @property
@@ -515,8 +522,8 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
     def __init__(self) -> None:
         super().__init__()
 
-        self._login: Optional[str] = None
-        self._password: Optional[str] = None
+        self._login: str | None = None
+        self._password: str | None = None
 
     @property
     def username(self) -> str:
@@ -532,7 +539,7 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
         assert self._password is not None, "Method withRequester(Requester) must be called first"
         return self._password
 
-    def withRequester(self, requester: Requester) -> "NetrcAuth":
+    def withRequester(self, requester: Requester) -> NetrcAuth:
         assert isinstance(requester, Requester), requester
         super().withRequester(requester)
 

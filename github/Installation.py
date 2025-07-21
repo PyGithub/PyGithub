@@ -85,6 +85,21 @@ class Installation(NonCompletableGithubObject):
 
     """
 
+    def __init__(
+        self,
+        requester: Requester,
+        headers: dict[str, str | int],
+        attributes: Any,
+    ) -> None:
+        super().__init__(requester, headers, attributes)
+
+        auth = self._requester.auth if self._requester is not None else None
+        # Usually, an Installation is created from a Requester with App authentication
+        if isinstance(auth, AppAuth):
+            # But the installation has to authenticate as an installation (e.g. for get_repos())
+            auth = auth.get_installation_auth(self.id, requester=self._requester)
+            self._requester = self._requester.withAuth(auth)
+
     def _initAttributes(self) -> None:
         self._access_tokens_url: Attribute[str] = NotSet
         self._account: Attribute[NamedUser | Organization] = NotSet
@@ -106,21 +121,6 @@ class Installation(NonCompletableGithubObject):
         self._target_id: Attribute[int] = NotSet
         self._target_type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-
-    def __init__(
-        self,
-        requester: Requester,
-        headers: dict[str, str | int],
-        attributes: Any,
-    ) -> None:
-        super().__init__(requester, headers, attributes)
-
-        auth = self._requester.auth if self._requester is not None else None
-        # Usually, an Installation is created from a Requester with App authentication
-        if isinstance(auth, AppAuth):
-            # But the installation has to authenticate as an installation (e.g. for get_repos())
-            auth = auth.get_installation_auth(self.id, requester=self._requester)
-            self._requester = self._requester.withAuth(auth)
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})

@@ -37,8 +37,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser  # TODO remove unused
@@ -56,7 +57,7 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
 
     """
 
-    _dict: Dict[Tuple[int, int], int]
+    _dict: dict[tuple[int, int], int]
 
     def _initAttributes(self) -> None:
         self._dict = {}

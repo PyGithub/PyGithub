@@ -55,24 +55,22 @@ class GitCommitVerification(NonCompletableGithubObject):
     https://docs.github.com/en/rest/commits/commits
 
     The OpenAPI schema can be found at
+    - /components/schemas/file-commit/properties/commit/properties/verification
     - /components/schemas/git-commit/properties/verification
+    - /components/schemas/verification
 
     """
 
     def _initAttributes(self) -> None:
-        self._verified: Attribute[bool] = NotSet
-        self._verified_at: Attribute[datetime] = NotSet
+        self._payload: Attribute[str] = NotSet
         self._reason: Attribute[str] = NotSet
         self._signature: Attribute[str] = NotSet
-        self._payload: Attribute[str] = NotSet
+        self._verified: Attribute[bool] = NotSet
+        self._verified_at: Attribute[datetime] = NotSet
 
     @property
-    def verified(self) -> bool:
-        return self._verified.value
-
-    @property
-    def verified_at(self) -> datetime:
-        return self._verified_at.value
+    def payload(self) -> str:
+        return self._payload.value
 
     @property
     def reason(self) -> str:
@@ -83,17 +81,21 @@ class GitCommitVerification(NonCompletableGithubObject):
         return self._signature.value
 
     @property
-    def payload(self) -> str:
-        return self._payload.value
+    def verified(self) -> bool:
+        return self._verified.value
+
+    @property
+    def verified_at(self) -> datetime:
+        return self._verified_at.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "verified" in attributes:  # pragma no branch
-            self._verified = self._makeBoolAttribute(attributes["verified"])
-        if "verified_at" in attributes:  # pragma no branch
-            self._verified_at = self._makeDatetimeAttribute(attributes["verified_at"])
+        if "payload" in attributes:  # pragma no branch
+            self._payload = self._makeStringAttribute(attributes["payload"])
         if "reason" in attributes:  # pragma no branch
             self._reason = self._makeStringAttribute(attributes["reason"])
         if "signature" in attributes:  # pragma no branch
             self._signature = self._makeStringAttribute(attributes["signature"])
-        if "payload" in attributes:  # pragma no branch
-            self._payload = self._makeStringAttribute(attributes["payload"])
+        if "verified" in attributes:  # pragma no branch
+            self._verified = self._makeBoolAttribute(attributes["verified"])
+        if "verified_at" in attributes:  # pragma no branch
+            self._verified_at = self._makeDatetimeAttribute(attributes["verified_at"])

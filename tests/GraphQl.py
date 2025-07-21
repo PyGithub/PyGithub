@@ -20,8 +20,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 import github
 import github.GithubException
@@ -39,7 +40,7 @@ class GraphQl(Framework.TestCase):
     def setUp(self):
         super().setUp()
 
-    def expected(self, base_url: str = "https://github.com") -> Dict[Any, Any]:
+    def expected(self, base_url: str = "https://github.com") -> dict[Any, Any]:
         return {
             "actor": {
                 "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",

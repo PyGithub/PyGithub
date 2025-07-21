@@ -35,9 +35,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -81,7 +82,7 @@ class GitAuthor(NonCompletableGithubObject):
     def name(self) -> str:
         return self._name.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "date" in attributes:  # pragma no branch
             self._date = self._makeDatetimeAttribute(attributes["date"])
         if "email" in attributes:  # pragma no branch

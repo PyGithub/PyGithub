@@ -140,7 +140,7 @@ class SpecificExceptions(Framework.TestCase):
     def testBadUserAgent(self):
         self.assertRaises(
             github.BadUserAgentException,
-            lambda: github.Github(auth=self.login, user_agent="").get_user().name,
+            lambda: github.Github(auth=self.oauth_token, user_agent="").get_user().name,
         )
 
     def testRateLimitExceeded(self):

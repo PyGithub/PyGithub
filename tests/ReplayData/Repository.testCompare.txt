@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/compare/v0.6...v0.7?page=1&per_page=250
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4997'), ('content-length', '14488'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"42eb6d36008b20550ae6d1991e0423d5"'), ('date', 'Sun, 27 May 2012 06:30:33 GMT'), ('content-type', 'application/json; charset=utf-8')]

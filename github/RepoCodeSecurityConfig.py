@@ -57,6 +57,9 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/code-security/configurations.
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-security-configuration-for-repository
+
     """
 
     def _initAttributes(self) -> None:

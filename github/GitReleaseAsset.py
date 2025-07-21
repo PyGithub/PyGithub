@@ -47,6 +47,7 @@ from datetime import datetime
 from typing import Any, Iterator
 
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 

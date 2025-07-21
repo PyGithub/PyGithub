@@ -167,7 +167,7 @@ from collections.abc import Iterable
 from datetime import date, datetime, timezone
 from typing import TYPE_CHECKING, Any
 
-from deprecated import deprecated
+from typing_extensions import deprecated
 
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability
@@ -2852,7 +2852,7 @@ class Repository(CompletableGithubObject):
         }
 
     @deprecated(
-        reason="""
+        """
         Repository.get_dir_contents() is deprecated, use
         Repository.get_contents() instead.
         """
@@ -4661,3 +4661,41 @@ class Repository(CompletableGithubObject):
             self._watchers_count = self._makeIntAttribute(attributes["watchers_count"])
         if "web_commit_signoff_required" in attributes:  # pragma no branch
             self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
+
+
+class RepositorySearchResult(Repository):
+    """
+    This class represents RepositorySearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-repositories
+
+    The OpenAPI schema can be found at
+    - /components/schemas/repo-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+        self._text_matches: Attribute[dict[str, Any]] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"full_name": self._full_name.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    @property
+    def text_matches(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._text_matches)
+        return self._text_matches.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeDictAttribute(attributes["text_matches"])

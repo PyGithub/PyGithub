@@ -36,8 +36,9 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -88,7 +89,7 @@ class Plan(NonCompletableGithubObject):
     def space(self) -> int:
         return self._space.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "filled_seats" in attributes:  # pragma no branch

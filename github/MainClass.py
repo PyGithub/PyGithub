@@ -107,6 +107,7 @@ from urllib3.util import Retry
 import github.ApplicationOAuth
 import github.Auth
 import github.AuthenticatedUser
+import github.Commit
 import github.Enterprise
 import github.Event
 import github.Gist
@@ -115,6 +116,7 @@ import github.GithubIntegration
 import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
+import github.Issue
 import github.License
 import github.NamedUser
 import github.Topic
@@ -125,27 +127,27 @@ from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.HookDescription import HookDescription
 from github.PaginatedList import PaginatedList
-from github.RateLimit import RateLimit
+from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
     from github.AuthenticatedUser import AuthenticatedUser
-    from github.Commit import Commit
-    from github.ContentFile import ContentFile
+    from github.Commit import CommitSearchResult
+    from github.ContentFile import ContentFileSearchResult
     from github.Event import Event
     from github.Gist import Gist
     from github.GithubApp import GithubApp
     from github.GitignoreTemplate import GitignoreTemplate
     from github.GlobalAdvisory import GlobalAdvisory
-    from github.Issue import Issue
+    from github.Issue import IssueSearchResult
     from github.License import License
-    from github.NamedUser import NamedUser
+    from github.NamedUser import NamedUser, NamedUserSearchResult
     from github.Organization import Organization
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
-    from github.Repository import Repository
+    from github.Repository import Repository, RepositorySearchResult
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
 
@@ -345,15 +347,15 @@ class Github:
             self.get_rate_limit()
         return self.__requester.rate_limiting_resettime
 
-    def get_rate_limit(self) -> RateLimit:
+    def get_rate_limit(self) -> RateLimitOverview:
         """
-        Rate limit status for different resources (core/search/graphql).
+        Rate limit overview that provides general status and status for different resources (core/search/graphql).
 
         :calls:`GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
-        return RateLimit(self.__requester, headers, data["resources"])
+        return RateLimitOverview(self.__requester, headers, data)
 
     @property
     def oauth_scopes(self) -> list[str] | None:
@@ -520,7 +522,7 @@ class Github:
             "/projects/columns/%d" % id,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
-        return github.ProjectColumn.ProjectColumn(self.__requester, headers, data, completed=True)
+        return github.ProjectColumn.ProjectColumn(self.__requester, headers, data)
 
     def get_gist(self, id: str) -> Gist:
         """
@@ -660,7 +662,7 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[Repository]:
+    ) -> PaginatedList[RepositorySearchResult]:
         """
         :calls: `GET /search/repositories <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
@@ -688,7 +690,7 @@ class Github:
         assert url_parameters["q"], "need at least one qualifier"
 
         return PaginatedList(
-            github.Repository.Repository,
+            github.Repository.RepositorySearchResult,
             self.__requester,
             "/search/repositories",
             url_parameters,
@@ -700,14 +702,14 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[NamedUser]:
+    ) -> PaginatedList[NamedUserSearchResult]:
         """
         :calls: `GET /search/users <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('followers', 'repositories', 'joined')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
+        :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUserSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -729,7 +731,7 @@ class Github:
         assert url_parameters["q"], "need at least one qualifier"
 
         return PaginatedList(
-            github.NamedUser.NamedUser,
+            github.NamedUser.NamedUserSearchResult,
             self.__requester,
             "/search/users",
             url_parameters,
@@ -741,14 +743,14 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[Issue]:
+    ) -> PaginatedList[IssueSearchResult]:
         """
         :calls: `GET /search/issues <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('comments', 'created', 'updated')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
+        :rtype: :class:`PaginatedList` of :class:`github.Issue.IssueSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -769,7 +771,7 @@ class Github:
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
 
-        return PaginatedList(github.Issue.Issue, self.__requester, "/search/issues", url_parameters)
+        return PaginatedList(github.Issue.IssueSearchResult, self.__requester, "/search/issues", url_parameters)
 
     def search_code(
         self,
@@ -778,7 +780,7 @@ class Github:
         order: Opt[str] = NotSet,
         highlight: bool = False,
         **qualifiers: Any,
-    ) -> PaginatedList[ContentFile]:
+    ) -> PaginatedList[ContentFileSearchResult]:
         """
         :calls: `GET /search/code <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
@@ -786,7 +788,7 @@ class Github:
         :param order: string ('asc', 'desc')
         :param highlight: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.ContentFile.ContentFile`
+        :rtype: :class:`PaginatedList` of :class:`github.ContentFile.ContentFileSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -810,7 +812,7 @@ class Github:
         headers = {"Accept": Consts.highLightSearchPreview} if highlight else None
 
         return PaginatedList(
-            github.ContentFile.ContentFile,
+            github.ContentFile.ContentFileSearchResult,
             self.__requester,
             "/search/code",
             url_parameters,
@@ -823,14 +825,14 @@ class Github:
         sort: Opt[str] = NotSet,
         order: Opt[str] = NotSet,
         **qualifiers: Any,
-    ) -> PaginatedList[Commit]:
+    ) -> PaginatedList[CommitSearchResult]:
         """
         :calls: `GET /search/commits <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
         :param sort: string ('author-date', 'committer-date')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`PaginatedList` of :class:`github.Commit.Commit`
+        :rtype: :class:`PaginatedList` of :class:`github.Commit.CommitSearchResult`
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -852,7 +854,7 @@ class Github:
         assert url_parameters["q"], "need at least one qualifier"
 
         return PaginatedList(
-            github.Commit.Commit,
+            github.Commit.CommitSearchResult,
             self.__requester,
             "/search/commits",
             url_parameters,

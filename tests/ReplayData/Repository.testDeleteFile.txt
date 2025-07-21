@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/contents/doc/testCreateUpdateDeleteFile.md
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('content-length', '16'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('x-ratelimit-remaining', '4997'), ('server', 'nginx/1.0.13'), ('last-modified', 'Wed, 05 Sep 2012 17:54:40 GMT'), ('connection', 'keep-alive'), ('etag', '"71786feb5f476112c5a8aa894ee7ca6c"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Sat, 08 Sep 2012 10:43:48 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ DELETE
 api.github.com
 None
 /repos/PyGithub/PyGithub/contents/doc/testCreateUpdateDeleteFile.md
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"branch": "master", "message": "Delete file for testDeleteFile", "sha": "5628799a7d517a4aaa0c1a7004d07569cd154df0"}
 200
 [('status', '200 OK'), ('content-length', '16'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('x-ratelimit-remaining', '4997'), ('server', 'nginx/1.0.13'), ('last-modified', 'Wed, 05 Sep 2012 17:54:40 GMT'), ('connection', 'keep-alive'), ('etag', '"71786feb5f476112c5a8aa894ee7ca6c"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Sat, 08 Sep 2012 10:43:48 GMT'), ('content-type', 'application/json; charset=utf-8')]

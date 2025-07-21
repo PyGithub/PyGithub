@@ -46,6 +46,7 @@ class RepositoryAdvisory(Framework.TestCase):
         self.assertEqual(self.advisory.author.login, "JLLeitschuh")
         self.assertEqual(self.advisory.closed_at, None)
         self.assertIsNone(self.advisory.collaborating_teams)
+        self.assertIsNone(self.advisory.collaborating_users)
         self.assertEqual(
             self.advisory.created_at,
             datetime(2023, 3, 28, 21, 41, 40, tzinfo=timezone.utc),

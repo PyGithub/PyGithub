@@ -54,6 +54,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+from __future__ import annotations
 
 import base64
 import contextlib
@@ -64,7 +65,6 @@ import traceback
 import unittest
 import warnings
 from io import BytesIO
-from typing import Optional
 
 import responses
 from requests.structures import CaseInsensitiveDict
@@ -342,13 +342,12 @@ class ReplayingHttpsConnection(ReplayingConnection):
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
-    tokenAuthMode = False
-    jwtAuthMode = False
+    authMode = "token"
     per_page = Consts.DEFAULT_PER_PAGE
     retry = None
     pool_size = None
-    seconds_between_requests: Optional[float] = None
-    seconds_between_writes: Optional[float] = None
+    seconds_between_requests: float | None = None
+    seconds_between_writes: float | None = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
 
     def setUp(self):
@@ -365,11 +364,6 @@ class BasicTestCase(unittest.TestCase):
             )
             import GithubCredentials  # type: ignore
 
-            self.login = (
-                github.Auth.Login(GithubCredentials.login, GithubCredentials.password)
-                if GithubCredentials.login and GithubCredentials.password
-                else None
-            )
             self.oauth_token = (
                 github.Auth.Token(GithubCredentials.oauth_token) if GithubCredentials.oauth_token else None
             )
@@ -385,7 +379,6 @@ class BasicTestCase(unittest.TestCase):
                 ReplayingHttpConnection,
                 ReplayingHttpsConnection,
             )
-            self.login = github.Auth.Login("login", "password")
             self.oauth_token = github.Auth.Token("oauth_token")
             self.jwt = github.Auth.AppAuthToken("jwt")
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
@@ -478,45 +471,29 @@ class TestCase(BasicTestCase):
         self.g = self.get_github(self.retry, self.pool_size)
 
     def get_github(self, retry, pool_size):
-        if self.tokenAuthMode:
-            return github.Github(
-                auth=self.oauth_token,
-                per_page=self.per_page,
-                retry=retry,
-                pool_size=pool_size,
-                seconds_between_requests=self.seconds_between_requests,
-                seconds_between_writes=self.seconds_between_writes,
-            )
-        elif self.jwtAuthMode:
-            return github.Github(
-                auth=self.jwt,
-                per_page=self.per_page,
-                retry=retry,
-                pool_size=pool_size,
-                seconds_between_requests=self.seconds_between_requests,
-                seconds_between_writes=self.seconds_between_writes,
-            )
+        if self.authMode == "token":
+            auth = self.oauth_token
+        elif self.authMode == "jwt":
+            auth = self.jwt
         else:
-            return github.Github(
-                auth=self.login,
-                per_page=self.per_page,
-                retry=retry,
-                pool_size=pool_size,
-                seconds_between_requests=self.seconds_between_requests,
-                seconds_between_writes=self.seconds_between_writes,
-            )
+            raise ValueError(f"Unsupported test auth mode: {self.authMode}")
+
+        return github.Github(
+            auth=auth,
+            per_page=self.per_page,
+            retry=retry,
+            pool_size=pool_size,
+            seconds_between_requests=self.seconds_between_requests,
+            seconds_between_writes=self.seconds_between_writes,
+        )
 
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
 
 
-def activateTokenAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
-    BasicTestCase.tokenAuthMode = True
-
-
 def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
-    BasicTestCase.jwtAuthMode = True
+    BasicTestCase.authMode = "jwt"
 
 
 def enableRetry(retry):
