@@ -2279,8 +2279,8 @@ class LazyRepository(Framework.TestCase):
     def testGetReleases(self):
         lazy_repo = self.getLazyRepository()
         releases = lazy_repo.get_releases()
-        self.assertEqual(releases.totalCount, 2)
         self.assertListEqual([release.tag_name for release in releases], ["v1.55", "v1.50"])
+        self.assertEqual(releases.totalCount, 2)
 
     def testGetReleaseWithTag(self):
         lazy_repo = self.getLazyRepository()
