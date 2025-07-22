@@ -70,6 +70,7 @@ import github.IssueComment
 import github.IssueEvent
 import github.IssuePullRequest
 import github.Label
+import github.IssueType
 import github.Milestone
 import github.NamedUser
 import github.Organization
@@ -96,6 +97,7 @@ if TYPE_CHECKING:
     from github.IssueEvent import IssueEvent
     from github.IssuePullRequest import IssuePullRequest
     from github.Label import Label
+    from github.IssueType import IssueType
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
     from github.PullRequest import PullRequest
@@ -153,6 +155,8 @@ class Issue(CompletableGithubObject):
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
+        self._type: Attribute[IssueType] = NotSet
+        
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -341,6 +345,12 @@ class Issue(CompletableGithubObject):
     def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
+    
+    @property
+    def type(self) -> IssueType:
+        self._completeIfNotSet(self._type)
+        return self._type.value
+    
 
     def as_pull_request(self) -> PullRequest:
         """
@@ -663,6 +673,8 @@ class Issue(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        if "type" in attributes:
+            self._type = self._makeClassAttribute(github.IssueType.IssueType, attributes["type"])
 
 
 class IssueSearchResult(Issue):
