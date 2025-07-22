@@ -109,7 +109,7 @@ commit() {
 last_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
 echo -n "Adding schemas to ${#github_classes[@]} classes:" | tee >(cat 1>&2)
 while true; do
-  "$python" "$openapi" suggest --add "$spec" "$index" "${github_classes[@]}" 1>&2
+  "$python" "$openapi" suggest --add schema "$spec" "$index" "${github_classes[@]}" 1>&2
   "$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
   now_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
   if [ "$now_schemas" -eq "$last_schemas" ]; then break; fi
@@ -198,7 +198,7 @@ update() {
 
   # add schemas to class
   for github_class in "${classes[@]}"; do
-    ("$python" "$openapi" suggest --add "$spec" "$index" "$github_class" && echo) 1>&2
+    ("$python" "$openapi" suggest --add schema "$spec" "$index" "$github_class" && echo) 1>&2
   done || failed "schemas" || return 0
   commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "schemas" || return 0
 
