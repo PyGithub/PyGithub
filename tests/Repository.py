@@ -736,6 +736,9 @@ class Repository(Framework.TestCase):
     def testCollaboratorPermission(self):
         self.assertEqual(self.repo.get_collaborator_permission("jacquev6"), "admin")
 
+    def testCollaboratorRoleName(self):
+        self.assertEqual(self.repo.get_collaborator_role_name("jacquev6"), "maintain")
+
     def testAddToCollaboratorsCustomRole(self):
         lyloa = self.g.get_user("Lyloa")
         self.repo.add_to_collaborators(lyloa, "custom_role")
