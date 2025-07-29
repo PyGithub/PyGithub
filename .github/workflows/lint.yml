@@ -20,7 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
           pip install -r requirements/types.txt
-      - uses: liskin/gh-problem-matcher-wrap@v2
+      - uses: liskin/gh-problem-matcher-wrap@v3
         with:
           action: add
           linters: mypy
