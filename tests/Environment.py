@@ -115,8 +115,8 @@ class Environment(Framework.TestCase):
     def testCreateEnvironment(self):
         environment = self.repo.create_environment("test/env")
         self.assertEqual(environment.name, "test/env")
-        self.assertEqual(environment.id, 5884352928)
-        self.assertEqual(environment.node_id, "EN_kwDOOG7P0c8AAAABXrwZoA")
+        self.assertEqual(environment.id, 470015651)
+        self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
         self.assertEqual(
             environment.url,
             "https://api.github.com/repos/alson/PyGithub/environments/test/env",
@@ -127,11 +127,11 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(
             environment.created_at,
-            datetime(2025, 3, 11, 21, 53, 19, tzinfo=timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(
             environment.updated_at,
-            datetime(2025, 3, 11, 21, 53, 19, tzinfo=timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(len(environment.protection_rules), 0)
         self.assertIsNone(environment.deployment_branch_policy)
@@ -140,14 +140,14 @@ class Environment(Framework.TestCase):
         environment = self.repo.create_environment(
             "test/env",
             wait_timer=42,
-            reviewers=[github.EnvironmentProtectionRuleReviewer.ReviewerParams(type_="User", id_=7999692)],
+            reviewers=[github.EnvironmentProtectionRuleReviewer.ReviewerParams(type_="User", id_=19245)],
             deployment_branch_policy=github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams(
                 protected_branches=True, custom_branch_policies=False
             ),
         )
-        self.assertEqual(environment.name, "test/env")
-        self.assertEqual(environment.id, 5884352928)
-        self.assertEqual(environment.node_id, "EN_kwDOOG7P0c8AAAABXrwZoA")
+        self.assertEqual(environment.name, "test")
+        self.assertEqual(environment.id, 470015651)
+        self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
         self.assertEqual(
             environment.url,
             "https://api.github.com/repos/alson/PyGithub/environments/test/env",
@@ -158,17 +158,17 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(
             environment.created_at,
-            datetime(2025, 3, 11, 21, 53, 19, tzinfo=timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(
             environment.updated_at,
-            datetime(2025, 3, 11, 21, 53, 19, tzinfo=timezone.utc),
+            datetime(2022, 4, 19, 14, 4, 32, tzinfo=timezone.utc),
         )
         self.assertEqual(len(environment.protection_rules), 3)
         self.assertEqual(environment.protection_rules[0].type, "required_reviewers")
         self.assertEqual(len(environment.protection_rules[0].reviewers), 1)
         self.assertEqual(environment.protection_rules[0].reviewers[0].type, "User")
-        self.assertEqual(environment.protection_rules[0].reviewers[0].reviewer.id, 7999692)
+        self.assertEqual(environment.protection_rules[0].reviewers[0].reviewer.id, 19245)
         self.assertEqual(environment.protection_rules[1].type, "wait_timer")
         self.assertEqual(environment.protection_rules[1].wait_timer, 42)
         self.assertEqual(environment.protection_rules[2].type, "branch_policy")
