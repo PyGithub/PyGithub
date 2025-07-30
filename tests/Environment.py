@@ -114,17 +114,17 @@ class Environment(Framework.TestCase):
         self.assertEqual(environments[0].name, "dev")
 
     def testCreateEnvironment(self):
-        environment = self.repo.create_environment("test")
-        self.assertEqual(environment.name, "test")
+        environment = self.repo.create_environment("test/env")
+        self.assertEqual(environment.name, "test/env")
         self.assertEqual(environment.id, 470015651)
         self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
         self.assertEqual(
             environment.url,
-            "https://api.github.com/repos/alson/PyGithub/environments/test",
+            "https://api.github.com/repos/alson/PyGithub/environments/test/env",
         )
         self.assertEqual(
             environment.html_url,
-            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test",
+            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test%2Fenv",
         )
         self.assertEqual(
             environment.created_at,
@@ -139,7 +139,7 @@ class Environment(Framework.TestCase):
 
     def testUpdateEnvironment(self):
         environment = self.repo.create_environment(
-            "test",
+            "test/env",
             wait_timer=42,
             reviewers=[github.EnvironmentProtectionRuleReviewer.ReviewerParams(type_="User", id_=19245)],
             prevent_self_review=True,
@@ -152,11 +152,11 @@ class Environment(Framework.TestCase):
         self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
         self.assertEqual(
             environment.url,
-            "https://api.github.com/repos/alson/PyGithub/environments/test",
+            "https://api.github.com/repos/alson/PyGithub/environments/test/env",
         )
         self.assertEqual(
             environment.html_url,
-            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test",
+            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test%2Fenv",
         )
         self.assertEqual(
             environment.created_at,
