@@ -171,7 +171,7 @@ class WorkflowRun(Framework.TestCase):
     def test_timing_no_run_duration(self):
         timing = self.workflow_run.timing()
         self.assertEqual(timing.billable, {})
-        self.assertEqual(timing.run_duration_ms, None)
+        self.assertIsNone(timing.run_duration_ms)
 
     def test_rerun(self):
         wr = self.repo.get_workflow_run(3910280793)
