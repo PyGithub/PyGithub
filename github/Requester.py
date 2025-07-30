@@ -1178,7 +1178,7 @@ class Requester:
                     self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
                 # remove auth to not leak authentication to redirection location
                 if o.hostname != self.__hostname:
-                    del requestHeaders["Authorization"]
+                    requestHeaders = {k: v for k, v in requestHeaders.items() if k != "Authorization"}
                 return self.__requestRaw(
                     cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
                 )
