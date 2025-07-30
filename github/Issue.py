@@ -420,12 +420,12 @@ class Issue(CompletableGithubObject):
                 "state": state,
                 "state_reason": state_reason,
                 "labels": labels,
-                "assignee": (
-                    assignee._identity if isinstance(assignee, github.NamedUser.NamedUser) else (assignee or "")
-                ),
-                "milestone": (
-                    milestone._identity if isinstance(milestone, github.Milestone.Milestone) else (milestone or "")
-                ),
+                "assignee": assignee._identity
+                if isinstance(assignee, github.NamedUser.NamedUser)
+                else (assignee or ""),
+                "milestone": milestone._identity
+                if isinstance(milestone, github.Milestone.Milestone)
+                else (milestone or ""),
             }
         )
 
@@ -563,7 +563,7 @@ class Issue(CompletableGithubObject):
         :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :rtype: :class:`github.Issue.SubIssue`
         """
-        assert isinstance(self.number, int), self.number
+        assert isinstance(sub_issue, (int, Issue)), sub_issue
 
         if isinstance(sub_issue, Issue):
             sub_issue_id = sub_issue.id
@@ -587,12 +587,13 @@ class Issue(CompletableGithubObject):
         :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :rtype: :class:`github.Issue.SubIssue`
         """
+        assert isinstance(sub_issue, (int, Issue)), sub_issue
+
         if isinstance(sub_issue, Issue):
             sub_issue_id = sub_issue.id
         else:
             sub_issue_id = sub_issue
 
-        assert isinstance(sub_issue_id, int), sub_issue_id
         post_parameters: dict[str, Any] = {
             "sub_issue_id": sub_issue_id,
         }
@@ -604,16 +605,26 @@ class Issue(CompletableGithubObject):
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
-    def reprioritize_sub_issue(self, sub_issue_id: int, after_id: int | None) -> SubIssue:
+    def reprioritize_sub_issue(self, sub_issue: int | Issue, after_sub_issue: int | Issue | None) -> SubIssue:
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub_issues/priority <https://docs.github.com/en/rest/issues/sub-issues>`_
-        :param sub_issue_id: int
-        :param after_id: int
+        :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
+        :param after_id: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :rtype: :class:`github.Issue.SubIssue`
         """
-        assert isinstance(sub_issue_id, int), sub_issue_id
-        assert after_id is None or isinstance(after_id, int), after_id
-        patch_parameters = {"sub_issue_id": sub_issue_id, "after_id": after_id}
+        assert isinstance(sub_issue, (int, Issue)), sub_issue
+        assert after_sub_issue is None or isinstance(after_sub_issue, (int, Issue)), after_sub_issue
+
+        if isinstance(sub_issue, Issue):
+            sub_issue_id = sub_issue.id
+        else:
+            sub_issue_id = sub_issue
+        if isinstance(after_sub_issue, Issue):
+            after_sub_issue_id = after_sub_issue.id
+        else:
+            after_sub_issue_id = after_sub_issue
+
+        patch_parameters = {"sub_issue_id": sub_issue_id, "after_id": after_sub_issue_id}
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             f"{self.url}/sub_issues/priority",

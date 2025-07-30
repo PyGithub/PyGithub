@@ -183,4 +183,3 @@ DEFAULT_JWT_ALGORITHM = "RS256"
 # https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
 DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
 DEFAULT_SECONDS_BETWEEN_WRITES = 1.0
-
