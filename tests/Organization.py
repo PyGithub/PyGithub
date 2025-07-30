@@ -215,7 +215,7 @@ class Organization(Framework.TestCase):
             "secret",
             "Description also created by PyGithub",
             parent_team.id,
-            [maintainer.id],
+            [maintainer.login],
             "notifications_disabled",
         )
         self.assertEqual(team.id, 189852)
