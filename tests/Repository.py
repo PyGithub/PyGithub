@@ -736,6 +736,9 @@ class Repository(Framework.TestCase):
     def testCollaboratorPermission(self):
         self.assertEqual(self.repo.get_collaborator_permission("jacquev6"), "admin")
 
+    def testCollaboratorRoleName(self):
+        self.assertEqual(self.repo.get_collaborator_role_name("jacquev6"), "maintain")
+
     def testAddToCollaboratorsCustomRole(self):
         lyloa = self.g.get_user("Lyloa")
         self.repo.add_to_collaborators(lyloa, "custom_role")
@@ -1772,7 +1775,7 @@ class Repository(Framework.TestCase):
     def testMergeUpstreamFailure(self):
         # Use fork for being able to update it
         repo = self.g.get_repo("Felixoid/PyGithub")
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             repo.merge_upstream("doesNotExist")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
