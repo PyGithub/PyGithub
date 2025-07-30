@@ -79,6 +79,7 @@ class Environment(Framework.TestCase):
         self.assertEqual(protection_rules[1].id, 216324)
         self.assertEqual(protection_rules[1].node_id, "GA_kwDOHKhL9c4AA00E")
         self.assertEqual(protection_rules[1].type, "required_reviewers")
+        self.assertFalse(protection_rules[1].prevent_self_review)
         self.assertEqual(protection_rules[2].id, 216325)
         self.assertEqual(protection_rules[2].node_id, "GA_kwDOHKhL9c4AA00F")
         self.assertEqual(protection_rules[2].type, "wait_timer")
@@ -141,6 +142,7 @@ class Environment(Framework.TestCase):
             "test/env",
             wait_timer=42,
             reviewers=[github.EnvironmentProtectionRuleReviewer.ReviewerParams(type_="User", id_=19245)],
+            prevent_self_review=True,
             deployment_branch_policy=github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams(
                 protected_branches=True, custom_branch_policies=False
             ),
@@ -166,6 +168,7 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(len(environment.protection_rules), 3)
         self.assertEqual(environment.protection_rules[0].type, "required_reviewers")
+        self.assertTrue(environment.protection_rules[0].prevent_self_review)
         self.assertEqual(len(environment.protection_rules[0].reviewers), 1)
         self.assertEqual(environment.protection_rules[0].reviewers[0].type, "User")
         self.assertEqual(environment.protection_rules[0].reviewers[0].reviewer.id, 19245)
