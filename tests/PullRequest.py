@@ -532,7 +532,7 @@ class PullRequest(Framework.TestCase):
         status = self.delete_restore_pull.merge(delete_branch=True)
         self.assertTrue(status.merged)
         self.assertTrue(self.delete_restore_pull.is_merged())
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(
@@ -544,7 +544,7 @@ class PullRequest(Framework.TestCase):
         )
 
     def testRestoreBranch(self):
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
@@ -561,7 +561,7 @@ class PullRequest(Framework.TestCase):
     def testDeleteBranch(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.delete_restore_pull.delete_branch(force=False)
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
@@ -576,7 +576,7 @@ class PullRequest(Framework.TestCase):
     def testForceDeleteBranch(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)

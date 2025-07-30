@@ -836,6 +836,8 @@ class Requester:
             exc = GithubException.RateLimitExceededException
         elif status == 404 and ("not found" in lc_message or "no object found" in lc_message):
             exc = GithubException.UnknownObjectException
+            if lc_message != "not found":
+                msg = message
         else:
             # for general GithubException, provide the actual message
             msg = message

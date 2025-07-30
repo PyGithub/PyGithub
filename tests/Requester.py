@@ -390,11 +390,11 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.UnknownObjectException,
-            None,
+            "No object found for the path some-nonexistent-file",
             404,
             {"message": "No object found for the path some-nonexistent-file"},
             {"header": "value"},
-            '404 {"message": "No object found for the path some-nonexistent-file"}',
+            'No object found for the path some-nonexistent-file: 404 {"message": "No object found for the path some-nonexistent-file"}',
         )
 
     def testShouldCreateUnknownObjectException3(self):
@@ -402,11 +402,11 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.UnknownObjectException,
-            None,
+            "Branch Not Found",
             404,
             {"message": "Branch Not Found"},
             {"header": "value"},
-            '404 {"message": "Branch Not Found"}',
+            'Branch Not Found: 404 {"message": "Branch Not Found"}',
         )
 
     def testShouldCreateGithubException(self):
