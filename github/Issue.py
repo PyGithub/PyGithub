@@ -605,11 +605,11 @@ class Issue(CompletableGithubObject):
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
-    def reprioritize_sub_issue(self, sub_issue: int | Issue, after_sub_issue: int | Issue | None) -> SubIssue:
+    def prioritize_sub_issue(self, sub_issue: int | Issue, after_sub_issue: int | Issue | None) -> SubIssue:
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub_issues/priority <https://docs.github.com/en/rest/issues/sub-issues>`_
         :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
-        :param after_id: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
+        :param after_sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :rtype: :class:`github.Issue.SubIssue`
         """
         assert isinstance(sub_issue, (int, Issue)), sub_issue
@@ -794,7 +794,6 @@ class SubIssue(Issue):
     See https://docs.github.com/en/rest/issues/sub-issues for more details.
 
     """
-
     def _initAttributes(self) -> None:
         super()._initAttributes()
         # Sub-issue specific attributes

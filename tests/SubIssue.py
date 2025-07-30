@@ -63,7 +63,7 @@ class SubIssue(Framework.TestCase):
         updated_sub_issues = list(self.issue.get_sub_issues())
         self.assertListKeyEqual(updated_sub_issues, lambda s: s.number, [34, 35, 38])
 
-    def testReprioritizeSubIssue(self):
+    def testPrioritizeSubIssue(self):
         """
         Test changing the priority of a sub-issue.
         """
@@ -72,7 +72,7 @@ class SubIssue(Framework.TestCase):
 
         sub_issue = self.repo.get_issue(35)
         after_issue = self.repo.get_issue(38)
-        self.issue.reprioritize_sub_issue(sub_issue.id, after_issue.id)
+        self.issue.prioritize_sub_issue(sub_issue, after_issue)
 
         updated_sub_issues = list(self.issue.get_sub_issues())
         self.assertListKeyEqual(updated_sub_issues, lambda s: s.number, [34, 38, 35])
