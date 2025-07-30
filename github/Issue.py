@@ -565,10 +565,9 @@ class Issue(CompletableGithubObject):
         """
         assert isinstance(sub_issue, (int, Issue)), sub_issue
 
+        sub_issue_id = sub_issue
         if isinstance(sub_issue, Issue):
             sub_issue_id = sub_issue.id
-        else:
-            sub_issue_id = sub_issue
 
         post_parameters: dict[str, Any] = {
             "sub_issue_id": sub_issue_id,
@@ -589,10 +588,9 @@ class Issue(CompletableGithubObject):
         """
         assert isinstance(sub_issue, (int, Issue)), sub_issue
 
+        sub_issue_id = sub_issue
         if isinstance(sub_issue, Issue):
             sub_issue_id = sub_issue.id
-        else:
-            sub_issue_id = sub_issue
 
         post_parameters: dict[str, Any] = {
             "sub_issue_id": sub_issue_id,
@@ -615,14 +613,12 @@ class Issue(CompletableGithubObject):
         assert isinstance(sub_issue, (int, Issue)), sub_issue
         assert after_sub_issue is None or isinstance(after_sub_issue, (int, Issue)), after_sub_issue
 
+        sub_issue_id = sub_issue
         if isinstance(sub_issue, Issue):
             sub_issue_id = sub_issue.id
-        else:
-            sub_issue_id = sub_issue
+        after_sub_issue_id = after_sub_issue
         if isinstance(after_sub_issue, Issue):
             after_sub_issue_id = after_sub_issue.id
-        else:
-            after_sub_issue_id = after_sub_issue
 
         patch_parameters = {"sub_issue_id": sub_issue_id, "after_id": after_sub_issue_id}
         headers, data = self._requester.requestJsonAndCheck(
@@ -794,6 +790,7 @@ class SubIssue(Issue):
     See https://docs.github.com/en/rest/issues/sub-issues for more details.
 
     """
+
     def _initAttributes(self) -> None:
         super()._initAttributes()
         # Sub-issue specific attributes
