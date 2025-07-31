@@ -51,6 +51,8 @@
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matt Tuchfarber <matt@tuchfarber.com>                         #
+# Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
 # Copyright 2025 Ryan Peach <github.essential257@passmail.net>                 #
 # Copyright 2025 a-sido <andrei.sidorenko.1993@gmail.com>                      #
 #                                                                              #

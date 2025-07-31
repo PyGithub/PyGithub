@@ -136,8 +136,12 @@
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 GPK <gopidesupavan@gmail.com>                                 #
+# Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #

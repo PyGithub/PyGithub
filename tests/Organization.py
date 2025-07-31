@@ -44,8 +44,9 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2025 Greg Fogelberg <greg.fogelberg@gmail.com>                     #
+# Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

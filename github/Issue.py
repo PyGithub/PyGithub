@@ -38,8 +38,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
+# Copyright 2025 Changyong Um <e7217@naver.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2025 Changyong Um <eum6211@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

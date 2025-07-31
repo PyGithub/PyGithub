@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2025 Changyong Um <eum6211@gmail.com>                              #
+# Copyright 2025 Changyong Um <e7217@naver.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

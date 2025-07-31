@@ -21,8 +21,10 @@
 # Copyright 2024 Bernhard M. Wiedemann <githubbmwprimary@lsmod.de>             #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
+# Copyright 2025 Soubhik Kumar Mitra <59209034+x612skm@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
