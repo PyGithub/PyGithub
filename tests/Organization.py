@@ -767,6 +767,9 @@ class Organization(Framework.TestCase):
         runners = self.org.get_self_hosted_runners()
         self.assertEqual(runners.totalCount, 602)
 
+    def testDeleteSelfHostedRunner(self):
+        self.org.delete_self_hosted_runner("42")
+
     def testGetCodeSecurityConfigs(self):
         configs = list(self.org.get_code_security_configs())
         self.assertEqual(configs.pop().id, 17)
