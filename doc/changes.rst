@@ -84,6 +84,7 @@ Bug Fixes
 * Fix side-effect when removing Authorization key from headers (`#3313 <https://github.com/PyGithub/PyGithub/pull/3313>`_) (`0378ccee <https://github.com/PyGithub/PyGithub/commit/0378ccee>`_)
 * Make ``TimingData.run_duration_ms`` optional (`#3268 <https://github.com/PyGithub/PyGithub/pull/3268>`_) (`131949b3 <https://github.com/PyGithub/PyGithub/commit/131949b3>`_)
 * Normalize App ID to String & Enhance JWT Issuer Verification (`#3272 <https://github.com/PyGithub/PyGithub/pull/3272>`_) (`01196d67 <https://github.com/PyGithub/PyGithub/commit/01196d67>`_)
+* Add ``delete_self_hosted_runner`` to ``Organization`` (`#3306 <https://github.com/PyGithub/PyGithub/pull/3306>`_)
 
 Dependencies
 ^^^^^^^^^^^^
