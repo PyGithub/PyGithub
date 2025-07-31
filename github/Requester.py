@@ -1244,6 +1244,8 @@ class Requester:
             return self.__connection
 
         with self.__connection_lock:
+            if self.__persist and self.__connection is not None and hostname == self.__connection.host:
+                return self.__connection
             if self.__connection is not None:
                 self.__connection.close()
                 self.__connection = None
