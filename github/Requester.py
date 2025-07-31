@@ -834,8 +834,10 @@ class Requester:
             exc = GithubException.BadUserAgentException
         elif status == 403 and cls.isRateLimitError(lc_message):
             exc = GithubException.RateLimitExceededException
-        elif status == 404 and (lc_message == "not found" or "no object found" in lc_message):
+        elif status == 404 and ("not found" in lc_message or "no object found" in lc_message):
             exc = GithubException.UnknownObjectException
+            if lc_message != "not found":
+                msg = message
         else:
             # for general GithubException, provide the actual message
             msg = message
@@ -1176,7 +1178,7 @@ class Requester:
                     self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
                 # remove auth to not leak authentication to redirection location
                 if o.hostname != self.__hostname:
-                    del requestHeaders["Authorization"]
+                    requestHeaders = {k: v for k, v in requestHeaders.items() if k != "Authorization"}
                 return self.__requestRaw(
                     cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
                 )

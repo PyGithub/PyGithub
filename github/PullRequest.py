@@ -94,6 +94,7 @@ import github.PullRequestMergeStatus
 import github.PullRequestPart
 import github.PullRequestReview
 import github.Team
+import github.TimelineEvent
 from github import Consts
 from github.GithubObject import (
     Attribute,
@@ -122,6 +123,7 @@ if TYPE_CHECKING:
     from github.PullRequestPart import PullRequestPart
     from github.PullRequestReview import PullRequestReview
     from github.Team import Team
+    from github.TimelineEvent import TimelineEvent
 
 
 class ReviewComment(TypedDict):
@@ -457,7 +459,7 @@ class PullRequest(CompletableGithubObject):
     def create_review_comment(
         self,
         body: str,
-        commit: github.Commit.Commit,
+        commit: github.Commit.Commit | str,
         path: str,
         # line replaces deprecated position argument, so we put it between path and side
         line: Opt[int] = NotSet,
@@ -472,7 +474,7 @@ class PullRequest(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(body, str), body
-        assert isinstance(commit, github.Commit.Commit), commit
+        assert isinstance(commit, (github.Commit.Commit, str)), commit
         assert isinstance(path, str), path
         assert is_optional(line, int), line
         assert is_undefined(side) or side in ["LEFT", "RIGHT"], side
@@ -489,12 +491,14 @@ class PullRequest(CompletableGithubObject):
         ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
+        commit_id = commit._identity if isinstance(commit, github.Commit.Commit) else commit
+
         if as_suggestion:
             body = f"```suggestion\n{body}\n```"
         post_parameters = NotSet.remove_unset_items(
             {
                 "body": body,
-                "commit_id": commit._identity,
+                "commit_id": commit_id,
                 "path": path,
                 "line": line,
                 "side": side,
@@ -736,6 +740,19 @@ class PullRequest(CompletableGithubObject):
             github.IssueEvent.IssueEvent,
             self._requester,
             f"{self.issue_url}/events",
+            None,
+            headers={"Accept": Consts.mediaTypeLockReasonPreview},
+        )
+
+    def get_issue_timeline(self) -> PaginatedList[TimelineEvent]:
+        """
+        :calls `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline <https://docs.github.com/en/rest/reference/issues#timeline>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.TimelineEvent`
+        """
+        return PaginatedList(
+            github.TimelineEvent.TimelineEvent,
+            self._requester,
+            f"{self.issue_url}/timeline",
             None,
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
