@@ -34,7 +34,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2025 Changyong Um <eum6211@gmail.com>                              #
+# Copyright 2025 Changyong Um <e7217@naver.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -53,6 +54,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 REQ_IF_NONE_MATCH = "If-None-Match"
