@@ -127,6 +127,7 @@ class Issue(Framework.TestCase):
                 "eyes": 0,
             },
         )
+        self.assertIsNone(self.issue.type)
 
     def testEditWithoutParameters(self):
         self.issue.edit()
