@@ -1240,18 +1240,20 @@ class Requester:
     def __createConnection(
         self, hostname: str | None = None
     ) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass:
-        if self.__persist and self.__connection is not None and hostname is not None and hostname == self.__hostname:
+        if hostname is None:
+            hostname = self.__hostname
+
+        if self.__persist and self.__connection is not None and hostname == self.__connection.host:
             return self.__connection
 
         with self.__connection_lock:
-            if self.__connection is not None and hostname is not None and hostname == self.__hostname:
-                if self.__persist:
-                    return self.__connection
+            if self.__persist and self.__connection is not None and hostname == self.__connection.host:
+                return self.__connection
             if self.__connection is not None:
                 self.__connection.close()
                 self.__connection = None
             self.__connection = self.__connectionClass(
-                hostname if hostname is not None else self.__hostname,
+                hostname,
                 self.__port,
                 retry=self.__retry,
                 pool_size=self.__pool_size,
