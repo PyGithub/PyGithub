@@ -50,6 +50,7 @@ from typing import Any
 
 import github.Branch
 import github.Commit
+import github.GithubException as GithubException
 import github.GithubObject
 import github.NamedUser
 import github.Tag
@@ -141,11 +142,18 @@ class Workflow(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    # v3: default throw to True
     def create_dispatch(
-        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
     ) -> bool:
         """
+        Call Create Dispatch, raises or return False without details on error, depending on the "throw" parameter.
+
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
+
         """
         assert (
             isinstance(ref, github.Branch.Branch)
@@ -162,10 +170,13 @@ class Workflow(CompletableGithubObject):
             ref = ref.name
         if inputs is NotSet:
             inputs = {}
-        status, _, _ = self._requester.requestJson(
-            "POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs}
-        )
-        return status == 204
+        try:
+            self._requester.requestJsonAndCheck("POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs})
+        except GithubException.GithubException:
+            if throw:
+                raise
+            return False
+        return True
 
     def get_runs(
         self,
