@@ -202,7 +202,7 @@ class Ruleset(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def update(
+    def edit(
         self,
         name: Opt[str] = NotSet,
         target: Opt[str] = NotSet,
