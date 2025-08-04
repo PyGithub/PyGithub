@@ -77,9 +77,9 @@ class Ruleset(Framework.TestCase):
             },
         )
 
-    def testUpdate(self):
-        ruleset = self.ruleset.update(
-            name="updated rule set",
+    def testEdit(self):
+        ruleset = self.ruleset.edit(
+            name="edited rule set",
             target="branch",
             enforcement="disabled",
             bypass_actors=[],
