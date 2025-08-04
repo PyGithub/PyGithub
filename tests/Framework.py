@@ -35,6 +35,7 @@
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Maja Massarini <2678400+majamassarini@users.noreply.github.com>#
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -54,6 +55,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import base64
@@ -352,6 +354,7 @@ class BasicTestCase(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
+        self.__customFilename: str | None = None
         self.__fileName = ""
         self.__file = None
         if (
@@ -418,14 +421,26 @@ class BasicTestCase(unittest.TestCase):
             warnings.filterwarnings("ignore", category=category, module=module)
             yield
 
+    @contextlib.contextmanager
+    def replayData(self, filename: str):
+        previous = self.__customFilename
+        self.__customFilename = filename
+        try:
+            yield
+        finally:
+            self.__customFilename = previous
+
     def __openFile(self, mode):
-        for _, _, functionName, _ in traceback.extract_stack():
-            if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
-                if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    fileName = os.path.join(
-                        self.replayDataFolder,
-                        f"{self.__class__.__name__}.{functionName}.txt",
-                    )
+        fileName = None
+        if self.__customFilename:
+            fileName = self.__customFilename
+        else:
+            for _, _, functionName, _ in traceback.extract_stack():
+                if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
+                    # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+                    if functionName != "test":
+                        fileName = f"{self.__class__.__name__}.{functionName}.txt"
+        fileName = os.path.join(self.replayDataFolder, fileName) if fileName else None
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName

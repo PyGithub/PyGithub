@@ -136,8 +136,12 @@
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 GPK <gopidesupavan@gmail.com>                                 #
+# Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -1268,7 +1272,7 @@ class Repository(CompletableGithubObject):
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
         else:
-            collaborator = urllib.parse.quote(collaborator)
+            collaborator = urllib.parse.quote(collaborator, safe="")
 
         if is_defined(permission):
             put_parameters = {"permission": permission}
@@ -1294,7 +1298,7 @@ class Repository(CompletableGithubObject):
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
         else:
-            collaborator = urllib.parse.quote(collaborator)
+            collaborator = urllib.parse.quote(collaborator, safe="")
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"{self.url}/collaborators/{collaborator}/permission",
@@ -1949,7 +1953,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(unencrypted_value, str), unencrypted_value
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
-        secret_name = urllib.parse.quote(secret_name)
+        secret_name = urllib.parse.quote(secret_name, safe="")
         public_key = self.get_public_key(secret_type=secret_type)
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
@@ -1997,7 +2001,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(secret_name, str), secret_name
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
-        secret_name = urllib.parse.quote(secret_name)
+        secret_name = urllib.parse.quote(secret_name, safe="")
         return github.Secret.Secret(
             requester=self._requester,
             headers={},
@@ -2047,7 +2051,7 @@ class Repository(CompletableGithubObject):
         :rtype: github.Variable.Variable
         """
         assert isinstance(variable_name, str), variable_name
-        variable_name = urllib.parse.quote(variable_name)
+        variable_name = urllib.parse.quote(variable_name, safe="")
         return github.Variable.Variable(
             requester=self._requester,
             headers={},
@@ -2064,7 +2068,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(secret_name, str), secret_name
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
-        secret_name = urllib.parse.quote(secret_name)
+        secret_name = urllib.parse.quote(secret_name, safe="")
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/{secret_type}/secrets/{secret_name}")
         return status == 204
 
@@ -2075,7 +2079,7 @@ class Repository(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(variable_name, str), variable_name
-        variable_name = urllib.parse.quote(variable_name)
+        variable_name = urllib.parse.quote(variable_name, safe="")
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
         return status == 204
 
@@ -2226,11 +2230,11 @@ class Repository(CompletableGithubObject):
         :rtype: string
         """
         assert isinstance(archive_format, str), archive_format
-        archive_format = urllib.parse.quote(archive_format)
+        archive_format = urllib.parse.quote(archive_format, safe="")
         assert is_optional(ref, str), ref
         url = f"{self.url}/{archive_format}"
         if is_defined(ref):
-            ref = urllib.parse.quote(ref)
+            ref = urllib.parse.quote(ref, safe="")
             url += f"/{ref}"
         headers, data = self._requester.requestJsonAndCheck("GET", url)
         return headers["location"]
@@ -3010,7 +3014,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.GitRef.GitRef`
         """
         assert isinstance(ref, str), ref
-        ref = urllib.parse.quote(ref)
+        ref = urllib.parse.quote(ref, safe="")
         return PaginatedList(
             github.GitRef.GitRef,
             self._requester,
@@ -3025,7 +3029,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.GitTag.GitTag`
         """
         assert isinstance(sha, str), sha
-        sha = urllib.parse.quote(sha)
+        sha = urllib.parse.quote(sha, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/tags/{sha}")
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
@@ -3256,7 +3260,9 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Label.Label`
         """
         assert isinstance(name, str), name
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/labels/{urllib.parse.quote(name)}")
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/labels/{urllib.parse.quote(name, safe='')}"
+        )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
     def get_labels(self) -> PaginatedList[Label]:
@@ -3607,7 +3613,7 @@ class Repository(CompletableGithubObject):
             headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/{id}")
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
         elif isinstance(id, str):
-            id = urllib.parse.quote(id)
+            id = urllib.parse.quote(id, safe="")
             headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/tags/{id}")
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
@@ -3665,7 +3671,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Workflow.Workflow`
         """
         assert isinstance(id_or_file_name, (int, str)), id_or_file_name
-        id_or_file_name = urllib.parse.quote(str(id_or_file_name))
+        id_or_file_name = urllib.parse.quote(str(id_or_file_name), safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
         return github.Workflow.Workflow(self._requester, headers, data, completed=True)
 
@@ -3755,7 +3761,7 @@ class Repository(CompletableGithubObject):
         if isinstance(assignee, github.NamedUser.NamedUser):
             assignee = assignee._identity
         else:
-            assignee = urllib.parse.quote(assignee)
+            assignee = urllib.parse.quote(assignee, safe="")
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/assignees/{assignee}")
         return status == 204
@@ -3771,7 +3777,7 @@ class Repository(CompletableGithubObject):
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
         else:
-            collaborator = urllib.parse.quote(collaborator)
+            collaborator = urllib.parse.quote(collaborator, safe="")
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/collaborators/{collaborator}")
         return status == 204
@@ -3803,7 +3809,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(keyword, str), keyword
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            f"/legacy/issues/search/{self.owner.login}/{self.name}/{state}/{urllib.parse.quote(keyword)}",
+            f"/legacy/issues/search/{self.owner.login}/{self.name}/{state}/{urllib.parse.quote(keyword, safe='')}",
         )
         return [
             github.Issue.Issue(
@@ -3979,7 +3985,7 @@ class Repository(CompletableGithubObject):
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
         else:
-            collaborator = urllib.parse.quote(collaborator)
+            collaborator = urllib.parse.quote(collaborator, safe="")
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/collaborators/{collaborator}")
 
@@ -4083,7 +4089,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(event, str), event
         assert isinstance(callback, str), callback
         assert is_optional(secret, str), secret
-        event = urllib.parse.quote(event)
+        event = urllib.parse.quote(event, safe="")
 
         post_parameters = collections.OrderedDict()
         post_parameters["hub.callback"] = callback
@@ -4235,7 +4241,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
-        environment_name = urllib.parse.quote(environment_name)
+        environment_name = urllib.parse.quote(environment_name, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/environments/{environment_name}")
         data["environments_url"] = f"/repositories/{self.id}/environments"
         return Environment(self._requester, headers, data, completed=True)
@@ -4245,19 +4251,22 @@ class Repository(CompletableGithubObject):
         environment_name: str,
         wait_timer: int = 0,
         reviewers: list[ReviewerParams] = [],
+        prevent_self_review: bool = False,
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
     ) -> Environment:
         """
         :calls: `PUT /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
         :param wait_timer: int
-        :param reviews: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
+        :param reviewers: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
+        :param prevent_self_review: bool
         :param deployment_branch_policy: Optional[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams`]
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
         assert isinstance(wait_timer, int)
         assert isinstance(reviewers, list)
+        assert isinstance(prevent_self_review, bool)
         assert all(
             [isinstance(reviewer, github.EnvironmentProtectionRuleReviewer.ReviewerParams) for reviewer in reviewers]
         )
@@ -4268,11 +4277,12 @@ class Repository(CompletableGithubObject):
             )
             or deployment_branch_policy is None
         )
-        environment_name = urllib.parse.quote(environment_name)
+        environment_name = urllib.parse.quote(environment_name, safe="")
 
         put_parameters = {
             "wait_timer": wait_timer,
             "reviewers": [reviewer._asdict() for reviewer in reviewers],
+            "prevent_self_review": prevent_self_review,
             "deployment_branch_policy": deployment_branch_policy._asdict() if deployment_branch_policy else None,
         }
 
@@ -4289,7 +4299,7 @@ class Repository(CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(environment_name, str), environment_name
-        environment_name = urllib.parse.quote(environment_name)
+        environment_name = urllib.parse.quote(environment_name, safe="")
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
 

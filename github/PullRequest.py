@@ -51,6 +51,8 @@
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matt Tuchfarber <matt@tuchfarber.com>                         #
+# Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
 # Copyright 2025 Ryan Peach <github.essential257@passmail.net>                 #
 # Copyright 2025 a-sido <andrei.sidorenko.1993@gmail.com>                      #
 #                                                                              #
@@ -94,6 +96,7 @@ import github.PullRequestMergeStatus
 import github.PullRequestPart
 import github.PullRequestReview
 import github.Team
+import github.TimelineEvent
 from github import Consts
 from github.GithubObject import (
     Attribute,
@@ -122,6 +125,7 @@ if TYPE_CHECKING:
     from github.PullRequestPart import PullRequestPart
     from github.PullRequestReview import PullRequestReview
     from github.Team import Team
+    from github.TimelineEvent import TimelineEvent
 
 
 class ReviewComment(TypedDict):
@@ -738,6 +742,19 @@ class PullRequest(CompletableGithubObject):
             github.IssueEvent.IssueEvent,
             self._requester,
             f"{self.issue_url}/events",
+            None,
+            headers={"Accept": Consts.mediaTypeLockReasonPreview},
+        )
+
+    def get_issue_timeline(self) -> PaginatedList[TimelineEvent]:
+        """
+        :calls `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline <https://docs.github.com/en/rest/reference/issues#timeline>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.TimelineEvent`
+        """
+        return PaginatedList(
+            github.TimelineEvent.TimelineEvent,
+            self._requester,
+            f"{self.issue_url}/timeline",
             None,
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )

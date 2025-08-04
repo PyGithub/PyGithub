@@ -74,6 +74,8 @@
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
+# Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 #                                                                              #
@@ -1775,7 +1777,7 @@ class Repository(Framework.TestCase):
     def testMergeUpstreamFailure(self):
         # Use fork for being able to update it
         repo = self.g.get_repo("Felixoid/PyGithub")
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             repo.merge_upstream("doesNotExist")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
