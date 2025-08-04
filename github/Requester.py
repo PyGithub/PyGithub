@@ -1225,7 +1225,7 @@ class Requester:
             url = f"{self.__prefix}{url}"
         else:
             o = urllib.parse.urlparse(url)
-            assert self.__extractDomainFromHostname(o.hostname) in [
+            assert o.hostname == self.__hostname or self.__extractDomainFromHostname(o.hostname) in [
                 self.__hostname,
                 "github.com",
                 "githubusercontent.com",
