@@ -795,13 +795,14 @@ class Requester:
         if isinstance(domain_or_domains, str):
             if hostname == domain_or_domains:
                 return True
-            domain = domain_or_domains.split('.')
-            host_domain = hostname.split('.')[-len(domain):]
+            domain = domain_or_domains.split(".")
+            host_domain = hostname.split(".")[-len(domain) :]
             return host_domain == domain
         return any(cls.__hostnameHasDomain(hostname, d) for d in domain_or_domains)
 
     def __assertUrlAllowed(self, url: str) -> None:
         o = urllib.parse.urlparse(url)
+        assert o.hostname is not None
         if o.hostname == self.__hostname:
             prefixes = [self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth"]
             assert o.path.startswith(tuple(prefixes)), o.path
@@ -810,7 +811,7 @@ class Requester:
             if self.__base_url == Consts.DEFAULT_BASE_URL:
                 assert self.__hostnameHasDomain(o.hostname, ("github.com", "githubusercontent.com")), o.hostname
             else:
-                domain = self.__hostname[4:] if self.__hostname.startswith('api.') else self.__hostname
+                domain = self.__hostname[4:] if self.__hostname.startswith("api.") else self.__hostname
                 assert self.__hostnameHasDomain(o.hostname, domain), (o.hostname, domain)
 
     def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:

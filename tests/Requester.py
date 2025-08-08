@@ -32,7 +32,6 @@ from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
-from github import Consts
 from github import Requester as gr
 
 from . import Framework
@@ -275,8 +274,10 @@ class Requester(Framework.TestCase):
         assert self.g.requester.__hostnameHasDomain("github.com", ("github.com", "githubusercontent.com"))
         assert self.g.requester.__hostnameHasDomain("api.github.com", ("github.com", "githubusercontent.com"))
         assert self.g.requester.__hostnameHasDomain("githubusercontent.com", ("github.com", "githubusercontent.com"))
-        assert self.g.requester.__hostnameHasDomain("objects.githubusercontent.com", ("github.com", "githubusercontent.com"))
-        assert self.g.requester.__hostnameHasDomain("abc.def", ("github.com", "githubusercontent.com")) == False
+        assert self.g.requester.__hostnameHasDomain(
+            "objects.githubusercontent.com", ("github.com", "githubusercontent.com")
+        )
+        assert self.g.requester.__hostnameHasDomain("abc.def", ("github.com", "githubusercontent.com")) is False
 
     def testAssertUrlAllowed(self):
         # default github.com requester
@@ -289,9 +290,8 @@ class Requester(Framework.TestCase):
             "https://status.github.com/path",
             "https://githubusercontent.com/path",
             "https://objects.githubusercontent.com/path",
-            "https://release-assets.githubusercontent.com/path"
+            "https://release-assets.githubusercontent.com/path",
         ]:
-            #with self.subTest(f"gh-allows-{allowed}"):
             requester.__assertUrlAllowed(allowed)
 
         for not_allowed, arg in [
@@ -301,10 +301,9 @@ class Requester(Framework.TestCase):
             ("https://status.prod.ghe.local/github-api/path", "status.prod.ghe.local"),
             ("https://example.com/", "example.com"),
         ]:
-            #with self.subTest(f"gh-disallows-{not_allowed}"):
             with self.assertRaises(AssertionError) as exc:
                 requester.__assertUrlAllowed(not_allowed)
-            self.assertEqual(exc.exception.args, (arg, ))
+            self.assertEqual(exc.exception.args, (arg,))
 
         # custom (Enterprise) requester with different prefix
         requester = github.Github(base_url="https://api.prod.ghe.local/github-api/").requester
@@ -315,24 +314,25 @@ class Requester(Framework.TestCase):
             "https://uploads.prod.ghe.local/github-api/path"
             "https://status.prod.ghe.local/github-api/path"
         ]:
-            #with self.subTest(f"ghe-allows-{allowed}"):
             requester.__assertUrlAllowed(allowed)
 
         for not_allowed, arg in [
             ("https://api.prod.ghe.local/path", ("/path")),
-            ("https://api.github.com/request", (('api.github.com', 'prod.ghe.local'))),
-            ("https://github.com/path", (('github.com', 'prod.ghe.local'))),
-            ("https://uploads.github.com/path", (('uploads.github.com', 'prod.ghe.local'))),
-            ("https://status.github.com/path", (('status.github.com', 'prod.ghe.local'))),
-            ("https://githubusercontent.com/path", (('githubusercontent.com', 'prod.ghe.local'))),
-            ("https://objects.githubusercontent.com/path", (('objects.githubusercontent.com', 'prod.ghe.local'))),
-            ("https://release-assets.githubusercontent.com/path", (('release-assets.githubusercontent.com', 'prod.ghe.local'))),
-            ("https://example.com/", ("example.com", 'prod.ghe.local')),
+            ("https://api.github.com/request", (("api.github.com", "prod.ghe.local"))),
+            ("https://github.com/path", (("github.com", "prod.ghe.local"))),
+            ("https://uploads.github.com/path", (("uploads.github.com", "prod.ghe.local"))),
+            ("https://status.github.com/path", (("status.github.com", "prod.ghe.local"))),
+            ("https://githubusercontent.com/path", (("githubusercontent.com", "prod.ghe.local"))),
+            ("https://objects.githubusercontent.com/path", (("objects.githubusercontent.com", "prod.ghe.local"))),
+            (
+                "https://release-assets.githubusercontent.com/path",
+                (("release-assets.githubusercontent.com", "prod.ghe.local")),
+            ),
+            ("https://example.com/", ("example.com", "prod.ghe.local")),
         ]:
-            #with self.subTest(f"ghe-disallows-{not_allowed}"):
             with self.assertRaises(AssertionError) as exc:
                 requester.__assertUrlAllowed(not_allowed)
-            self.assertEqual(exc.exception.args, (arg, ))
+            self.assertEqual(exc.exception.args, (arg,))
 
     def testMakeAbsoluteUrl(self):
         # default github.com requester
@@ -348,7 +348,9 @@ class Requester(Framework.TestCase):
         assert "/github-api/request", requester.__makeAbsoluteUrl("/request")
         assert "/github-api/request", requester.__makeAbsoluteUrl("/request?param=value")
         assert "/github-api/request", requester.__makeAbsoluteUrl("https://api.enterprise.ghe.com/github-api/request")
-        assert "/github-api/request", requester.__makeAbsoluteUrl("https://api.enterprise.ghe.com/github-api/request?param=value")
+        assert "/github-api/request", requester.__makeAbsoluteUrl(
+            "https://api.enterprise.ghe.com/github-api/request?param=value"
+        )
         assert "/request", requester.__makeAbsoluteUrl("https://github.com/request?param=value")
 
     PrimaryRateLimitErrors = [
