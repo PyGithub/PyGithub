@@ -43,11 +43,32 @@ from __future__ import annotations
 import os.path
 import sys
 
+if len(sys.argv) < 4 or len(sys.argv) > 6:
+    print(f"usage: {sys.argv[0]} <class> <attribute> [list] [class] <attribute-type>")
+    print()
+    print("examples:")
+    print(f"  {sys.executable} {sys.argv[0]} Commit url string")
+    print(f"  {sys.executable} {sys.argv[0]} Commit author class NamedUser")
+    print(f"  {sys.executable} {sys.argv[0]} Commit ids list string")
+    print(f"  {sys.executable} {sys.argv[0]} Commit parents list class Commit")
+    sys.exit(1)
+
 className, attributeName, attributeType = sys.argv[1:4]
-if len(sys.argv) > 4:
+attributeListType = ""
+attributeClassType = ""
+if attributeType == "list":
+    attributeListType = sys.argv[4]
+    if len(sys.argv) != (6 if attributeListType == "class" else 5):
+        raise ValueError("Too many arguments")
+    if attributeListType == "class":
+        attributeClassType = sys.argv[5]
+elif attributeType == "class":
+    if len(sys.argv) != 5:
+        raise ValueError("Too many arguments")
     attributeClassType = sys.argv[4]
 else:
-    attributeClassType = ""
+    if len(sys.argv) != 4:
+        raise ValueError("Too many arguments")
 
 types = {
     "string": (
@@ -88,8 +109,20 @@ types = {
     ),
 }
 
-attributeDocType, attributeAssertType, attributeValue, attributeClassType = types[attributeType]
-if attributeType == "class":
+listValueTypes = {
+    "string": 'self._makeListOfStringsAttribute(attributes["' + attributeName + '"])',
+    "int": 'self._makeListOfIntsAttribute(attributes["' + attributeName + '"])',
+    "class": "self._makeListOfClassesAttribute(" + attributeClassType + ', attributes["' + attributeName + '"])',
+}
+
+if attributeType == "list":
+    attributeDocType, attributeAssertType, attributeValue, attributeClassType = types[attributeListType]
+    attributeDocType = f"list of {attributeDocType}"
+    attributeValue = listValueTypes[attributeListType]
+else:
+    attributeDocType, attributeAssertType, attributeValue, attributeClassType = types[attributeType]
+
+if attributeType == "class" or attributeListType == "class":
     # Wrap in quotes to avoid an explicit import requirement which can cause circular import errors
     attributeClassType = f"'{attributeClassType}'"
 
@@ -120,7 +153,10 @@ def add_as_class_property(lines: list[str]) -> list[str]:
             ):
                 if not isProperty:
                     newLines.append("    @property")
-                newLines.append("    def " + attributeName + "(self) -> " + attributeClassType + ":")
+                if attributeType == "list":
+                    newLines.append("    def " + attributeName + "(self) -> list[" + attributeClassType + "]:")
+                else:
+                    newLines.append("    def " + attributeName + "(self) -> " + attributeClassType + ":")
                 if isCompletable:
                     newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
                 newLines.append("        return self._" + attributeName + ".value")
@@ -156,7 +192,10 @@ def add_to_initAttributes(lines: list[str]) -> list[str]:
                 if line:
                     attrName = line[14:-29]
                 if not line or attrName > attributeName:
-                    newLines.append(f"        self._{attributeName}: Attribute[{attributeClassType}] = NotSet")
+                    if attributeType == "list":
+                        newLines.append(f"        self._{attributeName}: Attribute[list[{attributeClassType}]] = NotSet")
+                    else:
+                        newLines.append(f"        self._{attributeName}: Attribute[{attributeClassType}] = NotSet")
                     added = True
         newLines.append(line)
 
