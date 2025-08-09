@@ -1548,6 +1548,57 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/releases", input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
+
+    def generate_release_notes(
+            self,
+            tag: str | Tag,
+            previous_tag_name: Opt[str | Tag] = NotSet,
+            target_commitish: Opt[str] = NotSet,
+            configuration_file_path: Opt[str] = NotSet
+    ) -> str | None:
+        """
+        :calls: `POST /repos/{owner}/{repo}/releases/generate-notes <https://docs.github.com/en/rest/reference/releases#generate-release-notes-content-for-a-release>
+        :param tag: string or :class:`github.tag.Tag`
+        :param previous_tag_name: string or :class:`github.tag.Tag`
+        :param target_commitish: string or :class:`github.Branch.Branch` or :class:`github.Commit.Commit` or :class:`github.GitCommit.GitCommit`
+        :param configuration_file_path: string
+        :rtype: string or None
+        """
+        assert isinstance(tag, (str, Tag)), tag
+        assert is_undefined(previous_tag_name) or isinstance(previous_tag_name, str), previous_tag_name
+        assert is_undefined(configuration_file_path) or isinstance(configuration_file_path, str), configuration_file_path
+        assert is_undefined(target_commitish) or isinstance(
+            target_commitish,
+            (
+                str,
+                github.Branch.Branch,
+                github.Commit.Commit,
+                github.GitCommit.GitCommit,
+            ),
+        ), target_commitish
+        post_parameters = {
+            "configuration_file_path": configuration_file_path
+        }
+        if isinstance(target_commitish, str):
+            post_parameters["target_commitish"] = target_commitish
+        elif isinstance(target_commitish, github.Branch.Branch):
+            post_parameters["target_commitish"] = target_commitish.name
+        elif isinstance(target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)):
+            post_parameters["target_commitish"] = target_commitish.sha
+        if isinstance(previous_tag_name, str):
+            post_parameters["previous_tag_name"] = previous_tag_name
+        else:
+            post_parameters["previous_tag_name"] = previous_tag_name.name
+        if isinstance(tag, str):
+            post_parameters["tag"] = tag
+        else:
+            post_parameters["tag"] = tag.name
+
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}releases/generate-notes", input=post_parameters)
+        if isinstance(data, dict) and "body" in data:
+            return data["body"]
+        return None
+
     def create_git_tag(
         self,
         tag: str,
