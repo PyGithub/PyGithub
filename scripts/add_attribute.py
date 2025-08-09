@@ -43,6 +43,14 @@ from __future__ import annotations
 import os.path
 import sys
 
+if len(sys.argv) == 1:
+    print(f"usage: {sys.argv[0]} <class> <attribute> <attribute-type> [<attribute-class-type>]")
+    print()
+    print("examples:")
+    print(f"  {sys.executable} {sys.argv[0]} Repository name string")
+    print(f"  {sys.executable} {sys.argv[0]} Repository owner class NamedUser")
+    sys.exit(1)
+
 className, attributeName, attributeType = sys.argv[1:4]
 if len(sys.argv) > 4:
     attributeClassType = sys.argv[4]
