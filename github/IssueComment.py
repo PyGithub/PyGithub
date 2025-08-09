@@ -61,6 +61,7 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Reaction import Reaction
 
 
@@ -90,7 +91,7 @@ class IssueComment(CompletableGithubObject):
         self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | Organization] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -161,7 +162,7 @@ class IssueComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -287,4 +288,12 @@ class IssueComment(CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeUnionClassAttributeFromTypeKey(
+                github.NamedUser.NamedUser,
+                "User",
+                github.Organization.Organization,
+                "Organization",
+                "type",
+                "User",
+                attributes["user"],
+            )

@@ -237,11 +237,14 @@ class Installation(NonCompletableGithubObject):
         if "access_tokens_url" in attributes:  # pragma no branch
             self._access_tokens_url = self._makeStringAttribute(attributes["access_tokens_url"])
         if "account" in attributes and "target_type" in attributes:  # pragma no branch
-            target_type = attributes["target_type"]
-            if target_type == "User":
-                self._account = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["account"])
-            if target_type == "Organization":
-                self._account = self._makeClassAttribute(github.Organization.Organization, attributes["account"])
+            self._account = self._makeUnionClassAttributeFromTypeName(
+                github.NamedUser.NamedUser,
+                "User",
+                github.Organization.Organization,
+                "Organization",
+                attributes["target_type"],
+                attributes["account"],
+            )
         if "app_id" in attributes:  # pragma no branch
             self._app_id = self._makeIntAttribute(attributes["app_id"])
         if "app_slug" in attributes:  # pragma no branch
