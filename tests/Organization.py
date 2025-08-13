@@ -43,6 +43,10 @@
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -554,6 +558,9 @@ class Organization(Framework.TestCase):
     def testInviteUserAsNonOwner(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.org.invite_user(email="bar@example.com")
+        self.assertEqual(
+            raisedexp.exception.message, "You must be an admin to create an invitation to an organization."
+        )
         self.assertEqual(raisedexp.exception.status, 403)
         self.assertEqual(
             raisedexp.exception.data,
@@ -679,6 +686,22 @@ class Organization(Framework.TestCase):
                 allowed_values=["foo", "bar"],
                 values_editable_by="org_and_repo_actors",
             ),
+            CustomProperty(
+                property_name="property_3",
+                value_type="multi_select",
+                required=True,
+                default_value="bar",
+                description="Lorem ipsum",
+                allowed_values=["foo", "bar"],
+                values_editable_by="org_and_repo_actors",
+            ),
+            CustomProperty(
+                property_name="property_4",
+                value_type="true_false",
+                required=False,
+                description="description",
+                values_editable_by="org_actors",
+            ),
         ]
         properties = self.org.create_custom_properties(properties)
         properties_map = {p.property_name: p for p in properties}
@@ -686,6 +709,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(property_1.value_type, "string")
         property_2 = properties_map["property_2"]
         self.assertEqual(property_2.description, "Lorem ipsum")
+        property_3 = properties_map["property_3"]
+        self.assertEqual(property_3.value_type, "multi_select")
+        property_4 = properties_map["property_4"]
+        self.assertEqual(property_4.value_type, "true_false")
 
     def testCreateCustomProperty(self):
         custom_property = CustomProperty(
@@ -735,3 +762,53 @@ class Organization(Framework.TestCase):
         self.org.remove_custom_property("property_1")
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
+
+    def testGetSelfHostedRunners(self):
+        runners = self.org.get_self_hosted_runners()
+        self.assertEqual(runners.totalCount, 602)
+
+    def testDeleteSelfHostedRunner(self):
+        self.org.delete_self_hosted_runner("42")
+
+    def testGetCodeSecurityConfigs(self):
+        configs = list(self.org.get_code_security_configs())
+        self.assertEqual(configs.pop().id, 17)
+
+    def testCreateCodeSecurityConfigs(self):
+        config = self.org.create_code_security_config(name="test1", description="This is a description")
+        self.assertEqual(config.name, "test1")
+
+        self.org.delete_code_security_config(id=config.id)
+
+    def testGetCodeSecurityConfig(self):
+        config = self.org.get_code_security_config(id=17)
+        self.assertEqual(config.id, 17)
+
+    def testSetDefaultCodeSecurityConfig(self):
+        self.org.set_default_code_security_config(id=17, default_for_new_repos="all")
+        configs = self.org.get_default_code_security_configs()
+        for config in configs:
+            if config.default_for_new_repos == "all":
+                self.assertEqual(config.configuration.id, 17)
+
+    def testAttachDetachSecurityConfig(self):
+        config = self.org.create_code_security_config(name="test1", description="This is a description")
+        repo = self.org.get_repo("test1")
+        repo.attach_security_config(id=config.id)
+        status = "unknown"
+        while status != "enforced":
+            repo_config = repo.get_security_config()
+            if repo_config:
+                status = repo_config.status
+            else:
+                status = "unknown"
+
+        self.assertEqual(config.id, repo_config.configuration.id)
+        repo.detach_security_config()
+
+    def testGetReposForCodeSecurityConfig(self):
+        repo_statuses = self.org.get_repos_for_code_security_config(id=182032)
+        status = repo_statuses[0]
+        self.assertEqual(status.status, "enforced")
+        self.assertIsNotNone(status.repository)
+        self.assertEqual(status.repository.full_name, "BeaverSoftware/truth")

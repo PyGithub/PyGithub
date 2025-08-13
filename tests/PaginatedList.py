@@ -19,6 +19,9 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -94,6 +97,14 @@ class PaginatedList(Framework.TestCase):
             self.assertEqual(i.id, 4286936)
             return
         self.fail("empty iterator")
+
+    def testReversedIterationSupportsBuiltinReversed(self):
+        # reuse test data of testReversedIterationSupportsIterator
+        with self.replayData("PaginatedList.testReversedIterationSupportsIterator.txt"):
+            for i in reversed(self.list):
+                self.assertEqual(i.id, 4286936)
+                return
+            self.fail("empty iterator")
 
     def testGettingTheReversedListDoesNotModifyTheOriginalList(self):
         self.assertEqual(self.list[0].id, 18345408)

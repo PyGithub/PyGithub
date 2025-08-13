@@ -24,6 +24,7 @@
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -282,7 +283,7 @@ class Github(Framework.TestCase):
         self.assertEqual(delivery.duration, 0.27)
         self.assertEqual(delivery.status, "OK")
         self.assertEqual(delivery.status_code, 200)
-        self.assertIsNone(delivery.throttled_at)
+        self.assertEqual(delivery.throttled_at, datetime(2024, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(delivery.event, "issues")
         self.assertEqual(delivery.action, "opened")
         self.assertEqual(delivery.installation_id, 123)
@@ -308,6 +309,7 @@ class Github(Framework.TestCase):
         self.assertEqual(deliveries[0].duration, 0.27)
         self.assertEqual(deliveries[0].status, "OK")
         self.assertEqual(deliveries[0].status_code, 200)
+        self.assertEqual(deliveries[0].throttled_at, datetime(2024, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
         self.assertEqual(deliveries[0].event, "issues")
         self.assertEqual(deliveries[0].action, "opened")
         self.assertEqual(deliveries[0].installation_id, 123)

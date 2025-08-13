@@ -6,6 +6,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,11 +31,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-import github.GithubObject
-from github.GithubObject import Attribute, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
-class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
+class HookDeliverySummary(NonCompletableGithubObject):
     """
     This class represents a Summary of HookDeliveries.
 
@@ -55,6 +55,7 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         self._repository_id: Attribute[int] = NotSet
         self._status: Attribute[str] = NotSet
         self._status_code: Attribute[int] = NotSet
+        self._throttled_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -105,6 +106,10 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
         return self._status_code.value
 
     @property
+    def throttled_at(self) -> datetime:
+        return self._throttled_at.value
+
+    @property
     def url(self) -> str | None:
         return self._url.value
 
@@ -131,11 +136,13 @@ class HookDeliverySummary(github.GithubObject.NonCompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "status_code" in attributes:  # pragma no branch
             self._status_code = self._makeIntAttribute(attributes["status_code"])
+        if "throttled_at" in attributes:  # pragma no branch
+            self._throttled_at = self._makeDatetimeAttribute(attributes["throttled_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
 
 
-class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
+class HookDeliveryRequest(NonCompletableGithubObject):
     """
     This class represents a HookDeliveryRequest.
 
@@ -145,15 +152,15 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self.__headers: Attribute[dict] = NotSet
         self._payload: Attribute[dict] = NotSet
-        self._request_headers: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
 
     @property
     def headers(self) -> dict | None:
-        return self._request_headers.value
+        return self.__headers.value
 
     @property
     def payload(self) -> dict | None:
@@ -161,12 +168,12 @@ class HookDeliveryRequest(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "headers" in attributes:  # pragma no branch
-            self._request_headers = self._makeDictAttribute(attributes["headers"])
+            self.__headers = self._makeDictAttribute(attributes["headers"])
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeDictAttribute(attributes["payload"])
 
 
-class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
+class HookDeliveryResponse(NonCompletableGithubObject):
     """
     This class represents a HookDeliveryResponse.
 
@@ -176,15 +183,15 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self.__headers: Attribute[dict] = NotSet
         self._payload: Attribute[str] = NotSet
-        self._response_headers: Attribute[dict] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
 
     @property
     def headers(self) -> dict | None:
-        return self._response_headers.value
+        return self.__headers.value
 
     @property
     def payload(self) -> str | None:
@@ -192,7 +199,7 @@ class HookDeliveryResponse(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "headers" in attributes:  # pragma no branch
-            self._response_headers = self._makeDictAttribute(attributes["headers"])
+            self.__headers = self._makeDictAttribute(attributes["headers"])
         if "payload" in attributes:  # pragma no branch
             self._payload = self._makeStringAttribute(attributes["payload"])
 
@@ -210,7 +217,6 @@ class HookDelivery(HookDeliverySummary):
         super()._initAttributes()
         self._request: Attribute[HookDeliveryRequest] = NotSet
         self._response: Attribute[HookDeliveryResponse] = NotSet
-        self._throttled_at: Attribute[datetime] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -223,10 +229,6 @@ class HookDelivery(HookDeliverySummary):
     def response(self) -> HookDeliveryResponse | None:
         return self._response.value
 
-    @property
-    def throttled_at(self) -> datetime:
-        return self._throttled_at.value
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "request" in attributes:  # pragma no branch
@@ -234,5 +236,3 @@ class HookDelivery(HookDeliverySummary):
         if "response" in attributes:  # pragma no branch
             self._response = self._makeClassAttribute(HookDeliveryResponse, attributes["response"])
             # self._response = self._makeDictAttribute(attributes["response"])
-        if "throttled_at" in attributes:  # pragma no branch
-            self._throttled_at = self._makeDatetimeAttribute(attributes["throttled_at"])

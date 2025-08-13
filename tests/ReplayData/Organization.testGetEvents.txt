@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/events
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('content-length', '30164'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4976'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"50c3892fcab2acf668d9b89d97865983"'), ('link', '<https://api.github.com/orgs/BeaverSoftware/events?page=2>; rel="next"'), ('date', 'Sun, 27 May 2012 05:13:00 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/events?page=2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4975'), ('content-length', '2'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/orgs/BeaverSoftware/events?page=1>; rel="prev"'), ('etag', '"d751713988987e9331980363e24189ce"'), ('date', 'Sun, 27 May 2012 05:13:00 GMT'), ('content-type', 'application/json; charset=utf-8')]

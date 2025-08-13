@@ -16,7 +16,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
 # Copyright 2024 iarspider <iarspider@gmail.com>                               #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -84,7 +86,6 @@ class Commit(Framework.TestCase):
         self.assertEqual(len(self.commit.parents), 1)
         self.assertEqual(self.commit.parents[0].sha, "b46ed0dfde5ad02d3b91eb54a41c5ed960710eae")
         self.assertIsNone(self.commit.repository)
-        self.assertEqual(self.commit.score, None)
         self.assertEqual(self.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.commit.stats.deletions, 20)
         self.assertEqual(self.commit.stats.additions, 0)

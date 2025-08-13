@@ -30,6 +30,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -49,7 +51,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Callable, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
+from __future__ import annotations
+
+from typing import Any, Callable, Generic, Iterator, TypeVar, overload
 from urllib.parse import parse_qs
 
 from github.GithubObject import GithubObject
@@ -59,18 +63,26 @@ T = TypeVar("T", bound=GithubObject)
 
 
 class PaginatedListBase(Generic[T]):
-    __elements: List[T]
+    __elements: list[T]
 
     def _couldGrow(self) -> bool:
         raise NotImplementedError
 
-    def _fetchNextPage(self) -> List[T]:
+    def _fetchNextPage(self) -> list[T]:
         raise NotImplementedError
 
-    def __init__(self, elements: Optional[List[T]] = None) -> None:
+    def __init__(self, elements: list[T] | None = None) -> None:
         self.__elements = [] if elements is None else elements
 
-    def __getitem__(self, index: Union[int, slice]) -> Any:
+    @overload
+    def __getitem__(self, index: int) -> T:
+        ...
+
+    @overload
+    def __getitem__(self, index: slice) -> _Slice:
+        ...
+
+    def __getitem__(self, index: int | slice) -> T | _Slice:
         assert isinstance(index, (int, slice))
         if isinstance(index, int):
             self.__fetchToIndex(index)
@@ -91,13 +103,13 @@ class PaginatedListBase(Generic[T]):
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
-    def _grow(self) -> List[T]:
+    def _grow(self) -> list[T]:
         newElements = self._fetchNextPage()
         self.__elements += newElements
         return newElements
 
     class _Slice:
-        def __init__(self, theList: "PaginatedListBase[T]", theSlice: slice):
+        def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
             self.__list = theList
             self.__start = theSlice.start or 0
             self.__stop = theSlice.stop
@@ -107,7 +119,7 @@ class PaginatedListBase(Generic[T]):
             index = self.__start
             while not self.__finished(index):
                 if self.__list._isBiggerThan(index):
-                    yield self.__list[index]
+                    yield self.__list[index]  # type: ignore
                     index += self.__step
                 else:
                     return
@@ -152,19 +164,19 @@ class PaginatedList(PaginatedListBase[T]):
     # v3: move * before firstUrl and fix call sites
     def __init__(
         self,
-        contentClass: Type[T],
+        contentClass: type[T],
         requester: Requester,
-        firstUrl: Optional[str] = None,
-        firstParams: Optional[Dict[str, Any]] = None,
+        firstUrl: str | None = None,
+        firstParams: dict[str, Any] | None = None,
         *,
-        headers: Optional[Dict[str, str]] = None,
-        list_item: Union[str, List[str]] = "items",
+        headers: dict[str, str] | None = None,
+        list_item: str | list[str] = "items",
         total_count_item: str = "total_count",
-        firstData: Optional[Any] = None,
-        firstHeaders: Optional[Dict[str, Union[str, int]]] = None,
-        attributesTransformer: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
-        graphql_query: Optional[str] = None,
-        graphql_variables: Optional[Dict[str, Any]] = None,
+        firstData: Any | None = None,
+        firstHeaders: dict[str, str | int] | None = None,
+        attributesTransformer: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+        graphql_query: str | None = None,
+        graphql_variables: dict[str, Any] | None = None,
     ):
         if firstUrl is None and firstData is None and graphql_query is None:
             raise ValueError("Either firstUrl or graphql_query must be given")
@@ -179,16 +191,16 @@ class PaginatedList(PaginatedListBase[T]):
 
         self.__is_rest = firstUrl is not None or firstData is not None
         self.__firstUrl = firstUrl
-        self.__firstParams: Dict[str, Any] = firstParams or {}
+        self.__firstParams: dict[str, Any] = firstParams or {}
         self.__nextUrl = firstUrl
-        self.__nextParams: Dict[str, Any] = firstParams or {}
+        self.__nextParams: dict[str, Any] = firstParams or {}
         self.__headers = headers
         self.__list_item = list_item
         self.__total_count_item = total_count_item
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
-        self.__totalCount: Optional[int] = None
+        self.__totalCount: int | None = None
         self._attributesTransformer = attributesTransformer
 
         self.__graphql_query = graphql_query
@@ -211,7 +223,7 @@ class PaginatedList(PaginatedListBase[T]):
     def is_graphql(self) -> bool:
         return not self.is_rest
 
-    def _transformAttributes(self, element: Dict[str, Any]) -> Dict[str, Any]:
+    def _transformAttributes(self, element: dict[str, Any]) -> dict[str, Any]:
         if self._attributesTransformer is None:
             return element
         return self._attributesTransformer(element)
@@ -256,7 +268,7 @@ class PaginatedList(PaginatedListBase[T]):
                 self.__totalCount = pagination.get("totalCount")
         return self.__totalCount  # type: ignore
 
-    def _getLastPageUrl(self) -> Optional[str]:
+    def _getLastPageUrl(self) -> str | None:
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers  # type: ignore
         )
@@ -264,7 +276,7 @@ class PaginatedList(PaginatedListBase[T]):
         return links.get("last")
 
     @property
-    def reversed(self) -> "PaginatedList[T]":
+    def reversed(self) -> PaginatedList[T]:
         r = PaginatedList(
             self.__contentClass,
             self.__requester,
@@ -293,6 +305,10 @@ class PaginatedList(PaginatedListBase[T]):
                         if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
                     }
 
+    # To support Python's built-in `reversed()` method
+    def __reversed__(self) -> PaginatedList[T]:
+        return self.reversed
+
     def _couldGrow(self) -> bool:
         return (
             self.is_rest
@@ -307,14 +323,14 @@ class PaginatedList(PaginatedListBase[T]):
             )
         )
 
-    def _get_graphql_pagination(self, data: Dict[str, Any], path: List[str]) -> Dict[str, Any]:
+    def _get_graphql_pagination(self, data: dict[str, Any], path: list[str]) -> dict[str, Any]:
         for item in path:
             if item not in data:
                 raise RuntimeError(f"Pagination path {path} not found in data: {self.paths_of_dict(data)}")
             data = data[item]
         return data
 
-    def _fetchNextPage(self) -> List[T]:
+    def _fetchNextPage(self) -> list[T]:
         if self.is_rest:
             # REST API pagination
             headers, data = self.__requester.requestJsonAndCheck(
@@ -339,7 +355,7 @@ class PaginatedList(PaginatedListBase[T]):
             pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
             return self._getPage(pagination, {})
 
-    def _getPage(self, data: Any, headers: Optional[Dict[str, Union[str, int]]]) -> List[T]:
+    def _getPage(self, data: Any, headers: dict[str, str | int] | None) -> list[T]:
         if self.is_rest:
             self.__nextUrl = None  # type: ignore
             if len(data) > 0:
@@ -387,7 +403,7 @@ class PaginatedList(PaginatedListBase[T]):
                 nodes = nodes[::-1]
             return [self.__contentClass(self.__requester, {}, element) for element in nodes if element is not None]
 
-    def __parseLinkHeader(self, headers: Dict[str, Union[str, int]]) -> Dict[str, str]:
+    def __parseLinkHeader(self, headers: dict[str, str | int]) -> dict[str, str]:
         links = {}
         if "link" in headers and isinstance(headers["link"], str):
             linkHeaders = headers["link"].split(", ")
@@ -398,7 +414,7 @@ class PaginatedList(PaginatedListBase[T]):
                 links[rel] = url
         return links
 
-    def get_page(self, page: int) -> List[T]:
+    def get_page(self, page: int) -> list[T]:
         if self.is_graphql:
             raise RuntimeError("Not supported for GraphQL pagination")
 
@@ -417,8 +433,8 @@ class PaginatedList(PaginatedListBase[T]):
         return [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
 
     @classmethod
-    def override_attributes(cls, overrides: Dict[str, Any]) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
-        def attributes_transformer(element: Dict[str, Any]) -> Dict[str, Any]:
+    def override_attributes(cls, overrides: dict[str, Any]) -> Callable[[dict[str, Any]], dict[str, Any]]:
+        def attributes_transformer(element: dict[str, Any]) -> dict[str, Any]:
             # Recursively merge overrides with attributes, overriding attributes with overrides
             element = cls.merge_dicts(element, overrides)
             return element
@@ -426,7 +442,7 @@ class PaginatedList(PaginatedListBase[T]):
         return attributes_transformer
 
     @classmethod
-    def merge_dicts(cls, d1: Dict[str, Any], d2: Dict[str, Any]) -> Dict[str, Any]:
+    def merge_dicts(cls, d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
         # clone d1
         d1 = d1.copy()
         for k, v in d2.items():

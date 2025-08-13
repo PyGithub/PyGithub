@@ -3,7 +3,7 @@ POST
 api.github.com
 None
 /user/repos
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"gitignore_template": "Python", "name": "TestPyGithub", "auto_init": true}
 201
 [('status', '201 Created'), ('content-length', '1176'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4999'), ('server', 'nginx'), ('connection', 'keep-alive'), ('etag', '"762d15bfe4477f7ec15c3c08a07da857"'), ('location', 'https://api.github.com/repos/jacquev6/TestPyGithub'), ('cache-control', 'max-age=0, private, must-revalidate'), ('date', 'Sat, 03 Nov 2012 09:01:00 GMT'), ('content-type', 'application/json; charset=utf-8')]

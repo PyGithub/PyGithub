@@ -36,6 +36,7 @@
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -77,7 +78,6 @@ class GitRelease(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#releases
 
     The OpenAPI schema can be found at
-    - /components/schemas/basic-error
     - /components/schemas/release
 
     """

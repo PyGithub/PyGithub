@@ -49,6 +49,12 @@
 # Copyright 2024 Evan Fetsko <emfetsko@gmail.com>                              #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
+# Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matt Tuchfarber <matt@tuchfarber.com>                         #
+# Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
+# Copyright 2025 Ryan Peach <github.essential257@passmail.net>                 #
+# Copyright 2025 a-sido <andrei.sidorenko.1993@gmail.com>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -83,12 +89,14 @@ import github.IssueEvent
 import github.Label
 import github.Milestone
 import github.NamedUser
+import github.Organization
 import github.PaginatedList
 import github.PullRequestComment
 import github.PullRequestMergeStatus
 import github.PullRequestPart
 import github.PullRequestReview
 import github.Team
+import github.TimelineEvent
 from github import Consts
 from github.GithubObject import (
     Attribute,
@@ -117,6 +125,7 @@ if TYPE_CHECKING:
     from github.PullRequestPart import PullRequestPart
     from github.PullRequestReview import PullRequestReview
     from github.Team import Team
+    from github.TimelineEvent import TimelineEvent
 
 
 class ReviewComment(TypedDict):
@@ -452,13 +461,13 @@ class PullRequest(CompletableGithubObject):
     def create_review_comment(
         self,
         body: str,
-        commit: github.Commit.Commit,
+        commit: github.Commit.Commit | str,
         path: str,
         # line replaces deprecated position argument, so we put it between path and side
         line: Opt[int] = NotSet,
         side: Opt[str] = NotSet,
         start_line: Opt[int] = NotSet,
-        start_side: Opt[int] = NotSet,
+        start_side: Opt[str] = NotSet,
         in_reply_to: Opt[int] = NotSet,
         subject_type: Opt[str] = NotSet,
         as_suggestion: bool = False,
@@ -467,7 +476,7 @@ class PullRequest(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(body, str), body
-        assert isinstance(commit, github.Commit.Commit), commit
+        assert isinstance(commit, (github.Commit.Commit, str)), commit
         assert isinstance(path, str), path
         assert is_optional(line, int), line
         assert is_undefined(side) or side in ["LEFT", "RIGHT"], side
@@ -484,12 +493,14 @@ class PullRequest(CompletableGithubObject):
         ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
+        commit_id = commit._identity if isinstance(commit, github.Commit.Commit) else commit
+
         if as_suggestion:
             body = f"```suggestion\n{body}\n```"
         post_parameters = NotSet.remove_unset_items(
             {
                 "body": body,
-                "commit_id": commit._identity,
+                "commit_id": commit_id,
                 "path": path,
                 "line": line,
                 "side": side,
@@ -564,6 +575,11 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
 
+        if isinstance(reviewers, str):
+            reviewers = [reviewers]
+        if isinstance(team_reviewers, str):
+            team_reviewers = [team_reviewers]
+
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 
         headers, data = self._requester.requestJsonAndCheck(
@@ -580,6 +596,11 @@ class PullRequest(CompletableGithubObject):
         """
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
+
+        if isinstance(reviewers, str):
+            reviewers = [reviewers]
+        if isinstance(team_reviewers, str):
+            team_reviewers = [team_reviewers]
 
         post_parameters = NotSet.remove_unset_items({"reviewers": reviewers, "team_reviewers": team_reviewers})
 
@@ -721,6 +742,19 @@ class PullRequest(CompletableGithubObject):
             github.IssueEvent.IssueEvent,
             self._requester,
             f"{self.issue_url}/events",
+            None,
+            headers={"Accept": Consts.mediaTypeLockReasonPreview},
+        )
+
+    def get_issue_timeline(self) -> PaginatedList[TimelineEvent]:
+        """
+        :calls `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline <https://docs.github.com/en/rest/reference/issues#timeline>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.TimelineEvent`
+        """
+        return PaginatedList(
+            github.TimelineEvent.TimelineEvent,
+            self._requester,
+            f"{self.issue_url}/timeline",
             None,
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
@@ -970,6 +1004,56 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.updateBranchPreview},
         )
         return status == 202
+
+    def convert_to_draft(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to convert pull request to draft
+        <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
+        """
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="convertPullRequestToDraft",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="clientMutationId pullRequest { isDraft }",
+        )
+        self._useAttributes({"draft": data["pullRequest"]["isDraft"]})
+        return data
+
+    def mark_ready_for_review(
+        self,
+        client_mutation_id: Opt[str] = NotSet,
+    ) -> dict[str, Any]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to mark pull request ready for review
+        <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
+        """
+        assert is_optional(client_mutation_id, str), client_mutation_id
+
+        # Define the variables
+        variables = {
+            "pullRequestId": self.node_id,
+            "clientMutationId": client_mutation_id,
+        }
+
+        # Make the request
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="markPullRequestReadyForReview",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="clientMutationId pullRequest { isDraft }",
+        )
+        self._useAttributes({"draft": data["pullRequest"]["isDraft"]})
+        return data
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "_links" in attributes:  # pragma no branch
