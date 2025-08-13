@@ -3930,7 +3930,7 @@ class Repository(CompletableGithubObject):
 
     def get_automated_security_fixes(self) -> dict[str, bool]:
         """
-        :calls: `GET /repos/{owner}/{repo}/automated-security-fixes <https://docs.github.com/en/rest/reference/repos>`_
+        :calls: `GET /repos/{owner}/{repo}/automated-security-fixes <https://docs.github.com/en/rest/repos/repos#check-if-dependabot-security-updates-are-enabled-for-a-repository>`_
         :rtype: dict
         """
         _, data = self._requester.requestJsonAndCheck(
