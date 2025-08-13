@@ -675,5 +675,5 @@ class PullRequest(Framework.TestCase):
 
     def test_validate_review_comment_start_side_start_side_already_defined(self):
         # start_side already defined
-        result = self.pull.validate_review_comment_start_side("LEFT", "LEFT", 1, 1, github.GithubObject.NotSet)
-        self.assertEqual(result, "LEFT")
+        result = self.pull.validate_review_comment_start_side("LEFT", "RIGHT", 1, 1, github.GithubObject.NotSet)
+        self.assertEqual(result, "RIGHT")

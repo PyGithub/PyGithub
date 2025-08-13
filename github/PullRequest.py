@@ -578,7 +578,7 @@ class PullRequest(CompletableGithubObject):
 
         for comment in comments:
             comment["start_side"] = self.validate_review_comment_start_side(
-                comment["side"], comment["start_side"], comment["line"], comment["start_line"], comment["in_reply_to"]
+                comment.get("side", NotSet), comment.get("start_side", NotSet), comment.get("line", NotSet), comment.get("start_line", NotSet), comment.get("in_reply_to", `NotSet)`
             )
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
