@@ -30,6 +30,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
+# Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -303,6 +305,28 @@ class PullRequest(Framework.TestCase):
             [16349963, 16350729, 16350730, 16350731, 28469043, 98136335],
         )
 
+    def testGetIssueTimeline(self):
+        self.assertListKeyEqual(
+            self.pull.get_issue_timeline(),
+            lambda t: t.event,
+            [
+                "committed",
+                "committed",
+                "committed",
+                "subscribed",
+                "referenced",
+                "merged",
+                "closed",
+                "commented",
+                "line-commented",
+                "assigned",
+                "labeled",
+                "cross-referenced",
+                "reviewed",
+                "reviewed",
+            ],
+        )
+
     def testGetReviewComments(self):
         epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_review_comments(sort="updated", direction="desc", since=epoch)
@@ -532,7 +556,7 @@ class PullRequest(Framework.TestCase):
         status = self.delete_restore_pull.merge(delete_branch=True)
         self.assertTrue(status.merged)
         self.assertTrue(self.delete_restore_pull.is_merged())
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(
@@ -544,7 +568,7 @@ class PullRequest(Framework.TestCase):
         )
 
     def testRestoreBranch(self):
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
@@ -561,7 +585,7 @@ class PullRequest(Framework.TestCase):
     def testDeleteBranch(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.delete_restore_pull.delete_branch(force=False)
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
@@ -576,7 +600,7 @@ class PullRequest(Framework.TestCase):
     def testForceDeleteBranch(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
