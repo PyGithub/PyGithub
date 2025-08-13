@@ -562,7 +562,7 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(notes.name, None)
         self.assertIn(
-            "Release notes generated using configuration in .github/test_release_notes.yml at main", notes.body
+            "Release notes generated using configuration in tests/test_release_notes.yml at main", notes.body
         )
 
     def testCreateGitTag(self):
