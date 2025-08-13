@@ -510,7 +510,10 @@ class PullRequest(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/comments", input=post_parameters)
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
-    def validate_review_comment_start_side(self, side, start_side, line, start_line, in_reply_to):
+    @staticmethod
+    def validate_review_comment_start_side(
+        side: Opt[str], start_side: Opt[str], line: Opt[int], start_line: Opt[int], in_reply_to: Opt[int]
+    ) -> Opt[str]:
         """
         Validates and adjusts start_side for review comments according to GitHub API requirements.
 
@@ -572,14 +575,19 @@ class PullRequest(CompletableGithubObject):
         if is_defined(commit):
             post_parameters["commit_id"] = commit.sha
         if is_defined(comments):
+            for comment in comments:
+                valid_start_side = self.validate_review_comment_start_side(
+                    comment.get("side", NotSet),
+                    comment.get("start_side", NotSet),
+                    comment.get("line", NotSet),
+                    comment.get("start_line", NotSet),
+                    comment.get("in_reply_to", NotSet),
+                )
+                if is_defined(valid_start_side):
+                    comment["start_side"] = valid_start_side
             post_parameters["comments"] = comments
         else:
             post_parameters["comments"] = []
-
-        for comment in comments:
-            comment["start_side"] = self.validate_review_comment_start_side(
-                comment.get("side", NotSet), comment.get("start_side", NotSet), comment.get("line", NotSet), comment.get("start_line", NotSet), comment.get("in_reply_to", `NotSet)`
-            )
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
