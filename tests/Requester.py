@@ -277,6 +277,7 @@ class Requester(Framework.TestCase):
         assert self.g.requester.__hostnameHasDomain(
             "objects.githubusercontent.com", ("github.com", "githubusercontent.com")
         )
+        assert self.g.requester.__hostnameHasDomain("maliciousgithub.com", "github.com") is False
         assert self.g.requester.__hostnameHasDomain("abc.def", ("github.com", "githubusercontent.com")) is False
 
     def testAssertUrlAllowed(self):
@@ -305,30 +306,30 @@ class Requester(Framework.TestCase):
                 requester.__assertUrlAllowed(not_allowed)
             self.assertEqual(exc.exception.args, (arg,))
 
-        # custom (Enterprise) requester with different prefix
-        requester = github.Github(base_url="https://api.prod.ghe.local/github-api/").requester
+        # custom (Enterprise) requester with prefix
+        requester = github.Github(base_url="https://prod.ghe.local/github-api/").requester
 
         for allowed in [
-            "https://api.prod.ghe.local/github-api/request"
-            "https://prod.ghe.local/path"
-            "https://uploads.prod.ghe.local/github-api/path"
-            "https://status.prod.ghe.local/github-api/path"
+            "https://prod.ghe.local/github-api/request",
+            "https://uploads.prod.ghe.local/path",
+            "https://status.prod.ghe.local/path",
         ]:
             requester.__assertUrlAllowed(allowed)
 
         for not_allowed, arg in [
-            ("https://api.prod.ghe.local/path", ("/path")),
-            ("https://api.github.com/request", (("api.github.com", "prod.ghe.local"))),
-            ("https://github.com/path", (("github.com", "prod.ghe.local"))),
-            ("https://uploads.github.com/path", (("uploads.github.com", "prod.ghe.local"))),
-            ("https://status.github.com/path", (("status.github.com", "prod.ghe.local"))),
-            ("https://githubusercontent.com/path", (("githubusercontent.com", "prod.ghe.local"))),
-            ("https://objects.githubusercontent.com/path", (("objects.githubusercontent.com", "prod.ghe.local"))),
+            ("https://prod.ghe.local/path", "/path"),
+            ("https://ghe.local/path", "ghe.local"),
+            ("https://api.github.com/request", "api.github.com"),
+            ("https://github.com/path", "github.com"),
+            ("https://uploads.github.com/path", "uploads.github.com"),
+            ("https://status.github.com/path", "status.github.com"),
+            ("https://githubusercontent.com/path", "githubusercontent.com"),
+            ("https://objects.githubusercontent.com/path", "objects.githubusercontent.com"),
             (
                 "https://release-assets.githubusercontent.com/path",
-                (("release-assets.githubusercontent.com", "prod.ghe.local")),
+                "release-assets.githubusercontent.com",
             ),
-            ("https://example.com/", ("example.com", "prod.ghe.local")),
+            ("https://example.com/", "example.com"),
         ]:
             with self.assertRaises(AssertionError) as exc:
                 requester.__assertUrlAllowed(not_allowed)
