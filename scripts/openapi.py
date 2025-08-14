@@ -1549,13 +1549,24 @@ class OpenApi:
                     w.write(updated_code)
             return True
 
-    def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool) -> bool:
+    def apply(
+        self, spec_file: str, index_filename: str, class_names: list[str] | None, dry_run: bool, tests: bool
+    ) -> bool:
+        print(f"Using spec {spec_file}")
         with open(spec_file) as r:
             spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
         classes = index.get("classes", {})
 
+        if not class_names:
+            class_names = classes.keys()
+        if len(class_names) == 1:
+            print(f"Applying API schemas to PyGithub class {class_names[0]}")
+        else:
+            print(f"Applying API schemas to {len(class_names)} PyGithub classes")
+
+        any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
 
@@ -1572,6 +1583,8 @@ class OpenApi:
             }
             completable = "CompletableGithubObject" in cls.get("inheritance", [])
             cls_schemas = cls.get("schemas", [])
+            class_change = False
+            test_change = False
             for schema_name in cls_schemas:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
@@ -1590,7 +1603,7 @@ class OpenApi:
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
-                changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
+                class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
                 if tests and os.path.exists(clazz.test_filename):
                     with open(clazz.test_filename) as r:
@@ -1601,9 +1614,15 @@ class OpenApi:
                     )
                     tree = cst.parse_module(code)
                     tree_updated = tree.visit(transformer)
-                    changed = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or changed
+                    test_change = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or test_change
 
-                return changed
+            any_change = any_change or class_change or test_change
+            if class_change or test_change:
+                print(f"Class {class_name} changed")
+                if test_change:
+                    print(f"Test {clazz.test_filename} changed")
+
+        return any_change
 
     def fetch(self, api: str, api_version: str, commit: str | None, spec_file: str) -> bool:
         ref = "refs/heads/main" if commit is None else commit
@@ -1728,7 +1747,7 @@ class OpenApi:
             if len(class_names) == 1:
                 print(f"Suggesting API schemas for PyGithub class {class_names[0]}")
             else:
-                print(f"Suggesting API schemas for PyGithub {len(class_names)} classes")
+                print(f"Suggesting API schemas for {len(class_names)} PyGithub classes")
         else:
             print("Suggesting API schemas for PyGithub classes")
 
