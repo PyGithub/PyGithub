@@ -15,6 +15,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +35,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -41,10 +44,18 @@ class RequiredStatusChecks(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.required_status_checks = (
-            self.g.get_user().get_repo("PyGithub").get_branch("integrations").get_required_status_checks()
+            self.g.get_repo("jacquev6/PyGithub", lazy=True).get_branch("integrations").get_required_status_checks()
         )
 
     def testAttributes(self):
+        self.assertEqual(len(self.required_status_checks.checks), 1)
+        self.assertEqual(self.required_status_checks.checks[0].context, "continuous-integration/travis-ci")
+        self.assertEqual(self.required_status_checks.checks[0].app_id, 123)
+        self.assertEqual(
+            self.required_status_checks.contexts_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks/contexts",
+        )
+        self.assertEqual(self.required_status_checks.enforcement_level, "non_admins")
         self.assertTrue(self.required_status_checks.strict)
         self.assertEqual(self.required_status_checks.contexts, ["foo/bar"])
         self.assertEqual(

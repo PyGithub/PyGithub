@@ -14,6 +14,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,6 +33,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+from __future__ import annotations
 
 from . import Framework
 
@@ -62,6 +65,7 @@ class GitTree(Framework.TestCase):
             self.tree.tree[6].url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/trees/60b4602b2c2070246c5df078fb7a5150b45815eb",
         )
+        self.assertIsNone(self.tree.truncated)
         self.assertEqual(
             self.tree.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad",

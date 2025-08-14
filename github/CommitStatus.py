@@ -18,6 +18,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -44,21 +45,28 @@ from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
 class CommitStatus(NonCompletableGithubObject):
     """
     This class represents CommitStatuses.The reference can be found here https://docs.github.com/en/rest/reference/repos#statuses
+
+    The OpenAPI schema can be found at
+    - /components/schemas/status
+
     """
 
     def _initAttributes(self) -> None:
+        self._avatar_url: Attribute[str] = NotSet
+        self._context: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
         self._description: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
-        self._context: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -71,6 +79,14 @@ class CommitStatus(NonCompletableGithubObject):
                 "context": self._context.value,
             }
         )
+
+    @property
+    def avatar_url(self) -> str:
+        return self._avatar_url.value
+
+    @property
+    def context(self) -> str:
+        return self._context.value
 
     @property
     def created_at(self) -> datetime:
@@ -89,12 +105,12 @@ class CommitStatus(NonCompletableGithubObject):
         return self._id.value
 
     @property
-    def state(self) -> str:
-        return self._state.value
+    def node_id(self) -> str:
+        return self._node_id.value
 
     @property
-    def context(self) -> str:
-        return self._context.value
+    def state(self) -> str:
+        return self._state.value
 
     @property
     def target_url(self) -> str:
@@ -109,6 +125,10 @@ class CommitStatus(NonCompletableGithubObject):
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "avatar_url" in attributes:  # pragma no branch
+            self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
+        if "context" in attributes:  # pragma no branch
+            self._context = self._makeStringAttribute(attributes["context"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
@@ -117,10 +137,10 @@ class CommitStatus(NonCompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
-        if "context" in attributes:  # pragma no branch
-            self._context = self._makeStringAttribute(attributes["context"])
         if "target_url" in attributes:  # pragma no branch
             self._target_url = self._makeStringAttribute(attributes["target_url"])
         if "updated_at" in attributes:  # pragma no branch

@@ -16,7 +16,9 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Ramiro Morales <ramiro@users.noreply.github.com>              #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -36,6 +38,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -51,11 +55,15 @@ class RepositoryKey(Framework.TestCase):
         self.yet_unused_key = repo.get_key(98051552)
 
     def testAttributes(self):
+        self.assertEqual(self.key.added_by, "key-admin-user")
+        self.assertEqual(self.key.created_at, datetime(2017, 2, 22, 8, 16, 23, tzinfo=timezone.utc))
         self.assertEqual(self.key.id, 21870881)
         self.assertEqual(
             self.key.key,
             "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLOoLSVPwG1OSgVSeEXNbfIofYdxR5zs3u4PryhnamfFPYwi2vZW3ZxeI1oRcDh2VEdwGvlN5VUduKJNoOWMVzV2jSyR8CeDHH+I0soQCC7kfJVodU96HcPMzZ6MuVwSfD4BFGvKMXyCnBUqzo28BGHFwVQG8Ya9gL6/cTbuWywgM4xaJgMHv1OVcESXBtBkrqOneTJuOgeEmP0RfUnIAK/3/wbg9mfiBq7JV4cmWAg1xNE8GJoAbci59Tdx1dQgVuuqdQGk5jzNusOVneyMtGEB+p7UpPLJsGBW29rsMt7ITUbXM/kl9v11vPtWb+oOUThoFsDYmsWy7fGGP9YAFB",
         )
+        self.assertEqual(self.key.last_used, datetime(2024, 4, 13, 10, 0, 21, tzinfo=timezone.utc))
+        self.assertEqual(self.key.read_only, True)
         self.assertEqual(self.key.title, "PyGithub Test Key")
         self.assertEqual(self.key.url, "https://api.github.com/repos/lra/mackup/keys/21870881")
         self.assertEqual(

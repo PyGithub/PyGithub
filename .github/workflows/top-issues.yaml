@@ -8,6 +8,7 @@ jobs:
   ShowAndLabelTopIssues:
     name: Display and label top issues
     runs-on: ubuntu-latest
+    if: github.repository == 'PyGithub/PyGithub'
     steps:
       - name: Run top issues action
         uses: rickstaa/top-issues-action@7e8dda5d5ae3087670f9094b9724a9a091fc3ba1  # v1.3.101

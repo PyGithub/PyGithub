@@ -22,6 +22,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,6 +49,7 @@ from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -58,24 +60,44 @@ class GithubApp(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/apps
 
+    The OpenAPI schema can be found at
+    - /components/schemas/integration
+    - /components/schemas/nullable-integration
+
     """
 
     def _initAttributes(self) -> None:
+        self._client_id: Attribute[str] = NotSet
+        self._client_secret: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
         self._events: Attribute[list[str]] = NotSet
         self._external_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._installations_count: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._pem: Attribute[str] = NotSet
         self._permissions: Attribute[dict[str, str]] = NotSet
         self._slug: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._webhook_secret: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
+
+    @property
+    def client_id(self) -> str:
+        self._completeIfNotSet(self._client_id)
+        return self._client_id.value
+
+    @property
+    def client_secret(self) -> str:
+        self._completeIfNotSet(self._client_secret)
+        return self._client_secret.value
 
     @property
     def created_at(self) -> datetime:
@@ -108,14 +130,29 @@ class GithubApp(CompletableGithubObject):
         return self._id.value
 
     @property
+    def installations_count(self) -> int:
+        self._completeIfNotSet(self._installations_count)
+        return self._installations_count.value
+
+    @property
     def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def owner(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._owner)
         return self._owner.value
+
+    @property
+    def pem(self) -> str:
+        self._completeIfNotSet(self._pem)
+        return self._pem.value
 
     @property
     def permissions(self) -> dict[str, str]:
@@ -136,7 +173,16 @@ class GithubApp(CompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
+    @property
+    def webhook_secret(self) -> str:
+        self._completeIfNotSet(self._webhook_secret)
+        return self._webhook_secret.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "client_id" in attributes:  # pragma no branch
+            self._client_id = self._makeStringAttribute(attributes["client_id"])
+        if "client_secret" in attributes:  # pragma no branch
+            self._client_secret = self._makeStringAttribute(attributes["client_secret"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch
@@ -149,10 +195,16 @@ class GithubApp(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "installations_count" in attributes:  # pragma no branch
+            self._installations_count = self._makeIntAttribute(attributes["installations_count"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+        if "pem" in attributes:  # pragma no branch
+            self._pem = self._makeStringAttribute(attributes["pem"])
         if "permissions" in attributes:  # pragma no branch
             self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "slug" in attributes:  # pragma no branch
@@ -162,3 +214,5 @@ class GithubApp(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+        if "webhook_secret" in attributes:  # pragma no branch
+            self._webhook_secret = self._makeStringAttribute(attributes["webhook_secret"])

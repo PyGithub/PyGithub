@@ -14,12 +14,12 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: package
           path: dist
       - name: Install twine
-        run: pip install -q twine
+        run: pip install -U "twine>=6.1.0" "packaging>=24.2"
       - name: Publish 📦 to PyPI
         # only run this for tags
         if: startsWith(github.event.ref, 'refs/tags/')

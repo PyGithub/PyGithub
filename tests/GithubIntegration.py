@@ -12,6 +12,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,7 +41,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts
-from github.Auth import AppInstallationAuth
+from github.Auth import AppInstallationAuth, Login
 
 from . import Framework
 
@@ -92,7 +95,7 @@ class GithubIntegration(Framework.BasicTestCase):
 
     def testRequiredAppAuth(self):
         # GithubIntegration requires AppAuth authentication.
-        for auth in [self.oauth_token, self.jwt, self.login]:
+        for auth in [self.oauth_token, self.jwt, Login("login", "password")]:
             with self.assertRaises(AssertionError) as r:
                 github.GithubIntegration(auth=auth)
             self.assertEqual(
@@ -136,6 +139,9 @@ class GithubIntegration(Framework.BasicTestCase):
                 pool_size=10,
                 seconds_between_requests=100,
                 seconds_between_writes=1000,
+                # v3: this should not be the default value, so if this has been changed in v3,
+                # change it here is well
+                lazy=True,
             )
 
             # assert kwargs consists of ALL requester constructor arguments
@@ -169,6 +175,10 @@ class GithubIntegration(Framework.BasicTestCase):
             {"issues": "read", "metadata": "read"},
         )
         self.assertEqual(repo_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(repo_installation_authorization.repositories)
+        self.assertIsNone(repo_installation_authorization.single_file)
+        self.assertIsNone(repo_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(repo_installation_authorization.single_file_paths)
 
         # Get org installation access token
         org_installation_authorization = github_integration.get_access_token(self.org_installation_id)
@@ -184,6 +194,10 @@ class GithubIntegration(Framework.BasicTestCase):
         }
         self.assertDictEqual(org_installation_authorization.permissions, org_permissions)
         self.assertEqual(org_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(org_installation_authorization.repositories)
+        self.assertIsNone(org_installation_authorization.single_file)
+        self.assertIsNone(org_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(org_installation_authorization.single_file_paths)
 
         # Get user installation access token
         user_installation_authorization = github_integration.get_access_token(self.user_installation_id)
@@ -196,6 +210,10 @@ class GithubIntegration(Framework.BasicTestCase):
             {"issues": "read", "metadata": "read"},
         )
         self.assertEqual(user_installation_authorization.repository_selection, "selected")
+        self.assertIsNone(user_installation_authorization.repositories)
+        self.assertIsNone(user_installation_authorization.single_file)
+        self.assertIsNone(user_installation_authorization.has_multiple_single_files)
+        self.assertIsNone(user_installation_authorization.single_file_paths)
 
     def testGetUserInstallation(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
@@ -238,7 +256,10 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_org_installation(org="GithubApp-Test-Org")
-
+        self.assertEqual(
+            raisedexp.exception.message,
+            "'Expiration time' claim ('exp') must be a numeric value representing the future time at which the assertion expires",
+        )
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenWithExpiredJWT(self):
@@ -246,7 +267,10 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id)
-
+        self.assertEqual(
+            raisedexp.exception.message,
+            "'Expiration time' claim ('exp') must be a numeric value representing the future time at which the assertion expires",
+        )
         self.assertEqual(raisedexp.exception.status, 401)
 
     def testGetAccessTokenForNoInstallation(self):
@@ -262,7 +286,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id, permissions={"test-permissions": "read"})
-
+        self.assertEqual(raisedexp.exception.message, "The permissions requested are not granted to this installation.")
         self.assertEqual(raisedexp.exception.status, 422)
 
     def testGetAccessTokenWithInvalidData(self):
@@ -270,7 +294,7 @@ class GithubIntegration(Framework.BasicTestCase):
         github_integration = github.GithubIntegration(auth=auth)
         with self.assertRaises(github.GithubException) as raisedexp:
             github_integration.get_access_token(self.repo_installation_id, permissions="invalid_data")
-
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 400)
 
     def testGetApp(self):

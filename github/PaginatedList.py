@@ -30,6 +30,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -49,7 +51,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Callable, Dict, Generic, Iterator, List, Optional, Type, TypeVar, Union
+from __future__ import annotations
+
+from typing import Any, Callable, Generic, Iterator, TypeVar, overload
 from urllib.parse import parse_qs
 
 from github.GithubObject import GithubObject
@@ -59,18 +63,26 @@ T = TypeVar("T", bound=GithubObject)
 
 
 class PaginatedListBase(Generic[T]):
-    __elements: List[T]
+    __elements: list[T]
 
     def _couldGrow(self) -> bool:
         raise NotImplementedError
 
-    def _fetchNextPage(self) -> List[T]:
+    def _fetchNextPage(self) -> list[T]:
         raise NotImplementedError
 
-    def __init__(self, elements: Optional[List[T]] = None) -> None:
+    def __init__(self, elements: list[T] | None = None) -> None:
         self.__elements = [] if elements is None else elements
 
-    def __getitem__(self, index: Union[int, slice]) -> Any:
+    @overload
+    def __getitem__(self, index: int) -> T:
+        ...
+
+    @overload
+    def __getitem__(self, index: slice) -> _Slice:
+        ...
+
+    def __getitem__(self, index: int | slice) -> T | _Slice:
         assert isinstance(index, (int, slice))
         if isinstance(index, int):
             self.__fetchToIndex(index)
@@ -91,13 +103,13 @@ class PaginatedListBase(Generic[T]):
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
-    def _grow(self) -> List[T]:
+    def _grow(self) -> list[T]:
         newElements = self._fetchNextPage()
         self.__elements += newElements
         return newElements
 
     class _Slice:
-        def __init__(self, theList: "PaginatedListBase[T]", theSlice: slice):
+        def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
             self.__list = theList
             self.__start = theSlice.start or 0
             self.__stop = theSlice.stop
@@ -107,7 +119,7 @@ class PaginatedListBase(Generic[T]):
             index = self.__start
             while not self.__finished(index):
                 if self.__list._isBiggerThan(index):
-                    yield self.__list[index]
+                    yield self.__list[index]  # type: ignore
                     index += self.__step
                 else:
                     return
@@ -118,7 +130,8 @@ class PaginatedListBase(Generic[T]):
 
 class PaginatedList(PaginatedListBase[T]):
     """
-    This class abstracts the `pagination of the API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_.
+    This class abstracts the `pagination of the REST API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_
+    and the GraphQl API <https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api>`_.
 
     You can simply enumerate through instances of this class::
 
@@ -141,137 +154,258 @@ class PaginatedList(PaginatedListBase[T]):
 
     And if you really need it, you can explicitly access a specific page::
 
-        some_repos = user.get_repos().get_page(0)
-        some_other_repos = user.get_repos().get_page(3)
+        repos = user.get_repos()
+        assert repos.is_rest, "get_page not supported by the GraphQL API"
+
+        some_repos = repos.get_page(0)
+        some_other_repos = repos.get_page(3)
     """
 
+    # v3: move * before firstUrl and fix call sites
     def __init__(
         self,
-        contentClass: Type[T],
+        contentClass: type[T],
         requester: Requester,
-        firstUrl: str,
-        firstParams: Any,
-        headers: Optional[Dict[str, str]] = None,
-        list_item: str = "items",
+        firstUrl: str | None = None,
+        firstParams: dict[str, Any] | None = None,
+        *,
+        headers: dict[str, str] | None = None,
+        list_item: str | list[str] = "items",
         total_count_item: str = "total_count",
-        firstData: Optional[Any] = None,
-        firstHeaders: Optional[Dict[str, Union[str, int]]] = None,
-        attributesTransformer: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
+        firstData: Any | None = None,
+        firstHeaders: dict[str, str | int] | None = None,
+        attributesTransformer: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+        graphql_query: str | None = None,
+        graphql_variables: dict[str, Any] | None = None,
     ):
+        if firstUrl is None and firstData is None and graphql_query is None:
+            raise ValueError("Either firstUrl or graphql_query must be given")
+        if firstUrl is not None and graphql_query is not None:
+            raise ValueError("Only one of firstUrl or graphql_query can be given")
+        if graphql_query is not None:
+            if not (isinstance(list_item, list) and all(isinstance(item, str) for item in list_item)):
+                raise ValueError("With graphql_query given, item_list must be a list of strings")
+
         self.__requester = requester
         self.__contentClass = contentClass
+
+        self.__is_rest = firstUrl is not None or firstData is not None
         self.__firstUrl = firstUrl
-        self.__firstParams = firstParams or ()
+        self.__firstParams: dict[str, Any] = firstParams or {}
         self.__nextUrl = firstUrl
-        self.__nextParams = firstParams or {}
+        self.__nextParams: dict[str, Any] = firstParams or {}
         self.__headers = headers
         self.__list_item = list_item
         self.__total_count_item = total_count_item
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
-        self.__totalCount: Optional[int] = None
+        self.__totalCount: int | None = None
         self._attributesTransformer = attributesTransformer
 
+        self.__graphql_query = graphql_query
+        self.__graphql_variables = graphql_variables or {}
+        self.__page_info = None
+
         first_page = []
-        if firstData is not None and firstHeaders is not None:
+        if firstData is not None:
             first_page = self._getPage(firstData, firstHeaders)
+            # this paginated list contains a single page
+            if self.__nextUrl is None and self.__totalCount is None:
+                self.__totalCount = len(first_page)
         super().__init__(first_page)
 
-    def _transformAttributes(self, element: Dict[str, Any]) -> Dict[str, Any]:
+    @property
+    def is_rest(self) -> bool:
+        return self.__is_rest
+
+    @property
+    def is_graphql(self) -> bool:
+        return not self.is_rest
+
+    def _transformAttributes(self, element: dict[str, Any]) -> dict[str, Any]:
         if self._attributesTransformer is None:
             return element
         return self._attributesTransformer(element)
 
     @property
     def totalCount(self) -> int:
-        if not self.__totalCount:
-            params = {} if self.__nextParams is None else self.__nextParams.copy()
-            # set per_page = 1 so the totalCount is just the number of pages
-            params.update({"per_page": 1})
-            headers, data = self.__requester.requestJsonAndCheck(
-                "GET", self.__firstUrl, parameters=params, headers=self.__headers
-            )
-            if "link" not in headers:
-                if data and "total_count" in data:
-                    self.__totalCount = data["total_count"]
-                elif data:
-                    if isinstance(data, dict):
-                        data = data[self.__list_item]
-                    self.__totalCount = len(data)
+        if self.__totalCount is None:
+            if self.is_rest:
+                params = self.__nextParams.copy()
+                # set per_page = 1 so the totalCount is just the number of pages
+                params.update({"per_page": 1})
+                headers, data = self.__requester.requestJsonAndCheck(
+                    "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
+                )
+                if "link" not in headers:
+                    if data and "total_count" in data:
+                        self.__totalCount = data["total_count"]
+                    elif data:
+                        if isinstance(data, dict):
+                            data = data[self.__list_item]
+                        self.__totalCount = len(data)
+                    else:
+                        self.__totalCount = 0
                 else:
-                    self.__totalCount = 0
+                    links = self.__parseLinkHeader(headers)
+                    lastUrl = links.get("last")
+                    if lastUrl:
+                        self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                    else:
+                        self.__totalCount = 0
             else:
-                links = self.__parseLinkHeader(headers)
-                lastUrl = links.get("last")
-                if lastUrl:
-                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                variables = self.__graphql_variables.copy()
+                if not self._reversed:
+                    variables["first"] = 1
+                    variables["after"] = None
                 else:
-                    self.__totalCount = 0
+                    variables["last"] = 1
+                    variables["before"] = None
+
+                _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+                pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
+                self.__totalCount = pagination.get("totalCount")
         return self.__totalCount  # type: ignore
 
-    def _getLastPageUrl(self) -> Optional[str]:
+    def _getLastPageUrl(self) -> str | None:
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers
+            "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers  # type: ignore
         )
         links = self.__parseLinkHeader(headers)
         return links.get("last")
 
     @property
-    def reversed(self) -> "PaginatedList[T]":
+    def reversed(self) -> PaginatedList[T]:
         r = PaginatedList(
             self.__contentClass,
             self.__requester,
             self.__firstUrl,
             self.__firstParams,
-            self.__headers,
-            self.__list_item,
+            headers=self.__headers,
+            list_item=self.__list_item,
             attributesTransformer=self._attributesTransformer,
+            graphql_query=self.__graphql_query,
+            graphql_variables=self.__graphql_variables,
         )
         r.__reverse()
         return r
 
     def __reverse(self) -> None:
         self._reversed = True
-        lastUrl = self._getLastPageUrl()
-        if lastUrl:
-            self.__nextUrl = lastUrl
+        if self.is_rest:
+            lastUrl = self._getLastPageUrl()
+            if lastUrl:
+                self.__nextUrl = lastUrl
+                if self.__nextParams:
+                    # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
+                    self.__nextParams = {
+                        k: v
+                        for k, v in self.__nextParams.items()
+                        if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
+                    }
+
+    # To support Python's built-in `reversed()` method
+    def __reversed__(self) -> PaginatedList[T]:
+        return self.reversed
 
     def _couldGrow(self) -> bool:
-        return self.__nextUrl is not None
-
-    def _fetchNextPage(self) -> List[T]:
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers
+        return (
+            self.is_rest
+            and self.__nextUrl is not None
+            or self.is_graphql
+            and (
+                self.__page_info is None
+                or not self._reversed
+                and self.__page_info["hasNextPage"]
+                or self._reversed
+                and self.__page_info["hasPreviousPage"]
+            )
         )
-        data = data if data else []
-        return self._getPage(data, headers)
 
-    def _getPage(self, data: Any, headers: Dict[str, Any]) -> List[T]:
-        self.__nextUrl = None  # type: ignore
-        if len(data) > 0:
-            links = self.__parseLinkHeader(headers)
+    def _get_graphql_pagination(self, data: dict[str, Any], path: list[str]) -> dict[str, Any]:
+        for item in path:
+            if item not in data:
+                raise RuntimeError(f"Pagination path {path} not found in data: {self.paths_of_dict(data)}")
+            data = data[item]
+        return data
+
+    def _fetchNextPage(self) -> list[T]:
+        if self.is_rest:
+            # REST API pagination
+            headers, data = self.__requester.requestJsonAndCheck(
+                "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers  # type: ignore
+            )
+            data = data if data else []
+            return self._getPage(data, headers)
+        else:
+            # GraphQL API pagination
+            variables = self.__graphql_variables.copy()
+            if not self._reversed:
+                variables["first"] = self.__requester.per_page
+                if self.__page_info is not None:
+                    variables["after"] = self.__page_info["endCursor"]
+            else:
+                variables["last"] = self.__requester.per_page
+                if self.__page_info is not None:
+                    variables["before"] = self.__page_info["startCursor"]
+
+            _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+
+            pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
+            return self._getPage(pagination, {})
+
+    def _getPage(self, data: Any, headers: dict[str, str | int] | None) -> list[T]:
+        if self.is_rest:
+            self.__nextUrl = None  # type: ignore
+            if len(data) > 0:
+                links = self.__parseLinkHeader(headers)  # type: ignore
+                if self._reversed:
+                    if "prev" in links:
+                        self.__nextUrl = links["prev"]
+                elif "next" in links:
+                    self.__nextUrl = links["next"]
+            self.__nextParams = {}
+            if self.__list_item in data:
+                self.__totalCount = data.get(self.__total_count_item)
+                data = data[self.__list_item]
+            content = [
+                self.__contentClass(self.__requester, headers, self._transformAttributes(element))  # type: ignore
+                for element in data
+                if element is not None
+            ]
             if self._reversed:
-                if "prev" in links:
-                    self.__nextUrl = links["prev"]
-            elif "next" in links:
-                self.__nextUrl = links["next"]
-        self.__nextParams = None
-        if self.__list_item in data:
-            self.__totalCount = data.get(self.__total_count_item)
-            data = data[self.__list_item]
-        content = [
-            self.__contentClass(self.__requester, headers, self._transformAttributes(element), completed=False)
-            for element in data
-            if element is not None
-        ]
-        if self._reversed:
-            return content[::-1]
-        return content
+                return content[::-1]
+            return content
+        else:
+            if "pageInfo" not in data:
+                raise RuntimeError(f"Query must provide pagination with pageInfo:\n{self.__graphql_query}")
 
-    def __parseLinkHeader(self, headers: Dict[str, str]) -> Dict[str, str]:
+            self.__page_info = data["pageInfo"]
+            if any(
+                item not in self.__page_info  # type: ignore
+                for item in ["startCursor", "endCursor", "hasNextPage", "hasPreviousPage"]
+            ):
+                raise RuntimeError(f"Query must provide pagination with pageInfo\n{self.__graphql_query}")
+
+            if self.__totalCount is None:
+                if "totalCount" not in data:
+                    raise RuntimeError(f"Query must provide totalCount\n{self.__graphql_query}")
+                self.__totalCount = data["totalCount"]
+
+            if "nodes" not in data:
+                raise RuntimeError(
+                    f"No nodes found under pagination path {self.__list_item}: {self.paths_of_dict(data)}"
+                )
+
+            nodes = data["nodes"]
+            if self._reversed:
+                nodes = nodes[::-1]
+            return [self.__contentClass(self.__requester, {}, element) for element in nodes if element is not None]
+
+    def __parseLinkHeader(self, headers: dict[str, str | int]) -> dict[str, str]:
         links = {}
-        if "link" in headers:
+        if "link" in headers and isinstance(headers["link"], str):
             linkHeaders = headers["link"].split(", ")
             for linkHeader in linkHeaders:
                 url, rel, *rest = linkHeader.split("; ")
@@ -280,27 +414,27 @@ class PaginatedList(PaginatedListBase[T]):
                 links[rel] = url
         return links
 
-    def get_page(self, page: int) -> List[T]:
+    def get_page(self, page: int) -> list[T]:
+        if self.is_graphql:
+            raise RuntimeError("Not supported for GraphQL pagination")
+
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
         if self.__requester.per_page != 30:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__firstUrl, parameters=params, headers=self.__headers
+            "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
         )
 
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")
             data = data[self.__list_item]
-        return [
-            self.__contentClass(self.__requester, headers, self._transformAttributes(element), completed=False)
-            for element in data
-        ]
+        return [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
 
     @classmethod
-    def override_attributes(cls, overrides: Dict[str, Any]) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
-        def attributes_transformer(element: Dict[str, Any]) -> Dict[str, Any]:
+    def override_attributes(cls, overrides: dict[str, Any]) -> Callable[[dict[str, Any]], dict[str, Any]]:
+        def attributes_transformer(element: dict[str, Any]) -> dict[str, Any]:
             # Recursively merge overrides with attributes, overriding attributes with overrides
             element = cls.merge_dicts(element, overrides)
             return element
@@ -308,7 +442,7 @@ class PaginatedList(PaginatedListBase[T]):
         return attributes_transformer
 
     @classmethod
-    def merge_dicts(cls, d1: Dict[str, Any], d2: Dict[str, Any]) -> Dict[str, Any]:
+    def merge_dicts(cls, d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
         # clone d1
         d1 = d1.copy()
         for k, v in d2.items():
@@ -317,3 +451,7 @@ class PaginatedList(PaginatedListBase[T]):
             else:
                 d1[k] = v
         return d1
+
+    @classmethod
+    def paths_of_dict(cls, d: dict) -> dict:
+        return {key: cls.paths_of_dict(val) if isinstance(val, dict) else None for key, val in d.items()}

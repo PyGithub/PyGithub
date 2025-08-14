@@ -20,6 +20,8 @@
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 GPK <gopidesupavan@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -62,8 +64,9 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
+        self._prevent_self_review: Attribute[bool] = NotSet
         self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer]] = NotSet
+        self._type: Attribute[str] = NotSet
         self._wait_timer: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
@@ -78,14 +81,18 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
         return self._node_id.value
 
     @property
-    def type(self) -> str:
-        return self._type.value
+    def prevent_self_review(self) -> bool:
+        return self._prevent_self_review.value
 
     @property
     def reviewers(
         self,
     ) -> list[EnvironmentProtectionRuleReviewer]:
         return self._reviewers.value
+
+    @property
+    def type(self) -> str:
+        return self._type.value
 
     @property
     def wait_timer(self) -> int:
@@ -96,12 +103,14 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
-        if "type" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
         if "reviewers" in attributes:  # pragma no branch
             self._reviewers = self._makeListOfClassesAttribute(
                 github.EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer,
                 attributes["reviewers"],
             )
+        if "prevent_self_review" in attributes:
+            self._prevent_self_review = self._makeBoolAttribute(attributes["prevent_self_review"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])
         if "wait_timer" in attributes:  # pragma no branch
             self._wait_timer = self._makeIntAttribute(attributes["wait_timer"])

@@ -7,6 +7,7 @@
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,12 +27,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import json
 import logging
 from datetime import datetime, timezone
 from logging import Logger
 from types import TracebackType
-from typing import Any, Optional
+from typing import Any
 
 from requests import Response
 from requests.models import CaseInsensitiveDict
@@ -63,7 +66,7 @@ class GithubRetry(Retry):
 
     """
 
-    __logger: Optional[Logger] = None
+    __logger: Logger | None = None
 
     # used to mock datetime, mock.patch("github.GithubRetry.date") does not work as this
     # references the class, not the module (due to re-exporting in github/__init__.py)
@@ -88,12 +91,12 @@ class GithubRetry(Retry):
 
     def increment(  # type: ignore[override]
         self,
-        method: Optional[str] = None,
-        url: Optional[str] = None,
-        response: Optional[HTTPResponse] = None,  # type: ignore[override]
-        error: Optional[Exception] = None,
-        _pool: Optional[ConnectionPool] = None,
-        _stacktrace: Optional[TracebackType] = None,
+        method: str | None = None,
+        url: str | None = None,
+        response: HTTPResponse | None = None,  # type: ignore[override]
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
     ) -> Retry:
         if response:
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)

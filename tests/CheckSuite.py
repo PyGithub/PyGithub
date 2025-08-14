@@ -4,6 +4,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,6 +23,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+from __future__ import annotations
 
 from datetime import datetime, timezone
 
@@ -57,9 +60,12 @@ class CheckSuite(Framework.TestCase):
         self.assertEqual(cs.id, self.check_suite_id)
         self.assertEqual(cs.latest_check_runs_count, 2)
         self.assertEqual(cs.id, self.check_suite_id)
+        self.assertEqual(cs.node_id, "MDEwOkNoZWNrU3VpdGUxMDA0NTAzODM3")
         self.assertEqual(len(cs.pull_requests), 1)
         self.assertEqual(cs.pull_requests[0].id, 462527907)
         self.assertEqual(cs.repository.url, "https://api.github.com/repos/wrecker/PySample")
+        self.assertEqual(cs.rerequestable, True)
+        self.assertEqual(cs.runs_rerequestable, True)
         self.assertEqual(cs.status, "completed")
         self.assertEqual(cs.updated_at, datetime(2020, 8, 4, 5, 7, 40, tzinfo=timezone.utc))
         self.assertEqual(

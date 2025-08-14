@@ -59,8 +59,12 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Mohamed Mostafa <112487260+mohy01@users.noreply.github.com>   #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2024 Pasha Fateev <pasha@autokitteh.com>                           #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -86,6 +90,10 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.CodeSecurityConfig
+import github.CodeSecurityConfigRepository
+import github.Copilot
+import github.DefaultCodeSecurityConfig
 import github.Event
 import github.GithubObject
 import github.HookDelivery
@@ -97,6 +105,7 @@ import github.OrganizationVariable
 import github.Plan
 import github.Project
 import github.Repository
+import github.SelfHostedActionsRunner
 import github.Team
 from github import Consts
 from github.GithubObject import (
@@ -112,13 +121,17 @@ from github.GithubObject import (
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.CodeSecurityConfig import CodeSecurityConfig
+    from github.CodeSecurityConfigRepository import CodeSecurityConfigRepository
+    from github.Copilot import Copilot
+    from github.DefaultCodeSecurityConfig import DefaultCodeSecurityConfig
     from github.Event import Event
     from github.Hook import Hook
     from github.Installation import Installation
     from github.Issue import Issue
     from github.Label import Label
     from github.Migration import Migration
-    from github.NamedUser import NamedUser
+    from github.NamedUser import NamedUser, OrganizationInvitation
     from github.OrganizationCustomProperty import (
         CustomProperty,
         OrganizationCustomProperty,
@@ -131,6 +144,7 @@ if TYPE_CHECKING:
     from github.Project import Project
     from github.PublicKey import PublicKey
     from github.Repository import Repository
+    from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.Team import Team
 
 
@@ -141,36 +155,58 @@ class Organization(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/orgs
 
+    The OpenAPI schema can be found at
+    - /components/schemas/actor
+    - /components/schemas/nullable-organization-simple
+    - /components/schemas/nullable-simple-user
+    - /components/schemas/organization-full
+    - /components/schemas/organization-simple
+    - /components/schemas/team-organization
+
     """
 
     def _initAttributes(self) -> None:
+        self._advanced_security_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._archived_at: Attribute[datetime] = NotSet
-        self._default_repository_permission: Attribute[str] = NotSet
-        self._has_organization_projects: Attribute[bool] = NotSet
-        self._has_repository_projects: Attribute[bool] = NotSet
-        self._hooks_url: Attribute[str] = NotSet
-        self._issues_url: Attribute[str] = NotSet
-        self._members_can_create_repositories: Attribute[bool] = NotSet
-        self._two_factor_requirement_enabled: Attribute[bool] = NotSet
         self._avatar_url: Attribute[str] = NotSet
         self._billing_email: Attribute[str] = NotSet
         self._blog: Attribute[str | None] = NotSet
         self._collaborators: Attribute[int] = NotSet
         self._company: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._default_repository_permission: Attribute[str] = NotSet
+        self._dependabot_alerts_enabled_for_new_repositories: Attribute[bool] = NotSet
+        self._dependabot_security_updates_enabled_for_new_repositories: Attribute[bool] = NotSet
+        self._dependency_graph_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._description: Attribute[str] = NotSet
         self._disk_usage: Attribute[int] = NotSet
+        self._display_login: Attribute[str] = NotSet
         self._email: Attribute[str] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._followers: Attribute[int] = NotSet
         self._following: Attribute[int] = NotSet
         self._gravatar_id: Attribute[str] = NotSet
+        self._has_organization_projects: Attribute[bool] = NotSet
+        self._has_repository_projects: Attribute[bool] = NotSet
+        self._hooks_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._is_verified: Attribute[bool] = NotSet
+        self._issues_url: Attribute[str] = NotSet
         self._location: Attribute[str] = NotSet
         self._login: Attribute[str] = NotSet
+        self._members_allowed_repository_creation_type: Attribute[str] = NotSet
+        self._members_can_create_internal_repositories: Attribute[bool] = NotSet
+        self._members_can_create_pages: Attribute[bool] = NotSet
+        self._members_can_create_private_pages: Attribute[bool] = NotSet
+        self._members_can_create_private_repositories: Attribute[bool] = NotSet
+        self._members_can_create_public_pages: Attribute[bool] = NotSet
+        self._members_can_create_public_repositories: Attribute[bool] = NotSet
+        self._members_can_create_repositories: Attribute[bool] = NotSet
+        self._members_can_fork_private_repositories: Attribute[bool] = NotSet
         self._members_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
         self._plan: Attribute[Plan] = NotSet
         self._private_gists: Attribute[int] = NotSet
@@ -178,13 +214,25 @@ class Organization(CompletableGithubObject):
         self._public_members_url: Attribute[str] = NotSet
         self._public_repos: Attribute[int] = NotSet
         self._repos_url: Attribute[str] = NotSet
+        self._secret_scanning_enabled_for_new_repositories: Attribute[bool] = NotSet
+        self._secret_scanning_push_protection_custom_link: Attribute[str] = NotSet
+        self._secret_scanning_push_protection_custom_link_enabled: Attribute[bool] = NotSet
+        self._secret_scanning_push_protection_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
+        self._twitter_username: Attribute[str] = NotSet
+        self._two_factor_requirement_enabled: Attribute[bool] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._web_commit_signoff_required: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
+
+    @property
+    def advanced_security_enabled_for_new_repositories(self) -> bool:
+        self._completeIfNotSet(self._advanced_security_enabled_for_new_repositories)
+        return self._advanced_security_enabled_for_new_repositories.value
 
     @property
     def archived_at(self) -> datetime:
@@ -227,6 +275,21 @@ class Organization(CompletableGithubObject):
         return self._default_repository_permission.value
 
     @property
+    def dependabot_alerts_enabled_for_new_repositories(self) -> bool:
+        self._completeIfNotSet(self._dependabot_alerts_enabled_for_new_repositories)
+        return self._dependabot_alerts_enabled_for_new_repositories.value
+
+    @property
+    def dependabot_security_updates_enabled_for_new_repositories(self) -> bool:
+        self._completeIfNotSet(self._dependabot_security_updates_enabled_for_new_repositories)
+        return self._dependabot_security_updates_enabled_for_new_repositories.value
+
+    @property
+    def dependency_graph_enabled_for_new_repositories(self) -> bool:
+        self._completeIfNotSet(self._dependency_graph_enabled_for_new_repositories)
+        return self._dependency_graph_enabled_for_new_repositories.value
+
+    @property
     def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
@@ -235,6 +298,11 @@ class Organization(CompletableGithubObject):
     def disk_usage(self) -> int:
         self._completeIfNotSet(self._disk_usage)
         return self._disk_usage.value
+
+    @property
+    def display_login(self) -> str:
+        self._completeIfNotSet(self._display_login)
+        return self._display_login.value
 
     @property
     def email(self) -> str | None:
@@ -287,6 +355,11 @@ class Organization(CompletableGithubObject):
         return self._id.value
 
     @property
+    def is_verified(self) -> bool:
+        self._completeIfNotSet(self._is_verified)
+        return self._is_verified.value
+
+    @property
     def issues_url(self) -> str:
         self._completeIfNotSet(self._issues_url)
         return self._issues_url.value
@@ -302,9 +375,49 @@ class Organization(CompletableGithubObject):
         return self._login.value
 
     @property
+    def members_allowed_repository_creation_type(self) -> str:
+        self._completeIfNotSet(self._members_allowed_repository_creation_type)
+        return self._members_allowed_repository_creation_type.value
+
+    @property
+    def members_can_create_internal_repositories(self) -> bool:
+        self._completeIfNotSet(self._members_can_create_internal_repositories)
+        return self._members_can_create_internal_repositories.value
+
+    @property
+    def members_can_create_pages(self) -> bool:
+        self._completeIfNotSet(self._members_can_create_pages)
+        return self._members_can_create_pages.value
+
+    @property
+    def members_can_create_private_pages(self) -> bool:
+        self._completeIfNotSet(self._members_can_create_private_pages)
+        return self._members_can_create_private_pages.value
+
+    @property
+    def members_can_create_private_repositories(self) -> bool:
+        self._completeIfNotSet(self._members_can_create_private_repositories)
+        return self._members_can_create_private_repositories.value
+
+    @property
+    def members_can_create_public_pages(self) -> bool:
+        self._completeIfNotSet(self._members_can_create_public_pages)
+        return self._members_can_create_public_pages.value
+
+    @property
+    def members_can_create_public_repositories(self) -> bool:
+        self._completeIfNotSet(self._members_can_create_public_repositories)
+        return self._members_can_create_public_repositories.value
+
+    @property
     def members_can_create_repositories(self) -> bool:
         self._completeIfNotSet(self._members_can_create_repositories)
         return self._members_can_create_repositories.value
+
+    @property
+    def members_can_fork_private_repositories(self) -> bool:
+        self._completeIfNotSet(self._members_can_fork_private_repositories)
+        return self._members_can_fork_private_repositories.value
 
     @property
     def members_url(self) -> str:
@@ -315,6 +428,11 @@ class Organization(CompletableGithubObject):
     def name(self) -> str | None:
         self._completeIfNotSet(self._name)
         return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def owned_private_repos(self) -> int:
@@ -352,9 +470,34 @@ class Organization(CompletableGithubObject):
         return self._repos_url.value
 
     @property
+    def secret_scanning_enabled_for_new_repositories(self) -> bool:
+        self._completeIfNotSet(self._secret_scanning_enabled_for_new_repositories)
+        return self._secret_scanning_enabled_for_new_repositories.value
+
+    @property
+    def secret_scanning_push_protection_custom_link(self) -> str:
+        self._completeIfNotSet(self._secret_scanning_push_protection_custom_link)
+        return self._secret_scanning_push_protection_custom_link.value
+
+    @property
+    def secret_scanning_push_protection_custom_link_enabled(self) -> bool:
+        self._completeIfNotSet(self._secret_scanning_push_protection_custom_link_enabled)
+        return self._secret_scanning_push_protection_custom_link_enabled.value
+
+    @property
+    def secret_scanning_push_protection_enabled_for_new_repositories(self) -> bool:
+        self._completeIfNotSet(self._secret_scanning_push_protection_enabled_for_new_repositories)
+        return self._secret_scanning_push_protection_enabled_for_new_repositories.value
+
+    @property
     def total_private_repos(self) -> int:
         self._completeIfNotSet(self._total_private_repos)
         return self._total_private_repos.value
+
+    @property
+    def twitter_username(self) -> str:
+        self._completeIfNotSet(self._twitter_username)
+        return self._twitter_username.value
 
     @property
     def two_factor_requirement_enabled(self) -> bool:
@@ -375,6 +518,11 @@ class Organization(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    @property
+    def web_commit_signoff_required(self) -> bool:
+        self._completeIfNotSet(self._web_commit_signoff_required)
+        return self._web_commit_signoff_required.value
 
     def add_to_members(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
         """
@@ -910,7 +1058,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET", f"{self.url}/hooks/{hook_id}/deliveries/{delivery_id}"
         )
-        return github.HookDelivery.HookDelivery(self._requester, headers, data, completed=True)
+        return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
     def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
         """
@@ -993,7 +1141,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/projects",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def get_public_members(self) -> PaginatedList[NamedUser]:
@@ -1052,6 +1200,12 @@ class Organization(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/{secret_type}/secrets/public-key")
         return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
+
+    def get_copilot(self) -> Copilot:
+        """
+        :calls: Various Copilot-related endpoints for this organization :rtype: :class:`github.Copilot.Copilot`
+        """
+        return github.Copilot.Copilot(self._requester, self.login)
 
     def get_repo(self, name: str) -> Repository:
         """
@@ -1117,12 +1271,12 @@ class Organization(CompletableGithubObject):
         """
         return PaginatedList(github.Team.Team, self._requester, f"{self.url}/teams", None)
 
-    def invitations(self) -> PaginatedList[NamedUser]:
+    def invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
         :calls: `GET /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
         """
         return PaginatedList(
-            github.NamedUser.NamedUser,
+            github.NamedUser.OrganizationInvitation,
             self._requester,
             f"{self.url}/invitations",
             None,
@@ -1169,7 +1323,7 @@ class Organization(CompletableGithubObject):
         """
         :calls: `DELETE /orgs/{org}/invitations/{invitation_id} <https://docs.github.com/en/rest/reference/orgs#cancel-an-organization-invitation>`_
         :param invitee: :class:`github.NamedUser.NamedUser`
-        :rtype: None
+        :rtype: bool
         """
         assert isinstance(invitee, github.NamedUser.NamedUser), invitee
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/invitations/{invitee.id}")
@@ -1285,7 +1439,7 @@ class Organization(CompletableGithubObject):
             self._requester,
             f"{self.url}/installations",
             None,
-            None,
+            headers=None,
             list_item="installations",
         )
 
@@ -1366,7 +1520,6 @@ class Organization(CompletableGithubObject):
             requester=self._requester,
             headers=headers,
             attributes=data,
-            completed=False,
         )
 
     def create_custom_properties(self, properties: list[CustomProperty]) -> list[OrganizationCustomProperty]:
@@ -1384,7 +1537,7 @@ class Organization(CompletableGithubObject):
         )
         return [
             github.OrganizationCustomProperty.OrganizationCustomProperty(
-                requester=self._requester, headers=headers, attributes=property, completed=True
+                requester=self._requester, headers=headers, attributes=property
             )
             for property in data
         ]
@@ -1405,7 +1558,7 @@ class Organization(CompletableGithubObject):
             "PUT", f"{self.url}/properties/schema/{property_name}", input=post_parameters
         )
         return github.OrganizationCustomProperty.OrganizationCustomProperty(
-            requester=self._requester, headers=headers, attributes=data, completed=True
+            requester=self._requester, headers=headers, attributes=data
         )
 
     def remove_custom_property(self, property_name: str) -> None:
@@ -1451,7 +1604,282 @@ class Organization(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PATCH", f"{self.url}/properties/values", input=patch_parameters)
 
+    def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
+        """
+        :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#list-self-hosted-runners-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
+        """
+        return PaginatedList(
+            github.SelfHostedActionsRunner.SelfHostedActionsRunner,
+            self._requester,
+            f"{self.url}/actions/runners",
+            None,
+            list_item="runners",
+        )
+
+    def delete_self_hosted_runner(self, runner_id: str) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#delete-a-self-hosted-runner-from-an-organization>`_
+        :param runner_id: string
+        :rtype: None
+        """
+        assert isinstance(runner_id, str), runner_id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/actions/runners/{runner_id}",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        )
+
+    def get_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
+        """
+        :calls: `GET /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#get-code-security-configurations-for-an-organization>`_
+        :rtype: :class:`CodeSecurityConfig`
+        """
+        return PaginatedList(
+            contentClass=github.CodeSecurityConfig.CodeSecurityConfig,
+            requester=self._requester,
+            firstUrl=f"{self.url}/code-security/configurations",
+            firstParams=NotSet.remove_unset_items({"target_type": target_type}),
+        )
+
+    def create_code_security_config(
+        self,
+        name: str,
+        description: str,
+        advanced_security: Opt[str] = NotSet,
+        dependency_graph: Opt[str] = NotSet,
+        dependency_graph_autosubmit_action: Opt[str] = NotSet,
+        dependabot_alerts: Opt[str] = NotSet,
+        dependabot_security_updates: Opt[str] = NotSet,
+        code_scanning_default_setup: Opt[str] = NotSet,
+        secret_scanning: Opt[str] = NotSet,
+        secret_scanning_push_protection: Opt[str] = NotSet,
+        secret_scanning_delegated_bypass: Opt[str] = NotSet,
+        secret_scanning_validity_checks: Opt[str] = NotSet,
+        secret_scanning_non_provider_patterns: Opt[str] = NotSet,
+        private_vulnerability_reporting: Opt[str] = NotSet,
+        enforcement: Opt[str] = NotSet,
+    ) -> CodeSecurityConfig:
+        """
+        :calls: `POST /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#create-a-code-security-configuration>`_
+        :rtype: :class:`PaginatedList` of dict
+        """
+        assert isinstance(name, str), name
+        assert isinstance(description, str), description
+        assert is_optional(advanced_security, str), advanced_security
+        assert is_optional(dependency_graph, str), dependency_graph
+        assert is_optional(dependency_graph_autosubmit_action, str), dependency_graph_autosubmit_action
+        assert is_optional(dependabot_alerts, str), dependabot_alerts
+        assert is_optional(dependabot_security_updates, str), dependabot_security_updates
+        assert is_optional(code_scanning_default_setup, str), code_scanning_default_setup
+        assert is_optional(secret_scanning, str), secret_scanning
+        assert is_optional(secret_scanning_push_protection, str), secret_scanning_push_protection
+        assert is_optional(secret_scanning_delegated_bypass, str), secret_scanning_delegated_bypass
+        assert is_optional(secret_scanning_validity_checks, str), secret_scanning_validity_checks
+        assert is_optional(secret_scanning_non_provider_patterns, str), secret_scanning_non_provider_patterns
+        assert is_optional(private_vulnerability_reporting, str), private_vulnerability_reporting
+        assert is_optional(enforcement, str), enforcement
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "description": description,
+                "advanced_security": advanced_security,
+                "dependency_graph": dependency_graph,
+                "dependency_graph_autosubmit_action": dependency_graph_autosubmit_action,
+                "dependabot_alerts": dependabot_alerts,
+                "dependabot_security_updates": dependabot_security_updates,
+                "code_scanning_default_setup": code_scanning_default_setup,
+                "secret_scanning": secret_scanning,
+                "secret_scanning_push_protection": secret_scanning_push_protection,
+                "secret_scanning_delegated_bypass": secret_scanning_delegated_bypass,
+                "secret_scanning_validity_checks": secret_scanning_validity_checks,
+                "secret_scanning_non_provider_patterns": secret_scanning_non_provider_patterns,
+                "private_vulnerability_reporting": private_vulnerability_reporting,
+                "enforcement": enforcement,
+            }
+        )
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            f"{self.url}/code-security/configurations",
+            input=post_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
+        )
+        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data)
+
+    def edit_code_security_config(
+        self,
+        id: int,
+        name: Opt[str] = NotSet,
+        description: Opt[str] = NotSet,
+        advanced_security: Opt[str] = NotSet,
+        dependency_graph: Opt[str] = NotSet,
+        dependency_graph_autosubmit_action: Opt[str] = NotSet,
+        dependabot_alerts: Opt[str] = NotSet,
+        dependabot_security_updates: Opt[str] = NotSet,
+        code_scanning_default_setup: Opt[str] = NotSet,
+        secret_scanning: Opt[str] = NotSet,
+        secret_scanning_push_protection: Opt[str] = NotSet,
+        secret_scanning_delegated_bypass: Opt[str] = NotSet,
+        secret_scanning_validity_checks: Opt[str] = NotSet,
+        secret_scanning_non_provider_patterns: Opt[str] = NotSet,
+        private_vulnerability_reporting: Opt[str] = NotSet,
+        enforcement: Opt[str] = NotSet,
+    ) -> CodeSecurityConfig:
+        """
+        :calls: `PATCH /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#update-a-code-security-configuration>`_
+        """
+        assert isinstance(id, int), id
+        assert is_optional(name, str), name
+        assert is_optional(description, str), description
+        assert is_optional(advanced_security, str), advanced_security
+        assert is_optional(dependency_graph, str), dependency_graph
+        assert is_optional(dependency_graph_autosubmit_action, str), dependency_graph_autosubmit_action
+        assert is_optional(dependabot_alerts, str), dependabot_alerts
+        assert is_optional(dependabot_security_updates, str), dependabot_security_updates
+        assert is_optional(code_scanning_default_setup, str), code_scanning_default_setup
+        assert is_optional(secret_scanning, str), secret_scanning
+        assert is_optional(secret_scanning_push_protection, str), secret_scanning_push_protection
+        assert is_optional(secret_scanning_delegated_bypass, str), secret_scanning_delegated_bypass
+        assert is_optional(secret_scanning_validity_checks, str), secret_scanning_validity_checks
+        assert is_optional(secret_scanning_non_provider_patterns, str), secret_scanning_non_provider_patterns
+        assert is_optional(private_vulnerability_reporting, str), private_vulnerability_reporting
+        assert is_optional(enforcement, str), enforcement
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "description": description,
+                "advanced_security": advanced_security,
+                "dependency_graph": dependency_graph,
+                "dependency_graph_autosubmit_action": dependency_graph_autosubmit_action,
+                "dependabot_alerts": dependabot_alerts,
+                "dependabot_security_updates": dependabot_security_updates,
+                "code_scanning_default_setup": code_scanning_default_setup,
+                "secret_scanning": secret_scanning,
+                "secret_scanning_push_protection": secret_scanning_push_protection,
+                "secret_scanning_delegated_bypass": secret_scanning_delegated_bypass,
+                "secret_scanning_validity_checks": secret_scanning_validity_checks,
+                "secret_scanning_non_provider_patterns": secret_scanning_non_provider_patterns,
+                "private_vulnerability_reporting": private_vulnerability_reporting,
+                "enforcement": enforcement,
+            }
+        )
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH", f"{self.url}/code-security/configurations/{id}", input=post_parameters
+        )
+        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data)
+
+    def delete_code_security_config(self, id: int) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#delete-a-code-security-configuration>`_
+        :param id: integer
+        :rtype: None`
+        """
+        assert isinstance(id, int), id
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/code-security/configurations/{id}")
+
+    def get_code_security_config(self, id: int) -> CodeSecurityConfig:
+        """
+        :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#get-a-code-security-configurationt>`_
+        :param id: configuration_id
+        :rtype: CodeSecurityConfig
+        """
+        assert isinstance(id, int), id
+
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-security/configurations/{id}")
+        return github.CodeSecurityConfig.CodeSecurityConfig(self._requester, headers, data)
+
+    def set_default_code_security_config(self, id: int, default_for_new_repos: Opt[str] = NotSet) -> None:
+        """
+        :calls: `PUT /orgs/{org}/code-security/configurations/{configuration_id}/defaults <https://docs.github.com/en/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-organization>`_
+        """
+        assert isinstance(id, int), id
+        assert is_optional(default_for_new_repos, str), default_for_new_repos
+        put_parameters = NotSet.remove_unset_items({"default_for_new_repos": default_for_new_repos})
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/code-security/configurations/{id}/defaults", input=put_parameters
+        )
+
+    def get_default_code_security_configs(self) -> PaginatedList[DefaultCodeSecurityConfig]:
+        """
+        :calls: `GET /orgs/{org}/code-security/configurations/defaults <https://docs.github.com/en/rest/code-security/configurations#get-default-code-security-configurations>`_
+        :rtype: :class:`github.DefaultCodeSecurityConfig.DefaultCodeSecurityConfig`
+        """
+        return PaginatedList(
+            contentClass=github.DefaultCodeSecurityConfig.DefaultCodeSecurityConfig,
+            requester=self._requester,
+            firstUrl=f"{self.url}/code-security/configurations/defaults",
+            firstParams=None,
+        )
+
+    def attach_security_config_to_repositories(
+        self, id: int, scope: str, selected_repository_ids: Opt[list[int]] = NotSet
+    ) -> None:
+        """
+        :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
+        """
+        assert isinstance(id, int), id
+        assert isinstance(scope, str), scope
+        assert is_optional(selected_repository_ids, list), selected_repository_ids
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "scope": scope,
+                "selected_repository_ids": selected_repository_ids,
+            }
+        )
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            f"/orgs/{self.login}/code-security/configurations/{id}/attach",
+            input=post_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
+        )
+
+    def detach_security_config_from_repositories(self, selected_repository_ids: list[int]) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
+        """
+        assert isinstance(selected_repository_ids, list), selected_repository_ids
+        delete_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "selected_repository_ids": selected_repository_ids,
+            }
+        )
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"/orgs/{self.login}/code-security/configurations/detach",
+            input=delete_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
+        )
+
+    def get_repos_for_code_security_config(
+        self, id: int, status: Opt[str] = NotSet
+    ) -> PaginatedList[CodeSecurityConfigRepository]:
+        """
+        :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories <https://docs.github.com/en/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration>`_
+        """
+        assert isinstance(id, int), id
+        assert is_optional(status, str), status
+
+        url_parameters = NotSet.remove_unset_items({"status": status})
+
+        return PaginatedList(
+            github.CodeSecurityConfigRepository.CodeSecurityConfigRepository,
+            self._requester,
+            f"{self.url}/code-security/configurations/{id}/repositories",
+            url_parameters,
+            headers={"Accept": Consts.repoVisibilityPreview},
+        )
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "advanced_security_enabled_for_new_repositories" in attributes:  # pragma no branch
+            self._advanced_security_enabled_for_new_repositories = self._makeBoolAttribute(
+                attributes["advanced_security_enabled_for_new_repositories"]
+            )
         if "archived_at" in attributes:  # pragma no branch
             assert attributes["archived_at"] is None or isinstance(attributes["archived_at"], str), attributes[
                 "archived_at"
@@ -1471,10 +1899,24 @@ class Organization(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "default_repository_permission" in attributes:  # pragma no branch
             self._default_repository_permission = self._makeStringAttribute(attributes["default_repository_permission"])
+        if "dependabot_alerts_enabled_for_new_repositories" in attributes:  # pragma no branch
+            self._dependabot_alerts_enabled_for_new_repositories = self._makeBoolAttribute(
+                attributes["dependabot_alerts_enabled_for_new_repositories"]
+            )
+        if "dependabot_security_updates_enabled_for_new_repositories" in attributes:  # pragma no branch
+            self._dependabot_security_updates_enabled_for_new_repositories = self._makeBoolAttribute(
+                attributes["dependabot_security_updates_enabled_for_new_repositories"]
+            )
+        if "dependency_graph_enabled_for_new_repositories" in attributes:  # pragma no branch
+            self._dependency_graph_enabled_for_new_repositories = self._makeBoolAttribute(
+                attributes["dependency_graph_enabled_for_new_repositories"]
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "disk_usage" in attributes:  # pragma no branch
             self._disk_usage = self._makeIntAttribute(attributes["disk_usage"])
+        if "display_login" in attributes:  # pragma no branch
+            self._display_login = self._makeStringAttribute(attributes["display_login"])
         if "email" in attributes:  # pragma no branch
             self._email = self._makeStringAttribute(attributes["email"])
         if "events_url" in attributes:  # pragma no branch
@@ -1495,20 +1937,54 @@ class Organization(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "is_verified" in attributes:  # pragma no branch
+            self._is_verified = self._makeBoolAttribute(attributes["is_verified"])
         if "issues_url" in attributes:  # pragma no branch
             self._issues_url = self._makeStringAttribute(attributes["issues_url"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        if "members_allowed_repository_creation_type" in attributes:  # pragma no branch
+            self._members_allowed_repository_creation_type = self._makeStringAttribute(
+                attributes["members_allowed_repository_creation_type"]
+            )
+        if "members_can_create_internal_repositories" in attributes:  # pragma no branch
+            self._members_can_create_internal_repositories = self._makeBoolAttribute(
+                attributes["members_can_create_internal_repositories"]
+            )
+        if "members_can_create_pages" in attributes:  # pragma no branch
+            self._members_can_create_pages = self._makeBoolAttribute(attributes["members_can_create_pages"])
+        if "members_can_create_private_pages" in attributes:  # pragma no branch
+            self._members_can_create_private_pages = self._makeBoolAttribute(
+                attributes["members_can_create_private_pages"]
+            )
+        if "members_can_create_private_repositories" in attributes:  # pragma no branch
+            self._members_can_create_private_repositories = self._makeBoolAttribute(
+                attributes["members_can_create_private_repositories"]
+            )
+        if "members_can_create_public_pages" in attributes:  # pragma no branch
+            self._members_can_create_public_pages = self._makeBoolAttribute(
+                attributes["members_can_create_public_pages"]
+            )
+        if "members_can_create_public_repositories" in attributes:  # pragma no branch
+            self._members_can_create_public_repositories = self._makeBoolAttribute(
+                attributes["members_can_create_public_repositories"]
+            )
         if "members_can_create_repositories" in attributes:  # pragma no branch
             self._members_can_create_repositories = self._makeBoolAttribute(
                 attributes["members_can_create_repositories"]
+            )
+        if "members_can_fork_private_repositories" in attributes:  # pragma no branch
+            self._members_can_fork_private_repositories = self._makeBoolAttribute(
+                attributes["members_can_fork_private_repositories"]
             )
         if "members_url" in attributes:  # pragma no branch
             self._members_url = self._makeStringAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owned_private_repos" in attributes:  # pragma no branch
             self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
         if "plan" in attributes:  # pragma no branch
@@ -1523,8 +1999,26 @@ class Organization(CompletableGithubObject):
             self._public_repos = self._makeIntAttribute(attributes["public_repos"])
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
+        if "secret_scanning_enabled_for_new_repositories" in attributes:  # pragma no branch
+            self._secret_scanning_enabled_for_new_repositories = self._makeBoolAttribute(
+                attributes["secret_scanning_enabled_for_new_repositories"]
+            )
+        if "secret_scanning_push_protection_custom_link" in attributes:  # pragma no branch
+            self._secret_scanning_push_protection_custom_link = self._makeStringAttribute(
+                attributes["secret_scanning_push_protection_custom_link"]
+            )
+        if "secret_scanning_push_protection_custom_link_enabled" in attributes:  # pragma no branch
+            self._secret_scanning_push_protection_custom_link_enabled = self._makeBoolAttribute(
+                attributes["secret_scanning_push_protection_custom_link_enabled"]
+            )
+        if "secret_scanning_push_protection_enabled_for_new_repositories" in attributes:  # pragma no branch
+            self._secret_scanning_push_protection_enabled_for_new_repositories = self._makeBoolAttribute(
+                attributes["secret_scanning_push_protection_enabled_for_new_repositories"]
+            )
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
+        if "twitter_username" in attributes:  # pragma no branch
+            self._twitter_username = self._makeStringAttribute(attributes["twitter_username"])
         if "two_factor_requirement_enabled" in attributes:  # pragma no branch
             self._two_factor_requirement_enabled = self._makeBoolAttribute(attributes["two_factor_requirement_enabled"])
         if "type" in attributes:  # pragma no branch
@@ -1533,3 +2027,5 @@ class Organization(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "web_commit_signoff_required" in attributes:  # pragma no branch
+            self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])

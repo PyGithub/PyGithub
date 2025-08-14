@@ -18,7 +18,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Benjamin K. <53038537+treee111@users.noreply.github.com>      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,6 +40,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import github
 
 from . import Framework
@@ -52,14 +56,26 @@ class Branch(Framework.TestCase):
         self.organization_branch = self.g.get_repo("PyGithub/PyGithub", lazy=True).get_branch("master")
 
     def testAttributes(self):
+        self.assertEqual(
+            self.branch._links,
+            {
+                "self": "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode",
+                "html": "https://github.com/jacquev6/PyGithub/tree/topic/RewriteWithGeneratedCode",
+            },
+        )
+        self.assertEqual(self.branch.commit.sha, "f23da453917a36c8bd48ab8d99e5fa7221884342")
         self.assertEqual(self.branch.name, "topic/RewriteWithGeneratedCode")
-        self.assertEqual(self.branch.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
+        self.assertEqual(self.branch.commit.sha, "f23da453917a36c8bd48ab8d99e5fa7221884342")
+        self.assertIsNone(self.branch.pattern)
+        self.assertEqual(self.branch.protected, False)
+        self.assertIsNone(self.branch.protection.url)
         self.assertEqual(
             self.branch.protection_url,
             "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode/protection",
         )
         self.assertFalse(self.branch.protected)
         self.assertEqual(repr(self.branch), 'Branch(name="topic/RewriteWithGeneratedCode")')
+        self.assertIsNone(self.branch.required_approving_review_count)
 
     def testEditProtection(self):
         self.protected_branch.edit_protection(
@@ -70,7 +86,12 @@ class Branch(Framework.TestCase):
         )
         branch_protection = self.protected_branch.get_protection()
         self.assertTrue(branch_protection.required_status_checks.strict)
+        self.assertEqual(branch_protection.required_status_checks.checks, [])
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
+        self.assertEqual(
+            branch_protection.required_status_checks.contexts_url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks/contexts",
+        )
         self.assertTrue(branch_protection.enforce_admins)
         self.assertFalse(branch_protection.required_linear_history)
         self.assertFalse(branch_protection.allow_deletions)
@@ -81,10 +102,15 @@ class Branch(Framework.TestCase):
             2,
         )
         self.assertTrue(branch_protection.required_pull_request_reviews.require_last_push_approval)
+        self.assertEqual(
+            branch_protection.required_pull_request_reviews.url,
+            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_pull_request_reviews",
+        )
 
     def testEditProtectionDismissalUsersWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_protection(dismissal_users=["jacquev6"])
+        self.assertEqual(raisedexp.exception.message, "Validation Failed")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -98,6 +124,7 @@ class Branch(Framework.TestCase):
     def testEditProtectionPushRestrictionsWithUserOwnedBranch(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_protection(user_push_restrictions=["jacquev6"], team_push_restrictions=[])
+        self.assertEqual(raisedexp.exception.message, "Validation Failed")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -135,6 +162,7 @@ class Branch(Framework.TestCase):
         self.assertFalse(protected_branch.protected)
         with self.assertRaises(github.GithubException) as raisedexp:
             protected_branch.get_protection()
+        self.assertEqual(raisedexp.exception.message, "Branch not protected")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -150,10 +178,21 @@ class Branch(Framework.TestCase):
         self.assertTrue(required_status_checks.strict)
         self.assertEqual(required_status_checks.contexts, ["foo/bar"])
 
+    def testEditRequiredStatusChecksContexts(self):
+        self.protected_branch.edit_required_status_checks(contexts=["check1", "check2"])
+        required_status_checks = self.protected_branch.get_required_status_checks()
+        self.assertEqual(required_status_checks.contexts, ["check1", "check2"])
+
+    def testEditRequiredStatusChecksChecks(self):
+        self.protected_branch.edit_required_status_checks(checks=["check1", ("check2", -1), ("check3", 123456)])
+        required_status_checks = self.protected_branch.get_required_status_checks()
+        self.assertEqual(required_status_checks.contexts, ["check1", "check2", "check3"])
+
     def testRemoveRequiredStatusChecks(self):
         self.protected_branch.remove_required_status_checks()
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.get_required_status_checks()
+        self.assertEqual(raisedexp.exception.message, "Required status checks not enabled")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -176,6 +215,7 @@ class Branch(Framework.TestCase):
     def testEditRequiredPullRequestReviewsWithTooLargeApprovingReviewCount(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_required_pull_request_reviews(required_approving_review_count=9)
+        self.assertEqual(raisedexp.exception.message, "Invalid request.\n\n9 must be less than or equal to 6.")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -188,6 +228,10 @@ class Branch(Framework.TestCase):
     def testEditRequiredPullRequestReviewsWithUserBranchAndDismissalUsers(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.protected_branch.edit_required_pull_request_reviews(dismissal_users=["jacquev6"])
+        self.assertEqual(
+            raisedexp.exception.message,
+            "Dismissal restrictions are supported only for repositories owned by an organization.",
+        )
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -279,6 +323,7 @@ class Branch(Framework.TestCase):
         self.organization_branch.remove_push_restrictions()
         with self.assertRaises(github.GithubException) as raisedexp:
             list(self.organization_branch.get_user_push_restrictions())
+        self.assertEqual(raisedexp.exception.message, "Push restrictions not enabled")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,

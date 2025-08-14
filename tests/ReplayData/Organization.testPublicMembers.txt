@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4996'), ('content-length', '554'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"5d4e2c6e9715d64a46d9ebe6d7d460eb"'), ('date', 'Sun, 27 May 2012 05:06:42 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/public_members/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4995'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sun, 27 May 2012 05:06:43 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ PUT
 api.github.com
 None
 /orgs/BeaverSoftware/public_members/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4994'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:06:43 GMT')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/public_members/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4993'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:06:44 GMT')]
@@ -47,7 +47,7 @@ DELETE
 api.github.com
 None
 /orgs/BeaverSoftware/public_members/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4992'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:06:44 GMT')]
@@ -58,7 +58,7 @@ GET
 api.github.com
 None
 /orgs/BeaverSoftware/public_members/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4991'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sun, 27 May 2012 05:06:45 GMT'), ('content-type', 'application/json; charset=utf-8')]

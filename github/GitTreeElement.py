@@ -16,6 +16,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,7 +36,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -43,6 +46,10 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class GitTreeElement(NonCompletableGithubObject):
     """
     This class represents GitTreeElements.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/git-tree/properties/tree/items
+
     """
 
     def _initAttributes(self) -> None:
@@ -80,7 +87,7 @@ class GitTreeElement(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "mode" in attributes:  # pragma no branch
             self._mode = self._makeStringAttribute(attributes["mode"])
         if "path" in attributes:  # pragma no branch

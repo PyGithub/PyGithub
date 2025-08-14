@@ -20,6 +20,7 @@
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -68,15 +69,15 @@ class Environment(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
+        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
+        self._environments_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._protection_rules: Attribute[list[EnvironmentProtectionRule]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-        self._environments_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -85,6 +86,20 @@ class Environment(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def deployment_branch_policy(
+        self,
+    ) -> EnvironmentDeploymentBranchPolicy:
+        self._completeIfNotSet(self._deployment_branch_policy)
+        return self._deployment_branch_policy.value
+
+    @property
+    def environments_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._environments_url.value
 
     @property
     def html_url(self) -> str:
@@ -119,13 +134,6 @@ class Environment(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def environments_url(self) -> str:
-        """
-        :type: string
-        """
-        return self._environments_url.value
-
-    @property
     def url(self) -> str:
         """
         :type: string
@@ -134,13 +142,6 @@ class Environment(CompletableGithubObject):
         if self._url is NotSet:
             self._url = self._makeStringAttribute(self.environments_url + "/" + self.name)
         return self._url.value
-
-    @property
-    def deployment_branch_policy(
-        self,
-    ) -> EnvironmentDeploymentBranchPolicy:
-        self._completeIfNotSet(self._deployment_branch_policy)
-        return self._deployment_branch_policy.value
 
     def get_public_key(self) -> PublicKey:
         """
@@ -272,6 +273,13 @@ class Environment(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "deployment_branch_policy" in attributes:  # pragma no branch
+            self._deployment_branch_policy = self._makeClassAttribute(
+                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy,
+                attributes["deployment_branch_policy"],
+            )
+        if "environments_url" in attributes:
+            self._environments_url = self._makeStringAttribute(attributes["environments_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
@@ -287,12 +295,5 @@ class Environment(CompletableGithubObject):
             )
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "environments_url" in attributes:
-            self._environments_url = self._makeStringAttribute(attributes["environments_url"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "deployment_branch_policy" in attributes:  # pragma no branch
-            self._deployment_branch_policy = self._makeClassAttribute(
-                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy,
-                attributes["deployment_branch_policy"],
-            )

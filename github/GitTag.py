@@ -18,6 +18,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,6 +43,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import github.GitAuthor
+import github.GitCommitVerification
 import github.GithubObject
 import github.GitObject
 import github.GitTreeElement
@@ -49,6 +51,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.GitAuthor import GitAuthor
+    from github.GitCommitVerification import GitCommitVerification
     from github.GitObject import GitObject
 
 
@@ -59,15 +62,20 @@ class GitTag(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#tags
 
+    The OpenAPI schema can be found at
+    - /components/schemas/git-tag
+
     """
 
     def _initAttributes(self) -> None:
         self._message: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._object: Attribute[GitObject] = NotSet
         self._sha: Attribute[str] = NotSet
         self._tag: Attribute[str] = NotSet
         self._tagger: Attribute[GitAuthor] = NotSet
         self._url: Attribute[str] = NotSet
+        self._verification: Attribute[GitCommitVerification] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
@@ -76,6 +84,11 @@ class GitTag(CompletableGithubObject):
     def message(self) -> str:
         self._completeIfNotSet(self._message)
         return self._message.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def object(self) -> GitObject:
@@ -102,9 +115,16 @@ class GitTag(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def verification(self) -> GitCommitVerification:
+        self._completeIfNotSet(self._verification)
+        return self._verification.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "object" in attributes:  # pragma no branch
             self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "sha" in attributes:  # pragma no branch
@@ -115,3 +135,7 @@ class GitTag(CompletableGithubObject):
             self._tagger = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["tagger"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "verification" in attributes:  # pragma no branch
+            self._verification = self._makeClassAttribute(
+                github.GitCommitVerification.GitCommitVerification, attributes["verification"]
+            )

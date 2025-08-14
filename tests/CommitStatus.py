@@ -15,6 +15,8 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +36,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -45,29 +49,39 @@ class CommitStatus(Framework.TestCase):
         self.statuses = list(
             self.g.get_user().get_repo("PyGithub").get_commit("1292bf0e22c796e91cc3d6e24b544aece8c21f2a").get_statuses()
         )
+        self.status = self.statuses[0]
 
     def testAttributes(self):
+        self.assertIsNone(self.status.avatar_url)
+        self.assertEqual(self.status.context, "build")
         self.assertEqual(
-            self.statuses[0].created_at,
+            self.status.created_at,
             datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
+        self.assertEqual(self.status.creator.login, "jacquev6")
+        self.assertEqual(self.status.description, "Status successfully created by PyGithub")
+        self.assertEqual(self.status.id, 277040)
+        self.assertIsNone(self.status.node_id)
+        self.assertEqual(self.status.state, "success")
+        self.assertEqual(self.status.target_url, "https://github.com/jacquev6/PyGithub/issues/67")
         self.assertEqual(
-            self.statuses[0].updated_at,
+            self.status.updated_at,
             datetime(2012, 9, 8, 11, 30, 56, tzinfo=timezone.utc),
         )
-        self.assertEqual(self.statuses[0].creator.login, "jacquev6")
-        self.assertEqual(self.statuses[0].description, "Status successfuly created by PyGithub")
+        self.assertEqual(self.status.creator.login, "jacquev6")
+        self.assertEqual(self.status.description, "Status successfully created by PyGithub")
         self.assertEqual(self.statuses[1].description, None)
-        self.assertEqual(self.statuses[0].id, 277040)
-        self.assertEqual(self.statuses[0].state, "success")
+        self.assertEqual(self.status.id, 277040)
+        self.assertEqual(self.status.state, "success")
         self.assertEqual(self.statuses[1].state, "pending")
-        self.assertEqual(self.statuses[0].context, "build")
+        self.assertEqual(self.status.context, "build")
         self.assertEqual(
-            self.statuses[0].target_url,
+            self.status.target_url,
             "https://github.com/jacquev6/PyGithub/issues/67",
         )
         self.assertEqual(self.statuses[1].target_url, None)
         self.assertEqual(
-            repr(self.statuses[0]),
+            repr(self.status),
             'CommitStatus(state="success", id=277040, context="build")',
         )
+        self.assertEqual(self.status.url, "https://api.github.com/repos/jacquev6/PyGithub/statuses/277040")

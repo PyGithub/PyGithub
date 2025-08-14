@@ -19,6 +19,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,8 +39,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -94,7 +97,7 @@ class WorkflowStep(CompletableGithubObject):
         self._completeIfNotSet(self._status)
         return self._status.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch

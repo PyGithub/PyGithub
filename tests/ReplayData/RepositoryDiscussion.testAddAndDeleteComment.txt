@@ -1,0 +1,76 @@
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "\n            query Q($id: ID!) {\n              node(id: $id) {\n                __typename\n                ... on Discussion { id }\n              }\n            }\n            ", "variables": {"id": "D_kwDOADYVqs4AaHoG"}}
+200
+[('Date', 'Wed, 18 Sep 2024 09:55:02 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'public_repo, read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4978'), ('X-RateLimit-Reset', '1726656664'), ('X-RateLimit-Used', '22'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FA0:38937:5DC62D:5EA454:66EAA376')]
+{"data":{"node":{"__typename":"Discussion","id":"D_kwDOADYVqs4AaHoG"}}}
+
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "mutation Mutation($input: AddDiscussionCommentInput!) { addDiscussionComment(input: $input) { comment { id body } } }", "variables": {"input": {"body": "test comment", "discussionId": "D_kwDOADYVqs4AaHoG", "replyToId": null}}}
+200
+[('Date', 'Wed, 18 Sep 2024 09:55:03 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'public_repo, read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4977'), ('X-RateLimit-Reset', '1726656664'), ('X-RateLimit-Used', '23'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FD6:2E4B5D:5DDE95:5EBC96:66EAA376')]
+{"data":{"addDiscussionComment":{"comment":{"id":"DC_kwDOADYVqs4AovYk","body":"test comment"}}}}
+
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "mutation Mutation($input: AddDiscussionCommentInput!) { addDiscussionComment(input: $input) { comment { id body } } }", "variables": {"input": {"body": "test reply", "discussionId": "D_kwDOADYVqs4AaHoG", "replyToId": "DC_kwDOADYVqs4AovYk"}}}
+200
+[('Date', 'Wed, 18 Sep 2024 09:55:03 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'public_repo, read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4976'), ('X-RateLimit-Reset', '1726656664'), ('X-RateLimit-Used', '24'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FB4:12DC96:59403B:5A1DF2:66EAA377')]
+{"data":{"addDiscussionComment":{"comment":{"id":"DC_kwDOADYVqs4AovYl","body":"test reply"}}}}
+
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "mutation Mutation($input: AddDiscussionCommentInput!) { addDiscussionComment(input: $input) { comment { id body } } }", "variables": {"input": {"body": "test reply by string id", "discussionId": "D_kwDOADYVqs4AaHoG", "replyToId": "DC_kwDOADYVqs4AovYk"}}}
+200
+[('Date', 'Wed, 18 Sep 2024 09:55:04 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'public_repo, read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4975'), ('X-RateLimit-Reset', '1726656664'), ('X-RateLimit-Used', '25'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FCC:385EF9:238109:23DAE5:66EAA377')]
+{"data":{"addDiscussionComment":{"comment":{"id":"DC_kwDOADYVqs4AovYm","body":"test reply by string id"}}}}
+
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "mutation Mutation($input: DeleteDiscussionCommentInput!) { deleteDiscussionComment(input: $input) { comment { id } } }", "variables": {"input": {"id": "DC_kwDOADYVqs4AovYm"}}}
+200
+[('Date', 'Wed, 18 Sep 2024 09:55:04 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'public_repo, read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4974'), ('X-RateLimit-Reset', '1726656664'), ('X-RateLimit-Used', '26'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FEE:319EE5:223AF7A:22D58C8:66EAA378')]
+{"data":{"deleteDiscussionComment":{"comment":{"id":"DC_kwDOADYVqs4AovYm"}}}}
+
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "mutation Mutation($input: DeleteDiscussionCommentInput!) { deleteDiscussionComment(input: $input) { comment { id } } }", "variables": {"input": {"id": "DC_kwDOADYVqs4AovYl"}}}
+200
+[('Date', 'Wed, 18 Sep 2024 09:55:05 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'public_repo, read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4973'), ('X-RateLimit-Reset', '1726656664'), ('X-RateLimit-Used', '27'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FD5:216D57:5BBEE5:5C9D60:66EAA379')]
+{"data":{"deleteDiscussionComment":{"comment":{"id":"DC_kwDOADYVqs4AovYl"}}}}
+
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "mutation Mutation($input: DeleteDiscussionCommentInput!) { deleteDiscussionComment(input: $input) { comment { id } } }", "variables": {"input": {"id": "DC_kwDOADYVqs4AovYk"}}}
+200
+[('Date', 'Wed, 18 Sep 2024 09:55:06 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'public_repo, read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4972'), ('X-RateLimit-Reset', '1726656664'), ('X-RateLimit-Used', '28'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FA6:3A746F:5AB4A2:5B92B9:66EAA379')]
+{"data":{"deleteDiscussionComment":{"comment":{"id":"DC_kwDOADYVqs4AovYk"}}}}

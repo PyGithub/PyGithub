@@ -14,6 +14,9 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -33,6 +36,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
+from datetime import datetime, timezone
+
 from urllib3.exceptions import InsecureRequestWarning
 
 import github
@@ -50,12 +57,37 @@ class Installation(Framework.BasicTestCase):
         self.auth = AppAuth(app_id, private_key)
         self.integration = github.GithubIntegration(auth=self.auth)
         self.installations = list(self.integration.get_installations())
+        self.installation = self.installations[0]
+
+    def testAttributes(self):
+        self.assertEqual(
+            self.installation.access_tokens_url, "https://api.github.com/app/installations/36541767/access_tokens"
+        )
+        self.assertEqual(self.installation.account.login, "EnricoMi")
+        self.assertEqual(self.installation.app_id, 319953)
+        self.assertEqual(self.installation.app_slug, "publish-test-results")
+        self.assertIsNone(self.installation.contact_email)
+        self.assertEqual(self.installation.created_at, datetime(2023, 4, 17, 16, 18, 5, tzinfo=timezone.utc))
+        self.assertEqual(self.installation.events, [])
+        self.assertEqual(self.installation.has_multiple_single_files, False)
+        self.assertEqual(self.installation.html_url, "https://github.com/settings/installations/36541767")
+        self.assertEqual(self.installation.id, 36541767)
+        self.assertEqual(
+            self.installation.permissions,
+            {"checks": "write", "issues": "read", "contents": "read", "metadata": "read", "pull_requests": "write"},
+        )
+        self.assertEqual(self.installation.repositories_url, "https://api.github.com/installation/repositories")
+        self.assertEqual(self.installation.repository_selection, "selected")
+        self.assertIsNone(self.installation.single_file_name)
+        self.assertEqual(self.installation.single_file_paths, [])
+        self.assertIsNone(self.installation.suspended_at)
+        self.assertIsNone(self.installation.suspended_by)
+        self.assertEqual(self.installation.target_id, 44700269)
+        self.assertEqual(self.installation.target_type, "User")
+        self.assertEqual(self.installation.updated_at, datetime(2023, 6, 8, 7, 38, 12, tzinfo=timezone.utc))
 
     def testGetRepos(self):
-        self.assertEqual(len(self.installations), 1)
-        installation = self.installations[0]
-
-        repos = list(installation.get_repos())
+        repos = list(self.installation.get_repos())
         self.assertEqual(len(repos), 2)
         self.assertListEqual([repo.full_name for repo in repos], ["EnricoMi/sandbox", "EnricoMi/python"])
 
@@ -75,6 +107,9 @@ class Installation(Framework.BasicTestCase):
                 pool_size=10,
                 seconds_between_requests=100,
                 seconds_between_writes=1000,
+                # v3: this should not be the default value, so if this has been changed in v3,
+                # change it here is well
+                lazy=True,
             )
 
             # assert kwargs consists of ALL requester constructor arguments

@@ -4,6 +4,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -23,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -33,6 +36,29 @@ class ProjectColumn(Framework.TestCase):
         super().setUp()
         self.get_project_column = self.g.get_project_column(8700460)
         self.move_project_column = self.g.get_project_column(8748065)
+        proj = self.g.get_project(1682941)
+        self.col = proj.get_columns()[0]
+
+    # See https://developer.github.com/v3/projects/columns/#get-a-project-column
+    def testAttributes(self):
+        col = self.col
+        self.assertEqual(col.cards_url, "https://api.github.com/projects/columns/3138830/cards")
+        self.assertEqual(col.created_at.year, 2018)
+        self.assertEqual(col.id, 3138830)
+        self.assertEqual(col.name, "To Do")
+        self.assertEqual(col.node_id, "MDEzOlByb2plY3RDb2x1bW4zMTM4ODMw")
+        self.assertEqual(col.project_url, "https://api.github.com/projects/1682941")
+        self.assertEqual(col.updated_at, datetime(2018, 8, 1, 4, 7, 35, tzinfo=timezone.utc))
+        self.assertEqual(col.url, "https://api.github.com/projects/columns/3138830")
+        self.assertEqual(repr(col), 'ProjectColumn(name="To Do")')
+
+    def testCreate(self):
+        repo = self.g.get_user().get_repo("PyGithub")
+        project = repo.create_project("Project created by PyGithub", "Project Body")
+        column = project.create_column(
+            "Project Column created by PyGithub",
+        )
+        self.assertEqual(column.id, 3999333)
 
     def testGetProjectColumn(self):
         self.assertEqual(self.get_project_column.id, 8700460)

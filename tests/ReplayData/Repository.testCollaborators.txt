@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('content-length', '554'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4955'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"4e931612aa9051643f0a428d2ae60b2e"'), ('date', 'Sun, 27 May 2012 05:34:26 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -13,8 +13,8 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+/repos/PyGithub/PyGithub/collaborators/Lyloa
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4954'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sun, 27 May 2012 05:34:27 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -24,8 +24,8 @@ https
 PUT
 api.github.com
 None
-/repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+/repos/PyGithub/PyGithub/collaborators/Lyloa
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4953'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:34:27 GMT')]
@@ -35,8 +35,8 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+/repos/PyGithub/PyGithub/collaborators/Lyloa
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4952'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:34:28 GMT')]
@@ -46,8 +46,8 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/collaborators
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+/repos/PyGithub/PyGithub/collaborators
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '2085'), ('x-runtime-rack', '0.048639'), ('etag', '"23ec009b721d7456726f15f2c6dc5f9d"'), ('status', '200 OK'), ('x-ratelimit-remaining', '4892'), ('x-github-media-type', 'github.v3; format=json'), ('date', 'Thu, 28 Dec 2017 16:31:19 GMT'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1514478935')]
@@ -57,8 +57,8 @@ https
 DELETE
 api.github.com
 None
-/repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+/repos/PyGithub/PyGithub/collaborators/Lyloa
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4950'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:34:29 GMT')]
@@ -68,8 +68,8 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+/repos/PyGithub/PyGithub/collaborators/Lyloa
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4949'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sun, 27 May 2012 05:34:30 GMT'), ('content-type', 'application/json; charset=utf-8')]

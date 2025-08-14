@@ -19,6 +19,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -68,14 +69,31 @@ class PublicKey(CompletableGithubObject):
     or    here
     https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
 
+    The OpenAPI schema can be found at
+    - /components/schemas/actions-public-key
+
     """
 
     def _initAttributes(self) -> None:
-        self._key_id: Attribute[str | int] = NotSet
+        self._created_at: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
+        self._key_id: Attribute[str | int] = NotSet
+        self._title: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"key_id": self._key_id.value, "key": self._key.value})
+
+    @property
+    def created_at(self) -> str:
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    def id(self) -> int:
+        self._completeIfNotSet(self._id)
+        return self._id.value
 
     @property
     def key(self) -> str:
@@ -87,7 +105,24 @@ class PublicKey(CompletableGithubObject):
         self._completeIfNotSet(self._key_id)
         return self._key_id.value
 
+    @property
+    def title(self) -> str:
+        self._completeIfNotSet(self._title)
+        return self._title.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
+    def encrypt(self, unencrypted_value: str) -> str:
+        return encrypt(self._key.value, unencrypted_value)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeStringAttribute(attributes["created_at"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "key_id" in attributes:  # pragma no branch
@@ -95,6 +130,7 @@ class PublicKey(CompletableGithubObject):
                 self._key_id = self._makeStringAttribute(attributes["key_id"])
             else:
                 self._key_id = self._makeIntAttribute(attributes["key_id"])
-
-    def encrypt(self, unencrypted_value: str) -> str:
-        return encrypt(self._key.value, unencrypted_value)
+        if "title" in attributes:  # pragma no branch
+            self._title = self._makeStringAttribute(attributes["title"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

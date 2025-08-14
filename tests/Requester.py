@@ -4,6 +4,10 @@
 # Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
+# Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,6 +32,7 @@ from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
+from github import Requester as gr
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY
@@ -64,6 +69,9 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
+            # v3: this should not be the default value, so if this has been changed in v3,
+            # change it here is well
+            lazy=True,
         )
         kwargs = requester.kwargs
 
@@ -82,6 +90,7 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
+                lazy=True,
             ),
         )
 
@@ -114,6 +123,9 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
+            # v3: this should not be the default value, so if this has been changed in v3,
+            # change it here is well
+            lazy=True,
         )
 
         # create a copy with different auth
@@ -134,7 +146,42 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
+                lazy=True,
             ),
+        )
+
+    def testGetParametersOfUrl(self):
+        self.assertEqual({}, gr.Requester.get_parameters_of_url("https://github.com/api"))
+        self.assertEqual({"per_page": ["10"]}, gr.Requester.get_parameters_of_url("https://github.com/api?per_page=10"))
+        self.assertEqual(
+            {"per_page": ["10"], "page": ["2"]},
+            gr.Requester.get_parameters_of_url("https://github.com/api?per_page=10&page=2"),
+        )
+        self.assertEqual(
+            {"item": ["1", "2", "3"]}, gr.Requester.get_parameters_of_url("https://github.com/api?item=1&item=2&item=3")
+        )
+
+    def testAddParametersToUrl(self):
+        self.assertEqual("https://github.com/api", gr.Requester.add_parameters_to_url("https://github.com/api", {}))
+        self.assertEqual(
+            "https://github.com/api?per_page=10",
+            gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10}),
+        )
+        self.assertEqual(
+            "https://github.com/api?per_page=10&page=2",
+            gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10, "page": 2}),
+        )
+        self.assertEqual(
+            "https://github.com/api?per_page=10&page=2",
+            gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10", {"page": 2}),
+        )
+        self.assertEqual(
+            "https://github.com/api?per_page=10&page=2",
+            gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10&page=1", {"page": 2}),
+        )
+        self.assertEqual(
+            "https://github.com/api?item=3&item=4",
+            gr.Requester.add_parameters_to_url("https://github.com/api?item=1&item=2&item=3", {"item": [3, 4]}),
         )
 
     def testCloseGithub(self):
@@ -247,8 +294,12 @@ class Requester(Framework.TestCase):
         for message in self.OtherErrors + self.PrimaryRateLimitErrors:
             self.assertFalse(github.Requester.Requester.isSecondaryRateLimitError(message), message)
 
-    def assertException(self, exception, exception_type, status, data, headers, string):
+    def assertException(self, exception, exception_type, message, status, data, headers, string):
         self.assertIsInstance(exception, exception_type)
+        if message is None:
+            self.assertIsNone(exception.message)
+        else:
+            self.assertEqual(exception.message, message)
         self.assertEqual(exception.status, status)
         if data is None:
             self.assertIsNone(exception.data)
@@ -262,6 +313,7 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.BadCredentialsException,
+            None,
             401,
             {"message": "Bad credentials"},
             {"header": "value"},
@@ -280,6 +332,7 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.TwoFactorException,
+            None,
             401,
             {
                 "message": "Must specify two-factor authentication OTP code.",
@@ -298,6 +351,7 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.BadUserAgentException,
+            None,
             403,
             {"message": "Missing or invalid User Agent string"},
             {"header": "value"},
@@ -311,6 +365,7 @@ class Requester(Framework.TestCase):
                 self.assertException(
                     exc,
                     github.RateLimitExceededException,
+                    None,
                     403,
                     {"message": message},
                     {"header": "value"},
@@ -322,10 +377,37 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.UnknownObjectException,
+            None,
             404,
             {"message": "Not Found"},
             {"header": "value"},
             '404 {"message": "Not Found"}',
+        )
+
+    def testShouldCreateUnknownObjectException2(self):
+        exc = self.g._Github__requester.createException(
+            404, {"header": "value"}, {"message": "No object found for the path some-nonexistent-file"}
+        )
+        self.assertException(
+            exc,
+            github.UnknownObjectException,
+            "No object found for the path some-nonexistent-file",
+            404,
+            {"message": "No object found for the path some-nonexistent-file"},
+            {"header": "value"},
+            'No object found for the path some-nonexistent-file: 404 {"message": "No object found for the path some-nonexistent-file"}',
+        )
+
+    def testShouldCreateUnknownObjectException3(self):
+        exc = self.g._Github__requester.createException(404, {"header": "value"}, {"message": "Branch Not Found"})
+        self.assertException(
+            exc,
+            github.UnknownObjectException,
+            "Branch Not Found",
+            404,
+            {"message": "Branch Not Found"},
+            {"header": "value"},
+            'Branch Not Found: 404 {"message": "Branch Not Found"}',
         )
 
     def testShouldCreateGithubException(self):
@@ -337,23 +419,24 @@ class Requester(Framework.TestCase):
                 self.assertException(
                     exc,
                     github.GithubException,
+                    "Something unknown",
                     status,
                     {"message": "Something unknown"},
                     {"header": "value"},
-                    f'{status} {{"message": "Something unknown"}}',
+                    f'Something unknown: {status} {{"message": "Something unknown"}}',
                 )
 
     def testShouldCreateExceptionWithoutMessage(self):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.createException(status, {}, {})
-                self.assertException(exc, github.GithubException, status, {}, {}, f"{status} {{}}")
+                self.assertException(exc, github.GithubException, None, status, {}, {}, f"{status} {{}}")
 
     def testShouldCreateExceptionWithoutOutput(self):
         for status in range(400, 600):
             with self.subTest(status=status):
                 exc = self.g._Github__requester.createException(status, {}, None)
-                self.assertException(exc, github.GithubException, status, None, {}, f"{status}")
+                self.assertException(exc, github.GithubException, None, status, None, {}, f"{status}")
 
 
 class RequesterThrottleTestCase(Framework.TestCase):
@@ -380,9 +463,10 @@ class RequesterUnThrottled(RequesterThrottleTestCase):
     def testShouldNotDeferRequests(self):
         with self.mock_sleep() as sleep_mock:
             # same test setup as in RequesterThrottled.testShouldDeferRequests
-            repository = self.g.get_repo(REPO_NAME)
-            releases = list(repository.get_releases())
-            self.assertEqual(len(releases), 30)
+            with self.replayData("RequesterThrottleTestCase.testDeferRequests.txt"):
+                repository = self.g.get_repo(REPO_NAME)
+                releases = list(repository.get_releases())
+                self.assertEqual(len(releases), 30)
 
         sleep_mock.assert_not_called()
 
@@ -393,10 +477,11 @@ class RequesterThrottled(RequesterThrottleTestCase):
 
     def testShouldDeferRequests(self):
         with self.mock_sleep() as sleep_mock:
-            # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
-            repository = self.g.get_repo(REPO_NAME)
-            releases = [release for release in repository.get_releases()]
-            self.assertEqual(len(releases), 30)
+            with self.replayData("RequesterThrottleTestCase.testDeferRequests.txt"):
+                # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
+                repository = self.g.get_repo(REPO_NAME)
+                releases = [release for release in repository.get_releases()]
+                self.assertEqual(len(releases), 30)
 
         self.assertEqual(sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)])
 

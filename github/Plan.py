@@ -17,6 +17,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -36,7 +37,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -44,15 +47,21 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class Plan(NonCompletableGithubObject):
     """
     This class represents Plans.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/organization-full/properties/plan
+    - /components/schemas/public-user/properties/plan
+    - /components/schemas/team-organization/properties/plan
+
     """
 
     def _initAttributes(self) -> None:
         self._collaborators: Attribute[int] = NotSet
+        self._filled_seats: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._private_repos: Attribute[int] = NotSet
-        self._space: Attribute[int] = NotSet
-        self._filled_seats: Attribute[int] = NotSet
         self._seats: Attribute[int] = NotSet
+        self._space: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -60,6 +69,10 @@ class Plan(NonCompletableGithubObject):
     @property
     def collaborators(self) -> int:
         return self._collaborators.value
+
+    @property
+    def filled_seats(self) -> int:
+        return self._filled_seats.value
 
     @property
     def name(self) -> str:
@@ -70,27 +83,23 @@ class Plan(NonCompletableGithubObject):
         return self._private_repos.value
 
     @property
-    def space(self) -> int:
-        return self._space.value
-
-    @property
-    def filled_seats(self) -> int:
-        return self._filled_seats.value
-
-    @property
     def seats(self) -> int:
         return self._seats.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    @property
+    def space(self) -> int:
+        return self._space.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
+        if "filled_seats" in attributes:  # pragma no branch
+            self._filled_seats = self._makeIntAttribute(attributes["filled_seats"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "private_repos" in attributes:  # pragma no branch
             self._private_repos = self._makeIntAttribute(attributes["private_repos"])
-        if "space" in attributes:  # pragma no branch
-            self._space = self._makeIntAttribute(attributes["space"])
         if "seats" in attributes:  # pragma no branch
             self._seats = self._makeIntAttribute(attributes["seats"])
-        if "filled_seats" in attributes:  # pragma no branch
-            self._filled_seats = self._makeIntAttribute(attributes["filled_seats"])
+        if "space" in attributes:  # pragma no branch
+            self._space = self._makeIntAttribute(attributes["space"])

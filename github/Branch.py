@@ -27,8 +27,10 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 terenho <33275803+terenho@users.noreply.github.com>           #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Benjamin K. <53038537+treee111@users.noreply.github.com>      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -85,10 +87,29 @@ class Branch(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#branches
 
+    The OpenAPI schema can be found at
+    - /components/schemas/branch-short
+    - /components/schemas/branch-with-protection
+    - /components/schemas/short-branch
+
     """
+
+    def _initAttributes(self) -> None:
+        self.__links: Attribute[dict[str, Any]] = NotSet
+        self._commit: Attribute[Commit] = github.GithubObject.NotSet
+        self._name: Attribute[str] = github.GithubObject.NotSet
+        self._pattern: Attribute[str] = NotSet
+        self._protected: Attribute[bool] = github.GithubObject.NotSet
+        self._protection: Attribute[BranchProtection] = NotSet
+        self._protection_url: Attribute[str] = github.GithubObject.NotSet
+        self._required_approving_review_count: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
+
+    @property
+    def _links(self) -> dict[str, Any]:
+        return self.__links.value
 
     @property
     def commit(self) -> Commit:
@@ -99,28 +120,26 @@ class Branch(NonCompletableGithubObject):
         return self._name.value
 
     @property
+    def pattern(self) -> str:
+        return self._pattern.value
+
+    @property
     def protected(self) -> bool:
         return self._protected.value
+
+    @property
+    def protection(self) -> BranchProtection:
+        if is_undefined(self._protection):
+            return self.get_protection()
+        return self._protection.value
 
     @property
     def protection_url(self) -> str:
         return self._protection_url.value
 
-    def _initAttributes(self) -> None:
-        self._commit: Attribute[Commit] = github.GithubObject.NotSet
-        self._name: Attribute[str] = github.GithubObject.NotSet
-        self._protection_url: Attribute[str] = github.GithubObject.NotSet
-        self._protected: Attribute[bool] = github.GithubObject.NotSet
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
-        if "name" in attributes:  # pragma no branch
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "protection_url" in attributes:  # pragma no branch
-            self._protection_url = self._makeStringAttribute(attributes["protection_url"])
-        if "protected" in attributes:  # pragma no branch
-            self._protected = self._makeBoolAttribute(attributes["protected"])
+    @property
+    def required_approving_review_count(self) -> int:
+        return self._required_approving_review_count.value
 
     def get_protection(self) -> BranchProtection:
         """
@@ -158,6 +177,7 @@ class Branch(NonCompletableGithubObject):
         block_creations: Opt[bool] = NotSet,
         require_last_push_approval: Opt[bool] = NotSet,
         allow_deletions: Opt[bool] = NotSet,
+        checks: Opt[list[str | tuple[str, int]]] = NotSet,
     ) -> BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
@@ -185,16 +205,27 @@ class Branch(NonCompletableGithubObject):
         assert is_optional_list(apps_bypass_pull_request_allowances, str), apps_bypass_pull_request_allowances
         assert is_optional(require_last_push_approval, bool), require_last_push_approval
         assert is_optional(allow_deletions, bool), allow_deletions
+        assert is_optional_list(checks, (str, tuple)), checks
+        if is_defined(checks):
+            assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
         post_parameters: dict[str, Any] = {}
-        if is_defined(strict) or is_defined(contexts):
+        if is_defined(strict) or is_defined(contexts) or is_defined(checks):
             if is_undefined(strict):
                 strict = False
-            if is_undefined(contexts):
-                contexts = []
+
+            checks_parameters = []
+            if is_defined(checks):
+                checks_parameters = [
+                    {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
+                    for check in checks
+                ]
+            elif is_defined(contexts):
+                checks_parameters = [{"context": context} for context in contexts]
+
             post_parameters["required_status_checks"] = {
                 "strict": strict,
-                "contexts": contexts,
+                "checks": checks_parameters,
             }
         else:
             post_parameters["required_status_checks"] = None
@@ -334,14 +365,28 @@ class Branch(NonCompletableGithubObject):
         self,
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
+        checks: Opt[list[str | tuple[str, int]]] = NotSet,
     ) -> RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         assert is_optional(strict, bool), strict
         assert is_optional_list(contexts, str), contexts
+        assert is_optional_list(checks, (str, tuple)), checks
+        if is_defined(checks):
+            assert all(not isinstance(check, tuple) or list(map(type, check)) == [str, int] for check in checks), checks
 
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "contexts": contexts})
+        checks_parameters: Opt[list[dict[str, Any]]] = NotSet
+        if is_defined(checks):
+            checks_parameters = [
+                {"context": check[0], "app_id": check[1]} if isinstance(check, tuple) else {"context": check}
+                for check in checks
+            ]
+        elif is_defined(contexts):
+            checks_parameters = [{"context": context} for context in contexts]
+
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"strict": strict, "checks": checks_parameters})
+
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             f"{self.protection_url}/required_status_checks",
@@ -381,7 +426,7 @@ class Branch(NonCompletableGithubObject):
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
         require_last_push_approval: Opt[bool] = NotSet,
-    ) -> RequiredStatusChecks:
+    ) -> RequiredPullRequestReviews:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -415,7 +460,9 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-        return github.RequiredStatusChecks.RequiredStatusChecks(self._requester, headers, data, completed=True)
+        return github.RequiredPullRequestReviews.RequiredPullRequestReviews(
+            self._requester, headers, data, completed=True
+        )
 
     def remove_required_pull_request_reviews(self) -> None:
         """
@@ -588,3 +635,25 @@ class Branch(NonCompletableGithubObject):
         :calls: `DELETE /repos/{owner}/{repo}/branches/{branch}/protection/allow_deletions <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.protection_url}/allow_deletions")
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "_links" in attributes:  # pragma no branch
+            self.__links = self._makeDictAttribute(attributes["_links"])
+        if "commit" in attributes:  # pragma no branch
+            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "pattern" in attributes:  # pragma no branch
+            self._pattern = self._makeStringAttribute(attributes["pattern"])
+        if "protected" in attributes:  # pragma no branch
+            self._protected = self._makeBoolAttribute(attributes["protected"])
+        if "protection" in attributes:  # pragma no branch
+            self._protection = self._makeClassAttribute(
+                github.BranchProtection.BranchProtection, attributes["protection"]
+            )
+        if "protection_url" in attributes:  # pragma no branch
+            self._protection_url = self._makeStringAttribute(attributes["protection_url"])
+        if "required_approving_review_count" in attributes:  # pragma no branch
+            self._required_approving_review_count = self._makeIntAttribute(
+                attributes["required_approving_review_count"]
+            )
