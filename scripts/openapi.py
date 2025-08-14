@@ -335,7 +335,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         self._ids = []
         self._properties = {}
         self._methods = {}
-        self._method_verbs = method_verbs if method_verbs else {}
+        self._method_verbs = method_verbs
 
     def module(self, module: str):
         self._module = module
@@ -439,7 +439,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                 }
 
                 # check if method (VERB) is same as in the code
-                if len(fields) > 0:
+                if len(fields) > 0 and self._method_verbs is not None:
                     method = f'"{fields[0]}"'
                     full_method_name = f"{self.current_class_name}.{method_name}"
 
@@ -1309,9 +1309,10 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any], index_config_file: Path | None = None):
+    def __init__(self, classes: dict[str, Any], index_config_file: Path | None = None, check_verbs: bool = False):
         self.classes = classes
         self.config = {}
+        self.check_verbs = check_verbs
 
         if index_config_file:
             with index_config_file.open("r") as r:
@@ -1323,7 +1324,9 @@ class IndexFileWorker:
 
         from pathlib import Path
 
-        visitor = IndexPythonClassesVisitor(self.classes, self.config.get("known method verbs", {}))
+        visitor = IndexPythonClassesVisitor(
+            self.classes, self.config.get("known method verbs", {}) if self.check_verbs else None
+        )
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
@@ -1618,7 +1621,7 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, index_filename: str, dry_run: bool) -> bool:
+    def index(self, github_path: str, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
         import multiprocessing
 
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
@@ -1628,7 +1631,9 @@ class OpenApi:
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
             config = Path(github_path) / "openapi.index.json"
-            indexer = IndexFileWorker(classes, config if config.exists() else None)
+            if check_verbs and not config.exists():
+                raise RuntimeError(f"Cannot check verbs without config: {config}")
+            indexer = IndexFileWorker(classes, config if config.exists() else None, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
@@ -2092,6 +2097,7 @@ class OpenApi:
         fetch_parser.add_argument("spec", help="Github API OpenAPI spec file to be written")
 
         index_parser = subparsers.add_parser("index")
+        index_parser.add_argument("--check-verbs", help="Check verbs in doc-string matches code", action="store_true")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
         index_parser.add_argument("index_filename", help="Path of index file")
 
@@ -2140,7 +2146,9 @@ class OpenApi:
         if args.subcommand == "fetch":
             changes = self.fetch(self.args.api, self.args.api_version, self.args.commit, self.args.spec)
         elif args.subcommand == "index":
-            changes = self.index(self.args.github_path, self.args.index_filename, self.args.dry_run)
+            changes = self.index(
+                self.args.github_path, self.args.index_filename, self.args.check_verbs, self.args.dry_run
+            )
         elif self.args.subcommand == "suggest":
             changes = self.suggest(
                 self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
