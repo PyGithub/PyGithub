@@ -35,7 +35,7 @@ from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Sequence, Optional
+from typing import Any, Sequence
 
 import libcst as cst
 import requests
@@ -153,7 +153,12 @@ class FunctionCallCollector(cst.CSTVisitor):
 
     def visit_Call(self, node: cst.Call) -> bool | None:
         code = cst.Module([]).code_for_node
-        self._calls.append((".".join([code(node.func)]), [(f"{code(arg.keyword)}=" if arg.keyword else '') + code(arg.value) for arg in node.args]))
+        self._calls.append(
+            (
+                ".".join([code(node.func)]),
+                [(f"{code(arg.keyword)}=" if arg.keyword else "") + code(arg.value) for arg in node.args],
+            )
+        )
 
 
 def get_class_docstring(node: cst.ClassDef) -> str | None:
@@ -438,40 +443,79 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                     if full_method_name in self._method_verbs:
                         known_method_verb = f'"{self._method_verbs[full_method_name]}"'
                         if known_method_verb != method:
-                            print(f"Method {full_method_name} is known to call {known_method_verb}, but doc-string says {method}")
+                            print(
+                                f"Method {full_method_name} is known to call {known_method_verb}, but doc-string says {method}"
+                            )
                     else:
                         visitor = FunctionCallCollector()
                         node.body.visit(visitor)
                         calls = visitor.calls
                         # calls to PaginatedList(...) are equivalent to
                         # self.__requester.requestJsonAndCheck("GET", …, parameters=…, headers=…)
-                        calls = [("self.__requester.requestJsonAndCheck", ['"GET"', "…", "parameters=…", "headers=…"])
-                                 if func in ["PaginatedList", "github.PaginatedList.PaginatedList"] else (func, args)
-                                 for func, args in calls]
+                        calls = [
+                            ("self.__requester.requestJsonAndCheck", ['"GET"', "…", "parameters=…", "headers=…"])
+                            if func in ["PaginatedList", "github.PaginatedList.PaginatedList"]
+                            else (func, args)
+                            for func, args in calls
+                        ]
                         # calls to self._requester.graphql_ are equivalent to
                         # self._requester.requestJsonAndCheck("POST", …, input=…)
-                        calls = [("self._requester.requestJsonAndCheck", ['"POST"', "…", "input=…"])
-                                 if func.startswith("self._requester.graphql_") else (func, args)
-                                 for func, args in calls]
+                        calls = [
+                            ("self._requester.requestJsonAndCheck", ['"POST"', "…", "input=…"])
+                            if func.startswith("self._requester.graphql_")
+                            else (func, args)
+                            for func, args in calls
+                        ]
                         # calls to github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
                         # where class extends CompletableGithubObject are equivalent to
                         # self._requester.requestJsonAndCheck("GET", …, headers=…)
                         if self.current_class_name == "Organization" and method_name == "get_secret":
                             pass
-                        calls = [("self._requester.requestJsonAndCheck", ['"GET"', "…", "headers=…"], "CompletableGithubObject")
-                                 if func.startswith("github.") and args and args[0] in ["self._requester", "self.__requester", "requester=self._requester", "requester=self.__requester"] and (
-                                    len(args) > 1 and args[1].startswith("url=") or
-                                    len(args) > 2 and args[2].startswith(('{"url":', 'attributes={"url":'))
-                                 ) else (func, args, None)
-                                 for func, args in calls]
+                        calls = [
+                            (
+                                "self._requester.requestJsonAndCheck",
+                                ['"GET"', "…", "headers=…"],
+                                "CompletableGithubObject",
+                            )
+                            if func.startswith("github.")
+                            and args
+                            and args[0]
+                            in [
+                                "self._requester",
+                                "self.__requester",
+                                "requester=self._requester",
+                                "requester=self.__requester",
+                            ]
+                            and (
+                                len(args) > 1
+                                and args[1].startswith("url=")
+                                or len(args) > 2
+                                and args[2].startswith(('{"url":', 'attributes={"url":'))
+                            )
+                            else (func, args, None)
+                            for func, args in calls
+                        ]
                         if not any(func.startswith("super().") for func, args, base in calls):
-                            if not any(func.startswith(("self._requester.request", "self.__requester.request")) and args and args[0] == method for func, args, base in calls):
+                            if not any(
+                                func.startswith(("self._requester.request", "self.__requester.request"))
+                                and args
+                                and args[0] == method
+                                for func, args, base in calls
+                            ):
                                 print(f"Not found any {method} call in {self.current_class_name}.{method_name}")
                                 for func, args, base in calls:
                                     print(f"- calls {func}({', '.join(args)})")
                             else:
-                                if not any(func.startswith(("self._requester.request", "self.__requester.request")) and args and args[0] == method and base is None for func, args, base in calls):
-                                    print(f"Not found any {method} call in {self.current_class_name}.{method_name} conditional on some base class")
+                                if not any(
+                                    func.startswith(("self._requester.request", "self.__requester.request"))
+                                    and args
+                                    and args[0] == method
+                                    and base is None
+                                    for func, args, base in calls
+                                ):
+                                    print(
+                                        f"Not found any {method} call in {self.current_class_name}.{method_name} conditional on some base class"
+                                    )
                                     for func, args, base in calls:
                                         print(f"- calls {func}({', '.join(args)})")
                             len(calls)
