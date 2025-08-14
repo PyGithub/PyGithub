@@ -19,6 +19,9 @@ class GeneratedReleaseNotes(CompletableGithubObject):
     The reference can be found here:
     https://docs.github.com/en/rest/releases/releases#generate-release-notes-content-for-a-release
 
+    The OpenAPI schema can be found at
+    - /components/schemas/release-notes-content
+
     """
 
     def _initAttributes(self) -> None:
