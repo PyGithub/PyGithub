@@ -140,7 +140,11 @@ jobs:
         run: |
           pip install -r head/requirements/scripts.txt
       - name: Add schemas
+        shell: bash
         run: |
+          # Add schemas
+          set -euo pipefail
+
           python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head schema suggestions:"
@@ -153,8 +157,29 @@ jobs:
           python head/scripts/openapi.py suggest schemas openapi.json openapi.base.index | tee schemas.base.txt
           echo "::endgroup::"
 
-          echo "Difference:"
-          diff schemas.base.txt schemas.head.txt
+          if ! (diff schemas.base.txt schemas.head.txt > diff.txt)
+          then
+            echo ""
+            echo "Difference:"
+            cat diff.txt
+            echo ""
+            (grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/" || true) | while read class
+            do
+              echo "::group::Add schema to $class:"
+              python head/scripts/openapi.py suggest schemas --add openapi.json openapi.head.index "$class" > /dev/null
+              (cd head; git diff; git reset --hard --quiet HEAD)
+              echo "::endgroup::"
+            done
+            echo ""
+            echo "Run the following commands to add the suggested schemas:"
+            echo "python3 -m venv venv"
+            echo "source venv/bin/activate"
+            echo "pip install -r requirements/scripts.txt"
+            echo python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
+            echo python scripts/openapi.py index github openapi.json openapi.index
+            echo python scripts/openapi.py suggest schemas --add openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
+            false
+          fi
 
   implementations:
     name: "Implement schemas"
