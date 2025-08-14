@@ -1,0 +1,10 @@
+https
+POST
+api.github.com
+None
+/repos/PyGithub/PyGithub/releases/generate-notes
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"tag_name": "vX.Y.Z-by-PyGithub-acctest"}
+200
+[('Date', 'Sun, 18 Aug 2024 23:56:45 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"f05115701836368bcab805d829f1453234af1eea7b25bf97c3effa382838f562"'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-11-14 21:03:22 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4982'), ('X-RateLimit-Reset', '1724025644'), ('X-RateLimit-Used', '18'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('X-GitHub-Request-Id', '86EA:313F29:56B6E84:A55D123:66C28A3C'), ('Server', 'github.com')]
+{"name":"vX.Y.Z-by-PyGithub-acctest","body":"**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest"}
