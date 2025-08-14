@@ -686,21 +686,21 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                                 print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
                                 for func, args, base in calls:
                                     print(f"- calls {func}({', '.join(args)})")
-                            else:
-                                # check if the found verb depends on a base class, which we cannot test here
-                                if not any(
-                                    func.startswith(("self._requester.request", "self.__requester.request"))
-                                    and args
-                                    and args[0] == verb
-                                    and base is None
-                                    for func, args, base in calls
-                                ):
-                                    print(
-                                        f"Not found any {verb} call in {self.current_class_name}.{method_name} "
-                                        f"conditional on some base class"
-                                    )
-                                    for func, args, base in calls:
-                                        print(f"- calls {func}({', '.join(args)})")
+                            #else:
+                            #    # check if the found verb depends on a base class, which we cannot test here
+                            #    if not any(
+                            #        func.startswith(("self._requester.request", "self.__requester.request"))
+                            #        and args
+                            #        and args[0] == verb
+                            #        and base is None
+                            #        for func, args, base in calls
+                            #    ):
+                            #        print(
+                            #            f"Not found any {verb} call in {self.current_class_name}.{method_name} "
+                            #            f"conditional on some base class"
+                            #        )
+                            #        for func, args, base in calls:
+                            #            print(f"- calls {func}({', '.join(args)})")
 
         if method_name == "__repr__":
             # extract properties used here as ids

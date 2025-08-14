@@ -67,6 +67,58 @@ jobs:
         run: false
         shell: bash
 
+  index:
+    name: "Check verbs"
+    needs: "test_success"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Check verbs
+        shell: bash
+        run: |
+          # Check verbs
+          set -euo pipefail
+
+          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+
+          echo "::group::Head verb checking:"
+          python head/scripts/openapi.py index --check-verbs head/github openapi.json openapi.head.index | tee verbs.head.txt
+          echo "::endgroup::"
+
+          echo "::group::Base verb checking:"
+          python head/scripts/openapi.py index --check-verbs base/github openapi.json openapi.base.index | tee verbs.base.txt
+          echo "::endgroup::"
+
+          if ! (diff verbs.base.txt verbs.head.txt > diff.txt)
+          then
+            echo ""
+            echo "Difference:"
+            cat diff.txt
+            echo ""
+            echo "To fix this revisit the verbs in :calls: doc-string line of the respective method."
+            echo ""
+            echo "Fix warnings like 'Not found any … call in …' by adding the method name "
+            echo "and verb to the 'known method verbs' section in github/openapi.index.json."
+            echo ""
+            echo "Fix warnings like 'Method … is known to call …' by fixing "
+            echo "the doc-string or github/openapi.index.json."
+            false
+          fi
+
   schemas:
     name: "Add schemas"
     needs: "test_success"
