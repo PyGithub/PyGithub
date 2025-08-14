@@ -18,6 +18,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,6 +38,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -48,7 +51,9 @@ class RequiredPullRequestReviews(Framework.TestCase):
         )
 
     def testAttributes(self):
+        self.assertIsNone(self.required_pull_request_reviews.bypass_pull_request_allowances)
         self.assertTrue(self.required_pull_request_reviews.dismiss_stale_reviews)
+        self.assertIsNone(self.required_pull_request_reviews.dismissal_restrictions)
         self.assertTrue(self.required_pull_request_reviews.require_code_owner_reviews)
         self.assertIsNone(self.required_pull_request_reviews.require_last_push_approval)
         self.assertEqual(self.required_pull_request_reviews.required_approving_review_count, 3)
@@ -69,6 +74,38 @@ class RequiredPullRequestReviews(Framework.TestCase):
             .get_branch("integrations")
             .get_required_pull_request_reviews()
         )
+        self.assertIsNone(required_pull_request_reviews.bypass_pull_request_allowances.apps)
+        self.assertListKeyEqual(
+            required_pull_request_reviews.bypass_pull_request_allowances.users,
+            lambda u: u.login,
+            ["jacquev6"],
+        )
+        self.assertListKeyEqual(
+            required_pull_request_reviews.bypass_pull_request_allowances.teams,
+            lambda t: t.slug,
+            ["pygithub-owners"],
+        )
+
+        self.assertIsNone(required_pull_request_reviews.dismissal_restrictions.apps)
+        self.assertListKeyEqual(
+            required_pull_request_reviews.dismissal_restrictions.users,
+            lambda u: u.login,
+            ["jacquev6"],
+        )
+        self.assertListKeyEqual(
+            required_pull_request_reviews.dismissal_restrictions.teams,
+            lambda t: t.slug,
+            ["pygithub-owners"],
+        )
+        self.assertEqual(
+            required_pull_request_reviews.dismissal_restrictions.users_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/branches/integrations/protection/dismissal_restrictions/users",
+        )
+        self.assertEqual(
+            required_pull_request_reviews.dismissal_restrictions.teams_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/branches/integrations/protection/dismissal_restrictions/teams",
+        )
+
         self.assertListKeyEqual(
             required_pull_request_reviews.dismissal_users,
             lambda u: u.login,

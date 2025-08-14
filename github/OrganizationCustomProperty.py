@@ -3,6 +3,7 @@
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
 # Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,7 +51,7 @@ class CustomProperty:
     ):
         assert isinstance(property_name, str), property_name
         assert isinstance(value_type, str), value_type
-        assert value_type in ["string", "single_select"], value_type
+        assert value_type in ["string", "single_select", "multi_select", "true_false"], value_type
         assert is_optional(required, bool), required
         assert is_optional(default_value, (type(None), str, list)), default_value
         assert is_optional(description, (str, type(None))), description
@@ -168,12 +169,12 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
         return self._repository_full_name.value
 
     @property
-    def repository_name(self) -> str:
-        return self._repository_name.value
-
-    @property
     def repository_id(self) -> int:
         return self._repository_id.value
+
+    @property
+    def repository_name(self) -> str:
+        return self._repository_name.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._repository_id = self._makeIntAttribute(attributes["repository_id"])

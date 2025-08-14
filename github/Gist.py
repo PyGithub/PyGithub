@@ -53,6 +53,7 @@ import github.GistFile
 import github.GistHistoryState
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 import github.PaginatedList
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType, is_defined, is_optional
 from github.PaginatedList import PaginatedList

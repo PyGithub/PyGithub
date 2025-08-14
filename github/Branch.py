@@ -426,7 +426,7 @@ class Branch(NonCompletableGithubObject):
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
         require_last_push_approval: Opt[bool] = NotSet,
-    ) -> RequiredStatusChecks:
+    ) -> RequiredPullRequestReviews:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -460,7 +460,9 @@ class Branch(NonCompletableGithubObject):
             input=post_parameters,
         )
 
-        return github.RequiredStatusChecks.RequiredStatusChecks(self._requester, headers, data, completed=True)
+        return github.RequiredPullRequestReviews.RequiredPullRequestReviews(
+            self._requester, headers, data, completed=True
+        )
 
     def remove_required_pull_request_reviews(self) -> None:
         """

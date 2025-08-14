@@ -55,17 +55,17 @@ $ python scripts/add_attribute.py Commit url string
 
 ## Deprecation warning
 
-Before removing attributes/methods, consider adding deprecation warnings instead. The [Deprecated](https://github.com/tantale/deprecated) packages provides a handy decorator to add deprecation warnings with an optional reason.
+Before removing attributes/methods, consider adding deprecation warnings instead. The [typing_extensions](https://pypi.org/project/typing-extensions/) package provides a handy decorator to add deprecation warnings.
 
 ```python
-from deprecated import deprecated
+from typing_extensions import deprecated
 
 @property
-@deprecated
+@deprecated("Use core instead")
 def rate(self):
    pass
 
-@deprecated(reason="Deprecated in favor of the new branch protection")
+@deprecated("Deprecated in favor of the new branch protection")
 def get_protected_branch(self):
    pass
 ```

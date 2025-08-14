@@ -55,6 +55,7 @@ class Copilot(Framework.TestCase):
         self.assertEqual(seat.pending_cancellation_date, None)
         self.assertEqual(seat.last_activity_at, datetime(2012, 5, 26, 14, 59, 39, tzinfo=timezone.utc))
         self.assertEqual(seat.last_activity_editor, "vscode/1.0.0")
+        self.assertEqual(seat.organization.login, self.org_name)
         self.assertEqual(seat.plan_type, "business")
         self.assertEqual(seat.assignee.login, "pashafateev")
         self.assertEqual(repr(seat), 'CopilotSeat(assignee=NamedUser(login="pashafateev"))')
