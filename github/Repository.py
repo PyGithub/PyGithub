@@ -2990,11 +2990,11 @@ class Repository(CompletableGithubObject):
 
     def get_git_ref(self, ref: str) -> GitRef:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
+        :calls: `GET /repos/{owner}/{repo}/git/ref/{ref} <https://docs.github.com/en/rest/git/refs#get-a-reference>`_
         :param ref: string
         :rtype: :class:`github.GitRef.GitRef`
         """
-        prefix = "/git/refs/"
+        prefix = "/git/ref/"
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref

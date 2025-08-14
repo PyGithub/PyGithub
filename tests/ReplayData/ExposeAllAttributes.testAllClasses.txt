@@ -145,12 +145,12 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/git/refs/tags/v1.17.0
+/repos/jacquev6/PyGithub/git/ref/tags/v1.17.0
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4883'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('x-github-request-id', 'eb4e50d0-67c7-41f4-977e-fd091a501b16'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '282'), ('server', 'GitHub.com'), ('last-modified', 'Fri, 06 Sep 2013 12:41:05 GMT'), ('x-ratelimit-limit', '5000'), ('etag', '"feb5059cac897bdd13fd1205785f865c"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Fri, 06 Sep 2013 15:05:15 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1378482241')]
-{"ref":"refs/tags/v1.17.0","url":"https://api.github.com/repos/jacquev6/PyGithub/git/refs/tags/v1.17.0","object":{"sha":"a08db4387b1294359e283f2a5c2c79584e23450f","type":"tag","url":"https://api.github.com/repos/jacquev6/PyGithub/git/tags/a08db4387b1294359e283f2a5c2c79584e23450f"}}
+{"ref":"refs/tags/v1.17.0","url":"https://api.github.com/repos/jacquev6/PyGithub/git/ref/tags/v1.17.0","object":{"sha":"a08db4387b1294359e283f2a5c2c79584e23450f","type":"tag","url":"https://api.github.com/repos/jacquev6/PyGithub/git/tags/a08db4387b1294359e283f2a5c2c79584e23450f"}}
 
 https
 GET
@@ -453,7 +453,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/git/refs/tags/v1.17.0
+/repos/jacquev6/PyGithub/git/ref/tags/v1.17.0
 {'If-None-Match': '"feb5059cac897bdd13fd1205785f865c"', 'User-Agent': 'PyGithub/Python', 'Authorization': 'token private_token_removed', 'If-Modified-Since': 'Fri, 06 Sep 2013 12:41:05 GMT'}
 None
 304
