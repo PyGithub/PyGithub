@@ -437,19 +437,25 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                     },
                     "returns": returns,
                 }
+
+                # check if method (VERB) is same as in the code
                 if len(fields) > 0:
                     method = f'"{fields[0]}"'
                     full_method_name = f"{self.current_class_name}.{method_name}"
+
                     if full_method_name in self._method_verbs:
+                        # these are methods configured in the github/openapi.index.json file
                         known_method_verb = f'"{self._method_verbs[full_method_name]}"'
                         if known_method_verb != method:
                             print(
                                 f"Method {full_method_name} is known to call {known_method_verb}, but doc-string says {method}"
                             )
                     else:
+                        # detect method from code
                         visitor = FunctionCallCollector()
                         node.body.visit(visitor)
                         calls = visitor.calls
+
                         # calls to PaginatedList(...) are equivalent to
                         # self.__requester.requestJsonAndCheck("GET", …, parameters=…, headers=…)
                         calls = [
@@ -458,6 +464,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             else (func, args)
                             for func, args in calls
                         ]
+
                         # calls to self._requester.graphql_ are equivalent to
                         # self._requester.requestJsonAndCheck("POST", …, input=…)
                         calls = [
@@ -466,11 +473,10 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             else (func, args)
                             for func, args in calls
                         ]
+
                         # calls to github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
                         # where class extends CompletableGithubObject are equivalent to
                         # self._requester.requestJsonAndCheck("GET", …, headers=…)
-                        if self.current_class_name == "Organization" and method_name == "get_secret":
-                            pass
                         calls = [
                             (
                                 "self._requester.requestJsonAndCheck",
@@ -495,6 +501,8 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             else (func, args, None)
                             for func, args in calls
                         ]
+
+                        # skip functions that call into parent functions
                         if not any(func.startswith("super().") for func, args, base in calls):
                             if not any(
                                 func.startswith(("self._requester.request", "self.__requester.request"))
@@ -518,7 +526,6 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                                     )
                                     for func, args, base in calls:
                                         print(f"- calls {func}({', '.join(args)})")
-                            len(calls)
 
         if method_name == "__repr__":
             # extract properties used here as ids
