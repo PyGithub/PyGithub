@@ -40,10 +40,10 @@ class SelfHostedActionsRunnerApplication(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._os: Attribute[str] = NotSet
         self._architecture: Attribute[str] = NotSet
         self._download_url: Attribute[str] = NotSet
         self._filename: Attribute[str] = NotSet
+        self._os: Attribute[str] = NotSet
         self._sha256_checksum: Attribute[str] = NotSet
         self._temp_download_token: Attribute[str] = NotSet
 
@@ -75,14 +75,14 @@ class SelfHostedActionsRunnerApplication(NonCompletableGithubObject):
         return self._temp_download_token.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "os" in attributes:
-            self._os = self._makeStringAttribute(attributes["os"])
         if "architecture" in attributes:  # pragma no branch
             self._architecture = self._makeStringAttribute(attributes["architecture"])
         if "download_url" in attributes:  # pragma no branch
             self._download_url = self._makeStringAttribute(attributes["download_url"])
         if "filename" in attributes:  # pragma no branch
             self._filename = self._makeStringAttribute(attributes["filename"])
+        if "os" in attributes:
+            self._os = self._makeStringAttribute(attributes["os"])
         if "sha256_checksum" in attributes:  # pragma no branch
             self._sha256_checksum = self._makeStringAttribute(attributes["sha256_checksum"])
         if "temp_download_token" in attributes:  # pragma no branch

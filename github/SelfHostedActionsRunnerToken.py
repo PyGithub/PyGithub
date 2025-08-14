@@ -23,8 +23,10 @@
 from __future__ import annotations
 
 from typing import Any
+from datetime import datetime, timezone
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+import github.Repository
 
 
 class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
@@ -41,6 +43,10 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._expires_at: Attribute[str] = NotSet
+        self._permissions: Attribute[dict[str, Any]] = NotSet
+        self._repositories: Attribute[list[Repository]] = NotSet
+        self._repository_selection: Attribute[str] = NotSet
+        self._single_file: Attribute[str] = NotSet
         self._token: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -51,11 +57,35 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
         return self._expires_at.value
 
     @property
+    def permissions(self) -> dict[str, Any]:
+        return self._permissions.value
+
+    @property
+    def repositories(self) -> list[Repository]:
+        return self._repositories.value
+
+    @property
+    def repository_selection(self) -> str:
+        return self._repository_selection.value
+
+    @property
+    def single_file(self) -> str:
+        return self._single_file.value
+
+    @property
     def token(self) -> str:
         return self._token.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "expires_at" in attributes:  # pragma no branch
+            self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeDictAttribute(attributes["permissions"])
+        if "repositories" in attributes:  # pragma no branch
+            self._repositories = self._makeListOfClassesAttribute(github.Repository.Repository, attributes["repositories"])
+        if "repository_selection" in attributes:  # pragma no branch
+            self._repository_selection = self._makeStringAttribute(attributes["repository_selection"])
+        if "single_file" in attributes:  # pragma no branch
+            self._single_file = self._makeStringAttribute(attributes["single_file"])
         if "token" in attributes:
             self._token = self._makeStringAttribute(attributes["token"])
-        if "expires_at" in attributes:  # pragma no branch
-            self._expires_at = self._makeStringAttribute(attributes["expires_at"])
