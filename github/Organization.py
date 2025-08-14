@@ -1883,7 +1883,7 @@ class Organization(CompletableGithubObject):
         self, name: str, runner_group_id: int, labels: list[str], work_folder: Opt[str] = NotSet
     ) -> SelfHostedActionsRunnerJitConfig:
         """
-        :calls: `GET /orgs/{org}/actions/runners/generate-jitconfig <https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization>`_
+        :calls: `POST /orgs/{org}/actions/runners/generate-jitconfig <https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization>`_
         """
         body_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
@@ -1903,7 +1903,7 @@ class Organization(CompletableGithubObject):
 
     def create_self_hosted_runner_registration_token(self) -> SelfHostedActionsRunnerToken:
         """
-        :calls: `GET /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization>`_
+        :calls: `POST /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -1913,7 +1913,7 @@ class Organization(CompletableGithubObject):
 
     def create_self_hosted_runner_remove_token(self) -> SelfHostedActionsRunnerToken:
         """
-        :calls: `GET /orgs/{org}/actions/runners/remove-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-remove-token-for-an-organization>`_
+        :calls: `POST /orgs/{org}/actions/runners/remove-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-remove-token-for-an-organization>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
