@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/readme?ref=refs%2Fheads%2Ftopic%2FExperimentOnDocumentation
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4941'), ('x-ratelimit-limit', '5000'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '7693'), ('server', 'nginx'), ('last-modified', 'Fri, 21 Dec 2012 21:22:43 GMT'), ('connection', 'keep-alive'), ('etag', '"7c2a77b0e46dda4d6e11562d52ec5ae0"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Tue, 25 Dec 2012 10:46:11 GMT'), ('x-github-media-type', 'github.beta; format=json'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/contents/doc/ReferenceOfClasses.md?ref=refs%2Fheads%2Ftopic%2FExperimentOnDocumentation
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('content-length', '45572'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('x-ratelimit-remaining', '4940'), ('server', 'nginx'), ('last-modified', 'Fri, 21 Dec 2012 21:22:43 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"7c2a77b0e46dda4d6e11562d52ec5ae0"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Tue, 25 Dec 2012 10:46:22 GMT'), ('content-type', 'application/json; charset=utf-8')]

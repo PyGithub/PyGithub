@@ -51,6 +51,7 @@ import github.Issue
 import github.Label
 import github.Milestone
 import github.NamedUser
+import github.Organization
 import github.Team
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 

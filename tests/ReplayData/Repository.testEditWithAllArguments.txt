@@ -3,7 +3,7 @@ PATCH
 api.github.com
 None
 /repos/PyGithub/PyGithub
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"has_wiki": false, "name": "PyGithub", "has_issues": true, "homepage": "http://vincent-jacques.net/PyGithub", "private": true, "description": "Description edited by PyGithub", "has_projects": false, "allow_auto_merge": true, "allow_update_branch": true, "allow_forking": true, "allow_squash_merge": true, "allow_merge_commit": true, "allow_rebase_merge": true, "delete_branch_on_merge": true, "is_template": true, "use_squash_pr_title_as_default": true, "squash_merge_commit_title": "PR_TITLE", "squash_merge_commit_message": "COMMIT_MESSAGES", "merge_commit_title": "PR_TITLE", "merge_commit_message": "PR_BODY", "web_commit_signoff_required": true, "has_discussions": false}
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4953'), ('content-length', '1109'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"749313ec2d171323deb61f9f4c85e84f"'), ('date', 'Sat, 26 May 2012 11:22:13 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ PATCH
 api.github.com
 None
 /repos/PyGithub/PyGithub
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"name": "PyGithub", "description": "Python library implementing the full Github API v3"}
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4952'), ('content-length', '1129'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"c1328d95af7d85267acb5754968b2c0b"'), ('date', 'Sat, 26 May 2012 11:22:13 GMT'), ('content-type', 'application/json; charset=utf-8')]

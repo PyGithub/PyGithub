@@ -38,6 +38,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
+# Copyright 2025 Changyong Um <e7217@naver.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -72,6 +73,7 @@ import github.IssuePullRequest
 import github.Label
 import github.Milestone
 import github.NamedUser
+import github.Organization
 import github.PullRequest
 import github.Reaction
 import github.Repository
@@ -112,7 +114,6 @@ class Issue(CompletableGithubObject):
 
     The OpenAPI schema can be found at
     - /components/schemas/issue
-    - /components/schemas/issue-search-result-item
     - /components/schemas/nullable-issue
 
     """
@@ -145,7 +146,6 @@ class Issue(CompletableGithubObject):
         self._reactions: Attribute[dict] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._repository_url: Attribute[str] = NotSet
-        self._score: Attribute[float] = NotSet
         self._state: Attribute[str] = NotSet
         self._state_reason: Attribute[str | None] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
@@ -302,11 +302,6 @@ class Issue(CompletableGithubObject):
     def repository_url(self) -> str:
         self._completeIfNotSet(self._repository_url)
         return self._repository_url.value
-
-    @property
-    def score(self) -> float:
-        self._completeIfNotSet(self._score)
-        return self._score.value
 
     @property
     def state(self) -> str:
@@ -549,6 +544,91 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
+    def get_sub_issues(self) -> PaginatedList[SubIssue]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues?apiVersion=2022-11-28>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+        return PaginatedList(
+            SubIssue,
+            self._requester,
+            f"{self.url}/sub_issues",
+            None,
+            headers={"Accept": Consts.mediaType},
+        )
+
+    def add_sub_issue(self, sub_issue: int | Issue) -> SubIssue:
+        """
+        :calls: `POST /repos/{owner}/{repo}/issues/{number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
+        :rtype: :class:`github.Issue.SubIssue`
+        """
+        assert isinstance(sub_issue, (int, Issue)), sub_issue
+
+        sub_issue_id = sub_issue
+        if isinstance(sub_issue, Issue):
+            sub_issue_id = sub_issue.id
+
+        post_parameters: dict[str, Any] = {
+            "sub_issue_id": sub_issue_id,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            f"{self.url}/sub_issues",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaType},
+        )
+        return SubIssue(self._requester, headers, data, completed=True)
+
+    def remove_sub_issue(self, sub_issue: int | Issue) -> SubIssue:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/sub_issue <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
+        :rtype: :class:`github.Issue.SubIssue`
+        """
+        assert isinstance(sub_issue, (int, Issue)), sub_issue
+
+        sub_issue_id = sub_issue
+        if isinstance(sub_issue, Issue):
+            sub_issue_id = sub_issue.id
+
+        post_parameters: dict[str, Any] = {
+            "sub_issue_id": sub_issue_id,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/sub_issue",
+            input=post_parameters,
+            headers={"Accept": Consts.mediaType},
+        )
+        return SubIssue(self._requester, headers, data, completed=True)
+
+    def prioritize_sub_issue(self, sub_issue: int | Issue, after_sub_issue: int | Issue | None) -> SubIssue:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub_issues/priority <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
+        :param after_sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
+        :rtype: :class:`github.Issue.SubIssue`
+        """
+        assert isinstance(sub_issue, (int, Issue)), sub_issue
+        assert after_sub_issue is None or isinstance(after_sub_issue, (int, Issue)), after_sub_issue
+
+        sub_issue_id = sub_issue
+        if isinstance(sub_issue, Issue):
+            sub_issue_id = sub_issue.id
+        after_sub_issue_id = after_sub_issue
+        if isinstance(after_sub_issue, Issue):
+            after_sub_issue_id = after_sub_issue.id
+
+        patch_parameters = {"sub_issue_id": sub_issue_id, "after_id": after_sub_issue_id}
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            f"{self.url}/sub_issues/priority",
+            input=patch_parameters,
+            headers={"Accept": Consts.mediaType},
+        )
+        return SubIssue(self._requester, headers, data, completed=True)
+
     def create_reaction(self, reaction_type: str) -> Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{number}/reactions <https://docs.github.com/en/rest/reference/reactions>`_
@@ -653,8 +733,6 @@ class Issue(CompletableGithubObject):
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
-        if "score" in attributes:  # pragma no branch
-            self._score = self._makeFloatAttribute(attributes["score"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "state_reason" in attributes:  # pragma no branch
@@ -671,3 +749,77 @@ class Issue(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+
+
+class IssueSearchResult(Issue):
+    """
+    This class represents IssueSearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-issues-and-pull-requests
+
+    The OpenAPI schema can be found at
+    - /components/schemas/issue-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        # TODO: remove if parent does not implement this
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"number": self._number.value, "title": self._title.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        # TODO: remove if parent does not implement this
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])
+
+
+class SubIssue(Issue):
+    """
+    This class represents a Sub-issue in GitHub's REST API. Sub-issues are issues that are linked to a parent issue.
+
+    See https://docs.github.com/en/rest/issues/sub-issues for more details.
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        # Sub-issue specific attributes
+        self._parent_issue: Attribute[Issue] = NotSet
+        self._priority_position: Attribute[int] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"number": self._number.value, "title": self._title.value})
+
+    @property
+    def parent_issue(self) -> Issue:
+        """
+        :type: :class:`github.Issue.Issue`
+        """
+        self._completeIfNotSet(self._parent_issue)
+        return self._parent_issue.value
+
+    @property
+    def priority_position(self) -> int:
+        """
+        :type: int
+        """
+        self._completeIfNotSet(self._priority_position)
+        return self._priority_position.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        # Process sub-issue specific attributes
+        if "parent_issue" in attributes:
+            self._parent_issue = self._makeClassAttribute(Issue, attributes["parent_issue"])
+        if "priority_position" in attributes:
+            self._priority_position = self._makeIntAttribute(attributes["priority_position"])

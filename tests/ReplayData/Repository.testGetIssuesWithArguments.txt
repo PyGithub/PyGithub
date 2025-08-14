@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/milestones/3
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4986'), ('content-length', '577'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"aefd46b78a992c1eb76e6bb49c45be7c"'), ('date', 'Fri, 01 Jun 2012 19:52:57 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /users/jacquev6
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('content-length', '801'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"7ce1335565832b7bdbe43916a0724156"'), ('date', 'Fri, 01 Jun 2012 19:52:57 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /users/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4984'), ('content-length', '554'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"73f74c6f88d8578cb44a6c29b1e2ee8e"'), ('date', 'Fri, 01 Jun 2012 19:52:58 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/labels/Bug
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4997'), ('content-length', '97'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"569c414d87e8ec43ec269a9e28bc2982"'), ('date', 'Fri, 01 Jun 2012 19:56:30 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?state=closed&milestone=3
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4868'), ('content-length', '6944'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"5c472a7784b7cd933a35e2bb0ce5df38"'), ('date', 'Tue, 29 May 2012 18:39:43 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -58,7 +58,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?labels=Bug
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4867'), ('content-length', '2426'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"dcab4e56d1acdb64e964e0f8669f5c19"'), ('date', 'Tue, 29 May 2012 18:39:44 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -69,7 +69,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?labels=Bug
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4867'), ('content-length', '2426'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"dcab4e56d1acdb64e964e0f8669f5c19"'), ('date', 'Tue, 29 May 2012 18:39:44 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -80,7 +80,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?sort=comments&assignee=jacquev6&direction=asc
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4866'), ('content-length', '29746'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"ca9d3b0d1f8313bd38c2b092f3dec187"'), ('date', 'Tue, 29 May 2012 18:39:45 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -91,7 +91,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?since=2012-05-28T23%3A00%3A00Z
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4865'), ('content-length', '12920'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d09251f5f9bcb3430efa333b42335a0b"'), ('date', 'Tue, 29 May 2012 18:39:46 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -102,7 +102,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?mentioned=Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4864'), ('content-length', '2210'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"bf7c5823992799efca0369752072ec8e"'), ('date', 'Tue, 29 May 2012 18:39:46 GMT'), ('content-type', 'application/json; charset=utf-8')]

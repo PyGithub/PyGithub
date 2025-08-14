@@ -24,8 +24,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NotSet
 from github.PaginatedList import PaginatedList
@@ -84,7 +86,7 @@ class OrganizationVariable(Variable):
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
 
-        patch_parameters: Dict[str, Any] = {
+        patch_parameters: dict[str, Any] = {
             "name": self.name,
             "value": value,
             "visibility": visibility,
@@ -119,7 +121,7 @@ class OrganizationVariable(Variable):
         self._requester.requestJsonAndCheck("DELETE", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "name" in attributes:

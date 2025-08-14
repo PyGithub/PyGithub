@@ -52,6 +52,7 @@ import github.Consts
 import github.DeploymentStatus
 import github.GithubApp
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
 
@@ -70,7 +71,6 @@ class Deployment(CompletableGithubObject):
     The OpenAPI schema can be found at
     - /components/schemas/deployment
     - /components/schemas/deployment-simple
-    - /paths/"/repos/{owner}/{repo}/deployments"/post/responses/202/content/"application/json"/schema
 
     """
 
@@ -80,7 +80,6 @@ class Deployment(CompletableGithubObject):
         self._description: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._message: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._original_environment: Attribute[str] = NotSet
         self._payload: Attribute[dict[str, Any]] = NotSet
@@ -122,11 +121,6 @@ class Deployment(CompletableGithubObject):
     def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
-
-    @property
-    def message(self) -> str:
-        self._completeIfNotSet(self._message)
-        return self._message.value
 
     @property
     def node_id(self) -> str:
@@ -275,8 +269,6 @@ class Deployment(CompletableGithubObject):
             self._environment = self._makeStringAttribute(attributes["environment"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
-        if "message" in attributes:  # pragma no branch
-            self._message = self._makeStringAttribute(attributes["message"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "original_environment" in attributes:  # pragma no branch

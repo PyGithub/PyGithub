@@ -3,7 +3,7 @@ POST
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
-{'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
 {"reviewers":["sfdye"],"team_reviewers":["pygithub-owners"]}
 201
 ''
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1153'), ('server', 'nginx'), ('last-modified', 'Sat, 03 Nov 2012 08:19:40 GMT'), ('connection', 'keep-alive'), ('etag', '"1ec7d9f2ebb27db7dc002f1382d23975"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Sat, 03 Nov 2012 08:19:46 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1153'), ('server', 'nginx'), ('last-modified', 'Sat, 03 Nov 2012 08:19:40 GMT'), ('connection', 'keep-alive'), ('etag', '"1ec7d9f2ebb27db7dc002f1382d23975"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Sat, 03 Nov 2012 08:19:46 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ DELETE
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
-{'Authorization': 'Basic login_and_password_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python'}
 {"reviewers":["sfdye"]}
 204
 ''
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '318'), ('server', 'nginx'), ('last-modified', 'Sat, 03 Nov 2012 08:19:40 GMT'), ('connection', 'keep-alive'), ('etag', '"1ec7d9f2ebb27db7dc002f1382d23975"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Sat, 03 Nov 2012 08:19:46 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -58,7 +58,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/31/requested_reviewers
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4985'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '318'), ('server', 'nginx'), ('last-modified', 'Sat, 03 Nov 2012 08:19:40 GMT'), ('connection', 'keep-alive'), ('etag', '"1ec7d9f2ebb27db7dc002f1382d23975"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Sat, 03 Nov 2012 08:19:46 GMT'), ('content-type', 'application/json; charset=utf-8')]

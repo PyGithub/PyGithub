@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues/28/comments?since=2012-05-26T13%3A59%3A33Z
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4984'), ('content-length', '1820'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"bab5fb77d873847d153979f7fcd7e0f1"'), ('date', 'Sat, 26 May 2012 09:43:03 GMT'), ('content-type', 'application/json; charset=utf-8')]

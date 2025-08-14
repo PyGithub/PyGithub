@@ -39,8 +39,9 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -82,7 +83,7 @@ class NotificationSubject(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "latest_comment_url" in attributes:  # pragma no branch
             self._latest_comment_url = self._makeStringAttribute(attributes["latest_comment_url"])
         if "title" in attributes:  # pragma no branch

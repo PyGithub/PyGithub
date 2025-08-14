@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/danvk
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '1295'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '13d09b732ebe76f892093130dc088652'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"646d82e27d1cb55020ba0b6c901d15ce"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4915'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '44AE6A38:AB2B:3D4623E:561EA76C'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Wed, 07 Oct 2015 13:43:17 GMT'), ('date', 'Wed, 14 Oct 2015 19:05:17 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1444851351')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/danvk/comparea
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '4432'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '065b43cd9674091fec48a221b420fbb3'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"2cc0aa4e78ef70f886d92ac338e3e22b"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4914'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '44AE6A38:AB2F:94E8736:561EA76D'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Sat, 09 May 2015 19:14:45 GMT'), ('date', 'Wed, 14 Oct 2015 19:05:17 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1444851351')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/danvk/comparea/stargazers
-{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.v3.star+json', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'Accept': 'application/vnd.github.v3.star+json', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '5547'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '2c18a09f3ac5e4dd1e004af7c5a94769'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"83247ceb0b43ff0c9c1d97c5cc427ceb"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4913'), ('x-github-media-type', 'github.v3; param=star; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '44AE6A38:AB2F:94E8764:561EA76D'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 14 Oct 2015 19:05:17 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1444851351')]

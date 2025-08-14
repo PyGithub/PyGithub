@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/nvie
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4960'), ('content-length', '598'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"75740284d989e9a492e32f435cff48ac"'), ('date', 'Sat, 26 May 2012 20:23:33 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4959'), ('content-length', '1182'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"b96ea8f5f6ac24b533e2a5dc5ea2479d"'), ('date', 'Sat, 26 May 2012 20:23:34 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ POST
 api.github.com
 None
 /repos/nvie/gitflow/forks
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {}
 202
 [('status', '202 Accepted'), ('x-ratelimit-remaining', '4958'), ('content-length', '3486'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"92f5b171559bccda47d7ebb598ba4f73"'), ('date', 'Sat, 26 May 2012 20:23:35 GMT'), ('content-type', 'application/json; charset=utf-8')]

@@ -68,7 +68,7 @@ import github.Permissions
 import github.Plan
 import github.Repository
 from github import Consts
-from github.GithubObject import Attribute, NotSet, Opt, is_defined
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -94,10 +94,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     - /components/schemas/actor
     - /components/schemas/collaborator
     - /components/schemas/contributor
+    - /components/schemas/empty-object
     - /components/schemas/nullable-simple-user
     - /components/schemas/public-user
     - /components/schemas/simple-user
-    - /components/schemas/user-search-result-item
 
     """
 
@@ -140,7 +140,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._repos_url: Attribute[str] = NotSet
         self._role: Attribute[str] = NotSet
         self._role_name: Attribute[str] = NotSet
-        self._score: Attribute[float] = NotSet
         self._site_admin: Attribute[bool] = NotSet
         self._starred_at: Attribute[str] = NotSet
         self._starred_url: Attribute[str] = NotSet
@@ -354,10 +353,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     @property
     def role_name(self) -> str:
         return self._role_name.value
-
-    @property
-    def score(self) -> float:
-        return self._score.value
 
     @property
     def site_admin(self) -> bool:
@@ -663,8 +658,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._role = self._makeStringAttribute(attributes["role"])
         if "role_name" in attributes:  # pragma no branch
             self._role_name = self._makeStringAttribute(attributes["role_name"])
-        if "score" in attributes:  # pragma no branch
-            self._score = self._makeFloatAttribute(attributes["score"])
         if "site_admin" in attributes:  # pragma no branch
             self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
         if "starred_at" in attributes:  # pragma no branch
@@ -691,3 +684,88 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user_view_type" in attributes:  # pragma no branch
             self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])
+
+
+class NamedUserSearchResult(NamedUser):
+    """
+    This class represents NamedUserSearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-users
+
+    The OpenAPI schema can be found at
+    - /components/schemas/user-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"login": self._login.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        return self._score.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])
+
+
+# A better place would be github.OrganizationInvitation.OrganizationInvitation
+# but that causes an import cycle. This is a specialization of NamedUser any way.
+class OrganizationInvitation(NamedUser):
+    """
+    This class represents OrganizationInvitation.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/orgs/members
+
+    The OpenAPI schema can be found at
+    - /components/schemas/organization-invitation
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._failed_at: Attribute[str] = NotSet
+        self._failed_reason: Attribute[str] = NotSet
+        self._invitation_source: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"id": self._id.value})
+
+    @property
+    def failed_at(self) -> str:
+        return self._failed_at.value
+
+    @property
+    def failed_reason(self) -> str:
+        return self._failed_reason.value
+
+    @property
+    def invitation_source(self) -> str:
+        return self._invitation_source.value
+
+    def cancel(self) -> bool:
+        """
+        :calls: `DELETE /orgs/{org}/invitations/{invitation_id} <https://docs.github.com/en/rest/reference/orgs#cancel-an-organization-invitation>`_
+        :rtype: bool
+        """
+        status, headers, data = self._requester.requestJson("DELETE", self.url)
+        return status == 204
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "failed_at" in attributes:  # pragma no branch
+            self._failed_at = self._makeStringAttribute(attributes["failed_at"])
+        if "failed_reason" in attributes:  # pragma no branch
+            self._failed_reason = self._makeStringAttribute(attributes["failed_reason"])
+        if "invitation_source" in attributes:  # pragma no branch
+            self._invitation_source = self._makeStringAttribute(attributes["invitation_source"])
+        if "invitation_teams_url" in attributes and is_undefined(self._url):  # pragma no branch
+            url = "/".join(attributes["invitation_teams_url"].split("/")[:-1])
+            self._url = self._makeStringAttribute(url)

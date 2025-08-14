@@ -3,7 +3,7 @@ POST
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/comments/1580134/reactions
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.squirrel-girl-preview', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'Accept': 'application/vnd.github.squirrel-girl-preview', 'User-Agent': 'PyGithub/Python'}
 {"content": "hooray"}
 201
 [('content-length', '999'), ('x-runtime-rack', '0.077219'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('x-oauth-scopes', 'repo, user'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"e4d556e3e2d16fc003293ad7f6afcf98"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '201 Created'), ('x-ratelimit-remaining', '4973'), ('x-github-media-type', 'github.squirrel-girl-preview'), ('access-control-expose-headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'F426:452B:1A25A1:37AB78:5A31D6DA'), ('date', 'Thu, 14 Dec 2017 01:41:46 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1513217425')]

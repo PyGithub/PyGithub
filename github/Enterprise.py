@@ -38,8 +38,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import urllib.parse
-from typing import Any, Dict
+from typing import Any
 
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -56,10 +58,6 @@ class Enterprise(NonCompletableGithubObject):
 
     """
 
-    def _initAttributes(self) -> None:
-        self._enterprise: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
-
     def __init__(
         self,
         requester: Requester,
@@ -67,6 +65,10 @@ class Enterprise(NonCompletableGithubObject):
     ):
         enterprise = urllib.parse.quote(enterprise)
         super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"})
+
+    def _initAttributes(self) -> None:
+        self._enterprise: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"enterprise": self._enterprise.value})
@@ -89,7 +91,7 @@ class Enterprise(NonCompletableGithubObject):
 
         return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "enterprise" in attributes:  # pragma no branch
             self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "url" in attributes:  # pragma no branch

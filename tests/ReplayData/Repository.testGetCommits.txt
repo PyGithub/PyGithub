@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4979'), ('content-length', '46151'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/PyGithub/PyGithub/commits?last_sha=c1440bdf20bfeb62684c6d1779448719dce9d2df&top=master>; rel="next", <https://api.github.com/repos/PyGithub/PyGithub/commits?sha=master>; rel="first"'), ('etag', '"5443e5772e0bda0813a09a3620a8f7c2"'), ('date', 'Sun, 27 May 2012 06:45:57 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits?last_sha=c1440bdf20bfeb62684c6d1779448719dce9d2df&top=master
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4978'), ('content-length', '44844'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/PyGithub/PyGithub/commits?last_sha=3e8169c0a98ce1e2c6a32ae1256ae0f735065df5&top=master>; rel="next", <https://api.github.com/repos/PyGithub/PyGithub/commits?sha=master>; rel="first"'), ('etag', '"b1e58b63cf08fef49b20ee7682f4eadb"'), ('date', 'Sun, 27 May 2012 06:45:59 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits?last_sha=3e8169c0a98ce1e2c6a32ae1256ae0f735065df5&top=master
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4977'), ('content-length', '45317'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/PyGithub/PyGithub/commits?last_sha=6b89c02872cbcb179d79cb4ceb2436fee02425d0&top=master>; rel="next", <https://api.github.com/repos/PyGithub/PyGithub/commits?sha=master>; rel="first"'), ('etag', '"b341665cd46d642b2e6045772eb3278b"'), ('date', 'Sun, 27 May 2012 06:46:00 GMT'), ('content-type', 'application/json; charset=utf-8')]
