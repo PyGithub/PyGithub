@@ -33,8 +33,9 @@ from collections import Counter
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
+from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Sequence
+from typing import Any, Sequence, Optional
 
 import libcst as cst
 import requests
@@ -139,6 +140,20 @@ class SimpleStringCollector(cst.CSTVisitor):
 
     def visit_SimpleString(self, node: cst.SimpleString) -> bool | None:
         self._strings.append(node.evaluated_value)
+
+
+class FunctionCallCollector(cst.CSTVisitor):
+    def __init__(self):
+        super().__init__()
+        self._calls = []
+
+    @property
+    def calls(self):
+        return self._calls
+
+    def visit_Call(self, node: cst.Call) -> bool | None:
+        code = cst.Module([]).code_for_node
+        self._calls.append((".".join([code(node.func)]), [(f"{code(arg.keyword)}=" if arg.keyword else '') + code(arg.value) for arg in node.args]))
 
 
 def get_class_docstring(node: cst.ClassDef) -> str | None:
@@ -306,7 +321,7 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
 
 
 class IndexPythonClassesVisitor(CstVisitorBase):
-    def __init__(self, classes: dict[str, Any] | None = None):
+    def __init__(self, classes: dict[str, Any] | None = None, method_verbs: dict[str, str] | None = None):
         super().__init__()
         self._module = None
         self._package = None
@@ -315,6 +330,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         self._ids = []
         self._properties = {}
         self._methods = {}
+        self._method_verbs = method_verbs if method_verbs else {}
 
     def module(self, module: str):
         self._module = module
@@ -416,6 +432,49 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                     },
                     "returns": returns,
                 }
+                if len(fields) > 0:
+                    method = f'"{fields[0]}"'
+                    full_method_name = f"{self.current_class_name}.{method_name}"
+                    if full_method_name in self._method_verbs:
+                        known_method_verb = f'"{self._method_verbs[full_method_name]}"'
+                        if known_method_verb != method:
+                            print(f"Method {full_method_name} is known to call {known_method_verb}, but doc-string says {method}")
+                    else:
+                        visitor = FunctionCallCollector()
+                        node.body.visit(visitor)
+                        calls = visitor.calls
+                        # calls to PaginatedList(...) are equivalent to
+                        # self.__requester.requestJsonAndCheck("GET", …, parameters=…, headers=…)
+                        calls = [("self.__requester.requestJsonAndCheck", ['"GET"', "…", "parameters=…", "headers=…"])
+                                 if func in ["PaginatedList", "github.PaginatedList.PaginatedList"] else (func, args)
+                                 for func, args in calls]
+                        # calls to self._requester.graphql_ are equivalent to
+                        # self._requester.requestJsonAndCheck("POST", …, input=…)
+                        calls = [("self._requester.requestJsonAndCheck", ['"POST"', "…", "input=…"])
+                                 if func.startswith("self._requester.graphql_") else (func, args)
+                                 for func, args in calls]
+                        # calls to github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+                        # where class extends CompletableGithubObject are equivalent to
+                        # self._requester.requestJsonAndCheck("GET", …, headers=…)
+                        if self.current_class_name == "Organization" and method_name == "get_secret":
+                            pass
+                        calls = [("self._requester.requestJsonAndCheck", ['"GET"', "…", "headers=…"], "CompletableGithubObject")
+                                 if func.startswith("github.") and args and args[0] in ["self._requester", "self.__requester", "requester=self._requester", "requester=self.__requester"] and (
+                                    len(args) > 1 and args[1].startswith("url=") or
+                                    len(args) > 2 and args[2].startswith(('{"url":', 'attributes={"url":'))
+                                 ) else (func, args, None)
+                                 for func, args in calls]
+                        if not any(func.startswith("super().") for func, args, base in calls):
+                            if not any(func.startswith(("self._requester.request", "self.__requester.request")) and args and args[0] == method for func, args, base in calls):
+                                print(f"Not found any {method} call in {self.current_class_name}.{method_name}")
+                                for func, args, base in calls:
+                                    print(f"- calls {func}({', '.join(args)})")
+                            else:
+                                if not any(func.startswith(("self._requester.request", "self.__requester.request")) and args and args[0] == method and base is None for func, args, base in calls):
+                                    print(f"Not found any {method} call in {self.current_class_name}.{method_name} conditional on some base class")
+                                    for func, args, base in calls:
+                                        print(f"- calls {func}({', '.join(args)})")
+                            len(calls)
 
         if method_name == "__repr__":
             # extract properties used here as ids
@@ -1199,8 +1258,13 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any]):
+    def __init__(self, classes: dict[str, Any], index_config_file: Path | None = None):
         self.classes = classes
+        self.config = {}
+
+        if index_config_file:
+            with index_config_file.open("r") as r:
+                self.config = json.load(r)
 
     def index_file(self, filename: str):
         with open(filename) as r:
@@ -1208,7 +1272,7 @@ class IndexFileWorker:
 
         from pathlib import Path
 
-        visitor = IndexPythonClassesVisitor(self.classes)
+        visitor = IndexPythonClassesVisitor(self.classes, self.config.get("known method verbs", {}))
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
@@ -1512,7 +1576,8 @@ class OpenApi:
         # index files in parallel
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
-            indexer = IndexFileWorker(classes)
+            config = Path(github_path) / "openapi.index.json"
+            indexer = IndexFileWorker(classes, config if config.exists() else None)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
