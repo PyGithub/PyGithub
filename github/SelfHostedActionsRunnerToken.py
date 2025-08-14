@@ -22,11 +22,15 @@
 
 from __future__ import annotations
 
-from typing import Any
-from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Any
 
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from black import datetime
+
 import github.Repository
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
@@ -42,7 +46,7 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._expires_at: Attribute[str] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
         self._permissions: Attribute[dict[str, Any]] = NotSet
         self._repositories: Attribute[list[Repository]] = NotSet
         self._repository_selection: Attribute[str] = NotSet
@@ -53,7 +57,7 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
         return self.get__repr__({"token": self._token.value})
 
     @property
-    def expires_at(self) -> str:
+    def expires_at(self) -> datetime:
         return self._expires_at.value
 
     @property
@@ -82,7 +86,9 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
         if "permissions" in attributes:  # pragma no branch
             self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "repositories" in attributes:  # pragma no branch
-            self._repositories = self._makeListOfClassesAttribute(github.Repository.Repository, attributes["repositories"])
+            self._repositories = self._makeListOfClassesAttribute(
+                github.Repository.Repository, attributes["repositories"]
+            )
         if "repository_selection" in attributes:  # pragma no branch
             self._repository_selection = self._makeStringAttribute(attributes["repository_selection"])
         if "single_file" in attributes:  # pragma no branch
