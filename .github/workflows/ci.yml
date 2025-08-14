@@ -202,7 +202,11 @@ jobs:
         run: |
           pip install -r head/requirements/scripts.txt
       - name: Add implementations
+        shell: bash
         run: |
+          # Add implementations
+          set -euo pipefail
+
           python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head implementations:"
@@ -215,8 +219,40 @@ jobs:
           python head/scripts/openapi.py --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
           echo "::endgroup::"
 
-          echo "Difference:"
-          diff implementation.base.txt implementation.head.txt
+          if ! (diff <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]base/github/%(github/%" -e "s%Test base/%Test %" implementation.base.txt) <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]head/github/%(github/%" -e "s%Test head/%Test %" implementation.head.txt) > diff.txt)
+          then
+            echo ""
+            echo "Difference:"
+            cat diff.txt
+            echo ""
+            (grep -E -e "^> Class \w+ changed$" diff.txt | sed -E -e "s/^> Class (\w+) changed$/\1/" || true) | while read class
+            do
+              echo "::group::Apply schema to $class:"
+              python head/scripts/openapi.py apply --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
+              (cd head; git diff; git reset --hard --quiet HEAD)
+              echo "::endgroup::"
+            done
+            echo ""
+            echo "Run the following commands to apply the schemas:"
+            echo "python3 -m venv venv"
+            echo "source venv/bin/activate"
+            echo "pip install -r requirements/scripts.txt"
+            echo python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
+            echo python scripts/openapi.py index github openapi.index
+            echo python scripts/openapi.py apply --tests github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
+            (grep -E -e "^> Test .+ changed$" diff.txt | sed -E -e "s/^> Test (.+) changed$/\1/" || true) | while read test
+            do
+              echo python scripts/prepare-for-update-assertions.py "$test" testAttributes
+              echo bash scripts/update-assertions.sh "$test" testAttributes
+            done
+            echo pre-commit run --all-files
+            echo ""
+            echo "You may need to fix the tests afterwards:"
+            echo pip install . -r requirements/test.txt
+            echo pytest tests
+            echo
+            false
+          fi
 
   sort:
     name: "Sort classes"
