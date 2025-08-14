@@ -1055,6 +1055,7 @@ class Github:
                 "Argument slug is mandatory, calling this method without the slug argument is deprecated, please use "
                 "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             return GithubIntegration(**self.__requester.kwargs).get_app()
         else:
