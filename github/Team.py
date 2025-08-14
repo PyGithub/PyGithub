@@ -41,7 +41,9 @@
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -67,7 +69,7 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from deprecated import deprecated
+from typing_extensions import deprecated
 
 import github.NamedUser
 import github.Organization
@@ -283,7 +285,7 @@ class Team(CompletableGithubObject):
         if isinstance(member, github.NamedUser.NamedUser):
             member = member._identity
         else:
-            member = urllib.parse.quote(member)
+            member = urllib.parse.quote(member, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/memberships/{member}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
@@ -302,7 +304,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo = repo._identity  # type: ignore
         else:
-            repo = urllib.parse.quote(repo)
+            repo = urllib.parse.quote(repo, safe="")
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
@@ -314,7 +316,7 @@ class Team(CompletableGithubObject):
             return None
 
     @deprecated(
-        reason="""
+        """
         Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
         """
     )
@@ -343,7 +345,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo_url_param = repo._identity
         else:
-            repo_url_param = urllib.parse.quote(repo)
+            repo_url_param = urllib.parse.quote(repo, safe="")
         put_parameters = {
             "permission": permission,
         }

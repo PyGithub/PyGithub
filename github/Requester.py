@@ -57,7 +57,9 @@
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Alec Ostrander <alec.ostrander@gmail.com>                     #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
 #                                                                              #
@@ -78,6 +80,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import io
@@ -834,8 +837,10 @@ class Requester:
             exc = GithubException.BadUserAgentException
         elif status == 403 and cls.isRateLimitError(lc_message):
             exc = GithubException.RateLimitExceededException
-        elif status == 404 and (lc_message == "not found" or "no object found" in lc_message):
+        elif status == 404 and ("not found" in lc_message or "no object found" in lc_message):
             exc = GithubException.UnknownObjectException
+            if lc_message != "not found":
+                msg = message
         else:
             # for general GithubException, provide the actual message
             msg = message
@@ -1176,7 +1181,7 @@ class Requester:
                     self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
                 # remove auth to not leak authentication to redirection location
                 if o.hostname != self.__hostname:
-                    del requestHeaders["Authorization"]
+                    requestHeaders = {k: v for k, v in requestHeaders.items() if k != "Authorization"}
                 return self.__requestRaw(
                     cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
                 )
@@ -1235,18 +1240,20 @@ class Requester:
     def __createConnection(
         self, hostname: str | None = None
     ) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass:
-        if self.__persist and self.__connection is not None and hostname is not None and hostname == self.__hostname:
+        if hostname is None:
+            hostname = self.__hostname
+
+        if self.__persist and self.__connection is not None and hostname == self.__connection.host:
             return self.__connection
 
         with self.__connection_lock:
-            if self.__connection is not None and hostname is not None and hostname == self.__hostname:
-                if self.__persist:
-                    return self.__connection
+            if self.__persist and self.__connection is not None and hostname == self.__connection.host:
+                return self.__connection
             if self.__connection is not None:
                 self.__connection.close()
                 self.__connection = None
             self.__connection = self.__connectionClass(
-                hostname if hostname is not None else self.__hostname,
+                hostname,
                 self.__port,
                 retry=self.__retry,
                 pool_size=self.__pool_size,

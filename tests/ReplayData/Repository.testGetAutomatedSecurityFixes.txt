@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/automated-security-fixes
+{'Accept': 'application/vnd.github.london-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Date', 'Sun, 22 Jun 2025 16:20:25 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"b5a99043f278e50ed9453ba99f7a85b38765424e6ab1582dc6291e1411ab37c2"'), ('github-authentication-token-expiration', '2025-06-29 14:31:52 +0200'), ('X-GitHub-Media-Type', 'github.v3; param=london-preview; format=json'), ('x-accepted-github-permissions', 'administration=read'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4994'), ('X-RateLimit-Reset', '1750612705'), ('X-RateLimit-Used', '6'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', 'AD86:1A55F0:1542031:15FD31D:68582D49')]
+{"enabled":true,"paused":false}
