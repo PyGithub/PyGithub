@@ -41,9 +41,13 @@ class Topic(Framework.TestCase):
 
     def testAttributes(self):
         topic = self.topics[0]
+        self.assertIsNone(topic.aliases)
+        self.assertIsNone(topic.logo_url)
 
         self.assertEqual(topic.name, "python")
         self.assertEqual(topic.display_name, "Python")
+        self.assertIsNone(topic.related)
+        self.assertIsNone(topic.repository_count)
         self.assertEqual(
             topic.short_description,
             "Python is a dynamically typed programming language.",
@@ -59,6 +63,7 @@ class Topic(Framework.TestCase):
         self.assertEqual(topic.created_by, "Guido van Rossum")
         self.assertEqual(topic.released, "February 20, 1991")
         self.assertEqual(topic.created_at, datetime(2016, 12, 7, 0, 7, 2, tzinfo=timezone.utc))
+        self.assertIsNone(topic.text_matches)
         self.assertEqual(topic.updated_at, datetime(2025, 1, 7, 9, 22, 52, tzinfo=timezone.utc))
         self.assertEqual(topic.featured, True)
         self.assertEqual(topic.curated, True)

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?milestone=%2A
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4970'), ('content-length', '16480'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"28fffaa40fef9cdb999d5b217e212f0a"'), ('date', 'Sat, 02 Jun 2012 06:15:11 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?milestone=none
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4969'), ('content-length', '7399'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"27992c230165868561de1a0461b6fb75"'), ('date', 'Sat, 02 Jun 2012 06:15:12 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?assignee=%2A
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4968'), ('content-length', '22053'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"19578e844395dac67fcdaf015d1fbce1"'), ('date', 'Sat, 02 Jun 2012 06:15:13 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/issues?assignee=none
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4967'), ('content-length', '1826'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"c087198529310acda2e50d723e071ec8"'), ('date', 'Sat, 02 Jun 2012 06:15:14 GMT'), ('content-type', 'application/json; charset=utf-8')]

@@ -9,6 +9,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -34,7 +35,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import deprecated
+from typing_extensions import deprecated
 
 import github.CheckRunAnnotation
 import github.CheckRunOutput
@@ -109,7 +110,7 @@ class CheckRun(CompletableGithubObject):
         return self._check_suite.value
 
     @property
-    @deprecated.deprecated("Use property check_suite.id instead")
+    @deprecated("Use property check_suite.id instead")
     def check_suite_id(self) -> int:
         self._completeIfNotSet(self._check_suite_id)
         return self._check_suite_id.value

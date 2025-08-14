@@ -52,6 +52,7 @@ import github.Consts
 import github.DeploymentStatus
 import github.GithubApp
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
 

@@ -38,8 +38,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import urllib.parse
-from typing import Any, Dict
+from typing import Any
 
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -89,7 +91,7 @@ class Enterprise(NonCompletableGithubObject):
 
         return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "enterprise" in attributes:  # pragma no branch
             self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "url" in attributes:  # pragma no branch

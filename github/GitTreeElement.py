@@ -36,7 +36,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -85,7 +87,7 @@ class GitTreeElement(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "mode" in attributes:  # pragma no branch
             self._mode = self._makeStringAttribute(attributes["mode"])
         if "path" in attributes:  # pragma no branch

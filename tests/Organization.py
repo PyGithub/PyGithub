@@ -44,7 +44,9 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -684,6 +686,22 @@ class Organization(Framework.TestCase):
                 allowed_values=["foo", "bar"],
                 values_editable_by="org_and_repo_actors",
             ),
+            CustomProperty(
+                property_name="property_3",
+                value_type="multi_select",
+                required=True,
+                default_value="bar",
+                description="Lorem ipsum",
+                allowed_values=["foo", "bar"],
+                values_editable_by="org_and_repo_actors",
+            ),
+            CustomProperty(
+                property_name="property_4",
+                value_type="true_false",
+                required=False,
+                description="description",
+                values_editable_by="org_actors",
+            ),
         ]
         properties = self.org.create_custom_properties(properties)
         properties_map = {p.property_name: p for p in properties}
@@ -691,6 +709,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(property_1.value_type, "string")
         property_2 = properties_map["property_2"]
         self.assertEqual(property_2.description, "Lorem ipsum")
+        property_3 = properties_map["property_3"]
+        self.assertEqual(property_3.value_type, "multi_select")
+        property_4 = properties_map["property_4"]
+        self.assertEqual(property_4.value_type, "true_false")
 
     def testCreateCustomProperty(self):
         custom_property = CustomProperty(
@@ -741,6 +763,38 @@ class Organization(Framework.TestCase):
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
 
+    def testGetSelfHostedRunners(self):
+        runners = self.org.get_self_hosted_runners()
+        self.assertEqual(runners.totalCount, 602)
+
+    def testDeleteSelfHostedRunner(self):
+        self.org.delete_self_hosted_runner("42")
+
+    def testGetSelfHostedRunnerApplications(self):
+        self.assertListKeyEqual(
+            self.org.get_self_hosted_runner_applications(),
+            lambda h: h.os,
+            ["osx", "linux", "linux", "win", "linux", "osx", "win"],
+        )
+
+    def testSelfHostedRunnerJitConfig(self):
+        runner = self.org.create_self_hosted_runner_jitconfig(name="self_hosted", runner_group_id=1, labels=["default"])
+        # Now remove the runner
+        for runner in self.org.get_self_hosted_runners():
+            if runner.name == "self_hosted":
+                runner = self.org.get_self_hosted_runner(runner_id=runner.id)
+                self.org.delete_self_hosted_runner(runner_id=runner.id)
+
+    def testSelfHostedRunnerGetRegistrationToken(self):
+        token = self.org.create_self_hosted_runner_registration_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(token.expires_at, "2025-02-17T21:11:49.260-08:00")
+
+    def testSelfHostedRunnerGetRemoveToken(self):
+        token = self.org.create_self_hosted_runner_remove_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(token.expires_at, "2025-02-17T21:12:28.308-08:00")
+
     def testGetCodeSecurityConfigs(self):
         configs = list(self.org.get_code_security_configs())
         self.assertEqual(configs.pop().id, 17)
@@ -777,27 +831,9 @@ class Organization(Framework.TestCase):
         self.assertEqual(config.id, repo_config.configuration.id)
         repo.detach_security_config()
 
-    def testGetSelfHostedRunnerApplications(self):
-        self.assertListKeyEqual(
-            self.org.get_self_hosted_runner_applications(),
-            lambda h: h.os,
-            ["osx", "linux", "linux", "win", "linux", "osx", "win"],
-        )
-
-    def testSelfHostedRunnerJitConfig(self):
-        runner = self.org.create_self_hosted_runner_jitconfig(name="self_hosted", runner_group_id=1, labels=["default"])
-        # Now remove the runner
-        for runner in self.org.get_self_hosted_runners():
-            if runner.name == "self_hosted":
-                runner = self.org.get_self_hosted_runner(runner_id=runner.id)
-                self.org.delete_self_hosted_runner(runner_id=runner.id)
-
-    def testSelfHostedRunnerGetRegistrationToken(self):
-        token = self.org.create_self_hosted_runner_registration_token()
-        self.assertEqual(token.token, "XXXXXX")
-        self.assertEqual(token.expires_at, "2025-02-17T21:11:49.260-08:00")
-
-    def testSelfHostedRunnerGetRemoveToken(self):
-        token = self.org.create_self_hosted_runner_remove_token()
-        self.assertEqual(token.token, "XXXXXX")
-        self.assertEqual(token.expires_at, "2025-02-17T21:12:28.308-08:00")
+    def testGetReposForCodeSecurityConfig(self):
+        repo_statuses = self.org.get_repos_for_code_security_config(id=182032)
+        status = repo_statuses[0]
+        self.assertEqual(status.status, "enforced")
+        self.assertIsNotNone(status.repository)
+        self.assertEqual(status.repository.full_name, "BeaverSoftware/truth")

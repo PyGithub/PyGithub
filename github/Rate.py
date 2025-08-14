@@ -39,8 +39,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -88,7 +90,7 @@ class Rate(NonCompletableGithubObject):
     def used(self) -> int:
         return self._used.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "limit" in attributes:  # pragma no branch
             self._limit = self._makeIntAttribute(attributes["limit"])
         if "remaining" in attributes:  # pragma no branch

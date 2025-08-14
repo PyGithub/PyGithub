@@ -10,6 +10,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -36,8 +37,8 @@ import urllib.parse
 import warnings
 from typing import Any
 
-import deprecated
 import urllib3
+from typing_extensions import deprecated
 from urllib3 import Retry
 
 import github
@@ -241,7 +242,7 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated.deprecated(
+    @deprecated(
         "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
     )
     def create_jwt(self, expiration: int | None = None) -> str:
@@ -277,7 +278,7 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated.deprecated("Use get_repo_installation")
+    @deprecated("Use get_repo_installation")
     def get_installation(self, owner: str, repo: str) -> Installation:
         """
         Deprecated by get_repo_installation.

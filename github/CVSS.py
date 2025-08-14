@@ -39,8 +39,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from decimal import Decimal
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -71,7 +73,7 @@ class CVSS(NonCompletableGithubObject):
     def version(self) -> Decimal:
         return self._version.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "score" in attributes and attributes["score"] is not None:  # pragma no branch
             # ensure string so we don't have all the float extra nonsense
             self._score = self._makeDecimalAttribute(Decimal(str(attributes["score"])))

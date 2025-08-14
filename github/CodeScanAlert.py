@@ -7,6 +7,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 ReenigneArcher <42013603+ReenigneArcher@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -53,7 +54,9 @@ class CodeScanAlert(NonCompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
         self._dismissed_by: Attribute[github.NamedUser.NamedUser | None] = NotSet
+        self._dismissed_comment: Attribute[str | None] = NotSet
         self._dismissed_reason: Attribute[str | None] = NotSet
+        self._fixed_at: Attribute[datetime | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._instances_url: Attribute[str] = NotSet
         self._most_recent_instance: Attribute[github.CodeScanAlertInstance.CodeScanAlertInstance] = NotSet
@@ -79,8 +82,16 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._dismissed_by.value
 
     @property
+    def dismissed_comment(self) -> str | None:
+        return self._dismissed_comment.value
+
+    @property
     def dismissed_reason(self) -> str | None:
         return self._dismissed_reason.value
+
+    @property
+    def fixed_at(self) -> datetime | None:
+        return self._fixed_at.value
 
     @property
     def html_url(self) -> str:
@@ -135,8 +146,12 @@ class CodeScanAlert(NonCompletableGithubObject):
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:  # pragma no branch
             self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
+        if "dismissed_comment" in attributes:  # pragma no branch
+            self._dismissed_comment = self._makeStringAttribute(attributes["dismissed_comment"])
         if "dismissed_reason" in attributes:  # pragma no branch
             self._dismissed_reason = self._makeStringAttribute(attributes["dismissed_reason"])
+        if "fixed_at" in attributes:  # pragma no branch
+            self._fixed_at = self._makeDatetimeAttribute(attributes["fixed_at"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "instances_url" in attributes:  # pragma no branch

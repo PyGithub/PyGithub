@@ -14,6 +14,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,14 +39,15 @@ from . import Framework
 
 def pytest_addoption(parser):
     parser.addoption("--record", action="store_true", help="record mode")
-    parser.addoption("--auth_with_token", action="store_true", help="auth using a token")
+    parser.addoption(
+        "--auth_with_token", action="store_true", help="auth using a token, deprecated: this is the default"
+    )
     parser.addoption("--auth_with_jwt", action="store_true", help="auth using JWT")
 
 
 def pytest_configure(config):
     if config.getoption("record"):
         Framework.activateRecordMode()
-    if config.getoption("auth_with_token"):
-        Framework.activateTokenAuthMode()
     if config.getoption("auth_with_jwt"):
         Framework.activateJWTAuthMode()
+    # auth_with_token is being ignored, it is the default, here for backward compatibility
