@@ -463,9 +463,10 @@ class RequesterUnThrottled(RequesterThrottleTestCase):
     def testShouldNotDeferRequests(self):
         with self.mock_sleep() as sleep_mock:
             # same test setup as in RequesterThrottled.testShouldDeferRequests
-            repository = self.g.get_repo(REPO_NAME)
-            releases = list(repository.get_releases())
-            self.assertEqual(len(releases), 30)
+            with self.replayData("RequesterThrottleTestCase.testDeferRequests.txt"):
+                repository = self.g.get_repo(REPO_NAME)
+                releases = list(repository.get_releases())
+                self.assertEqual(len(releases), 30)
 
         sleep_mock.assert_not_called()
 
@@ -476,10 +477,11 @@ class RequesterThrottled(RequesterThrottleTestCase):
 
     def testShouldDeferRequests(self):
         with self.mock_sleep() as sleep_mock:
-            # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
-            repository = self.g.get_repo(REPO_NAME)
-            releases = [release for release in repository.get_releases()]
-            self.assertEqual(len(releases), 30)
+            with self.replayData("RequesterThrottleTestCase.testDeferRequests.txt"):
+                # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
+                repository = self.g.get_repo(REPO_NAME)
+                releases = [release for release in repository.get_releases()]
+                self.assertEqual(len(releases), 30)
 
         self.assertEqual(sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)])
 
