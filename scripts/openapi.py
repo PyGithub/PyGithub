@@ -60,6 +60,7 @@ class GithubClass:
     module: str
     name: str
     filename: str
+    test_filename: str
     bases: list[str]
     inheritance: list[str]
     methods: dict
@@ -81,10 +82,6 @@ class GithubClass:
     def full_class_name(self) -> str:
         return f"{self.package}.{self.module}.{self.name}"
 
-    @property
-    def test_filename(self) -> str:
-        return f"tests/{self.module}.py"
-
     @staticmethod
     def from_class_name(class_name: str, index: dict[str, Any] | None = None) -> GithubClass:
         if "." in class_name:
@@ -102,6 +99,7 @@ class GithubClass:
                     module=class_name,
                     name=class_name,
                     filename=f"{package}/{module}.py",
+                    test_filename=f"tests/{module}.py",
                     bases=[],
                     inheritance=[],
                     methods={},
@@ -328,6 +326,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         self._module = None
         self._package = None
         self._filename = None
+        self._test_filename = None
         self._classes = classes if classes is not None else {}
         self._ids = []
         self._properties = {}
@@ -342,6 +341,9 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
     def filename(self, filename: str):
         self._filename = filename
+
+    def test_filename(self, test_filename: str):
+        self._test_filename = test_filename
 
     @property
     def classes(self) -> dict[str, Any]:
@@ -380,6 +382,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             "module": self._module,
             "package": self._package,
             "filename": self._filename,
+            "test_filename": self._test_filename,
             "docstring": class_docstring,
             "schemas": class_schemas,
             "bases": class_bases,
@@ -1310,12 +1313,13 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any], index_config_file: Path | None = None, check_verbs: bool = False):
+    def __init__(self, classes: dict[str, Any], index_config_file: Path, check_verbs: bool):
         self.classes = classes
         self.config = {}
         self.check_verbs = check_verbs
+        self.tests_path = index_config_file.parent.parent / "tests"
 
-        if index_config_file:
+        if index_config_file.exists():
             with index_config_file.open("r") as r:
                 self.config = json.load(r)
 
@@ -1331,6 +1335,7 @@ class IndexFileWorker:
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
+        visitor.test_filename(str(self.tests_path / Path(filename).name))
         try:
             tree = cst.parse_module(code)
             tree.visit(visitor)
@@ -1653,7 +1658,7 @@ class OpenApi:
             config = Path(github_path) / "openapi.index.json"
             if check_verbs and not config.exists():
                 raise RuntimeError(f"Cannot check verbs without config: {config}")
-            indexer = IndexFileWorker(classes, config if config.exists() else None, check_verbs)
+            indexer = IndexFileWorker(classes, config, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
