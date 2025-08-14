@@ -1572,12 +1572,14 @@ class Repository(CompletableGithubObject):
             configuration_file_path, str
         ), configuration_file_path
 
-        post_parameters = NotSet.remove_unset_items({
-            "tag_name": tag_name,
-            "previous_tag_name": previous_tag_name,
-            "target_commitish": target_commitish,
-            "configuration_file_path": configuration_file_path,
-        })
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "tag_name": tag_name,
+                "previous_tag_name": previous_tag_name,
+                "target_commitish": target_commitish,
+                "configuration_file_path": configuration_file_path,
+            }
+        )
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/releases/generate-notes", input=post_parameters

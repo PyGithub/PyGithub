@@ -561,9 +561,7 @@ class Repository(Framework.TestCase):
             configuration_file_path="tests/test_release_notes.yml",
         )
         self.assertEqual(notes.name, None)
-        self.assertIn(
-            "Release notes generated using configuration in tests/test_release_notes.yml at main", notes.body
-        )
+        self.assertIn("Release notes generated using configuration in tests/test_release_notes.yml at main", notes.body)
 
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag(
