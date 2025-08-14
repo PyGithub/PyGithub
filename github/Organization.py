@@ -1940,6 +1940,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self.url}/actions/runners/{runner_id}",
+            headers={"Accept": Consts.mediaType},
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
