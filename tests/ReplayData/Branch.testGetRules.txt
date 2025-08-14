@@ -2,18 +2,18 @@ https
 GET
 api.github.com
 None
-/repos/PyGithub/PyGithub/rules/branches/main?per_page=1
+/repos/PyGithub/PyGithub/rules/branches/master?per_page=1
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
-[('Date', 'Tue, 04 Feb 2025 19:04:35 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"6d5edc64d85d04519f38874ded137861e8e4e4ae0e095e0c5eb5c89e17bebfee"'), ('github-authentication-token-expiration', '2025-02-21 11:42:01 +0100'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Link', '<https://api.github.com/repositories/924735381/rules/branches/main?per_page=1&page=2>; rel="next", <https://api.github.com/repositories/924735381/rules/branches/main?per_page=1&page=7>; rel="last"'), ('x-accepted-github-permissions', 'metadata=read'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4988'), ('X-RateLimit-Reset', '1738698256'), ('X-RateLimit-Used', '12'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', 'C6BD:130DBE:56A296:597620:67A264C3')]
+[('Date', 'Tue, 04 Feb 2025 19:04:35 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"6d5edc64d85d04519f38874ded137861e8e4e4ae0e095e0c5eb5c89e17bebfee"'), ('github-authentication-token-expiration', '2025-02-21 11:42:01 +0100'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Link', '<https://api.github.com/repositories/924735381/rules/branches/master?per_page=1&page=2>; rel="next", <https://api.github.com/repositories/924735381/rules/branches/master?per_page=1&page=7>; rel="last"'), ('x-accepted-github-permissions', 'metadata=read'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4988'), ('X-RateLimit-Reset', '1738698256'), ('X-RateLimit-Used', '12'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', 'C6BD:130DBE:56A296:597620:67A264C3')]
 [{"type":"deletion","ruleset_source_type":"Repository","ruleset_source":"PyGithub/PyGithub","ruleset_id":3474546}]
 
 https
 GET
 api.github.com
 None
-/repos/PyGithub/PyGithub/rules/branches/main
+/repos/PyGithub/PyGithub/rules/branches/master
 {'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200

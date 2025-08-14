@@ -2815,21 +2815,6 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/security-advisories/{ghsa}")
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data)
 
-    def get_rules_for_branch(self, branch: str) -> PaginatedList[github.Rule.Rule]:
-        """
-        :calls: `GET /repos/{owner}/{repo}/rules/branches/{branch} <https://docs.github.com/en/rest/repos/rules#get-rules-for-a-branch>`_
-        :param branch: str
-        :rtype: :class:`PaginatedList` of :class:`github.Rule.Rule`
-        """
-        assert isinstance(branch, str), branch
-        branch = urllib.parse.quote(branch)
-        return PaginatedList(
-            github.Rule.Rule,
-            self._requester,
-            f"{self.url}/rules/branches/{branch}",
-            None,
-        )
-
     def get_rulesets(
         self, includes_parents: bool = True, targets: Opt[list[str]] = NotSet
     ) -> PaginatedList[github.Ruleset.Ruleset]:
@@ -2902,21 +2887,6 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/rulesets", input=post_parameters)
         return github.Ruleset.Ruleset(self._requester, headers, data, completed=True)
-
-    def update_ruleset(
-        self,
-        ruleset_id: int,
-        name: Opt[str] = NotSet,
-        target: Opt[str] = NotSet,
-        enforcement: Opt[str] = NotSet,
-        bypass_actors: Opt[list[dict[str, Any]]] = NotSet,
-        conditions: Opt[dict[str, Any]] = NotSet,
-        rules: Opt[list[dict[str, Any]]] = NotSet,
-    ) -> github.Ruleset.Ruleset:
-        return Repository.get_ruleset(ruleset_id).update()
-
-    def delete_ruleset(self, ruleset_id: int) -> bool:
-        return Repository.get_ruleset(ruleset_id).delete()
 
     def update_file(
         self,
