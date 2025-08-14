@@ -34,6 +34,9 @@ class SelfHostedActionsRunnerApplication(NonCompletableGithubObject):
     The reference can be found at
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
 
+    The OpenAPI schema can be found at
+    - /components/schemas/runner-application
+
     """
 
     def _initAttributes(self) -> None:
