@@ -40,9 +40,7 @@ from typing import Any, Sequence
 
 import libcst as cst
 import requests
-from docutils.nodes import target
 from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
-
 
 equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
 
@@ -60,14 +58,17 @@ def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[st
     return schema_type
 
 
-def as_python_type(schema_type: dict[str, Any], schema_path: list[str],
-                   schema_to_class: dict[str, str], classes, verbose: bool) -> PythonType | GithubClass | None:
+def as_python_type(
+    schema_type: dict[str, Any], schema_path: list[str], schema_to_class: dict[str, str], classes, verbose: bool
+) -> PythonType | GithubClass | None:
     schema = None
     data_type = schema_type.get("type")
     if "$ref" in schema_type:
         schema = schema_type.get("$ref").strip("# ")
     elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
-        return as_python_type(schema_type.get("allOf")[0], schema_path + ["allOf", "0"], schema_to_class, classes, verbose)
+        return as_python_type(
+            schema_type.get("allOf")[0], schema_path + ["allOf", "0"], schema_to_class, classes, verbose
+        )
     if data_type == "object":
         schema = "/".join([""] + schema_path)
     if schema is not None:
@@ -104,7 +105,9 @@ def as_python_type(schema_type: dict[str, Any], schema_path: list[str],
     if data_type == "array":
         return PythonType(
             type="list",
-            inner_types=[as_python_type(schema_type.get("items"), schema_path + ["items"], schema_to_class, classes, verbose)]
+            inner_types=[
+                as_python_type(schema_type.get("items"), schema_path + ["items"], schema_to_class, classes, verbose)
+            ],
         )
 
     format = schema_type.get("format")
@@ -296,7 +299,6 @@ class CstMethods(abc.ABC):
         for name in names[2:]:
             attr = cst.Attribute(attr, name)
         return attr
-
 
     @classmethod
     def create_type(
@@ -578,7 +580,8 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                         self._paths[path] = {}
                     if verb not in self._paths[path]:
                         self._paths[path][verb] = {"methods": []}
-                    self._paths[path][verb]["methods"].append({
+                    self._paths[path][verb]["methods"].append(
+                        {
                             "class": self.current_class_name,
                             "name": method_name,
                             "returns": returns,
@@ -1421,7 +1424,18 @@ class AddSchemasTransformer(CstTransformerBase):
 
 
 class CreateClassMethodTransformer(CstTransformerBase):
-    def __init__(self, spec: dict[str, Any], index: dict[str, Any], clazz: GithubClass, method_name: str, api_verb: str, api_path: str, api_response: str | None, prefix_path, return_property: str | None):
+    def __init__(
+        self,
+        spec: dict[str, Any],
+        index: dict[str, Any],
+        clazz: GithubClass,
+        method_name: str,
+        api_verb: str,
+        api_path: str,
+        api_response: str | None,
+        prefix_path,
+        return_property: str | None,
+    ):
         super().__init__()
         self.spec = spec
         self.classes = index.get("classes", {})
@@ -1431,7 +1445,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         self.method_name = method_name
         self.api_verb = api_verb
         self.api_path = api_path
-        self.relative_path = api_path[len(prefix_path):] if prefix_path else api_path
+        self.relative_path = api_path[len(prefix_path) :] if prefix_path else api_path
         self.api = spec.get("paths", {}).get(api_path, {}).get(api_verb, {})
         if not self.api:
             raise ValueError(f"Path {api_path} with verb {api_verb} does not exist in spec")
@@ -1453,17 +1467,34 @@ class CreateClassMethodTransformer(CstTransformerBase):
             raise ValueError(f"Response {api_response} does not exist for path {api_path} and verb {api_verb} in spec")
         self.api_response = api_response
         content_schema = responses.get(api_response).get("content", {}).get("application/json", {}).get("schema", None)
-        schema_path = ["paths", self.api_path, self.api_verb, "responses", self.api_response, "content", "application/json", "schema"]
+        schema_path = [
+            "paths",
+            self.api_path,
+            self.api_verb,
+            "responses",
+            self.api_response,
+            "content",
+            "application/json",
+            "schema",
+        ]
         self.return_property = return_property
         if return_property:
             if content_schema is None:
-                raise ValueError(f"No schema exists for response {api_response} of path {api_path} and verb {api_verb} in spec, cannot extract return property")
+                raise ValueError(
+                    f"No schema exists for response {api_response} of path {api_path} and verb {api_verb} in spec, cannot extract return property"
+                )
             content_schema = resolve_schema(content_schema, spec)
             if return_property not in content_schema.get("properties", {}):
-                raise ValueError(f"Property '{return_property}' does not exist in response for path {api_path} and verb {api_verb} in spec")
+                raise ValueError(
+                    f"Property '{return_property}' does not exist in response for path {api_path} and verb {api_verb} in spec"
+                )
             content_schema = content_schema.get("properties", {}).get(return_property, {})
             schema_path.extend(["properties", return_property])
-        self.api_content = as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, True) if content_schema else None
+        self.api_content = (
+            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, True)
+            if content_schema
+            else None
+        )
         self.schema_added = 0
 
     def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef):
@@ -1475,12 +1506,14 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 if isinstance(stmt, cst.FunctionDef) and stmt.name.value == self.method_name:
                     raise RuntimeError(f"Function '{self.method_name}' already exists")
             method = self.create_method()
-            stmts = tuple(stmts[:insert_idx]) + (method, ) + tuple(stmts[insert_idx:])
+            stmts = tuple(stmts[:insert_idx]) + (method,) + tuple(stmts[insert_idx:])
             return updated_node.with_changes(body=updated_node.body.with_changes(body=stmts))
 
         return updated_node
 
-    def find_method_index(self, method_name: str, statements: Sequence[cst.BaseStatement] | Sequence[cst.BaseSmallStatement]):
+    def find_method_index(
+        self, method_name: str, statements: Sequence[cst.BaseStatement] | Sequence[cst.BaseSmallStatement]
+    ):
         method_name_order_elements = self.get_order_elements(method_name)
         for idx, stmt in enumerate(statements):
             if isinstance(stmt, cst.FunctionDef):
@@ -1498,20 +1531,37 @@ class CreateClassMethodTransformer(CstTransformerBase):
     def get_order_elements(function_name: str) -> tuple[str] | tuple[str, int, str]:
         for idx, prefix in enumerate(["create", "get", "set", "delete", "remove", "edit"]):
             if function_name.startswith(f"{prefix}_"):
-                return function_name[len(prefix)+1:], idx, prefix
-        return (function_name, )
+                return function_name[len(prefix) + 1 :], idx, prefix
+        return (function_name,)
 
     def create_method(self) -> cst.FunctionDef:
-        url_params = [elem[1:-1]
-                      for elem in self.relative_path.split('/')
-                      if elem.startswith('{') and elem.endswith('}')]
+        url_params = [
+            elem[1:-1] for elem in self.relative_path.split("/") if elem.startswith("{") and elem.endswith("}")
+        ]
         if url_params:
             raise ValueError(f"URL parameter not implemented: {', '.join(url_params)}")
 
-        request_schema = self.api.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", None)
-        schema_path = ("paths", self.api_path, self.api_verb, "requestBody", "content", "application/json", "schema", "properties")
-        request_properties = {prop: as_python_type(desc, list(schema_path + (prop, )), self.schema_to_class, self.classes, True)
-                              for prop, desc in request_schema.get("properties", {}).items()} if request_schema else {}
+        request_schema = (
+            self.api.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", None)
+        )
+        schema_path = (
+            "paths",
+            self.api_path,
+            self.api_verb,
+            "requestBody",
+            "content",
+            "application/json",
+            "schema",
+            "properties",
+        )
+        request_properties = (
+            {
+                prop: as_python_type(desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, True)
+                for prop, desc in request_schema.get("properties", {}).items()
+            }
+            if request_schema
+            else {}
+        )
         required_properties = request_schema.get("required") if request_schema else []
         # TODO: ignore parameters:
         #       - those covered by prefix_path
@@ -1538,15 +1588,19 @@ class CreateClassMethodTransformer(CstTransformerBase):
         stmts.append(cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))]))
 
         assertion_stmts = [
-            cst.SimpleStatementLine(body=[
-                cst.Assert(
-                    test=cst.Call(
-                        func=cst.Name("isinstance") if prop_name in required_properties else cst.Name("is_optional"),
-                        args=[cst.Arg(cst.Name(prop_name)), cst.Arg(self.create_type(prop_type))]
-                    ),
-                    msg=cst.Name(prop_name)
-                )
-            ])
+            cst.SimpleStatementLine(
+                body=[
+                    cst.Assert(
+                        test=cst.Call(
+                            func=cst.Name("isinstance")
+                            if prop_name in required_properties
+                            else cst.Name("is_optional"),
+                            args=[cst.Arg(cst.Name(prop_name)), cst.Arg(self.create_type(prop_type))],
+                        ),
+                        msg=cst.Name(prop_name),
+                    )
+                ]
+            )
             for prop_name, prop_type in request_properties.items()
         ]
         stmts.extend(assertion_stmts)
@@ -1554,32 +1608,55 @@ class CreateClassMethodTransformer(CstTransformerBase):
         # TODO: add NotSet.remove_notset()
         if request_properties:
             parameter_stmt = cst.SimpleStatementLine(
-                body=[cst.Assign(
-                    targets=[cst.AssignTarget(cst.Name("parameters"))],
-                    value=cst.Dict([
-                        cst.DictElement(key=cst.SimpleString(f'"{prop_name}"'), value=cst.Name(prop_name))
-                        for prop_name, prop_type in request_properties.items()
-                    ])
-                )],
-                leading_lines=[cst.EmptyLine()]
+                body=[
+                    cst.Assign(
+                        targets=[cst.AssignTarget(cst.Name("parameters"))],
+                        value=cst.Dict(
+                            [
+                                cst.DictElement(key=cst.SimpleString(f'"{prop_name}"'), value=cst.Name(prop_name))
+                                for prop_name, prop_type in request_properties.items()
+                            ]
+                        ),
+                    )
+                ],
+                leading_lines=[cst.EmptyLine()],
             )
             stmts.append(parameter_stmt)
 
-        request_stmt = cst.SimpleStatementLine(body=[cst.Assign(
-            targets=[cst.AssignTarget(cst.Tuple(elements=[cst.Element(cst.Name("headers")), cst.Element(cst.Name("data"))], lpar=(), rpar=()))],
-            value=cst.Call(
-                func=self.create_attribute(["self", "_requester", "requestJsonAndCheck"]),
-                args=(
-                    cst.Arg(cst.SimpleString(f'"{self.api_verb.upper()}"')),
-                    cst.Arg(cst.FormattedString([
-                        cst.FormattedStringExpression(self.create_attribute(["self", "url"])),
-                        cst.FormattedStringText(self.relative_path)
-                    ])),
-                ) + (
-                    (cst.Arg(keyword=cst.Name("input"), value=cst.Name("parameters"), equal=equal),) if request_properties else ()
+        request_stmt = cst.SimpleStatementLine(
+            body=[
+                cst.Assign(
+                    targets=[
+                        cst.AssignTarget(
+                            cst.Tuple(
+                                elements=[cst.Element(cst.Name("headers")), cst.Element(cst.Name("data"))],
+                                lpar=(),
+                                rpar=(),
+                            )
+                        )
+                    ],
+                    value=cst.Call(
+                        func=self.create_attribute(["self", "_requester", "requestJsonAndCheck"]),
+                        args=(
+                            cst.Arg(cst.SimpleString(f'"{self.api_verb.upper()}"')),
+                            cst.Arg(
+                                cst.FormattedString(
+                                    [
+                                        cst.FormattedStringExpression(self.create_attribute(["self", "url"])),
+                                        cst.FormattedStringText(self.relative_path),
+                                    ]
+                                )
+                            ),
+                        )
+                        + (
+                            (cst.Arg(keyword=cst.Name("input"), value=cst.Name("parameters"), equal=equal),)
+                            if request_properties
+                            else ()
+                        ),
+                    ),
                 )
-            )
-        )])
+            ]
+        )
         stmts.append(request_stmt)
 
         if self.api_content:
@@ -1587,22 +1664,26 @@ class CreateClassMethodTransformer(CstTransformerBase):
             if self.return_property:
                 data = cst.Call(
                     func=self.create_attribute(["data", "get"]),
-                    args=[cst.Arg(cst.SimpleString(f'"{self.return_property}"'))]
+                    args=[cst.Arg(cst.SimpleString(f'"{self.return_property}"'))],
                 )
             else:
                 data = cst.Name("data")
 
             if isinstance(self.api_content, GithubClass):
-                result_stmt = cst.SimpleStatementLine(body=[
-                    cst.Return(value=cst.Call(
-                        func=self.create_type(self.api_content),
-                        args=[
-                            cst.Arg(self.create_attribute(["self", "_requester"])),
-                            cst.Arg(cst.Name("headers")),
-                            cst.Arg(data),
-                        ]
-                    ))
-                ])
+                result_stmt = cst.SimpleStatementLine(
+                    body=[
+                        cst.Return(
+                            value=cst.Call(
+                                func=self.create_type(self.api_content),
+                                args=[
+                                    cst.Arg(self.create_attribute(["self", "_requester"])),
+                                    cst.Arg(cst.Name("headers")),
+                                    cst.Arg(data),
+                                ],
+                            )
+                        )
+                    ]
+                )
             else:
                 result_stmt = cst.SimpleStatementLine(body=[cst.Return(data)])
             stmts.append(result_stmt)
@@ -1627,7 +1708,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
             params=params,
             body=body,
             returns=returns,
-            lines_after_decorators=[cst.EmptyLine()]
+            lines_after_decorators=[cst.EmptyLine()],
         )
 
 
@@ -1639,7 +1720,9 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any], index_config_file: Path, paths: list[dict[str, Any]], check_verbs: bool):
+    def __init__(
+        self, classes: dict[str, Any], index_config_file: Path, paths: list[dict[str, Any]], check_verbs: bool
+    ):
         self.classes = classes
         self.paths = paths
         self.config = {}
@@ -1865,7 +1948,12 @@ class OpenApi:
                 schema_path, schema = self.get_schema(spec, schema_name)
 
                 all_properties = {
-                    k: (as_python_type(v, schema_path + ["properties", k], self.schema_to_class, self.classes, self.verbose), v.get("deprecated", False))
+                    k: (
+                        as_python_type(
+                            v, schema_path + ["properties", k], self.schema_to_class, self.classes, self.verbose
+                        ),
+                        v.get("deprecated", False),
+                    )
                     for k, v in schema.get("properties", {}).items()
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
@@ -1979,7 +2067,9 @@ class OpenApi:
                     path_to_return_classes[path] = {}
                 if verb not in path_to_return_classes[path]:
                     path_to_return_classes[path][verb] = set()
-                path_to_return_classes[path][verb] = sorted(list(set(path_to_return_classes[path][verb]).union(set(returns))))
+                path_to_return_classes[path][verb] = sorted(
+                    list(set(path_to_return_classes[path][verb]).union(set(returns)))
+                )
 
             # construct schema-to-class index
             for schema in cls.get("schemas"):
@@ -2039,9 +2129,7 @@ class OpenApi:
 
         return True
 
-    def suggest_paths(
-        self, spec_file: str, index_filename: str, class_names: list[str] | None, dry_run: bool
-    ) -> bool:
+    def suggest_paths(self, spec_file: str, index_filename: str, class_names: list[str] | None, dry_run: bool) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
             spec = json.load(r)
@@ -2074,9 +2162,11 @@ class OpenApi:
                     for candidate_path in paths:
                         verbs = paths[candidate_path].keys()
                         if len(candidate_path) > len(path) and candidate_path.startswith(f"{path}/"):
-                            rel_path = candidate_path[len(path)+1:]
+                            rel_path = candidate_path[len(path) + 1 :]
                             rel_path_fields = rel_path.split("/")
-                            rel_path_params = [field.startswith("{") and field.endswith("}") for field in rel_path_fields]
+                            rel_path_params = [
+                                field.startswith("{") and field.endswith("}") for field in rel_path_fields
+                            ]
                             # we skip paths where multiple path parameters exist, or
                             # the path parameter is not at the end of the path
                             if sum(rel_path_params) > 1 or sum(rel_path_params) == 1 and not rel_path_params[-1]:
@@ -2098,53 +2188,65 @@ class OpenApi:
 
                             for verb in verbs:
                                 if implemented_paths.get(candidate_path, {}).get(verb.upper, {}).get("methods", []):
-                                    methods = [f"{method.get("class")}.{method.get("name")}"
-                                               for method in
-                                               implemented_paths.get(candidate_path, {}).get("GET", {}).get("methods")]
+                                    methods = [
+                                        f"{method.get('class')}.{method.get('name')}"
+                                        for method in implemented_paths.get(candidate_path, {})
+                                        .get("GET", {})
+                                        .get("methods")
+                                    ]
                                     if self.verbose:
                                         print(f"    - {verb} {candidate_path} implemented by {", ".join(methods)}")
                                     continue
 
                                 suggested_methods = self.suggest_method_names(verb, path, candidate_path, spec)
                                 if suggested_methods:
-                                    implementations = " or ".join([f"{cls}.{suggested_method}()" for suggested_method in suggested_methods])
+                                    implementations = " or ".join(
+                                        [f"{cls}.{suggested_method}()" for suggested_method in suggested_methods]
+                                    )
                                     print(f"    - {verb} {candidate_path} should be implemented as {implementations}")
                                     for suggested_method in suggested_methods:
-                                      print(f"      {sys.executable} {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}")
+                                        print(
+                                            f"      {sys.executable} {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
+                                        )
                             print()
             print()
 
         return False
 
     def suggest_path_corrections(self, paths: dict[str, Any], implemented_paths: dict[str, Any]):
-        spec_paths = set((verb, path) for path, verbs in paths.items() for verb in verbs)
-        impl_paths = set((verb.lower(), path) for path, verbs in implemented_paths.items() for verb in verbs)
+        spec_paths = {(verb, path) for path, verbs in paths.items() for verb in verbs}
+        impl_paths = {(verb.lower(), path) for path, verbs in implemented_paths.items() for verb in verbs}
         unspec_paths = impl_paths - spec_paths
         impl_spec_paths = spec_paths.intersection(impl_paths)
-        print(f"There are {len(impl_spec_paths)} out of {len(spec_paths)} verbs ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented")
+        print(
+            f"There are {len(impl_spec_paths)} out of {len(spec_paths)} verbs ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented"
+        )
         print(f"There are {len(unspec_paths)} verbs unknown to the OpenAPI spec")
         if self.verbose:
             for verb, path in sorted(list(unspec_paths)):
                 print(f"- {verb} {path}")
         print()
 
-        spec_paths = set(path for (verb, path) in spec_paths)
-        impl_paths = set(path for (verb, path) in impl_paths)
+        spec_paths = {path for (verb, path) in spec_paths}
+        impl_paths = {path for (verb, path) in impl_paths}
         unspec_paths = impl_paths - spec_paths
         impl_spec_paths = spec_paths.intersection(impl_paths)
-        print(f"There are {len(impl_spec_paths)} out of {len(spec_paths)} paths ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented")
+        print(
+            f"There are {len(impl_spec_paths)} out of {len(spec_paths)} paths ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented"
+        )
         print(f"There are {len(unspec_paths)} paths unknown to the OpenAPI spec")
         if self.verbose:
+
             def fingerprint(path: str) -> str:
                 return re.sub("[{][^}]+[}]", "{}", path.rstrip("/"))
 
             spec_fingerprints = {fingerprint(path): path for path in spec_paths}
             for path in sorted(list(unspec_paths)):
-                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), "")}")
+                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), " ")}")
         print()
 
     def suggest_method_names(self, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
-        suffix_path = path.replace("-", "_")[len(prefix_path)+1:]
+        suffix_path = path.replace("-", "_")[len(prefix_path) + 1 :]
         fields = suffix_path.split("/")
         context = "_".join(fields[:-1])
         last_field = fields[-1]
@@ -2315,7 +2417,9 @@ class OpenApi:
         # suggest schemas based on API calls
         available_schemas = {}
         ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
-        paths = set(spec.get("paths", {}).keys()).union(index.get("indices", {}).get("path_to_return_classes", {}).keys())
+        paths = set(spec.get("paths", {}).keys()).union(
+            index.get("indices", {}).get("path_to_return_classes", {}).keys()
+        )
         for path in paths:
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
@@ -2671,7 +2775,11 @@ class OpenApi:
         create_class_parser.add_argument("schema", help="Github API OpenAPI schema name", nargs="*")
 
         create_method_parser = create_component_parsers.add_parser("method", help="Create a PyGithub method")
-        create_method_parser.add_argument("--return-property", help="Return the value of this response property, instead of the entire response object", nargs="?")
+        create_method_parser.add_argument(
+            "--return-property",
+            help="Return the value of this response property, instead of the entire response object",
+            nargs="?",
+        )
         create_method_parser.add_argument("spec", help="Github API OpenAPI spec file")
         create_method_parser.add_argument("index_filename", help="Path of index file")
         create_method_parser.add_argument("class_name", help="PyGithub GithubObject class name")
