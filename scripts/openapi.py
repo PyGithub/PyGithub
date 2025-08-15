@@ -2631,11 +2631,11 @@ class OpenApi:
                 with NamedTemporaryFile(delete_on_close=False) as f:
                     f.close()
                     print(f"Updating temporary index {f.name}")
-                    self.index(github_path, f.name, dry_run=False)
+                    self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
                     self.apply(spec_file, f.name, [clazz.name], dry_run=False, tests=tests)
             else:
                 print("Updating index")
-                self.index(github_path, index_filename, dry_run=False)
+                self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
                 self.apply(spec_file, index_filename, [clazz.name], dry_run=False, tests=tests)
         except Exception as e:
             success = False
