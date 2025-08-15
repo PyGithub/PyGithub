@@ -60,6 +60,7 @@ class GithubClass:
     module: str
     name: str
     filename: str
+    test_filename: str
     bases: list[str]
     inheritance: list[str]
     methods: dict
@@ -81,10 +82,6 @@ class GithubClass:
     def full_class_name(self) -> str:
         return f"{self.package}.{self.module}.{self.name}"
 
-    @property
-    def test_filename(self) -> str:
-        return f"tests/{self.module}.py"
-
     @staticmethod
     def from_class_name(class_name: str, index: dict[str, Any] | None = None) -> GithubClass:
         if "." in class_name:
@@ -102,6 +99,7 @@ class GithubClass:
                     module=class_name,
                     name=class_name,
                     filename=f"{package}/{module}.py",
+                    test_filename=f"tests/{module}.py",
                     bases=[],
                     inheritance=[],
                     methods={},
@@ -328,6 +326,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         self._module = None
         self._package = None
         self._filename = None
+        self._test_filename = None
         self._classes = classes if classes is not None else {}
         self._ids = []
         self._properties = {}
@@ -342,6 +341,9 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
     def filename(self, filename: str):
         self._filename = filename
+
+    def test_filename(self, test_filename: str):
+        self._test_filename = test_filename
 
     @property
     def classes(self) -> dict[str, Any]:
@@ -380,6 +382,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             "module": self._module,
             "package": self._package,
             "filename": self._filename,
+            "test_filename": self._test_filename,
             "docstring": class_docstring,
             "schemas": class_schemas,
             "bases": class_bases,
@@ -1310,12 +1313,13 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any], index_config_file: Path | None = None, check_verbs: bool = False):
+    def __init__(self, classes: dict[str, Any], index_config_file: Path, check_verbs: bool):
         self.classes = classes
         self.config = {}
         self.check_verbs = check_verbs
+        self.tests_path = index_config_file.parent.parent / "tests"
 
-        if index_config_file:
+        if index_config_file.exists():
             with index_config_file.open("r") as r:
                 self.config = json.load(r)
 
@@ -1331,6 +1335,7 @@ class IndexFileWorker:
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
+        visitor.test_filename(str(self.tests_path / Path(filename).name))
         try:
             tree = cst.parse_module(code)
             tree.visit(visitor)
@@ -1549,13 +1554,24 @@ class OpenApi:
                     w.write(updated_code)
             return True
 
-    def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool) -> bool:
+    def apply(
+        self, spec_file: str, index_filename: str, class_names: list[str] | None, dry_run: bool, tests: bool
+    ) -> bool:
+        print(f"Using spec {spec_file}")
         with open(spec_file) as r:
             spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
         classes = index.get("classes", {})
 
+        if not class_names:
+            class_names = classes.keys()
+        if len(class_names) == 1:
+            print(f"Applying API schemas to PyGithub class {class_names[0]}")
+        else:
+            print(f"Applying API schemas to {len(class_names)} PyGithub classes")
+
+        any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
 
@@ -1572,6 +1588,8 @@ class OpenApi:
             }
             completable = "CompletableGithubObject" in cls.get("inheritance", [])
             cls_schemas = cls.get("schemas", [])
+            class_change = False
+            test_change = False
             for schema_name in cls_schemas:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
@@ -1590,7 +1608,7 @@ class OpenApi:
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
-                changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
+                class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
                 if tests and os.path.exists(clazz.test_filename):
                     with open(clazz.test_filename) as r:
@@ -1601,9 +1619,15 @@ class OpenApi:
                     )
                     tree = cst.parse_module(code)
                     tree_updated = tree.visit(transformer)
-                    changed = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or changed
+                    test_change = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or test_change
 
-                return changed
+            any_change = any_change or class_change or test_change
+            if class_change or test_change:
+                print(f"Class {class_name} changed")
+                if test_change:
+                    print(f"Test {clazz.test_filename} changed")
+
+        return any_change
 
     def fetch(self, api: str, api_version: str, commit: str | None, spec_file: str) -> bool:
         ref = "refs/heads/main" if commit is None else commit
@@ -1634,7 +1658,7 @@ class OpenApi:
             config = Path(github_path) / "openapi.index.json"
             if check_verbs and not config.exists():
                 raise RuntimeError(f"Cannot check verbs without config: {config}")
-            indexer = IndexFileWorker(classes, config if config.exists() else None, check_verbs)
+            indexer = IndexFileWorker(classes, config, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
@@ -1728,7 +1752,7 @@ class OpenApi:
             if len(class_names) == 1:
                 print(f"Suggesting API schemas for PyGithub class {class_names[0]}")
             else:
-                print(f"Suggesting API schemas for PyGithub {len(class_names)} classes")
+                print(f"Suggesting API schemas for {len(class_names)} PyGithub classes")
         else:
             print("Suggesting API schemas for PyGithub classes")
 
