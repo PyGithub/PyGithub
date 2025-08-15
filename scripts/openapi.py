@@ -153,12 +153,9 @@ class FunctionCallCollector(cst.CSTVisitor):
 
     def visit_Call(self, node: cst.Call) -> bool | None:
         code = cst.Module([]).code_for_node
-        self._calls.append(
-            (
-                ".".join([code(node.func)]),
-                [(f"{code(arg.keyword)}=" if arg.keyword else "") + code(arg.value) for arg in node.args],
-            )
-        )
+        func_name = code(node.func)
+        args = [(f"{code(arg.keyword)}=" if arg.keyword else "") + code(arg.value) for arg in node.args]
+        self._calls.append((func_name, args))
 
 
 def get_class_docstring(node: cst.ClassDef) -> str | None:
@@ -440,15 +437,16 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
                 # check if method (VERB) is same as in the code
                 if len(fields) > 0 and self._method_verbs is not None:
-                    method = f'"{fields[0]}"'
+                    verb = f'"{fields[0]}"'
                     full_method_name = f"{self.current_class_name}.{method_name}"
 
                     if full_method_name in self._method_verbs:
                         # these are methods configured in the github/openapi.index.json file
-                        known_method_verb = f'"{self._method_verbs[full_method_name]}"'
-                        if known_method_verb != method:
+                        known_verb = f'"{self._method_verbs[full_method_name]}"'
+                        if known_verb != verb:
                             print(
-                                f"Method {full_method_name} is known to call {known_method_verb}, but doc-string says {method}"
+                                f"Method {full_method_name} is known to call {known_verb}, "
+                                f"but doc-string says {verb}"
                             )
                     else:
                         # detect method from code
@@ -504,25 +502,28 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
                         # skip functions that call into parent functions
                         if not any(func.startswith("super().") for func, args, base in calls):
+                            # check for requester calls with the expected verb
                             if not any(
                                 func.startswith(("self._requester.request", "self.__requester.request"))
                                 and args
-                                and args[0] == method
+                                and args[0] == verb
                                 for func, args, base in calls
                             ):
-                                print(f"Not found any {method} call in {self.current_class_name}.{method_name}")
+                                print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
                                 for func, args, base in calls:
                                     print(f"- calls {func}({', '.join(args)})")
                             else:
+                                # check if the found verb depends on a base class, which we cannot test here
                                 if not any(
                                     func.startswith(("self._requester.request", "self.__requester.request"))
                                     and args
-                                    and args[0] == method
+                                    and args[0] == verb
                                     and base is None
                                     for func, args, base in calls
                                 ):
                                     print(
-                                        f"Not found any {method} call in {self.current_class_name}.{method_name} conditional on some base class"
+                                        f"Not found any {verb} call in {self.current_class_name}.{method_name} "
+                                        f"conditional on some base class"
                                     )
                                     for func, args, base in calls:
                                         print(f"- calls {func}({', '.join(args)})")
