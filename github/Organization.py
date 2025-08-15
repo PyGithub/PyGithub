@@ -184,7 +184,10 @@ class Organization(CompletableGithubObject):
         self._email: Attribute[str] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._followers: Attribute[int] = NotSet
+        self._followers_url: Attribute[str] = NotSet
         self._following: Attribute[int] = NotSet
+        self._following_url: Attribute[str] = NotSet
+        self._gists_url: Attribute[str] = NotSet
         self._gravatar_id: Attribute[str] = NotSet
         self._has_organization_projects: Attribute[bool] = NotSet
         self._has_repository_projects: Attribute[bool] = NotSet
@@ -207,23 +210,30 @@ class Organization(CompletableGithubObject):
         self._members_url: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
         self._plan: Attribute[Plan] = NotSet
         self._private_gists: Attribute[int] = NotSet
         self._public_gists: Attribute[int] = NotSet
         self._public_members_url: Attribute[str] = NotSet
         self._public_repos: Attribute[int] = NotSet
+        self._received_events_url: Attribute[str] = NotSet
         self._repos_url: Attribute[str] = NotSet
         self._secret_scanning_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._secret_scanning_push_protection_custom_link: Attribute[str] = NotSet
         self._secret_scanning_push_protection_custom_link_enabled: Attribute[bool] = NotSet
         self._secret_scanning_push_protection_enabled_for_new_repositories: Attribute[bool] = NotSet
+        self._site_admin: Attribute[bool] = NotSet
+        self._starred_at: Attribute[str] = NotSet
+        self._starred_url: Attribute[str] = NotSet
+        self._subscriptions_url: Attribute[str] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
         self._twitter_username: Attribute[str] = NotSet
         self._two_factor_requirement_enabled: Attribute[bool] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._user_view_type: Attribute[str] = NotSet
         self._web_commit_signoff_required: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
@@ -320,9 +330,24 @@ class Organization(CompletableGithubObject):
         return self._followers.value
 
     @property
+    def followers_url(self) -> str:
+        self._completeIfNotSet(self._followers_url)
+        return self._followers_url.value
+
+    @property
     def following(self) -> int:
         self._completeIfNotSet(self._following)
         return self._following.value
+
+    @property
+    def following_url(self) -> str:
+        self._completeIfNotSet(self._following_url)
+        return self._following_url.value
+
+    @property
+    def gists_url(self) -> str:
+        self._completeIfNotSet(self._gists_url)
+        return self._gists_url.value
 
     @property
     def gravatar_id(self) -> str:
@@ -435,6 +460,11 @@ class Organization(CompletableGithubObject):
         return self._node_id.value
 
     @property
+    def organizations_url(self) -> str:
+        self._completeIfNotSet(self._organizations_url)
+        return self._organizations_url.value
+
+    @property
     def owned_private_repos(self) -> int:
         self._completeIfNotSet(self._owned_private_repos)
         return self._owned_private_repos.value
@@ -465,6 +495,11 @@ class Organization(CompletableGithubObject):
         return self._public_repos.value
 
     @property
+    def received_events_url(self) -> str:
+        self._completeIfNotSet(self._received_events_url)
+        return self._received_events_url.value
+
+    @property
     def repos_url(self) -> str:
         self._completeIfNotSet(self._repos_url)
         return self._repos_url.value
@@ -488,6 +523,26 @@ class Organization(CompletableGithubObject):
     def secret_scanning_push_protection_enabled_for_new_repositories(self) -> bool:
         self._completeIfNotSet(self._secret_scanning_push_protection_enabled_for_new_repositories)
         return self._secret_scanning_push_protection_enabled_for_new_repositories.value
+
+    @property
+    def site_admin(self) -> bool:
+        self._completeIfNotSet(self._site_admin)
+        return self._site_admin.value
+
+    @property
+    def starred_at(self) -> str:
+        self._completeIfNotSet(self._starred_at)
+        return self._starred_at.value
+
+    @property
+    def starred_url(self) -> str:
+        self._completeIfNotSet(self._starred_url)
+        return self._starred_url.value
+
+    @property
+    def subscriptions_url(self) -> str:
+        self._completeIfNotSet(self._subscriptions_url)
+        return self._subscriptions_url.value
 
     @property
     def total_private_repos(self) -> int:
@@ -518,6 +573,11 @@ class Organization(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    @property
+    def user_view_type(self) -> str:
+        self._completeIfNotSet(self._user_view_type)
+        return self._user_view_type.value
 
     @property
     def web_commit_signoff_required(self) -> bool:
@@ -1923,8 +1983,14 @@ class Organization(CompletableGithubObject):
             self._events_url = self._makeStringAttribute(attributes["events_url"])
         if "followers" in attributes:  # pragma no branch
             self._followers = self._makeIntAttribute(attributes["followers"])
+        if "followers_url" in attributes:  # pragma no branch
+            self._followers_url = self._makeStringAttribute(attributes["followers_url"])
         if "following" in attributes:  # pragma no branch
             self._following = self._makeIntAttribute(attributes["following"])
+        if "following_url" in attributes:  # pragma no branch
+            self._following_url = self._makeStringAttribute(attributes["following_url"])
+        if "gists_url" in attributes:  # pragma no branch
+            self._gists_url = self._makeStringAttribute(attributes["gists_url"])
         if "gravatar_id" in attributes:  # pragma no branch
             self._gravatar_id = self._makeStringAttribute(attributes["gravatar_id"])
         if "has_organization_projects" in attributes:  # pragma no branch
@@ -1985,6 +2051,8 @@ class Organization(CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "organizations_url" in attributes:  # pragma no branch
+            self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
             self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
         if "plan" in attributes:  # pragma no branch
@@ -1997,6 +2065,8 @@ class Organization(CompletableGithubObject):
             self._public_members_url = self._makeStringAttribute(attributes["public_members_url"])
         if "public_repos" in attributes:  # pragma no branch
             self._public_repos = self._makeIntAttribute(attributes["public_repos"])
+        if "received_events_url" in attributes:  # pragma no branch
+            self._received_events_url = self._makeStringAttribute(attributes["received_events_url"])
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
         if "secret_scanning_enabled_for_new_repositories" in attributes:  # pragma no branch
@@ -2015,6 +2085,14 @@ class Organization(CompletableGithubObject):
             self._secret_scanning_push_protection_enabled_for_new_repositories = self._makeBoolAttribute(
                 attributes["secret_scanning_push_protection_enabled_for_new_repositories"]
             )
+        if "site_admin" in attributes:  # pragma no branch
+            self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
+        if "starred_at" in attributes:  # pragma no branch
+            self._starred_at = self._makeStringAttribute(attributes["starred_at"])
+        if "starred_url" in attributes:  # pragma no branch
+            self._starred_url = self._makeStringAttribute(attributes["starred_url"])
+        if "subscriptions_url" in attributes:  # pragma no branch
+            self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "twitter_username" in attributes:  # pragma no branch
@@ -2027,5 +2105,7 @@ class Organization(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "user_view_type" in attributes:  # pragma no branch
+            self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])
         if "web_commit_signoff_required" in attributes:  # pragma no branch
             self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
