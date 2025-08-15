@@ -73,7 +73,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.events_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/events")
         self.assertEqual(self.issue.html_url, "https://github.com/PyGithub/PyGithub/issues/28")
         self.assertEqual(self.issue.id, 4653757)
-        self.assertEqual(self.issue.issue_dependencies_summary.some_attribute, "")
+        self.assertIsNone(self.issue.issue_dependencies_summary)
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["bug", "question"])
         self.assertEqual(
             self.issue.labels_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/labels{/name}"
@@ -103,11 +103,11 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.repository_url, "https://api.github.com/repos/PyGithub/PyGithub")
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
-        self.assertEqual(self.issue.sub_issues_summary.some_attribute, "")
+        self.assertIsNone(self.issue.sub_issues_summary)
         self.assertIsNone(self.issue.text_matches)
         self.assertEqual(self.issue.timeline_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/timeline")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
-        self.assertEqual(self.issue.type.name, "")
+        self.assertIsNone(self.issue.type)
         self.assertEqual(self.issue.updated_at, datetime(2019, 5, 3, 9, 44, 22, tzinfo=timezone.utc))
         self.assertEqual(self.issue.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28")
         self.assertFalse(self.issue.locked)
