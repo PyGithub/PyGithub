@@ -33,6 +33,7 @@ from collections import Counter
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any, Sequence
 
@@ -139,6 +140,22 @@ class SimpleStringCollector(cst.CSTVisitor):
 
     def visit_SimpleString(self, node: cst.SimpleString) -> bool | None:
         self._strings.append(node.evaluated_value)
+
+
+class FunctionCallCollector(cst.CSTVisitor):
+    def __init__(self):
+        super().__init__()
+        self._calls = []
+
+    @property
+    def calls(self):
+        return self._calls
+
+    def visit_Call(self, node: cst.Call) -> bool | None:
+        code = cst.Module([]).code_for_node
+        func_name = code(node.func)
+        args = [(f"{code(arg.keyword)}=" if arg.keyword else "") + code(arg.value) for arg in node.args]
+        self._calls.append((func_name, args))
 
 
 def get_class_docstring(node: cst.ClassDef) -> str | None:
@@ -306,7 +323,7 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
 
 
 class IndexPythonClassesVisitor(CstVisitorBase):
-    def __init__(self, classes: dict[str, Any] | None = None):
+    def __init__(self, classes: dict[str, Any] | None = None, method_verbs: dict[str, str] | None = None):
         super().__init__()
         self._module = None
         self._package = None
@@ -315,6 +332,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         self._ids = []
         self._properties = {}
         self._methods = {}
+        self._method_verbs = method_verbs
 
     def module(self, module: str):
         self._module = module
@@ -416,6 +434,99 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                     },
                     "returns": returns,
                 }
+
+                # check if method (VERB) is same as in the code
+                if len(fields) > 0 and self._method_verbs is not None:
+                    verb = f'"{fields[0]}"'
+                    full_method_name = f"{self.current_class_name}.{method_name}"
+
+                    if full_method_name in self._method_verbs:
+                        # these are methods configured in the github/openapi.index.json file
+                        known_verb = f'"{self._method_verbs[full_method_name]}"'
+                        if known_verb != verb:
+                            print(
+                                f"Method {full_method_name} is known to call {known_verb}, "
+                                f"but doc-string says {verb}"
+                            )
+                    else:
+                        # detect method from code
+                        visitor = FunctionCallCollector()
+                        node.body.visit(visitor)
+                        calls = visitor.calls
+
+                        # calls to PaginatedList(...) are equivalent to
+                        # self.__requester.requestJsonAndCheck("GET", …, parameters=…, headers=…)
+                        calls = [
+                            ("self.__requester.requestJsonAndCheck", ['"GET"', "…", "parameters=…", "headers=…"])
+                            if func in ["PaginatedList", "github.PaginatedList.PaginatedList"]
+                            else (func, args)
+                            for func, args in calls
+                        ]
+
+                        # calls to self._requester.graphql_ are equivalent to
+                        # self._requester.requestJsonAndCheck("POST", …, input=…)
+                        calls = [
+                            ("self._requester.requestJsonAndCheck", ['"POST"', "…", "input=…"])
+                            if func.startswith("self._requester.graphql_")
+                            else (func, args)
+                            for func, args in calls
+                        ]
+
+                        # calls to github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+                        # where class extends CompletableGithubObject are equivalent to
+                        # self._requester.requestJsonAndCheck("GET", …, headers=…)
+                        calls = [
+                            (
+                                "self._requester.requestJsonAndCheck",
+                                ['"GET"', "…", "headers=…"],
+                                "CompletableGithubObject",
+                            )
+                            if func.startswith("github.")
+                            and args
+                            and args[0]
+                            in [
+                                "self._requester",
+                                "self.__requester",
+                                "requester=self._requester",
+                                "requester=self.__requester",
+                            ]
+                            and (
+                                len(args) > 1
+                                and args[1].startswith("url=")
+                                or len(args) > 2
+                                and args[2].startswith(('{"url":', 'attributes={"url":'))
+                            )
+                            else (func, args, None)
+                            for func, args in calls
+                        ]
+
+                        # skip functions that call into parent functions
+                        if not any(func.startswith("super().") for func, args, base in calls):
+                            # check for requester calls with the expected verb
+                            if not any(
+                                func.startswith(("self._requester.request", "self.__requester.request"))
+                                and args
+                                and args[0] == verb
+                                for func, args, base in calls
+                            ):
+                                print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
+                                for func, args, base in calls:
+                                    print(f"- calls {func}({', '.join(args)})")
+                            else:
+                                # check if the found verb depends on a base class, which we cannot test here
+                                if not any(
+                                    func.startswith(("self._requester.request", "self.__requester.request"))
+                                    and args
+                                    and args[0] == verb
+                                    and base is None
+                                    for func, args, base in calls
+                                ):
+                                    print(
+                                        f"Not found any {verb} call in {self.current_class_name}.{method_name} "
+                                        f"conditional on some base class"
+                                    )
+                                    for func, args, base in calls:
+                                        print(f"- calls {func}({', '.join(args)})")
 
         if method_name == "__repr__":
             # extract properties used here as ids
@@ -1199,8 +1310,14 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any]):
+    def __init__(self, classes: dict[str, Any], index_config_file: Path | None = None, check_verbs: bool = False):
         self.classes = classes
+        self.config = {}
+        self.check_verbs = check_verbs
+
+        if index_config_file:
+            with index_config_file.open("r") as r:
+                self.config = json.load(r)
 
     def index_file(self, filename: str):
         with open(filename) as r:
@@ -1208,7 +1325,9 @@ class IndexFileWorker:
 
         from pathlib import Path
 
-        visitor = IndexPythonClassesVisitor(self.classes)
+        visitor = IndexPythonClassesVisitor(
+            self.classes, self.config.get("known method verbs", {}) if self.check_verbs else None
+        )
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
@@ -1503,7 +1622,7 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, index_filename: str, dry_run: bool) -> bool:
+    def index(self, github_path: str, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
         import multiprocessing
 
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
@@ -1512,7 +1631,10 @@ class OpenApi:
         # index files in parallel
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
-            indexer = IndexFileWorker(classes)
+            config = Path(github_path) / "openapi.index.json"
+            if check_verbs and not config.exists():
+                raise RuntimeError(f"Cannot check verbs without config: {config}")
+            indexer = IndexFileWorker(classes, config if config.exists() else None, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
@@ -1976,6 +2098,7 @@ class OpenApi:
         fetch_parser.add_argument("spec", help="Github API OpenAPI spec file to be written")
 
         index_parser = subparsers.add_parser("index")
+        index_parser.add_argument("--check-verbs", help="Check verbs in doc-string matches code", action="store_true")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
         index_parser.add_argument("index_filename", help="Path of index file")
 
@@ -2024,7 +2147,9 @@ class OpenApi:
         if args.subcommand == "fetch":
             changes = self.fetch(self.args.api, self.args.api_version, self.args.commit, self.args.spec)
         elif args.subcommand == "index":
-            changes = self.index(self.args.github_path, self.args.index_filename, self.args.dry_run)
+            changes = self.index(
+                self.args.github_path, self.args.index_filename, self.args.check_verbs, self.args.dry_run
+            )
         elif self.args.subcommand == "suggest":
             changes = self.suggest(
                 self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run

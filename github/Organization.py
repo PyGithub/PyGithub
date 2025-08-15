@@ -822,7 +822,7 @@ class Organization(CompletableGithubObject):
 
     def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
         """
-        :calls: 'GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
         :param secret_type: string options actions or dependabot
         :rtype: github.OrganizationSecret.OrganizationSecret
@@ -946,7 +946,7 @@ class Organization(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> OrganizationVariable:
         """
-        :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :calls: `GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
         :rtype: github.OrganizationVariable.OrganizationVariable
         """
