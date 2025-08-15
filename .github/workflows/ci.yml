@@ -268,15 +268,41 @@ jobs:
         run: |
           pip install -r requirements/scripts.txt
       - name: Sort classes
+        shell: bash
         run: |
+          # Sort classes
+          set -euo pipefail
+
           echo "::group::Sort classes"
           python scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
           python scripts/openapi.py index github openapi.json openapi.index
           python scripts/sort_class.py openapi.index $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
           echo "::endgroup::"
 
-          echo "Changes:"
-          git diff
+          if ! (git diff --exit-code > diff.txt)
+          then
+            echo ""
+            echo "Changes:"
+            cat diff.txt
+            git reset --hard --quiet HEAD
+            echo ""
+            echo "To fix this, run the following commands:"
+            echo "python3 -m venv venv"
+            echo "source venv/bin/activate"
+            echo "pip install -r requirements/scripts.txt"
+            echo python scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+            echo python scripts/openapi.py index github openapi.json openapi.index
+            for class in $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
+            do
+              python scripts/sort_class.py openapi.index $class > /dev/null
+              if ! git diff --quiet --exit-code
+              then
+                echo python scripts/sort_class.py openapi.index $class
+                git reset --hard --quiet HEAD
+              fi
+            done
+            false
+          fi
 
   event_file:
     name: "Event File"
