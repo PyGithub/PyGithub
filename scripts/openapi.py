@@ -1649,16 +1649,22 @@ class OpenApi:
     def index(self, github_path: str, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
         import multiprocessing
 
+        config = {}
+        config_file = Path(github_path) / "openapi.index.json"
+        if config_file.exists():
+            with config_file.open("r") as r:
+                ignored_schemas = json.load(r).get("ignored OpenAPI schemas", [])
+            config["ignored_schemas"] = ignored_schemas
+
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
         print(f"Indexing {len(files)} Python files")
 
         # index files in parallel
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
-            config = Path(github_path) / "openapi.index.json"
-            if check_verbs and not config.exists():
-                raise RuntimeError(f"Cannot check verbs without config: {config}")
-            indexer = IndexFileWorker(classes, config, check_verbs)
+            if check_verbs and not config_file.exists():
+                raise RuntimeError(f"Cannot check verbs without config: {config_file}")
+            indexer = IndexFileWorker(classes, config_file, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
@@ -1714,6 +1720,7 @@ class OpenApi:
             print(f"Indexed {len(schema_to_classes)} schemas")
 
             data = {
+                "config": config,
                 "sources": github_path,
                 "classes": classes,
                 "indices": {
@@ -1861,20 +1868,23 @@ class OpenApi:
 
         # suggest schemas based on API calls
         available_schemas = {}
+        ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
         paths = set(spec.get("paths", {}).keys()).union(index.get("indices", {}).get("path_to_classes", {}).keys())
-        for path in paths:
+        for path in sorted(paths):
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
                 schema_path = ["paths", f'"{path}"', verb, "responses"]
                 # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
                 schemas_of_path = [
-                    components.lstrip("#")
+                    component
                     for status, response in responses_of_path.items()
                     if status.isnumeric() and int(status) < 400 and "content" in response
                     for schema in [response.get("content").get("application/json", {}).get("schema", {})]
-                    for components in self.get_inner_spec_types(
+                    for component in self.get_inner_spec_types(
                         schema, schema_path + [str(status), "content", '"application/json"', "schema"]
                     )
+                    for component in [component.lstrip("#")]
+                    if component not in ignored_schemas
                 ]
                 classes_of_path = index.get("indices", {}).get("path_to_classes", {}).get(path, {}).get(verb, [])
 

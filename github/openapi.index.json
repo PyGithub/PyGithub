@@ -25,5 +25,8 @@
     "Requester.graphql_node_class": "POST",
     "Requester.graphql_query": "POST",
     "Requester.graphql_query_class": "POST"
-  }
+  },
+  "ignored OpenAPI schemas": [
+    "/paths/\"/repos/{owner}/{repo}/deployments\"/post/responses/202/content/\"application/json\"/schema"
+  ]
 }
