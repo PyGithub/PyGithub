@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright                                                                    #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +34,7 @@ from collections import Counter, defaultdict
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any, Sequence
 
@@ -145,6 +146,7 @@ class GithubClass:
     module: str
     name: str
     filename: str
+    test_filename: str
     bases: list[str]
     inheritance: list[str]
     methods: dict
@@ -166,10 +168,6 @@ class GithubClass:
     def full_class_name(self) -> str:
         return f"{self.package}.{self.module}.{self.name}"
 
-    @property
-    def test_filename(self) -> str:
-        return f"tests/{self.module}.py"
-
     @staticmethod
     def from_class_name(class_name: str, index: dict[str, Any] | None = None) -> GithubClass:
         if "." in class_name:
@@ -187,6 +185,7 @@ class GithubClass:
                     module=class_name,
                     name=class_name,
                     filename=f"{package}/{module}.py",
+                    test_filename=f"tests/{module}.py",
                     bases=[],
                     inheritance=[],
                     methods={},
@@ -225,6 +224,22 @@ class SimpleStringCollector(cst.CSTVisitor):
 
     def visit_SimpleString(self, node: cst.SimpleString) -> bool | None:
         self._strings.append(node.evaluated_value)
+
+
+class FunctionCallCollector(cst.CSTVisitor):
+    def __init__(self):
+        super().__init__()
+        self._calls = []
+
+    @property
+    def calls(self):
+        return self._calls
+
+    def visit_Call(self, node: cst.Call) -> bool | None:
+        code = cst.Module([]).code_for_node
+        func_name = code(node.func)
+        args = [(f"{code(arg.keyword)}=" if arg.keyword else "") + code(arg.value) for arg in node.args]
+        self._calls.append((func_name, args))
 
 
 def get_class_docstring(node: cst.ClassDef) -> str | None:
@@ -439,16 +454,18 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
 
 
 class IndexPythonClassesVisitor(CstVisitorBase):
-    def __init__(self, classes: dict[str, Any] | None = None, paths: dict[str, Any] | None = None):
+    def __init__(self, classes: dict[str, Any], paths: dict[str, Any], method_verbs: dict[str, str] | None):
         super().__init__()
         self._module = None
         self._package = None
         self._filename = None
-        self._classes = classes if classes is not None else {}
-        self._paths = paths if paths is not None else {}
+        self._test_filename = None
+        self._classes = classes
+        self._paths = paths
         self._ids = []
         self._properties = {}
         self._methods = {}
+        self._method_verbs = method_verbs
 
     def module(self, module: str):
         self._module = module
@@ -458,6 +475,13 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
     def filename(self, filename: str):
         self._filename = filename
+
+    def test_filename(self, test_filename: str):
+        self._test_filename = test_filename
+
+    @property
+    def classes(self) -> dict[str, Any]:
+        return self._classes
 
     def leave_ClassDef(self, node: cst.ClassDef) -> bool | None:
         class_name = self.current_class_name
@@ -492,6 +516,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             "module": self._module,
             "package": self._package,
             "filename": self._filename,
+            "test_filename": self._test_filename,
             "docstring": class_docstring,
             "schemas": class_schemas,
             "bases": class_bases,
@@ -559,6 +584,99 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             "returns": returns,
                         }
                     )
+
+                # check if method (VERB) is same as in the code
+                if len(fields) > 0 and self._method_verbs is not None:
+                    verb = f'"{fields[0]}"'
+                    full_method_name = f"{self.current_class_name}.{method_name}"
+
+                    if full_method_name in self._method_verbs:
+                        # these are methods configured in the github/openapi.index.json file
+                        known_verb = f'"{self._method_verbs[full_method_name]}"'
+                        if known_verb != verb:
+                            print(
+                                f"Method {full_method_name} is known to call {known_verb}, "
+                                f"but doc-string says {verb}"
+                            )
+                    else:
+                        # detect method from code
+                        visitor = FunctionCallCollector()
+                        node.body.visit(visitor)
+                        calls = visitor.calls
+
+                        # calls to PaginatedList(...) are equivalent to
+                        # self.__requester.requestJsonAndCheck("GET", …, parameters=…, headers=…)
+                        calls = [
+                            ("self.__requester.requestJsonAndCheck", ['"GET"', "…", "parameters=…", "headers=…"])
+                            if func in ["PaginatedList", "github.PaginatedList.PaginatedList"]
+                            else (func, args)
+                            for func, args in calls
+                        ]
+
+                        # calls to self._requester.graphql_ are equivalent to
+                        # self._requester.requestJsonAndCheck("POST", …, input=…)
+                        calls = [
+                            ("self._requester.requestJsonAndCheck", ['"POST"', "…", "input=…"])
+                            if func.startswith("self._requester.graphql_")
+                            else (func, args)
+                            for func, args in calls
+                        ]
+
+                        # calls to github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+                        # where class extends CompletableGithubObject are equivalent to
+                        # self._requester.requestJsonAndCheck("GET", …, headers=…)
+                        calls = [
+                            (
+                                "self._requester.requestJsonAndCheck",
+                                ['"GET"', "…", "headers=…"],
+                                "CompletableGithubObject",
+                            )
+                            if func.startswith("github.")
+                            and args
+                            and args[0]
+                            in [
+                                "self._requester",
+                                "self.__requester",
+                                "requester=self._requester",
+                                "requester=self.__requester",
+                            ]
+                            and (
+                                len(args) > 1
+                                and args[1].startswith("url=")
+                                or len(args) > 2
+                                and args[2].startswith(('{"url":', 'attributes={"url":'))
+                            )
+                            else (func, args, None)
+                            for func, args in calls
+                        ]
+
+                        # skip functions that call into parent functions
+                        if not any(func.startswith("super().") for func, args, base in calls):
+                            # check for requester calls with the expected verb
+                            if not any(
+                                func.startswith(("self._requester.request", "self.__requester.request"))
+                                and args
+                                and args[0] == verb
+                                for func, args, base in calls
+                            ):
+                                print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
+                                for func, args, base in calls:
+                                    print(f"- calls {func}({', '.join(args)})")
+                            else:
+                                # check if the found verb depends on a base class, which we cannot test here
+                                if not any(
+                                    func.startswith(("self._requester.request", "self.__requester.request"))
+                                    and args
+                                    and args[0] == verb
+                                    and base is None
+                                    for func, args, base in calls
+                                ):
+                                    print(
+                                        f"Not found any {verb} call in {self.current_class_name}.{method_name} "
+                                        f"conditional on some base class"
+                                    )
+                                    for func, args, base in calls:
+                                        print(f"- calls {func}({', '.join(args)})")
 
         if method_name == "__repr__":
             # extract properties used here as ids
@@ -1521,9 +1639,16 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any], paths: list[dict[str, Any]]):
+    def __init__(self, classes: dict[str, Any], index_config_file: Path, paths: list[dict[str, Any]], check_verbs: bool):
         self.classes = classes
         self.paths = paths
+        self.config = {}
+        self.check_verbs = check_verbs
+        self.tests_path = index_config_file.parent.parent / "tests"
+
+        if index_config_file.exists():
+            with index_config_file.open("r") as r:
+                self.config = json.load(r)
 
     def index_file(self, filename: str):
         with open(filename) as r:
@@ -1532,10 +1657,13 @@ class IndexFileWorker:
         from pathlib import Path
 
         paths = {}
-        visitor = IndexPythonClassesVisitor(self.classes, paths)
+        visitor = IndexPythonClassesVisitor(
+            self.classes, paths, self.config.get("known method verbs", {}) if self.check_verbs else None
+        )
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
+        visitor.test_filename(str(self.tests_path / Path(filename).name))
         try:
             tree = cst.parse_module(code)
             tree.visit(visitor)
@@ -1696,13 +1824,24 @@ class OpenApi:
                     w.write(updated_code)
             return True
 
-    def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool) -> bool:
+    def apply(
+        self, spec_file: str, index_filename: str, class_names: list[str] | None, dry_run: bool, tests: bool
+    ) -> bool:
+        print(f"Using spec {spec_file}")
         with open(spec_file) as r:
             spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
         classes = index.get("classes", {})
 
+        if not class_names:
+            class_names = classes.keys()
+        if len(class_names) == 1:
+            print(f"Applying API schemas to PyGithub class {class_names[0]}")
+        else:
+            print(f"Applying API schemas to {len(class_names)} PyGithub classes")
+
+        any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
 
@@ -1719,6 +1858,8 @@ class OpenApi:
             }
             completable = "CompletableGithubObject" in cls.get("inheritance", [])
             cls_schemas = cls.get("schemas", [])
+            class_change = False
+            test_change = False
             for schema_name in cls_schemas:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
@@ -1737,7 +1878,7 @@ class OpenApi:
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
-                changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
+                class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
                 if tests and os.path.exists(clazz.test_filename):
                     with open(clazz.test_filename) as r:
@@ -1748,9 +1889,15 @@ class OpenApi:
                     )
                     tree = cst.parse_module(code)
                     tree_updated = tree.visit(transformer)
-                    changed = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or changed
+                    test_change = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or test_change
 
-                return changed
+            any_change = any_change or class_change or test_change
+            if class_change or test_change:
+                print(f"Class {class_name} changed")
+                if test_change:
+                    print(f"Test {clazz.test_filename} changed")
+
+        return any_change
 
     def fetch(self, api: str, api_version: str, commit: str | None, spec_file: str) -> bool:
         ref = "refs/heads/main" if commit is None else commit
@@ -1769,8 +1916,15 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, spec_file: str, index_filename: str, dry_run: bool) -> bool:
+    def index(self, github_path: str, spec_file: str, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
         import multiprocessing
+
+        config = {}
+        config_file = Path(github_path) / "openapi.index.json"
+        if config_file.exists():
+            with config_file.open("r") as r:
+                ignored_schemas = json.load(r).get("ignored OpenAPI schemas", [])
+            config["ignored_schemas"] = ignored_schemas
 
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
         print(f"Indexing {len(files)} Python files")
@@ -1779,7 +1933,9 @@ class OpenApi:
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
             paths = manager.list()
-            indexer = IndexFileWorker(classes, paths)
+            if check_verbs and not config_file.exists():
+                raise RuntimeError(f"Cannot check verbs without config: {config_file}")
+            indexer = IndexFileWorker(classes, config_file, paths, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
@@ -1858,6 +2014,7 @@ class OpenApi:
                         return_schema_to_paths[schema[1:]].append(path)
 
         data = {
+            "config": config,
             "sources": github_path,
             "classes": classes,
             "paths": paths,
@@ -2157,6 +2314,7 @@ class OpenApi:
 
         # suggest schemas based on API calls
         available_schemas = {}
+        ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
         paths = set(spec.get("paths", {}).keys()).union(index.get("indices", {}).get("path_to_return_classes", {}).keys())
         for path in paths:
             for verb in spec.get("paths", {}).get(path, {}).keys():
@@ -2164,13 +2322,15 @@ class OpenApi:
                 schema_path = ["paths", f'"{path}"', verb, "responses"]
                 # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
                 schemas_of_path = [
-                    components.lstrip("#")
+                    component
                     for status, response in responses_of_path.items()
                     if status.isnumeric() and int(status) < 400 and "content" in response
                     for schema in [response.get("content").get("application/json", {}).get("schema", {})]
-                    for components in self.get_inner_spec_types(
+                    for component in self.get_inner_spec_types(
                         schema, schema_path + [str(status), "content", '"application/json"', "schema"]
                     )
+                    for component in [component.lstrip("#")]
+                    if component not in ignored_schemas
                 ]
                 classes_of_path = index.get("indices", {}).get("path_to_return_classes", {}).get(path, {}).get(verb, [])
 
@@ -2461,6 +2621,7 @@ class OpenApi:
         fetch_parser.add_argument("spec", help="Github API OpenAPI spec file to be written")
 
         index_parser = subparsers.add_parser("index")
+        index_parser.add_argument("--check-verbs", help="Check verbs in doc-string matches code", action="store_true")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
         index_parser.add_argument("spec", help="Github API OpenAPI spec file")
         index_parser.add_argument("index_filename", help="Path of index file")
@@ -2529,7 +2690,13 @@ class OpenApi:
         if args.subcommand == "fetch":
             changes = self.fetch(self.args.api, self.args.api_version, self.args.commit, self.args.spec)
         elif args.subcommand == "index":
-            changes = self.index(self.args.github_path, self.args.spec, self.args.index_filename, self.args.dry_run)
+            changes = self.index(
+                self.args.github_path,
+                self.args.spec,
+                self.args.index_filename,
+                self.args.check_verbs,
+                self.args.dry_run,
+            )
         elif self.args.subcommand == "suggest":
             if self.args.component == "paths":
                 changes = self.suggest_paths(
