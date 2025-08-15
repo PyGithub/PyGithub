@@ -490,6 +490,8 @@ class TestCase(BasicTestCase):
             auth = self.oauth_token
         elif self.authMode == "jwt":
             auth = self.jwt
+        elif self.authMode == "none":
+            auth = None
         else:
             raise ValueError(f"Unsupported test auth mode: {self.authMode}")
 
