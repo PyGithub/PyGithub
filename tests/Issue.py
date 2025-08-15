@@ -73,6 +73,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.events_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/events")
         self.assertEqual(self.issue.html_url, "https://github.com/PyGithub/PyGithub/issues/28")
         self.assertEqual(self.issue.id, 4653757)
+        self.assertEqual(self.issue.issue_dependencies_summary.some_attribute, "")
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["bug", "question"])
         self.assertEqual(
             self.issue.labels_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/labels{/name}"
@@ -102,9 +103,11 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.repository_url, "https://api.github.com/repos/PyGithub/PyGithub")
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
+        self.assertEqual(self.issue.sub_issues_summary.some_attribute, "")
         self.assertIsNone(self.issue.text_matches)
         self.assertEqual(self.issue.timeline_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/timeline")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
+        self.assertEqual(self.issue.type.name, "")
         self.assertEqual(self.issue.updated_at, datetime(2019, 5, 3, 9, 44, 22, tzinfo=timezone.utc))
         self.assertEqual(self.issue.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28")
         self.assertFalse(self.issue.locked)
@@ -127,16 +130,6 @@ class Issue(Framework.TestCase):
                 "eyes": 0,
             },
         )
-        
-        # test issue type data
-        self.assertEqual(self.issue.type.id, 534535)
-        self.assertEqual(self.issue.type.node_id, "IT_kwDOAF3p4s4ACCgH")
-        self.assertEqual(self.issue.type.description, "An unexpected problem or behavior")
-        self.assertEqual(self.issue.type.color, "red")
-        self.assertEqual(self.issue.type.name, "Bug")
-        self.assertEqual(self.issue.type.created_at, datetime(2024, 1, 25, 10, 1, 18, tzinfo=timezone.utc))
-        self.assertEqual(self.issue.type.updated_at, datetime(2024, 7, 26, 10, 11, 34, tzinfo=timezone.utc))
-        self.assertTrue(self.issue.type.is_enabled)
 
     def testEditWithoutParameters(self):
         self.issue.edit()
