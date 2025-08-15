@@ -61,6 +61,7 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Team import Team
 
 

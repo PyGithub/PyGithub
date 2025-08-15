@@ -55,6 +55,8 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.Organization import Organization
+    from github.NamedUser import NamedUser
     from github.Reaction import Reaction
 
 
