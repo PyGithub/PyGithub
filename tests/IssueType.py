@@ -29,19 +29,16 @@ from . import Framework
 class IssueType(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        # TODO: create an instance of type IssueType and assign to self.attr, then run:
-        #   pytest tests/IssueType.py -k testAttributes --record
-        #   ./scripts/update-assertions.sh tests/IssueType.py testAttributes
-        #   pre-commit run --all-files
-        self.attr = None
+        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        self.issue = self.repo.get_issue(28)
+        self.type = self.issue.type
 
     def testAttributes(self):
-        self.assertEqual(self.attr.color, "")
-        self.assertEqual(self.attr.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
-        self.assertEqual(self.attr.description, "")
-        self.assertEqual(self.attr.id, 0)
-        self.assertEqual(self.attr.is_enabled, False)
-        self.assertEqual(self.attr.name, "")
-        self.assertEqual(self.attr.node_id, "")
-        self.assertEqual(self.attr.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
-        self.assertEqual(self.attr.url, "")
+        self.assertEqual(self.type.color, "red")
+        self.assertEqual(self.type.created_at, datetime(2024, 1, 25, 12, 55, 41, tzinfo=timezone.utc))
+        self.assertEqual(self.type.description, "An unexpected problem or behavior")
+        self.assertEqual(self.type.id, 1386163)
+        self.assertEqual(self.type.is_enabled, True)
+        self.assertEqual(self.type.name, "Bug")
+        self.assertEqual(self.type.node_id, "IT_kwDOAKxBpM4AFSaz")
+        self.assertEqual(self.type.updated_at, datetime(2024, 7, 26, 10, 24, 51, tzinfo=timezone.utc))
