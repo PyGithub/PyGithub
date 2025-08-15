@@ -127,7 +127,16 @@ class Issue(Framework.TestCase):
                 "eyes": 0,
             },
         )
-        self.assertIsNone(self.issue.type)
+        
+        # test issue type data
+        self.assertEqual(self.issue.type.id, 534535)
+        self.assertEqual(self.issue.type.node_id, "IT_kwDOAF3p4s4ACCgH")
+        self.assertEqual(self.issue.type.description, "An unexpected problem or behavior")
+        self.assertEqual(self.issue.type.color, "red")
+        self.assertEqual(self.issue.type.name, "Bug")
+        self.assertEqual(self.issue.type.created_at, datetime(2024, 1, 25, 10, 1, 18, tzinfo=timezone.utc))
+        self.assertEqual(self.issue.type.updated_at, datetime(2024, 7, 26, 10, 11, 34, tzinfo=timezone.utc))
+        self.assertTrue(self.issue.type.is_enabled)
 
     def testEditWithoutParameters(self):
         self.issue.edit()
