@@ -1,20 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
-# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
-# Copyright 2018 Mateusz Loskot <mateusz@loskot.net>                           #
-# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
-# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2019 TechnicalPirate <35609336+TechnicalPirate@users.noreply.github.com>#
-# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
-# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -37,92 +22,87 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from typing import Any, TYPE_CHECKING
+from datetime import datetime, timezone
 
-from typing import Any
-import urllib.parse
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+from github.GithubObject import NonCompletableGithubObject
+from github.GithubObject import Attribute, NotSet
+
+if TYPE_CHECKING:
+    from github.GithubObject import NonCompletableGithubObject
 
 
-class IssueType(CompletableGithubObject):
+class IssueType(NonCompletableGithubObject):
     """
-    This class represents IssueTypes.
-    
+    This class represents IssueType.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/issues/issues
+
     The OpenAPI schema can be found at
     - /components/schemas/issue-type
+
     """
+
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._node_id: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._description: Attribute[str] = NotSet
         self._color: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
         self._is_enabled: Attribute[bool] = NotSet
-        
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
-    
-    @property
-    def _identity(self) -> str:
-        return urllib.parse.quote(self.name)
-    
-    @property
-    def id(self) -> int:
-        self._completeIfNotSet(self._id)
-        return self._id.value
-    
-    @property
-    def node_id(self) -> str:
-        self._completeIfNotSet(self._node_id)
-        return self._node_id.value
-    
-    @property
-    def name(self) -> str:
-        self._completeIfNotSet(self._name)
-        return self._name.value
-    
-    @property
-    def description(self) -> str:
-        self._completeIfNotSet(self._description)
-        return self._description.value
-        
+
     @property
     def color(self) -> str:
-        self._completeIfNotSet(self._color)
         return self._color.value
-    
+
     @property
     def created_at(self) -> datetime:
-        self._completeIfNotSet(self._created_at)
         return self._created_at.value
-    
+
     @property
-    def updated_at(self) -> datetime:
-        self._completeIfNotSet(self._updated_at)
-        return self._updated_at.value
-    
+    def description(self) -> str:
+        return self._description.value
+
+    @property
+    def id(self) -> int:
+        return self._id.value
+
     @property
     def is_enabled(self) -> bool:
-        self._completeIfNotSet(self._is_enabled)
         return self._is_enabled.value
-    
+
+    @property
+    def name(self) -> str:
+        return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        return self._node_id.value
+
+    @property
+    def updated_at(self) -> datetime:
+        return self._updated_at.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "id" in attributes:
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "node_id" in attributes:
-            self._node_id = self._makeStringAttribute(attributes["node_id"])
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "description" in attributes:
-            self._description = self._makeStringAttribute(attributes["description"])
-        if "color" in attributes:
+        if "color" in attributes:  # pragma no branch
             self._color = self._makeStringAttribute(attributes["color"])
-        if "created_at" in attributes:
+        if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "is_enabled" in attributes:
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "is_enabled" in attributes:  # pragma no branch
             self._is_enabled = self._makeBoolAttribute(attributes["is_enabled"])
-            
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
