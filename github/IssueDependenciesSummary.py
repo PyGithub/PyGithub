@@ -21,10 +21,9 @@
 
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from github.GithubObject import NonCompletableGithubObject
-from github.GithubObject import Attribute, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.GithubObject import NonCompletableGithubObject
@@ -81,4 +80,3 @@ class IssueDependenciesSummary(NonCompletableGithubObject):
             self._total_blocked_by = self._makeIntAttribute(attributes["total_blocked_by"])
         if "total_blocking" in attributes:  # pragma no branch
             self._total_blocking = self._makeIntAttribute(attributes["total_blocking"])
-
