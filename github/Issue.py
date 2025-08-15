@@ -97,6 +97,7 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.IssueComment import IssueComment
+    from github.IssueDependenciesSummary import IssueDependenciesSummary
     from github.IssueEvent import IssueEvent
     from github.IssuePullRequest import IssuePullRequest
     from github.IssueType import IssueType
@@ -106,6 +107,7 @@ if TYPE_CHECKING:
     from github.PullRequest import PullRequest
     from github.Reaction import Reaction
     from github.Repository import Repository
+    from github.SubIssueSummary import SubIssueSummary
     from github.TimelineEvent import TimelineEvent
 
 

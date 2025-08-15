@@ -21,12 +21,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from github.GithubObject import NonCompletableGithubObject
 
 
 class SubIssueSummary(NonCompletableGithubObject):
@@ -42,15 +39,9 @@ class SubIssueSummary(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        # TODO: remove if parent does not implement this
-        super()._initAttributes()
         self._completed: Attribute[int] = NotSet
         self._percent_completed: Attribute[int] = NotSet
         self._total: Attribute[int] = NotSet
-
-    def __repr__(self) -> str:
-        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
-        return self.get__repr__({"some_attribute": self._some_attribute.value})
 
     @property
     def completed(self) -> int:
