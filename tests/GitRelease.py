@@ -157,9 +157,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.target_commitish, "master")
         self.assertEqual(
             release.upload_url,
-            "https://uploads.github.com/repos/{}/{}/releases/{}/assets{{?name,label}}".format(
-                user, repo_name, release_id
-            ),
+            f"https://uploads.github.com/repos/{user}/{repo_name}/releases/{release_id}/assets{{?name,label}}",
         )
         self.assertEqual(release.body, "Body")
         self.assertEqual(release.title, "Test")

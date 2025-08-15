@@ -41,7 +41,6 @@ if TYPE_CHECKING:
     from github.DependabotAlertDependency import DependabotAlertDependency
     from github.DependabotAlertVulnerability import DependabotAlertVulnerability
     from github.NamedUser import NamedUser
-    from github.Organization import Organization
 
 
 class DependabotAlert(NonCompletableGithubObject):

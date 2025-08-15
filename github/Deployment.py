@@ -59,7 +59,6 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.NamedUser import NamedUser
-    from github.Organization import Organization
 
 
 class Deployment(CompletableGithubObject):
