@@ -91,7 +91,9 @@ def as_python_type(
                         print(f"Class not found in index: {class_name}")
             return PythonType(
                 type="union",
-                inner_types=[GithubClass(**classes.get(cls)) for cls in classes if cls in classes],
+                inner_types=[GithubClass(**classes.get(cls))
+                             for cls in classes_of_schema
+                             if cls in classes],
             )
         if verbose:
             print(f"Schema not implemented: {schema or '.'.join([''] + schema_path)}")
@@ -2731,7 +2733,7 @@ class OpenApi:
         index_parser.add_argument("index_filename", help="Path of index file")
 
         suggest_parser = subparsers.add_parser("suggest")
-        suggest_component_parsers = suggest_parser.add_subparsers(dest="component")
+        suggest_component_parsers = suggest_parser.add_subparsers(dest="component", required=True)
         suggest_paths_parser = suggest_component_parsers.add_parser("paths")
         suggest_paths_parser.add_argument("spec", help="Github API OpenAPI spec file")
         suggest_paths_parser.add_argument("index_filename", help="Path of index file")
@@ -2752,7 +2754,7 @@ class OpenApi:
         apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
 
         create_parser = subparsers.add_parser("create", description="Create PyGithub classes and methods")
-        create_component_parsers = create_parser.add_subparsers(dest="component")
+        create_component_parsers = create_parser.add_subparsers(dest="component", required=True)
         create_class_parser = create_component_parsers.add_parser("class", help="Create a PyGithub class")
         create_class_parser.add_argument(
             "--completable",
