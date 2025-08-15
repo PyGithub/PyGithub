@@ -56,8 +56,6 @@ class SubIssueSummary(NonCompletableGithubObject):
         return self._total.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        # TODO: remove if parent does not implement this
-        super()._useAttributes(attributes)
         if "completed" in attributes:  # pragma no branch
             self._completed = self._makeIntAttribute(attributes["completed"])
         if "percent_completed" in attributes:  # pragma no branch

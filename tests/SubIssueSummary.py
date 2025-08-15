@@ -27,14 +27,11 @@ from . import Framework
 class SubIssueSummary(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        # TODO: create an instance of type SubIssueSummary and assign to self.attr, then run:
-        #   pytest tests/SubIssueSummary.py -k testAttributes --record
-        #   ./scripts/update-assertions.sh tests/SubIssueSummary.py testAttributes
-        #   pre-commit run --all-files
-        self.attr = None
+        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        self.issue = self.repo.get_issue(28)
+        self.sis = self.issue.sub_issues_summary
 
     def testAttributes(self):
-        self.assertEqual(self.attr.completed, 0)
-        self.assertEqual(self.attr.percent_completed, 0)
-        self.assertEqual(self.attr.total, 0)
-        self.assertEqual(self.attr.url, "")
+        self.assertEqual(self.sis.completed, 0)
+        self.assertEqual(self.sis.percent_completed, 0)
+        self.assertEqual(self.sis.total, 1)
