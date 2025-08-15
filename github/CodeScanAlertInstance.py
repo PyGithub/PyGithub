@@ -44,6 +44,9 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-scanning-alert-instance
+
     """
 
     def _initAttributes(self) -> None:
