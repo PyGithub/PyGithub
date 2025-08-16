@@ -59,7 +59,13 @@ def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[st
 
 
 def as_python_type(
-    schema_type: dict[str, Any], schema_path: list[str], schema_to_class: dict[str, str], classes, verbose: bool
+    schema_type: dict[str, Any],
+    schema_path: list[str],
+    schema_to_class: dict[str, str],
+    classes,
+    *,
+    verbose: bool = False,
+    collect_unsupported_schemas: list[str] | None = None,
 ) -> PythonType | GithubClass | None:
     schema = None
     data_type = schema_type.get("type")
@@ -67,7 +73,12 @@ def as_python_type(
         schema = schema_type.get("$ref").strip("# ")
     elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
         return as_python_type(
-            schema_type.get("allOf")[0], schema_path + ["allOf", "0"], schema_to_class, classes, verbose
+            schema_type.get("allOf")[0],
+            schema_path + ["allOf", "0"],
+            schema_to_class,
+            classes,
+            verbose=verbose,
+            collect_unsupported_schemas=collect_unsupported_schemas,
         )
     if data_type == "object":
         schema = "/".join([""] + schema_path)
@@ -91,10 +102,10 @@ def as_python_type(
                         print(f"Class not found in index: {class_name}")
             return PythonType(
                 type="union",
-                inner_types=[GithubClass(**classes.get(cls))
-                             for cls in classes_of_schema
-                             if cls in classes],
+                inner_types=[GithubClass(**classes.get(cls)) for cls in classes_of_schema if cls in classes],
             )
+        if collect_unsupported_schemas is not None:
+            collect_unsupported_schemas.append(schema or ".".join([""] + schema_path))
         if verbose:
             print(f"Schema not implemented: {schema or '.'.join([''] + schema_path)}")
         return PythonType(type="dict", inner_types=[PythonType("str"), PythonType("Any")])
@@ -108,7 +119,14 @@ def as_python_type(
         return PythonType(
             type="list",
             inner_types=[
-                as_python_type(schema_type.get("items"), schema_path + ["items"], schema_to_class, classes, verbose)
+                as_python_type(
+                    schema_type.get("items"),
+                    schema_path + ["items"],
+                    schema_to_class,
+                    classes,
+                    verbose=verbose,
+                    collect_unsupported_schemas=collect_unsupported_schemas,
+                )
             ],
         )
 
@@ -1493,7 +1511,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
             content_schema = content_schema.get("properties", {}).get(return_property, {})
             schema_path.extend(["properties", return_property])
         self.api_content = (
-            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, True)
+            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, verbose=True)
             if content_schema
             else None
         )
@@ -1558,7 +1576,9 @@ class CreateClassMethodTransformer(CstTransformerBase):
         )
         request_properties = (
             {
-                prop: as_python_type(desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, True)
+                prop: as_python_type(
+                    desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, verbose=True
+                )
                 for prop, desc in request_schema.get("properties", {}).items()
             }
             if request_schema
@@ -1772,6 +1792,22 @@ class OpenApi:
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         self.schema_to_class["default"] = ["GithubObject"]
 
+    def as_python_type(
+        self,
+        schema_type: dict[str, Any],
+        schema_path: list[str],
+        *,
+        collect_unsupported_schemas: list[str] | None = None,
+    ) -> PythonType | GithubClass | None:
+        return as_python_type(
+            schema_type,
+            schema_path,
+            self.schema_to_class,
+            self.classes,
+            verbose=self.verbose,
+            collect_unsupported_schemas=collect_unsupported_schemas,
+        )
+
     @staticmethod
     def read_index(filename: str) -> dict[str, Any]:
         with open(filename) as r:
@@ -1910,7 +1946,13 @@ class OpenApi:
             return True
 
     def apply(
-        self, spec_file: str, index_filename: str, class_names: list[str] | None, dry_run: bool, tests: bool
+        self,
+        spec_file: str,
+        index_filename: str,
+        class_names: list[str] | None,
+        dry_run: bool,
+        tests: bool,
+        unsupported_schemas: bool,
     ) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
@@ -1950,13 +1992,12 @@ class OpenApi:
                 schema_path, schema = self.get_schema(spec, schema_name)
 
                 all_properties = {
-                    k: (
-                        as_python_type(
-                            v, schema_path + ["properties", k], self.schema_to_class, self.classes, self.verbose
-                        ),
-                        v.get("deprecated", False),
-                    )
+                    k: (python_type, v.get("deprecated", False))
                     for k, v in schema.get("properties", {}).items()
+                    for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
+                    if python_type is None
+                    or isinstance(python_type, GithubClass)
+                    or (isinstance(python_type, PythonType) and python_type.type != "dict" or unsupported_schemas)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -2511,6 +2552,7 @@ class OpenApi:
         schemas: list[str],
         dry_run: bool,
         tests: bool,
+        unsupported_schemas: bool,
     ) -> bool:
         with open(index_filename) as r:
             index = json.load(r)
@@ -2632,11 +2674,25 @@ class OpenApi:
                     f.close()
                     print(f"Updating temporary index {f.name}")
                     self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
-                    self.apply(spec_file, f.name, [clazz.name], dry_run=False, tests=tests)
+                    self.apply(
+                        spec_file,
+                        f.name,
+                        [clazz.name],
+                        dry_run=False,
+                        tests=tests,
+                        unsupported_schemas=unsupported_schemas,
+                    )
             else:
                 print("Updating index")
                 self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
-                self.apply(spec_file, index_filename, [clazz.name], dry_run=False, tests=tests)
+                self.apply(
+                    spec_file,
+                    index_filename,
+                    [clazz.name],
+                    dry_run=False,
+                    tests=tests,
+                    unsupported_schemas=unsupported_schemas,
+                )
         except Exception as e:
             success = False
             raise e
@@ -2749,6 +2805,11 @@ class OpenApi:
 
         apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
+        apply_parser.add_argument(
+            "--unsupported-schemas",
+            help="Create attributes that return unsupported schemas (returns dict[str, Any])",
+            action="store_true",
+        )
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("index_filename", help="Path of index file")
         apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
@@ -2766,6 +2827,11 @@ class OpenApi:
         )
         create_class_parser.add_argument("--parent", help="A parent PyGithub class")
         create_class_parser.add_argument("--tests", help="Also create test file", action="store_true")
+        create_class_parser.add_argument(
+            "--unsupported-schemas",
+            help="Create attributes that return unsupported schemas (returns dict[str, Any])",
+            action="store_true",
+        )
         create_class_parser.add_argument("github_path", help="Path to PyGithub Python files")
         create_class_parser.add_argument("spec", help="Github API OpenAPI spec file")
         create_class_parser.add_argument("index_filename", help="Path of index file")
@@ -2818,7 +2884,12 @@ class OpenApi:
                 )
         elif self.args.subcommand == "apply":
             changes = self.apply(
-                self.args.spec, self.args.index_filename, self.args.class_name, self.args.dry_run, self.args.tests
+                self.args.spec,
+                self.args.index_filename,
+                self.args.class_name,
+                self.args.dry_run,
+                self.args.tests,
+                self.args.unsupported_schemas,
             )
         elif self.args.subcommand == "create":
             if self.args.component == "class":
@@ -2832,6 +2903,7 @@ class OpenApi:
                     self.args.schema,
                     self.args.dry_run,
                     self.args.tests,
+                    self.args.unsupported_schemas,
                 )
             if self.args.component == "method":
                 changes = self.create_method(
