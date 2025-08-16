@@ -31,6 +31,7 @@ import os.path
 import re
 import sys
 from collections import Counter, defaultdict
+from enum import Enum
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
@@ -65,7 +66,7 @@ def as_python_type(
     classes,
     *,
     verbose: bool = False,
-    collect_unsupported_schemas: list[str] | None = None,
+    collect_new_schemas: list[str] | None = None,
 ) -> PythonType | GithubClass | None:
     schema = None
     data_type = schema_type.get("type")
@@ -78,7 +79,7 @@ def as_python_type(
             schema_to_class,
             classes,
             verbose=verbose,
-            collect_unsupported_schemas=collect_unsupported_schemas,
+            collect_new_schemas=collect_new_schemas,
         )
     if data_type == "object":
         schema = "/".join([""] + schema_path)
@@ -104,8 +105,8 @@ def as_python_type(
                 type="union",
                 inner_types=[GithubClass(**classes.get(cls)) for cls in classes_of_schema if cls in classes],
             )
-        if collect_unsupported_schemas is not None:
-            collect_unsupported_schemas.append(schema or ".".join([""] + schema_path))
+        if collect_new_schemas is not None:
+            collect_new_schemas.append(schema or ".".join([""] + schema_path))
         if verbose:
             print(f"Schema not implemented: {schema or '.'.join([''] + schema_path)}")
         return PythonType(type="dict", inner_types=[PythonType("str"), PythonType("Any")])
@@ -125,7 +126,7 @@ def as_python_type(
                     schema_to_class,
                     classes,
                     verbose=verbose,
-                    collect_unsupported_schemas=collect_unsupported_schemas,
+                    collect_new_schemas=collect_new_schemas,
                 )
             ],
         )
@@ -1778,6 +1779,15 @@ class IndexFileWorker:
             raise RuntimeError(f"Failed to parse {filename}", e)
 
 
+class HandleNewSchemas(Enum):
+    ignore = "ignore"
+    create_class = "create-class"
+    as_dict = "as-dict"
+
+    def __str__(self):
+        return self.value
+
+
 class OpenApi:
     def __init__(self, args: argparse.Namespace):
         self.args = args
@@ -1797,7 +1807,7 @@ class OpenApi:
         schema_type: dict[str, Any],
         schema_path: list[str],
         *,
-        collect_unsupported_schemas: list[str] | None = None,
+        collect_new_schemas: list[str] | None = None,
     ) -> PythonType | GithubClass | None:
         return as_python_type(
             schema_type,
@@ -1805,7 +1815,7 @@ class OpenApi:
             self.schema_to_class,
             self.classes,
             verbose=self.verbose,
-            collect_unsupported_schemas=collect_unsupported_schemas,
+            collect_new_schemas=collect_new_schemas,
         )
 
     @staticmethod
@@ -1947,12 +1957,13 @@ class OpenApi:
 
     def apply(
         self,
+        github_path: str,
         spec_file: str,
         index_filename: str,
         class_names: list[str] | None,
         dry_run: bool,
         tests: bool,
-        unsupported_schemas: bool,
+        handle_new_schemas: HandleNewSchemas,
     ) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
@@ -1968,6 +1979,7 @@ class OpenApi:
         else:
             print(f"Applying API schemas to {len(class_names)} PyGithub classes")
 
+        new_schemas_as_dict = handle_new_schemas == HandleNewSchemas.as_dict
         any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
@@ -1985,11 +1997,54 @@ class OpenApi:
             }
             completable = "CompletableGithubObject" in cls.get("inheritance", [])
             cls_schemas = cls.get("schemas", [])
+            cls_properties = cls.get("properties", [])
             class_change = False
             test_change = False
             for schema_name in cls_schemas:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
+
+                if handle_new_schemas == HandleNewSchemas.create_class:
+                    new_schemas = []
+                    for k, v in schema.get("properties", {}).items():
+                        # only check for new schemas of new attributes
+                        if k not in cls_properties:
+                            self.as_python_type(v, schema_path + ["properties", k], collect_new_schemas=new_schemas)
+                    # handle new schemas
+                    for new_schema in new_schemas:
+                        new_class_name = "".join(
+                            [term[0].upper() + term[1:] for term in new_schema.split("/")[-1].split("-")]
+                        )
+                        if new_class_name in classes:
+                            # we probably created that class in an earlier iteration, or we have a name collision here
+                            continue
+                        is_completable = "url" in self.get_schema(spec, new_schema)[1].get("properties", [])
+                        parent_name = "CompletableGithubObject" if is_completable else "NonCompletableGithubObject"
+                        # TODO: get path from schema via indices.path_to_return_classes, get from spec.paths.PATH.get.externalDocs,url
+                        docs_url = "https://docs.github.com/en/rest"
+                        print(f"Drafting class {new_class_name} for new schema {new_schema}")
+                        self.create_class(
+                            github_path,
+                            spec_file,
+                            index_filename,
+                            new_class_name,
+                            parent_name,
+                            docs_url,
+                            [new_schema],
+                            dry_run=False,
+                            tests=tests,
+                            handle_new_schemas=handle_new_schemas,
+                        )
+
+                        # update index
+                        self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
+                        with open(index_filename) as r:
+                            index = json.load(r)
+                        classes = index.get("classes", {})
+
+                    # propagate new classes to self.as_python_type
+                    self.classes = classes
+                    self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
 
                 all_properties = {
                     k: (python_type, v.get("deprecated", False))
@@ -1997,7 +2052,8 @@ class OpenApi:
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
                     if python_type is None
                     or isinstance(python_type, GithubClass)
-                    or (isinstance(python_type, PythonType) and python_type.type != "dict" or unsupported_schemas)
+                    or isinstance(python_type, PythonType)
+                    and (python_type.type != "dict" or new_schemas_as_dict)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -2552,7 +2608,7 @@ class OpenApi:
         schemas: list[str],
         dry_run: bool,
         tests: bool,
-        unsupported_schemas: bool,
+        handle_new_schemas: HandleNewSchemas,
     ) -> bool:
         with open(index_filename) as r:
             index = json.load(r)
@@ -2675,23 +2731,25 @@ class OpenApi:
                     print(f"Updating temporary index {f.name}")
                     self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
                     self.apply(
+                        github_path,
                         spec_file,
                         f.name,
                         [clazz.name],
                         dry_run=False,
                         tests=tests,
-                        unsupported_schemas=unsupported_schemas,
+                        handle_new_schemas=handle_new_schemas,
                     )
             else:
                 print("Updating index")
                 self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
                 self.apply(
+                    github_path,
                     spec_file,
                     index_filename,
                     [clazz.name],
                     dry_run=False,
                     tests=tests,
-                    unsupported_schemas=unsupported_schemas,
+                    handle_new_schemas=handle_new_schemas,
                 )
         except Exception as e:
             success = False
@@ -2806,10 +2864,12 @@ class OpenApi:
         apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
         apply_parser.add_argument(
-            "--unsupported-schemas",
-            help="Create attributes that return unsupported schemas (returns dict[str, Any])",
-            action="store_true",
+            "--new-schemas",
+            type=HandleNewSchemas,
+            help="How to handle attributes that return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
+            choices=list(HandleNewSchemas),
         )
+        apply_parser.add_argument("github_path", help="Path to PyGithub Python files")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("index_filename", help="Path of index file")
         apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
@@ -2828,9 +2888,10 @@ class OpenApi:
         create_class_parser.add_argument("--parent", help="A parent PyGithub class")
         create_class_parser.add_argument("--tests", help="Also create test file", action="store_true")
         create_class_parser.add_argument(
-            "--unsupported-schemas",
-            help="Create attributes that return unsupported schemas (returns dict[str, Any])",
-            action="store_true",
+            "--new-schemas",
+            type=HandleNewSchemas,
+            help="How to handle attributes that return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
+            choices=list(HandleNewSchemas),
         )
         create_class_parser.add_argument("github_path", help="Path to PyGithub Python files")
         create_class_parser.add_argument("spec", help="Github API OpenAPI spec file")
@@ -2859,7 +2920,17 @@ class OpenApi:
         if len(sys.argv) == 1:
             args_parser.print_help()
             sys.exit(1)
-        return args_parser.parse_args()
+        args = args_parser.parse_args()
+
+        # perform some sanity checks
+        params = args.__dict__
+        if params.get("dry_run", False) is True and params.get("new_schemas") == HandleNewSchemas.create_class:
+            raise ValueError(
+                f"Cannot combine --new-schemas {HandleNewSchemas.create_class} "
+                f"(creating classes for new schemas) with --dry-run"
+            )
+
+        return args
 
     def main(self):
         changes = False
@@ -2884,12 +2955,13 @@ class OpenApi:
                 )
         elif self.args.subcommand == "apply":
             changes = self.apply(
+                self.args.github_path,
                 self.args.spec,
                 self.args.index_filename,
                 self.args.class_name,
                 self.args.dry_run,
                 self.args.tests,
-                self.args.unsupported_schemas,
+                self.args.new_schemas,
             )
         elif self.args.subcommand == "create":
             if self.args.component == "class":
@@ -2903,7 +2975,7 @@ class OpenApi:
                     self.args.schema,
                     self.args.dry_run,
                     self.args.tests,
-                    self.args.unsupported_schemas,
+                    self.args.new_schemas,
                 )
             if self.args.component == "method":
                 changes = self.create_method(
