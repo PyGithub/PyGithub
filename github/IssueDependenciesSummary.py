@@ -61,8 +61,6 @@ class IssueDependenciesSummary(NonCompletableGithubObject):
         return self._total_blocking.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        # TODO: remove if parent does not implement this
-        super()._useAttributes(attributes)
         if "blocked_by" in attributes:  # pragma no branch
             self._blocked_by = self._makeIntAttribute(attributes["blocked_by"])
         if "blocking" in attributes:  # pragma no branch
