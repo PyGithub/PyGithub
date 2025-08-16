@@ -32,6 +32,6 @@ class SubIssueSummary(Framework.TestCase):
         self.sis = self.issue.sub_issues_summary
 
     def testAttributes(self):
-        self.assertEqual(self.sis.completed, 0)
-        self.assertEqual(self.sis.percent_completed, 0)
+        self.assertEqual(self.sis.completed, 1)
+        self.assertEqual(self.sis.percent_completed, 100)
         self.assertEqual(self.sis.total, 1)
