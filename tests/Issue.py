@@ -73,7 +73,10 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.events_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/events")
         self.assertEqual(self.issue.html_url, "https://github.com/PyGithub/PyGithub/issues/28")
         self.assertEqual(self.issue.id, 4653757)
-        self.assertIsNone(self.issue.issue_dependencies_summary)
+        self.assertEqual(self.issue.issue_dependencies_summary.blocking, 0)
+        self.assertEqual(self.issue.issue_dependencies_summary.blocked_by, 0)
+        self.assertEqual(self.issue.issue_dependencies_summary.total_blocking, 1)
+        self.assertEqual(self.issue.issue_dependencies_summary.total_blocked_by, 1)
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["bug", "question"])
         self.assertEqual(
             self.issue.labels_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/labels{/name}"
@@ -103,8 +106,8 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.repository_url, "https://api.github.com/repos/PyGithub/PyGithub")
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
-        self.assertEqual(self.issue.sub_issues_summary.completed, 0)
-        self.assertEqual(self.issue.sub_issues_summary.percent_completed, 0)
+        self.assertEqual(self.issue.sub_issues_summary.completed, 1)
+        self.assertEqual(self.issue.sub_issues_summary.percent_completed, 100)
         self.assertEqual(self.issue.sub_issues_summary.total, 1)
         self.assertIsNone(self.issue.text_matches)
         self.assertEqual(self.issue.timeline_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/timeline")

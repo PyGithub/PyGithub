@@ -27,15 +27,12 @@ from . import Framework
 class IssueDependenciesSummary(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        # TODO: create an instance of type IssueDependenciesSummary and assign to self.attr, then run:
-        #   pytest tests/IssueDependenciesSummary.py -k testAttributes --record
-        #   ./scripts/update-assertions.sh tests/IssueDependenciesSummary.py testAttributes
-        #   pre-commit run --all-files
-        self.attr = None
+        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        self.issue = self.repo.get_issue(28)
+        self.ids = self.issue.issue_dependencies_summary
 
     def testAttributes(self):
-        self.assertEqual(self.attr.blocked_by, 0)
-        self.assertEqual(self.attr.blocking, 0)
-        self.assertEqual(self.attr.total_blocked_by, 0)
-        self.assertEqual(self.attr.total_blocking, 0)
-        self.assertEqual(self.attr.url, "")
+        self.assertEqual(self.ids.blocked_by, 0)
+        self.assertEqual(self.ids.blocking, 0)
+        self.assertEqual(self.ids.total_blocked_by, 1)
+        self.assertEqual(self.ids.total_blocking, 1)
