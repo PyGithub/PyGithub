@@ -68,8 +68,10 @@ from typing import TYPE_CHECKING, Any
 import github.GithubApp
 import github.GithubObject
 import github.IssueComment
+import github.IssueDependenciesSummary
 import github.IssueEvent
 import github.IssuePullRequest
+import github.IssueType
 import github.Label
 import github.Milestone
 import github.NamedUser
@@ -77,6 +79,7 @@ import github.Organization
 import github.PullRequest
 import github.Reaction
 import github.Repository
+import github.SubIssueSummary
 import github.TimelineEvent
 from github import Consts
 from github.GithubObject import (
@@ -94,14 +97,17 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.IssueComment import IssueComment
+    from github.IssueDependenciesSummary import IssueDependenciesSummary
     from github.IssueEvent import IssueEvent
     from github.IssuePullRequest import IssuePullRequest
+    from github.IssueType import IssueType
     from github.Label import Label
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
     from github.PullRequest import PullRequest
     from github.Reaction import Reaction
     from github.Repository import Repository
+    from github.SubIssueSummary import SubIssueSummary
     from github.TimelineEvent import TimelineEvent
 
 
@@ -135,6 +141,7 @@ class Issue(CompletableGithubObject):
         self._events_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._issue_dependencies_summary: Attribute[IssueDependenciesSummary] = NotSet
         self._labels: Attribute[list[Label]] = NotSet
         self._labels_url: Attribute[str] = NotSet
         self._locked: Attribute[bool] = NotSet
@@ -148,9 +155,11 @@ class Issue(CompletableGithubObject):
         self._repository_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._state_reason: Attribute[str | None] = NotSet
+        self._sub_issues_summary: Attribute[SubIssueSummary] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._timeline_url: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
+        self._type: Attribute[IssueType] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
@@ -243,6 +252,11 @@ class Issue(CompletableGithubObject):
         return self._id.value
 
     @property
+    def issue_dependencies_summary(self) -> IssueDependenciesSummary:
+        self._completeIfNotSet(self._issue_dependencies_summary)
+        return self._issue_dependencies_summary.value
+
+    @property
     def labels(self) -> list[Label]:
         self._completeIfNotSet(self._labels)
         return self._labels.value
@@ -314,6 +328,11 @@ class Issue(CompletableGithubObject):
         return self._state_reason.value
 
     @property
+    def sub_issues_summary(self) -> SubIssueSummary:
+        self._completeIfNotSet(self._sub_issues_summary)
+        return self._sub_issues_summary.value
+
+    @property
     def text_matches(self) -> dict[str, Any]:
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
@@ -327,6 +346,11 @@ class Issue(CompletableGithubObject):
     def title(self) -> str:
         self._completeIfNotSet(self._title)
         return self._title.value
+
+    @property
+    def type(self) -> IssueType:
+        self._completeIfNotSet(self._type)
+        return self._type.value
 
     @property
     def updated_at(self) -> datetime:
@@ -707,6 +731,10 @@ class Issue(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "issue_dependencies_summary" in attributes:  # pragma no branch
+            self._issue_dependencies_summary = self._makeClassAttribute(
+                github.IssueDependenciesSummary.IssueDependenciesSummary, attributes["issue_dependencies_summary"]
+            )
         if "labels" in attributes:  # pragma no branch
             self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
         if "labels_url" in attributes:  # pragma no branch
@@ -737,12 +765,18 @@ class Issue(CompletableGithubObject):
             self._state = self._makeStringAttribute(attributes["state"])
         if "state_reason" in attributes:  # pragma no branch
             self._state_reason = self._makeStringAttribute(attributes["state_reason"])
+        if "sub_issues_summary" in attributes:  # pragma no branch
+            self._sub_issues_summary = self._makeClassAttribute(
+                github.SubIssueSummary.SubIssueSummary, attributes["sub_issues_summary"]
+            )
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "timeline_url" in attributes:  # pragma no branch
             self._timeline_url = self._makeStringAttribute(attributes["timeline_url"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeClassAttribute(github.IssueType.IssueType, attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
