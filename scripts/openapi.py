@@ -2103,7 +2103,7 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, spec_file: str, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
+    def index(self, github_path: str, spec_file: str | None, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
         import multiprocessing
 
         config = {}
@@ -2190,28 +2190,6 @@ class OpenApi:
         print(f"Indexed {len(path_to_return_classes)} paths")
         print(f"Indexed {len(schema_to_classes)} schemas")
 
-        print("Indexing OpenAPI spec")
-        with open(spec_file) as r:
-            spec = json.load(r)
-
-        # construct schema to path index
-        return_schema_to_paths = defaultdict(list)
-        for path, path_spec in spec.get("paths", {}).items():
-            spec_type = (
-                path_spec.get("get", {})
-                .get("responses", {})
-                .get("200", {})
-                .get("content", {})
-                .get("application/json", {})
-                .get("schema", {})
-            )
-            if spec_type:
-                for schema in self.get_spec_types(
-                    spec_type, [f'"{path}"', "get", "responses", '"200"', "content", '"application/json"', "schema"]
-                ):
-                    if schema.startswith("#/components/"):
-                        return_schema_to_paths[schema[1:]].append(path)
-
         data = {
             "config": config,
             "sources": github_path,
@@ -2222,9 +2200,33 @@ class OpenApi:
                 "path_to_call_methods": path_to_call_methods,
                 "path_to_return_classes": path_to_return_classes,
                 "schema_to_classes": schema_to_classes,
-                "return_schema_to_paths": return_schema_to_paths,
             },
         }
+
+        if spec_file is not None:
+            print("Indexing OpenAPI spec")
+            with open(spec_file) as r:
+                spec = json.load(r)
+
+            # construct schema to path index
+            return_schema_to_paths = defaultdict(list)
+            for path, path_spec in spec.get("paths", {}).items():
+                spec_type = (
+                    path_spec.get("get", {})
+                    .get("responses", {})
+                    .get("200", {})
+                    .get("content", {})
+                    .get("application/json", {})
+                    .get("schema", {})
+                )
+                if spec_type:
+                    for schema in self.get_spec_types(
+                        spec_type, [f'"{path}"', "get", "responses", '"200"', "content", '"application/json"', "schema"]
+                    ):
+                        if schema.startswith("#/components/"):
+                            return_schema_to_paths[schema[1:]].append(path)
+
+            data["indices"]["return_schema_to_paths"] = return_schema_to_paths
 
         if dry_run:
             if os.path.exists(index_filename):
@@ -2257,7 +2259,9 @@ class OpenApi:
 
         paths = spec.get("paths", {})
         classes = index.get("classes", {})
-        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths", {})
+        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
+        if return_schema_to_paths is None:
+            raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
         implemented_paths = index.get("paths", {})
 
         self.suggest_path_corrections(paths, implemented_paths)
@@ -2838,7 +2842,9 @@ class OpenApi:
             code = "".join(r.readlines())
 
         prefix_path = None
-        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths", {})
+        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
+        if return_schema_to_paths is None:
+            raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
         for schema in clazz.schemas:
             for path in return_schema_to_paths.get(schema, []):
                 if api_path.startswith(f"{path}/"):
@@ -2882,7 +2888,7 @@ class OpenApi:
         index_parser = subparsers.add_parser("index")
         index_parser.add_argument("--check-verbs", help="Check verbs in doc-string matches code", action="store_true")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
-        index_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        index_parser.add_argument("spec", help="Github API OpenAPI spec file", nargs="?")
         index_parser.add_argument("index_filename", help="Path of index file")
 
         suggest_parser = subparsers.add_parser("suggest")
