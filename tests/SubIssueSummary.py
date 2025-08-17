@@ -27,9 +27,10 @@ from . import Framework
 class SubIssueSummary(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
-        self.issue = self.repo.get_issue(28)
-        self.sis = self.issue.sub_issues_summary
+        with self.replayData("Issue.setUp.txt"):
+            self.repo = self.g.get_repo("PyGithub/PyGithub")
+            self.issue = self.repo.get_issue(28)
+            self.sis = self.issue.sub_issues_summary
 
     def testAttributes(self):
         self.assertEqual(self.sis.completed, 1)

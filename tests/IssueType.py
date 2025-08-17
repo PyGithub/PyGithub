@@ -29,9 +29,10 @@ from . import Framework
 class IssueType(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
-        self.issue = self.repo.get_issue(28)
-        self.type = self.issue.type
+        with self.replayData("Issue.setUp.txt"):
+            self.repo = self.g.get_repo("PyGithub/PyGithub")
+            self.issue = self.repo.get_issue(28)
+            self.type = self.issue.type
 
     def testAttributes(self):
         self.assertEqual(self.type.color, "red")
