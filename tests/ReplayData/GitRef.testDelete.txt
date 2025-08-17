@@ -2,7 +2,7 @@ https
 DELETE
 api.github.com
 None
-/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub
+/repos/jacquev6/PyGithub/git/ref/heads/BranchCreatedByPyGithub
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204

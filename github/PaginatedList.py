@@ -30,6 +30,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,6 +50,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any, Callable, Generic, Iterator, TypeVar, overload
@@ -301,6 +304,10 @@ class PaginatedList(PaginatedListBase[T]):
                         for k, v in self.__nextParams.items()
                         if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
                     }
+
+    # To support Python's built-in `reversed()` method
+    def __reversed__(self) -> PaginatedList[T]:
+        return self.reversed
 
     def _couldGrow(self) -> bool:
         return (

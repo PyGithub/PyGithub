@@ -8,6 +8,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Soubhik Kumar Mitra <59209034+x612skm@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,6 +27,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import abc
@@ -235,7 +237,7 @@ class AppAuth(JWT):
         assert isinstance(jwt_expiry, int), jwt_expiry
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
 
-        self._app_id = app_id
+        self._app_id = str(app_id)
         self._sign_func = sign_func
         self._jwt_expiry = jwt_expiry
         self._jwt_issued_at = jwt_issued_at
