@@ -237,7 +237,7 @@ jobs:
             echo "pip install -r requirements/scripts.txt"
             echo python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
             echo python scripts/openapi.py index github openapi.index
-            echo python scripts/openapi.py apply --tests github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
+            echo python scripts/openapi.py apply --tests --new-schemas create-class github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
             (grep -E -e "^> Test .+ changed$" diff.txt | sed -E -e "s/^> Test (.+) changed$/\1/" || true) | while read test
             do
               echo python scripts/prepare-for-update-assertions.py "$test" testAttributes
