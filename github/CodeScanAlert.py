@@ -7,6 +7,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 ReenigneArcher <42013603+ReenigneArcher@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -126,10 +127,7 @@ class CodeScanAlert(NonCompletableGithubObject):
 
     def get_instances(self) -> PaginatedList[github.CodeScanAlertInstance.CodeScanAlertInstance]:
         """
-        Get instances.
-
-        :calls: `GET` on the URL for instances as provided by Github.
-
+        :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances <https://docs.github.com/en/rest/code-scanning/code-scanning#list-instances-of-a-code-scanning-alert>`_
         """
         return PaginatedList(
             github.CodeScanAlertInstance.CodeScanAlertInstance,

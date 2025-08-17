@@ -6,6 +6,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -390,11 +391,23 @@ class Requester(Framework.TestCase):
         self.assertException(
             exc,
             github.UnknownObjectException,
-            None,
+            "No object found for the path some-nonexistent-file",
             404,
             {"message": "No object found for the path some-nonexistent-file"},
             {"header": "value"},
-            '404 {"message": "No object found for the path some-nonexistent-file"}',
+            'No object found for the path some-nonexistent-file: 404 {"message": "No object found for the path some-nonexistent-file"}',
+        )
+
+    def testShouldCreateUnknownObjectException3(self):
+        exc = self.g._Github__requester.createException(404, {"header": "value"}, {"message": "Branch Not Found"})
+        self.assertException(
+            exc,
+            github.UnknownObjectException,
+            "Branch Not Found",
+            404,
+            {"message": "Branch Not Found"},
+            {"header": "value"},
+            'Branch Not Found: 404 {"message": "Branch Not Found"}',
         )
 
     def testShouldCreateGithubException(self):
@@ -450,9 +463,10 @@ class RequesterUnThrottled(RequesterThrottleTestCase):
     def testShouldNotDeferRequests(self):
         with self.mock_sleep() as sleep_mock:
             # same test setup as in RequesterThrottled.testShouldDeferRequests
-            repository = self.g.get_repo(REPO_NAME)
-            releases = list(repository.get_releases())
-            self.assertEqual(len(releases), 30)
+            with self.replayData("RequesterThrottleTestCase.testDeferRequests.txt"):
+                repository = self.g.get_repo(REPO_NAME)
+                releases = list(repository.get_releases())
+                self.assertEqual(len(releases), 30)
 
         sleep_mock.assert_not_called()
 
@@ -463,10 +477,11 @@ class RequesterThrottled(RequesterThrottleTestCase):
 
     def testShouldDeferRequests(self):
         with self.mock_sleep() as sleep_mock:
-            # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
-            repository = self.g.get_repo(REPO_NAME)
-            releases = [release for release in repository.get_releases()]
-            self.assertEqual(len(releases), 30)
+            with self.replayData("RequesterThrottleTestCase.testDeferRequests.txt"):
+                # same test setup as in RequesterUnThrottled.testShouldNotDeferRequests
+                repository = self.g.get_repo(REPO_NAME)
+                releases = [release for release in repository.get_releases()]
+                self.assertEqual(len(releases), 30)
 
         self.assertEqual(sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)])
 
