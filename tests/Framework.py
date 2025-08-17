@@ -511,7 +511,7 @@ class TestCase(BasicTestCase):
         elif authMode == "app":
             auth = self.app_auth
         else:
-            raise ValueError(f"Unsupported test auth mode: {self.authMode}")
+            raise ValueError(f"Unsupported test auth mode: {authMode}")
 
         return github.Github(
             auth=auth,
