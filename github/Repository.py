@@ -143,6 +143,7 @@
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
+# Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1995,7 +1996,7 @@ class Repository(CompletableGithubObject):
 
     def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
         """
-        :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
@@ -2046,7 +2047,7 @@ class Repository(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> github.Variable.Variable:
         """
-        :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :calls: `GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
         :rtype: github.Variable.Variable
         """
@@ -2989,11 +2990,11 @@ class Repository(CompletableGithubObject):
 
     def get_git_ref(self, ref: str) -> GitRef:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
+        :calls: `GET /repos/{owner}/{repo}/git/ref/{ref} <https://docs.github.com/en/rest/git/refs#get-a-reference>`_
         :param ref: string
         :rtype: :class:`github.GitRef.GitRef`
         """
-        prefix = "/git/refs/"
+        prefix = "/git/ref/"
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref
@@ -3949,6 +3950,18 @@ class Repository(CompletableGithubObject):
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
         return status == 204
+
+    def get_automated_security_fixes(self) -> dict[str, bool]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/automated-security-fixes <https://docs.github.com/en/rest/repos/repos#check-if-dependabot-security-updates-are-enabled-for-a-repository>`_
+        :rtype: dict
+        """
+        _, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"{self.url}/automated-security-fixes",
+            headers={"Accept": Consts.automatedSecurityFixes},
+        )
+        return data
 
     def enable_automated_security_fixes(self) -> bool:
         """
