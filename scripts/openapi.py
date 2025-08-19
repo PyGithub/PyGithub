@@ -2470,27 +2470,32 @@ class OpenApi:
                 for property_name, property_spec_type in schema.get("properties", {}).items():
                     property = properties.get(property_name, {})
                     returns = property.get("returns", [])
-                    for ret in returns:
-                        cls_names = set(inner_return_type(ret))
-                        for cls_name in cls_names:
-                            if class_names and cls_name not in class_names:
-                                continue
-                            if cls_name in ["bool", "int", "str", "datetime", "list", "dict", "Any"]:
-                                continue
-                            if cls_name not in available_schemas:
-                                available_schemas[cls_name] = {}
-                            key = (cls.get("name"), property_name)
-                            if key not in available_schemas[cls_name]:
-                                available_schemas[cls_name][key] = []
-                            spec_type = self.get_inner_spec_types(
-                                property_spec_type, schema_path + ["properties", property_name]
-                            )
-                            for st in spec_type:
-                                st = st.lstrip("#")
-                                schema_returned_by[st].add(key)
-                                if st not in schema_to_classes:
-                                    unimplemented_schemas.add(st)
-                            available_schemas[cls_name][key].extend(spec_type)
+                    cls_names = set(ir for ret in returns for ir in inner_return_type(ret))
+                    spec_type = self.get_inner_spec_types(
+                        property_spec_type, schema_path + ["properties", property_name]
+                    )
+
+                    for cls_name in cls_names:
+                        if class_names and cls_name not in class_names:
+                            continue
+                        if cls_name in ["bool", "int", "str", "datetime", "list", "dict", "Any"]:
+                            continue
+                        if cls_name not in available_schemas:
+                            available_schemas[cls_name] = {}
+                        key = (cls.get("name"), property_name)
+                        if key not in available_schemas[cls_name]:
+                            available_schemas[cls_name][key] = []
+                        for st in spec_type:
+                            st = st.lstrip("#")
+                            schema_returned_by[st].add(key)
+                            if st not in schema_to_classes:
+                                unimplemented_schemas.add(st)
+                            # only add as available schema for cls_name if this schema
+                            # is not implemented by any other cls in cls_names
+                            if not any(st in classes.get(n, {}).get("schemas", [])
+                                       for n in cls_names.difference(set(cls_name))):
+                                available_schemas[cls_name][key].append(st)
+
 
         for schema in sorted(list(unimplemented_schemas)):
             print(f"schema not implemented: {schema}")
