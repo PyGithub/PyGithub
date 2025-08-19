@@ -146,7 +146,9 @@ class Enterprise(NonCompletableGithubObject):
         if "url" not in data:
             data["url"] = self.url + "/consumed-licenses"
 
-        return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
+        return github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(
+            self._requester, headers, data, completed=True
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch
