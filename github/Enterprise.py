@@ -56,6 +56,9 @@ class Enterprise(NonCompletableGithubObject):
     /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
     https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
 
+    The OpenAPI schema can be found at
+    - /components/schemas/enterprise
+
     """
 
     def __init__(
