@@ -371,31 +371,25 @@ class GithubObject(ABC):
         )
 
     def _makeUnionClassAttributeFromTypeName(
-        self, klass: type[T_gh], name: str, klass2: type[T_gh2], name2: str, type_name: str, value: Any
+        self, type_name: str | None, value: Any, *class_and_names: (type[T_gh], str)
     ) -> Attribute[T_gh | T_gh2]:
         if value is None or type_name is None:
             return _ValuedAttribute(None)  # type: ignore
-        if type_name == name:
-            return self._makeClassAttribute(klass, value)
-        if type_name == name2:
-            return self._makeClassAttribute(klass2, value)
+        for klass, name in class_and_names:
+            if type_name == name:
+                return self._makeClassAttribute(klass, value)
         return _BadAttribute(value, type)  # type: ignore
 
     def _makeUnionClassAttributeFromTypeKey(
         self,
-        klass: type[T_gh],
-        name: str,
-        klass2: type[T_gh2],
-        name2: str,
         type_key: str,
-        default_type: str,
+        default_type: str | None,
         value: Any,
+        *class_and_names: (type[T_gh], str),
     ) -> Attribute[T_gh | T_gh2]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
-        return self._makeUnionClassAttributeFromTypeName(
-            klass, name, klass2, name2, value.get(type_key, default_type), value
-        )
+        return self._makeUnionClassAttributeFromTypeName(value.get(type_key, default_type), value, *class_and_names)
 
     @staticmethod
     def _makeListOfStringsAttribute(value: list[list[str]] | list[str] | list[str | int]) -> Attribute:

@@ -149,13 +149,11 @@ class DependabotAlert(NonCompletableGithubObject):
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:
             self._dismissed_by = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["dismissed_by"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "dismissed_comment" in attributes:
             self._dismissed_comment = self._makeStringAttribute(attributes["dismissed_comment"])

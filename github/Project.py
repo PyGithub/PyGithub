@@ -246,13 +246,11 @@ class Project(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["creator"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])

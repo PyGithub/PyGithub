@@ -123,13 +123,11 @@ class StatsContributor(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
             self._author = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["author"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])

@@ -144,23 +144,19 @@ class Invitation(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "invitee" in attributes:  # pragma no branch
             self._invitee = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["invitee"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "inviter" in attributes:  # pragma no branch
             self._inviter = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["inviter"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])

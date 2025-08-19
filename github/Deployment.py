@@ -264,13 +264,11 @@ class Deployment(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             self._creator = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["creator"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])

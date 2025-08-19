@@ -260,13 +260,11 @@ class Migration(CompletableGithubObject):
             self._org_metadata_only = self._makeBoolAttribute(attributes["org_metadata_only"])
         if "owner" in attributes:
             self._owner = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["owner"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "repositories" in attributes:
             self._repositories = self._makeListOfClassesAttribute(

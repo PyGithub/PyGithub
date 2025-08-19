@@ -218,33 +218,27 @@ class IssueEvent(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["actor"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "assignee" in attributes:  # pragma no branch
             self._assignee = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["assignee"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "assigner" in attributes:  # pragma no branch
             self._assigner = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["assigner"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "author_association" in attributes:  # pragma no branch
             self._author_association = self._makeDictAttribute(attributes["author_association"])
@@ -280,25 +274,21 @@ class IssueEvent(CompletableGithubObject):
             self._rename = self._makeDictAttribute(attributes["rename"])
         if "requested_reviewer" in attributes:  # pragma no branch
             self._requested_reviewer = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["requested_reviewer"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "requested_team" in attributes:  # pragma no branch
             self._requested_team = self._makeClassAttribute(github.Team.Team, attributes["requested_team"])
         if "review_requester" in attributes:  # pragma no branch
             self._review_requester = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["review_requester"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

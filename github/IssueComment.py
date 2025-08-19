@@ -289,11 +289,9 @@ class IssueComment(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeUnionClassAttributeFromTypeKey(
-                github.NamedUser.NamedUser,
-                "User",
-                github.Organization.Organization,
-                "Organization",
                 "type",
                 "User",
                 attributes["user"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
