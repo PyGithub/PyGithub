@@ -157,7 +157,7 @@ class CommitComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> github.NamedUser.NamedUser | github.Organization.Organization:
+    def user(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._user)
         return self._user.value
 

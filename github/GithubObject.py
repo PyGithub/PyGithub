@@ -72,7 +72,6 @@ T = typing.TypeVar("T")
 K = typing.TypeVar("K")
 T_co = typing.TypeVar("T_co", covariant=True)
 T_gh = typing.TypeVar("T_gh", bound="GithubObject")
-T_gh2 = typing.TypeVar("T_gh2", bound="GithubObject")
 
 
 class Attribute(Protocol[T_co]):
@@ -371,8 +370,8 @@ class GithubObject(ABC):
         )
 
     def _makeUnionClassAttributeFromTypeName(
-        self, type_name: str | None, value: Any, *class_and_names: (type[T_gh], str)
-    ) -> Attribute[T_gh | T_gh2]:
+        self, type_name: str | None, value: Any, *class_and_names: tuple[type[T_gh], str]
+    ) -> Attribute[T_gh]:
         if value is None or type_name is None:
             return _ValuedAttribute(None)  # type: ignore
         for klass, name in class_and_names:
@@ -385,8 +384,8 @@ class GithubObject(ABC):
         type_key: str,
         default_type: str | None,
         value: Any,
-        *class_and_names: (type[T_gh], str),
-    ) -> Attribute[T_gh | T_gh2]:
+        *class_and_names: tuple[type[T_gh], str],
+    ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
         return self._makeUnionClassAttributeFromTypeName(value.get(type_key, default_type), value, *class_and_names)
@@ -397,8 +396,8 @@ class GithubObject(ABC):
         value_key: str,
         default_type: str | None,
         value: Any,
-        *class_and_names: (type[T_gh], str),
-    ) -> Attribute[T_gh | T_gh2]:
+        *class_and_names: tuple[type[T_gh], str],
+    ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
         return self._makeUnionClassAttributeFromTypeName(

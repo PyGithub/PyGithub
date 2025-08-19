@@ -41,11 +41,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.Team
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Team import Team
 
 
 class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
@@ -65,7 +69,7 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def reviewer(self) -> github.NamedUser.NamedUser | github.Team.Team:
+    def reviewer(self) -> NamedUser | Team:
         return self._reviewer.value
 
     @property

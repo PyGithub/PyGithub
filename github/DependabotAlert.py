@@ -154,7 +154,7 @@ class DependabotAlert(NonCompletableGithubObject):
                 attributes["dismissed_by"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore
         if "dismissed_comment" in attributes:
             self._dismissed_comment = self._makeStringAttribute(attributes["dismissed_comment"])
         if "dismissed_reason" in attributes:
