@@ -2482,9 +2482,14 @@ class OpenApi:
             available = set()
             implemented = classes.get(cls, {}).get("schemas", [])
             providing_properties = []
+            schema_returned_by = defaultdict(set)
 
             for providing_property, spec_types in provided_schemas.items():
-                available = available.union([t.lstrip("#") for t in spec_types])
+                for spec_type in spec_types:
+                    spec_type = spec_type.lstrip("#")
+                    available.add(spec_type)
+                    schema_returned_by[spec_type].add(providing_property)
+
                 providing_properties.append(providing_property)
 
             schemas_to_implement = sorted(list(available.difference(set(implemented))))
@@ -2494,6 +2499,9 @@ class OpenApi:
                 print(f"Class {cls}:")
                 for schema_to_implement in sorted(schemas_to_implement):
                     print(f"- should implement schema {schema_to_implement}")
+                    print("  Properties returning the schema:")
+                    for providing_class, providing_property in sorted(schema_returned_by[schema_to_implement]):
+                        print(f"  - {providing_class}.{providing_property}")
                 # for schema_to_remove in sorted(schemas_to_remove):
                 #    print(f"- should not implement schema {schema_to_remove}")
                 print("Properties returning the class:")
