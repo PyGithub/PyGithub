@@ -2470,7 +2470,7 @@ class OpenApi:
                 for property_name, property_spec_type in schema.get("properties", {}).items():
                     property = properties.get(property_name, {})
                     returns = property.get("returns", [])
-                    cls_names = set(ir for ret in returns for ir in inner_return_type(ret))
+                    cls_names = {ir for ret in returns for ir in inner_return_type(ret)}
                     spec_type = self.get_inner_spec_types(
                         property_spec_type, schema_path + ["properties", property_name]
                     )
@@ -2491,11 +2491,11 @@ class OpenApi:
                             if st not in schema_to_classes:
                                 unimplemented_schemas.add(st)
                             # only add as available schema for cls_name if this schema
-                            # is not implemented by any other cls in cls_names
-                            if not any(st in classes.get(n, {}).get("schemas", [])
-                                       for n in cls_names.difference(set(cls_name))):
+                            # is not implemented by any other class in the union (cls_names)
+                            if not any(
+                                st in classes.get(n, {}).get("schemas", []) for n in cls_names.difference(set(cls_name))
+                            ):
                                 available_schemas[cls_name][key].append(st)
-
 
         for schema in sorted(list(unimplemented_schemas)):
             print(f"schema not implemented: {schema}")
