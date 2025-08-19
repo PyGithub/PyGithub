@@ -2145,22 +2145,32 @@ class OpenApi:
                 class_to_descendants[cls].append(name)
         class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
 
+        path_to_call_methods = {}
         path_to_return_classes = {}
         schema_to_classes = {}
-        for name, cls in classes.items():
+        for cls_name, cls in classes.items():
             # construct path-to-class index
-            for method in cls.get("methods", {}).values():
+            for method_name, method in cls.get("methods", {}).items():
                 path = method.get("call", {}).get("path")
                 if not path:
                     continue
                 verb = method.get("call", {}).get("verb", "").lower()
                 if not verb:
                     if self.verbose:
-                        print(f"Unknown verb for path {path} of class {name}")
+                        print(f"Unknown verb for path {path} of class {cls_name}")
                     continue
 
                 if not path.startswith("/") and self.verbose:
                     print(f"Unsupported path: {path}")
+
+                if path not in path_to_call_methods:
+                    path_to_call_methods[path] = {}
+                if verb not in path_to_call_methods[path]:
+                    path_to_call_methods[path][verb] = set()
+                path_to_call_methods[path][verb] = sorted(
+                    list(set(path_to_call_methods[path][verb]).union({".".join([cls_name, method_name])}))
+                )
+
                 returns = method.get("returns", [])
                 if path not in path_to_return_classes:
                     path_to_return_classes[path] = {}
@@ -2174,7 +2184,7 @@ class OpenApi:
             for schema in cls.get("schemas"):
                 if schema not in schema_to_classes:
                     schema_to_classes[schema] = []
-                schema_to_classes[schema].append(name)
+                schema_to_classes[schema].append(cls_name)
 
         print(f"Indexed {len(classes)} classes")
         print(f"Indexed {len(path_to_return_classes)} paths")
@@ -2209,6 +2219,7 @@ class OpenApi:
             "paths": paths,
             "indices": {
                 "class_to_descendants": class_to_descendants,
+                "path_to_call_methods": path_to_call_methods,
                 "path_to_return_classes": path_to_return_classes,
                 "schema_to_classes": schema_to_classes,
                 "return_schema_to_paths": return_schema_to_paths,
@@ -2399,6 +2410,11 @@ class OpenApi:
         with open(index_filename) as r:
             index = json.load(r)
 
+        classes = index.get("classes", {})
+        schema_to_classes = index.get("indices", {}).get("schema_to_classes", {})
+        path_to_call_methods = index.get("indices", {}).get("path_to_call_methods", {})
+        path_to_return_classes = index.get("indices", {}).get("path_to_return_classes", {})
+
         schemas_added = 0
         schemas_suggested = 0
 
@@ -2436,6 +2452,7 @@ class OpenApi:
 
         # suggest schemas based on properties of classes
         available_schemas = {}
+        schema_returned_by = defaultdict(set)
         unimplemented_schemas = set()
         for cls in self.classes.values():
             schemas: list[str] = cls.get("schemas", [])
@@ -2469,26 +2486,24 @@ class OpenApi:
                                 property_spec_type, schema_path + ["properties", property_name]
                             )
                             for st in spec_type:
-                                if st.lstrip("#") not in index.get("indices", {}).get("schema_to_classes", {}):
-                                    unimplemented_schemas.add(st.lstrip("#"))
+                                st = st.lstrip("#")
+                                schema_returned_by[st].add(key)
+                                if st not in schema_to_classes:
+                                    unimplemented_schemas.add(st)
                             available_schemas[cls_name][key].extend(spec_type)
 
         for schema in sorted(list(unimplemented_schemas)):
             print(f"schema not implemented: {schema}")
 
-        classes = index.get("classes", {})
-
         for cls, provided_schemas in sorted(available_schemas.items()):
             available = set()
             implemented = classes.get(cls, {}).get("schemas", [])
             providing_properties = []
-            schema_returned_by = defaultdict(set)
 
             for providing_property, spec_types in provided_schemas.items():
                 for spec_type in spec_types:
                     spec_type = spec_type.lstrip("#")
                     available.add(spec_type)
-                    schema_returned_by[spec_type].add(providing_property)
 
                 providing_properties.append(providing_property)
 
@@ -2499,9 +2514,10 @@ class OpenApi:
                 print(f"Class {cls}:")
                 for schema_to_implement in sorted(schemas_to_implement):
                     print(f"- should implement schema {schema_to_implement}")
-                    print("  Properties returning the schema:")
-                    for providing_class, providing_property in sorted(schema_returned_by[schema_to_implement]):
-                        print(f"  - {providing_class}.{providing_property}")
+                    if schema_returned_by[schema_to_implement]:
+                        print("  Properties returning the schema:")
+                        for providing_class, providing_property in sorted(schema_returned_by[schema_to_implement]):
+                            print(f"  - {providing_class}.{providing_property}")
                 # for schema_to_remove in sorted(schemas_to_remove):
                 #    print(f"- should not implement schema {schema_to_remove}")
                 print("Properties returning the class:")
@@ -2523,10 +2539,9 @@ class OpenApi:
 
         # suggest schemas based on API calls
         available_schemas = {}
+        schema_returned_by = defaultdict(set)
         ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
-        paths = set(spec.get("paths", {}).keys()).union(
-            index.get("indices", {}).get("path_to_return_classes", {}).keys()
-        )
+        paths = set(spec.get("paths", {}).keys()).union(path_to_return_classes.keys())
         for path in paths:
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
@@ -2555,6 +2570,8 @@ class OpenApi:
                         if verb not in available_schemas[cls]:
                             available_schemas[cls][verb] = {}
                         available_schemas[cls][verb][path] = set(schemas_of_path)
+                        for schema in schemas_of_path:
+                            schema_returned_by[schema].add((verb, path))
 
         for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
             if cls in ["bool", "str", "None"]:
@@ -2583,6 +2600,15 @@ class OpenApi:
                 print(f"Class {cls}:")
                 for schema_to_implement in sorted(schemas_to_implement):
                     print(f"- should implement schema {schema_to_implement}")
+                    methods = set()
+                    for verb, verb_paths in paths.items():
+                        for path in verb_paths:
+                            if (verb, path) in schema_returned_by[schema_to_implement]:
+                                methods = methods.union(path_to_call_methods.get(path, {}).get(verb, set()))
+                    if methods:
+                        print("  Methods returning the schema:")
+                        for method in methods:
+                            print(f"  - {method}")
                 # for schema_to_remove in sorted(schemas_to_remove):
                 #    print(f"- should not implement schema {schema_to_remove}")
                 print("Paths returning the class:")
