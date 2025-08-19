@@ -73,9 +73,9 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
         return self._type.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "reviewer" in attributes and "type" in attributes:  # pragma no branch
-            self._reviewer = self._makeUnionClassAttributeFromTypeKey(
-                "type", None, attributes["reviewer"], (github.NamedUser.NamedUser, "User"), (github.Team.Team, "Team")
+        if "reviewer" in attributes:  # pragma no branch
+            self._reviewer = self._makeUnionClassAttributeFromTypeKeyAndValueKey(
+                "type", "reviewer", None, attributes, (github.NamedUser.NamedUser, "User"), (github.Team.Team, "Team")
             )
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])

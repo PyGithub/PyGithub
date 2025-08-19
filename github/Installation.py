@@ -236,11 +236,12 @@ class Installation(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "access_tokens_url" in attributes:  # pragma no branch
             self._access_tokens_url = self._makeStringAttribute(attributes["access_tokens_url"])
-        if "account" in attributes and "target_type" in attributes:  # pragma no branch
-            self._account = self._makeUnionClassAttributeFromTypeKey(
+        if "account" in attributes:  # pragma no branch
+            self._account = self._makeUnionClassAttributeFromTypeKeyAndValueKey(
                 "target_type",
+                "account",
                 None,
-                attributes["account"],
+                attributes,
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
             )

@@ -391,6 +391,20 @@ class GithubObject(ABC):
             return _ValuedAttribute(None)  # type: ignore
         return self._makeUnionClassAttributeFromTypeName(value.get(type_key, default_type), value, *class_and_names)
 
+    def _makeUnionClassAttributeFromTypeKeyAndValueKey(
+        self,
+        type_key: str,
+        value_key: str,
+        default_type: str | None,
+        value: Any,
+        *class_and_names: (type[T_gh], str),
+    ) -> Attribute[T_gh | T_gh2]:
+        if value is None or not isinstance(value, dict):
+            return _ValuedAttribute(None)  # type: ignore
+        return self._makeUnionClassAttributeFromTypeName(
+            value.get(type_key, default_type), value.get(value_key), *class_and_names
+        )
+
     @staticmethod
     def _makeListOfStringsAttribute(value: list[list[str]] | list[str] | list[str | int]) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, str)
