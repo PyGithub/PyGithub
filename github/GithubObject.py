@@ -369,6 +369,41 @@ class GithubObject(ABC):
             lambda value: klass(self._requester, self._headers, value),
         )
 
+    def _makeUnionClassAttributeFromTypeName(
+        self, type_name: str | None, value: Any, *class_and_names: tuple[type[T_gh], str]
+    ) -> Attribute[T_gh]:
+        if value is None or type_name is None:
+            return _ValuedAttribute(None)  # type: ignore
+        for klass, name in class_and_names:
+            if type_name == name:
+                return self._makeClassAttribute(klass, value)
+        return _BadAttribute(value, type)  # type: ignore
+
+    def _makeUnionClassAttributeFromTypeKey(
+        self,
+        type_key: str,
+        default_type: str | None,
+        value: Any,
+        *class_and_names: tuple[type[T_gh], str],
+    ) -> Attribute[T_gh]:
+        if value is None or not isinstance(value, dict):
+            return _ValuedAttribute(None)  # type: ignore
+        return self._makeUnionClassAttributeFromTypeName(value.get(type_key, default_type), value, *class_and_names)
+
+    def _makeUnionClassAttributeFromTypeKeyAndValueKey(
+        self,
+        type_key: str,
+        value_key: str,
+        default_type: str | None,
+        value: Any,
+        *class_and_names: tuple[type[T_gh], str],
+    ) -> Attribute[T_gh]:
+        if value is None or not isinstance(value, dict):
+            return _ValuedAttribute(None)  # type: ignore
+        return self._makeUnionClassAttributeFromTypeName(
+            value.get(type_key, default_type), value.get(value_key), *class_and_names
+        )
+
     @staticmethod
     def _makeListOfStringsAttribute(value: list[list[str]] | list[str] | list[str | int]) -> Attribute:
         return GithubObject.__makeSimpleListAttribute(value, str)

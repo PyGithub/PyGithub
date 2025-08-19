@@ -41,12 +41,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
 class CommitStatus(NonCompletableGithubObject):
@@ -62,7 +66,7 @@ class CommitStatus(NonCompletableGithubObject):
         self._avatar_url: Attribute[str] = NotSet
         self._context: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._creator: Attribute[NamedUser | Organization] = NotSet
         self._description: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
@@ -93,7 +97,7 @@ class CommitStatus(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> github.NamedUser.NamedUser:
+    def creator(self) -> NamedUser | Organization:
         return self._creator.value
 
     @property
@@ -132,7 +136,13 @@ class CommitStatus(NonCompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+            self._creator = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["creator"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch
