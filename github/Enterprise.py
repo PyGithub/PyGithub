@@ -40,41 +40,40 @@
 
 from __future__ import annotations
 
-import urllib.parse
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
-from github.Requester import Requester
+from typing_extensions import deprecated
+
+import github.EnterpriseConsumedLicenses
+import github.Requester
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined, is_undefined
+
+if TYPE_CHECKING:
+    from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
+    from github.Requester import Requester
 
 
 class Enterprise(NonCompletableGithubObject):
     """
     This class represents Enterprises.
 
-    Such objects do not exist in the Github API, so this class merely collects all endpoints the start with
-    /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
-    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
+    The reference can be found here
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin
 
     The OpenAPI schema can be found at
     - /components/schemas/enterprise
 
     """
 
-    def __init__(
-        self,
-        requester: Requester,
-        enterprise: str,
-    ):
-        enterprise = urllib.parse.quote(enterprise)
-        super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"})
+    @staticmethod
+    def from_slug(requester: Requester, slug: str) -> Enterprise:
+        return github.Enterprise.Enterprise(requester, {}, {"slug": slug})
 
     def _initAttributes(self) -> None:
         self._avatar_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
-        self._enterprise: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
@@ -85,7 +84,7 @@ class Enterprise(NonCompletableGithubObject):
         self._website_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"enterprise": self._enterprise.value})
+        return self.get__repr__({"slug": self._slug.value})
 
     @property
     def avatar_url(self) -> str:
@@ -100,8 +99,10 @@ class Enterprise(NonCompletableGithubObject):
         return self._description.value
 
     @property
+    @deprecated("Use slug instead")
     def enterprise(self) -> str:
-        return self._enterprise.value
+        # alias for slug
+        return self._slug.value
 
     @property
     def html_url(self) -> str:
@@ -129,6 +130,8 @@ class Enterprise(NonCompletableGithubObject):
 
     @property
     def url(self) -> str:
+        if is_undefined(self._url) and is_defined(self._slug):
+            self._url = self._makeStringAttribute(f"/enterprises/{self.slug}")
         return self._url.value
 
     @property
@@ -152,8 +155,6 @@ class Enterprise(NonCompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
-        if "enterprise" in attributes:  # pragma no branch
-            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
