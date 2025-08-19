@@ -41,6 +41,7 @@
 from __future__ import annotations
 
 import urllib.parse
+from datetime import datetime
 from typing import Any
 
 from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
@@ -70,19 +71,69 @@ class Enterprise(NonCompletableGithubObject):
         super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"})
 
     def _initAttributes(self) -> None:
+        self._avatar_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._description: Attribute[str] = NotSet
         self._enterprise: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._slug: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._website_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"enterprise": self._enterprise.value})
+
+    @property
+    def avatar_url(self) -> str:
+        return self._avatar_url.value
+
+    @property
+    def created_at(self) -> datetime:
+        return self._created_at.value
+
+    @property
+    def description(self) -> str:
+        return self._description.value
 
     @property
     def enterprise(self) -> str:
         return self._enterprise.value
 
     @property
+    def html_url(self) -> str:
+        return self._html_url.value
+
+    @property
+    def id(self) -> int:
+        return self._id.value
+
+    @property
+    def name(self) -> str:
+        return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        return self._node_id.value
+
+    @property
+    def slug(self) -> str:
+        return self._slug.value
+
+    @property
+    def updated_at(self) -> datetime:
+        return self._updated_at.value
+
+    @property
     def url(self) -> str:
         return self._url.value
+
+    @property
+    def website_url(self) -> str:
+        return self._website_url.value
 
     def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
         """
@@ -95,7 +146,27 @@ class Enterprise(NonCompletableGithubObject):
         return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "avatar_url" in attributes:  # pragma no branch
+            self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
         if "enterprise" in attributes:  # pragma no branch
             self._enterprise = self._makeStringAttribute(attributes["enterprise"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "slug" in attributes:  # pragma no branch
+            self._slug = self._makeStringAttribute(attributes["slug"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "website_url" in attributes:  # pragma no branch
+            self._website_url = self._makeStringAttribute(attributes["website_url"])
