@@ -52,6 +52,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Repository import Repository
 
 
@@ -72,8 +73,8 @@ class Invitation(CompletableGithubObject):
         self._expired: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._invitee: Attribute[NamedUser] = NotSet
-        self._inviter: Attribute[NamedUser] = NotSet
+        self._invitee: Attribute[NamedUser | Organization] = NotSet
+        self._inviter: Attribute[NamedUser | Organization] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._permissions: Attribute[str] = NotSet
         self._repository: Attribute[Repository] = NotSet
@@ -103,12 +104,12 @@ class Invitation(CompletableGithubObject):
         return self._id.value
 
     @property
-    def invitee(self) -> NamedUser:
+    def invitee(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._invitee)
         return self._invitee.value
 
     @property
-    def inviter(self) -> NamedUser:
+    def inviter(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._inviter)
         return self._inviter.value
 
@@ -142,9 +143,21 @@ class Invitation(CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "invitee" in attributes:  # pragma no branch
-            self._invitee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["invitee"])
+            self._invitee = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["invitee"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "inviter" in attributes:  # pragma no branch
-            self._inviter = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["inviter"])
+            self._inviter = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["inviter"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
 
