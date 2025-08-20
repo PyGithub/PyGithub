@@ -130,12 +130,12 @@ jobs:
 
           echo "::group::Head implementations:"
           python head/scripts/openapi.py index head/github openapi.json openapi.head.index
-          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.head.index | tee implementation.head.txt
+          python head/scripts/openapi.py --dry-run apply --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
           echo "::endgroup::"
 
           echo "::group::Base implementations:"
           python head/scripts/openapi.py index base/github openapi.json openapi.base.index
-          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.base.index | tee implementation.base.txt
+          python head/scripts/openapi.py --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
           echo "::endgroup::"
 
           echo "Difference:"

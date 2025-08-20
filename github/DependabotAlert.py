@@ -41,6 +41,7 @@ if TYPE_CHECKING:
     from github.DependabotAlertDependency import DependabotAlertDependency
     from github.DependabotAlertVulnerability import DependabotAlertVulnerability
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
 class DependabotAlert(NonCompletableGithubObject):
@@ -60,7 +61,7 @@ class DependabotAlert(NonCompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._dependency: Attribute[DependabotAlertDependency] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
-        self._dismissed_by: Attribute[NamedUser | None] = NotSet
+        self._dismissed_by: Attribute[NamedUser | Organization | None] = NotSet
         self._dismissed_comment: Attribute[str | None] = NotSet
         self._dismissed_reason: Attribute[str | None] = NotSet
         self._fixed_at: Attribute[str] = NotSet
@@ -92,7 +93,7 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._dismissed_at.value
 
     @property
-    def dismissed_by(self) -> NamedUser | None:
+    def dismissed_by(self) -> NamedUser | Organization | None:
         return self._dismissed_by.value
 
     @property
@@ -147,7 +148,13 @@ class DependabotAlert(NonCompletableGithubObject):
         if "dismissed_at" in attributes:
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:
-            self._dismissed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["dismissed_by"])
+            self._dismissed_by = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["dismissed_by"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )  # type: ignore
         if "dismissed_comment" in attributes:
             self._dismissed_comment = self._makeStringAttribute(attributes["dismissed_comment"])
         if "dismissed_reason" in attributes:
