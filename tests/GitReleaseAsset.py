@@ -53,6 +53,7 @@ class GitReleaseAsset(Framework.TestCase):
         )
         self.assertEqual(self.asset.content_type, "text/markdown")
         self.assertEqual(self.asset.created_at, datetime(2025, 1, 30, 11, 11, 32, tzinfo=timezone.utc))
+        self.assertEqual(self.asset.digest, "")
         self.assertEqual(self.asset.download_count, 0)
         self.assertEqual(self.asset.id, 224868540)
         self.assertIsNone(self.asset.label)
