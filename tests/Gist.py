@@ -47,6 +47,7 @@ class Gist(Framework.TestCase):
     def testAttributes(self):
         gist = self.g.get_gist("6296732")
         self.assertEqual(gist.comments, 0)
+        self.assertEqual(gist.comments_enabled, False)
         self.assertEqual(gist.comments_url, "https://api.github.com/gists/6296732/comments")
         self.assertEqual(gist.commits_url, "https://api.github.com/gists/6296732/commits")
         self.assertEqual(

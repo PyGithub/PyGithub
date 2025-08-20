@@ -144,6 +144,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.draft, False)
         self.assertEqual(release.html_url, "https://github.com/rickrickston123/RepoTest/releases/tag/v1.0")
         self.assertEqual(release.id, release_id)
+        self.assertEqual(release.immutable, False)
         self.assertIsNone(release.mentions_count)
         self.assertIsNone(release.message)
         self.assertIsNone(release.name)
