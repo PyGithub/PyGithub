@@ -92,13 +92,13 @@ jobs:
           python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head schema suggestions:"
-          python head/scripts/openapi.py index head/github openapi.head.index
-          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.head.index | tee schemas.head.txt
+          python head/scripts/openapi.py index head/github openapi.json openapi.head.index
+          python head/scripts/openapi.py suggest schemas openapi.json openapi.head.index | tee schemas.head.txt
           echo "::endgroup::"
 
           echo "::group::Base schema suggestions:"
-          python head/scripts/openapi.py index base/github openapi.base.index
-          python head/scripts/openapi.py --dry-run suggest openapi.json openapi.base.index | tee schemas.base.txt
+          python head/scripts/openapi.py index base/github openapi.json openapi.base.index
+          python head/scripts/openapi.py suggest schemas openapi.json openapi.base.index | tee schemas.base.txt
           echo "::endgroup::"
 
           echo "Difference:"
@@ -129,13 +129,13 @@ jobs:
           python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head implementations:"
-          python head/scripts/openapi.py index head/github openapi.head.index
-          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.head.index | tee implementation.head.txt
+          python head/scripts/openapi.py index head/github openapi.json openapi.head.index
+          python head/scripts/openapi.py --dry-run apply --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
           echo "::endgroup::"
 
           echo "::group::Base implementations:"
-          python head/scripts/openapi.py index base/github openapi.base.index
-          python head/scripts/openapi.py --dry-run apply --tests openapi.json openapi.base.index | tee implementation.base.txt
+          python head/scripts/openapi.py index base/github openapi.json openapi.base.index
+          python head/scripts/openapi.py --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
           echo "::endgroup::"
 
           echo "Difference:"
@@ -157,7 +157,8 @@ jobs:
       - name: Sort classes
         run: |
           echo "::group::Sort classes"
-          python scripts/openapi.py index github openapi.index
+          python scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+          python scripts/openapi.py index github openapi.json openapi.index
           python scripts/sort_class.py openapi.index $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
           echo "::endgroup::"
 
