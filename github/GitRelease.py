@@ -61,6 +61,7 @@ from __future__ import annotations
 from datetime import datetime
 from os.path import basename
 from typing import Any, BinaryIO
+
 from typing_extensions import deprecated
 
 import github.GitReleaseAsset
