@@ -61,6 +61,7 @@ from __future__ import annotations
 from datetime import datetime
 from os.path import basename
 from typing import Any, BinaryIO
+from typing_extensions import deprecated
 
 import github.GitReleaseAsset
 import github.NamedUser
@@ -108,13 +109,12 @@ class GitRelease(CompletableGithubObject):
         self._tag_name: Attribute[str] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._target_commitish: Attribute[str] = NotSet
-        self._title: Attribute[str] = NotSet
         self._upload_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"title": self._title.value})
+        return self.get__repr__({"name": self._name.value})
 
     @property
     def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
@@ -237,9 +237,10 @@ class GitRelease(CompletableGithubObject):
         return self._target_commitish.value
 
     @property
+    @deprecated("Use name instead")
     def title(self) -> str:
-        self._completeIfNotSet(self._title)
-        return self._title.value
+        # alias for name
+        return self.name
 
     @property
     def upload_url(self) -> str:
@@ -414,7 +415,7 @@ class GitRelease(CompletableGithubObject):
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "name" in attributes:
-            self._title = self._makeStringAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "prerelease" in attributes:
