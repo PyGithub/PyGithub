@@ -2013,7 +2013,7 @@ class OpenApi:
                     # handle new schemas
                     for new_schema in new_schemas:
                         new_class_name = "".join(
-                            [term[0].upper() + term[1:] for term in new_schema.split("/")[-1].split("-")]
+                            [term[0].upper() + term[1:] for term in re.split("[-_]", new_schema.split("/")[-1])]
                         )
                         if new_class_name in classes:
                             # we probably created that class in an earlier iteration, or we have a name collision here
