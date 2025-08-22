@@ -135,8 +135,8 @@ jobs:
           git checkout -b openapi/autosync-new-classes
           git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
-            git merge --squash "$branch"
-            git commit --no-edit
+            git merge --squash "$branch" || true
+            git commit --no-edit || true
             echo "::endgroup::"
           done
 
