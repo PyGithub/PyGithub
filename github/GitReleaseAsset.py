@@ -67,14 +67,13 @@ class GitReleaseAsset(CompletableGithubObject):
         self._browser_download_url: Attribute[str] = NotSet
         self._content_type: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._digest: Attribute[str] = NotSet
+        self._digest: Attribute[str | None] = NotSet
         self._download_count: Attribute[int] = NotSet
         self._id: Attribute[int] = NotSet
         self._label: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
-        self._digest: Attribute[str | None] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._uploader: Attribute[github.NamedUser.NamedUser] = NotSet
@@ -99,7 +98,7 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def digest(self) -> str:
+    def digest(self) -> str | None:
         self._completeIfNotSet(self._digest)
         return self._digest.value
 
@@ -132,11 +131,6 @@ class GitReleaseAsset(CompletableGithubObject):
     def size(self) -> int:
         self._completeIfNotSet(self._size)
         return self._size.value
-
-    @property
-    def digest(self) -> str | None:
-        self._completeIfNotSet(self._digest)
-        return self._digest.value
 
     @property
     def state(self) -> str:
@@ -207,8 +201,6 @@ class GitReleaseAsset(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
-        if "digest" in attributes and attributes["digest"] is not None:  # pragma no branch
-            self._digest = self._makeStringAttribute(attributes["digest"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "updated_at" in attributes:  # pragma no branch
