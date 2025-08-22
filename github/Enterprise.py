@@ -66,10 +66,6 @@ class Enterprise(NonCompletableGithubObject):
 
     """
 
-    @staticmethod
-    def from_slug(requester: Requester, slug: str) -> Enterprise:
-        return github.Enterprise.Enterprise(requester, {}, {"slug": slug})
-
     def _initAttributes(self) -> None:
         self._avatar_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -137,6 +133,10 @@ class Enterprise(NonCompletableGithubObject):
     @property
     def website_url(self) -> str:
         return self._website_url.value
+
+    @staticmethod
+    def from_slug(requester: Requester, slug: str) -> Enterprise:
+        return github.Enterprise.Enterprise(requester, {}, {"slug": slug})
 
     def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
         """
