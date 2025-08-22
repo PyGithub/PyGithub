@@ -103,13 +103,6 @@ jobs:
             echo "Pushing changes to origin openapi/autosync"
             git push origin openapi/autosync
           fi
-      - name: Fail on changes
-        run: |
-          # Fail on changes
-          if ! git diff --quiet openapi/main; then
-            echo "Changes exist, please investigate branch openapi/autosync"
-            exit 1
-          fi
 
       - name: Sync with OpenAPI spec (create new classes)
         run: |
@@ -152,10 +145,11 @@ jobs:
             echo "Pushing changes to origin openapi/autosync-new-classes"
             git push origin openapi/autosync-new-classes
           fi
+
       - name: Fail on changes
         run: |
           # Fail on changes
           if ! git diff --quiet openapi/main; then
-            echo "Changes exist, please investigate branch openapi/autosync-new-classes"
+            echo "Changes exist, please investigate branches openapi/autosync and openapi/autosync-new-classes"
             exit 1
           fi
