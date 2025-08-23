@@ -65,6 +65,7 @@
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
 # Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -98,9 +99,11 @@ import github.Event
 import github.GithubObject
 import github.HookDelivery
 import github.NamedUser
+import github.OrganizationCodeScanAlert
 import github.OrganizationCustomProperty
 import github.OrganizationDependabotAlert
 import github.OrganizationSecret
+import github.OrganizationSecretScanAlert
 import github.OrganizationVariable
 import github.Plan
 import github.Project
@@ -132,6 +135,7 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Migration import Migration
     from github.NamedUser import NamedUser, OrganizationInvitation
+    from github.OrganizationCodeScanAlert import OrganizationCodeScanAlert
     from github.OrganizationCustomProperty import (
         CustomProperty,
         OrganizationCustomProperty,
@@ -139,6 +143,7 @@ if TYPE_CHECKING:
     )
     from github.OrganizationDependabotAlert import OrganizationDependabotAlert
     from github.OrganizationSecret import OrganizationSecret
+    from github.OrganizationSecretScanAlert import OrganizationSecretScanAlert
     from github.OrganizationVariable import OrganizationVariable
     from github.Plan import Plan
     from github.Project import Project
@@ -1611,6 +1616,121 @@ class Organization(CompletableGithubObject):
             github.OrganizationDependabotAlert.OrganizationDependabotAlert,
             self._requester,
             f"{self.url}/dependabot/alerts",
+            url_parameters,
+        )
+    
+    def get_codescan_alerts(
+        self,
+        tool_name: Opt[str] = NotSet,
+        tool_guid: Opt[str] = NotSet,
+        ref: Opt[str] = NotSet,
+        pr: Opt[int] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        state: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet
+    ) -> PaginatedList[OrganizationCodeScanAlert]:
+        """
+        :calls: `GET /orgs/{org}/code-scanning/alerts <https://docs.github.com/en/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization>`_
+        :param tool_name: Optional string
+        :param tool_guid: Optional string
+        :param ref: Optional string
+        :param pr: Optional integer
+        :param sort: Optional string
+        :param direction: Optional string
+        :param state: Optional string
+        :param severity: Optional string
+        :rtype: :class:`PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
+        """
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        allowed_states = ["open", "closed", "dismissed", "fixed"]
+        allowed_severities = ["critical", "high", "medium", "low", "warning", "note", "error"]
+        assert is_optional(tool_name, str), tool_name
+        assert is_optional(tool_guid, str), tool_guid
+        assert tool_name is NotSet or tool_guid is NotSet, "You can specify the tool by using either tool_guid or tool_name, but not both."
+        assert is_optional(ref, str), ref
+        assert is_optional(pr, int), pr
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert severity in allowed_severities + [NotSet], f"Severity can be one of {', '.join(allowed_severities)}"
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "tool_name": tool_name,
+                "tool_guid": tool_guid,
+                "ref": ref,
+                "pr": pr,
+                "sort": sort,
+                "direction": direction,
+                "state": state,
+                "severity": severity
+            }
+        )
+        return PaginatedList(
+            github.OrganizationCodeScanAlert.OrganizationCodeScanAlert,
+            self._requester,
+            f"{self.url}/code-scanning/alerts",
+            url_parameters,
+        )
+    
+    def get_secret_scanning_alerts(
+        self,
+        state: Opt[str] = NotSet,
+        secret_type: Opt[str] = NotSet,
+        resolution: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        validity: Opt[str] = NotSet,
+        is_publicly_leaked: Opt[bool] = NotSet,
+        is_multi_repo: Opt[bool] = NotSet,
+        hide_secret: Opt[bool] = NotSet
+    ) -> PaginatedList[OrganizationSecretScanAlert]:
+        """
+        :calls: `GET /orgs/{org}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-organization>`_
+        :param state: Optional string
+        :param secret_type: Optional string
+        :param resolution: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
+        :param validity: Optional string
+        :param is_publicly_leaked: Optional bool
+        :param is_multi_repo: Optional bool
+        :param hide_secret: Optional bool
+        :rtype: :class:`PaginatedList` of :class:`github.SecretScanAlert.SecretScanAlert`
+        """
+        allowed_states = ["open", "resolved"]
+        allowed_secret_types = ["user", "push_protection", "partner"]
+        allowed_resolutions = ["false_positive", "wont_fix", "revoked", "pattern_edited", "pattern_deleted", "used_in_tests"]
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        allowed_validities = ["active", "inactive", "unknown"]
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert secret_type in allowed_secret_types + [NotSet], f"Severity can be one of {', '.join(allowed_secret_types)}"
+        assert resolution in allowed_resolutions + [NotSet], f"Ecosystem can be one of {', '.join(allowed_resolutions)}"
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        assert validity in allowed_validities + [NotSet], f"Ecosystem can be one of {', '.join(allowed_validities)}"
+        assert is_optional(is_publicly_leaked, bool), is_publicly_leaked
+        assert is_optional(is_multi_repo, bool), is_multi_repo
+        assert is_optional(hide_secret, bool), hide_secret
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "secret_type": secret_type,
+                "resolution": resolution,
+                "sort": sort,
+                "direction": direction,
+                "validity": validity,
+                "is_publicly_leaked": is_publicly_leaked,
+                "is_multi_repo": is_multi_repo,
+                "hide_secret": hide_secret,
+            }
+        )
+        return PaginatedList(
+            github.OrganizationSecretScanAlert.OrganizationSecretScanAlert,
+            self._requester,
+            f"{self.url}/secret-scanning/alerts",
             url_parameters,
         )
 
