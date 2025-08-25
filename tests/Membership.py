@@ -48,6 +48,8 @@ class Membership(Framework.TestCase):
         self.membership = self.g.get_user().get_organization_membership("github")
 
     def testAttributes(self):
+        self.assertIsNone(self.membership.direct_membership)
+        self.assertIsNone(self.membership.enterprise_teams_providing_indirect_membership)
         self.assertEqual(self.membership.organization.login, "github")
         self.assertEqual(self.membership.organization_url, "https://api.github.com/orgs/invitocat")
         self.assertIsNone(self.membership.permissions)

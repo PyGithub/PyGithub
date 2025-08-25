@@ -1,8 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,29 +19,20 @@
 #                                                                              #
 ################################################################################
 
-import github
+from __future__ import annotations
 
 from . import Framework
 
-REPO_NAME = "PyGithub/PyGithub"
 
-
-class PoolSize(Framework.TestCase):
+class SubIssueSummary(Framework.TestCase):
     def setUp(self):
-        self.setPoolSize(20)
         super().setUp()
+        with self.replayData("Issue.setUp.txt"):
+            self.repo = self.g.get_repo("PyGithub/PyGithub")
+            self.issue = self.repo.get_issue(28)
+            self.sis = self.issue.sub_issues_summary
 
-    def testReturnsRepoAfterSettingPoolSize(self):
-        repository = self.g.get_repo(REPO_NAME)
-        self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEqual(repository.full_name, REPO_NAME)
-
-    def testReturnsRepoAfterSettingPoolSizeHttp(self):
-        g = github.Github(
-            auth=self.oauth_token,
-            base_url="http://my.enterprise.com",
-            pool_size=20,
-        )
-        repository = g.get_repo(REPO_NAME)
-        self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEqual(repository.full_name, REPO_NAME)
+    def testAttributes(self):
+        self.assertEqual(self.sis.completed, 1)
+        self.assertEqual(self.sis.percent_completed, 100)
+        self.assertEqual(self.sis.total, 1)

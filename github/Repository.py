@@ -1996,7 +1996,7 @@ class Repository(CompletableGithubObject):
 
     def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
         """
-        :calls: 'GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
@@ -2047,7 +2047,7 @@ class Repository(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> github.Variable.Variable:
         """
-        :calls: 'GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :calls: `GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
         :rtype: github.Variable.Variable
         """
@@ -2990,11 +2990,11 @@ class Repository(CompletableGithubObject):
 
     def get_git_ref(self, ref: str) -> GitRef:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/refs/{ref} <https://docs.github.com/en/rest/reference/git#references>`_
+        :calls: `GET /repos/{owner}/{repo}/git/ref/{ref} <https://docs.github.com/en/rest/git/refs#get-a-reference>`_
         :param ref: string
         :rtype: :class:`github.GitRef.GitRef`
         """
-        prefix = "/git/refs/"
+        prefix = "/git/ref/"
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref

@@ -38,12 +38,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
 class StatsContributor(NonCompletableGithubObject):
@@ -100,12 +104,12 @@ class StatsContributor(NonCompletableGithubObject):
                 self._w = self._makeTimestampAttribute(attributes["w"])
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._author: Attribute[NamedUser | Organization] = NotSet
         self._total: Attribute[int] = NotSet
         self._weeks: Attribute[list[StatsContributor.Week]] = NotSet
 
     @property
-    def author(self) -> github.NamedUser.NamedUser:
+    def author(self) -> NamedUser | Organization:
         return self._author.value
 
     @property
@@ -118,7 +122,13 @@ class StatsContributor(NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+            self._author = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["author"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])
         if "weeks" in attributes:  # pragma no branch

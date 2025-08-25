@@ -48,6 +48,7 @@ from typing import Any
 import github.GithubObject
 import github.Label
 import github.NamedUser
+import github.Organization
 import github.PaginatedList
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined
 from github.PaginatedList import PaginatedList
