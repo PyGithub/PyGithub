@@ -193,7 +193,11 @@ class GithubClass:
         return f"{self.package}.{self.module}.{self.name}"
 
     @staticmethod
-    def from_class_name(class_name: str, index: dict[str, Any] | None = None) -> GithubClass:
+    def from_class_name(
+        class_name: str, index: dict[str, Any] | None = None, github_parent_path: str = ""
+    ) -> GithubClass:
+        if github_parent_path and not github_parent_path.endswith("/"):
+            github_parent_path = f"{github_parent_path}/"
         if "." in class_name:
             full_class_name = class_name
             package, module, class_name = full_class_name.split(".", 2)
@@ -208,8 +212,8 @@ class GithubClass:
                     package="github",
                     module=class_name,
                     name=class_name,
-                    filename=f"{package}/{module}.py",
-                    test_filename=f"tests/{module}.py",
+                    filename=f"{github_parent_path}{package}/{module}.py",
+                    test_filename=f"{github_parent_path}tests/{module}.py",
                     bases=[],
                     inheritance=[],
                     methods={},
@@ -227,7 +231,9 @@ class GithubClass:
                     raise KeyError(f"Missing package, module or name in {cls}")
                 return GithubClass(**cls)
             else:
-                return GithubClass.from_class_name(f"github.{class_name}.{class_name}")
+                return GithubClass.from_class_name(
+                    f"github.{class_name}.{class_name}", github_parent_path=github_parent_path
+                )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -2666,7 +2672,8 @@ class OpenApi:
         with open(index_filename) as r:
             index = json.load(r)
 
-        clazz = GithubClass.from_class_name(class_name)
+        github_parent_path = str(Path(github_path).parent)
+        clazz = GithubClass.from_class_name(class_name, github_parent_path=github_parent_path)
         parent_class = GithubClass.from_class_name(parent_name, index)
         print(f"Creating class {clazz.full_class_name} with parent {parent_class.full_class_name} in {clazz.filename}")
         if os.path.exists(clazz.filename):
