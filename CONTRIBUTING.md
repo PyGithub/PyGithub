@@ -80,34 +80,48 @@ pip install -r requirements/test.txt
 Then you can run the tests through `pytest`.
 Run a specific test with `pytest tests/tests_filename.py` or `pytest tests/tests_filename.py -k testMethod` or `pytest -k TestClass.testMethod`.
 
-If you add a new test, for example `Issue139.testCompletion`, you have to run `pytest -k Issue139.testCompletion --record` to create the `tests/ReplayData/*.txt` files needed for your new test.
-Check them and commit them as well.
+If you add or modify a test, for example `Repository.testCompare`, you have to run `pytest -k Repository.testCompare --record` to create or update the `tests/ReplayData/*.txt` files needed for your new test.
+Check them in to git and commit them as well.
+
 You will need a `GithubCredentials.py` file at the root of the project with the following contents:
 
 ```python
-login = "my_login"
-password = "my_password"                # Can be left empty if not used
-oauth_token = "my_token"                # Can be left empty if not used
+oauth_token = "my_token"
 jwt = "my_json_web_token"               # Can be left empty if not used
 app_id = "my_app_id"                    # Can be left empty if not used
 app_private_key = "my_app_private_key"  # Can be left empty if not used
 ```
 
-If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.
-You can use `pytest Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. Note that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used.
-
-Also note that if you record your test data with `--auth_with_token` then you also need to be in token authentication mode when running the test. You can do this by setting `tokenAuthMode` to be true like so:
+The `oauth_token` field in `GithubCredentials.py` is used by default to record test data.
+Tests that require JWT (`jwt` field) or App authentication (`app_id` and `app_private_key` field)
+have to enable `"jwt"` or `"app"` auth mode in their `setUp` method:
 
 ```python
-    def setUp(self):
-        self.tokenAuthMode = True
-        super().setUp()
-        ...
+def setUp(self):
+    self.authMode = "jwt"
+    super().setUp()
+    ...
 ```
 
-A simple alternative is to replace `token private_token_removed` with `Basic login_and_password_removed` in all your newly generated ReplayData files.
+A test method that needs a different authentication than configured in `setUp` can simply
+create a new `Github` object with the respective authentication:
 
-Similarly, you can use `pytest Issue139.testCompletion --record --auth_with_jwt` to use the `jwt` field specified in `GithubCredentials.py` to access endpoints that require JWT.
+```python
+def testGetUserWithOAuth(self):
+    # this test needs OAuth authentication
+    g = self.get_github("oauth_token")
+    self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+def testGetUserWithJwt(self):
+    # this test needs JWT authentication
+    g = self.get_github("jwt")
+    self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+def testGetUserWithAppAuth(self):
+    # this test needs App authentication
+    g = self.get_github("app")
+    self.assertEqual(g.get_user("jacquev6").name, "App name")
+```
 
 To run manual tests with external scripts that use the PyGithub package, you can install your development version with:
 
