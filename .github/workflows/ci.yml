@@ -286,30 +286,6 @@ jobs:
             false
           fi
 
-  sort-fix:
-    name: "Fix"
-    runs-on: ubuntu-latest
-    needs: sort
-    if: always() && needs.sort.result == 'failure' && github.event_name == 'pull_request'
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-      - uses: ./.github/actions/sort-classes
-        continue-on-error: true
-      - name: Commit and push changes
-        run: |
-          # Commit and push changes
-          git config --local user.name "${{ github.actor }}"
-          git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
-          git commit -a -m "Sorting classes"
-          git fetch origin $GITHUB_HEAD_REF
-          git rebase origin/$GITHUB_HEAD_REF
-          git push origin HEAD:$GITHUB_HEAD_REF
-
   event_file:
     name: "Event File"
     runs-on: ubuntu-latest
