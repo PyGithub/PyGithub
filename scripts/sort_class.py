@@ -130,6 +130,8 @@ class SortMethodsTransformer(cst.CSTTransformer):
         return sorted(funcs, key=lambda d: d.name.value)
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        if self.class_name is not None and self.current_class_name != self.class_name:
+            return updated_node
         if updated_node.name.value == "_initAttributes":
             attrs = list(
                 [

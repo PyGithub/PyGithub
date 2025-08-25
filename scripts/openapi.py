@@ -193,7 +193,11 @@ class GithubClass:
         return f"{self.package}.{self.module}.{self.name}"
 
     @staticmethod
-    def from_class_name(class_name: str, index: dict[str, Any] | None = None) -> GithubClass:
+    def from_class_name(
+        class_name: str, index: dict[str, Any] | None = None, github_parent_path: str = ""
+    ) -> GithubClass:
+        if github_parent_path and not github_parent_path.endswith("/"):
+            github_parent_path = f"{github_parent_path}/"
         if "." in class_name:
             full_class_name = class_name
             package, module, class_name = full_class_name.split(".", 2)
@@ -208,8 +212,8 @@ class GithubClass:
                     package="github",
                     module=class_name,
                     name=class_name,
-                    filename=f"{package}/{module}.py",
-                    test_filename=f"tests/{module}.py",
+                    filename=f"{github_parent_path}{package}/{module}.py",
+                    test_filename=f"{github_parent_path}tests/{module}.py",
                     bases=[],
                     inheritance=[],
                     methods={},
@@ -227,7 +231,9 @@ class GithubClass:
                     raise KeyError(f"Missing package, module or name in {cls}")
                 return GithubClass(**cls)
             else:
-                return GithubClass.from_class_name(f"github.{class_name}.{class_name}")
+                return GithubClass.from_class_name(
+                    f"github.{class_name}.{class_name}", github_parent_path=github_parent_path
+                )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -686,21 +692,21 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                                 print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
                                 for func, args, base in calls:
                                     print(f"- calls {func}({', '.join(args)})")
-                            else:
-                                # check if the found verb depends on a base class, which we cannot test here
-                                if not any(
-                                    func.startswith(("self._requester.request", "self.__requester.request"))
-                                    and args
-                                    and args[0] == verb
-                                    and base is None
-                                    for func, args, base in calls
-                                ):
-                                    print(
-                                        f"Not found any {verb} call in {self.current_class_name}.{method_name} "
-                                        f"conditional on some base class"
-                                    )
-                                    for func, args, base in calls:
-                                        print(f"- calls {func}({', '.join(args)})")
+                            # else:
+                            #    # check if the found verb depends on a base class, which we cannot test here
+                            #    if not any(
+                            #        func.startswith(("self._requester.request", "self.__requester.request"))
+                            #        and args
+                            #        and args[0] == verb
+                            #        and base is None
+                            #        for func, args, base in calls
+                            #    ):
+                            #        print(
+                            #            f"Not found any {verb} call in {self.current_class_name}.{method_name} "
+                            #            f"conditional on some base class"
+                            #        )
+                            #        for func, args, base in calls:
+                            #            print(f"- calls {func}({', '.join(args)})")
 
         if method_name == "__repr__":
             # extract properties used here as ids
@@ -2013,7 +2019,7 @@ class OpenApi:
                     # handle new schemas
                     for new_schema in new_schemas:
                         new_class_name = "".join(
-                            [term[0].upper() + term[1:] for term in new_schema.split("/")[-1].split("-")]
+                            [term[0].upper() + term[1:] for term in re.split("[-_]", new_schema.split("/")[-1])]
                         )
                         if new_class_name in classes:
                             # we probably created that class in an earlier iteration, or we have a name collision here
@@ -2046,14 +2052,22 @@ class OpenApi:
                     self.classes = classes
                     self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
 
+                def is_not_dict_type(python_type: GithubClass | PythonType | None) -> bool:
+                    return (
+                        python_type is None
+                        or isinstance(python_type, GithubClass)
+                        or isinstance(python_type, PythonType)
+                        and (
+                            python_type.type != "dict"
+                            and (python_type.type != "list" or is_not_dict_type(python_type.inner_types[0]))
+                        )
+                    )
+
                 all_properties = {
                     k: (python_type, v.get("deprecated", False))
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
-                    if python_type is None
-                    or isinstance(python_type, GithubClass)
-                    or isinstance(python_type, PythonType)
-                    and (python_type.type != "dict" or new_schemas_as_dict)
+                    if is_not_dict_type(python_type) or new_schemas_as_dict
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -2103,7 +2117,9 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, spec_file: str, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
+    def index(
+        self, github_path: str, spec_file: str | None, index_filename: str, check_verbs: bool, dry_run: bool
+    ) -> bool:
         import multiprocessing
 
         config = {}
@@ -2190,28 +2206,6 @@ class OpenApi:
         print(f"Indexed {len(path_to_return_classes)} paths")
         print(f"Indexed {len(schema_to_classes)} schemas")
 
-        print("Indexing OpenAPI spec")
-        with open(spec_file) as r:
-            spec = json.load(r)
-
-        # construct schema to path index
-        return_schema_to_paths = defaultdict(list)
-        for path, path_spec in spec.get("paths", {}).items():
-            spec_type = (
-                path_spec.get("get", {})
-                .get("responses", {})
-                .get("200", {})
-                .get("content", {})
-                .get("application/json", {})
-                .get("schema", {})
-            )
-            if spec_type:
-                for schema in self.get_spec_types(
-                    spec_type, [f'"{path}"', "get", "responses", '"200"', "content", '"application/json"', "schema"]
-                ):
-                    if schema.startswith("#/components/"):
-                        return_schema_to_paths[schema[1:]].append(path)
-
         data = {
             "config": config,
             "sources": github_path,
@@ -2222,9 +2216,33 @@ class OpenApi:
                 "path_to_call_methods": path_to_call_methods,
                 "path_to_return_classes": path_to_return_classes,
                 "schema_to_classes": schema_to_classes,
-                "return_schema_to_paths": return_schema_to_paths,
             },
         }
+
+        if spec_file is not None:
+            print("Indexing OpenAPI spec")
+            with open(spec_file) as r:
+                spec = json.load(r)
+
+            # construct schema to path index
+            return_schema_to_paths = defaultdict(list)
+            for path, path_spec in spec.get("paths", {}).items():
+                spec_type = (
+                    path_spec.get("get", {})
+                    .get("responses", {})
+                    .get("200", {})
+                    .get("content", {})
+                    .get("application/json", {})
+                    .get("schema", {})
+                )
+                if spec_type:
+                    for schema in self.get_spec_types(
+                        spec_type, [f'"{path}"', "get", "responses", '"200"', "content", '"application/json"', "schema"]
+                    ):
+                        if schema.startswith("#/components/"):
+                            return_schema_to_paths[schema[1:]].append(path)
+
+            data["indices"]["return_schema_to_paths"] = return_schema_to_paths
 
         if dry_run:
             if os.path.exists(index_filename):
@@ -2257,7 +2275,9 @@ class OpenApi:
 
         paths = spec.get("paths", {})
         classes = index.get("classes", {})
-        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths", {})
+        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
+        if return_schema_to_paths is None:
+            raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
         implemented_paths = index.get("paths", {})
 
         self.suggest_path_corrections(paths, implemented_paths)
@@ -2652,7 +2672,8 @@ class OpenApi:
         with open(index_filename) as r:
             index = json.load(r)
 
-        clazz = GithubClass.from_class_name(class_name)
+        github_parent_path = str(Path(github_path).parent)
+        clazz = GithubClass.from_class_name(class_name, github_parent_path=github_parent_path)
         parent_class = GithubClass.from_class_name(parent_name, index)
         print(f"Creating class {clazz.full_class_name} with parent {parent_class.full_class_name} in {clazz.filename}")
         if os.path.exists(clazz.filename):
@@ -2838,7 +2859,9 @@ class OpenApi:
             code = "".join(r.readlines())
 
         prefix_path = None
-        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths", {})
+        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
+        if return_schema_to_paths is None:
+            raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
         for schema in clazz.schemas:
             for path in return_schema_to_paths.get(schema, []):
                 if api_path.startswith(f"{path}/"):
@@ -2882,7 +2905,7 @@ class OpenApi:
         index_parser = subparsers.add_parser("index")
         index_parser.add_argument("--check-verbs", help="Check verbs in doc-string matches code", action="store_true")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
-        index_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        index_parser.add_argument("spec", help="Github API OpenAPI spec file", nargs="?")
         index_parser.add_argument("index_filename", help="Path of index file")
 
         suggest_parser = subparsers.add_parser("suggest")
