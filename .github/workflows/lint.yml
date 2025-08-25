@@ -12,23 +12,19 @@ permissions: {}
 jobs:
   mypy:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/pre-commit
+
+  mypy-fix:
+    runs-on: ubuntu-latest
+    needs: mypy
+    if: needs.mypy.result == 'failure' && always()
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-      - run: |
-          python -m pip install --upgrade pip
-          pip install -e .
-          pip install -r requirements/types.txt
-      - uses: liskin/gh-problem-matcher-wrap@v2
-        with:
-          action: add
-          linters: mypy
-      - run: mypy --show-column-numbers github tests
+      - uses: ./.github/actions/mypy
       - name: Commit and push changes
         if: contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name) && failure()
         run: |
@@ -40,24 +36,26 @@ jobs:
 
   pre-commit:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/pre-commit
+      - name: debug
+        run: |
+          # Commit and push changes
+          env
+          cat "$GITHUB_EVENT_PATH"
+
+  pre-commit-fix:
+    runs-on: ubuntu-latest
+    needs: pre-commit
+    if: needs.pre-commit.result == 'failure' && always()
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
-      # FIXME: pin pre-commit<4 pending PyCQA/docformatter#287
-      - name: install pre-commit
-        run: python -m pip install 'pre-commit<4'
-      - name: show environment
-        run: python -m pip freeze --local
-      - uses: actions/cache@v4
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: run pre-commit
-        run: pre-commit run --show-diff-on-failure --color=always --all-files
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: ./.github/actions/pre-commit
       - name: Commit and push changes
         if: contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name) && failure()
         run: |
