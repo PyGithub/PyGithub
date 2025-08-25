@@ -440,7 +440,9 @@ class Requester(Framework.TestCase):
 
 
 class RequesterThrottleTestCase(Framework.TestCase):
-    per_page = 10
+    def setUp(self):
+        self.setPerPage(10)
+        super().setUp()
 
     mock_time = [datetime.now(timezone.utc)]
 
@@ -472,8 +474,10 @@ class RequesterUnThrottled(RequesterThrottleTestCase):
 
 
 class RequesterThrottled(RequesterThrottleTestCase):
-    seconds_between_requests = 1.0
-    seconds_between_writes = 3.0
+    def setUp(self):
+        self.setSecondsBetweenRequests(1.0)
+        self.setSecondsBetweenWrites(3.0)
+        super().setUp()
 
     def testShouldDeferRequests(self):
         with self.mock_sleep() as sleep_mock:
