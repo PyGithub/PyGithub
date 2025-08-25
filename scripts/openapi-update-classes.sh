@@ -31,18 +31,21 @@ if ! "$git" diff --quiet; then
 fi
 
 # check for some options
+create_classes=
 single_branch=
 branch_prefix="openapi/update"
-while [ $# -ge 2 ]; do
-  if [ "$1" == "--branch" ]; then
+while [ $# -ge 1 ]; do
+  if [ "$1" == "--create-classes" ]; then
+    create_classes="true"
+    shift 1
+  elif [ $# -ge 2  ] && [ "$1" == "--branch" ]; then
     single_branch="$2"
     shift 2
-  elif [ "$1" == "--branch-prefix" ]; then
+  elif [ $# -ge 2  ] && [ "$1" == "--branch-prefix" ]; then
     branch_prefix="$2"
     shift 2
   else
-    echo "Unknown option: $*"
-    exit 1
+    break
   fi
 done
 
@@ -210,12 +213,13 @@ update() {
   commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort" || return 0
 
   # apply schemas to class
-  ("$python" "$openapi" apply "$spec" "$index" "${classes[@]}" && echo) 1>&2 || failed "$class" || return 0
+  ("$python" "$openapi" apply ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes[@]}" && echo) 1>&2 || failed "$class" || return 0
+  if [ -n "$create_classes" ]; then git add github/; fi
   commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class" || return 0
 
   # apply schemas to test class
   if [ ${#classes_with_tests[@]} -gt 0 ]; then
-    ("$python" "$openapi" apply --tests "$spec" "$index" "${classes_with_tests[@]}" && echo) 1>&2 || failed "tests" || return 0
+    ("$python" "$openapi" apply --tests ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes_with_tests[@]}" && if [ -n "$create_classes" ]; then git add tests/; fi; echo) 1>&2 || failed "tests" || return 0
   fi
   # do not perform linting as part of the commit as this step
   # introduces imports that might be needed by assertions
