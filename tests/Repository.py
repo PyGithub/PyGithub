@@ -507,7 +507,7 @@ class Repository(Framework.TestCase):
             "This release is created by PyGithub",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest")
-        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest")
+        self.assertEqual(release.name, "vX.Y.Z: PyGithub acctest")
         self.assertEqual(release.body, "This release is created by PyGithub")
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, False)
@@ -530,7 +530,7 @@ class Repository(Framework.TestCase):
             "true",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
-        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest2")
+        self.assertEqual(release.name, "vX.Y.Z: PyGithub acctest2")
         self.assertEqual(release.body, "This release is also created by PyGithub")
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, True)

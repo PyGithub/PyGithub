@@ -147,7 +147,7 @@ class GitRelease(Framework.TestCase):
         self.assertIsNone(release.immutable)
         self.assertIsNone(release.mentions_count)
         self.assertIsNone(release.message)
-        self.assertIsNone(release.name)
+        self.assertEqual(release.name, "Test")
         self.assertEqual(release.node_id, "MDc6UmVsZWFzZTI4NTI0MjM0")
         self.assertEqual(release.prerelease, False)
         self.assertEqual(release.published_at, datetime(2020, 7, 14, 0, 58, 20, tzinfo=timezone.utc))
@@ -161,7 +161,6 @@ class GitRelease(Framework.TestCase):
             f"https://uploads.github.com/repos/{user}/{repo_name}/releases/{release_id}/assets{{?name,label}}",
         )
         self.assertEqual(release.body, "Body")
-        self.assertEqual(release.title, "Test")
         self.assertFalse(release.draft)
         self.assertFalse(release.prerelease)
         self.assertEqual(
@@ -186,7 +185,7 @@ class GitRelease(Framework.TestCase):
             release.zipball_url,
             f"https://api.github.com/repos/{user}/{repo_name}/zipball/{tag}",
         )
-        self.assertEqual(repr(release), 'GitRelease(title="Test")')
+        self.assertEqual(repr(release), 'GitRelease(name="Test")')
         self.assertEqual(len(release.assets), 1)
         self.assertEqual(
             repr(release.assets[0]),
@@ -226,7 +225,7 @@ class GitRelease(Framework.TestCase):
         self.setUpNewRelease()
         release = self.new_release
         new_release = release.update_release("Updated Test", "Updated Body")
-        self.assertEqual(new_release.title, "Updated Test")
+        self.assertEqual(new_release.name, "Updated Test")
         self.assertEqual(new_release.body, "Updated Body")
         self.tearDownNewRelease()
 
@@ -251,7 +250,7 @@ class GitRelease(Framework.TestCase):
         release = self.new_release
         self.assertEqual(release.tag_name, self.new_tag)
         self.assertEqual(release.body, "release message")
-        self.assertEqual(release.title, "release title")
+        self.assertEqual(release.name, "release title")
         self.assertEqual(release.author._rawData["login"], user)
         self.assertEqual(
             release.html_url,
