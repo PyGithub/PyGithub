@@ -61,6 +61,7 @@ jobs:
         if: contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name) && failure()
         run: |
           # Commit and push changes
+          env
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
           git push origin HEAD:$GITHUB_REF
