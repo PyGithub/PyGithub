@@ -6,10 +6,14 @@ on:
       - release-v*
   pull_request:
   merge_group:
+  workflow_dispatch:
+permissions: {}
 
 jobs:
   mypy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -25,9 +29,27 @@ jobs:
           action: add
           linters: mypy
       - run: mypy --show-column-numbers github tests
+      - name: changes
+        id: changes
+        run: |
+          if ! git diff --exit-code
+          then
+            echo "changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Commit and push changes
+        if: contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name) && steps.changes.ouputs.changes == 'true'
+        run: |
+          # Commit and push changes
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
+          git push
 
   pre-commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
@@ -44,6 +66,22 @@ jobs:
           key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
       - name: run pre-commit
         run: pre-commit run --show-diff-on-failure --color=always --all-files
+      - name: changes
+        id: changes
+        run: |
+          if ! git diff --exit-code
+          then
+            echo "changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Commit and push changes
+        if: contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name) && steps.changes.ouputs.changes == 'true'
+        run: |
+          # Commit and push changes
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
+          git push
 
   docs:
     runs-on: ubuntu-latest
