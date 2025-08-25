@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/user/memberships/orgs/github
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4960'), ('content-length', '598'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"75740284d989e9a492e32f435cff48ac"'), ('date', 'Sat, 16 Apr 2018 20:23:33 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"url":"https://api.github.com/orgs/invitocat/memberships/defunkt","state":"pending","role":"admin","organization_url":"https://api.github.com/orgs/invitocat","organization":{"login":"github","id":1,"node_id":"MDEyOk9yZ2FuaXphdGlvbjE=","url":"https://api.github.com/orgs/github","repos_url":"https://api.github.com/orgs/github/repos","events_url":"https://api.github.com/orgs/github/events","hooks_url":"https://api.github.com/orgs/github/hooks","issues_url":"https://api.github.com/orgs/github/issues","members_url":"https://api.github.com/orgs/github/members{/member}","public_members_url":"https://api.github.com/orgs/github/public_members{/member}","avatar_url":"https://github.com/images/error/octocat_happy.gif","description":"A great organization"},"user":{"login":"octocat","id":1,"node_id":"MDQ6VXNlcjE=","avatar_url":"https://github.com/images/error/octocat_happy.gif","gravatar_id":"","url":"https://api.github.com/users/octocat","html_url":"https://github.com/octocat","followers_url":"https://api.github.com/users/octocat/followers","following_url":"https://api.github.com/users/octocat/following{/other_user}","gists_url":"https://api.github.com/users/octocat/gists{/gist_id}","starred_url":"https://api.github.com/users/octocat/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/octocat/subscriptions","organizations_url":"https://api.github.com/users/octocat/orgs","repos_url":"https://api.github.com/users/octocat/repos","events_url":"https://api.github.com/users/octocat/events{/privacy}","received_events_url":"https://api.github.com/users/octocat/received_events","type":"User","site_admin":false}}

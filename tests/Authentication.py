@@ -18,7 +18,13 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Bernhard M. Wiedemann <githubbmwprimary@lsmod.de>             #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
+# Copyright 2025 Soubhik Kumar Mitra <59209034+x612skm@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,7 +53,7 @@ from unittest.mock import Mock
 import jwt
 
 import github
-from github.Auth import Auth
+from github.Auth import Auth, Login
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY, PUBLIC_KEY
@@ -60,7 +66,7 @@ class Authentication(Framework.BasicTestCase):
 
     def testBasicAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
-            g = github.Github(self.login.login, self.login.password)
+            g = github.Github("login", "password")
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
         self.assertWarning(
             warning,
@@ -89,21 +95,21 @@ class Authentication(Framework.BasicTestCase):
     def testAppAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
             app_auth = github.AppAuthentication(
-                app_id=self.app_auth.app_id,
-                private_key=self.app_auth.private_key,
+                app_id=APP_ID,
+                private_key=PRIVATE_KEY,
                 installation_id=29782936,
             )
             g = github.Github(app_auth=app_auth)
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
         self.assertWarnings(
             warning,
-            "Call to deprecated class AppAuthentication. (Use github.Auth.AppInstallationAuth instead)",
+            "Use github.Auth.AppInstallationAuth instead",
             "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
         )
 
     def testLoginAuthentication(self):
         # test data copied from testBasicAuthentication to test parity
-        g = github.Github(auth=self.login)
+        g = github.Github(auth=Login("login", "password"))
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
     def testTokenAuthentication(self):
@@ -176,16 +182,15 @@ class Authentication(Framework.BasicTestCase):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
         g = github.Github(auth=installation_auth)
 
-        # test token expiry
         # token expires 2024-11-25 01:00:02
         token = installation_auth.token
-        self.assertFalse(installation_auth._is_expired)
         self.assertEqual(
             installation_auth._AppInstallationAuth__installation_authorization.expires_at,
             datetime(2024, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
         )
 
-        # forward the clock so token expires
+        # test token expiry
+        # control the current time used by _is_expired
         with mock.patch("github.Auth.datetime") as dt:
             # just before expiry
             dt.now = mock.Mock(return_value=datetime(2024, 11, 25, 0, 59, 3, tzinfo=timezone.utc))
@@ -204,9 +209,9 @@ class Authentication(Framework.BasicTestCase):
                 datetime(2025, 11, 25, 1, 0, 2, tzinfo=timezone.utc),
             )
 
-        # use the token
-        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
-        self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
+            # use the token
+            self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+            self.assertEqual(g.get_repo("PyGithub/PyGithub").full_name, "PyGithub/PyGithub")
 
     def testAppInstallationAuthAuthenticationRequesterArgs(self):
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
@@ -299,8 +304,9 @@ class Authentication(Framework.BasicTestCase):
             key=PUBLIC_KEY,
             algorithms=["RS256"],
             options={"verify_exp": False},
+            issuer=str(APP_ID),
         )
-        self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": APP_ID})
+        self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": str(APP_ID)})
 
     def testCreateJWTWithExpiration(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30)
@@ -314,8 +320,9 @@ class Authentication(Framework.BasicTestCase):
             key=PUBLIC_KEY,
             algorithms=["RS256"],
             options={"verify_exp": False},
+            issuer=str(APP_ID),
         )
-        self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": APP_ID})
+        self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": str(APP_ID)})
 
     def testUserAgent(self):
         g = github.Github(user_agent="PyGithubTester")
@@ -336,7 +343,7 @@ class Authentication(Framework.BasicTestCase):
     def testAddingCustomHeaders(self):
         requester = github.Github(auth=CustomAuth())._Github__requester
 
-        def requestRaw(cnx, verb, url, requestHeaders, encoded_input):
+        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False, follow_302_redirect=False):
             self.modifiedHeaders = requestHeaders
             return Mock(), {}, Mock()
 

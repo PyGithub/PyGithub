@@ -18,6 +18,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,7 +38,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict, Tuple
+from __future__ import annotations
+
+from typing import Any
 
 import github.GithubObject
 import github.NamedUser  # TODO remove unused
@@ -50,18 +53,21 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-the-hourly-commit-count-for-each-day
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-frequency-stat
+
     """
 
-    _dict: Dict[Tuple[int, int], int]
+    _dict: dict[tuple[int, int], int]
+
+    def _initAttributes(self) -> None:
+        self._dict = {}
 
     def get(self, day: int, hour: int) -> int:
         """
         Get a specific element.
         """
         return self._dict[(day, hour)]
-
-    def _initAttributes(self) -> None:
-        self._dict = {}
 
     def _useAttributes(self, attributes: Any) -> None:
         for day, hour, commits in attributes:

@@ -5,6 +5,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,8 +25,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NotSet
 from github.PaginatedList import PaginatedList
@@ -43,13 +46,13 @@ class OrganizationSecret(Secret):
     """
 
     def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._visibility: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
         self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
         self._selected_repositories_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._visibility: Attribute[str] = NotSet
 
     @property
     def visibility(self) -> str:
@@ -87,7 +90,7 @@ class OrganizationSecret(Secret):
         assert isinstance(visibility, str), visibility
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
-        patch_parameters: Dict[str, Any] = {
+        patch_parameters: dict[str, Any] = {
             "name": self.name,
             "value": value,
             "visibility": visibility,
@@ -102,7 +105,7 @@ class OrganizationSecret(Secret):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'PUT {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name}` <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -113,7 +116,7 @@ class OrganizationSecret(Secret):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'DELETE {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name}` <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -122,16 +125,16 @@ class OrganizationSecret(Secret):
         self._requester.requestJsonAndCheck("DELETE", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "visibility" in attributes:
-            self._visibility = self._makeStringAttribute(attributes["visibility"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
         if "selected_repositories_url" in attributes:
             self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+        if "visibility" in attributes:
+            self._visibility = self._makeStringAttribute(attributes["visibility"])

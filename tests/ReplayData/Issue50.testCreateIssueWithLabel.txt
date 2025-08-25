@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/labels/Label%20with%20spaces%20and%20strange%20characters%20%28%26%2A%23%24%29
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('content-length', '197'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('x-ratelimit-remaining', '4908'), ('server', 'nginx/1.0.13'), ('last-modified', 'Thu, 28 Jun 2012 19:29:52 GMT'), ('connection', 'keep-alive'), ('etag', '"c536d81e7479c8c9acfa7deeddeb6e72"'), ('cache-control', 'private, max-age=60'), ('date', 'Thu, 28 Jun 2012 19:56:20 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/jacquev6/PyGithub/issues
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"labels": ["Label with spaces and strange characters (&*#$)"], "title": "Issue created by PyGithub to test issue #50"}
 201
 [('status', '201 Created'), ('content-length', '963'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4907'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"e1e5db9ef97e084a3d36ede8dc41c0d9"'), ('location', 'https://api.github.com/repos/jacquev6/PyGithub/issues/52'), ('cache-control', 'max-age=0, private, must-revalidate'), ('date', 'Thu, 28 Jun 2012 19:56:21 GMT'), ('content-type', 'application/json; charset=utf-8')]

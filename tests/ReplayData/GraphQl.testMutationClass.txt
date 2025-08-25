@@ -1,0 +1,10 @@
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "mutation Mutation($input: FollowOrganizationInput!) { followOrganization(input: $input) { organization { name } } }", "variables": {"input": {"organizationId": "O_kgDOAKxBpA"}}}
+200
+[('Date', 'Wed, 18 Sep 2024 08:33:14 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'read:discussion, read:org, user:follow'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4984'), ('X-RateLimit-Reset', '1726649567'), ('X-RateLimit-Used', '16'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7F65:1B2122:68DCF:69F2E:66EA904A')]
+{"data":{"followOrganization":{"organization":{"name":"PyGithub"}}}}

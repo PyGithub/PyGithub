@@ -13,6 +13,7 @@
 # Copyright 2020 Victor Zeng <zacker150@users.noreply.github.com>              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -43,13 +46,24 @@ class SelfHostedActionsRunner(Framework.TestCase):
 
     def testAttributes(self):
         runner = self.repo.get_self_hosted_runner(2217)
-        self.assertEqual(2217, runner.id)
-        self.assertEqual("linux", runner.os)
-        self.assertEqual("4306125c7c84", runner.name)
-        self.assertEqual("offline", runner.status)
         self.assertFalse(runner.busy)
-        labels = runner.labels()
-        self.assertEqual(3, len(labels))
-        self.assertEqual("self-hosted", labels[0]["name"])
-        self.assertEqual("X64", labels[1]["name"])
-        self.assertEqual("Linux", labels[2]["name"])
+        self.assertIsNone(runner.ephemeral)
+        self.assertEqual(runner.id, 2217)
+        self.assertEqual(
+            runner.labels,
+            [
+                {"id": 1, "name": "self-hosted", "type": "read-only"},
+                {"id": 3, "name": "X64", "type": "read-only"},
+                {"id": 4, "name": "Linux", "type": "read-only"},
+            ],
+        )
+        self.assertEqual(runner.name, "4306125c7c84")
+        self.assertEqual(runner.os, "linux")
+        self.assertEqual(runner.name, "4306125c7c84")
+        self.assertIsNone(runner.runner_group_id)
+        self.assertEqual(runner.status, "offline")
+        labels = runner.labels
+        self.assertEqual(len(labels), 3)
+        self.assertEqual(labels[0]["name"], "self-hosted")
+        self.assertEqual(labels[1]["name"], "X64")
+        self.assertEqual(labels[2]["name"], "Linux")

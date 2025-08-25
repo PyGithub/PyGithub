@@ -15,6 +15,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,11 +38,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
 class StatsContributor(NonCompletableGithubObject):
@@ -51,47 +57,59 @@ class StatsContributor(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
 
+    The OpenAPI schema can be found at
+    - /components/schemas/contributor-activity
+
     """
 
     class Week(NonCompletableGithubObject):
         """
         This class represents weekly statistics of a contributor.
+
+        The OpenAPI schema can be found at
+        - /components/schemas/contributor-activity/properties/weeks/items
+
         """
 
-        @property
-        def w(self) -> datetime:
-            return self._w.value
+        def _initAttributes(self) -> None:
+            self._a: Attribute[int] = NotSet
+            self._c: Attribute[int] = NotSet
+            self._d: Attribute[int] = NotSet
+            self._w: Attribute[datetime] = NotSet
 
         @property
         def a(self) -> int:
             return self._a.value
 
         @property
+        def c(self) -> int:
+            return self._c.value
+
+        @property
         def d(self) -> int:
             return self._d.value
 
         @property
-        def c(self) -> int:
-            return self._c.value
-
-        def _initAttributes(self) -> None:
-            self._w: Attribute[datetime] = NotSet
-            self._a: Attribute[int] = NotSet
-            self._d: Attribute[int] = NotSet
-            self._c: Attribute[int] = NotSet
+        def w(self) -> datetime:
+            return self._w.value
 
         def _useAttributes(self, attributes: dict[str, Any]) -> None:
-            if "w" in attributes:  # pragma no branch
-                self._w = self._makeTimestampAttribute(attributes["w"])
             if "a" in attributes:  # pragma no branch
                 self._a = self._makeIntAttribute(attributes["a"])
-            if "d" in attributes:  # pragma no branch
-                self._d = self._makeIntAttribute(attributes["d"])
             if "c" in attributes:  # pragma no branch
                 self._c = self._makeIntAttribute(attributes["c"])
+            if "d" in attributes:  # pragma no branch
+                self._d = self._makeIntAttribute(attributes["d"])
+            if "w" in attributes:  # pragma no branch
+                self._w = self._makeTimestampAttribute(attributes["w"])
+
+    def _initAttributes(self) -> None:
+        self._author: Attribute[NamedUser | Organization] = NotSet
+        self._total: Attribute[int] = NotSet
+        self._weeks: Attribute[list[StatsContributor.Week]] = NotSet
 
     @property
-    def author(self) -> github.NamedUser.NamedUser:
+    def author(self) -> NamedUser | Organization:
         return self._author.value
 
     @property
@@ -102,14 +120,15 @@ class StatsContributor(NonCompletableGithubObject):
     def weeks(self) -> list[Week]:
         return self._weeks.value
 
-    def _initAttributes(self) -> None:
-        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._total: Attribute[int] = NotSet
-        self._weeks: Attribute[list[StatsContributor.Week]] = NotSet
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+            self._author = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["author"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])
         if "weeks" in attributes:  # pragma no branch

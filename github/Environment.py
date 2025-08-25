@@ -20,6 +20,7 @@
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -46,15 +47,18 @@ from typing import TYPE_CHECKING, Any
 
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
+import github.PublicKey
+import github.Secret
+import github.Variable
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
-from github.PublicKey import PublicKey
-from github.Secret import Secret
-from github.Variable import Variable
 
 if TYPE_CHECKING:
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicy
     from github.EnvironmentProtectionRule import EnvironmentProtectionRule
+    from github.PublicKey import PublicKey
+    from github.Secret import Secret
+    from github.Variable import Variable
 
 
 class Environment(CompletableGithubObject):
@@ -68,15 +72,15 @@ class Environment(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
+        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
+        self._environments_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._protection_rules: Attribute[list[EnvironmentProtectionRule]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-        self._environments_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -85,6 +89,20 @@ class Environment(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def deployment_branch_policy(
+        self,
+    ) -> EnvironmentDeploymentBranchPolicy:
+        self._completeIfNotSet(self._deployment_branch_policy)
+        return self._deployment_branch_policy.value
+
+    @property
+    def environments_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._environments_url.value
 
     @property
     def html_url(self) -> str:
@@ -119,13 +137,6 @@ class Environment(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def environments_url(self) -> str:
-        """
-        :type: string
-        """
-        return self._environments_url.value
-
-    @property
     def url(self) -> str:
         """
         :type: string
@@ -135,13 +146,6 @@ class Environment(CompletableGithubObject):
             self._url = self._makeStringAttribute(self.environments_url + "/" + self.name)
         return self._url.value
 
-    @property
-    def deployment_branch_policy(
-        self,
-    ) -> EnvironmentDeploymentBranchPolicy:
-        self._completeIfNotSet(self._deployment_branch_policy)
-        return self._deployment_branch_policy.value
-
     def get_public_key(self) -> PublicKey:
         """
         :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
@@ -150,7 +154,7 @@ class Environment(CompletableGithubObject):
         # https://stackoverflow.com/a/76474814
         # https://docs.github.com/en/rest/secrets?apiVersion=2022-11-28#get-an-environment-public-key
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/secrets/public-key")
-        return PublicKey(self._requester, headers, data, completed=True)
+        return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def create_secret(self, secret_name: str, unencrypted_value: str) -> Secret:
         """
@@ -165,7 +169,7 @@ class Environment(CompletableGithubObject):
             "encrypted_value": payload,
         }
         self._requester.requestJsonAndCheck("PUT", f"{self.url}/secrets/{secret_name}", input=put_parameters)
-        return Secret(
+        return github.Secret.Secret(
             requester=self._requester,
             headers={},
             attributes={
@@ -180,7 +184,7 @@ class Environment(CompletableGithubObject):
         Gets all repository secrets.
         """
         return PaginatedList(
-            Secret,
+            github.Secret.Secret,
             self._requester,
             f"{self.url}/secrets",
             None,
@@ -190,10 +194,10 @@ class Environment(CompletableGithubObject):
 
     def get_secret(self, secret_name: str) -> Secret:
         """
-        :calls: 'GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
+        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
-        return Secret(
+        return github.Secret.Secret(
             requester=self._requester,
             headers={},
             attributes={"url": f"{self.url}/secrets/{secret_name}"},
@@ -211,7 +215,7 @@ class Environment(CompletableGithubObject):
             "value": value,
         }
         self._requester.requestJsonAndCheck("POST", f"{self.url}/variables", input=post_parameters)
-        return Variable(
+        return github.Variable.Variable(
             self._requester,
             headers={},
             attributes={
@@ -227,7 +231,7 @@ class Environment(CompletableGithubObject):
         Gets all repository variables :rtype: :class:`PaginatedList` of :class:`Variable`
         """
         return PaginatedList(
-            Variable,
+            github.Variable.Variable,
             self._requester,
             f"{self.url}/variables",
             None,
@@ -237,12 +241,12 @@ class Environment(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> Variable:
         """
-        :calls: 'GET /orgs/{org}/variables/{variable_name} <https://docs.github.com/en/rest/variables#get-an-organization-variable>`_
+        :calls: `GET /orgs/{org}/variables/{variable_name} <https://docs.github.com/en/rest/variables#get-an-organization-variable>`_
         :param variable_name: string
         :rtype: Variable
         """
         assert isinstance(variable_name, str), variable_name
-        return Variable(
+        return github.Variable.Variable(
             requester=self._requester,
             headers={},
             attributes={"url": f"{self.url}/variables/{variable_name}"},
@@ -272,6 +276,13 @@ class Environment(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "deployment_branch_policy" in attributes:  # pragma no branch
+            self._deployment_branch_policy = self._makeClassAttribute(
+                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy,
+                attributes["deployment_branch_policy"],
+            )
+        if "environments_url" in attributes:
+            self._environments_url = self._makeStringAttribute(attributes["environments_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
@@ -287,12 +298,5 @@ class Environment(CompletableGithubObject):
             )
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "environments_url" in attributes:
-            self._environments_url = self._makeStringAttribute(attributes["environments_url"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "deployment_branch_policy" in attributes:  # pragma no branch
-            self._deployment_branch_policy = self._makeClassAttribute(
-                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy,
-                attributes["deployment_branch_policy"],
-            )

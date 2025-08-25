@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /gists/6296732
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '26707'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '3061975e1f37121b3751604ad153c687'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"1c7d4253540b5f2dce518343258085ff"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4984'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '62E80DDA:1FFE:2F9F3B3:5366987A'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Sun, 04 May 2014 19:18:39 GMT'), ('date', 'Sun, 04 May 2014 19:43:54 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1399236081')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /gists/6296732/c464aecd7fea16684e935607eeea7ae4f8caa0e2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('content-length', '26707'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '03d91026ad8428f4d9966d7434f9d82e'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"893689529e8ac78913dad210662443ac"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4983'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '62E80DDA:1FFB:7D4619:5366987A'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Sun, 04 May 2014 19:43:54 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1399236081')]

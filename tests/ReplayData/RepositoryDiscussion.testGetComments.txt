@@ -1,0 +1,21 @@
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "\n            query Q($id: ID!) {\n              node(id: $id) {\n                __typename\n                ... on Discussion { id }\n              }\n            }\n            ", "variables": {"id": "D_kwDOADYVqs4AaHoG"}}
+200
+[('Date', 'Tue, 17 Sep 2024 19:44:12 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'read:discussion, read:org'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4959'), ('X-RateLimit-Reset', '1726602697'), ('X-RateLimit-Used', '41'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7FF5:1E58CD:A4D98A:A6B211:66E9DC0C')]
+{"data":{"node":{"__typename":"Discussion","id":"D_kwDOADYVqs4AaHoG"}}}
+
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "\n            query Q($discussionId: ID!, $first: Int, $last: Int, $before: String, $after: String) {\n              node(id: $discussionId) {\n                ... on Discussion {\n                  comments(first: $first, last: $last, before: $before, after: $after) {\n                    totalCount\n                    pageInfo {\n                      startCursor\n                      endCursor\n                      hasNextPage\n                      hasPreviousPage\n                    }\n                    nodes { id }\n                  }\n                }\n              }\n            }", "variables": {"discussionId": "D_kwDOADYVqs4AaHoG", "first": 30}}
+200
+[('Date', 'Tue, 17 Sep 2024 19:44:12 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'read:discussion, read:org'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4958'), ('X-RateLimit-Reset', '1726602697'), ('X-RateLimit-Used', '42'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7F5C:1B4C5D:A62E39:A802C1:66E9DC0C')]
+{"data":{"node":{"comments":{"totalCount":2,"pageInfo":{"startCursor":"Y3Vyc29yOnYyOpK5MjAyNC0wOC0yM1QwODozNjo1MCswMjowMM4AnxkU","endCursor":"Y3Vyc29yOnYyOpK5MjAyNC0wOC0yOVQxODowMTowMCswMjowMM4AoA2V","hasNextPage":false,"hasPreviousPage":false},"nodes":[{"id":"DC_kwDOADYVqs4AnxkU"},{"id":"DC_kwDOADYVqs4AoA2V"}]}}}}

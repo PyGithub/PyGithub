@@ -17,6 +17,8 @@
 # Copyright 2023 Thomas Burghout <thomas.burghout@nedap.com>                   #
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Nick McClorey <32378821+nickrmcclorey@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -36,6 +38,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -51,8 +55,15 @@ class Workflow(Framework.TestCase):
             repr(self.workflow),
             'Workflow(url="https://api.github.com/repos/PyGithub/PyGithub/actions/workflows/1026390", name="check")',
         )
+        self.assertEqual(self.workflow.badge_url, "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg")
+        self.assertEqual(self.workflow.created_at, datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc))
+        self.assertIsNone(self.workflow.deleted_at)
+        self.assertEqual(
+            self.workflow.html_url, "https://github.com/PyGithub/PyGithub/blob/master/.github/workflows/check.yml"
+        )
         self.assertEqual(self.workflow.id, 1026390)
         self.assertEqual(self.workflow.name, "check")
+        self.assertEqual(self.workflow.node_id, "MDg6V29ya2Zsb3cxMDI2Mzkw")
         self.assertEqual(self.workflow.path, ".github/workflows/check.yml")
         self.assertEqual(self.workflow.state, "active")
         timestamp = datetime(2020, 4, 15, 0, 48, 32, tzinfo=timezone.utc)
@@ -130,3 +141,19 @@ class Workflow(Framework.TestCase):
     def testCreateDispatchForNonTriggerEnabled(self):
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("check.yml")
         self.assertFalse(workflow.create_dispatch("main"))
+
+    def testDisable(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.disable())
+
+    def testDisabledWhenAlreadyDisabled(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertFalse(workflow.disable())
+
+    def testEnable(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.enable())
+
+    def testEnableWhenAlreadyEnabled(self):
+        workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
+        self.assertTrue(workflow.enable())

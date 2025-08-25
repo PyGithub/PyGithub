@@ -27,6 +27,11 @@
 # Copyright 2023 vanya20074 <vanya20074@gmail.com>                             #
 # Copyright 2024 Austin Sasko <austintyler0239@yahoo.com>                      #
 # Copyright 2024 Den Stroebel <stroebs@users.noreply.github.com>               #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
+# Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,6 +50,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+from __future__ import annotations
 
 from datetime import datetime, timezone
 
@@ -106,9 +113,27 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pullIssue256Uncached.mergeable_state, "unknown")
 
     def testAttributes(self):
+        self.assertEqual(
+            self.pull._links,
+            {
+                "self": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/31"},
+                "html": {"href": "https://github.com/PyGithub/PyGithub/pull/31"},
+                "issue": {"href": "https://api.github.com/repos/PyGithub/PyGithub/issues/31"},
+                "comments": {"href": "https://api.github.com/repos/PyGithub/PyGithub/issues/31/comments"},
+                "review_comments": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/comments"},
+                "review_comment": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments{/number}"},
+                "commits": {"href": "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/commits"},
+                "statuses": {
+                    "href": "https://api.github.com/repos/PyGithub/PyGithub/statuses/8a4f306d4b223682dd19410d4a9150636ebe4206"
+                },
+            },
+        )
+        self.assertIsNone(self.pull.active_lock_reason)
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["jacquev6"])
+        self.assertEqual(self.pull.author_association, "MEMBER")
+        self.assertIsNone(self.pull.auto_merge)
         self.assertEqual(self.pull.base.label, "PyGithub:topic/RewriteWithGeneratedCode")
         self.assertEqual(self.pull.base.sha, "ed866fc43833802ab553e5ff8581c81bb00dd433")
         self.assertEqual(self.pull.base.user.login, "PyGithub")
@@ -121,13 +146,16 @@ class PullRequest(Framework.TestCase):
             datetime(2012, 5, 27, 10, 29, 7, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.comments, 1)
+        self.assertEqual(self.pull.comments_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/31/comments")
         self.assertEqual(self.pull.commits, 3)
+        self.assertEqual(self.pull.commits_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/commits")
         self.assertEqual(
             self.pull.created_at,
             datetime(2012, 5, 27, 9, 25, 36, tzinfo=timezone.utc),
         )
         self.assertEqual(self.pull.deletions, 384)
         self.assertEqual(self.pull.diff_url, "https://github.com/PyGithub/PyGithub/pull/31.diff")
+        self.assertEqual(self.pull.draft, False)
         self.assertEqual(self.pull.head.ref, "master")
         self.assertEqual(self.pull.html_url, "https://github.com/PyGithub/PyGithub/pull/31")
         self.assertEqual(self.pull.id, 1436215)
@@ -136,7 +164,18 @@ class PullRequest(Framework.TestCase):
             "https://api.github.com/repos/PyGithub/PyGithub/issues/31",
         )
         self.assertListKeyEqual(self.pull.labels, lambda a: a.name, [])
+        self.assertEqual(self.pull.locked, False)
+        self.assertEqual(self.pull.maintainer_can_modify, False)
+        self.assertEqual(self.pull.merge_commit_sha, "28ae6dd10ebccd5eaf8db8dacb5b699ee7f4a663")
         self.assertFalse(self.pull.mergeable)
+        self.assertEqual(self.pull.mergeable_state, "dirty")
+        self.assertEqual(self.pull.merged, True)
+        self.assertEqual(self.pull.merged_at, datetime(2012, 5, 27, 10, 29, 7, tzinfo=timezone.utc))
+        self.assertEqual(self.pull.merged_by.login, "jacquev6")
+        self.assertEqual(self.pull.milestone.number, 1)
+        self.assertEqual(self.pull.node_id, "MDExOlB1bGxSZXF1ZXN0MTQzNjIxNQ==")
+        self.assertEqual(self.pull.number, 31)
+        self.assertEqual(self.pull.patch_url, "https://github.com/PyGithub/PyGithub/pull/31.patch")
         self.assertFalse(self.pull.rebaseable)
         self.assertTrue(self.pull.merged)
         self.assertEqual(
@@ -146,8 +185,20 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
         self.assertEqual(self.pull.number, 31)
         self.assertEqual(self.pull.patch_url, "https://github.com/PyGithub/PyGithub/pull/31.patch")
+        self.assertEqual(self.pull.requested_reviewers[0].login, "sfdye")
+        self.assertEqual(self.pull.requested_teams[0].id, 123)
+        self.assertEqual(
+            self.pull.review_comment_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/comments{/number}"
+        )
         self.assertEqual(self.pull.review_comments, 2)
+        self.assertEqual(
+            self.pull.review_comments_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/31/comments"
+        )
         self.assertEqual(self.pull.state, "closed")
+        self.assertEqual(
+            self.pull.statuses_url,
+            "https://api.github.com/repos/PyGithub/PyGithub/statuses/8a4f306d4b223682dd19410d4a9150636ebe4206",
+        )
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(
             self.pull.updated_at,
@@ -252,6 +303,28 @@ class PullRequest(Framework.TestCase):
             self.pull.get_issue_events(),
             lambda e: e.id,
             [16349963, 16350729, 16350730, 16350731, 28469043, 98136335],
+        )
+
+    def testGetIssueTimeline(self):
+        self.assertListKeyEqual(
+            self.pull.get_issue_timeline(),
+            lambda t: t.event,
+            [
+                "committed",
+                "committed",
+                "committed",
+                "subscribed",
+                "referenced",
+                "merged",
+                "closed",
+                "commented",
+                "line-commented",
+                "assigned",
+                "labeled",
+                "cross-referenced",
+                "reviewed",
+                "reviewed",
+            ],
         )
 
     def testGetReviewComments(self):
@@ -453,14 +526,39 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.update_branch("addaebea821105cf6600441f05ff2b413ab21a36"))
         self.assertTrue(self.pull.update_branch())
 
+    def testConvertToDraft(self):
+        ready_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(1)
+        self.assertFalse(ready_pr.draft)
+        response = ready_pr.convert_to_draft()
+        self.assertTrue(ready_pr.draft)
+        assert response == {
+            "clientMutationId": None,
+            "pullRequest": {
+                "isDraft": True,
+            },
+        }
+
+    def testMarkReadyForReview(self):
+        draft_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(2)
+        self.assertTrue(draft_pr.draft)
+        response = draft_pr.mark_ready_for_review()
+        self.assertFalse(draft_pr.draft)
+        assert response == {
+            "clientMutationId": None,
+            "pullRequest": {
+                "isDraft": False,
+            },
+        }
+
     def testDeleteOnMerge(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.assertFalse(self.delete_restore_pull.is_merged())
         status = self.delete_restore_pull.merge(delete_branch=True)
         self.assertTrue(status.merged)
         self.assertTrue(self.delete_restore_pull.is_merged())
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(
             raisedexp.exception.data,
             {
@@ -470,8 +568,9 @@ class PullRequest(Framework.TestCase):
         )
 
     def testRestoreBranch(self):
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -486,8 +585,9 @@ class PullRequest(Framework.TestCase):
     def testDeleteBranch(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.delete_restore_pull.delete_branch(force=False)
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -500,8 +600,9 @@ class PullRequest(Framework.TestCase):
     def testForceDeleteBranch(self):
         self.assertTrue(self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref))
         self.assertEqual(self.delete_restore_pull.delete_branch(force=True), None)
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             self.delete_restore_repo.get_branch(self.delete_restore_pull.head.ref)
+        self.assertEqual(raisedexp.exception.message, "Branch not found")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(
             raisedexp.exception.data,
@@ -522,17 +623,13 @@ class PullRequest(Framework.TestCase):
             expected_head_oid="0283d46537193f1fed7d46859f15c5304b9836f9",
         )
         assert response == {
-            "data": {
-                "enablePullRequestAutoMerge": {
-                    "actor": {
-                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
-                        "login": "heitorpolidoro",
-                        "resourcePath": "/heitorpolidoro",
-                        "url": "https://github.com/heitorpolidoro",
-                    },
-                    "clientMutationId": None,
-                }
-            }
+            "actor": {
+                "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                "login": "heitorpolidoro",
+                "resourcePath": "/heitorpolidoro",
+                "url": "https://github.com/heitorpolidoro",
+            },
+            "clientMutationId": None,
         }
 
     def testEnableAutomergeDefaultValues(self):
@@ -549,7 +646,7 @@ class PullRequest(Framework.TestCase):
         # To reproduce this, the PR repository need to have the "Allow auto-merge" option disabled
         with pytest.raises(github.GithubException) as error:
             self.pull.enable_automerge()
-
+        assert error.value.message is None
         assert error.value.status == 400
         assert error.value.data == {
             "data": {"enablePullRequestAutoMerge": None},
@@ -566,15 +663,11 @@ class PullRequest(Framework.TestCase):
     def testDisableAutomerge(self):
         response = self.pull.disable_automerge()
         assert response == {
-            "data": {
-                "disablePullRequestAutoMerge": {
-                    "actor": {
-                        "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
-                        "login": "heitorpolidoro",
-                        "resourcePath": "/heitorpolidoro",
-                        "url": "https://github.com/heitorpolidoro",
-                    },
-                    "clientMutationId": None,
-                }
-            }
+            "actor": {
+                "avatarUrl": "https://avatars.githubusercontent.com/u/14806300?u=786f9f8ef8782d45381b01580f7f7783cf9c7e37&v=4",
+                "login": "heitorpolidoro",
+                "resourcePath": "/heitorpolidoro",
+                "url": "https://github.com/heitorpolidoro",
+            },
+            "clientMutationId": None,
         }

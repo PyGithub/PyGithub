@@ -19,6 +19,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,8 +39,9 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -51,39 +53,42 @@ class NotificationSubject(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
 
+    The OpenAPI schema can be found at
+    - /components/schemas/thread/properties/subject
+
     """
 
     def _initAttributes(self) -> None:
-        self._title: Attribute[str] = NotSet
-        self._url: Attribute[str] = NotSet
         self._latest_comment_url: Attribute[str] = NotSet
+        self._title: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
-
-    @property
-    def title(self) -> str:
-        return self._title.value
-
-    @property
-    def url(self) -> str:
-        return self._url.value
 
     @property
     def latest_comment_url(self) -> str:
         return self._latest_comment_url.value
 
     @property
+    def title(self) -> str:
+        return self._title.value
+
+    @property
     def type(self) -> str:
         return self._type.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "title" in attributes:  # pragma no branch
-            self._title = self._makeStringAttribute(attributes["title"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
+    @property
+    def url(self) -> str:
+        return self._url.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "latest_comment_url" in attributes:  # pragma no branch
             self._latest_comment_url = self._makeStringAttribute(attributes["latest_comment_url"])
+        if "title" in attributes:  # pragma no branch
+            self._title = self._makeStringAttribute(attributes["title"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

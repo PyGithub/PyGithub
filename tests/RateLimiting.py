@@ -15,6 +15,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Nikolay Yurin <yurinnick93@gmail.com>                         #
+# Copyright 2024 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,16 +52,49 @@ class RateLimiting(Framework.TestCase):
         self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
 
     def testGetRateLimit(self):
-        rateLimit = self.g.get_rate_limit()
+        rateLimitOverview = self.g.get_rate_limit()
+
+        rate = rateLimitOverview.rate
+        self.assertEqual(
+            repr(rate),
+            "Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000)",
+        )
+        self.assertEqual(rate.limit, 5000)
+        self.assertEqual(rate.remaining, 4988)
+        self.assertEqual(rate.used, 12)
+        self.assertEqual(rate.reset, datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc))
+
+        rateLimit = rateLimitOverview.resources
         self.assertEqual(
             repr(rateLimit),
-            "RateLimit(core=Rate(reset=2023-05-15 23:57:21+00:00, remaining=4904, limit=5000))",
+            "RateLimit(core=Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000))",
         )
         self.assertEqual(
             repr(rateLimit.core),
-            "Rate(reset=2023-05-15 23:57:21+00:00, remaining=4904, limit=5000)",
+            "Rate(reset=2024-12-13 06:43:18+00:00, remaining=4988, limit=5000)",
         )
         self.assertEqual(rateLimit.core.limit, 5000)
-        self.assertEqual(rateLimit.core.remaining, 4904)
-        self.assertEqual(rateLimit.core.used, 96)
-        self.assertEqual(rateLimit.core.reset, datetime(2023, 5, 15, 23, 57, 21, tzinfo=timezone.utc))
+        self.assertEqual(rateLimit.core.remaining, 4988)
+        self.assertEqual(rateLimit.core.used, 12)
+        self.assertEqual(rateLimit.core.reset, datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc))
+
+        self.assertEqual(
+            repr(rateLimit.actions_runner_registration),
+            "Rate(reset=2024-12-13 07:28:18+00:00, remaining=10000, limit=10000)",
+        )
+        self.assertEqual(
+            repr(rateLimit.code_scanning_upload), "Rate(reset=2024-12-13 07:28:18+00:00, remaining=1000, limit=1000)"
+        )
+        self.assertEqual(repr(rateLimit.code_search), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=10, limit=10)")
+        self.assertEqual(
+            repr(rateLimit.dependency_snapshots), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)"
+        )
+        self.assertEqual(repr(rateLimit.graphql), "Rate(reset=2024-12-13 06:43:42+00:00, remaining=4808, limit=5000)")
+        self.assertEqual(
+            repr(rateLimit.integration_manifest), "Rate(reset=2024-12-13 07:28:18+00:00, remaining=5000, limit=5000)"
+        )
+        self.assertEqual(repr(rateLimit.scim), "Rate(reset=2024-12-13 07:28:18+00:00, remaining=15000, limit=15000)")
+        self.assertEqual(repr(rateLimit.search), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=30, limit=30)")
+        self.assertEqual(
+            repr(rateLimit.source_import), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)"
+        )

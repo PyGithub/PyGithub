@@ -22,6 +22,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -61,38 +62,34 @@ class Membership(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/orgs
 
+    The OpenAPI schema can be found at
+    - /components/schemas/org-membership
+
     """
 
     def _initAttributes(self) -> None:
-        self._url: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
-        self._role: Attribute[str] = NotSet
-        self._organization_url: Attribute[str] = NotSet
+        self._direct_membership: Attribute[bool] = NotSet
+        self._enterprise_teams_providing_indirect_membership: Attribute[list[str]] = NotSet
         self._organization: Attribute[Organization] = NotSet
+        self._organization_url: Attribute[str] = NotSet
+        self._permissions: Attribute[dict[str, Any]] = NotSet
+        self._role: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
 
     @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
+    def direct_membership(self) -> bool:
+        self._completeIfNotSet(self._direct_membership)
+        return self._direct_membership.value
 
     @property
-    def state(self) -> str:
-        self._completeIfNotSet(self._state)
-        return self._state.value
-
-    @property
-    def role(self) -> str:
-        self._completeIfNotSet(self._role)
-        return self._role.value
-
-    @property
-    def organization_url(self) -> str:
-        self._completeIfNotSet(self._organization_url)
-        return self._organization_url.value
+    def enterprise_teams_providing_indirect_membership(self) -> list[str]:
+        self._completeIfNotSet(self._enterprise_teams_providing_indirect_membership)
+        return self._enterprise_teams_providing_indirect_membership.value
 
     @property
     def organization(self) -> Organization:
@@ -100,20 +97,53 @@ class Membership(CompletableGithubObject):
         return self._organization.value
 
     @property
+    def organization_url(self) -> str:
+        self._completeIfNotSet(self._organization_url)
+        return self._organization_url.value
+
+    @property
+    def permissions(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._permissions)
+        return self._permissions.value
+
+    @property
+    def role(self) -> str:
+        self._completeIfNotSet(self._role)
+        return self._role.value
+
+    @property
+    def state(self) -> str:
+        self._completeIfNotSet(self._state)
+        return self._state.value
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
+    @property
     def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
-        if "role" in attributes:  # pragma no branch
-            self._role = self._makeStringAttribute(attributes["role"])
-        if "organization_url" in attributes:  # pragma no branch
-            self._organization_url = self._makeStringAttribute(attributes["organization_url"])
+        if "direct_membership" in attributes:  # pragma no branch
+            self._direct_membership = self._makeBoolAttribute(attributes["direct_membership"])
+        if "enterprise_teams_providing_indirect_membership" in attributes:  # pragma no branch
+            self._enterprise_teams_providing_indirect_membership = self._makeListOfStringsAttribute(
+                attributes["enterprise_teams_providing_indirect_membership"]
+            )
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+        if "organization_url" in attributes:  # pragma no branch
+            self._organization_url = self._makeStringAttribute(attributes["organization_url"])
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeDictAttribute(attributes["permissions"])
+        if "role" in attributes:  # pragma no branch
+            self._role = self._makeStringAttribute(attributes["role"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

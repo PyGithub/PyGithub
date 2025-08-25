@@ -17,6 +17,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -36,7 +37,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -48,25 +51,28 @@ class GitignoreTemplate(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gitignore
 
+    The OpenAPI schema can be found at
+    - /components/schemas/gitignore-template
+
     """
 
     def _initAttributes(self) -> None:
-        self._source: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
+        self._source: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def source(self) -> str:
-        return self._source.value
-
-    @property
     def name(self) -> str:
         return self._name.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "source" in attributes:  # pragma no branch
-            self._source = self._makeStringAttribute(attributes["source"])
+    @property
+    def source(self) -> str:
+        return self._source.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "source" in attributes:  # pragma no branch
+            self._source = self._makeStringAttribute(attributes["source"])

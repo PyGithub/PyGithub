@@ -13,6 +13,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -32,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -43,12 +46,14 @@ class GistComment(Framework.TestCase):
         self.comment = self.g.get_gist("2729810").get_comment(323629)
 
     def testAttributes(self):
+        self.assertIsNone(self.comment.author_association)
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
         self.assertEqual(
             self.comment.created_at,
             datetime(2012, 5, 19, 7, 7, 57, tzinfo=timezone.utc),
         )
         self.assertEqual(self.comment.id, 323629)
+        self.assertIsNone(self.comment.node_id)
         self.assertEqual(
             self.comment.updated_at,
             datetime(2012, 5, 19, 7, 7, 57, tzinfo=timezone.utc),

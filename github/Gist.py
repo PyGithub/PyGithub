@@ -23,6 +23,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -52,6 +53,7 @@ import github.GistFile
 import github.GistHistoryState
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 import github.PaginatedList
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType, is_defined, is_optional
 from github.PaginatedList import PaginatedList
@@ -69,10 +71,17 @@ class Gist(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/gists
 
+    The OpenAPI schema can be found at
+    - /components/schemas/base-gist
+    - /components/schemas/gist-simple
+    - /components/schemas/gist-simple/properties/fork_of
+    - /components/schemas/gist-simple/properties/forks/items
+
     """
 
     def _initAttributes(self) -> None:
         self._comments: Attribute[int] = NotSet
+        self._comments_enabled: Attribute[bool] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commits_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -86,8 +95,10 @@ class Gist(CompletableGithubObject):
         self._history: Attribute[list[GistHistoryState]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
         self._public: Attribute[bool] = NotSet
+        self._truncated: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._user: Attribute[github.NamedUser.NamedUser] = NotSet
@@ -99,6 +110,11 @@ class Gist(CompletableGithubObject):
     def comments(self) -> int:
         self._completeIfNotSet(self._comments)
         return self._comments.value
+
+    @property
+    def comments_enabled(self) -> bool:
+        self._completeIfNotSet(self._comments_enabled)
+        return self._comments_enabled.value
 
     @property
     def comments_url(self) -> str:
@@ -166,6 +182,11 @@ class Gist(CompletableGithubObject):
         return self._id.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def owner(self) -> github.NamedUser.NamedUser:
         self._completeIfNotSet(self._owner)
         return self._owner.value
@@ -174,6 +195,11 @@ class Gist(CompletableGithubObject):
     def public(self) -> bool:
         self._completeIfNotSet(self._public)
         return self._public.value
+
+    @property
+    def truncated(self) -> bool:
+        self._completeIfNotSet(self._truncated)
+        return self._truncated.value
 
     @property
     def updated_at(self) -> datetime:
@@ -272,6 +298,8 @@ class Gist(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
+        if "comments_enabled" in attributes:  # pragma no branch
+            self._comments_enabled = self._makeBoolAttribute(attributes["comments_enabled"])
         if "comments_url" in attributes:  # pragma no branch
             self._comments_url = self._makeStringAttribute(attributes["comments_url"])
         if "commits_url" in attributes:  # pragma no branch
@@ -300,10 +328,14 @@ class Gist(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
+        if "truncated" in attributes:  # pragma no branch
+            self._truncated = self._makeBoolAttribute(attributes["truncated"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch

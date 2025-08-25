@@ -27,6 +27,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -54,18 +55,21 @@ from typing import Any
 import github.GithubObject
 import github.Project
 import github.ProjectCard
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
 
 from . import Consts
 
 
-class ProjectColumn(CompletableGithubObject):
+class ProjectColumn(NonCompletableGithubObject):
     """
     This class represents Project Columns.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects#columns
+
+    The OpenAPI schema can be found at
+    - /components/schemas/project-column
 
     """
 
@@ -129,7 +133,7 @@ class ProjectColumn(CompletableGithubObject):
             self._requester,
             f"{self.url}/cards",
             url_parameters,
-            {"Accept": Consts.mediaTypeProjectsPreview},
+            headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
     def create_card(
@@ -155,7 +159,7 @@ class ProjectColumn(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/cards", headers=import_header, input=post_parameters
         )
-        return github.ProjectCard.ProjectCard(self._requester, headers, data, completed=True)
+        return github.ProjectCard.ProjectCard(self._requester, headers, data)
 
     def move(self, position: str) -> bool:
         """

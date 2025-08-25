@@ -17,6 +17,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,16 +51,15 @@ class StatsCodeFrequency(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-frequency-stat
+
     """
 
     def _initAttributes(self) -> None:
-        self._week: Attribute[datetime] = NotSet
         self._additions: Attribute[int] = NotSet
         self._deletions: Attribute[int] = NotSet
-
-    @property
-    def week(self) -> datetime:
-        return self._week.value
+        self._week: Attribute[datetime] = NotSet
 
     @property
     def additions(self) -> int:
@@ -68,6 +68,10 @@ class StatsCodeFrequency(NonCompletableGithubObject):
     @property
     def deletions(self) -> int:
         return self._deletions.value
+
+    @property
+    def week(self) -> datetime:
+        return self._week.value
 
     def _useAttributes(self, attributes: tuple[int, int, int]) -> None:
         self._week = self._makeTimestampAttribute(attributes[0])

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('content-length', '801'), ('vary', 'Accept, Authorization, Cookie'), ('x-ratelimit-remaining', '4987'), ('server', 'nginx/1.0.13'), ('last-modified', 'Mon, 09 Jul 2012 06:49:53 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"1bd2b9dfc8ba65f7665102d6245a1593"'), ('cache-control', 'private, max-age=60'), ('date', 'Fri, 13 Jul 2012 11:59:58 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4986'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1154'), ('server', 'nginx/1.0.13'), ('last-modified', 'Thu, 12 Jul 2012 18:10:45 GMT'), ('connection', 'keep-alive'), ('etag', '"7db49a096161f262ffd7e0545292f4c3"'), ('cache-control', 'private, max-age=60'), ('date', 'Fri, 13 Jul 2012 11:59:59 GMT'), ('content-type', 'application/json; charset=utf-8')]
