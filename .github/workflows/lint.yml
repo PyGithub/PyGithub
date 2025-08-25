@@ -42,11 +42,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/pre-commit
-      - name: debug
-        run: |
-          # Commit and push changes
-          env
-          cat "$GITHUB_EVENT_PATH"
 
   pre-commit-fix:
     runs-on: ubuntu-latest

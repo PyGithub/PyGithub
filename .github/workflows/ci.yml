@@ -260,7 +260,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/sort-classes
-      - run: |
+      - name: changes
+        run: |
           if ! (git diff --exit-code > diff.txt)
           then
             echo ""
