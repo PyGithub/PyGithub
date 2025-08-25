@@ -9,6 +9,7 @@ on:
 env:
   openapi_api: api.github.com
   openapi_version: 2022-11-28
+permissions: {}
 
 jobs:
   build:
@@ -258,24 +259,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
-      - name: Set up dependencies
+      - uses: ./.github/actions/sort-classes
+      - name: changes
         run: |
-          pip install -r requirements/scripts.txt
-      - name: Sort classes
-        shell: bash
-        run: |
-          # Sort classes
-          set -euo pipefail
-
-          echo "::group::Sort classes"
-          python scripts/openapi.py index github openapi.index
-          python scripts/sort_class.py openapi.index $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
-          echo "::endgroup::"
-
           if ! (git diff --exit-code > diff.txt)
           then
             echo ""
