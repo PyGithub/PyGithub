@@ -25,6 +25,7 @@
 # Copyright 2024 Arash Kadkhodaei <arash77.kad@gmail.com>                      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -52,6 +53,7 @@ from typing import TYPE_CHECKING, Any
 import github.GithubApp
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
@@ -59,6 +61,7 @@ from github.PaginatedList import PaginatedList
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Reaction import Reaction
 
 
@@ -88,7 +91,7 @@ class IssueComment(CompletableGithubObject):
         self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | Organization] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -159,7 +162,7 @@ class IssueComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -285,4 +288,10 @@ class IssueComment(CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["user"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )

@@ -19,6 +19,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -62,6 +63,7 @@ class UserKey(CompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
+        self._last_used: Attribute[datetime] = NotSet
         self._read_only: Attribute[bool] = NotSet
         self._title: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
@@ -84,6 +86,11 @@ class UserKey(CompletableGithubObject):
     def key(self) -> str:
         self._completeIfNotSet(self._key)
         return self._key.value
+
+    @property
+    def last_used(self) -> datetime:
+        self._completeIfNotSet(self._last_used)
+        return self._last_used.value
 
     @property
     def read_only(self) -> bool:
@@ -119,6 +126,8 @@ class UserKey(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
+        if "last_used" in attributes:  # pragma no branch
+            self._last_used = self._makeDatetimeAttribute(attributes["last_used"])
         if "read_only" in attributes:  # pragma no branch
             self._read_only = self._makeBoolAttribute(attributes["read_only"])
         if "title" in attributes:  # pragma no branch

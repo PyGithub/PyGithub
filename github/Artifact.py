@@ -23,6 +23,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -66,6 +67,7 @@ class Artifact(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._archive_download_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._digest: Attribute[str] = NotSet
         self._expired: Attribute[bool] = NotSet
         self._expires_at: Attribute[datetime] = NotSet
         self._head_sha: Attribute[str] = NotSet
@@ -87,6 +89,10 @@ class Artifact(NonCompletableGithubObject):
     @property
     def created_at(self) -> datetime:
         return self._created_at.value
+
+    @property
+    def digest(self) -> str:
+        return self._digest.value
 
     @property
     def expired(self) -> bool:
@@ -143,6 +149,8 @@ class Artifact(NonCompletableGithubObject):
                 "created_at"
             ]
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "digest" in attributes:  # pragma no branch
+            self._digest = self._makeStringAttribute(attributes["digest"])
         if "expired" in attributes:  # pragma no branch
             self._expired = self._makeBoolAttribute(attributes["expired"])
         if "expires_at" in attributes:  # pragma no branch

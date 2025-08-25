@@ -13,6 +13,7 @@
 # Copyright 2020 Victor Zeng <zacker150@users.noreply.github.com>              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -46,6 +47,7 @@ class SelfHostedActionsRunner(Framework.TestCase):
     def testAttributes(self):
         runner = self.repo.get_self_hosted_runner(2217)
         self.assertFalse(runner.busy)
+        self.assertIsNone(runner.ephemeral)
         self.assertEqual(runner.id, 2217)
         self.assertEqual(
             runner.labels,

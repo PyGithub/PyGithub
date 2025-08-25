@@ -22,6 +22,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -67,7 +68,6 @@ class ContentFile(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#contents
 
     The OpenAPI schema can be found at
-    - /components/schemas/code-search-result-item
     - /components/schemas/content-directory
     - /components/schemas/content-file
     - /components/schemas/content-submodule
@@ -93,7 +93,6 @@ class ContentFile(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._repository: Attribute[Repository] = NotSet
-        self._score: Attribute[float] = NotSet
         self._sha: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._submodule_git_url: Attribute[str] = NotSet
@@ -191,11 +190,6 @@ class ContentFile(CompletableGithubObject):
         return self._repository.value
 
     @property
-    def score(self) -> float:
-        self._completeIfNotSet(self._score)
-        return self._score.value
-
-    @property
     def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
@@ -261,8 +255,6 @@ class ContentFile(CompletableGithubObject):
             self._path = self._makeStringAttribute(attributes["path"])
         if "repository" in attributes:  # pragma no branch
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
-        if "score" in attributes:  # pragma no branch
-            self._score = self._makeFloatAttribute(attributes["score"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
@@ -277,3 +269,33 @@ class ContentFile(CompletableGithubObject):
             self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+
+
+class ContentFileSearchResult(ContentFile):
+    """
+    This class represents ContentFileSearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-code
+
+    The OpenAPI schema can be found at
+    - /components/schemas/code-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"path": self._path.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])

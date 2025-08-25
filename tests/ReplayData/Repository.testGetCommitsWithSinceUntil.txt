@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/commits?since=2013-03-01T00%3A00%3A00Z&until=2013-03-31T00%3A00%3A00Z
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4997'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '95940'), ('server', 'GitHub.com'), ('last-modified', 'Fri, 29 Mar 2013 15:54:15 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/3544490/commits?since=2013-03-01T00%3A00%3A00Z&until=2013-03-31T00%3A00%3A00Z&top=master&last_sha=ee29deddd27480401db484733ecde9e7b1df5eda>; rel="next", <https://api.github.com/repositories/3544490/commits?since=2013-03-01T00%3A00%3A00Z&until=2013-03-31T00%3A00%3A00Z&sha=master>; rel="first"'), ('etag', '"ab4396ff3915897a1c3fe5a4b5db2697"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 19 Aug 2013 21:22:58 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1376950974')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repositories/3544490/commits?since=2013-03-01T00%3A00%3A00Z&until=2013-03-31T00%3A00%3A00Z&top=master&last_sha=ee29deddd27480401db484733ecde9e7b1df5eda
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4996'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '54863'), ('server', 'GitHub.com'), ('last-modified', 'Tue, 19 Mar 2013 21:07:42 GMT'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repositories/3544490/commits?since=2013-03-01T00%3A00%3A00Z&until=2013-03-31T00%3A00%3A00Z&sha=master>; rel="first"'), ('etag', '"8258d1301946e26d0951ed19a62b5770"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 19 Aug 2013 21:23:00 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1376950974')]

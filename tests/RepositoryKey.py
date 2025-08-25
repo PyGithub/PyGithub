@@ -18,6 +18,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Ramiro Morales <ramiro@users.noreply.github.com>              #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -56,6 +57,7 @@ class RepositoryKey(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.key.added_by, "key-admin-user")
         self.assertEqual(self.key.created_at, datetime(2017, 2, 22, 8, 16, 23, tzinfo=timezone.utc))
+        self.assertIsNone(self.key.enabled)
         self.assertEqual(self.key.id, 21870881)
         self.assertEqual(
             self.key.key,

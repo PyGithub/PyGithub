@@ -23,6 +23,7 @@
 # Copyright 2023 Nicolas Schweitzer <nicolas.schweitzer@datadoghq.com>         #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -72,6 +73,10 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.events_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/events")
         self.assertEqual(self.issue.html_url, "https://github.com/PyGithub/PyGithub/issues/28")
         self.assertEqual(self.issue.id, 4653757)
+        self.assertEqual(self.issue.issue_dependencies_summary.blocking, 0)
+        self.assertEqual(self.issue.issue_dependencies_summary.blocked_by, 0)
+        self.assertEqual(self.issue.issue_dependencies_summary.total_blocking, 1)
+        self.assertEqual(self.issue.issue_dependencies_summary.total_blocked_by, 1)
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["bug", "question"])
         self.assertEqual(
             self.issue.labels_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/labels{/name}"
@@ -99,13 +104,16 @@ class Issue(Framework.TestCase):
         )
         self.assertEqual(self.issue.repository.full_name, "PyGithub/PyGithub")
         self.assertEqual(self.issue.repository_url, "https://api.github.com/repos/PyGithub/PyGithub")
-        self.assertEqual(self.issue.score, None)
         self.assertEqual(self.issue.state, "closed")
         self.assertEqual(self.issue.state_reason, "completed")
+        self.assertEqual(self.issue.sub_issues_summary.completed, 1)
+        self.assertEqual(self.issue.sub_issues_summary.percent_completed, 100)
+        self.assertEqual(self.issue.sub_issues_summary.total, 1)
         self.assertIsNone(self.issue.text_matches)
         self.assertEqual(self.issue.timeline_url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28/timeline")
         self.assertEqual(self.issue.title, "Issue created by PyGithub")
-        self.assertEqual(self.issue.updated_at, datetime(2019, 5, 3, 9, 44, 22, tzinfo=timezone.utc))
+        self.assertEqual(self.issue.type.name, "Bug")
+        self.assertEqual(self.issue.updated_at, datetime(2025, 8, 15, 19, 35, 40, tzinfo=timezone.utc))
         self.assertEqual(self.issue.url, "https://api.github.com/repos/PyGithub/PyGithub/issues/28")
         self.assertFalse(self.issue.locked)
         self.assertIsNone(self.issue.active_lock_reason)

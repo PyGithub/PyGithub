@@ -24,6 +24,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -143,6 +144,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.draft, False)
         self.assertEqual(release.html_url, "https://github.com/rickrickston123/RepoTest/releases/tag/v1.0")
         self.assertEqual(release.id, release_id)
+        self.assertIsNone(release.immutable)
         self.assertIsNone(release.mentions_count)
         self.assertIsNone(release.message)
         self.assertIsNone(release.name)
@@ -156,9 +158,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.target_commitish, "master")
         self.assertEqual(
             release.upload_url,
-            "https://uploads.github.com/repos/{}/{}/releases/{}/assets{{?name,label}}".format(
-                user, repo_name, release_id
-            ),
+            f"https://uploads.github.com/repos/{user}/{repo_name}/releases/{release_id}/assets{{?name,label}}",
         )
         self.assertEqual(release.body, "Body")
         self.assertEqual(release.title, "Test")

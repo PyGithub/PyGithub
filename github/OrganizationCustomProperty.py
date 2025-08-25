@@ -1,6 +1,9 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2024 Jacky Lam <jacky.lam@r2studiohk.com>                          #
+# Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,7 +51,7 @@ class CustomProperty:
     ):
         assert isinstance(property_name, str), property_name
         assert isinstance(value_type, str), value_type
-        assert value_type in ["string", "single_select"], value_type
+        assert value_type in ["string", "single_select", "multi_select", "true_false"], value_type
         assert is_optional(required, bool), required
         assert is_optional(default_value, (type(None), str, list)), default_value
         assert is_optional(description, (str, type(None))), description
@@ -87,6 +90,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         self._description: Attribute[str] = NotSet
         self._property_name: Attribute[str] = NotSet
         self._required: Attribute[bool] = NotSet
+        self._source_type: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._value_type: Attribute[str] = NotSet
         self._values_editable_by: Attribute[str] = NotSet
@@ -112,6 +116,10 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._required.value
 
     @property
+    def source_type(self) -> str:
+        return self._source_type.value
+
+    @property
     def url(self) -> str:
         return self._url.value
 
@@ -134,6 +142,8 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
             self._property_name = self._makeStringAttribute(attributes["property_name"])
         if "required" in attributes:
             self._required = self._makeBoolAttribute(attributes["required"])
+        if "source_type" in attributes:  # pragma no branch
+            self._source_type = self._makeStringAttribute(attributes["source_type"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "value_type" in attributes:  # pragma no branch
@@ -166,12 +176,12 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
         return self._repository_full_name.value
 
     @property
-    def repository_name(self) -> str:
-        return self._repository_name.value
-
-    @property
     def repository_id(self) -> int:
         return self._repository_id.value
+
+    @property
+    def repository_name(self) -> str:
+        return self._repository_name.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         self._repository_id = self._makeIntAttribute(attributes["repository_id"])

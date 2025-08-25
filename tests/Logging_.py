@@ -17,6 +17,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,6 +38,7 @@
 ################################################################################
 
 import github
+from github.Auth import Login
 
 from . import Framework
 from .Authentication import CustomAuth
@@ -96,7 +98,7 @@ class Logging(Framework.BasicTestCase):
         self.assertEqual(self.logger.output, output)
 
     def testLoggingWithBasicAuthentication(self):
-        self.assertEqual(github.Github(auth=self.login).get_user().name, "Vincent Jacques")
+        self.assertEqual(github.Github(auth=Login("login", "password")).get_user().name, "Vincent Jacques")
         url = "https://api.github.com/user"
         requestHeaders = {
             "Authorization": "Basic (login and password removed)",

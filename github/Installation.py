@@ -22,6 +22,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -84,11 +85,27 @@ class Installation(NonCompletableGithubObject):
 
     """
 
+    def __init__(
+        self,
+        requester: Requester,
+        headers: dict[str, str | int],
+        attributes: Any,
+    ) -> None:
+        super().__init__(requester, headers, attributes)
+
+        auth = self._requester.auth if self._requester is not None else None
+        # Usually, an Installation is created from a Requester with App authentication
+        if isinstance(auth, AppAuth):
+            # But the installation has to authenticate as an installation (e.g. for get_repos())
+            auth = auth.get_installation_auth(self.id, requester=self._requester)
+            self._requester = self._requester.withAuth(auth)
+
     def _initAttributes(self) -> None:
         self._access_tokens_url: Attribute[str] = NotSet
         self._account: Attribute[NamedUser | Organization] = NotSet
         self._app_id: Attribute[int] = NotSet
         self._app_slug: Attribute[str] = NotSet
+        self._client_id: Attribute[str] = NotSet
         self._contact_email: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._events: Attribute[list[str]] = NotSet
@@ -105,21 +122,6 @@ class Installation(NonCompletableGithubObject):
         self._target_id: Attribute[int] = NotSet
         self._target_type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-
-    def __init__(
-        self,
-        requester: Requester,
-        headers: dict[str, str | int],
-        attributes: Any,
-    ) -> None:
-        super().__init__(requester, headers, attributes)
-
-        auth = self._requester.auth if self._requester is not None else None
-        # Usually, an Installation is created from a Requester with App authentication
-        if isinstance(auth, AppAuth):
-            # But the installation has to authenticate as an installation (e.g. for get_repos())
-            auth = auth.get_installation_auth(self.id, requester=self._requester)
-            self._requester = self._requester.withAuth(auth)
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -139,6 +141,10 @@ class Installation(NonCompletableGithubObject):
     @property
     def app_slug(self) -> str:
         return self._app_slug.value
+
+    @property
+    def client_id(self) -> str:
+        return self._client_id.value
 
     @property
     def contact_email(self) -> str:
@@ -235,16 +241,21 @@ class Installation(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "access_tokens_url" in attributes:  # pragma no branch
             self._access_tokens_url = self._makeStringAttribute(attributes["access_tokens_url"])
-        if "account" in attributes and "target_type" in attributes:  # pragma no branch
-            target_type = attributes["target_type"]
-            if target_type == "User":
-                self._account = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["account"])
-            if target_type == "Organization":
-                self._account = self._makeClassAttribute(github.Organization.Organization, attributes["account"])
+        if "account" in attributes:  # pragma no branch
+            self._account = self._makeUnionClassAttributeFromTypeKeyAndValueKey(
+                "target_type",
+                "account",
+                None,
+                attributes,
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "app_id" in attributes:  # pragma no branch
             self._app_id = self._makeIntAttribute(attributes["app_id"])
         if "app_slug" in attributes:  # pragma no branch
             self._app_slug = self._makeStringAttribute(attributes["app_slug"])
+        if "client_id" in attributes:  # pragma no branch
+            self._client_id = self._makeStringAttribute(attributes["client_id"])
         if "contact_email" in attributes:  # pragma no branch
             self._contact_email = self._makeStringAttribute(attributes["contact_email"])
         if "created_at" in attributes:  # pragma no branch

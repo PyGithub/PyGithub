@@ -1,0 +1,9 @@
+https
+DELETE
+api.github.com
+None
+/orgs/BeaverSoftware/actions/runners/42
+{'Accept': 'application/vnd.github+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Date', 'Mon, 17 Feb 2025 06:13:40 GMT'), ('X-OAuth-Scopes', 'admin:org, repo, user'), ('X-Accepted-OAuth-Scopes', 'admin:org'), ('github-authentication-token-expiration', '2025-03-19 04:09:19 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4975'), ('X-RateLimit-Reset', '1739775594'), ('X-RateLimit-Used', '25'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', '6214:2DF157:15BB370:2BF35BD:67B2D394'), ('Server', 'github.com')]

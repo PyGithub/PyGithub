@@ -36,6 +36,7 @@
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -77,7 +78,6 @@ class GitRelease(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#releases
 
     The OpenAPI schema can be found at
-    - /components/schemas/basic-error
     - /components/schemas/release
 
     """
@@ -96,6 +96,7 @@ class GitRelease(CompletableGithubObject):
         self._generate_release_notes: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._immutable: Attribute[bool] = NotSet
         self._mentions_count: Attribute[int] = NotSet
         self._message: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
@@ -174,6 +175,11 @@ class GitRelease(CompletableGithubObject):
     def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
+
+    @property
+    def immutable(self) -> bool:
+        self._completeIfNotSet(self._immutable)
+        return self._immutable.value
 
     @property
     def mentions_count(self) -> int:
@@ -401,6 +407,8 @@ class GitRelease(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
+        if "immutable" in attributes:  # pragma no branch
+            self._immutable = self._makeBoolAttribute(attributes["immutable"])
         if "mentions_count" in attributes:  # pragma no branch
             self._mentions_count = self._makeIntAttribute(attributes["mentions_count"])
         if "message" in attributes:  # pragma no branch

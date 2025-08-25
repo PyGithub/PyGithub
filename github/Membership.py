@@ -22,6 +22,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -67,6 +68,8 @@ class Membership(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._direct_membership: Attribute[bool] = NotSet
+        self._enterprise_teams_providing_indirect_membership: Attribute[list[str]] = NotSet
         self._organization: Attribute[Organization] = NotSet
         self._organization_url: Attribute[str] = NotSet
         self._permissions: Attribute[dict[str, Any]] = NotSet
@@ -77,6 +80,16 @@ class Membership(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
+
+    @property
+    def direct_membership(self) -> bool:
+        self._completeIfNotSet(self._direct_membership)
+        return self._direct_membership.value
+
+    @property
+    def enterprise_teams_providing_indirect_membership(self) -> list[str]:
+        self._completeIfNotSet(self._enterprise_teams_providing_indirect_membership)
+        return self._enterprise_teams_providing_indirect_membership.value
 
     @property
     def organization(self) -> Organization:
@@ -114,6 +127,12 @@ class Membership(CompletableGithubObject):
         return self._user.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "direct_membership" in attributes:  # pragma no branch
+            self._direct_membership = self._makeBoolAttribute(attributes["direct_membership"])
+        if "enterprise_teams_providing_indirect_membership" in attributes:  # pragma no branch
+            self._enterprise_teams_providing_indirect_membership = self._makeListOfStringsAttribute(
+                attributes["enterprise_teams_providing_indirect_membership"]
+            )
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "organization_url" in attributes:  # pragma no branch

@@ -17,6 +17,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,6 +58,7 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._busy: Attribute[bool] = NotSet
+        self._ephemeral: Attribute[bool] = NotSet
         self._id: Attribute[int] = NotSet
         self._labels: Attribute[list[dict[str, int | str]]] = NotSet
         self._name: Attribute[str] = NotSet
@@ -70,6 +72,10 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     @property
     def busy(self) -> bool:
         return self._busy.value
+
+    @property
+    def ephemeral(self) -> bool:
+        return self._ephemeral.value
 
     @property
     def id(self) -> int:
@@ -98,6 +104,8 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "busy" in attributes:
             self._busy = self._makeBoolAttribute(attributes["busy"])
+        if "ephemeral" in attributes:  # pragma no branch
+            self._ephemeral = self._makeBoolAttribute(attributes["ephemeral"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "labels" in attributes:

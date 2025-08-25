@@ -5,6 +5,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,6 +30,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import github
+import github.Organization
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY
@@ -92,6 +94,7 @@ class GithubApp(Framework.TestCase):
         self.assertIsNone(app.installations_count)
         self.assertEqual(app.name, "GitHub Actions")
         self.assertEqual(app.node_id, "MDM6QXBwMTUzNjg=")
+        self.assertIsInstance(app.owner, github.Organization.Organization)
         self.assertEqual(app.owner.login, "github")
         self.assertIsNone(app.pem)
         self.assertDictEqual(

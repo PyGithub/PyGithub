@@ -20,6 +20,8 @@
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 GPK <gopidesupavan@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -62,6 +64,7 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._prevent_self_review: Attribute[bool] = NotSet
         self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer]] = NotSet
         self._type: Attribute[str] = NotSet
         self._wait_timer: Attribute[int] = NotSet
@@ -76,6 +79,10 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     @property
     def node_id(self) -> str:
         return self._node_id.value
+
+    @property
+    def prevent_self_review(self) -> bool:
+        return self._prevent_self_review.value
 
     @property
     def reviewers(
@@ -96,6 +103,8 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "prevent_self_review" in attributes:
+            self._prevent_self_review = self._makeBoolAttribute(attributes["prevent_self_review"])
         if "reviewers" in attributes:  # pragma no branch
             self._reviewers = self._makeListOfClassesAttribute(
                 github.EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer,

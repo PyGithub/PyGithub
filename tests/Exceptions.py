@@ -19,6 +19,8 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,6 +52,8 @@ class Exceptions(Framework.TestCase):
     def testInvalidInput(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user().create_key("Bad key", "xxx")
+        self.assertIsInstance(raisedexp.exception, github.GithubException)
+        self.assertEqual(raisedexp.exception.message, "Validation Failed")
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(
             raisedexp.exception.data,
@@ -70,7 +74,9 @@ class Exceptions(Framework.TestCase):
         # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
         with self.assertRaises(github.GithubException) as raisedexp:
             # 503 would be retried, disable retries
-            self.get_github(retry=None, pool_size=self.pool_size).get_user("jacquev6")
+            self.get_github(self.authMode, retry=None).get_user("jacquev6")
+        self.assertIsInstance(raisedexp.exception, github.GithubException)
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 503)
         self.assertEqual(
             raisedexp.exception.data,
@@ -82,6 +88,8 @@ class Exceptions(Framework.TestCase):
     def testUnknownObject(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user().get_repo("Xxx")
+        self.assertIsInstance(raisedexp.exception, github.UnknownObjectException)
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
         self.assertEqual(str(raisedexp.exception), '404 {"message": "Not Found"}')
@@ -89,6 +97,8 @@ class Exceptions(Framework.TestCase):
     def testUnknownUser(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             self.g.get_user("ThisUserShouldReallyNotExist")
+        self.assertIsInstance(raisedexp.exception, github.UnknownObjectException)
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.data, {"message": "Not Found"})
         self.assertEqual(str(raisedexp.exception), '404 {"message": "Not Found"}')
@@ -96,6 +106,8 @@ class Exceptions(Framework.TestCase):
     def testBadAuthentication(self):
         with self.assertRaises(github.GithubException) as raisedexp:
             github.Github(auth=github.Auth.Login("BadUser", "BadPassword")).get_user().login
+        self.assertIsInstance(raisedexp.exception, github.BadCredentialsException)
+        self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 401)
         self.assertEqual(raisedexp.exception.data, {"message": "Bad credentials"})
         self.assertEqual(str(raisedexp.exception), '401 {"message": "Bad credentials"}')
@@ -128,7 +140,7 @@ class SpecificExceptions(Framework.TestCase):
     def testBadUserAgent(self):
         self.assertRaises(
             github.BadUserAgentException,
-            lambda: github.Github(auth=self.login, user_agent="").get_user().name,
+            lambda: github.Github(auth=self.oauth_token, user_agent="").get_user().name,
         )
 
     def testRateLimitExceeded(self):

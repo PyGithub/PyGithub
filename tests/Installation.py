@@ -16,6 +16,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -65,6 +66,7 @@ class Installation(Framework.BasicTestCase):
         self.assertEqual(self.installation.account.login, "EnricoMi")
         self.assertEqual(self.installation.app_id, 319953)
         self.assertEqual(self.installation.app_slug, "publish-test-results")
+        self.assertIsNone(self.installation.client_id)
         self.assertIsNone(self.installation.contact_email)
         self.assertEqual(self.installation.created_at, datetime(2023, 4, 17, 16, 18, 5, tzinfo=timezone.utc))
         self.assertEqual(self.installation.events, [])

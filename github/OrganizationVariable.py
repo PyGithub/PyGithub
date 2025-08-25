@@ -4,6 +4,7 @@
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -23,8 +24,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import Attribute, NotSet
 from github.PaginatedList import PaginatedList
@@ -83,7 +86,7 @@ class OrganizationVariable(Variable):
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
 
-        patch_parameters: Dict[str, Any] = {
+        patch_parameters: dict[str, Any] = {
             "name": self.name,
             "value": value,
             "visibility": visibility,
@@ -98,7 +101,7 @@ class OrganizationVariable(Variable):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'PUT {org_url}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -109,7 +112,7 @@ class OrganizationVariable(Variable):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'DELETE {org_url}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -118,7 +121,7 @@ class OrganizationVariable(Variable):
         self._requester.requestJsonAndCheck("DELETE", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "name" in attributes:

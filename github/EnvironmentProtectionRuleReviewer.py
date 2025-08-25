@@ -19,6 +19,7 @@
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -40,11 +41,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.Team
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Team import Team
 
 
 class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
@@ -64,7 +69,7 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def reviewer(self) -> github.NamedUser.NamedUser | github.Team.Team:
+    def reviewer(self) -> NamedUser | Team:
         return self._reviewer.value
 
     @property
@@ -72,12 +77,10 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
         return self._type.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "reviewer" in attributes and "type" in attributes:  # pragma no branch
-            assert attributes["type"] in ("User", "Team")
-            if attributes["type"] == "User":
-                self._reviewer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["reviewer"])
-            elif attributes["type"] == "Team":
-                self._reviewer = self._makeClassAttribute(github.Team.Team, attributes["reviewer"])
+        if "reviewer" in attributes:  # pragma no branch
+            self._reviewer = self._makeUnionClassAttributeFromTypeKeyAndValueKey(
+                "type", "reviewer", None, attributes, (github.NamedUser.NamedUser, "User"), (github.Team.Team, "Team")
+            )
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
 

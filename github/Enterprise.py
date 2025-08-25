@@ -18,6 +18,7 @@
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,46 +38,105 @@
 #                                                                              #
 ################################################################################
 
-import urllib.parse
-from typing import Any, Dict
+from __future__ import annotations
 
-from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
-from github.Requester import Requester
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
+from typing_extensions import deprecated
+
+import github.EnterpriseConsumedLicenses
+import github.Requester
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined, is_undefined
+
+if TYPE_CHECKING:
+    from github.EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
+    from github.Requester import Requester
 
 
 class Enterprise(NonCompletableGithubObject):
     """
     This class represents Enterprises.
 
-    Such objects do not exist in the Github API, so this class merely collects all endpoints the start with
-    /enterprises/{enterprise}/. See methods below for specific endpoints and docs.
-    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin?apiVersion=2022-11-28
+    The reference can be found here
+    https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin
+
+    The OpenAPI schema can be found at
+    - /components/schemas/enterprise
 
     """
 
     def _initAttributes(self) -> None:
-        self._enterprise: Attribute[str] = NotSet
+        self._avatar_url: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._description: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._slug: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-
-    def __init__(
-        self,
-        requester: Requester,
-        enterprise: str,
-    ):
-        enterprise = urllib.parse.quote(enterprise)
-        super().__init__(requester, {}, {"enterprise": enterprise, "url": f"/enterprises/{enterprise}"})
+        self._website_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"enterprise": self._enterprise.value})
+        return self.get__repr__({"slug": self._slug.value})
 
     @property
+    def avatar_url(self) -> str:
+        return self._avatar_url.value
+
+    @property
+    def created_at(self) -> datetime:
+        return self._created_at.value
+
+    @property
+    def description(self) -> str:
+        return self._description.value
+
+    @property
+    @deprecated("Use slug instead")
     def enterprise(self) -> str:
-        return self._enterprise.value
+        # alias for slug
+        return self._slug.value
+
+    @property
+    def html_url(self) -> str:
+        return self._html_url.value
+
+    @property
+    def id(self) -> int:
+        return self._id.value
+
+    @property
+    def name(self) -> str:
+        return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        return self._node_id.value
+
+    @property
+    def slug(self) -> str:
+        return self._slug.value
+
+    @property
+    def updated_at(self) -> datetime:
+        return self._updated_at.value
 
     @property
     def url(self) -> str:
+        if is_undefined(self._url) and is_defined(self._slug):
+            self._url = self._makeStringAttribute(f"/enterprises/{self.slug}")
         return self._url.value
+
+    @property
+    def website_url(self) -> str:
+        return self._website_url.value
+
+    @staticmethod
+    def from_slug(requester: Requester, slug: str) -> Enterprise:
+        return github.Enterprise.Enterprise(requester, {}, {"slug": slug})
 
     def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
         """
@@ -86,10 +146,30 @@ class Enterprise(NonCompletableGithubObject):
         if "url" not in data:
             data["url"] = self.url + "/consumed-licenses"
 
-        return EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
+        return github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(
+            self._requester, headers, data, completed=True
+        )
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "enterprise" in attributes:  # pragma no branch
-            self._enterprise = self._makeStringAttribute(attributes["enterprise"])
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "avatar_url" in attributes:  # pragma no branch
+            self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
+        if "created_at" in attributes:  # pragma no branch
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "slug" in attributes:  # pragma no branch
+            self._slug = self._makeStringAttribute(attributes["slug"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "website_url" in attributes:  # pragma no branch
+            self._website_url = self._makeStringAttribute(attributes["website_url"])
