@@ -62,6 +62,7 @@ jobs:
         run: |
           # Commit and push changes
           env
+          cat "$GITHUB_EVENT_PATH"
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
           git push origin HEAD:$GITHUB_REF
