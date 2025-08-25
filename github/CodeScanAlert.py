@@ -8,6 +8,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 ReenigneArcher <42013603+ReenigneArcher@users.noreply.github.com>#
+# Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,10 +49,14 @@ class CodeScanAlert(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-scanning-alert
+  
     """
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
+        self._dismissal_approved_by: Attribute[github.NamedUser.NamedUser | None] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
         self._dismissed_by: Attribute[github.NamedUser.NamedUser | None] = NotSet
         self._dismissed_comment: Attribute[str | None] = NotSet
@@ -64,14 +69,19 @@ class CodeScanAlert(NonCompletableGithubObject):
         self._rule: Attribute[github.CodeScanRule.CodeScanRule] = NotSet
         self._state: Attribute[str] = NotSet
         self._tool: Attribute[github.CodeScanTool.CodeScanTool] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"number": self.number})
+        return self.get__repr__({"number": self.number, "id": self.rule.id})
 
     @property
     def created_at(self) -> datetime:
         return self._created_at.value
+    
+    @property
+    def dismissal_approved_by(self) -> github.NamedUser.NamedUser | None:
+        return self._dismissal_approved_by.value
 
     @property
     def dismissed_at(self) -> datetime | None:
@@ -120,6 +130,10 @@ class CodeScanAlert(NonCompletableGithubObject):
     @property
     def tool(self) -> github.CodeScanTool.CodeScanTool:
         return self._tool.value
+    
+    @property
+    def updated_at(self) -> datetime:
+        return self._updated_at.value
 
     @property
     def url(self) -> str:
@@ -167,6 +181,7 @@ class CodeScanAlert(NonCompletableGithubObject):
             self._state = self._makeStringAttribute(attributes["state"])
         if "tool" in attributes:  # pragma no branch
             self._tool = self._makeClassAttribute(github.CodeScanTool.CodeScanTool, attributes["tool"])
-
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
