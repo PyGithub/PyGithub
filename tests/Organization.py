@@ -68,7 +68,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
@@ -789,6 +789,35 @@ class Organization(Framework.TestCase):
 
     def testDeleteSelfHostedRunner(self):
         self.org.delete_self_hosted_runner("42")
+
+    def testGetSelfHostedRunnerApplications(self):
+        self.assertListKeyEqual(
+            self.org.get_self_hosted_runner_applications(),
+            lambda h: h.os,
+            ["osx", "linux", "linux", "win", "linux", "osx", "win"],
+        )
+
+    def testSelfHostedRunnerJitConfig(self):
+        runner = self.org.create_self_hosted_runner_jitconfig(name="self_hosted", runner_group_id=1, labels=["default"])
+        # Now remove the runner
+        for runner in self.org.get_self_hosted_runners():
+            if runner.name == "self_hosted":
+                runner = self.org.get_self_hosted_runner(runner_id=runner.id)
+                self.org.delete_self_hosted_runner(runner_id=runner.id)
+
+    def testSelfHostedRunnerGetRegistrationToken(self):
+        token = self.org.create_self_hosted_runner_registration_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(
+            token.expires_at, datetime(2025, 2, 17, 21, 11, 49, 260000, tzinfo=timezone(timedelta(hours=-8)))
+        )
+
+    def testSelfHostedRunnerGetRemoveToken(self):
+        token = self.org.create_self_hosted_runner_remove_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(
+            token.expires_at, datetime(2025, 2, 17, 21, 12, 28, 308000, tzinfo=timezone(timedelta(hours=-8)))
+        )
 
     def testGetCodeSecurityConfigs(self):
         configs = list(self.org.get_code_security_configs())
