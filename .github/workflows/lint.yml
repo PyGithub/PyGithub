@@ -18,7 +18,7 @@ jobs:
   mypy-fix:
     runs-on: ubuntu-latest
     needs: mypy
-    if: always() && needs.mypy.result == 'failure' && contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name)
+    if: always() && needs.mypy.result == 'failure' && github.event_name = 'pull_request'
     permissions:
       contents: write
     steps:
@@ -47,7 +47,7 @@ jobs:
   pre-commit-fix:
     runs-on: ubuntu-latest
     needs: pre-commit
-    if: always() && needs.pre-commit.result == 'failure' && contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name)
+    if: always() && needs.pre-commit.result == 'failure' && github.event_name = 'pull_request'
     permissions:
       contents: write
     steps:
