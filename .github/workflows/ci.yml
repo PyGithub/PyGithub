@@ -297,6 +297,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - uses: ./.github/actions/sort-classes
         continue-on-error: true
       - name: Commit and push changes
