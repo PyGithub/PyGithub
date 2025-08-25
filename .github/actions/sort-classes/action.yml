@@ -47,4 +47,3 @@ runs:
           done
           false
         fi
-      shell: bash
