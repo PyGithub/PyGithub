@@ -61,6 +61,7 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Team import Team
 
 
@@ -78,9 +79,9 @@ class IssueEvent(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._actor: Attribute[NamedUser] = NotSet
-        self._assignee: Attribute[NamedUser] = NotSet
-        self._assigner: Attribute[NamedUser] = NotSet
+        self._actor: Attribute[NamedUser | Organization] = NotSet
+        self._assignee: Attribute[NamedUser | Organization] = NotSet
+        self._assigner: Attribute[NamedUser | Organization] = NotSet
         self._author_association: Attribute[dict[str, Any]] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._commit_url: Attribute[str] = NotSet
@@ -96,26 +97,26 @@ class IssueEvent(CompletableGithubObject):
         self._performed_via_github_app: Attribute[GithubApp] = NotSet
         self._project_card: Attribute[dict[str, Any]] = NotSet
         self._rename: Attribute[dict] = NotSet
-        self._requested_reviewer: Attribute[NamedUser] = NotSet
+        self._requested_reviewer: Attribute[NamedUser | Organization] = NotSet
         self._requested_team: Attribute[Team] = NotSet
-        self._review_requester: Attribute[NamedUser] = NotSet
+        self._review_requester: Attribute[NamedUser | Organization] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def actor(self) -> NamedUser:
+    def actor(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._actor)
         return self._actor.value
 
     @property
-    def assignee(self) -> NamedUser:
+    def assignee(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    def assigner(self) -> NamedUser:
+    def assigner(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._assigner)
         return self._assigner.value
 
@@ -195,7 +196,7 @@ class IssueEvent(CompletableGithubObject):
         return self._rename.value
 
     @property
-    def requested_reviewer(self) -> NamedUser:
+    def requested_reviewer(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._requested_reviewer)
         return self._requested_reviewer.value
 
@@ -205,7 +206,7 @@ class IssueEvent(CompletableGithubObject):
         return self._requested_team.value
 
     @property
-    def review_requester(self) -> NamedUser:
+    def review_requester(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._review_requester)
         return self._review_requester.value
 
@@ -216,11 +217,29 @@ class IssueEvent(CompletableGithubObject):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
-            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
+            self._actor = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["actor"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "assignee" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+            self._assignee = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["assignee"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "assigner" in attributes:  # pragma no branch
-            self._assigner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assigner"])
+            self._assigner = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["assigner"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "author_association" in attributes:  # pragma no branch
             self._author_association = self._makeDictAttribute(attributes["author_association"])
         if "commit_id" in attributes:  # pragma no branch
@@ -254,14 +273,22 @@ class IssueEvent(CompletableGithubObject):
         if "rename" in attributes:  # pragma no branch
             self._rename = self._makeDictAttribute(attributes["rename"])
         if "requested_reviewer" in attributes:  # pragma no branch
-            self._requested_reviewer = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["requested_reviewer"]
+            self._requested_reviewer = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["requested_reviewer"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "requested_team" in attributes:  # pragma no branch
             self._requested_team = self._makeClassAttribute(github.Team.Team, attributes["requested_team"])
         if "review_requester" in attributes:  # pragma no branch
-            self._review_requester = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["review_requester"]
+            self._review_requester = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["review_requester"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
             )
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

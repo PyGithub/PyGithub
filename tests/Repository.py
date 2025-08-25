@@ -78,6 +78,7 @@
 # Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
+# Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -2206,6 +2207,12 @@ class Repository(Framework.TestCase):
                 "documentation_url": "https://docs.github.com/rest/repos/repos#transfer-a-repository",
                 "status": "422",
             },
+        )
+
+    def testGetAutomatedSecurityFixes(self):
+        self.assertDictEqual(
+            self.repo.get_automated_security_fixes(),
+            {"enabled": True, "paused": False},
         )
 
 
