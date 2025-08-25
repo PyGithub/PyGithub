@@ -686,7 +686,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                                 print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
                                 for func, args, base in calls:
                                     print(f"- calls {func}({', '.join(args)})")
-                            #else:
+                            # else:
                             #    # check if the found verb depends on a base class, which we cannot test here
                             #    if not any(
                             #        func.startswith(("self._requester.request", "self.__requester.request"))
@@ -2046,14 +2046,22 @@ class OpenApi:
                     self.classes = classes
                     self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
 
+                def is_not_dict_type(python_type: GithubClass | PythonType | None) -> bool:
+                    return (
+                        python_type is None
+                        or isinstance(python_type, GithubClass)
+                        or isinstance(python_type, PythonType)
+                        and (
+                            python_type.type != "dict"
+                            and (python_type.type != "list" or is_not_dict_type(python_type.inner_types[0]))
+                        )
+                    )
+
                 all_properties = {
                     k: (python_type, v.get("deprecated", False))
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
-                    if python_type is None
-                    or isinstance(python_type, GithubClass)
-                    or isinstance(python_type, PythonType)
-                    and (python_type.type != "dict" or new_schemas_as_dict)
+                    if is_not_dict_type(python_type) or new_schemas_as_dict
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -2103,7 +2111,9 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, spec_file: str | None, index_filename: str, check_verbs: bool, dry_run: bool) -> bool:
+    def index(
+        self, github_path: str, spec_file: str | None, index_filename: str, check_verbs: bool, dry_run: bool
+    ) -> bool:
         import multiprocessing
 
         config = {}
