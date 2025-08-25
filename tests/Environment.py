@@ -44,7 +44,6 @@ from . import Framework
 
 class Environment(Framework.TestCase):
     def setUp(self):
-        self.tokenAuthMode = True
         super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.environment = self.repo.get_environment("dev")
