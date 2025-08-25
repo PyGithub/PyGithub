@@ -36,6 +36,9 @@ class OrganizationSecretScanAlert(SecretScanAlert):
     The reference can be found here
     https://docs.github.com/en/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-organization
 
+    The OpenAPI schema can be found at
+    - /components/schemas/organization-secret-scanning-alert
+
     """
 
     def _initAttributes(self) -> None:

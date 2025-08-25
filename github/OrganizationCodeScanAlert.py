@@ -36,6 +36,9 @@ class OrganizationCodeScanAlert(CodeScanAlert):
     The reference can be found here
     https://docs.github.com/en/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-scanning-organization-alert-items
+
     """
 
     def _initAttributes(self) -> None:

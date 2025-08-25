@@ -1,6 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com> #
+# Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,6 +41,9 @@ class SecretScanAlert(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/secret-scanning.
 
+    The OpenAPI schema can be found at
+    - /components/schemas/secret-scanning-alert
+
     """
 
     def _initAttributes(self) -> None:
@@ -53,13 +56,13 @@ class SecretScanAlert(NonCompletableGithubObject):
         self._multi_repo: Attribute[bool] = NotSet
         self._number: Attribute[int] = NotSet
         self._publicly_leaked: Attribute[bool] = NotSet
-        self._push_protection_bypassed: Attribute[bool] = NotSet
-        self._push_protection_bypassed_at: Attribute[datetime | None] = NotSet
-        self._push_protection_bypassed_by: Attribute[NamedUser | None] = NotSet
         self._push_protection_bypass_request_comment: Attribute[str | None] = NotSet
         self._push_protection_bypass_request_html_url: Attribute[str | None] = NotSet
         self._push_protection_bypass_request_reviewer: Attribute[NamedUser | None] = NotSet
         self._push_protection_bypass_request_reviewer_comment: Attribute[str | None] = NotSet
+        self._push_protection_bypassed: Attribute[bool] = NotSet
+        self._push_protection_bypassed_at: Attribute[datetime | None] = NotSet
+        self._push_protection_bypassed_by: Attribute[NamedUser | None] = NotSet
         self._resolution: Attribute[str | None] = NotSet
         self._resolution_comment: Attribute[str | None] = NotSet
         self._resolved_at: Attribute[datetime | None] = NotSet
@@ -112,18 +115,6 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._publicly_leaked.value
 
     @property
-    def push_protection_bypassed(self) -> bool:
-        return self._push_protection_bypassed.value
-
-    @property
-    def push_protection_bypassed_at(self) -> datetime | None:
-        return self._push_protection_bypassed_at.value
-
-    @property
-    def push_protection_bypassed_by(self) -> NamedUser | None:
-        return self._push_protection_bypassed_by.value
-
-    @property
     def push_protection_bypass_request_comment(self) -> str | None:
         return self._push_protection_bypass_request_comment.value
 
@@ -138,6 +129,18 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def push_protection_bypass_request_reviewer_comment(self) -> str | None:
         return self._push_protection_bypass_request_reviewer_comment.value
+    
+    @property
+    def push_protection_bypassed(self) -> bool:
+        return self._push_protection_bypassed.value
+
+    @property
+    def push_protection_bypassed_at(self) -> datetime | None:
+        return self._push_protection_bypassed_at.value
+
+    @property
+    def push_protection_bypassed_by(self) -> NamedUser | None:
+        return self._push_protection_bypassed_by.value
 
     @property
     def resolution(self) -> str | None:
@@ -204,14 +207,6 @@ class SecretScanAlert(NonCompletableGithubObject):
             self._number = self._makeIntAttribute(attributes["number"])
         if "publicly_leaked" in attributes:
             self._publicly_leaked = self._makeBoolAttribute(attributes["publicly_leaked"])
-        if "push_protection_bypassed" in attributes:
-            self._push_protection_bypassed = self._makeBoolAttribute(attributes["push_protection_bypassed"])
-        if "push_protection_bypassed_at" in attributes:
-            self._push_protection_bypassed_at = self._makeDatetimeAttribute(attributes["push_protection_bypassed_at"])
-        if "push_protection_bypassed_by" in attributes:
-            self._push_protection_bypassed_by = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"]
-            )
         if "push_protection_bypass_request_comment" in attributes:
             self._push_protection_bypass_request_comment = self._makeStringAttribute(
                 attributes["push_protection_bypass_request_comment"]
@@ -220,13 +215,21 @@ class SecretScanAlert(NonCompletableGithubObject):
             self._push_protection_bypass_request_html_url = self._makeStringAttribute(
                 attributes["push_protection_bypass_request_html_url"]
             )
-        if "_push_protection_bypass_request_reviewer" in attributes:
+        if "push_protection_bypass_request_reviewer" in attributes:
             self._push_protection_bypass_request_reviewer = self._makeClassAttribute(
-                github.NamedUser.NamedUser, attributes["_push_protection_bypass_request_reviewer"]
+                github.NamedUser.NamedUser, attributes["push_protection_bypass_request_reviewer"]
             )
         if "push_protection_bypass_request_reviewer_comment" in attributes:
             self._push_protection_bypass_request_reviewer_comment = self._makeStringAttribute(
                 attributes["push_protection_bypass_request_reviewer_comment"]
+            )
+        if "push_protection_bypassed" in attributes:
+            self._push_protection_bypassed = self._makeBoolAttribute(attributes["push_protection_bypassed"])
+        if "push_protection_bypassed_at" in attributes:
+            self._push_protection_bypassed_at = self._makeDatetimeAttribute(attributes["push_protection_bypassed_at"])
+        if "push_protection_bypassed_by" in attributes:
+            self._push_protection_bypassed_by = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"]
             )
         if "resolution" in attributes:
             self._resolution = self._makeStringAttribute(attributes["resolution"])
