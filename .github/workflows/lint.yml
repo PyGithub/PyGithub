@@ -35,7 +35,7 @@ jobs:
           # Commit and push changes
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
-          git push
+          git push origin HEAD:$GITHUB_REF
 
   pre-commit:
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
           # Commit and push changes
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
-          git push
+          git push origin HEAD:$GITHUB_REF
 
   docs:
     runs-on: ubuntu-latest
