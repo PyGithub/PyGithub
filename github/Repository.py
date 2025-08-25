@@ -4232,7 +4232,7 @@ class Repository(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         state: Opt[str] = NotSet,
-        severity: Opt[str] = NotSet
+        severity: Opt[str] = NotSet,
     ) -> PaginatedList[CodeScanAlert]:
         """
         :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
@@ -4252,7 +4252,9 @@ class Repository(CompletableGithubObject):
         allowed_severities = ["critical", "high", "medium", "low", "warning", "note", "error"]
         assert is_optional(tool_name, str), tool_name
         assert is_optional(tool_guid, str), tool_guid
-        assert tool_name is NotSet or tool_guid is NotSet, "You can specify the tool by using either tool_guid or tool_name, but not both."
+        assert (
+            tool_name is NotSet or tool_guid is NotSet
+        ), "You can specify the tool by using either tool_guid or tool_name, but not both."
         assert is_optional(ref, str), ref
         assert is_optional(pr, int), pr
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
@@ -4268,7 +4270,7 @@ class Repository(CompletableGithubObject):
                 "sort": sort,
                 "direction": direction,
                 "state": state,
-                "severity": severity
+                "severity": severity,
             }
         )
         return PaginatedList(
@@ -4277,7 +4279,7 @@ class Repository(CompletableGithubObject):
             f"{self.url}/code-scanning/alerts",
             url_parameters,
         )
-    
+
     def get_codescan_alert(self, number: int) -> CodeScanAlert:
         """
         :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number} <https://docs.github.com/en/rest/code-scanning/code-scanning#get-a-code-scanning-alert>`_
@@ -4298,7 +4300,7 @@ class Repository(CompletableGithubObject):
         validity: Opt[str] = NotSet,
         is_publicly_leaked: Opt[bool] = NotSet,
         is_multi_repo: Opt[bool] = NotSet,
-        hide_secret: Opt[bool] = NotSet
+        hide_secret: Opt[bool] = NotSet,
     ) -> PaginatedList[SecretScanAlert]:
         """
         :calls: `GET /repos/{owner}/{repo}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-a-repository>`_
@@ -4315,12 +4317,21 @@ class Repository(CompletableGithubObject):
         """
         allowed_states = ["open", "resolved"]
         allowed_secret_types = ["user", "push_protection", "partner"]
-        allowed_resolutions = ["false_positive", "wont_fix", "revoked", "pattern_edited", "pattern_deleted", "used_in_tests"]
+        allowed_resolutions = [
+            "false_positive",
+            "wont_fix",
+            "revoked",
+            "pattern_edited",
+            "pattern_deleted",
+            "used_in_tests",
+        ]
         allowed_sorts = ["created", "updated"]
         allowed_directions = ["asc", "desc"]
         allowed_validities = ["active", "inactive", "unknown"]
         assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
-        assert secret_type in allowed_secret_types + [NotSet], f"Severity can be one of {', '.join(allowed_secret_types)}"
+        assert secret_type in allowed_secret_types + [
+            NotSet
+        ], f"Severity can be one of {', '.join(allowed_secret_types)}"
         assert resolution in allowed_resolutions + [NotSet], f"Ecosystem can be one of {', '.join(allowed_resolutions)}"
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
         assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
@@ -4347,7 +4358,7 @@ class Repository(CompletableGithubObject):
             f"{self.url}/secret-scanning/alerts",
             url_parameters,
         )
-    
+
     def get_secret_scanning_alert(self, number: int, hide_secret: Opt[bool] = NotSet) -> SecretScanAlert:
         """
         :calls: `GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number} <https://docs.github.com/en/rest/secret-scanning/secret-scanning#get-a-secret-scanning-alert>`_
@@ -4362,7 +4373,9 @@ class Repository(CompletableGithubObject):
                 "hide_secret": hide_secret,
             }
         )
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/secret-scanning/alerts/{number}", parameters=query_parameters)
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/secret-scanning/alerts/{number}", parameters=query_parameters
+        )
         return github.SecretScanAlert.SecretScanAlert(self._requester, headers, data)
 
     def get_environments(self) -> PaginatedList[Environment]:

@@ -25,10 +25,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 import github.NamedUser
 import github.SecretScanAlertInstance
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
@@ -75,15 +74,15 @@ class SecretScanAlert(NonCompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self.number})
-    
+
     @property
     def created_at(self) -> datetime:
         return self._created_at.value
-    
+
     @property
     def first_location_detected(self) -> SecretScanAlertInstance:
         return self._first_location_detected.value
-    
+
     @property
     def has_more_locations(self) -> bool:
         return self._has_more_locations.value
@@ -91,7 +90,7 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def html_url(self) -> str:
         return self._html_url.value
-    
+
     @property
     def is_base64_encoded(self) -> bool:
         return self._is_base64_encoded.value
@@ -107,11 +106,11 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def number(self) -> int:
         return self._number.value
-    
+
     @property
     def publicly_leaked(self) -> bool:
         return self._publicly_leaked.value
-    
+
     @property
     def push_protection_bypassed(self) -> bool:
         return self._push_protection_bypassed.value
@@ -123,27 +122,27 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def push_protection_bypassed_by(self) -> NamedUser | None:
         return self._push_protection_bypassed_by.value
-    
+
     @property
     def push_protection_bypass_request_comment(self) -> str | None:
         return self._push_protection_bypass_request_comment.value
-    
+
     @property
     def push_protection_bypass_request_html_url(self) -> str | None:
         return self._push_protection_bypass_request_html_url.value
-    
+
     @property
     def push_protection_bypass_request_reviewer(self) -> NamedUser | None:
         return self._push_protection_bypass_request_reviewer.value
-    
+
     @property
     def push_protection_bypass_request_reviewer_comment(self) -> str | None:
         return self._push_protection_bypass_request_reviewer_comment.value
-    
+
     @property
     def resolution(self) -> str | None:
         return self._resolution.value
-    
+
     @property
     def resolution_comment(self) -> str | None:
         return self._resolution_comment.value
@@ -151,11 +150,11 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def resolved_at(self) -> datetime | None:
         return self._resolved_at.value
-    
+
     @property
     def resolved_by(self) -> NamedUser | None:
         return self._resolved_by.value
-    
+
     @property
     def secret(self) -> str:
         return self._secret.value
@@ -163,7 +162,7 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def secret_type(self) -> str:
         return self._secret_type.value
-    
+
     @property
     def secret_type_display_name(self) -> str:
         return self._secret_type_display_name.value
@@ -171,7 +170,7 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def state(self) -> str:
         return self._state.value
-    
+
     @property
     def updated_at(self) -> datetime:
         return self._updated_at.value
@@ -179,7 +178,7 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def url(self) -> str:
         return self._url.value
-    
+
     @property
     def validity(self) -> str:
         return self._validity.value
@@ -188,7 +187,9 @@ class SecretScanAlert(NonCompletableGithubObject):
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "first_location_detected" in attributes:
-            self._first_location_detected = self._makeClassAttribute(github.SecretScanAlertInstance.SecretScanAlertInstance, attributes["first_location_detected"])
+            self._first_location_detected = self._makeClassAttribute(
+                github.SecretScanAlertInstance.SecretScanAlertInstance, attributes["first_location_detected"]
+            )
         if "has_more_locations" in attributes:
             self._has_more_locations = self._makeBoolAttribute(attributes["has_more_locations"])
         if "html_url" in attributes:
@@ -208,15 +209,25 @@ class SecretScanAlert(NonCompletableGithubObject):
         if "push_protection_bypassed_at" in attributes:
             self._push_protection_bypassed_at = self._makeDatetimeAttribute(attributes["push_protection_bypassed_at"])
         if "push_protection_bypassed_by" in attributes:
-            self._push_protection_bypassed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"])
+            self._push_protection_bypassed_by = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"]
+            )
         if "push_protection_bypass_request_comment" in attributes:
-            self._push_protection_bypass_request_comment = self._makeStringAttribute(attributes["push_protection_bypass_request_comment"])
+            self._push_protection_bypass_request_comment = self._makeStringAttribute(
+                attributes["push_protection_bypass_request_comment"]
+            )
         if "push_protection_bypass_request_html_url" in attributes:
-            self._push_protection_bypass_request_html_url = self._makeStringAttribute(attributes["push_protection_bypass_request_html_url"])
+            self._push_protection_bypass_request_html_url = self._makeStringAttribute(
+                attributes["push_protection_bypass_request_html_url"]
+            )
         if "_push_protection_bypass_request_reviewer" in attributes:
-            self._push_protection_bypass_request_reviewer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["_push_protection_bypass_request_reviewer"])
+            self._push_protection_bypass_request_reviewer = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["_push_protection_bypass_request_reviewer"]
+            )
         if "push_protection_bypass_request_reviewer_comment" in attributes:
-            self._push_protection_bypass_request_reviewer_comment = self._makeStringAttribute(attributes["push_protection_bypass_request_reviewer_comment"])
+            self._push_protection_bypass_request_reviewer_comment = self._makeStringAttribute(
+                attributes["push_protection_bypass_request_reviewer_comment"]
+            )
         if "resolution" in attributes:
             self._resolution = self._makeStringAttribute(attributes["resolution"])
         if "resolution_comment" in attributes:

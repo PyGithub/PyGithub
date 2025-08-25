@@ -64,15 +64,15 @@ class SecretScanAlertInstance(NonCompletableGithubObject):
     @property
     def blob_sha(self) -> str:
         return self._blob_sha.value
-    
+
     @property
     def blob_url(self) -> str:
         return self._blob_url.value
-    
+
     @property
     def commit_sha(self) -> str:
         return self._commit_sha.value
-    
+
     @property
     def commit_url(self) -> str:
         return self._commit_url.value

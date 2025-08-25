@@ -24,9 +24,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from github.SecretScanAlert import SecretScanAlert
 from github.GithubObject import Attribute, NotSet
 from github.Repository import Repository
+from github.SecretScanAlert import SecretScanAlert
 
 
 class OrganizationSecretScanAlert(SecretScanAlert):
