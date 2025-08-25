@@ -129,9 +129,9 @@ class Issue(CompletableGithubObject):
         self._assignee: Attribute[NamedUser | None] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
         self._author_association: Attribute[str] = NotSet
-        self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
+        self._body: Attribute[str] = NotSet
         self._closed_at: Attribute[datetime] = NotSet
         self._closed_by: Attribute[NamedUser] = NotSet
         self._comments: Attribute[int] = NotSet
