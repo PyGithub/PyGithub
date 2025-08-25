@@ -124,12 +124,18 @@ class PublicReleaseAsset(Framework.TestCase):
         )
 
     def testDownload(self):
-        with tempfile.NamedTemporaryFile() as tmpf:
-            tmpf_path = tmpf.name
+        tmpf_path = None
+        try:
+            with tempfile.NamedTemporaryFile(delete_on_close=False) as tmpf:
+                tmpf_path = tmpf.name
             self.asset.download_asset(tmpf_path)
-            tmpf.seek(0)
-            hash = hashlib.sha256(tmpf.read())
-            size = tmpf.tell()
+            with open(tmpf_path, "rb") as tmpf:
+                tmpf.seek(0)
+                hash = hashlib.sha256(tmpf.read())
+                size = tmpf.tell()
+        finally:
+            if tmpf_path is not None:
+                os.unlink(tmpf_path)
 
         assert self.asset.digest
         digest = self.asset.digest.split(":")[1]
