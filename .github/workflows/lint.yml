@@ -6,7 +6,6 @@ on:
       - release-v*
   pull_request:
   merge_group:
-  workflow_dispatch:
 permissions: {}
 
 jobs:
@@ -14,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/pre-commit
+      - uses: ./.github/actions/mypy
 
   mypy-fix:
     runs-on: ubuntu-latest
