@@ -22,15 +22,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-import github.SecretScanAlert
-import github.Repository
+from github.SecretScanAlert import SecretScanAlert
 from github.GithubObject import Attribute, NotSet
-
-if TYPE_CHECKING:
-    from github.SecretScanAlert import SecretScanAlert
-    from github.Repository import Repository
+from github.Repository import Repository
 
 
 class OrganizationSecretScanAlert(SecretScanAlert):
@@ -53,4 +49,4 @@ class OrganizationSecretScanAlert(SecretScanAlert):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "repository" in attributes:
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(Repository, attributes["repository"])
