@@ -44,6 +44,9 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
 
+    The OpenAPI schema can be found at
+    - /components/schemas/code-scanning-alert-instance
+
     """
 
     def _initAttributes(self) -> None:
@@ -51,6 +54,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         self._classifications: Attribute[list[str]] = NotSet
         self._commit_sha: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
         self._message: Attribute[dict[str, Any]] = NotSet
         self._ref: Attribute[str] = NotSet
@@ -74,6 +78,10 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     @property
     def environment(self) -> str:
         return self._environment.value
+
+    @property
+    def html_url(self) -> str:
+        return self._html_url.value
 
     @property
     def location(self) -> CodeScanAlertInstanceLocation:
@@ -102,6 +110,8 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
             self._environment = self._makeStringAttribute(attributes["environment"])
         if "environment" in attributes:  # pragma no branch
             self._environment = self._makeStringAttribute(attributes["environment"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeClassAttribute(
                 github.CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation,

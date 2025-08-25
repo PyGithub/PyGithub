@@ -1,8 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,29 +19,21 @@
 #                                                                              #
 ################################################################################
 
-import github
+from __future__ import annotations
 
 from . import Framework
 
-REPO_NAME = "PyGithub/PyGithub"
 
-
-class PoolSize(Framework.TestCase):
+class IssueDependenciesSummary(Framework.TestCase):
     def setUp(self):
-        self.setPoolSize(20)
         super().setUp()
+        with self.replayData("Issue.setUp.txt"):
+            self.repo = self.g.get_repo("PyGithub/PyGithub")
+            self.issue = self.repo.get_issue(28)
+            self.ids = self.issue.issue_dependencies_summary
 
-    def testReturnsRepoAfterSettingPoolSize(self):
-        repository = self.g.get_repo(REPO_NAME)
-        self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEqual(repository.full_name, REPO_NAME)
-
-    def testReturnsRepoAfterSettingPoolSizeHttp(self):
-        g = github.Github(
-            auth=self.oauth_token,
-            base_url="http://my.enterprise.com",
-            pool_size=20,
-        )
-        repository = g.get_repo(REPO_NAME)
-        self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEqual(repository.full_name, REPO_NAME)
+    def testAttributes(self):
+        self.assertEqual(self.ids.blocked_by, 0)
+        self.assertEqual(self.ids.blocking, 0)
+        self.assertEqual(self.ids.total_blocked_by, 1)
+        self.assertEqual(self.ids.total_blocking, 1)

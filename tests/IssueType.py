@@ -1,8 +1,5 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
-# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,29 +19,27 @@
 #                                                                              #
 ################################################################################
 
-import github
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from . import Framework
 
-REPO_NAME = "PyGithub/PyGithub"
 
-
-class PoolSize(Framework.TestCase):
+class IssueType(Framework.TestCase):
     def setUp(self):
-        self.setPoolSize(20)
         super().setUp()
+        with self.replayData("Issue.setUp.txt"):
+            self.repo = self.g.get_repo("PyGithub/PyGithub")
+            self.issue = self.repo.get_issue(28)
+            self.type = self.issue.type
 
-    def testReturnsRepoAfterSettingPoolSize(self):
-        repository = self.g.get_repo(REPO_NAME)
-        self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEqual(repository.full_name, REPO_NAME)
-
-    def testReturnsRepoAfterSettingPoolSizeHttp(self):
-        g = github.Github(
-            auth=self.oauth_token,
-            base_url="http://my.enterprise.com",
-            pool_size=20,
-        )
-        repository = g.get_repo(REPO_NAME)
-        self.assertIsInstance(repository, github.Repository.Repository)
-        self.assertEqual(repository.full_name, REPO_NAME)
+    def testAttributes(self):
+        self.assertEqual(self.type.color, "red")
+        self.assertEqual(self.type.created_at, datetime(2024, 1, 25, 12, 55, 41, tzinfo=timezone.utc))
+        self.assertEqual(self.type.description, "An unexpected problem or behavior")
+        self.assertEqual(self.type.id, 1386163)
+        self.assertEqual(self.type.is_enabled, True)
+        self.assertEqual(self.type.name, "Bug")
+        self.assertEqual(self.type.node_id, "IT_kwDOAKxBpM4AFSaz")
+        self.assertEqual(self.type.updated_at, datetime(2024, 7, 26, 10, 24, 51, tzinfo=timezone.utc))
