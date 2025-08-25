@@ -193,7 +193,9 @@ class GithubClass:
         return f"{self.package}.{self.module}.{self.name}"
 
     @staticmethod
-    def from_class_name(class_name: str, index: dict[str, Any] | None = None, github_parent_path: str = "") -> GithubClass:
+    def from_class_name(
+        class_name: str, index: dict[str, Any] | None = None, github_parent_path: str = ""
+    ) -> GithubClass:
         if github_parent_path and not github_parent_path.endswith("/"):
             github_parent_path = f"{github_parent_path}/"
         if "." in class_name:
@@ -229,7 +231,9 @@ class GithubClass:
                     raise KeyError(f"Missing package, module or name in {cls}")
                 return GithubClass(**cls)
             else:
-                return GithubClass.from_class_name(f"github.{class_name}.{class_name}", github_parent_path=github_parent_path)
+                return GithubClass.from_class_name(
+                    f"github.{class_name}.{class_name}", github_parent_path=github_parent_path
+                )
 
 
 @dataclasses.dataclass(frozen=True)
