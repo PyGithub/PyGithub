@@ -259,9 +259,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/sort-classes/action.yml
+      - uses: ./.github/actions/sort-classes
 
   sort-fix:
+    name: "Fix"
     runs-on: ubuntu-latest
     needs: sort
     if: always() && needs.sort.result == 'failure' && github.event_name == 'pull_request'
@@ -269,7 +270,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/sort-classes/action.yml
+      - uses: ./.github/actions/sort-classes
         continue-on-error: true
       - name: Commit and push changes
         run: |
