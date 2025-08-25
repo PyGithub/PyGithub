@@ -29,11 +29,9 @@ jobs:
       - name: Commit and push changes
         run: |
           # Commit and push changes
-          git diff
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
           git commit -a -m "Fixing MyPy"
-          git show HEAD
           git push origin HEAD:$GITHUB_HEAD_REF
 
   pre-commit:
@@ -62,13 +60,9 @@ jobs:
       - name: Commit and push changes
         run: |
           # Commit and push changes
-          env
-          cat "$GITHUB_EVENT_PATH"
-          git diff
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
           git commit -a -m "Fixing pre-compile"
-          git show HEAD
           git push origin HEAD:$GITHUB_HEAD_REF
 
   docs:
