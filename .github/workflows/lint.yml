@@ -33,6 +33,8 @@ jobs:
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
           git commit -a -m "Fixing MyPy"
+          git fetch origin $GITHUB_HEAD_REF
+          git rebase origin/$GITHUB_HEAD_REF
           git push origin HEAD:$GITHUB_HEAD_REF
 
   pre-commit:
@@ -64,6 +66,8 @@ jobs:
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
           git commit -a -m "Fixing pre-compile"
+          git fetch origin $GITHUB_HEAD_REF
+          git rebase origin/$GITHUB_HEAD_REF
           git push origin HEAD:$GITHUB_HEAD_REF
 
   docs:
