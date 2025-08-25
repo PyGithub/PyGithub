@@ -790,9 +790,35 @@ class Requester:
             raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
+    @classmethod
+    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | tuple[str, ...]) -> bool:
+        if isinstance(domain_or_domains, str):
+            if hostname == domain_or_domains:
+                return True
+            domain_suffix = f".{domain_or_domains}"
+            return hostname.endswith(domain_suffix)
+        return any(cls.__hostnameHasDomain(hostname, d) for d in domain_or_domains)
+
+    def __assertUrlAllowed(self, url: str) -> None:
+        o = urllib.parse.urlparse(url)
+        assert o.hostname is not None
+        if o.hostname == self.__hostname:
+            prefixes = [self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth"]
+            assert o.path.startswith(tuple(prefixes)), o.path
+            assert o.port == self.__port, o.port
+        else:
+            if self.__base_url == Consts.DEFAULT_BASE_URL:
+                assert self.__hostnameHasDomain(o.hostname, ("github.com", "githubusercontent.com")), o.hostname
+            else:
+                assert self.__hostnameHasDomain(o.hostname, self.__hostname), o.hostname
+
     def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:
         cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None
         if not url.startswith("/"):
+            # check URL is allowed
+            self.__assertUrlAllowed(url)
+
+            # only return connection if url deviates from base_url
             o = urllib.parse.urlparse(url)
             if (
                 o.hostname != self.__hostname
@@ -1223,15 +1249,6 @@ class Requester:
             url = f"{self.__prefix}{url}"
         else:
             o = urllib.parse.urlparse(url)
-            assert o.hostname in [
-                self.__hostname,
-                "uploads.github.com",
-                "status.github.com",
-                "github.com",
-                "objects.githubusercontent.com",
-            ], o.hostname
-            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
-            assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":
                 url += f"?{o.query}"
