@@ -19,19 +19,21 @@ jobs:
   mypy-fix:
     runs-on: ubuntu-latest
     needs: mypy
-    if: needs.mypy.result == 'failure' && always()
+    if: always() && needs.mypy.result == 'failure' && contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name)
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/mypy
+        continue-on-error: true
       - name: Commit and push changes
-        if: contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name) && failure()
         run: |
           # Commit and push changes
+          git diff
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
-          git fetch origin $GITHUB_HEAD_REF
+          git commit -a -m "Fixing MyPy"
+          git show HEAD
           git push origin HEAD:$GITHUB_HEAD_REF
 
   pre-commit:
@@ -48,7 +50,7 @@ jobs:
   pre-commit-fix:
     runs-on: ubuntu-latest
     needs: pre-commit
-    if: needs.pre-commit.result == 'failure' && always()
+    if: always() && needs.pre-commit.result == 'failure' && contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name)
     permissions:
       contents: write
     steps:
@@ -56,15 +58,17 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/pre-commit
+        continue-on-error: true
       - name: Commit and push changes
-        if: contains(fromJson('["pull_request", "workflow_dispatch"]'), github.event_name) && failure()
         run: |
           # Commit and push changes
           env
           cat "$GITHUB_EVENT_PATH"
+          git diff
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
-          git fetch origin $GITHUB_HEAD_REF
+          git commit -a -m "Fixing pre-compile"
+          git show HEAD
           git push origin HEAD:$GITHUB_HEAD_REF
 
   docs:
