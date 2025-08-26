@@ -10,6 +10,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -137,6 +138,7 @@ class GithubIntegration:
                 "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm are deprecated, "
                 "please use auth=github.Auth.AppAuth(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             if jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
                 auth = AppAuth(

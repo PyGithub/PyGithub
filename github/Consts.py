@@ -34,6 +34,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Changyong Um <e7217@naver.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -52,6 +54,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 REQ_IF_NONE_MATCH = "If-None-Match"
@@ -153,6 +156,9 @@ deploymentStatusEnhancementsPreview = "application/vnd.github.flash-preview+json
 
 # https://developer.github.com/changes/2019-12-03-internal-visibility-changes/
 repoVisibilityPreview = "application/vnd.github.nebula-preview+json"
+
+# https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api?apiVersion=2022-11-28#media-types
+mediaType = "application/vnd.github+json"
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_OAUTH_URL = "https://github.com/login/oauth"

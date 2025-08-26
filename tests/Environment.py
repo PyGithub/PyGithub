@@ -6,6 +6,8 @@
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
 # Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 GPK <gopidesupavan@gmail.com>                                 #
+# Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,7 +44,6 @@ from . import Framework
 
 class Environment(Framework.TestCase):
     def setUp(self):
-        self.tokenAuthMode = True
         super().setUp()
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.environment = self.repo.get_environment("dev")
@@ -79,6 +80,7 @@ class Environment(Framework.TestCase):
         self.assertEqual(protection_rules[1].id, 216324)
         self.assertEqual(protection_rules[1].node_id, "GA_kwDOHKhL9c4AA00E")
         self.assertEqual(protection_rules[1].type, "required_reviewers")
+        self.assertFalse(protection_rules[1].prevent_self_review)
         self.assertEqual(protection_rules[2].id, 216325)
         self.assertEqual(protection_rules[2].node_id, "GA_kwDOHKhL9c4AA00F")
         self.assertEqual(protection_rules[2].type, "wait_timer")
@@ -113,17 +115,17 @@ class Environment(Framework.TestCase):
         self.assertEqual(environments[0].name, "dev")
 
     def testCreateEnvironment(self):
-        environment = self.repo.create_environment("test")
-        self.assertEqual(environment.name, "test")
+        environment = self.repo.create_environment("test/env")
+        self.assertEqual(environment.name, "test/env")
         self.assertEqual(environment.id, 470015651)
         self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
         self.assertEqual(
             environment.url,
-            "https://api.github.com/repos/alson/PyGithub/environments/test",
+            "https://api.github.com/repos/alson/PyGithub/environments/test/env",
         )
         self.assertEqual(
             environment.html_url,
-            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test",
+            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test%2Fenv",
         )
         self.assertEqual(
             environment.created_at,
@@ -138,9 +140,10 @@ class Environment(Framework.TestCase):
 
     def testUpdateEnvironment(self):
         environment = self.repo.create_environment(
-            "test",
+            "test/env",
             wait_timer=42,
             reviewers=[github.EnvironmentProtectionRuleReviewer.ReviewerParams(type_="User", id_=19245)],
+            prevent_self_review=True,
             deployment_branch_policy=github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams(
                 protected_branches=True, custom_branch_policies=False
             ),
@@ -150,11 +153,11 @@ class Environment(Framework.TestCase):
         self.assertEqual(environment.node_id, "EN_kwDOHKhL9c4cA96j")
         self.assertEqual(
             environment.url,
-            "https://api.github.com/repos/alson/PyGithub/environments/test",
+            "https://api.github.com/repos/alson/PyGithub/environments/test/env",
         )
         self.assertEqual(
             environment.html_url,
-            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test",
+            "https://github.com/alson/PyGithub/deployments/activity_log?environments_filter=test%2Fenv",
         )
         self.assertEqual(
             environment.created_at,
@@ -166,6 +169,7 @@ class Environment(Framework.TestCase):
         )
         self.assertEqual(len(environment.protection_rules), 3)
         self.assertEqual(environment.protection_rules[0].type, "required_reviewers")
+        self.assertTrue(environment.protection_rules[0].prevent_self_review)
         self.assertEqual(len(environment.protection_rules[0].reviewers), 1)
         self.assertEqual(environment.protection_rules[0].reviewers[0].type, "User")
         self.assertEqual(environment.protection_rules[0].reviewers[0].reviewer.id, 19245)

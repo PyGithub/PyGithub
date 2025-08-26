@@ -26,6 +26,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -39,6 +40,9 @@ class CodeScanAlertInstanceLocation(NonCompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
+
+    The OpenAPI schema can be found at
+    - /components/schemas/code-scanning-alert-location
 
     """
 

@@ -35,6 +35,7 @@
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Maja Massarini <2678400+majamassarini@users.noreply.github.com>#
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -54,6 +55,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import base64
@@ -342,16 +344,20 @@ class ReplayingHttpsConnection(ReplayingConnection):
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
-    authMode = "token"
-    per_page = Consts.DEFAULT_PER_PAGE
-    retry = None
-    pool_size = None
-    seconds_between_requests: float | None = None
-    seconds_between_writes: float | None = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
+
+    def __init__(self, methodName="runTest") -> None:
+        super().__init__(methodName)
+        self.authMode = "token"
+        self.per_page = Consts.DEFAULT_PER_PAGE
+        self.retry = None
+        self.pool_size = None
+        self.seconds_between_requests: float | None = None
+        self.seconds_between_writes: float | None = None
 
     def setUp(self):
         super().setUp()
+        self.__customFilename: str | None = None
         self.__fileName = ""
         self.__file = None
         if (
@@ -384,6 +390,21 @@ class BasicTestCase(unittest.TestCase):
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
             responses.start()
+
+    def setPerPage(self, per_page):
+        self.per_page = per_page
+
+    def setRetry(self, retry):
+        self.retry = retry
+
+    def setPoolSize(self, pool_size):
+        self.pool_size = pool_size
+
+    def setSecondsBetweenRequests(self, seconds_between_requests):
+        self.seconds_between_requests = seconds_between_requests
+
+    def setSecondsBetweenWrites(self, seconds_between_writes):
+        self.seconds_between_writes = seconds_between_writes
 
     @property
     def thisTestFailed(self) -> bool:
@@ -418,14 +439,26 @@ class BasicTestCase(unittest.TestCase):
             warnings.filterwarnings("ignore", category=category, module=module)
             yield
 
+    @contextlib.contextmanager
+    def replayData(self, filename: str):
+        previous = self.__customFilename
+        self.__customFilename = filename
+        try:
+            yield
+        finally:
+            self.__customFilename = previous
+
     def __openFile(self, mode):
-        for _, _, functionName, _ in traceback.extract_stack():
-            if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
-                if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    fileName = os.path.join(
-                        self.replayDataFolder,
-                        f"{self.__class__.__name__}.{functionName}.txt",
-                    )
+        fileName = None
+        if self.__customFilename:
+            fileName = self.__customFilename
+        else:
+            for _, _, functionName, _ in traceback.extract_stack():
+                if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
+                    # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+                    if functionName != "test":
+                        fileName = f"{self.__class__.__name__}.{functionName}.txt"
+        fileName = os.path.join(self.replayDataFolder, fileName) if fileName else None
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
@@ -468,15 +501,19 @@ class TestCase(BasicTestCase):
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
-        self.g = self.get_github(self.retry, self.pool_size)
+        self.g = self.get_github(self.authMode, self.retry, self.pool_size)
 
-    def get_github(self, retry, pool_size):
-        if self.authMode == "token":
+    def get_github(self, authMode, retry=None, pool_size=None):
+        if authMode == "token":
             auth = self.oauth_token
-        elif self.authMode == "jwt":
+        elif authMode == "jwt":
             auth = self.jwt
+        elif authMode == "app":
+            auth = self.app_auth
+        elif self.authMode == "none":
+            auth = None
         else:
-            raise ValueError(f"Unsupported test auth mode: {self.authMode}")
+            raise ValueError(f"Unsupported test auth mode: {authMode}")
 
         return github.Github(
             auth=auth,
@@ -490,15 +527,3 @@ class TestCase(BasicTestCase):
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
-
-
-def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
-    BasicTestCase.authMode = "jwt"
-
-
-def enableRetry(retry):
-    BasicTestCase.retry = retry
-
-
-def setPoolSize(pool_size):
-    BasicTestCase.pool_size = pool_size

@@ -37,6 +37,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -51,6 +52,9 @@ class Secret(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/actions/secrets
+
+    The OpenAPI schema can be found at
+    - /components/schemas/actions-secret
 
     """
 

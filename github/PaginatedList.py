@@ -30,6 +30,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,12 +50,14 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from typing import Any, Generic, TypeVar, overload
 from urllib.parse import parse_qs
 
+from github import Consts
 from github.GithubObject import GithubObject
 from github.Requester import Requester
 
@@ -303,6 +307,10 @@ class PaginatedList(PaginatedListBase[T]):
                         if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
                     }
 
+    # To support Python's built-in `reversed()` method
+    def __reversed__(self) -> PaginatedList[T]:
+        return self.reversed
+
     def _couldGrow(self) -> bool:
         return (
             self.is_rest
@@ -415,7 +423,7 @@ class PaginatedList(PaginatedListBase[T]):
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
-        if self.__requester.per_page != 30:
+        if self.__requester.per_page != Consts.DEFAULT_PER_PAGE:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore

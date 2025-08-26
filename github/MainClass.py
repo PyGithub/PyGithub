@@ -231,12 +231,14 @@ class Github:
                 "Arguments login_or_token and password are deprecated, please use "
                 "auth=github.Auth.Login(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = github.Auth.Login(login_or_token, password)  # type: ignore
         elif login_or_token is not None:
             warnings.warn(
                 "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = github.Auth.Token(login_or_token)
         elif jwt is not None:
@@ -245,12 +247,14 @@ class Github:
                 "auth=github.Auth.AppAuth(...) or "
                 "auth=github.Auth.AppAuthToken(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = github.Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
                 "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = app_auth
 
@@ -451,15 +455,15 @@ class Github:
             url_parameters,
         )
 
-    def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
+    def get_enterprise(self, slug: str) -> github.Enterprise.Enterprise:
         """
         :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
-        :param enterprise: string
+        :param slug: string
         :rtype: :class:`Enterprise`
         """
-        assert isinstance(enterprise, str), enterprise
+        assert isinstance(slug, str), slug
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
-        return github.Enterprise.Enterprise(self.__requester, enterprise)
+        return github.Enterprise.Enterprise.from_slug(self.__requester, slug)
 
     def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
         """
@@ -1051,6 +1055,7 @@ class Github:
                 "Argument slug is mandatory, calling this method without the slug argument is deprecated, please use "
                 "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             return GithubIntegration(**self.__requester.kwargs).get_app()
         else:

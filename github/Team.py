@@ -41,7 +41,9 @@
 # Copyright 2024 Andrii Kezikov <cheshirez@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -109,6 +111,7 @@ class Team(CompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
         self._group_id: Attribute[int] = NotSet
+        self._group_name: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._ldap_dn: Attribute[str] = NotSet
@@ -118,6 +121,7 @@ class Team(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._notification_setting: Attribute[str] = NotSet
         self._organization: Attribute[Organization] = NotSet
+        self._organization_selection_type: Attribute[str] = NotSet
         self._parent: Attribute[github.Team.Team] = NotSet
         self._permission: Attribute[str] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
@@ -150,6 +154,11 @@ class Team(CompletableGithubObject):
     def group_id(self) -> int:
         self._completeIfNotSet(self._group_id)
         return self._group_id.value
+
+    @property
+    def group_name(self) -> str:
+        self._completeIfNotSet(self._group_name)
+        return self._group_name.value
 
     @property
     def html_url(self) -> str:
@@ -195,6 +204,11 @@ class Team(CompletableGithubObject):
     def organization(self) -> Organization:
         self._completeIfNotSet(self._organization)
         return self._organization.value
+
+    @property
+    def organization_selection_type(self) -> str:
+        self._completeIfNotSet(self._organization_selection_type)
+        return self._organization_selection_type.value
 
     @property
     def parent(self) -> Team:
@@ -283,7 +297,7 @@ class Team(CompletableGithubObject):
         if isinstance(member, github.NamedUser.NamedUser):
             member = member._identity
         else:
-            member = urllib.parse.quote(member)
+            member = urllib.parse.quote(member, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/memberships/{member}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
@@ -302,7 +316,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo = repo._identity  # type: ignore
         else:
-            repo = urllib.parse.quote(repo)
+            repo = urllib.parse.quote(repo, safe="")
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
@@ -343,7 +357,7 @@ class Team(CompletableGithubObject):
         if isinstance(repo, github.Repository.Repository):
             repo_url_param = repo._identity
         else:
-            repo_url_param = urllib.parse.quote(repo)
+            repo_url_param = urllib.parse.quote(repo, safe="")
         put_parameters = {
             "permission": permission,
         }
@@ -498,6 +512,8 @@ class Team(CompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "group_id" in attributes:  # pragma no branch
             self._group_id = self._makeIntAttribute(attributes["group_id"])
+        if "group_name" in attributes:  # pragma no branch
+            self._group_name = self._makeStringAttribute(attributes["group_name"])
         if "html_url" in attributes:
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
@@ -516,6 +532,8 @@ class Team(CompletableGithubObject):
             self._notification_setting = self._makeStringAttribute(attributes["notification_setting"])
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+        if "organization_selection_type" in attributes:  # pragma no branch
+            self._organization_selection_type = self._makeStringAttribute(attributes["organization_selection_type"])
         if "parent" in attributes:  # pragma no branch
             self._parent = self._makeClassAttribute(github.Team.Team, attributes["parent"])
         if "permission" in attributes:  # pragma no branch

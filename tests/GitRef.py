@@ -51,13 +51,13 @@ class GitRef(Framework.TestCase):
             self.ref.object.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
-        self.assertEqual(self.ref.ref, "refs/heads/BranchCreatedByPyGithub")
+        self.assertEqual(self.ref.ref, "ref/heads/BranchCreatedByPyGithub")
         self.assertEqual(
             self.ref.url,
-            "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
+            "https://api.github.com/repos/jacquev6/PyGithub/git/ref/heads/BranchCreatedByPyGithub",
         )
 
-        self.assertEqual(repr(self.ref), 'GitRef(ref="refs/heads/BranchCreatedByPyGithub")')
+        self.assertEqual(repr(self.ref), 'GitRef(ref="ref/heads/BranchCreatedByPyGithub")')
         self.assertEqual(
             repr(self.ref.object),
             'GitObject(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',

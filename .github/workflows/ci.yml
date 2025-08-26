@@ -6,9 +6,12 @@ on:
       - release-v*
   pull_request:
   merge_group:
+env:
+  openapi_api: api.github.com
+  openapi_version: 2022-11-28
+permissions: {}
 
 jobs:
-
   build:
     uses: "./.github/workflows/_build-pkg.yml"
     with:
@@ -28,9 +31,9 @@ jobs:
           - {python-version: "3.9", os: "windows-latest", os-label: "Windows"}
           - {python-version: "3.9", os: "macos-latest", os-label: "macOS"}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "${{ matrix.python-version }}"
       - name: Install tox
@@ -64,6 +67,224 @@ jobs:
         if: needs.test.result != 'success'
         run: false
         shell: bash
+
+  index:
+    name: "Check verbs"
+    needs: "test_success"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Check verbs
+        shell: bash
+        run: |
+          # Check verbs
+          set -euo pipefail
+
+          echo "::group::Head verb checking:"
+          python head/scripts/openapi.py index --check-verbs head/github openapi.head.index | tee verbs.head.txt
+          echo "::endgroup::"
+
+          echo "::group::Base verb checking:"
+          python head/scripts/openapi.py index --check-verbs base/github openapi.base.index | tee verbs.base.txt
+          echo "::endgroup::"
+
+          if ! (diff verbs.base.txt verbs.head.txt > diff.txt)
+          then
+            echo ""
+            echo "Difference:"
+            cat diff.txt
+            echo ""
+            echo "To fix this revisit the verbs in :calls: doc-string line of the respective method."
+            echo ""
+            echo "Fix warnings like 'Not found any … call in …' by adding the method name "
+            echo "and verb to the 'known method verbs' section in github/openapi.index.json."
+            echo ""
+            echo "Fix warnings like 'Method … is known to call …' by fixing "
+            echo "the doc-string or github/openapi.index.json."
+            false
+          fi
+
+  schemas:
+    name: "Add schemas"
+    needs: "test_success"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Add schemas
+        shell: bash
+        run: |
+          # Add schemas
+          set -euo pipefail
+
+          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+
+          echo "::group::Head schema suggestions:"
+          python head/scripts/openapi.py index head/github openapi.json openapi.head.index
+          python head/scripts/openapi.py suggest schemas openapi.json openapi.head.index | tee schemas.head.txt
+          echo "::endgroup::"
+
+          echo "::group::Base schema suggestions:"
+          python head/scripts/openapi.py index base/github openapi.json openapi.base.index
+          python head/scripts/openapi.py suggest schemas openapi.json openapi.base.index | tee schemas.base.txt
+          echo "::endgroup::"
+
+          if ! (diff schemas.base.txt schemas.head.txt > diff.txt)
+          then
+            echo ""
+            echo "Difference:"
+            cat diff.txt
+            echo ""
+            (grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/" || true) | while read class
+            do
+              echo "::group::Add schema to $class:"
+              python head/scripts/openapi.py suggest schemas --add openapi.json openapi.head.index "$class" > /dev/null
+              (cd head; git diff; git reset --hard --quiet HEAD)
+              echo "::endgroup::"
+            done
+            echo ""
+            echo "Run the following commands to add the suggested schemas:"
+            echo "python3 -m venv venv"
+            echo "source venv/bin/activate"
+            echo "pip install -r requirements/scripts.txt"
+            echo python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
+            echo python scripts/openapi.py index github openapi.json openapi.index
+            echo python scripts/openapi.py suggest schemas --add openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
+            false
+          fi
+
+  implementations:
+    name: "Implement schemas"
+    needs: "test_success"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: head
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r head/requirements/scripts.txt
+      - name: Add implementations
+        shell: bash
+        run: |
+          # Add implementations
+          set -euo pipefail
+
+          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+
+          echo "::group::Head implementations:"
+          python head/scripts/openapi.py index head/github openapi.json openapi.head.index
+          python head/scripts/openapi.py --dry-run apply --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
+          echo "::endgroup::"
+
+          echo "::group::Base implementations:"
+          python head/scripts/openapi.py index base/github openapi.json openapi.base.index
+          python head/scripts/openapi.py --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
+          echo "::endgroup::"
+
+          if ! (diff <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]base/github/%(github/%" -e "s%Test base/%Test %" implementation.base.txt) <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]head/github/%(github/%" -e "s%Test head/%Test %" implementation.head.txt) > diff.txt)
+          then
+            echo ""
+            echo "Difference:"
+            cat diff.txt
+            echo ""
+            (grep -E -e "^> Class \w+ changed$" diff.txt | sed -E -e "s/^> Class (\w+) changed$/\1/" || true) | while read class
+            do
+              echo "::group::Apply schema to $class:"
+              python head/scripts/openapi.py apply --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
+              (cd head; git diff; git reset --hard --quiet HEAD)
+              echo "::endgroup::"
+            done
+            echo ""
+            echo "Run the following commands to apply the schemas:"
+            echo "python3 -m venv venv"
+            echo "source venv/bin/activate"
+            echo "pip install -r requirements/scripts.txt"
+            echo python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
+            echo python scripts/openapi.py index github openapi.index
+            echo python scripts/openapi.py apply --tests --new-schemas create-class github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
+            (grep -E -e "^> Test .+ changed$" diff.txt | sed -E -e "s/^> Test (.+) changed$/\1/" || true) | while read test
+            do
+              echo python scripts/prepare-for-update-assertions.py "$test" testAttributes
+              echo bash scripts/update-assertions.sh "$test" testAttributes
+            done
+            echo pre-commit run --all-files
+            echo ""
+            echo "You may need to fix the tests afterwards:"
+            echo pip install . -r requirements/test.txt
+            echo pytest tests
+            echo
+            false
+          fi
+
+  sort:
+    name: "Sort classes"
+    needs: "test_success"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/sort-classes
+      - name: changes
+        run: |
+          if ! (git diff --exit-code > diff.txt)
+          then
+            echo ""
+            echo "Changes:"
+            cat diff.txt
+            git reset --hard --quiet HEAD
+            echo ""
+            echo "To fix this, run the following commands:"
+            echo "python3 -m venv venv"
+            echo "source venv/bin/activate"
+            echo "pip install -r requirements/scripts.txt"
+            echo python scripts/openapi.py index github openapi.index
+            for class in $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
+            do
+              python scripts/sort_class.py openapi.index $class > /dev/null
+              if ! git diff --quiet --exit-code
+              then
+                echo python scripts/sort_class.py openapi.index $class
+                git reset --hard --quiet HEAD
+              fi
+            done
+            false
+          fi
 
   event_file:
     name: "Event File"

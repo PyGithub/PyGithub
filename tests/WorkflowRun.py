@@ -10,6 +10,7 @@
 # Copyright 2024 Chris Gavin <chris@chrisgavin.me>                             #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Geoffrey <geoffrey@moveparallel.com>                          #
+# Copyright 2025 Alejandro Perez Gancedo <37455131+LifeLex@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -167,6 +168,11 @@ class WorkflowRun(Framework.TestCase):
             },
         )
         self.assertEqual(timing.run_duration_ms, 241000)
+
+    def test_timing_no_run_duration(self):
+        timing = self.workflow_run.timing()
+        self.assertEqual(timing.billable, {})
+        self.assertIsNone(timing.run_duration_ms)
 
     def test_rerun(self):
         wr = self.repo.get_workflow_run(3910280793)
