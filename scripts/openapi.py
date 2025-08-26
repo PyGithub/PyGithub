@@ -72,6 +72,24 @@ def as_python_type(
     data_type = schema_type.get("type")
     if "$ref" in schema_type:
         schema = schema_type.get("$ref").strip("# ")
+    elif "oneOf" in schema_type:
+        types = [
+            as_python_type(
+                t,
+                schema_path + ["oneOf", idx],
+                schema_to_class,
+                classes,
+                verbose=verbose,
+                collect_new_schemas=collect_new_schemas,
+            )
+            for idx, t in enumerate(schema_type.get("oneOf"))
+        ]
+        types = list({t for t in types if t is not None})
+        if len(types) == 0:
+            return None
+        if len(types) == 1:
+            return types[0]
+        return PythonType("union", types)
     elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
         return as_python_type(
             schema_type.get("allOf")[0],
@@ -84,6 +102,9 @@ def as_python_type(
     if data_type == "object":
         schema = "/".join([""] + schema_path)
     if schema is not None:
+        # these schemas are explicitly ignored
+        if schema in {"/components/schemas/empty-object"}:
+            return None
         if schema in schema_to_class:
             classes_of_schema = schema_to_class[schema]
             if not isinstance(classes_of_schema, list):
@@ -156,6 +177,9 @@ def as_python_type(
 class PythonType:
     type: str
     inner_types: list[PythonType | GithubClass] | None = None
+
+    def __hash__(self):
+        return hash(self.__repr__())
 
     def __repr__(self):
         return (
@@ -856,8 +880,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
 
         # insert typing classes if needed
-        if isinstance(node.body[-2], cst.If):
-            if_node = node.body[-2]
+        # find first If statement in node.body
+        if_idx_node_or_none = next(((idx, stmt) for idx, stmt in enumerate(node.body) if isinstance(stmt, cst.If)), None)
+        if if_idx_node_or_none is not None:
+            if_idx, if_node = if_idx_node_or_none
             i = 0
             while i < len(if_node.body.body) and isinstance(if_node.body.body[i].body[0], (cst.Import, cst.ImportFrom)):
                 imported_module = if_node.body.body[i].body[0].module.attr.value
@@ -896,7 +922,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     body=if_node.body.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
                 )
 
-            node = node.with_changes(body=tuple(node.body[:-2]) + (if_node, node.body[-1]))
+            node = node.with_changes(body=tuple(node.body[:if_idx]) + (if_node,) + tuple(node.body[if_idx + 1 :]))
 
         return node
 
@@ -1062,8 +1088,19 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             and prop.data_type.inner_types
             and isinstance(prop.data_type.inner_types[0], GithubClass)
         ):
-            func_name = "_makeClassAttribute"
-            args = [cst.Arg(cls.create_type(prop.data_type)), cst.Arg(attr)]
+            func_name = "_makeUnionClassAttributeFromTypeKey"
+            args = [
+                cst.Arg(cst.SimpleString('"type"')),
+                cst.Arg(cst.SimpleString(f'"{prop.data_type.inner_types[0].name}"')),
+                cst.Arg(attr),
+            ] + [
+                cst.Arg(
+                    cst.Tuple(
+                        elements=[cst.Element(cls.create_type(dt)), cst.Element(cst.SimpleString(f'"{dt.name}"'))]
+                    )
+                )
+                for dt in prop.data_type.inner_types
+            ]
         if func_name is None:
             raise ValueError(f"Unsupported data type {prop.data_type}")
         return cst.Call(func=cls.create_attribute(["self", func_name]), args=args)
@@ -2507,6 +2544,9 @@ class OpenApi:
                             available_schemas[cls_name][key] = []
                         for st in spec_type:
                             st = st.lstrip("#")
+                            # explicitly ignore these schemas
+                            if st in {"/components/schemas/empty-object"}:
+                                continue
                             schema_returned_by[st].add(key)
                             if st not in schema_to_classes:
                                 unimplemented_schemas.add(st)
@@ -2779,7 +2819,7 @@ class OpenApi:
                 f"        self.attr = None\n"
                 f"\n"
                 f"    def testAttributes(self):\n"
-                f'        self.assertEqual(self.attr.url, "")\n'
+                f'        self.assertEqual(self.attr.__repr__(), "")\n'
             )
             self.write_code("", source, clazz.test_filename, dry_run=False)
 
