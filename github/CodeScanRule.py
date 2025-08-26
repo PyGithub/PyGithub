@@ -57,9 +57,9 @@ class CodeScanRule(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._description: Attribute[str] = NotSet
-        self._id: Attribute[str] = NotSet
         self._full_description: Attribute[str] = NotSet
         self._help: Attribute[str] = NotSet
+        self._id: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._security_severity_level: Attribute[str] = NotSet
         self._severity: Attribute[str] = NotSet
@@ -71,10 +71,6 @@ class CodeScanRule(NonCompletableGithubObject):
     @property
     def description(self) -> str:
         return self._description.value
-
-    @property
-    def id(self) -> str:
-        return self._id.value
     
     @property
     def full_description(self) -> str:
@@ -83,6 +79,10 @@ class CodeScanRule(NonCompletableGithubObject):
     @property
     def help(self) -> str:
         return self._help.value
+
+    @property
+    def id(self) -> str:
+        return self._id.value
 
     @property
     def name(self) -> str:
@@ -103,12 +103,12 @@ class CodeScanRule(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeStringAttribute(attributes["id"])
         if "full_description" in attributes:  # pragma no branch
             self._full_description = self._makeStringAttribute(attributes["full_description"])
         if "help" in attributes:  # pragma no branch
             self._help = self._makeStringAttribute(attributes["help"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "security_severity_level" in attributes:  # pragma no branch
