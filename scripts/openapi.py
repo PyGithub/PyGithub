@@ -3045,7 +3045,7 @@ class OpenApi:
                     self.args.index_filename,
                     self.args.class_name,
                     self.args.method_name,
-                    self.args.api_verb,
+                    self.args.api_verb.lower(),
                     self.args.api_path,
                     self.args.api_response,
                     self.args.return_property,
