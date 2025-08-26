@@ -31,13 +31,14 @@ import os.path
 import re
 import sys
 from collections import Counter, defaultdict
+from collections.abc import Sequence
 from enum import Enum
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Sequence
+from typing import Any
 
 import libcst as cst
 import requests
