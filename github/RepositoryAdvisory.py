@@ -30,8 +30,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Iterable
+from typing import TYPE_CHECKING, Any
 
 import github.AdvisoryCredit
 import github.AdvisoryCreditDetailed
