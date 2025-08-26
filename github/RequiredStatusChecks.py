@@ -54,6 +54,7 @@ class Check(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-status-checks-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-required-status-check/properties/checks/items
     - /components/schemas/status-check-policy/properties/checks/items
 
@@ -89,6 +90,7 @@ class RequiredStatusChecks(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-status-checks-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-required-status-check
     - /components/schemas/status-check-policy
 

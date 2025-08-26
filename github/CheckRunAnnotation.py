@@ -41,6 +41,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     The reference can be found here: https://docs.github.com/en/rest/reference/checks#list-check-run-annotations
 
     The OpenAPI schema can be found at
+
     - /components/schemas/check-annotation
 
     """

@@ -54,6 +54,7 @@ class NotificationSubject(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
 
     The OpenAPI schema can be found at
+
     - /components/schemas/thread/properties/subject
 
     """

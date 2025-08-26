@@ -339,6 +339,7 @@ class Repository(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos
 
     The OpenAPI schema can be found at
+
     - /components/schemas/event/properties/repo
     - /components/schemas/full-repository
     - /components/schemas/minimal-repository
@@ -4742,6 +4743,7 @@ class RepositorySearchResult(Repository):
     https://docs.github.com/en/rest/reference/search#search-repositories
 
     The OpenAPI schema can be found at
+
     - /components/schemas/repo-search-result-item
 
     """

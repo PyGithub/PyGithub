@@ -62,6 +62,7 @@ class Milestone(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/issues#milestones
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-event-milestone
     - /components/schemas/milestone
     - /components/schemas/nullable-milestone

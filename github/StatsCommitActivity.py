@@ -54,6 +54,7 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-the-last-year-of-commit-activity
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit-activity
 
     """

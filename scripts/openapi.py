@@ -553,6 +553,8 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             lines = class_docstring.splitlines()
             for idx, line in enumerate(lines):
                 if "The OpenAPI schema can be found at" in line:
+                    while len(lines) > idx + 1 and not lines[idx+1].strip():
+                        idx = idx + 1
                     for schema in lines[idx + 1 :]:
                         if not schema.strip().lstrip("- "):
                             break
@@ -1467,15 +1469,18 @@ class AddSchemasTransformer(CstTransformerBase):
                         heading = idx
                         schema_lines = lines[idx + 1 : -2 if empty_footing else -1]
                         break
+                schema_lines = {schema_line for schema_line in schema_lines if schema_line}
                 before = len(schema_lines)
-                schema_lines = sorted(list(set(schema_lines).union({f"{indent}- {schema}" for schema in self.schemas})))
+                schema_lines = sorted(list(schema_lines.union({f"{indent}- {schema}" for schema in self.schemas})))
                 after = len(schema_lines)
                 lines = (
                     lines[:heading]
                     +
-                    # we add an empty line before the schema lines if there is none
+                    # we add an empty line before the schema lines title if there is none
                     ([""] if lines[heading - 1].strip() else [])
                     + [indent + "The OpenAPI schema can be found at"]
+                    # we add an empty line after the schema lines title to get a proper bullet list in the docs
+                    + [""]
                     + schema_lines
                     + [""]
                     + lines[-1:]

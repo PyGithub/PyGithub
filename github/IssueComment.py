@@ -73,6 +73,7 @@ class IssueComment(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/issues#comments
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-comment
 
     """

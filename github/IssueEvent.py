@@ -73,6 +73,7 @@ class IssueEvent(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/issues#events
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-event
     - /components/schemas/issue-event-for-issue
 

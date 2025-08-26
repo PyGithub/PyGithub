@@ -72,6 +72,7 @@ class Migration(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/migrations
 
     The OpenAPI schema can be found at
+
     - /components/schemas/migration
 
     """

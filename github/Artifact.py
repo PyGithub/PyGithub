@@ -60,6 +60,7 @@ class Artifact(NonCompletableGithubObject):
     This class represents an Artifact of Github Run.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/artifact
 
     """

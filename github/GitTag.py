@@ -63,6 +63,7 @@ class GitTag(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/git#tags
 
     The OpenAPI schema can be found at
+
     - /components/schemas/git-tag
 
     """

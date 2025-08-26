@@ -67,6 +67,7 @@ class GithubApp(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/apps
 
     The OpenAPI schema can be found at
+
     - /components/schemas/integration
     - /components/schemas/nullable-integration
 
