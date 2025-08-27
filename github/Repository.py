@@ -2156,6 +2156,7 @@ class Repository(CompletableGithubObject):
         archived: Opt[bool] = NotSet,
         allow_forking: Opt[bool] = NotSet,
         web_commit_signoff_required: Opt[bool] = NotSet,
+        security_and_analysis: Opt[dict[Any]] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -2192,6 +2193,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(archived, bool), archived
         assert is_optional(allow_forking, bool), allow_forking
         assert is_optional(web_commit_signoff_required, bool), web_commit_signoff_required
+        assert is_optional(security_and_analysis, dict), security_and_analysis
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
@@ -2220,6 +2222,7 @@ class Repository(CompletableGithubObject):
                 "archived": archived,
                 "allow_forking": allow_forking,
                 "web_commit_signoff_required": web_commit_signoff_required,
+                "security_and_analysis": security_and_analysis,
             }
         )
 
