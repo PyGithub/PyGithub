@@ -881,7 +881,9 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
         # insert typing classes if needed
         # find first If statement in node.body
-        if_idx_node_or_none = next(((idx, stmt) for idx, stmt in enumerate(node.body) if isinstance(stmt, cst.If)), None)
+        if_idx_node_or_none = next(
+            ((idx, stmt) for idx, stmt in enumerate(node.body) if isinstance(stmt, cst.If)), None
+        )
         if if_idx_node_or_none is not None:
             if_idx, if_node = if_idx_node_or_none
             i = 0
@@ -2100,7 +2102,12 @@ class OpenApi:
                         )
                     )
 
-                def is_supported_type(property_name: str, property_spec: dict[str, Any], property_type: PythonType | GithubClass | None, verbose: bool) -> bool:
+                def is_supported_type(
+                    property_name: str,
+                    property_spec: dict[str, Any],
+                    property_type: PythonType | GithubClass | None,
+                    verbose: bool,
+                ) -> bool:
                     if isinstance(property_type, PythonType):
                         if property_type.type == "union":
                             if not all(isinstance(inner_type, GithubClass) for inner_type in property_type.inner_types):
@@ -2108,17 +2115,20 @@ class OpenApi:
                                     print(f"Unsupported property '{property_name}' of type {property_type}")
                                 return False
                         if property_type.type == "list":
-                            if not is_supported_type(property_name, property_spec, property_type.inner_types[0], verbose=False):
+                            if not is_supported_type(
+                                property_name, property_spec, property_type.inner_types[0], verbose=False
+                            ):
                                 if verbose:
                                     print(f"Unsupported property '{property_name}' of type {property_type}")
                                 return False
-                    return True;
+                    return True
 
                 all_properties = {
                     k: (python_type, v.get("deprecated", False))
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
-                    if is_supported_type(k, v, python_type, self.verbose) and (is_not_dict_type(python_type) or new_schemas_as_dict)
+                    if is_supported_type(k, v, python_type, self.verbose)
+                    and (is_not_dict_type(python_type) or new_schemas_as_dict)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
