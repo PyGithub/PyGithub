@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout Git
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           ref: openapi/autosync
         continue-on-error: true
@@ -30,7 +30,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Git
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Git
@@ -39,7 +39,7 @@ jobs:
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Set up dependencies

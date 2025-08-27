@@ -67,7 +67,7 @@ class GitReleaseAsset(CompletableGithubObject):
         self._browser_download_url: Attribute[str] = NotSet
         self._content_type: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._digest: Attribute[str] = NotSet
+        self._digest: Attribute[str | None] = NotSet
         self._download_count: Attribute[int] = NotSet
         self._id: Attribute[int] = NotSet
         self._label: Attribute[str] = NotSet
@@ -98,7 +98,7 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def digest(self) -> str:
+    def digest(self) -> str | None:
         self._completeIfNotSet(self._digest)
         return self._digest.value
 
