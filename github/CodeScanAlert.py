@@ -153,6 +153,10 @@ class CodeScanAlert(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "dismissal_approved_by" in attributes:  # pragma no branch
+            self._dismissal_approved_by = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["dismissal_approved_by"]
+            )
         if "dismissed_at" in attributes:  # pragma no branch
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:  # pragma no branch
@@ -167,7 +171,6 @@ class CodeScanAlert(NonCompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "instances_url" in attributes:  # pragma no branch
             self._instances_url = self._makeStringAttribute(attributes["instances_url"])
-
         if "most_recent_instance" in attributes:  # pragma no branch
             self._most_recent_instance = self._makeClassAttribute(
                 github.CodeScanAlertInstance.CodeScanAlertInstance,

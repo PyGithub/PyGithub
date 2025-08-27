@@ -1708,7 +1708,7 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.SecretScanAlert.SecretScanAlert`
         """
         allowed_states = ["open", "resolved"]
-        allowed_secret_types = ["user", "push_protection", "partner"]
+        # allowed_secret_types = ["http_basic_authentication_header", "http_bearer_authentication_header", ...]
         allowed_resolutions = [
             "false_positive",
             "wont_fix",
@@ -1721,13 +1721,13 @@ class Organization(CompletableGithubObject):
         allowed_directions = ["asc", "desc"]
         allowed_validities = ["active", "inactive", "unknown"]
         assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
-        assert secret_type in allowed_secret_types + [
-            NotSet
-        ], f"Severity can be one of {', '.join(allowed_secret_types)}"
-        assert resolution in allowed_resolutions + [NotSet], f"Ecosystem can be one of {', '.join(allowed_resolutions)}"
+        # assert secret_type in allowed_secret_types + [NotSet], \
+        # "Secret_type can be one of the tokens listed on \
+        # https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets"
+        assert resolution in allowed_resolutions + [NotSet], f"Resolution can be one of {', '.join(allowed_resolutions)}"
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
         assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
-        assert validity in allowed_validities + [NotSet], f"Ecosystem can be one of {', '.join(allowed_validities)}"
+        assert validity in allowed_validities + [NotSet], f"Validity can be one of {', '.join(allowed_validities)}"
         assert is_optional(is_publicly_leaked, bool), is_publicly_leaked
         assert is_optional(is_multi_repo, bool), is_multi_repo
         assert is_optional(hide_secret, bool), hide_secret
