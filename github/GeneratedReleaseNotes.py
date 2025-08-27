@@ -25,19 +25,19 @@ class GeneratedReleaseNotes(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "body": self._body.value})
 
     @property
-    def name(self) -> str:
-        return self._name.value
-
-    @property
     def body(self) -> str:
         return self._body.value
+
+    @property
+    def name(self) -> str:
+        return self._name.value
 
     def _useAttributes(self, attributes: Dict[str, Any]) -> None:
         if "body" in attributes:
