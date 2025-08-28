@@ -27,5 +27,3 @@ The `typing_extensions <https://pypi.org/project/typing-extensions/>`__ package 
     @deprecated("Deprecated in favor of the new branch protection")
     def get_protected_branch(self):
        pass
-
-

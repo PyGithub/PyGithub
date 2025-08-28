@@ -85,4 +85,3 @@ The response has to contain a GraphQL pagination object for :func:`github.Pagina
       hasNextPage
       hasPreviousPage
     }
-
