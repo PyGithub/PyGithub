@@ -43,4 +43,4 @@ class GeneratedReleaseNotes(CompletableGithubObject):
         if "body" in attributes:
             self._body = self._makeStringAttribute(attributes["body"])
         if "name" in attributes:
-            self._title = self._makeStringAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
