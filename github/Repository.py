@@ -1585,7 +1585,7 @@ class Repository(CompletableGithubObject):
             "POST", f"{self.url}/releases/generate-notes", input=post_parameters
         )
 
-        return GeneratedReleaseNotes(self._requester, headers, data, completed=True)
+        return GeneratedReleaseNotes(self._requester, headers, data)
 
     def create_git_tag(
         self,
