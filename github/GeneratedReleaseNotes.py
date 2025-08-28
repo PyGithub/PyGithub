@@ -18,7 +18,7 @@ class GeneratedReleaseNotes(NonCompletableGithubObject):
 
     The OpenAPI schema can be found at
 
-        - /components/schemas/release-notes-content
+    - /components/schemas/release-notes-content
 
     """
 
