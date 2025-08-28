@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from github.GithubObject import (
     Attribute,
-    CompletableGithubObject,
+    NonCompletableGithubObject,
     NotSet,
 )
 
@@ -37,7 +37,7 @@ class GeneratedReleaseNotes(NonCompletableGithubObject):
     def name(self) -> str:
         return self._name.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "body" in attributes:
             self._body = self._makeStringAttribute(attributes["body"])
         if "name" in attributes:
