@@ -89,7 +89,7 @@ def as_python_type(
             return None
         if len(types) == 1:
             return types[0]
-        return PythonType("union", types)
+        return PythonType("union", sorted(types))
     elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
         return as_python_type(
             schema_type.get("allOf")[0],
@@ -124,7 +124,7 @@ def as_python_type(
                         print(f"Class not found in index: {class_name}")
             return PythonType(
                 type="union",
-                inner_types=[GithubClass(**classes.get(cls)) for cls in classes_of_schema if cls in classes],
+                inner_types=[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes],
             )
         if collect_new_schemas is not None:
             collect_new_schemas.append(schema or ".".join([""] + schema_path))
@@ -186,6 +186,9 @@ class PythonType:
             f"{self.type}[{', '.join([str(inner) for inner in self.inner_types])}]" if self.inner_types else self.type
         )
 
+    def __lt__(self, other) -> bool:
+        return self.__repr__() < other.__repr__()
+
 
 @dataclasses.dataclass(frozen=True)
 class GithubClass:
@@ -207,6 +210,9 @@ class GithubClass:
 
     def __repr__(self):
         return ".".join([self.package, self.module, self.name])
+
+    def __lt__(self, other) -> bool:
+        return self.__repr__() < other.__repr__()
 
     @property
     def short_class_name(self) -> str:
