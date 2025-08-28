@@ -2386,7 +2386,7 @@ class OpenApi:
                                         .get("methods")
                                     ]
                                     if self.verbose:
-                                        print(f"    - {verb} {candidate_path} implemented by {", ".join(methods)}")
+                                        print(f"    - {verb} {candidate_path} implemented by {', '.join(methods)}")
                                     continue
 
                                 suggested_methods = self.suggest_method_names(verb, path, candidate_path, spec)
@@ -2433,7 +2433,7 @@ class OpenApi:
 
             spec_fingerprints = {fingerprint(path): path for path in spec_paths}
             for path in sorted(list(unspec_paths)):
-                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), " ")}")
+                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), ' ')}")
         print()
 
     def suggest_method_names(self, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
