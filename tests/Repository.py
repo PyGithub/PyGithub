@@ -539,13 +539,13 @@ class Repository(Framework.TestCase):
 
     def testGenerateReleaseNotes(self):
         notes = self.repo.generate_release_notes("vX.Y.Z-by-PyGithub-acctest")
-        self.assertEqual(notes.name, None)
+        self.assertEqual(notes.name, "vX.Y.Z-by-PyGithub-acctest")
         self.assertEqual(
             notes.body, "**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest"
         )
         self.assertEqual(
             repr(notes),
-            'GeneratedReleaseNotes(name=None, body="**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest")',
+            'GeneratedReleaseNotes(name="vX.Y.Z-by-PyGithub-acctest", body="**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest")',
         )
 
     def testGenerateReleaseNotesWithAllArguments(self):
@@ -560,7 +560,7 @@ class Repository(Framework.TestCase):
             target_commitish="main",
             configuration_file_path="tests/test_release_notes.yml",
         )
-        self.assertEqual(notes.name, None)
+        self.assertEqual(notes.name, "vX.Y.Z-by-PyGithub-acctest")
         self.assertIn("Release notes generated using configuration in tests/test_release_notes.yml at main", notes.body)
 
     def testCreateGitTag(self):
