@@ -2804,6 +2804,7 @@ class OpenApi:
         self.write_code("", source, clazz.filename, dry_run=False)
 
         if tests:
+            attr_name = re.sub("[a-z]", "", class_name).lower()
             source = (
                 f"############################ Copyrights and license ############################\n"
                 f"#                                                                              #\n"
@@ -2836,14 +2837,15 @@ class OpenApi:
                 f"class {clazz.name}(Framework.TestCase):\n"
                 f"    def setUp(self):\n"
                 f"        super().setUp()\n"
-                f"        # TODO: create an instance of type {clazz.name} and assign to self.attr, then run:\n"
+                f"        # TODO: create an instance of type {clazz.name} and assign to self.{attr_name}, then run:\n"
                 f"        #   pytest {clazz.test_filename} -k testAttributes --record\n"
                 f"        #   ./scripts/update-assertions.sh {clazz.test_filename} testAttributes\n"
                 f"        #   pre-commit run --all-files\n"
-                f"        self.attr = None\n"
+                f"        self.{attr_name} = None\n"
                 f"\n"
                 f"    def testAttributes(self):\n"
-                f'        self.assertEqual(self.attr.__repr__(), "")\n'
+                f"        {attr_name} = self.{attr_name}\n"
+                f'        self.assertEqual({attr_name}.__repr__(), "")\n'
             )
             self.write_code("", source, clazz.test_filename, dry_run=False)
 
