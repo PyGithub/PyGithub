@@ -559,7 +559,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             lines = class_docstring.splitlines()
             for idx, line in enumerate(lines):
                 if "The OpenAPI schema can be found at" in line:
-                    while len(lines) > idx + 1 and not lines[idx+1].strip():
+                    while len(lines) > idx + 1 and not lines[idx + 1].strip():
                         idx = idx + 1
                     for schema in lines[idx + 1 :]:
                         if not schema.strip().lstrip("- "):
