@@ -10,8 +10,8 @@ This can be used to semi-automate the creation and maintenance of PyGithub class
 OpenAPI annotations
 -------------------
 
-PyGithub classes have annotations that link the code to the OpenAPI spec. This allows to automate keeping
-the implementation in-sync with the specification.
+PyGithub classes have annotations that link the code to the OpenAPI spec. This allows to automate syncing
+the implementation with the specification.
 
 PyGithub class annotations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,7 +46,7 @@ The list of OpenAPI schemas can be found below the ``The OpenAPI schema can be f
 
 .. _get-openapi-schema:
 
-A schema can easily be extracted from the OpenAPI spec as follows (this requires ``jq`` to be installed)::
+A schema can easily be extracted from the OpenAPI spec as follows (this requires `jq <https://jqlang.github.io/jq/>`__ to be installed)::
 
     ./scripts/get-openapi-schema.sh "/components/schemas/minimal-repository" < api.github.com.2022-11-28.json
 
@@ -97,7 +97,7 @@ This documents that the method calls the ``/repos/{owner}/{repo}/branches/{branc
 
 .. _get-openapi-path:
 
-A path can easily be extracted from the OpenAPI spec as follows (this requires ``jq`` to be installed)::
+A path can easily be extracted from the OpenAPI spec as follows (this requires `jq <https://jqlang.github.io/jq/>`__ to be installed)::
 
     ./scripts/get-openapi-path.sh "/repos/{owner}/{repo}/branches/{branch}" < api.github.com.2022-11-28.json
 
@@ -161,6 +161,8 @@ Run ``python scripts/openapi.py --help`` or ``python scripts/openapi.py COMMAND 
       --exit-code           Indicate changes via non-zeor exit code (default: False)
       --verbose             Provide more information (default: False)
 
+Most commands support the ``--dry-run`` option. This will not modify any files but show prospect code changes.
+
 Setup OpenAPI support
 ---------------------
 
@@ -175,7 +177,13 @@ Load the PyGithub sources into an index file, e.g. ``openapi.index``::
 Automatically add schemas to PyGithub classes
 ---------------------------------------------
 
-TODO: intro::
+The ``openapi.py`` script can suggest OpenAPI schemas for PyGithub classes.
+
+Suggest schemas::
+
+    python scripts/openapi.py suggest schemas api.github.com.2022-11-28.json openapi.index Commit
+
+Add suggested schemas::
 
     python scripts/openapi.py suggest schemas --add api.github.com.2022-11-28.json openapi.index Commit
 
@@ -250,17 +258,17 @@ This may produce the following changes::
 With option ``--tests``, tests will also be modified.
 
 Some attributes may return schemas that are not implemented by any PyGithub class. In that case,
-option ``--new-schemas create-class`` will creates all those classes.
+option ``--new-schemas create-class`` creates all those classes.
+
+.. _create-class:
 
 Create a PyGithub class from an OpenAPI schema
 ----------------------------------------------
 
-New PyGithub classes returned by other PyGithub classes' attributes can be created by applying the schemas of the latter class
-via ``scripts/openapi.py apply --new-schemas create-class …``. See :ref:`apply-schemas` for details.
+Note: PyGithub classes can be created automatically where needed using ``--new-schemas create-class``
+when :ref:`applying schemas <apply-schemas>` or :ref:`creating methods <create-method>`.
 
-New PyGithub classes returned by other PyGithub classes' methods can be created based on the Github REST API path
-of the method.
-
+PyGithub classes can be created based on a Github OpenAPI schema. However, it is easier to start from a Github REST API path.
 Given a Github REST API path like ``/app``, you can extract the ``GET`` response from the OpenAPI spec via::
 
     ./scripts/get-openapi-path.sh "/app" < api.github.com.2022-11-28.json
@@ -388,51 +396,55 @@ As well as the following PyGithub test class (``tests/AuthenticatedApp.py``)::
     class AuthenticatedApp(Framework.TestCase):
         def setUp(self):
             super().setUp()
-            # TODO: create an instance of type AuthenticatedApp and assign to self.attr, then run:
+            # TODO: create an instance of type AuthenticatedApp and assign to self.aa, then run:
             #   pytest ./tests/AuthenticatedApp.py -k testAttributes --record
             #   ./scripts/update-assertions.sh ./tests/AuthenticatedApp.py testAttributes
             #   pre-commit run --all-files
-            self.attr = None
+            self.aa = None
 
         def testAttributes(self):
-            self.assertEqual(self.attr.client_id, "")
-            self.assertEqual(self.attr.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+            aa = self.aa
+            self.assertEqual(aa.__repr__(), "")
+            self.assertEqual(aa.client_id, "")
+            self.assertEqual(aa.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
             …
-            self.assertEqual(self.attr.slug, "")
-            self.assertEqual(self.attr.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
-            self.assertEqual(self.attr.url, "")
+            self.assertEqual(aa.slug, "")
+            self.assertEqual(aa.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
 
 
-Complete setUp::
+First complete the ``setUp`` method like::
 
     def setUp(self):
         self.authMode = "app"  # usually not needed
         super().setUp()
-        self.app = self.g.get_app()  # the method that returns the tested class
+        self.aa = self.g.get_app()  # the method that returns the tested class
 
-and replace ``self.attr`` with ``self.app`` in ``testAttributes``.
-
-record test data::
+Next, record test data for the ``testAttributes`` test method::
 
     pytest ./tests/AuthenticatedApp.py -k testAttributes --record
 
-once you see the first ``AssertionError``, update assertions in testAttributes::
+You will see ``AssertionError`` because the assertions in ``testAttributes`` do not match the recorded data.
+So update the expected values::
 
     ./scripts/update-assertions.sh tests/AuthenticatedApp.py testAttributes
 
-test::
+Once all assertions are updated, you can run the new test class::
 
     pytest tests/AuthenticatedApp.py
 
+.. _create-method:
+
 Create a PyGithub method from an OpenAPI path
 ---------------------------------------------
+
+Note: Creating methods is not fully implemented. However, the create code is a good starting point.
 
 Methods can be added to PyGithub classes via the ``scripts/openapi.py`` script.
 
 First update the index, then create a method::
 
     python scripts/openapi.py index github api.github.com.2022-11-28.json openapi.index
-    python scripts/openapi.py create method \
+    python scripts/openapi.py create method --new-schemas create-class \
       api.github.com.2022-11-28.json openapi.index \
       AuthenticatedApp get_installations GET /app/installations
 

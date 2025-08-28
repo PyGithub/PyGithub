@@ -30,7 +30,7 @@ Script ``sort_class.py``
 
 The ``scripts/openapi.py`` script works best when attributes and methods are sorted.
 
-This script applies that order to all / specific classes::
+This script applies that order to all / to specific classes::
 
     usage: sort_class.py [-h] [--dry-run] index_filename class_name [class_name ...]
 
@@ -44,22 +44,27 @@ This script applies that order to all / specific classes::
       -h, --help      show this help message and exit
       --dry-run       show prospect changes and do not modify the file
 
+
 See :doc:`openapi` for details.
 
 Script ``get-openapi-path.sh``
 ------------------------------
 
-Quickly extract a specific Github API path from the OpenAPI spec. See :ref:`Get and OpenAPI API path <get-openapi-path>`.
+Quickly extract a specific Github API path from the OpenAPI spec. See :ref:`Get an OpenAPI API path <get-openapi-path>`.
+
+This script requires `jq <https://jqlang.github.io/jq/>`__ to be installed.
 
 Script ``get-openapi-schema.sh``
 --------------------------------
 
-Quickly extract a specific OpenAPI schema from the spec. See :ref:`Get and OpenAPI schema <get-openapi-schema>`.
+Quickly extract a specific OpenAPI schema from the spec. See :ref:`Get an OpenAPI schema <get-openapi-schema>`.
+
+This script requires `jq <https://jqlang.github.io/jq/>`__ to be installed.
 
 Script ``openapi-update-classes.sh``
 ------------------------------------
 
-An umbrella script that syncs all (or specific classes) with the OpenAPI spec.
+An umbrella script that syncs all / specific classes with the OpenAPI spec.
 
 Invoke the script::
 
@@ -67,7 +72,7 @@ Invoke the script::
 
 The script puts all changes into either a single branch (``--branch BRANCH``),
 or one branch per PyGithub class (``--branch-prefix BRANCH_PREFIX`` prefixes branches
-with ``BRANCH_PREFIX``, default is ``openapi/update``)
+with ``BRANCH_PREFIX``, default is ``openapi/update``).
 
 With ``--create-classes``, the script creates new PyGithub classes for any schema returned by an attribute
 that is not yet implemented by a PyGithub class.

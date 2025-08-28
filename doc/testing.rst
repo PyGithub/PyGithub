@@ -59,21 +59,29 @@ you can use the replay data file of another test:
 
 .. code-block:: python
 
-    def testCompare(self):
-        comparison = self.repo.compare("v0.6", "v0.7")
-        self.assertEqual(comparison.status, "ahead")
+    class Repository(Framework.TestCase):
+        def setUp(self):
+            # this method uses file Repository.setUp.txt
+            super().setUp()
+            self.repo = self.g.get_repo("PyGithub/PyGithub")
 
-    def testCompare2(self):
-        # this file would use file Repository.testCompare2.txt
-        # but here we explicitly use a different file
-        with self.replayData("Repository.testCompare.txt"):
+        def testCompare(self):
+            # this method uses file Repository.testCompare.txt
             comparison = self.repo.compare("v0.6", "v0.7")
             self.assertEqual(comparison.status, "ahead")
+
+        def testCompare2(self):
+            # this method would use file Repository.testCompare2.txt
+            # but here we explicitly reuse a different file
+            with self.replayData("Repository.testCompare.txt"):
+                comparison = self.repo.compare("v0.6", "v0.7")
+                self.assertEqual(comparison.status, "ahead")
 
 Authenticating tests
 ~~~~~~~~~~~~~~~~~~~~
 
-To record replay data, a ``GithubCredentials.py`` file is needed at the root of the project with the following contents:
+Most Github API calls require authentication. To record test replay data, a ``GithubCredentials.py`` file is needed
+at the root of the project with the following contents:
 
 .. code-block:: python
 
@@ -82,11 +90,11 @@ To record replay data, a ``GithubCredentials.py`` file is needed at the root of 
     app_id = "my_app_id"                    # Can be left empty if not used
     app_private_key = "my_app_private_key"  # Can be left empty if not used
 
-The `oauth_token` field in `GithubCredentials.py` is used by default to record test data.
-Tests classes that require JWT (`jwt` field), App authentication (`app_id` and `app_private_key` field)
-or no authentication at all, have to enable the auth mode in their ``setUp`` method.
+The ``oauth_token`` field in ``GithubCredentials.py`` is used by default to record test data.
+Tests classes that require JWT (``jwt`` field), App authentication (``app_id`` and ``app_private_key`` field)
+or no authentication at all, have to enable the respective auth mode in their ``setUp`` method.
 
-Set ``self.authMode`` to `"jwt"`, `"app"` and ``"none"``, respectively:
+Set ``self.authMode`` to ``"jwt"``, ``"app"`` and ``"none"``, respectively:
 
 .. code-block:: python
 
@@ -95,8 +103,8 @@ Set ``self.authMode`` to `"jwt"`, `"app"` and ``"none"``, respectively:
         super().setUp()
         ...
 
-An individual test method that needs a different authentication than configured in `setUp` can simply
-create a new `Github` object with the respective authentication:
+An individual test method that needs a different authentication than configured in ``setUp`` can simply
+create a new ``Github`` object with the respective authentication:
 
 .. code-block:: python
 
@@ -128,7 +136,7 @@ create a new `Github` object with the respective authentication:
 Updating assertions
 -------------------
 
-Once replay data have been created or updated, test assertions may fail because some values most definitively have changed.
+Once replay data have been created or updated, test assertions may fail because some values may have changed.
 You can either manually update the expected values with the new values of your record data. Or you use the following commands
 that attempt to perform this automatically:
 
