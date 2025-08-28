@@ -1,5 +1,8 @@
-OpenAPI
-=======
+Github OpenAPI spec
+===================
+
+Adding classes, attributes or methods
+-------------------------------------
 
 Github provides an `OpenAPI specification for its v3 REST API <https://github.com/github/rest-api-description/>`__.
 This can be used to semi-automate the creation and maintenance of PyGithub classes.
@@ -7,8 +10,8 @@ This can be used to semi-automate the creation and maintenance of PyGithub class
 OpenAPI annotations
 -------------------
 
-PyGithub classes have annotations that link the code to the OpenAPI spec. This helps to keep the implementation
-in-sync with the specification.
+PyGithub classes have annotations that link the code to the OpenAPI spec. This allows to automate keeping
+the implementation in-sync with the specification.
 
 PyGithub class annotations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,6 +43,8 @@ For example, the ``Repository`` class has this header:
         """
 
 The list of OpenAPI schemas can be found below the ``The OpenAPI schema can be found at`` line.
+
+.. _get-openapi-schema:
 
 A schema can easily be extracted from the OpenAPI spec as follows (this requires ``jq`` to be installed)::
 
@@ -90,6 +95,8 @@ For example, the ``get_branch`` method of the ``Repository`` class has this head
 
 This documents that the method calls the ``/repos/{owner}/{repo}/branches/{branch}`` API path using the ``GET`` verb.
 
+.. _get-openapi-path:
+
 A path can easily be extracted from the OpenAPI spec as follows (this requires ``jq`` to be installed)::
 
     ./scripts/get-openapi-path.sh "/repos/{owner}/{repo}/branches/{branch}" < api.github.com.2022-11-28.json
@@ -134,6 +141,26 @@ This outputs::
       }
     }
 
+The OpenAPI sync CLI
+--------------------
+
+The main script to leverage the OpenAPI spec is the ``scripts/openapi.py`` CLI.
+
+Run ``python scripts/openapi.py --help`` or ``python scripts/openapi.py COMMAND --help`` for help::
+
+    usage: openapi.py [-h] [--dry-run] [--exit-code] [--verbose] {fetch,index,suggest,apply,create} ...
+
+    Applies OpenAPI spec to PyGithub GithubObject classes
+
+    positional arguments:
+      {fetch,index,suggest,apply,create}
+
+    options:
+      -h, --help            show this help message and exit
+      --dry-run             Show prospect changes and do not modify any files (default: False)
+      --exit-code           Indicate changes via non-zeor exit code (default: False)
+      --verbose             Provide more information (default: False)
+
 Setup OpenAPI support
 ---------------------
 
@@ -167,7 +194,12 @@ This may produce the following changes::
          - /components/schemas/commit/properties/parents/items
          - /components/schemas/short-branch/properties/commit
 
+
+Once new schemas have been added to classes, these schemas should be applied next. Only applying the
+schemas will add new attributes to the class.
+
 .. _apply-schemas:
+
 Automatically apply schemas to PyGithub classes
 -----------------------------------------------
 
@@ -223,7 +255,7 @@ option ``--new-schemas create-class`` will creates all those classes.
 Create a PyGithub class from an OpenAPI schema
 ----------------------------------------------
 
-New PyGithub classes returned other PyGithub classes' attributes can be created by applying the schemas of the latter class
+New PyGithub classes returned by other PyGithub classes' attributes can be created by applying the schemas of the latter class
 via ``scripts/openapi.py apply --new-schemas create-class …``. See :ref:`apply-schemas` for details.
 
 New PyGithub classes returned by other PyGithub classes' methods can be created based on the Github REST API path

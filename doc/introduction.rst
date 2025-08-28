@@ -63,8 +63,7 @@ Contributing
 
 This project is community-driven. New PyGithub classes, methods and fixes are authored by the community, then reviewed and released by the project maintainers.
 
-See our `Contribution guide <http://github.com/PyGithub/PyGithub/tree/main/CONTRIBUTING.md>`__ to get started.
-Checkout our :doc:`development` guide for further details.
+See our :doc:`development` guide for further details.
 
 Sponsoring
 ----------
