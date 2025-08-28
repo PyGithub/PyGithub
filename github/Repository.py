@@ -4335,7 +4335,9 @@ class Repository(CompletableGithubObject):
         # assert secret_type in allowed_secret_types + [NotSet], \
         # "Secret_type can be one of the tokens listed on \
         # https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets"
-        assert resolution in allowed_resolutions + [NotSet], f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        assert resolution in allowed_resolutions + [
+            NotSet
+        ], f"Resolution can be one of {', '.join(allowed_resolutions)}"
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
         assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
         assert validity in allowed_validities + [NotSet], f"Validity can be one of {', '.join(allowed_validities)}"

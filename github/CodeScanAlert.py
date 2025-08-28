@@ -51,7 +51,7 @@ class CodeScanAlert(NonCompletableGithubObject):
 
     The OpenAPI schema can be found at
     - /components/schemas/code-scanning-alert
-  
+
     """
 
     def _initAttributes(self) -> None:
@@ -78,7 +78,7 @@ class CodeScanAlert(NonCompletableGithubObject):
     @property
     def created_at(self) -> datetime:
         return self._created_at.value
-    
+
     @property
     def dismissal_approved_by(self) -> github.NamedUser.NamedUser | None:
         return self._dismissal_approved_by.value
@@ -130,7 +130,7 @@ class CodeScanAlert(NonCompletableGithubObject):
     @property
     def tool(self) -> github.CodeScanTool.CodeScanTool:
         return self._tool.value
-    
+
     @property
     def updated_at(self) -> datetime:
         return self._updated_at.value

@@ -67,7 +67,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     @property
     def analysis_key(self) -> str:
         return self._analysis_key.value
-    
+
     @property
     def category(self) -> str:
         return self._category.value

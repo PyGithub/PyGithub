@@ -24,8 +24,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-import github.SecretScanAlert
 import github.PaginatedList
+import github.SecretScanAlert
 
 from . import Framework
 
@@ -43,7 +43,9 @@ class SecretScanAlert(Framework.TestCase):
         self.assertEqual(alert.created_at, datetime(2020, 11, 6, 18, 18, 30, tzinfo=timezone.utc))
         self.assertEqual(alert.url, "https://api.github.com/repos/matt-davis27/PyGithub/secret-scanning/alerts/1")
         self.assertEqual(alert.html_url, "https://github.com/matt-davis27/PyGithub/security/secret-scanning/1")
-        self.assertEqual(alert.locations_url, "https://api.github.com/repos/matt-davis27/PyGithub/secret-scanning/alerts/1/locations")
+        self.assertEqual(
+            alert.locations_url, "https://api.github.com/repos/matt-davis27/PyGithub/secret-scanning/alerts/1/locations"
+        )
         self.assertEqual(alert.state, "open")
         self.assertIsNone(alert.resolution)
         self.assertIsNone(alert.resolved_at)
@@ -76,13 +78,18 @@ class SecretScanAlert(Framework.TestCase):
         alert_list = [alert for alert in multiple_alerts]
         self.assertEqual(len(alert_list), 2)
 
-        test_alert = alert_list[-1]  # Alerts are returned in descending order, so the first alert is the most recent and the last alert is the oldest
+        test_alert = alert_list[
+            -1
+        ]  # Alerts are returned in descending order, so the first alert is the most recent and the last alert is the oldest
         # Everything below is the same as testAttributes. This is just to make sure the list works.
         self.assertEqual(test_alert.number, 1)
         self.assertEqual(test_alert.created_at, datetime(2020, 11, 6, 18, 18, 30, tzinfo=timezone.utc))
         self.assertEqual(test_alert.url, "https://api.github.com/repos/matt-davis27/PyGithub/secret-scanning/alerts/1")
         self.assertEqual(test_alert.html_url, "https://github.com/matt-davis27/PyGithub/security/secret-scanning/1")
-        self.assertEqual(test_alert.locations_url, "https://api.github.com/repos/matt-davis27/PyGithub/secret-scanning/alerts/1/locations")
+        self.assertEqual(
+            test_alert.locations_url,
+            "https://api.github.com/repos/matt-davis27/PyGithub/secret-scanning/alerts/1/locations",
+        )
         self.assertEqual(test_alert.state, "open")
         self.assertIsNone(test_alert.resolution)
         self.assertIsNone(test_alert.resolved_at)
@@ -110,11 +117,19 @@ class SecretScanAlert(Framework.TestCase):
 
     def testRepr(self):
         alert = self.repo.get_secret_scanning_alert(1)
-        self.assertEqual(repr(alert), 'SecretScanAlert(number=1)')
+        self.assertEqual(repr(alert), "SecretScanAlert(number=1)")
 
     def testGetAlertsWithAllArguments(self):
         multiple_alerts = self.repo.get_secret_scanning_alerts(
-            state="resolved", secret_type="adafruit_io_key", resolution="false_positive", sort="created", direction="asc", validity="inactive", is_publicly_leaked=False, is_multi_repo=False, hide_secret=True
+            state="resolved",
+            secret_type="adafruit_io_key",
+            resolution="false_positive",
+            sort="created",
+            direction="asc",
+            validity="inactive",
+            is_publicly_leaked=False,
+            is_multi_repo=False,
+            hide_secret=True,
         )
         alert_list = [alert for alert in multiple_alerts]
         self.assertEqual(len(alert_list), 1)

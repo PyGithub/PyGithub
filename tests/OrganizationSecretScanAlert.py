@@ -36,7 +36,9 @@ class OrganizationSecretScanAlert(Framework.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.org = self.g.get_organization("github")  # This is a placeholder organization that should always exist, switch this to your own test organization
+        self.org = self.g.get_organization(
+            "github"
+        )  # This is a placeholder organization that should always exist, switch this to your own test organization
 
     def testMultipleAlerts(self):
         multiple_alerts = self.org.get_secret_scanning_alerts()
@@ -50,7 +52,10 @@ class OrganizationSecretScanAlert(Framework.TestCase):
         self.assertEqual(test_alert.created_at, datetime(2020, 11, 6, 18, 18, 30, tzinfo=timezone.utc))
         self.assertEqual(test_alert.url, "https://api.github.com/repos/owner/repo/secret-scanning/alerts/1")
         self.assertEqual(test_alert.html_url, "https://github.com/owner/repo/security/secret-scanning/1")
-        self.assertEqual(test_alert.locations_url, "https://api.github.com/repos/owner/private-repo/secret-scanning/alerts/1/locations")
+        self.assertEqual(
+            test_alert.locations_url,
+            "https://api.github.com/repos/owner/private-repo/secret-scanning/alerts/1/locations",
+        )
         self.assertEqual(test_alert.state, "open")
         self.assertIsNone(test_alert.resolution)
         self.assertIsNone(test_alert.resolved_at)
@@ -75,9 +80,15 @@ class OrganizationSecretScanAlert(Framework.TestCase):
         self.assertEqual(test_alert.first_location_detected.start_column, 1)
         self.assertEqual(test_alert.first_location_detected.end_column, 64)
         self.assertEqual(test_alert.first_location_detected.blob_sha, "af5626b4a114abcb82d63db7c8082c3c4756e51b")
-        self.assertEqual(test_alert.first_location_detected.blob_url, "https://api.github.com/repos/octocat/hello-world/git/blobs/af5626b4a114abcb82d63db7c8082c3c4756e51b")
+        self.assertEqual(
+            test_alert.first_location_detected.blob_url,
+            "https://api.github.com/repos/octocat/hello-world/git/blobs/af5626b4a114abcb82d63db7c8082c3c4756e51b",
+        )
         self.assertEqual(test_alert.first_location_detected.commit_sha, "f14d7debf9775f957cf4f1e8176da0786431f72b")
-        self.assertEqual(test_alert.first_location_detected.commit_url, "https://api.github.com/repos/octocat/hello-world/git/commits/f14d7debf9775f957cf4f1e8176da0786431f72b")
+        self.assertEqual(
+            test_alert.first_location_detected.commit_url,
+            "https://api.github.com/repos/octocat/hello-world/git/commits/f14d7debf9775f957cf4f1e8176da0786431f72b",
+        )
         self.assertFalse(test_alert.has_more_locations)
         self.assertIsInstance(test_alert.repository, github.Repository.Repository)
         self.assertEqual(test_alert.repository.name, "Hello-World")
@@ -87,15 +98,22 @@ class OrganizationSecretScanAlert(Framework.TestCase):
         multiple_alerts = self.org.get_secret_scanning_alerts()
         alert_list = [alert for alert in multiple_alerts]
         test_alert = alert_list[-1]
-        self.assertEqual(repr(test_alert), 'OrganizationSecretScanAlert(number=1)')
+        self.assertEqual(repr(test_alert), "OrganizationSecretScanAlert(number=1)")
 
     def testGetAlertsWithAllArguments(self):
         multiple_alerts = self.org.get_secret_scanning_alerts(
-            state="resolved", secret_type="adafruit_io_key", resolution="false_positive", sort="created", direction="asc", validity="inactive", is_publicly_leaked=False, is_multi_repo=False, hide_secret=True
+            state="resolved",
+            secret_type="adafruit_io_key",
+            resolution="false_positive",
+            sort="created",
+            direction="asc",
+            validity="inactive",
+            is_publicly_leaked=False,
+            is_multi_repo=False,
+            hide_secret=True,
         )
         alert_list = [alert for alert in multiple_alerts]
         self.assertEqual(len(alert_list), 1)
 
         test_alert = alert_list[-1]
         self.assertIsNone(test_alert.secret)  # Because hide_secret is True
-     

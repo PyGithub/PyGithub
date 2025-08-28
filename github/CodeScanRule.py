@@ -71,11 +71,11 @@ class CodeScanRule(NonCompletableGithubObject):
     @property
     def description(self) -> str:
         return self._description.value
-    
+
     @property
     def full_description(self) -> str:
         return self._full_description.value
-    
+
     @property
     def help(self) -> str:
         return self._help.value
@@ -95,7 +95,7 @@ class CodeScanRule(NonCompletableGithubObject):
     @property
     def severity(self) -> str:
         return self._severity.value
-    
+
     @property
     def tags(self) -> list[str]:
         return self._tags.value

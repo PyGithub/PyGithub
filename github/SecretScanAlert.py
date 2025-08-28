@@ -129,7 +129,7 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def push_protection_bypass_request_reviewer_comment(self) -> str | None:
         return self._push_protection_bypass_request_reviewer_comment.value
-    
+
     @property
     def push_protection_bypassed(self) -> bool:
         return self._push_protection_bypassed.value

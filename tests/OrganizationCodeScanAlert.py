@@ -36,7 +36,9 @@ class OrganizationCodeScanAlert(Framework.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.org = self.g.get_organization("github")  # This is a placeholder organization that should always exist, switch this to your own test organization
+        self.org = self.g.get_organization(
+            "github"
+        )  # This is a placeholder organization that should always exist, switch this to your own test organization
 
     def testMultipleAlerts(self):
         multiple_alerts = self.org.get_codescan_alerts()
@@ -66,7 +68,9 @@ class OrganizationCodeScanAlert(Framework.TestCase):
         self.assertIsNone(test_alert.tool.guid)
         self.assertEqual(test_alert.tool.version, "2.4.0")
         self.assertEqual(test_alert.most_recent_instance.ref, "refs/heads/main")
-        self.assertEqual(test_alert.most_recent_instance.analysis_key, ".github/workflows/codeql-analysis.yml:CodeQL-Build")
+        self.assertEqual(
+            test_alert.most_recent_instance.analysis_key, ".github/workflows/codeql-analysis.yml:CodeQL-Build"
+        )
         self.assertEqual(test_alert.most_recent_instance.environment, "{}")
         self.assertEqual(test_alert.most_recent_instance.category, ".github/workflows/codeql-analysis.yml:CodeQL-Build")
         self.assertEqual(test_alert.most_recent_instance.state, "open")
@@ -78,7 +82,10 @@ class OrganizationCodeScanAlert(Framework.TestCase):
         self.assertEqual(test_alert.most_recent_instance.location.start_column, 7)
         self.assertEqual(test_alert.most_recent_instance.location.end_column, 18)
         self.assertEqual(test_alert.most_recent_instance.classifications[0], "test")
-        self.assertEqual(test_alert.instances_url, "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4/instances")
+        self.assertEqual(
+            test_alert.instances_url,
+            "https://api.github.com/repos/octocat/hello-world/code-scanning/alerts/4/instances",
+        )
         self.assertIsNone(test_alert.dismissal_approved_by)
         self.assertIsInstance(test_alert.repository, github.Repository.Repository)
         self.assertEqual(test_alert.repository.name, "Hello-World")
@@ -96,4 +103,3 @@ class OrganizationCodeScanAlert(Framework.TestCase):
         )
         # Note, this doesn't test "tool_guid" or "pr" arguments as they are not found in the test data
         self.assertEqual(len(list(alerts)), 2)  # Update this when more alerts are added
-     

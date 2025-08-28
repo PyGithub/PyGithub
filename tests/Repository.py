@@ -295,7 +295,10 @@ class Repository(Framework.TestCase):
             merge_commit_title="PR_TITLE",
             merge_commit_message="PR_BODY",
             web_commit_signoff_required=True,
-            security_and_analysis={"secret_scanning": {"status": "enabled"}, "dependabot_security_updates": {"status": "disabled"}},
+            security_and_analysis={
+                "secret_scanning": {"status": "enabled"},
+                "dependabot_security_updates": {"status": "disabled"},
+            },
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")

@@ -36,7 +36,9 @@ class OrganizationDependabotAlert(Framework.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.org = self.g.get_organization("github")  # This is a placeholder organization that should always exist, switch this to your own test organization
+        self.org = self.g.get_organization(
+            "github"
+        )  # This is a placeholder organization that should always exist, switch this to your own test organization
 
     def testMultipleAlerts(self):
         multiple_alerts = self.org.get_dependabot_alerts()
@@ -70,9 +72,7 @@ class OrganizationDependabotAlert(Framework.TestCase):
         self.assertEqual(
             test_alert.security_advisory.published_at, datetime(2021, 6, 1, 17, 38, 0, tzinfo=timezone.utc)
         )
-        self.assertEqual(
-            test_alert.security_advisory.updated_at, datetime(2021, 8, 12, 23, 6, 0, tzinfo=timezone.utc)
-        )
+        self.assertEqual(test_alert.security_advisory.updated_at, datetime(2021, 8, 12, 23, 6, 0, tzinfo=timezone.utc))
         self.assertIsNone(test_alert.security_advisory.withdrawn_at)
         self.assertEqual(test_alert.security_advisory.vulnerabilities[0].package.ecosystem, "pip")
         self.assertEqual(test_alert.security_advisory.vulnerabilities[0].package.name, "ansible")
@@ -106,8 +106,5 @@ class OrganizationDependabotAlert(Framework.TestCase):
         self.assertEqual(repr(test_alert), 'OrganizationDependabotAlert(number=1, ghsa_id="GHSA-8f4m-hccc-8qph")')
 
     def testGetAlertsWithAllArguments(self):
-        alerts = self.org.get_dependabot_alerts(
-            "open", "medium", "pip", "ansible", "runtime", "created", "asc"
-        )
+        alerts = self.org.get_dependabot_alerts("open", "medium", "pip", "ansible", "runtime", "created", "asc")
         self.assertEqual(len(list(alerts)), 1)  # Update this when more alerts are added
-     
