@@ -5,7 +5,13 @@ Adding classes, attributes or methods
 -------------------------------------
 
 Github provides an `OpenAPI specification for its v3 REST API <https://github.com/github/rest-api-description/>`__.
-This can be used to semi-automate the creation and maintenance of PyGithub classes.
+This can be used to semi-automate the creation and maintenance of PyGithub classes. This allows for :ref:`adding
+attributes <apply-schemas>` and :ref:`adding methods <create-method>` to PyGithub classes, or
+:ref:`create entire PyGithub classes <create-class>`, including preliminary tests.
+
+The created classes and tests serve as a foundation to bootstrap the implementation phase for new functionality.
+It automates conventions and code style of this code base. It nevertheless requires the developer to review and refactor
+the generated code to achieve working implementation.
 
 OpenAPI annotations
 -------------------
@@ -208,11 +214,12 @@ schemas will add new attributes to the class.
 
 .. _apply-schemas:
 
-Automatically apply schemas to PyGithub classes
------------------------------------------------
+Automatically add attributes to PyGithub classes
+------------------------------------------------
 
 After new schemas have been added to PyGithub classes, or a new OpenAPI spec has been downloaded,
-the schemas can be applied to PyGithub classes as follows.
+the schemas can be applied to PyGithub classes as follows. Applying a schema to a PyGithub class
+adds all missing attributes to the PyGithub class as defined by the schema.
 
 First update the index, then apply the schemas (here to class ``Commit`` only)::
 
