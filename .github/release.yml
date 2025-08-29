@@ -14,6 +14,6 @@ changelog:
     - title: Dependencies
       labels: ['dependencies']
     - title: Maintenance
-      labels: ['ci', 'documentation', 'maintenance', 'OpenAPI']
+      labels: ['ci', 'documentation', 'maintenance', 'OpenAPI', 'github_actions']
     - title: Others
       labels: ['*']
