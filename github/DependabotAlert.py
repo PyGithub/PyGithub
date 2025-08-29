@@ -52,6 +52,7 @@ class DependabotAlert(NonCompletableGithubObject):
     https://docs.github.com/en/rest/dependabot/alerts
 
     The OpenAPI schema can be found at
+
     - /components/schemas/dependabot-alert
 
     """

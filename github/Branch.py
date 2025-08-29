@@ -88,6 +88,7 @@ class Branch(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#branches
 
     The OpenAPI schema can be found at
+
     - /components/schemas/branch-short
     - /components/schemas/branch-with-protection
     - /components/schemas/short-branch

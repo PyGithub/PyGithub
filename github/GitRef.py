@@ -59,6 +59,7 @@ class GitRef(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/git#references
 
     The OpenAPI schema can be found at
+
     - /components/schemas/git-ref
 
     """

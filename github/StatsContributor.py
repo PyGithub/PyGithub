@@ -58,6 +58,7 @@ class StatsContributor(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity
 
     The OpenAPI schema can be found at
+
     - /components/schemas/contributor-activity
 
     """
@@ -67,6 +68,7 @@ class StatsContributor(NonCompletableGithubObject):
         This class represents weekly statistics of a contributor.
 
         The OpenAPI schema can be found at
+
         - /components/schemas/contributor-activity/properties/weeks/items
 
         """

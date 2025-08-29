@@ -119,6 +119,7 @@ class Issue(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/issues
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue
     - /components/schemas/nullable-issue
 
@@ -793,6 +794,7 @@ class IssueSearchResult(Issue):
     https://docs.github.com/en/rest/reference/search#search-issues-and-pull-requests
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-search-result-item
 
     """

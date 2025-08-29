@@ -65,6 +65,7 @@ class TimingData(NamedTuple):
     https://docs.github.com/en/rest/actions/workflows#get-workflow-usage
 
     The OpenAPI schema can be found at
+
     - /components/schemas/workflow-run-usage
 
     """
@@ -81,6 +82,7 @@ class WorkflowRun(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/actions#workflow-runs
 
     The OpenAPI schema can be found at
+
     - /components/schemas/artifact/properties/workflow_run
     - /components/schemas/workflow-run
 

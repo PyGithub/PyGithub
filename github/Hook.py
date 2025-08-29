@@ -58,6 +58,7 @@ class Hook(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#webhooks
 
     The OpenAPI schema can be found at
+
     - /components/schemas/hook
 
     """

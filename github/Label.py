@@ -58,6 +58,7 @@ class Label(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/issues#labels
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-event-label
     - /components/schemas/issue-search-result-item/properties/labels/items
     - /components/schemas/issue/properties/labels/items/oneOf/1

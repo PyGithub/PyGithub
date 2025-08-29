@@ -57,6 +57,7 @@ class License(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/licenses
 
     The OpenAPI schema can be found at
+
     - /components/schemas/license-simple
     - /components/schemas/minimal-repository/properties/license
     - /components/schemas/nullable-license-simple

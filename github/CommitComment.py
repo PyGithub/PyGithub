@@ -68,6 +68,7 @@ class CommitComment(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#comments
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit-comment
 
     """

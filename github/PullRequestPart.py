@@ -56,6 +56,7 @@ class PullRequestPart(NonCompletableGithubObject):
     This class represents PullRequestParts.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/pull-request-minimal/properties/base
     - /components/schemas/pull-request-minimal/properties/head
     - /components/schemas/pull-request-simple/properties/base

@@ -50,6 +50,7 @@ class CheckRunOutput(NonCompletableGithubObject):
     This class represents the output of check run.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/check-run/properties/output
 
     """

@@ -34,6 +34,7 @@ class IssueDependenciesSummary(NonCompletableGithubObject):
     https://docs.github.com/en/rest/issues/issues
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-dependencies-summary
 
     """

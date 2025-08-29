@@ -132,7 +132,7 @@ class PaginatedListBase(Generic[T]):
 class PaginatedList(PaginatedListBase[T]):
     """
     This class abstracts the `pagination of the REST API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_
-    and the GraphQl API <https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api>`_.
+    and the `GraphQl API <https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api>`_.
 
     You can simply enumerate through instances of this class::
 
@@ -150,7 +150,7 @@ class PaginatedList(PaginatedListBase[T]):
 
     If you want to iterate in reversed order, just do::
 
-        for repo in user.get_repos().reversed:
+        for repo in reversed(user.get_repos()):
             print(repo.name)
 
     And if you really need it, you can explicitly access a specific page::

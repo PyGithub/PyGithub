@@ -61,6 +61,7 @@ class RepositoryKey(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#deploy-keys
 
     The OpenAPI schema can be found at
+
     - /components/schemas/deploy-key
 
     """

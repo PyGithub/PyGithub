@@ -52,6 +52,7 @@ class GitBlob(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/git#blobs
 
     The OpenAPI schema can be found at
+
     - /components/schemas/short-blob
 
     """

@@ -43,6 +43,7 @@ class CopilotSeat(NonCompletableGithubObject):
     https://docs.github.com/en/rest/copilot/copilot-user-management
 
     The OpenAPI schema can be found at
+
     - /components/schemas/copilot-seat-details
 
     """

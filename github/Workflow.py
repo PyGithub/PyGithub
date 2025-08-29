@@ -66,6 +66,7 @@ class Workflow(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/actions#workflows
 
     The OpenAPI schema can be found at
+
     - /components/schemas/workflow
 
     """

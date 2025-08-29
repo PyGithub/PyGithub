@@ -45,6 +45,7 @@ class CommitStats(NonCompletableGithubObject):
     This class represents CommitStats.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit/properties/stats
     - /components/schemas/gist-history/properties/change_status
 

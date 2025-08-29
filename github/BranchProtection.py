@@ -58,6 +58,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-branch-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/branch-protection
     - /components/schemas/protected-branch
 

@@ -59,6 +59,7 @@ class Tag(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#list-repository-tags
 
     The OpenAPI schema can be found at
+
     - /components/schemas/tag
 
     """

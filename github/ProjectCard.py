@@ -72,6 +72,7 @@ class ProjectCard(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/projects#cards
 
     The OpenAPI schema can be found at
+
     - /components/schemas/project-card
 
     """
