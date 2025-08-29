@@ -104,6 +104,7 @@ from datetime import date, datetime, timezone
 from unittest import mock
 
 import github
+import github.Repository
 
 from . import Framework
 
@@ -267,6 +268,15 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.watchers_count, 7122)
         self.assertEqual(self.repo.web_commit_signoff_required, False)
         self.assertEqual(self.repo.custom_properties, {})
+
+    def testAsUrlParam(self):
+        self.assertEqual(github.Repository.Repository.as_url_param(self.repo), "PyGithub/PyGithub")
+        self.assertEqual(github.Repository.Repository.as_url_param(self.repo._identity), "PyGithub/PyGithub")
+
+        for repo in ["repo", "repo/name/slash"]:
+            with self.assertRaises(AssertionError) as raisedexp:
+                github.Repository.Repository.as_url_param(repo)
+            self.assertEqual(raisedexp.exception.args, (repo,))
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
