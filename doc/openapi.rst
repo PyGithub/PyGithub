@@ -1,8 +1,8 @@
-Github OpenAPI spec
-===================
+Github OpenAPI
+==============
 
-Adding classes, attributes or methods
--------------------------------------
+Adding classes, attributes and methods
+--------------------------------------
 
 Github provides an `OpenAPI specification for its v3 REST API <https://github.com/github/rest-api-description/>`__.
 This can be used to semi-automate the creation and maintenance of PyGithub classes. This allows for :ref:`adding
