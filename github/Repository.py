@@ -1261,6 +1261,17 @@ class Repository(CompletableGithubObject):
         self._completeIfNotSet(self._web_commit_signoff_required)
         return self._web_commit_signoff_required.value
 
+    @staticmethod
+    def as_url_param(repo: str | Repository) -> str:
+        assert isinstance(repo, (str, github.Repository.Repository))
+        if isinstance(repo, github.Repository.Repository):
+            return repo._identity  # type: ignore
+        else:
+            # we expect exactly one slash in the repo name
+            assert len(repo.split("/")) == 2, repo
+            # do not quote the slash as this is expected to become part of URL path
+            return urllib.parse.quote(repo, safe="/")
+
     def add_to_collaborators(self, collaborator: str | NamedUser, permission: Opt[str] = NotSet) -> Invitation | None:
         """
         :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
