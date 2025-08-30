@@ -27,7 +27,7 @@ import difflib
 import json
 import multiprocessing
 import sys
-from typing import Sequence
+from collections.abc import Sequence
 
 import libcst as cst
 
