@@ -138,6 +138,7 @@ class GithubIntegration:
                 "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm are deprecated, "
                 "please use auth=github.Auth.AppAuth(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             if jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
                 auth = AppAuth(

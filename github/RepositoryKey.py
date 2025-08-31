@@ -68,6 +68,7 @@ class RepositoryKey(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._added_by: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._enabled: Attribute[bool] = NotSet
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
         self._last_used: Attribute[datetime] = NotSet
@@ -88,6 +89,11 @@ class RepositoryKey(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def enabled(self) -> bool:
+        self._completeIfNotSet(self._enabled)
+        return self._enabled.value
 
     @property
     def id(self) -> int:
@@ -135,6 +141,8 @@ class RepositoryKey(CompletableGithubObject):
             self._added_by = self._makeStringAttribute(attributes["added_by"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "enabled" in attributes:  # pragma no branch
+            self._enabled = self._makeBoolAttribute(attributes["enabled"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch

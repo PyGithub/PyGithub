@@ -30,6 +30,7 @@ update_assertion() {
     return
   fi
 
+  test_file="tests/$(basename "$test_file")"
   line_number="${line_number_line/$test_file:/}"
   line_number="${line_number/%: */}"
   echo "$line_number"
