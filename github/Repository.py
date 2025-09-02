@@ -174,8 +174,6 @@ from collections.abc import Iterable
 from datetime import date, datetime, timezone
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability
 import github.Artifact
@@ -2924,18 +2922,6 @@ class Repository(CompletableGithubObject):
             "commit": github.Commit.Commit(self._requester, headers, data["commit"], completed=True),
             "content": NotSet,
         }
-
-    @deprecated(
-        """
-        Repository.get_dir_contents() is deprecated, use
-        Repository.get_contents() instead.
-        """
-    )
-    def get_dir_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile]:
-        """
-        :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
-        """
-        return self.get_contents(path, ref=ref)  # type: ignore
 
     def get_contributors(self, anon: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """

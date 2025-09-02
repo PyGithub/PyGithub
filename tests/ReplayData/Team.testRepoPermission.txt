@@ -13,7 +13,7 @@ https
 PUT
 api.github.com
 None
-/organizations/1234567/team/12345678/repos/BeaverSoftware/FatherBeaver
+/orgs/BeaverSoftware/teams/team-slug/repos/BeaverSoftware/FatherBeaver
 {"Authorization": "token private_token_removed", "Content-Type": "application/json", "User-Agent": "PyGithub/Python"}
 {"permission": "admin"}
 204

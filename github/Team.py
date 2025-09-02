@@ -69,8 +69,6 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.NamedUser
 import github.Organization
 import github.PaginatedList
@@ -261,17 +259,6 @@ class Team(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    @deprecated("Use add_membership instead")
-    def add_to_members(self, member: NamedUser) -> None:
-        """
-        This API call is deprecated. Use `add_membership` instead.
-        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
-
-        :calls: `PUT /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
-        """
-        assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/members/{member._identity}")
-
     def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
         """
         :calls: `PUT /teams/{id}/memberships/{user} <https://docs.github.com/en/rest/reference/teams>`_
@@ -326,26 +313,6 @@ class Team(CompletableGithubObject):
             return github.Permissions.Permissions(self._requester, headers, data["permissions"])
         except UnknownObjectException:
             return None
-
-    @deprecated(
-        """
-        Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
-        """
-    )
-    def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
-        """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
-        :param repo: :class:`github.Repository.Repository`
-        :param permission: string
-        :rtype: None
-        """
-        assert isinstance(repo, (str, github.Repository.Repository)), repo
-        put_parameters = {
-            "permission": permission,
-        }
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}", input=put_parameters
-        )
 
     def update_team_repository(self, repo: str | Repository, permission: str) -> bool:
         """
@@ -484,17 +451,6 @@ class Team(CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/memberships/{member._identity}")
-
-    @deprecated("Use remove_membership instead")
-    def remove_from_members(self, member: NamedUser) -> None:
-        """
-        This API call is deprecated. Use `remove_membership` instead:
-        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
-
-        :calls: `DELETE /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
-        """
-        assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/members/{member._identity}")
 
     def remove_from_repos(self, repo: str | Repository) -> None:
         """
