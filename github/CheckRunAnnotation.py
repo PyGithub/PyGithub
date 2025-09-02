@@ -50,6 +50,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
         only GitHub Apps can use the Checks API". Because of this you may see
         empty ``.title`` attribute. See
         https://github.com/PyGithub/PyGithub/issues/3227
+
     """
 
     def _initAttributes(self) -> None:

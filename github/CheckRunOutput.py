@@ -59,6 +59,7 @@ class CheckRunOutput(NonCompletableGithubObject):
         only GitHub Apps can use the Checks API". Because of this you may see
         empty ``.summary``, ``.text`` or ``.title`` attributes. See
         https://github.com/PyGithub/PyGithub/issues/3227
+
     """
 
     def _initAttributes(self) -> None:
