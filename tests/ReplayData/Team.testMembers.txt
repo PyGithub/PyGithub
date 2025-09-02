@@ -35,9 +35,9 @@ https
 PUT
 api.github.com
 None
-/organizations/1234567/team/12345678/members/jacquev6
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-None
+/organizations/1234567/team/12345678/memberships/jacquev6
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{"role": "member"}
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4971'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sat, 26 May 2012 21:09:55 GMT')]
 
@@ -68,7 +68,7 @@ https
 DELETE
 api.github.com
 None
-/organizations/1234567/team/12345678/members/jacquev6
+/organizations/1234567/team/12345678/memberships/jacquev6
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
