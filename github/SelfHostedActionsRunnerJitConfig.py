@@ -36,6 +36,7 @@ class SelfHostedActionsRunnerJitConfig(NonCompletableGithubObject):
     https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-configuration-for-a-just-in-time-runner-for-a-repository
 
     The OpenAPI schema can be found at
+
     - /components/responses/actions_runner_jitconfig/content/"application/json"/schema
 
     """

@@ -81,6 +81,7 @@ class Installation(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/apps#installations
 
     The OpenAPI schema can be found at
+
     - /components/schemas/installation
 
     """

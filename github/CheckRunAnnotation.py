@@ -41,7 +41,16 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     The reference can be found here: https://docs.github.com/en/rest/reference/checks#list-check-run-annotations
 
     The OpenAPI schema can be found at
+
     - /components/schemas/check-annotation
+
+    .. warning::
+
+        As of Feb 2025 according to GitHub Support
+        "The Checks API does not support Fine-Grained PATs or classic PATs,
+        only GitHub Apps can use the Checks API". Because of this you may see
+        empty ``.title`` attribute. See
+        https://github.com/PyGithub/PyGithub/issues/3227
 
     """
 

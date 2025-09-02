@@ -63,6 +63,7 @@ class Notification(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/activity#notifications
 
     The OpenAPI schema can be found at
+
     - /components/schemas/thread
 
     """

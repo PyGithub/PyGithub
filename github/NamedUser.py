@@ -91,6 +91,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     https://docs.github.com/en/rest/reference/users#get-a-user
 
     The OpenAPI schema can be found at
+
     - /components/schemas/actor
     - /components/schemas/collaborator
     - /components/schemas/contributor
@@ -693,6 +694,7 @@ class NamedUserSearchResult(NamedUser):
     https://docs.github.com/en/rest/reference/search#search-users
 
     The OpenAPI schema can be found at
+
     - /components/schemas/user-search-result-item
 
     """
@@ -724,6 +726,7 @@ class OrganizationInvitation(NamedUser):
     https://docs.github.com/en/rest/orgs/members
 
     The OpenAPI schema can be found at
+
     - /components/schemas/organization-invitation
 
     """

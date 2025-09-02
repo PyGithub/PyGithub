@@ -102,7 +102,7 @@ jobs:
           python head/scripts/openapi.py --verbose index --check-verbs base/github openapi.base.index | tee verbs.base.txt
           echo "::endgroup::"
 
-          if ! (diff verbs.base.txt verbs.head.txt > diff.txt)
+          if ! (diff <(grep -v -E -e "^Index(ing|ed) " verbs.base.txt) <(grep -v -E -e "^Index(ing|ed) " verbs.head.txt) > diff.txt)
           then
             echo ""
             echo "Difference:"
@@ -156,7 +156,7 @@ jobs:
           python head/scripts/openapi.py --verbose suggest schemas openapi.json openapi.base.index | tee schemas.base.txt
           echo "::endgroup::"
 
-          if ! (diff schemas.base.txt schemas.head.txt > diff.txt)
+          if ! (diff <(grep -v -E -e "^Index(ing|ed) " schemas.base.txt) <(grep -v -E -e "^Index(ing|ed) " schemas.head.txt) > diff.txt)
           then
             echo ""
             echo "Difference:"

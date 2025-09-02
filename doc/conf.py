@@ -72,7 +72,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "PyGithub"
-copyright = "%d, Vincent Jacques" % datetime.date.today().year
+copyright = "%d, Vincent Jacques, Liuyang Wan, Steve Kowalik, Enrico Minack" % datetime.date.today().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

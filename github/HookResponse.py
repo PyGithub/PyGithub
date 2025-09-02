@@ -48,6 +48,7 @@ class HookResponse(NonCompletableGithubObject):
     This class represents HookResponses.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/hook-response
 
     """

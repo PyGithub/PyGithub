@@ -44,6 +44,7 @@ class RateLimitOverview(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/rate-limit
 
     The OpenAPI schema can be found at
+
     - /components/schemas/rate-limit-overview
 
     """

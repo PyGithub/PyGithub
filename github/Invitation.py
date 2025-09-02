@@ -64,6 +64,7 @@ class Invitation(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#invitations
 
     The OpenAPI schema can be found at
+
     - /components/schemas/repository-invitation
 
     """

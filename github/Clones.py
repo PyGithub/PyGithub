@@ -57,6 +57,7 @@ class Clones(NonCompletableGithubObject):
     https://docs.github.com/en/rest/metrics/traffic#get-repository-clones
 
     The OpenAPI schema can be found at
+
     - /components/schemas/clone-traffic
 
     """
