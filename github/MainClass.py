@@ -98,7 +98,6 @@ from __future__ import annotations
 
 import pickle
 import urllib.parse
-import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
 
@@ -122,7 +121,6 @@ import github.License
 import github.NamedUser
 import github.Topic
 from github import Consts
-from github.GithubIntegration import GithubIntegration
 from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined
 from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
@@ -132,7 +130,6 @@ from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 if TYPE_CHECKING:
-    from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Commit import CommitSearchResult
@@ -167,17 +164,11 @@ class Github:
 
     default_retry = GithubRetry()
 
-    # keep non-deprecated arguments in-sync with Requester
-    # v3: remove login_or_token, password, jwt and app_auth
-    # v3: move auth to the front of arguments
-    # v3: add * before first argument so all arguments must be named,
-    #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
+    # keep arguments in-sync with Requester
     def __init__(
         self,
-        login_or_token: str | None = None,
-        password: str | None = None,
-        jwt: str | None = None,
-        app_auth: AppAuthentication | None = None,
+        auth: github.Auth.Auth | None = None,
+        *,
         base_url: str = Consts.DEFAULT_BASE_URL,
         timeout: int = Consts.DEFAULT_TIMEOUT,
         user_agent: str = Consts.DEFAULT_USER_AGENT,
@@ -187,15 +178,11 @@ class Github:
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
-        auth: github.Auth.Auth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
     ) -> None:
         """
-        :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
-        :param password: string deprecated, use auth=github.Auth.Login(...) instead
-        :param jwt: string deprecated, use auth=github.Auth.AppAuth(...) or auth=github.Auth.AppAuthToken(...) instead
-        :param app_auth: github.AppAuthentication deprecated, use auth=github.Auth.AppInstallationAuth(...) instead
+        :param auth: authentication method
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
@@ -207,14 +194,11 @@ class Github:
         :param pool_size: int
         :param seconds_between_requests: float
         :param seconds_between_writes: float
-        :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
         """
 
-        assert login_or_token is None or isinstance(login_or_token, str), login_or_token
-        assert password is None or isinstance(password, str), password
-        assert jwt is None or isinstance(jwt, str), jwt
+        assert auth is None or isinstance(auth, github.Auth.Auth), auth
         assert isinstance(base_url, str), base_url
         assert isinstance(timeout, int), timeout
         assert user_agent is None or isinstance(user_agent, str), user_agent
@@ -224,40 +208,7 @@ class Github:
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert seconds_between_requests is None or seconds_between_requests >= 0
         assert seconds_between_writes is None or seconds_between_writes >= 0
-        assert auth is None or isinstance(auth, github.Auth.Auth), auth
         assert isinstance(lazy, bool), lazy
-
-        if password is not None:
-            warnings.warn(
-                "Arguments login_or_token and password are deprecated, please use "
-                "auth=github.Auth.Login(...) instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            auth = github.Auth.Login(login_or_token, password)  # type: ignore
-        elif login_or_token is not None:
-            warnings.warn(
-                "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            auth = github.Auth.Token(login_or_token)
-        elif jwt is not None:
-            warnings.warn(
-                "Argument jwt is deprecated, please use "
-                "auth=github.Auth.AppAuth(...) or "
-                "auth=github.Auth.AppAuthToken(...) instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            auth = github.Auth.AppAuthToken(jwt)
-        elif app_auth is not None:
-            warnings.warn(
-                "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            auth = app_auth
 
         self.__requester = Requester(
             auth,
@@ -1045,23 +996,10 @@ class Github:
             attributes={"client_id": client_id, "client_secret": client_secret},
         )
 
-    def get_app(self, slug: Opt[str] = NotSet) -> GithubApp:
+    def get_app(self, slug: str) -> GithubApp:
         """
         :calls: `GET /apps/{slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
-
-        if slug is NotSet:
-            # with no slug given, calling /app returns the authenticated app,
-            # including the actual /apps/{slug}
-            warnings.warn(
-                "Argument slug is mandatory, calling this method without the slug argument is deprecated, please use "
-                "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            return GithubIntegration(**self.__requester.kwargs).get_app()
-        else:
-            assert isinstance(slug, str), slug
-            # with a slug given, we can lazily load the GithubApp
-            slug = urllib.parse.quote(slug)
-            return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
+        assert isinstance(slug, str), slug
+        slug = urllib.parse.quote(slug)
+        return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)

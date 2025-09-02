@@ -127,18 +127,8 @@ class GithubApp(Framework.TestCase):
 
     def testGetAuthenticatedApp(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
-        g = github.Github(auth=auth)
-
-        with self.assertWarns(DeprecationWarning) as warning:
-            # httpretty has some deprecation warnings in Python 3.12
-            with self.ignoreWarning(category=DeprecationWarning, module="httpretty"):
-                app = g.get_app()
-
-            self.assertWarning(
-                warning,
-                "Argument slug is mandatory, calling this method without the slug argument is deprecated, "
-                "please use github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
-            )
+        gi = github.GithubIntegration(auth=auth)
+        app = gi.get_app()
 
         self.assertEqual(app.created_at, datetime(2020, 8, 1, 17, 23, 46, tzinfo=timezone.utc))
         self.assertEqual(app.description, "Sample App to test PyGithub")
