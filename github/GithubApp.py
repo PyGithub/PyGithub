@@ -211,7 +211,7 @@ class GithubApp(CompletableGithubObject):
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeUnionClassAttributeFromTypeKey(
                 "type",
-                "Enterprise",
+                "User",
                 attributes["owner"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
