@@ -62,8 +62,11 @@
 from __future__ import annotations
 
 import urllib.parse
+import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
+
+from typing_extensions import deprecated
 
 import github.GithubApp
 import github.GithubObject
@@ -179,6 +182,7 @@ class Issue(CompletableGithubObject):
         return self._active_lock_reason.value
 
     @property
+    @deprecated("Use assignees instead")
     def assignee(self) -> NamedUser | None:
         self._completeIfNotSet(self._assignee)
         return self._assignee.value
@@ -421,6 +425,7 @@ class Issue(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/labels")
 
+    # breaking change: remove deprecated assignee
     def edit(
         self,
         title: Opt[str] = NotSet,
@@ -445,6 +450,19 @@ class Issue(CompletableGithubObject):
         assert milestone is None or is_optional(milestone, github.Milestone.Milestone), milestone
         assert is_optional_list(labels, str), labels
 
+        if assignee is None or is_defined(assignee):
+            warnings.warn(
+                "Argument assignee is deprecated, please use assignees=[assignee] instead",
+                category=DeprecationWarning,
+            )
+            if is_undefined(assignees):
+                assignees = [assignee] if assignee is not None else []  # type: ignore
+        if is_defined(assignees):
+            assignees = [
+                element._identity if isinstance(element, github.NamedUser.NamedUser) else element
+                for element in assignees
+            ]
+
         post_parameters = NotSet.remove_unset_items(
             {
                 "title": title,
@@ -452,20 +470,12 @@ class Issue(CompletableGithubObject):
                 "state": state,
                 "state_reason": state_reason,
                 "labels": labels,
-                "assignee": assignee._identity
-                if isinstance(assignee, github.NamedUser.NamedUser)
-                else (assignee or ""),
+                "assignees": assignees,
                 "milestone": milestone._identity
                 if isinstance(milestone, github.Milestone.Milestone)
                 else (milestone or ""),
             }
         )
-
-        if is_defined(assignees):
-            post_parameters["assignees"] = [
-                element._identity if isinstance(element, github.NamedUser.NamedUser) else element
-                for element in assignees
-            ]
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
