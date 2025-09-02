@@ -2,6 +2,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2025 Changyong Um <e7217@naver.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

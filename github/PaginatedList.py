@@ -32,6 +32,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
+# Copyright 2025 Sam <35731946+sam93210@users.noreply.github.com>              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
