@@ -35,11 +35,9 @@
 from __future__ import annotations
 
 import urllib.parse
-import warnings
 from typing import Any
 
 import urllib3
-from typing_extensions import deprecated
 from urllib3 import Retry
 
 import github
@@ -58,22 +56,16 @@ class GithubIntegration:
     Main class to obtain tokens for a GitHub integration.
     """
 
-    # keep non-deprecated arguments in-sync with Requester
-    # v3: remove integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm
-    # v3: move auth to the front of arguments
-    # v3: move * before first argument so all arguments must be named,
-    #     allows to reorder / add new arguments / remove deprecated arguments without breaking user code
-    #     added here to force named parameters because new parameters have been added
+    # keep arguments in-sync with Requester
     auth: AppAuth
     base_url: str
     __requester: Requester
 
     def __init__(
         self,
-        integration_id: int | str | None = None,
-        private_key: str | None = None,
-        base_url: str = Consts.DEFAULT_BASE_URL,
+        auth: AppAuth,
         *,
+        base_url: str = Consts.DEFAULT_BASE_URL,
         timeout: int = Consts.DEFAULT_TIMEOUT,
         user_agent: str = Consts.DEFAULT_USER_AGENT,
         per_page: int = Consts.DEFAULT_PER_PAGE,
@@ -82,16 +74,11 @@ class GithubIntegration:
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
-        jwt_expiry: int = Consts.DEFAULT_JWT_EXPIRY,
-        jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
-        jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
-        auth: AppAuth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
     ) -> None:
         """
-        :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
-        :param private_key: string deprecated, use auth=github.Auth.AppAuth(...) instead
+        :param auth: authentication method
         :param base_url: string
         :param timeout: integer
         :param user_agent: string
@@ -101,17 +88,12 @@ class GithubIntegration:
         :param pool_size: int
         :param seconds_between_requests: float
         :param seconds_between_writes: float
-        :param jwt_expiry: int deprecated, use auth=github.Auth.AppAuth(...) instead
-        :param jwt_issued_at: int deprecated, use auth=github.Auth.AppAuth(...) instead
-        :param jwt_algorithm: string deprecated, use auth=github.Auth.AppAuth(...) instead
-        :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
         """
-        if integration_id is not None:
-            assert isinstance(integration_id, (int, str)), integration_id
-        if private_key is not None:
-            assert isinstance(private_key, str), "supplied private key should be a string"
+        assert isinstance(
+            auth, AppAuth
+        ), f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
         assert isinstance(base_url, str), base_url
         assert isinstance(timeout, int), timeout
         assert user_agent is None or isinstance(user_agent, str), user_agent
@@ -121,47 +103,10 @@ class GithubIntegration:
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert seconds_between_requests is None or seconds_between_requests >= 0
         assert seconds_between_writes is None or seconds_between_writes >= 0
-        assert isinstance(jwt_expiry, int), jwt_expiry
-        assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
-        assert isinstance(jwt_issued_at, int)
         assert isinstance(lazy, bool), lazy
 
-        self.base_url = base_url
-
-        if (
-            integration_id is not None
-            or private_key is not None
-            or jwt_expiry != Consts.DEFAULT_JWT_EXPIRY
-            or jwt_issued_at != Consts.DEFAULT_JWT_ISSUED_AT
-            or jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM
-        ):
-            warnings.warn(
-                "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm are deprecated, "
-                "please use auth=github.Auth.AppAuth(...) instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            if jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
-                auth = AppAuth(
-                    integration_id,  # type: ignore
-                    private_key=None,  # type: ignore
-                    sign_func=AppAuth.create_jwt_sign(private_key, jwt_algorithm),  # type: ignore
-                    jwt_expiry=jwt_expiry,
-                    jwt_issued_at=jwt_issued_at,
-                )
-            else:
-                auth = AppAuth(
-                    integration_id,  # type: ignore
-                    private_key,  # type: ignore
-                    jwt_expiry=jwt_expiry,
-                    jwt_issued_at=jwt_issued_at,
-                )
-
-        assert isinstance(
-            auth, AppAuth
-        ), f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
-
         self.auth = auth
+        self.base_url = base_url
 
         self.__requester = Requester(
             auth=auth,
@@ -244,16 +189,6 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated(
-        "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
-    )
-    def create_jwt(self, expiration: int | None = None) -> str:
-        """
-        Create a signed JWT
-        https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
-        """
-        return self.auth.create_jwt(expiration)
-
     def get_access_token(
         self, installation_id: int, permissions: dict[str, str] | None = None
     ) -> InstallationAuthorization:
@@ -279,21 +214,6 @@ class GithubIntegration:
             headers=headers,
             attributes=response,
         )
-
-    @deprecated("Use get_repo_installation")
-    def get_installation(self, owner: str, repo: str) -> Installation:
-        """
-        Deprecated by get_repo_installation.
-
-        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
-        installation-for-the-authenticated-app>`
-        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
-        installation-for-the-authenticated-app>`
-
-        """
-        owner = urllib.parse.quote(owner)
-        repo = urllib.parse.quote(repo)
-        return self._get_installed_app(url=f"/repos/{owner}/{repo}/installation")
 
     def get_installations(self) -> PaginatedList[Installation]:
         """

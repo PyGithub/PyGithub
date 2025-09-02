@@ -80,19 +80,6 @@ class GithubIntegration(Framework.BasicTestCase):
         self.repo_installation_id = 30614431
         self.user_installation_id = 30614431
 
-    def testDeprecatedAppAuth(self):
-        # Replay data copied from testGetInstallations to test authentication only
-        with self.assertWarns(DeprecationWarning) as warning:
-            github_integration = github.GithubIntegration(integration_id=APP_ID, private_key=PRIVATE_KEY)
-        installations = github_integration.get_installations()
-        self.assertEqual(len(list(installations)), 2)
-        self.assertWarning(
-            warning,
-            "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and "
-            "jwt_algorithm are deprecated, please use auth=github.Auth.AppAuth(...) "
-            "instead",
-        )
-
     def testRequiredAppAuth(self):
         # GithubIntegration requires AppAuth authentication.
         for auth in [self.oauth_token, self.jwt, Login("login", "password")]:
@@ -104,7 +91,6 @@ class GithubIntegration(Framework.BasicTestCase):
             )
 
     def testAppAuth(self):
-        # Replay data copied from testDeprecatedAppAuth to test parity
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         github_integration = github.GithubIntegration(auth=auth)
         installations = github_integration.get_installations()

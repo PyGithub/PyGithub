@@ -52,7 +52,6 @@ All classes inherit from :class:`github.GithubObject.GithubObject`.
 import logging
 
 from . import Auth
-from .AppAuthentication import AppAuthentication
 from .GithubException import (
     BadAttributeException,
     BadCredentialsException,
@@ -93,7 +92,6 @@ def enable_console_debug_logging() -> None:  # pragma no cover (Function useful 
 
 __all__ = [
     "Auth",
-    "AppAuthentication",
     "BadAttributeException",
     "BadCredentialsException",
     "BadUserAgentException",
