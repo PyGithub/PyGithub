@@ -62,8 +62,6 @@ from datetime import datetime
 from os.path import basename
 from typing import Any, BinaryIO
 
-from typing_extensions import deprecated
-
 import github.GitReleaseAsset
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
@@ -237,12 +235,6 @@ class GitRelease(CompletableGithubObject):
     def target_commitish(self) -> str:
         self._completeIfNotSet(self._target_commitish)
         return self._target_commitish.value
-
-    @property
-    @deprecated("Use name instead")
-    def title(self) -> str:
-        # alias for name
-        return self.name
 
     @property
     def upload_url(self) -> str:
