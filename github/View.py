@@ -57,6 +57,7 @@ class View(NonCompletableGithubObject):
     https://docs.github.com/en/rest/metrics/traffic#get-page-views
 
     The OpenAPI schema can be found at
+
     - /components/schemas/view-traffic
 
     """

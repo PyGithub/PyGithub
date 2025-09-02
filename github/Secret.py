@@ -54,6 +54,7 @@ class Secret(CompletableGithubObject):
     https://docs.github.com/en/rest/actions/secrets
 
     The OpenAPI schema can be found at
+
     - /components/schemas/actions-secret
 
     """

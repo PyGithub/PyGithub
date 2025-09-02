@@ -37,7 +37,18 @@ api.github.com
 None
 /orgs/BeaverSoftware/teams
 {'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-{"repo_names": ["BeaverSoftware/FatherBeaver"], "name": "Team also created by PyGithub", "permission": "push", "privacy": "secret", "description":"Description also created by PyGithub", "parent_team_id":141496, "maintainers": [327146], "notification_setting": "notifications_disabled"}
+{"repo_names": ["BeaverSoftware/FatherBeaver"], "name": "Team also created by PyGithub", "permission": "push", "privacy": "secret", "description":"Description also created by PyGithub", "parent_team_id":141496, "maintainers": ["jacquev6"], "notification_setting": "notifications_disabled"}
 201
 [('status', '201 Created'), ('x-ratelimit-remaining', '4982'), ('content-length', '150'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"6e3fb00de6ca4c112feee3a1438d6f0e"'), ('date', 'Sat, 26 May 2012 21:00:26 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/teams/189852')]
 {"repos_count":1,"url":"https://api.github.com/teams/189852","members_count":0,"name":"Team also created by PyGithub","permission":"push","description":"Description also created by PyGithub","id":189852, "notification_setting": "notifications_disabled", "parent":{"repos_count":1,"permission":"push","url":"https://api.github.com/teams/141496","name":"Members","id":141496,"members_count":1}}
+
+https
+GET
+api.github.com
+None
+/teams/189852/members?role=maintainer
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Tue, 17 Aug 2021 12:32:23 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"f84f6e37e193a8568bbac1bee0b16333c20ca1ca26dadc31129821e8aacad527"'), ('X-OAuth-Scopes', 'admin:enterprise, admin:gpg_key, admin:org, admin:org_hook, admin:public_key, admin:repo_hook, delete:packages, delete_repo, gist, notifications, repo, user, workflow, write:discussion, write:packages'), ('X-Accepted-OAuth-Scopes', 'read:org, repo'), ('github-authentication-token-expiration', '2021-09-09 21:12:46 UTC'), ('X-GitHub-Media-Type', 'github.inertia-preview; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4986'), ('X-RateLimit-Reset', '1629206924'), ('X-RateLimit-Used', '14'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '7E1A:AA20:1B68AF6:1C3923B:611BAC57')]
+[{"owner_url":"https://api.github.com/orgs/testinterifter","url":"https://api.github.com/orgs/testinterifter/teams","html_url":"https://github.com/orgs/testinterifter/projects/22","columns_url":"https://api.github.com/projects/13097272/columns","id":13097272,"node_id":"PRO_kwDOBUnFLs4Ax9k4","name":"jacquev6"}]

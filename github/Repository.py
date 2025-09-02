@@ -137,13 +137,15 @@
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
 # Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2025 Cristiano Salerno <119511125+csalerno-asml@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 GPK <gopidesupavan@gmail.com>                                 #
 # Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
+# Copyright 2025 Matt Ball <96152357+mball-agathos@users.noreply.github.com>   #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
-# Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
+# Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -248,6 +250,7 @@ import github.Workflow
 import github.WorkflowRun
 from github import Consts
 from github.Environment import Environment
+from github.GeneratedReleaseNotes import GeneratedReleaseNotes
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -338,6 +341,7 @@ class Repository(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos
 
     The OpenAPI schema can be found at
+
     - /components/schemas/event/properties/repo
     - /components/schemas/full-repository
     - /components/schemas/minimal-repository
@@ -1260,6 +1264,17 @@ class Repository(CompletableGithubObject):
         self._completeIfNotSet(self._web_commit_signoff_required)
         return self._web_commit_signoff_required.value
 
+    @staticmethod
+    def as_url_param(repo: str | Repository) -> str:
+        assert isinstance(repo, (str, github.Repository.Repository))
+        if isinstance(repo, github.Repository.Repository):
+            return repo._identity  # type: ignore
+        else:
+            # we expect exactly one slash in the repo name
+            assert len(repo.split("/")) == 2, repo
+            # do not quote the slash as this is expected to become part of URL path
+            return urllib.parse.quote(repo, safe="/")
+
     def add_to_collaborators(self, collaborator: str | NamedUser, permission: Opt[str] = NotSet) -> Invitation | None:
         """
         :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
@@ -1548,6 +1563,43 @@ class Repository(CompletableGithubObject):
             post_parameters["make_latest"] = make_latest
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/releases", input=post_parameters)
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
+    def generate_release_notes(
+        self,
+        tag_name: str,
+        previous_tag_name: Opt[str] = NotSet,
+        target_commitish: Opt[str] = NotSet,
+        configuration_file_path: Opt[str] = NotSet,
+    ) -> GeneratedReleaseNotes:
+        """
+        :calls: `POST /repos/{owner}/{repo}/releases/generate-notes <https://docs.github.com/en/rest/releases/releases#generate-release-notes-content-for-a-release>`
+        :param tag_name: The tag name for the release. This can be an existing tag or a new one.
+        :param previous_tag_name: The name of the previous tag to use as the starting point for the release notes. Use to manually specify the range for the set of changes considered as part this release.
+        :param target_commitish: Specifies the commitish value that will be the target for the release's tag. Required if the supplied tag_name does not reference an existing tag. Ignored if the tag_name already exists.
+        :param configuration_file_path: Specifies a path to a file in the repository containing configuration settings used for generating the release notes. If unspecified, the configuration file located in the repository at '.github/release.yml' or '.github/release.yaml' will be used. If that is not present, the default configuration will be used.
+        :rytpe: :class:`GeneratedReleaseNotes`
+        """
+        assert isinstance(tag_name, str), tag_name
+        assert isinstance(previous_tag_name, str) or is_optional(previous_tag_name, str), previous_tag_name
+        assert isinstance(target_commitish, str) or is_optional(target_commitish, str), target_commitish
+        assert isinstance(configuration_file_path, str) or is_optional(
+            configuration_file_path, str
+        ), configuration_file_path
+
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "tag_name": tag_name,
+                "previous_tag_name": previous_tag_name,
+                "target_commitish": target_commitish,
+                "configuration_file_path": configuration_file_path,
+            }
+        )
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/releases/generate-notes", input=post_parameters
+        )
+
+        return GeneratedReleaseNotes(self._requester, headers, data)
 
     def create_git_tag(
         self,
@@ -4704,6 +4756,7 @@ class RepositorySearchResult(Repository):
     https://docs.github.com/en/rest/reference/search#search-repositories
 
     The OpenAPI schema can be found at
+
     - /components/schemas/repo-search-result-item
 
     """

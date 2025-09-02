@@ -65,6 +65,8 @@
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
 # Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Pavel Abramov <31950564+uncleDecart@users.noreply.github.com> #
+# Copyright 2025 Zachary <6599715+interifter@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -162,6 +164,7 @@ class Organization(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/orgs
 
     The OpenAPI schema can be found at
+
     - /components/schemas/actor
     - /components/schemas/nullable-organization-simple
     - /components/schemas/nullable-simple-user
@@ -970,7 +973,7 @@ class Organization(CompletableGithubObject):
         privacy: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
         parent_team_id: Opt[int] = NotSet,
-        maintainers: Opt[list[int]] = NotSet,
+        maintainers: Opt[list[str]] = NotSet,
         notification_setting: Opt[str] = NotSet,
     ) -> Team:
         """
@@ -987,7 +990,7 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(name, str), name
         assert is_optional_list(repo_names, github.Repository.Repository), repo_names
-        assert is_optional_list(maintainers, int), maintainers
+        assert is_optional_list(maintainers, str), maintainers
         assert is_optional(parent_team_id, int), parent_team_id
         assert is_optional(permission, str), permission
         assert is_optional(privacy, str), privacy

@@ -7,4 +7,5 @@ PyGithub
    introduction
    examples
    reference
+   development
    changes

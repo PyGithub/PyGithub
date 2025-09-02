@@ -70,6 +70,7 @@ class PublicKey(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key
 
     The OpenAPI schema can be found at
+
     - /components/schemas/actions-public-key
 
     """

@@ -31,7 +31,7 @@ jobs:
           - {python-version: "3.9", os: "windows-latest", os-label: "Windows"}
           - {python-version: "3.9", os: "macos-latest", os-label: "macOS"}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -74,10 +74,10 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           path: head
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
@@ -95,14 +95,14 @@ jobs:
           set -euo pipefail
 
           echo "::group::Head verb checking:"
-          python head/scripts/openapi.py index --check-verbs head/github openapi.head.index | tee verbs.head.txt
+          python head/scripts/openapi.py --verbose index --check-verbs head/github openapi.head.index | tee verbs.head.txt
           echo "::endgroup::"
 
           echo "::group::Base verb checking:"
-          python head/scripts/openapi.py index --check-verbs base/github openapi.base.index | tee verbs.base.txt
+          python head/scripts/openapi.py --verbose index --check-verbs base/github openapi.base.index | tee verbs.base.txt
           echo "::endgroup::"
 
-          if ! (diff verbs.base.txt verbs.head.txt > diff.txt)
+          if ! (diff <(grep -v -E -e "^Index(ing|ed) " verbs.base.txt) <(grep -v -E -e "^Index(ing|ed) " verbs.head.txt) > diff.txt)
           then
             echo ""
             echo "Difference:"
@@ -124,10 +124,10 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           path: head
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
@@ -144,19 +144,19 @@ jobs:
           # Add schemas
           set -euo pipefail
 
-          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+          python head/scripts/openapi.py --verbose fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head schema suggestions:"
-          python head/scripts/openapi.py index head/github openapi.json openapi.head.index
-          python head/scripts/openapi.py suggest schemas openapi.json openapi.head.index | tee schemas.head.txt
+          python head/scripts/openapi.py --verbose index head/github openapi.json openapi.head.index
+          python head/scripts/openapi.py --verbose suggest schemas openapi.json openapi.head.index | tee schemas.head.txt
           echo "::endgroup::"
 
           echo "::group::Base schema suggestions:"
-          python head/scripts/openapi.py index base/github openapi.json openapi.base.index
-          python head/scripts/openapi.py suggest schemas openapi.json openapi.base.index | tee schemas.base.txt
+          python head/scripts/openapi.py --verbose index base/github openapi.json openapi.base.index
+          python head/scripts/openapi.py --verbose suggest schemas openapi.json openapi.base.index | tee schemas.base.txt
           echo "::endgroup::"
 
-          if ! (diff schemas.base.txt schemas.head.txt > diff.txt)
+          if ! (diff <(grep -v -E -e "^Index(ing|ed) " schemas.base.txt) <(grep -v -E -e "^Index(ing|ed) " schemas.head.txt) > diff.txt)
           then
             echo ""
             echo "Difference:"
@@ -165,7 +165,7 @@ jobs:
             (grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/" || true) | while read class
             do
               echo "::group::Add schema to $class:"
-              python head/scripts/openapi.py suggest schemas --add openapi.json openapi.head.index "$class" > /dev/null
+              python head/scripts/openapi.py --verbose suggest schemas --add openapi.json openapi.head.index "$class" > /dev/null
               (cd head; git diff; git reset --hard --quiet HEAD)
               echo "::endgroup::"
             done
@@ -186,10 +186,10 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           path: head
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
@@ -206,16 +206,16 @@ jobs:
           # Add implementations
           set -euo pipefail
 
-          python head/scripts/openapi.py fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
+          python head/scripts/openapi.py --verbose fetch ${{ env.openapi_api }} ${{ env.openapi_version }} openapi.json
 
           echo "::group::Head implementations:"
-          python head/scripts/openapi.py index head/github openapi.json openapi.head.index
-          python head/scripts/openapi.py --dry-run apply --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
+          python head/scripts/openapi.py --verbose index head/github openapi.json openapi.head.index
+          python head/scripts/openapi.py --verbose --dry-run apply --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
           echo "::endgroup::"
 
           echo "::group::Base implementations:"
-          python head/scripts/openapi.py index base/github openapi.json openapi.base.index
-          python head/scripts/openapi.py --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
+          python head/scripts/openapi.py --verbose index base/github openapi.json openapi.base.index
+          python head/scripts/openapi.py --verbose --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
           echo "::endgroup::"
 
           if ! (diff <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]base/github/%(github/%" -e "s%Test base/%Test %" implementation.base.txt) <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]head/github/%(github/%" -e "s%Test head/%Test %" implementation.head.txt) > diff.txt)
@@ -227,7 +227,7 @@ jobs:
             (grep -E -e "^> Class \w+ changed$" diff.txt | sed -E -e "s/^> Class (\w+) changed$/\1/" || true) | while read class
             do
               echo "::group::Apply schema to $class:"
-              python head/scripts/openapi.py apply --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
+              python head/scripts/openapi.py --verbose apply --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
               (cd head; git diff; git reset --hard --quiet HEAD)
               echo "::endgroup::"
             done
@@ -258,7 +258,7 @@ jobs:
     needs: "test_success"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
       - uses: ./.github/actions/sort-classes
       - name: changes
         run: |

@@ -63,6 +63,7 @@ class Membership(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/orgs
 
     The OpenAPI schema can be found at
+
     - /components/schemas/org-membership
 
     """

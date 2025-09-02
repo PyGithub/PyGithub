@@ -99,6 +99,7 @@ class Team(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/teams
 
     The OpenAPI schema can be found at
+
     - /components/schemas/enterprise-team
     - /components/schemas/nullable-team-simple
     - /components/schemas/team
@@ -301,26 +302,24 @@ class Team(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/memberships/{member}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
-    def add_to_repos(self, repo: Repository) -> None:
+    def add_to_repos(self, repo: str | Repository) -> None:
         """
         :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
-        assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/repos/{repo._identity}")
+        assert isinstance(repo, (str, github.Repository.Repository)), repo
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}"
+        )
 
-    def get_repo_permission(self, repo: Repository) -> Permissions | None:
+    def get_repo_permission(self, repo: str | Repository) -> Permissions | None:
         """
         :calls: `GET /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
-        assert isinstance(repo, github.Repository.Repository) or isinstance(repo, str), repo
-        if isinstance(repo, github.Repository.Repository):
-            repo = repo._identity  # type: ignore
-        else:
-            repo = urllib.parse.quote(repo, safe="")
+        assert isinstance(repo, (str, github.Repository.Repository)), repo
         try:
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
-                f"{self.url}/repos/{repo}",
+                f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}",
                 headers={"Accept": Consts.teamRepositoryPermissions},
             )
             return github.Permissions.Permissions(self._requester, headers, data["permissions"])
@@ -332,38 +331,33 @@ class Team(CompletableGithubObject):
         Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
         """
     )
-    def set_repo_permission(self, repo: Repository, permission: str) -> None:
+    def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
         """
         :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
         :rtype: None
         """
-
-        assert isinstance(repo, github.Repository.Repository), repo
+        assert isinstance(repo, (str, github.Repository.Repository)), repo
         put_parameters = {
             "permission": permission,
         }
         headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/repos/{repo._identity}", input=put_parameters
+            "PUT", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}", input=put_parameters
         )
 
-    def update_team_repository(self, repo: Repository, permission: str) -> bool:
+    def update_team_repository(self, repo: str | Repository, permission: str) -> bool:
         """
         :calls: `PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams#check-team-permissions-for-a-repository>`_
         """
-        assert isinstance(repo, github.Repository.Repository) or isinstance(repo, str), repo
+        assert isinstance(repo, (str, github.Repository.Repository)), repo
         assert isinstance(permission, str), permission
-        if isinstance(repo, github.Repository.Repository):
-            repo_url_param = repo._identity
-        else:
-            repo_url_param = urllib.parse.quote(repo, safe="")
         put_parameters = {
             "permission": permission,
         }
         status, _, _ = self._requester.requestJson(
             "PUT",
-            f"{self.organization.url}/teams/{self.slug}/repos/{repo_url_param}",
+            f"{self.organization.url}/teams/{self.slug}/repos/{github.Repository.Repository.as_url_param(repo)}",
             input=put_parameters,
         )
         return status == 204
@@ -473,12 +467,14 @@ class Team(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
         return status == 204
 
-    def has_in_repos(self, repo: Repository) -> bool:
+    def has_in_repos(self, repo: str | Repository) -> bool:
         """
         :calls: `GET /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
-        assert isinstance(repo, github.Repository.Repository), repo
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/repos/{repo._identity}")
+        assert isinstance(repo, (str, github.Repository.Repository)), repo
+        status, headers, data = self._requester.requestJson(
+            "GET", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}"
+        )
         return status == 204
 
     def remove_membership(self, member: NamedUser) -> None:
@@ -498,12 +494,14 @@ class Team(CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/members/{member._identity}")
 
-    def remove_from_repos(self, repo: Repository) -> None:
+    def remove_from_repos(self, repo: str | Repository) -> None:
         """
         :calls: `DELETE /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
-        assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/repos/{repo._identity}")
+        assert isinstance(repo, (str, github.Repository.Repository)), repo
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}"
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch

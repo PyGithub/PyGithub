@@ -55,6 +55,7 @@ class UserKey(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/users#keys
 
     The OpenAPI schema can be found at
+
     - /components/schemas/key
 
     """

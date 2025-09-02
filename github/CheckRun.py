@@ -9,6 +9,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Alexander Todorov <atodorov@otb.bg>                           #
 # Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
@@ -72,7 +73,16 @@ class CheckRun(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/checks#check-runs
 
     The OpenAPI schema can be found at
+
     - /components/schemas/check-run
+
+    .. warning::
+
+        As of Feb 2025 according to GitHub Support
+        "The Checks API does not support Fine-Grained PATs or classic PATs,
+        only GitHub Apps can use the Checks API". Because of this you may see
+        empty ``.output.*`` attributes. See
+        https://github.com/PyGithub/PyGithub/issues/3227
 
     """
 

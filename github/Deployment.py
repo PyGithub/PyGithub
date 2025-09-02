@@ -70,6 +70,7 @@ class Deployment(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#deployments
 
     The OpenAPI schema can be found at
+
     - /components/schemas/deployment
     - /components/schemas/deployment-simple
 

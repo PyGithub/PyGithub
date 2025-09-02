@@ -87,6 +87,7 @@ class Commit(CompletableGithubObject):
     https://docs.github.com/en/rest/commits/commits#get-a-commit-object
 
     The OpenAPI schema can be found at
+
     - /components/schemas/branch-short/properties/commit
     - /components/schemas/commit
     - /components/schemas/commit-search-result-item/properties/parents/items
@@ -369,6 +370,7 @@ class CommitSearchResult(Commit):
     https://docs.github.com/en/rest/reference/search#search-commits
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit-search-result-item
 
     """

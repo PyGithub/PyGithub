@@ -47,6 +47,8 @@
 # Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
+# Copyright 2025 Pavel Abramov <31950564+uncleDecart@users.noreply.github.com> #
+# Copyright 2025 Zachary <6599715+interifter@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -236,13 +238,14 @@ class Organization(Framework.TestCase):
             "secret",
             "Description also created by PyGithub",
             parent_team.id,
-            [maintainer.id],
+            [maintainer.login],
             "notifications_disabled",
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
         self.assertEqual(team.parent, parent_team)
         self.assertEqual(team.notification_setting, "notifications_disabled")
+        self.assertEqual(maintainer.login, team.get_members(role="maintainer")[0].name)
 
     def testDeleteHook(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})

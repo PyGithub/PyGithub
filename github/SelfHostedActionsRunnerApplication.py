@@ -1,6 +1,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,6 +36,7 @@ class SelfHostedActionsRunnerApplication(NonCompletableGithubObject):
     https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
 
     The OpenAPI schema can be found at
+
     - /components/schemas/runner-application
 
     """

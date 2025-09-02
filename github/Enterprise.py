@@ -62,6 +62,7 @@ class Enterprise(NonCompletableGithubObject):
     https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin
 
     The OpenAPI schema can be found at
+
     - /components/schemas/enterprise
 
     """

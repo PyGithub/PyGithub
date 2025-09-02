@@ -80,6 +80,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
     https://docs.github.com/en/rest/orgs/custom-properties
 
     The OpenAPI schema can be found at
+
     - /components/schemas/custom-property
 
     """

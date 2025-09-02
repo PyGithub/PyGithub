@@ -71,6 +71,7 @@ class Project(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/projects
 
     The OpenAPI schema can be found at
+
     - /components/schemas/project
 
     """
