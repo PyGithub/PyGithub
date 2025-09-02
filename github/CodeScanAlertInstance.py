@@ -45,6 +45,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/code-scanning.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/code-scanning-alert-instance
 
     """

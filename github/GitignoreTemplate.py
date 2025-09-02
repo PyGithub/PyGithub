@@ -52,6 +52,7 @@ class GitignoreTemplate(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/gitignore
 
     The OpenAPI schema can be found at
+
     - /components/schemas/gitignore-template
 
     """

@@ -58,6 +58,7 @@ class Event(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/activity#events
 
     The OpenAPI schema can be found at
+
     - /components/schemas/event
 
     """

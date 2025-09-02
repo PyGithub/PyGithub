@@ -57,6 +57,7 @@ class RepositoryPreferences(NonCompletableGithubObject):
     https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#update-repository-preferences-for-check-suites
 
     The OpenAPI schema can be found at
+
     - /components/schemas/check-suite-preference
 
     """

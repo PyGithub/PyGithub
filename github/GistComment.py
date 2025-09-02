@@ -58,6 +58,7 @@ class GistComment(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/gists#comments
 
     The OpenAPI schema can be found at
+
     - /components/schemas/gist-comment
 
     """

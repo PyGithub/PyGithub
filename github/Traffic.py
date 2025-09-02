@@ -54,6 +54,7 @@ class Traffic(NonCompletableGithubObject):
     https://docs.github.com/en/rest/metrics/traffic
 
     The OpenAPI schema can be found at
+
     - /components/schemas/traffic
 
     """

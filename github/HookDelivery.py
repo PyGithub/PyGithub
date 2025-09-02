@@ -39,6 +39,7 @@ class HookDeliverySummary(NonCompletableGithubObject):
     This class represents a Summary of HookDeliveries.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/hook-delivery-item
 
     """
@@ -147,6 +148,7 @@ class HookDeliveryRequest(NonCompletableGithubObject):
     This class represents a HookDeliveryRequest.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/hook-delivery/properties/request
 
     """
@@ -178,6 +180,7 @@ class HookDeliveryResponse(NonCompletableGithubObject):
     This class represents a HookDeliveryResponse.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/hook-delivery/properties/response
 
     """
@@ -209,6 +212,7 @@ class HookDelivery(HookDeliverySummary):
     This class represents a HookDelivery.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/hook-delivery
 
     """

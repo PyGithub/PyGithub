@@ -72,6 +72,7 @@ class CheckRun(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/checks#check-runs
 
     The OpenAPI schema can be found at
+
     - /components/schemas/check-run
 
     .. warning::
