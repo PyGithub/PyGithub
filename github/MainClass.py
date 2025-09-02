@@ -455,16 +455,15 @@ class Github:
             url_parameters,
         )
 
-    # v3: rename enterprise to slug
-    def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
+    def get_enterprise(self, slug: str) -> github.Enterprise.Enterprise:
         """
         :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
-        :param enterprise: string
+        :param slug: string
         :rtype: :class:`Enterprise`
         """
-        assert isinstance(enterprise, str), enterprise
+        assert isinstance(slug, str), slug
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
-        return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
+        return github.Enterprise.Enterprise.from_slug(self.__requester, slug)
 
     def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
         """
