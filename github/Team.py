@@ -279,6 +279,7 @@ class Team(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @deprecated("Use add_membership instead")
     def add_to_members(self, member: NamedUser) -> None:
         """
         This API call is deprecated. Use `add_membership` instead.
@@ -504,6 +505,7 @@ class Team(CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/memberships/{member._identity}")
 
+    @deprecated("Use remove_membership instead")
     def remove_from_members(self, member: NamedUser) -> None:
         """
         This API call is deprecated. Use `remove_membership` instead:
