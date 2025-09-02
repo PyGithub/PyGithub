@@ -59,6 +59,7 @@ class RepositoryAdvisory(AdvisoryBase):
     https://docs.github.com/en/rest/security-advisories/repository-advisories
 
     The OpenAPI schema can be found at
+
     - /components/schemas/repository-advisory
 
     """

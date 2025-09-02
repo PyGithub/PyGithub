@@ -344,13 +344,16 @@ class ReplayingHttpsConnection(ReplayingConnection):
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
-    authMode = "token"
-    per_page = Consts.DEFAULT_PER_PAGE
-    retry = None
-    pool_size = None
-    seconds_between_requests: float | None = None
-    seconds_between_writes: float | None = None
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
+
+    def __init__(self, methodName="runTest") -> None:
+        super().__init__(methodName)
+        self.authMode = "token"
+        self.per_page = Consts.DEFAULT_PER_PAGE
+        self.retry = None
+        self.pool_size = None
+        self.seconds_between_requests: float | None = None
+        self.seconds_between_writes: float | None = None
 
     def setUp(self):
         super().setUp()
@@ -387,6 +390,21 @@ class BasicTestCase(unittest.TestCase):
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
 
             responses.start()
+
+    def setPerPage(self, per_page):
+        self.per_page = per_page
+
+    def setRetry(self, retry):
+        self.retry = retry
+
+    def setPoolSize(self, pool_size):
+        self.pool_size = pool_size
+
+    def setSecondsBetweenRequests(self, seconds_between_requests):
+        self.seconds_between_requests = seconds_between_requests
+
+    def setSecondsBetweenWrites(self, seconds_between_writes):
+        self.seconds_between_writes = seconds_between_writes
 
     @property
     def thisTestFailed(self) -> bool:
@@ -483,15 +501,19 @@ class TestCase(BasicTestCase):
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
-        self.g = self.get_github(self.retry, self.pool_size)
+        self.g = self.get_github(self.authMode, self.retry, self.pool_size)
 
-    def get_github(self, retry, pool_size):
-        if self.authMode == "token":
+    def get_github(self, authMode, retry=None, pool_size=None):
+        if authMode == "token":
             auth = self.oauth_token
-        elif self.authMode == "jwt":
+        elif authMode == "jwt":
             auth = self.jwt
+        elif authMode == "app":
+            auth = self.app_auth
+        elif self.authMode == "none":
+            auth = None
         else:
-            raise ValueError(f"Unsupported test auth mode: {self.authMode}")
+            raise ValueError(f"Unsupported test auth mode: {authMode}")
 
         return github.Github(
             auth=auth,
@@ -505,15 +527,3 @@ class TestCase(BasicTestCase):
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
-
-
-def activateJWTAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
-    BasicTestCase.authMode = "jwt"
-
-
-def enableRetry(retry):
-    BasicTestCase.retry = retry
-
-
-def setPoolSize(pool_size):
-    BasicTestCase.pool_size = pool_size

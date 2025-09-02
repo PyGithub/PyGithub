@@ -48,6 +48,7 @@ from typing import Any
 import github.GithubObject
 import github.Label
 import github.NamedUser
+import github.Organization
 import github.PaginatedList
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined
 from github.PaginatedList import PaginatedList
@@ -61,6 +62,7 @@ class Milestone(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/issues#milestones
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-event-milestone
     - /components/schemas/milestone
     - /components/schemas/nullable-milestone

@@ -53,6 +53,10 @@ class Secret(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/actions/secrets
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/actions-secret
+
     """
 
     def _initAttributes(self) -> None:

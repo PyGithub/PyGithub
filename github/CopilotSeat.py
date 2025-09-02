@@ -43,6 +43,7 @@ class CopilotSeat(NonCompletableGithubObject):
     https://docs.github.com/en/rest/copilot/copilot-user-management
 
     The OpenAPI schema can be found at
+
     - /components/schemas/copilot-seat-details
 
     """
@@ -53,6 +54,7 @@ class CopilotSeat(NonCompletableGithubObject):
         self._created_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_editor: Attribute[str] | _NotSetType = NotSet
+        self._last_authenticated_at: Attribute[datetime] = NotSet
         self._organization: Attribute[Organization] = NotSet
         self._pending_cancellation_date: Attribute[datetime] | _NotSetType = NotSet
         self._plan_type: Attribute[str] | _NotSetType = NotSet
@@ -82,6 +84,10 @@ class CopilotSeat(NonCompletableGithubObject):
         return self._last_activity_editor.value
 
     @property
+    def last_authenticated_at(self) -> datetime:
+        return self._last_authenticated_at.value
+
+    @property
     def organization(self) -> Organization:
         return self._organization.value
 
@@ -108,6 +114,8 @@ class CopilotSeat(NonCompletableGithubObject):
             self._last_activity_at = self._makeDatetimeAttribute(attributes["last_activity_at"])
         if "last_activity_editor" in attributes:
             self._last_activity_editor = self._makeStringAttribute(attributes["last_activity_editor"])
+        if "last_authenticated_at" in attributes:  # pragma no branch
+            self._last_authenticated_at = self._makeDatetimeAttribute(attributes["last_authenticated_at"])
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "pending_cancellation_date" in attributes:

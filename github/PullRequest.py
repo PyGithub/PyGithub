@@ -146,6 +146,7 @@ class PullRequest(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/pulls
 
     The OpenAPI schema can be found at
+
     - /components/schemas/pull-request
     - /components/schemas/pull-request-minimal
     - /components/schemas/pull-request-simple
@@ -575,10 +576,6 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(body, str), body
         assert is_optional(event, str), event
         assert is_optional_list(comments, dict), comments
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"body": body})
-        post_parameters["event"] = "COMMENT" if is_undefined(event) else event
-        if is_defined(commit):
-            post_parameters["commit_id"] = commit.sha
         if is_defined(comments):
             for comment in comments:
                 valid_start_side = self.validate_review_comment_start_side(
@@ -590,10 +587,14 @@ class PullRequest(CompletableGithubObject):
                 )
                 if is_defined(valid_start_side):
                     comment["start_side"] = valid_start_side
-            post_parameters["comments"] = comments
-        else:
-            post_parameters["comments"] = []
-
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "body": body,
+                "event": event,
+                "commit_id": commit.sha if is_defined(commit) else NotSet,
+                "comments": comments if is_defined(comments) else [],
+            }
+        )
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 

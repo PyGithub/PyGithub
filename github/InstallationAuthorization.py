@@ -59,6 +59,7 @@ class InstallationAuthorization(NonCompletableGithubObject):
     This class represents InstallationAuthorizations.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/installation-token
 
     """

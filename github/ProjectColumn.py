@@ -69,6 +69,7 @@ class ProjectColumn(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/projects#columns
 
     The OpenAPI schema can be found at
+
     - /components/schemas/project-column
 
     """

@@ -51,6 +51,7 @@ class File(NonCompletableGithubObject):
     This class represents Files.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/diff-entry
 
     """

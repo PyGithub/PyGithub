@@ -49,6 +49,7 @@ class IssuePullRequest(NonCompletableGithubObject):
     This class represents IssuePullRequests.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/issue-search-result-item/properties/pull_request
     - /components/schemas/issue/properties/pull_request
     - /components/schemas/nullable-issue/properties/pull_request

@@ -56,6 +56,7 @@ from __future__ import annotations
 from typing import Any, Callable, Generic, Iterator, TypeVar, overload
 from urllib.parse import parse_qs
 
+from github import Consts
 from github.GithubObject import GithubObject
 from github.Requester import Requester
 
@@ -131,7 +132,7 @@ class PaginatedListBase(Generic[T]):
 class PaginatedList(PaginatedListBase[T]):
     """
     This class abstracts the `pagination of the REST API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_
-    and the GraphQl API <https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api>`_.
+    and the `GraphQl API <https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api>`_.
 
     You can simply enumerate through instances of this class::
 
@@ -149,7 +150,7 @@ class PaginatedList(PaginatedListBase[T]):
 
     If you want to iterate in reversed order, just do::
 
-        for repo in user.get_repos().reversed:
+        for repo in reversed(user.get_repos()):
             print(repo.name)
 
     And if you really need it, you can explicitly access a specific page::
@@ -421,7 +422,7 @@ class PaginatedList(PaginatedListBase[T]):
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
-        if self.__requester.per_page != 30:
+        if self.__requester.per_page != Consts.DEFAULT_PER_PAGE:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
