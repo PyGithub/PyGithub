@@ -28,11 +28,14 @@ import dataclasses
 import difflib
 import json
 import os.path
+import re
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
+from enum import Enum
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any, Sequence
 
@@ -40,11 +43,143 @@ import libcst as cst
 import requests
 from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
 
+equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
+
+
+def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
+    if "$ref" in schema_type:
+        schema = schema_type.get("$ref").strip("# ")
+        ref_schema_type = spec
+        for step in schema.split("/"):
+            if step:
+                if step not in ref_schema_type:
+                    raise ValueError(f"Could not find schema in spec: {schema}")
+                ref_schema_type = ref_schema_type[step]
+        return ref_schema_type
+    return schema_type
+
+
+def as_python_type(
+    schema_type: dict[str, Any],
+    schema_path: list[str],
+    schema_to_class: dict[str, str],
+    classes,
+    *,
+    verbose: bool = False,
+    collect_new_schemas: list[str] | None = None,
+) -> PythonType | GithubClass | None:
+    schema = None
+    data_type = schema_type.get("type")
+    if "$ref" in schema_type:
+        schema = schema_type.get("$ref").strip("# ")
+    elif "oneOf" in schema_type:
+        types = [
+            as_python_type(
+                t,
+                schema_path + ["oneOf", str(idx)],
+                schema_to_class,
+                classes,
+                verbose=verbose,
+                collect_new_schemas=collect_new_schemas,
+            )
+            for idx, t in enumerate(schema_type.get("oneOf"))
+        ]
+        types = list({t for t in types if t is not None})
+        if len(types) == 0:
+            return None
+        if len(types) == 1:
+            return types[0]
+        return PythonType("union", types)
+    elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
+        return as_python_type(
+            schema_type.get("allOf")[0],
+            schema_path + ["allOf", "0"],
+            schema_to_class,
+            classes,
+            verbose=verbose,
+            collect_new_schemas=collect_new_schemas,
+        )
+    if data_type == "object":
+        schema = "/".join([""] + schema_path)
+    if schema is not None:
+        # these schemas are explicitly ignored
+        if schema in {"/components/schemas/empty-object"}:
+            return None
+        if schema in schema_to_class:
+            classes_of_schema = schema_to_class[schema]
+            if not isinstance(classes_of_schema, list):
+                raise ValueError(f"Expected list of types for schema: {schema}")
+            if len(classes_of_schema) == 0:
+                raise ValueError(f"Expected non-empty list of types for schema: {schema}")
+            if len(classes_of_schema) == 1:
+                class_name = classes_of_schema[0]
+                if class_name not in classes:
+                    if verbose:
+                        print(f"Class not found in index: {class_name}")
+                    return None
+                return GithubClass(**classes.get(class_name))
+            if verbose:
+                for class_name in classes:
+                    if class_name not in classes:
+                        print(f"Class not found in index: {class_name}")
+            return PythonType(
+                type="union",
+                inner_types=[GithubClass(**classes.get(cls)) for cls in classes_of_schema if cls in classes],
+            )
+        if collect_new_schemas is not None:
+            collect_new_schemas.append(schema or ".".join([""] + schema_path))
+        if verbose:
+            print(f"Schema not implemented: {schema or '.'.join([''] + schema_path)}")
+        return PythonType(type="dict", inner_types=[PythonType("str"), PythonType("Any")])
+
+    if data_type is None:
+        if verbose:
+            print(f"There is no $ref and no type in schema: {json.dumps(schema_type)}")
+        return None
+
+    if data_type == "array":
+        return PythonType(
+            type="list",
+            inner_types=[
+                as_python_type(
+                    schema_type.get("items"),
+                    schema_path + ["items"],
+                    schema_to_class,
+                    classes,
+                    verbose=verbose,
+                    collect_new_schemas=collect_new_schemas,
+                )
+            ],
+        )
+
+    format = schema_type.get("format")
+    data_types = {
+        "boolean": {None: "bool"},
+        "integer": {None: "int"},
+        "number": {None: "float"},
+        "string": {
+            None: "str",
+            "date-time": "datetime",
+            "uri": "str",
+        },
+    }
+
+    if data_type not in data_types:
+        if verbose:
+            print(f"Unsupported data type: {data_type}")
+        return None
+
+    formats = data_types.get(data_type)
+    return PythonType(type=formats.get(format) or formats.get(None))
+
 
 @dataclasses.dataclass(frozen=True)
 class PythonType:
     type: str
     inner_types: list[PythonType | GithubClass] | None = None
+
+    def __hash__(self):
+        return hash(self.__repr__())
 
     def __repr__(self):
         return (
@@ -59,6 +194,7 @@ class GithubClass:
     module: str
     name: str
     filename: str
+    test_filename: str
     bases: list[str]
     inheritance: list[str]
     methods: dict
@@ -80,12 +216,12 @@ class GithubClass:
     def full_class_name(self) -> str:
         return f"{self.package}.{self.module}.{self.name}"
 
-    @property
-    def test_filename(self) -> str:
-        return f"tests/{self.module}.py"
-
     @staticmethod
-    def from_class_name(class_name: str, index: dict[str, Any] | None = None) -> GithubClass:
+    def from_class_name(
+        class_name: str, index: dict[str, Any] | None = None, github_parent_path: str = ""
+    ) -> GithubClass:
+        if github_parent_path and not github_parent_path.endswith("/"):
+            github_parent_path = f"{github_parent_path}/"
         if "." in class_name:
             full_class_name = class_name
             package, module, class_name = full_class_name.split(".", 2)
@@ -100,7 +236,8 @@ class GithubClass:
                     package="github",
                     module=class_name,
                     name=class_name,
-                    filename=f"{package}/{module}.py",
+                    filename=f"{github_parent_path}{package}/{module}.py",
+                    test_filename=f"{github_parent_path}tests/{module}.py",
                     bases=[],
                     inheritance=[],
                     methods={},
@@ -118,7 +255,9 @@ class GithubClass:
                     raise KeyError(f"Missing package, module or name in {cls}")
                 return GithubClass(**cls)
             else:
-                return GithubClass.from_class_name(f"github.{class_name}.{class_name}")
+                return GithubClass.from_class_name(
+                    f"github.{class_name}.{class_name}", github_parent_path=github_parent_path
+                )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -141,6 +280,22 @@ class SimpleStringCollector(cst.CSTVisitor):
         self._strings.append(node.evaluated_value)
 
 
+class FunctionCallCollector(cst.CSTVisitor):
+    def __init__(self):
+        super().__init__()
+        self._calls = []
+
+    @property
+    def calls(self):
+        return self._calls
+
+    def visit_Call(self, node: cst.Call) -> bool | None:
+        code = cst.Module([]).code_for_node
+        func_name = code(node.func)
+        args = [(f"{code(arg.keyword)}=" if arg.keyword else "") + code(arg.value) for arg in node.args]
+        self._calls.append((func_name, args))
+
+
 def get_class_docstring(node: cst.ClassDef) -> str | None:
     try:
         if (
@@ -152,6 +307,21 @@ def get_class_docstring(node: cst.ClassDef) -> str | None:
             return node.body.body[0].body[0].value.value
     except Exception as e:
         print(f"Extracting docstring of class {node.name.value} failed", e)
+
+
+def merge_paths(paths: list[dict[str, Any]]) -> dict[str, Any]:
+    merged_paths = {}
+    for path_dict in paths:
+        for path, verbs in path_dict.items():
+            for verb, methods in verbs.items():
+                if path not in merged_paths:
+                    merged_paths[path] = {}
+                if verb not in merged_paths[path]:
+                    merged_paths[path][verb] = {}
+                if "methods" not in merged_paths[path][verb]:
+                    merged_paths[path][verb]["methods"] = []
+                merged_paths[path][verb]["methods"].extend(methods.get("methods", []))
+    return merged_paths
 
 
 class CstMethods(abc.ABC):
@@ -180,6 +350,37 @@ class CstMethods(abc.ABC):
         for name in names[2:]:
             attr = cst.Attribute(attr, name)
         return attr
+
+    @classmethod
+    def create_type(
+        cls, data_type: PythonType | GithubClass | None, short_class_name: bool = False
+    ) -> cst.BaseExpression:
+        if data_type is None:
+            return cst.Name("None")
+        if isinstance(data_type, GithubClass):
+            if short_class_name:
+                return cst.Name(data_type.name.split(".")[-1])
+            return cls.create_attribute([data_type.package, data_type.module] + data_type.name.split("."))
+        if data_type.type == "union":
+            if len(data_type.inner_types) == 0:
+                return cst.Name("None")
+            if len(data_type.inner_types) == 1:
+                return cls.create_type(data_type.inner_types[0], short_class_name)
+            result = cst.BinaryOperation(
+                cls.create_type(data_type.inner_types[0], short_class_name),
+                cst.BitOr(),
+                cls.create_type(data_type.inner_types[1], short_class_name),
+            )
+            for dt in data_type.inner_types[2:]:
+                result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt, short_class_name))
+            return result
+        if data_type.inner_types:
+            elems = [
+                cst.SubscriptElement(cst.Index(cls.create_type(elem, short_class_name)))
+                for elem in data_type.inner_types
+            ]
+            return cst.Subscript(cst.Name(data_type.type), slice=elems)
+        return cst.Name(data_type.type)
 
     @classmethod
     def find_nodes(cls, node: cst.CSTNode, node_type: type[cst.CSTNode]) -> list[cst.CSTNode]:
@@ -306,15 +507,18 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
 
 
 class IndexPythonClassesVisitor(CstVisitorBase):
-    def __init__(self, classes: dict[str, Any] | None = None):
+    def __init__(self, classes: dict[str, Any], paths: dict[str, Any], method_verbs: dict[str, str] | None):
         super().__init__()
         self._module = None
         self._package = None
         self._filename = None
-        self._classes = classes if classes is not None else {}
+        self._test_filename = None
+        self._classes = classes
+        self._paths = paths
         self._ids = []
         self._properties = {}
         self._methods = {}
+        self._method_verbs = method_verbs
 
     def module(self, module: str):
         self._module = module
@@ -324,6 +528,9 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
     def filename(self, filename: str):
         self._filename = filename
+
+    def test_filename(self, test_filename: str):
+        self._test_filename = test_filename
 
     @property
     def classes(self) -> dict[str, Any]:
@@ -362,6 +569,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             "module": self._module,
             "package": self._package,
             "filename": self._filename,
+            "test_filename": self._test_filename,
             "docstring": class_docstring,
             "schemas": class_schemas,
             "bases": class_bases,
@@ -410,12 +618,119 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                 self._methods[method_name] = {
                     "name": method_name,
                     "call": {
-                        "method": fields[0] if len(fields) > 0 else None,
+                        "verb": fields[0] if len(fields) > 0 else None,
                         "path": fields[1] if len(fields) > 1 else None,
                         "docs": fields[2] if len(fields) > 2 else None,
                     },
                     "returns": returns,
                 }
+                if len(fields) > 1:
+                    verb = fields[0]
+                    path = fields[1]
+                    if path not in self._paths:
+                        self._paths[path] = {}
+                    if verb not in self._paths[path]:
+                        self._paths[path][verb] = {"methods": []}
+                    self._paths[path][verb]["methods"].append(
+                        {
+                            "class": self.current_class_name,
+                            "name": method_name,
+                            "returns": returns,
+                        }
+                    )
+
+                # check if method (VERB) is same as in the code
+                if len(fields) > 0 and self._method_verbs is not None:
+                    verb = f'"{fields[0]}"'
+                    full_method_name = f"{self.current_class_name}.{method_name}"
+
+                    if full_method_name in self._method_verbs:
+                        # these are methods configured in the github/openapi.index.json file
+                        known_verb = f'"{self._method_verbs[full_method_name]}"'
+                        if known_verb != verb:
+                            print(
+                                f"Method {full_method_name} is known to call {known_verb}, "
+                                f"but doc-string says {verb}"
+                            )
+                    else:
+                        # detect method from code
+                        visitor = FunctionCallCollector()
+                        node.body.visit(visitor)
+                        calls = visitor.calls
+
+                        # calls to PaginatedList(...) are equivalent to
+                        # self.__requester.requestJsonAndCheck("GET", …, parameters=…, headers=…)
+                        calls = [
+                            ("self.__requester.requestJsonAndCheck", ['"GET"', "…", "parameters=…", "headers=…"])
+                            if func in ["PaginatedList", "github.PaginatedList.PaginatedList"]
+                            else (func, args)
+                            for func, args in calls
+                        ]
+
+                        # calls to self._requester.graphql_ are equivalent to
+                        # self._requester.requestJsonAndCheck("POST", …, input=…)
+                        calls = [
+                            ("self._requester.requestJsonAndCheck", ['"POST"', "…", "input=…"])
+                            if func.startswith("self._requester.graphql_")
+                            else (func, args)
+                            for func, args in calls
+                        ]
+
+                        # calls to github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+                        # where class extends CompletableGithubObject are equivalent to
+                        # self._requester.requestJsonAndCheck("GET", …, headers=…)
+                        calls = [
+                            (
+                                "self._requester.requestJsonAndCheck",
+                                ['"GET"', "…", "headers=…"],
+                                "CompletableGithubObject",
+                            )
+                            if func.startswith("github.")
+                            and args
+                            and args[0]
+                            in [
+                                "self._requester",
+                                "self.__requester",
+                                "requester=self._requester",
+                                "requester=self.__requester",
+                            ]
+                            and (
+                                len(args) > 1
+                                and args[1].startswith("url=")
+                                or len(args) > 2
+                                and args[2].startswith(('{"url":', 'attributes={"url":'))
+                            )
+                            else (func, args, None)
+                            for func, args in calls
+                        ]
+
+                        # skip functions that call into parent functions
+                        if not any(func.startswith("super().") for func, args, base in calls):
+                            # check for requester calls with the expected verb
+                            if not any(
+                                func.startswith(("self._requester.request", "self.__requester.request"))
+                                and args
+                                and args[0] == verb
+                                for func, args, base in calls
+                            ):
+                                print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
+                                for func, args, base in calls:
+                                    print(f"- calls {func}({', '.join(args)})")
+                            # else:
+                            #    # check if the found verb depends on a base class, which we cannot test here
+                            #    if not any(
+                            #        func.startswith(("self._requester.request", "self.__requester.request"))
+                            #        and args
+                            #        and args[0] == verb
+                            #        and base is None
+                            #        for func, args, base in calls
+                            #    ):
+                            #        print(
+                            #            f"Not found any {verb} call in {self.current_class_name}.{method_name} "
+                            #            f"conditional on some base class"
+                            #        )
+                            #        for func, args, base in calls:
+                            #            print(f"- calls {func}({', '.join(args)})")
 
         if method_name == "__repr__":
             # extract properties used here as ids
@@ -565,8 +880,12 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
 
         # insert typing classes if needed
-        if isinstance(node.body[-2], cst.If):
-            if_node = node.body[-2]
+        # find first If statement in node.body
+        if_idx_node_or_none = next(
+            ((idx, stmt) for idx, stmt in enumerate(node.body) if isinstance(stmt, cst.If)), None
+        )
+        if if_idx_node_or_none is not None:
+            if_idx, if_node = if_idx_node_or_none
             i = 0
             while i < len(if_node.body.body) and isinstance(if_node.body.body[i].body[0], (cst.Import, cst.ImportFrom)):
                 imported_module = if_node.body.body[i].body[0].module.attr.value
@@ -605,7 +924,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     body=if_node.body.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
                 )
 
-            node = node.with_changes(body=tuple(node.body[:-2]) + (if_node, node.body[-1]))
+            node = node.with_changes(body=tuple(node.body[:if_idx]) + (if_node,) + tuple(node.body[if_idx + 1 :]))
 
         return node
 
@@ -681,37 +1000,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             returns=cst.Annotation(annotation=self.create_type(data_type, short_class_name=True)),
             body=cst.IndentedBlock(body=stmts),
         )
-
-    @classmethod
-    def create_type(
-        cls, data_type: PythonType | GithubClass | None, short_class_name: bool = False
-    ) -> cst.BaseExpression:
-        if data_type is None:
-            return cst.Name("None")
-        if isinstance(data_type, GithubClass):
-            if short_class_name:
-                return cst.Name(data_type.name.split(".")[-1])
-            return cls.create_attribute([data_type.package, data_type.module] + data_type.name.split("."))
-        if data_type.type == "union":
-            if len(data_type.inner_types) == 0:
-                return cst.Name("None")
-            if len(data_type.inner_types) == 1:
-                return cls.create_type(data_type.inner_types[0], short_class_name)
-            result = cst.BinaryOperation(
-                cls.create_type(data_type.inner_types[0], short_class_name),
-                cst.BitOr(),
-                cls.create_type(data_type.inner_types[1], short_class_name),
-            )
-            for dt in data_type.inner_types[2:]:
-                result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt, short_class_name))
-            return result
-        if data_type.inner_types:
-            elems = [
-                cst.SubscriptElement(cst.Index(cls.create_type(elem, short_class_name)))
-                for elem in data_type.inner_types
-            ]
-            return cst.Subscript(cst.Name(data_type.type), slice=elems)
-        return cst.Name(data_type.type)
 
     @classmethod
     def create_init_attr(cls, prop: Property) -> cst.SimpleStatementLine:
@@ -802,8 +1090,19 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             and prop.data_type.inner_types
             and isinstance(prop.data_type.inner_types[0], GithubClass)
         ):
-            func_name = "_makeClassAttribute"
-            args = [cst.Arg(cls.create_type(prop.data_type)), cst.Arg(attr)]
+            func_name = "_makeUnionClassAttributeFromTypeKey"
+            args = [
+                cst.Arg(cst.SimpleString('"type"')),
+                cst.Arg(cst.SimpleString(f'"{prop.data_type.inner_types[0].name}"')),
+                cst.Arg(attr),
+            ] + [
+                cst.Arg(
+                    cst.Tuple(
+                        elements=[cst.Element(cls.create_type(dt)), cst.Element(cst.SimpleString(f'"{dt.name}"'))]
+                    )
+                )
+                for dt in prop.data_type.inner_types
+            ]
         if func_name is None:
             raise ValueError(f"Unsupported data type {prop.data_type}")
         return cst.Call(func=cls.create_attribute(["self", func_name]), args=args)
@@ -913,7 +1212,6 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         if data_type.type == "str":
             return cst.SimpleString('""')
         if data_type.type == "datetime":
-            equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
             return cst.Call(
                 func=cst.Name("datetime"),
                 args=[
@@ -1191,6 +1489,297 @@ class AddSchemasTransformer(CstTransformerBase):
         return super().leave_ClassDef(original_node, updated_node)
 
 
+class CreateClassMethodTransformer(CstTransformerBase):
+    def __init__(
+        self,
+        spec: dict[str, Any],
+        index: dict[str, Any],
+        clazz: GithubClass,
+        method_name: str,
+        api_verb: str,
+        api_path: str,
+        api_response: str | None,
+        prefix_path,
+        return_property: str | None,
+    ):
+        super().__init__()
+        self.spec = spec
+        self.classes = index.get("classes", {})
+        self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
+        self.schema_to_class["default"] = ["GithubObject"]
+        self.clazz = clazz
+        self.method_name = method_name
+        self.api_verb = api_verb
+        self.api_path = api_path
+        self.relative_path = api_path[len(prefix_path) :] if prefix_path else api_path
+        self.api = spec.get("paths", {}).get(api_path, {}).get(api_verb, {})
+        if not self.api:
+            raise ValueError(f"Path {api_path} with verb {api_verb} does not exist in spec")
+        self.api_descr: str | None = self.api.get("summary", None)
+        if self.api_descr and not self.api_descr.endswith("."):
+            self.api_descr += "."
+        self.api_docs = self.api.get("externalDocs", {}).get("url")
+        responses = self.api.get("responses", {})
+        if api_response is None:
+            if api_verb in ["get", "patch"]:
+                api_response = "200"
+            elif api_verb in ["post", "put"]:
+                api_response = "200" if "200" in responses else "201"
+            elif api_verb == "delete":
+                api_response = "204"
+            else:
+                raise ValueError(f"Invalid verb {api_verb}")
+        if api_response not in responses:
+            raise ValueError(f"Response {api_response} does not exist for path {api_path} and verb {api_verb} in spec")
+        self.api_response = api_response
+        content_schema = responses.get(api_response).get("content", {}).get("application/json", {}).get("schema", None)
+        schema_path = [
+            "paths",
+            self.api_path,
+            self.api_verb,
+            "responses",
+            self.api_response,
+            "content",
+            "application/json",
+            "schema",
+        ]
+        self.return_property = return_property
+        if return_property:
+            if content_schema is None:
+                raise ValueError(
+                    f"No schema exists for response {api_response} of path {api_path} and verb {api_verb} in spec, cannot extract return property"
+                )
+            content_schema = resolve_schema(content_schema, spec)
+            if return_property not in content_schema.get("properties", {}):
+                raise ValueError(
+                    f"Property '{return_property}' does not exist in response for path {api_path} and verb {api_verb} in spec"
+                )
+            content_schema = content_schema.get("properties", {}).get(return_property, {})
+            schema_path.extend(["properties", return_property])
+        self.api_content = (
+            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, verbose=True)
+            if content_schema
+            else None
+        )
+        self.schema_added = 0
+
+    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef):
+        if self.current_class_name == self.clazz.name:
+            stmts = updated_node.body.body
+            insert_idx = self.find_method_index(self.method_name, stmts)
+            if insert_idx < len(stmts):
+                stmt = stmts[insert_idx]
+                if isinstance(stmt, cst.FunctionDef) and stmt.name.value == self.method_name:
+                    raise RuntimeError(f"Function '{self.method_name}' already exists")
+            method = self.create_method()
+            stmts = tuple(stmts[:insert_idx]) + (method,) + tuple(stmts[insert_idx:])
+            return updated_node.with_changes(body=updated_node.body.with_changes(body=stmts))
+
+        return updated_node
+
+    def find_method_index(
+        self, method_name: str, statements: Sequence[cst.BaseStatement] | Sequence[cst.BaseSmallStatement]
+    ):
+        method_name_order_elements = self.get_order_elements(method_name)
+        for idx, stmt in enumerate(statements):
+            if isinstance(stmt, cst.FunctionDef):
+                function_name = stmt.name.value
+                function_name_order_elements = self.get_order_elements(function_name)
+                if function_name == "_useAttributes":
+                    return idx
+                if function_name.startswith("_") or self.is_github_object_property(stmt):
+                    continue
+                if function_name_order_elements >= method_name_order_elements:
+                    return idx
+        return len(statements)
+
+    @staticmethod
+    def get_order_elements(function_name: str) -> tuple[str] | tuple[str, int, str]:
+        for idx, prefix in enumerate(["create", "get", "set", "delete", "remove", "edit"]):
+            if function_name.startswith(f"{prefix}_"):
+                return function_name[len(prefix) + 1 :], idx, prefix
+        return (function_name,)
+
+    def create_method(self) -> cst.FunctionDef:
+        url_params = [
+            elem[1:-1] for elem in self.relative_path.split("/") if elem.startswith("{") and elem.endswith("}")
+        ]
+        if url_params:
+            raise ValueError(f"URL parameter not implemented: {', '.join(url_params)}")
+
+        request_schema = (
+            self.api.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", None)
+        )
+        schema_path = (
+            "paths",
+            self.api_path,
+            self.api_verb,
+            "requestBody",
+            "content",
+            "application/json",
+            "schema",
+            "properties",
+        )
+        request_properties = (
+            {
+                prop: as_python_type(
+                    desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, verbose=True
+                )
+                for prop, desc in request_schema.get("properties", {}).items()
+            }
+            if request_schema
+            else {}
+        )
+        required_properties = request_schema.get("required") if request_schema else []
+        # TODO: ignore parameters:
+        #       - those covered by prefix_path
+        #       - those referring to pagination
+        #       - add all others to method name, e.g dir in /repos/{owner}/{repo}/readme/{dir}
+
+        stmts = []
+
+        docstrings = []
+        docstrings.append('"""')
+        if self.api_docs:
+            docstrings.append(f":calls: `{self.api_verb.upper()} {self.api_path} <{self.api_docs}>`_")
+        else:
+            docstrings.append(f":calls: {self.api_verb.upper()} {self.api_path}")
+        for prop_name, prop_type in request_properties.items():
+            docstrings.append(f":param {prop_name}: {prop_type}")
+        if self.api_content:
+            docstrings.append(f":rtype: {self.api_content}")
+        if self.api_descr:
+            docstrings.append("")
+            docstrings.append(self.api_descr)
+        docstrings.append('"""')
+        docstring = "\n        ".join(docstrings)
+        stmts.append(cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))]))
+
+        assertion_stmts = [
+            cst.SimpleStatementLine(
+                body=[
+                    cst.Assert(
+                        test=cst.Call(
+                            func=cst.Name("isinstance")
+                            if prop_name in required_properties
+                            else cst.Name("is_optional"),
+                            args=[cst.Arg(cst.Name(prop_name)), cst.Arg(self.create_type(prop_type))],
+                        ),
+                        msg=cst.Name(prop_name),
+                    )
+                ]
+            )
+            for prop_name, prop_type in request_properties.items()
+        ]
+        stmts.extend(assertion_stmts)
+
+        # TODO: add NotSet.remove_notset()
+        if request_properties:
+            parameter_stmt = cst.SimpleStatementLine(
+                body=[
+                    cst.Assign(
+                        targets=[cst.AssignTarget(cst.Name("parameters"))],
+                        value=cst.Dict(
+                            [
+                                cst.DictElement(key=cst.SimpleString(f'"{prop_name}"'), value=cst.Name(prop_name))
+                                for prop_name, prop_type in request_properties.items()
+                            ]
+                        ),
+                    )
+                ],
+                leading_lines=[cst.EmptyLine()],
+            )
+            stmts.append(parameter_stmt)
+
+        request_stmt = cst.SimpleStatementLine(
+            body=[
+                cst.Assign(
+                    targets=[
+                        cst.AssignTarget(
+                            cst.Tuple(
+                                elements=[cst.Element(cst.Name("headers")), cst.Element(cst.Name("data"))],
+                                lpar=(),
+                                rpar=(),
+                            )
+                        )
+                    ],
+                    value=cst.Call(
+                        func=self.create_attribute(["self", "_requester", "requestJsonAndCheck"]),
+                        args=(
+                            cst.Arg(cst.SimpleString(f'"{self.api_verb.upper()}"')),
+                            cst.Arg(
+                                cst.FormattedString(
+                                    [
+                                        cst.FormattedStringExpression(self.create_attribute(["self", "url"])),
+                                        cst.FormattedStringText(self.relative_path),
+                                    ]
+                                )
+                            ),
+                        )
+                        + (
+                            (cst.Arg(keyword=cst.Name("input"), value=cst.Name("parameters"), equal=equal),)
+                            if request_properties
+                            else ()
+                        ),
+                    ),
+                )
+            ]
+        )
+        stmts.append(request_stmt)
+
+        if self.api_content:
+            # TODO: return proper pagination instead of list[T]
+            if self.return_property:
+                data = cst.Call(
+                    func=self.create_attribute(["data", "get"]),
+                    args=[cst.Arg(cst.SimpleString(f'"{self.return_property}"'))],
+                )
+            else:
+                data = cst.Name("data")
+
+            if isinstance(self.api_content, GithubClass):
+                result_stmt = cst.SimpleStatementLine(
+                    body=[
+                        cst.Return(
+                            value=cst.Call(
+                                func=self.create_type(self.api_content),
+                                args=[
+                                    cst.Arg(self.create_attribute(["self", "_requester"])),
+                                    cst.Arg(cst.Name("headers")),
+                                    cst.Arg(data),
+                                ],
+                            )
+                        )
+                    ]
+                )
+            else:
+                result_stmt = cst.SimpleStatementLine(body=[cst.Return(data)])
+            stmts.append(result_stmt)
+
+        method_params = [cst.Param(cst.Name("self"))]
+        for prop_name, prop_type in request_properties.items():
+            annotation = None
+            if prop_type:
+                if prop_name in required_properties:
+                    # TODO: add NotSet default value
+                    annotation = cst.Annotation(self.create_type(prop_type))
+                else:
+                    annotation = cst.Annotation(self.create_type(PythonType("union", [prop_type, PythonType("None")])))
+            method_params.append(cst.Param(name=cst.Name(prop_name), annotation=annotation))
+
+        params = cst.Parameters(params=method_params)
+        returns = cst.Annotation(annotation=self.create_type(self.api_content, short_class_name=True))
+        body = cst.IndentedBlock(body=stmts)
+
+        return cst.FunctionDef(
+            name=cst.Name(value=self.method_name),
+            params=params,
+            body=body,
+            returns=returns,
+            lines_after_decorators=[cst.EmptyLine()],
+        )
+
+
 class JsonSerializer(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, set):
@@ -1199,8 +1788,18 @@ class JsonSerializer(JSONEncoder):
 
 
 class IndexFileWorker:
-    def __init__(self, classes: dict[str, Any]):
+    def __init__(
+        self, classes: dict[str, Any], index_config_file: Path, paths: list[dict[str, Any]], check_verbs: bool
+    ):
         self.classes = classes
+        self.paths = paths
+        self.config = {}
+        self.check_verbs = check_verbs
+        self.tests_path = index_config_file.parent.parent / "tests"
+
+        if index_config_file.exists():
+            with index_config_file.open("r") as r:
+                self.config = json.load(r)
 
     def index_file(self, filename: str):
         with open(filename) as r:
@@ -1208,15 +1807,30 @@ class IndexFileWorker:
 
         from pathlib import Path
 
-        visitor = IndexPythonClassesVisitor(self.classes)
+        paths = {}
+        visitor = IndexPythonClassesVisitor(
+            self.classes, paths, self.config.get("known method verbs", {}) if self.check_verbs else None
+        )
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
         visitor.filename(filename)
+        visitor.test_filename(str(self.tests_path / Path(filename).name))
         try:
             tree = cst.parse_module(code)
             tree.visit(visitor)
+            # return path dict populated by this worker through 'paths' argument
+            self.paths.append(paths)
         except Exception as e:
             raise RuntimeError(f"Failed to parse {filename}", e)
+
+
+class HandleNewSchemas(Enum):
+    ignore = "ignore"
+    create_class = "create-class"
+    as_dict = "as-dict"
+
+    def __str__(self):
+        return self.value
 
 
 class OpenApi:
@@ -1232,6 +1846,22 @@ class OpenApi:
         self.classes = index.get("classes", {})
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         self.schema_to_class["default"] = ["GithubObject"]
+
+    def as_python_type(
+        self,
+        schema_type: dict[str, Any],
+        schema_path: list[str],
+        *,
+        collect_new_schemas: list[str] | None = None,
+    ) -> PythonType | GithubClass | None:
+        return as_python_type(
+            schema_type,
+            schema_path,
+            self.schema_to_class,
+            self.classes,
+            verbose=self.verbose,
+            collect_new_schemas=collect_new_schemas,
+        )
 
     @staticmethod
     def read_index(filename: str) -> dict[str, Any]:
@@ -1268,9 +1898,9 @@ class OpenApi:
                 schema = schema.get(step, {})
         return steps, schema
 
-    def get_inner_spec_types(self, schema: dict, schema_path: list[str | int]) -> list[str]:
+    def get_spec_types(self, schema: dict, schema_path: list[str | int]) -> list[str]:
         """
-        Returns inner spec type, ignores outer datastructures like lists or pagination.
+        Returns spec types.
         """
         if "$ref" in schema:
             return [schema.get("$ref")]
@@ -1283,87 +1913,27 @@ class OpenApi:
         if "allOf" in schema and len(schema.get("allOf")) == 1:
             return [schema.get("allOf")[0].get("$ref")]
         if schema.get("type") == "object":
-            # extract the inner type of pagination objects
-            if "properties" in schema:
-                props = schema.get("properties")
-                list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
-                total_count_items = [
-                    n for n, p in props.items() if n.startswith("total_") and p.get("type") == "integer"
-                ]
-                if len(list_items) == 1 and len(total_count_items) == 1:
-                    list_item = list_items[0]
-                    return self.get_inner_spec_types(
-                        props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
-                    )
             return ["/".join(["#"] + schema_path)]
-        if schema.get("type") == "array" and "items" in schema:
-            return self.get_inner_spec_types(schema.get("items"), schema_path + ["items"])
         return []
 
-    def as_python_type(self, schema_type: dict[str, Any], schema_path: list[str]) -> PythonType | GithubClass | None:
-        schema = None
-        data_type = schema_type.get("type")
-        if "$ref" in schema_type:
-            schema = schema_type.get("$ref").strip("# ")
-        elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
-            return self.as_python_type(schema_type.get("allOf")[0], schema_path + ["allOf", "0"])
-        if data_type == "object":
-            schema = "/".join([""] + schema_path)
-        if schema is not None:
-            if schema in self.schema_to_class:
-                classes = self.schema_to_class[schema]
-                if not isinstance(classes, list):
-                    raise ValueError(f"Expected list of types for schema: {schema}")
-                if len(classes) == 0:
-                    raise ValueError(f"Expected non-empty list of types for schema: {schema}")
-                if len(classes) == 1:
-                    class_name = classes[0]
-                    if class_name not in self.classes:
-                        if self.verbose:
-                            print(f"Class not found in index: {class_name}")
-                        return None
-                    return GithubClass(**self.classes.get(class_name))
-                if self.verbose:
-                    for class_name in classes:
-                        if class_name not in self.classes:
-                            print(f"Class not found in index: {class_name}")
-                return PythonType(
-                    type="union",
-                    inner_types=[GithubClass(**self.classes.get(cls)) for cls in classes if cls in self.classes],
+    def get_inner_spec_types(self, schema: dict, schema_path: list[str | int]) -> list[str]:
+        """
+        Returns inner spec type, ignores outer datastructures like lists or pagination.
+        """
+        # extract the inner type of pagination objects
+        if "properties" in schema:
+            props = schema.get("properties")
+            list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
+            total_count_items = [n for n, p in props.items() if n.startswith("total_") and p.get("type") == "integer"]
+            if len(list_items) == 1 and len(total_count_items) == 1:
+                list_item = list_items[0]
+                return self.get_inner_spec_types(
+                    props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
                 )
-            if self.verbose:
-                print(f"Schema not implemented: {'.'.join([''] + schema_path)}")
-            return PythonType(type="dict", inner_types=[PythonType("str"), PythonType("Any")])
+        if schema.get("type") == "array" and "items" in schema:
+            return self.get_inner_spec_types(schema.get("items"), schema_path + ["items"])
 
-        if data_type is None:
-            if self.verbose:
-                print(f"There is no $ref and no type in schema: {json.dumps(schema_type)}")
-            return None
-
-        if data_type == "array":
-            return PythonType(
-                type="list", inner_types=[self.as_python_type(schema_type.get("items"), schema_path + ["items"])]
-            )
-
-        format = schema_type.get("format")
-        data_types = {
-            "boolean": {None: "bool"},
-            "integer": {None: "int"},
-            "number": {None: "float"},
-            "string": {
-                None: "str",
-                "date-time": "datetime",
-                "uri": "str",
-            },
-        }
-
-        if data_type not in data_types:
-            if self.verbose:
-                print(f"Unsupported data type: {data_type}")
-            return None
-
-        formats = data_types.get(data_type)
-        return PythonType(type=formats.get(format) or formats.get(None))
+        return self.get_spec_types(schema, schema_path)
 
     @staticmethod
     def extend_inheritance(classes: dict[str, Any]) -> bool:
@@ -1430,13 +2000,32 @@ class OpenApi:
                     w.write(updated_code)
             return True
 
-    def apply(self, spec_file: str, index_filename: str, class_names: list[str], dry_run: bool, tests: bool) -> bool:
+    def apply(
+        self,
+        github_path: str,
+        spec_file: str,
+        index_filename: str,
+        class_names: list[str] | None,
+        dry_run: bool,
+        tests: bool,
+        handle_new_schemas: HandleNewSchemas,
+    ) -> bool:
+        print(f"Using spec {spec_file}")
         with open(spec_file) as r:
             spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
         classes = index.get("classes", {})
 
+        if not class_names:
+            class_names = classes.keys()
+        if len(class_names) == 1:
+            print(f"Applying API schemas to PyGithub class {class_names[0]}")
+        else:
+            print(f"Applying API schemas to {len(class_names)} PyGithub classes")
+
+        new_schemas_as_dict = handle_new_schemas == HandleNewSchemas.as_dict
+        any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
 
@@ -1453,13 +2042,93 @@ class OpenApi:
             }
             completable = "CompletableGithubObject" in cls.get("inheritance", [])
             cls_schemas = cls.get("schemas", [])
+            cls_properties = cls.get("properties", [])
+            class_change = False
+            test_change = False
             for schema_name in cls_schemas:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
 
+                if handle_new_schemas == HandleNewSchemas.create_class:
+                    new_schemas = []
+                    for k, v in schema.get("properties", {}).items():
+                        # only check for new schemas of new attributes
+                        if k not in cls_properties:
+                            self.as_python_type(v, schema_path + ["properties", k], collect_new_schemas=new_schemas)
+                    # handle new schemas
+                    for new_schema in new_schemas:
+                        new_class_name = "".join(
+                            [term[0].upper() + term[1:] for term in re.split("[-_]", new_schema.split("/")[-1])]
+                        )
+                        if new_class_name in classes:
+                            # we probably created that class in an earlier iteration, or we have a name collision here
+                            continue
+                        is_completable = "url" in self.get_schema(spec, new_schema)[1].get("properties", [])
+                        parent_name = "CompletableGithubObject" if is_completable else "NonCompletableGithubObject"
+                        # TODO: get path from schema via indices.path_to_return_classes, get from spec.paths.PATH.get.externalDocs,url
+                        docs_url = "https://docs.github.com/en/rest"
+                        print(f"Drafting class {new_class_name} for new schema {new_schema}")
+                        self.create_class(
+                            github_path,
+                            spec_file,
+                            index_filename,
+                            new_class_name,
+                            parent_name,
+                            docs_url,
+                            [new_schema],
+                            dry_run=False,
+                            tests=tests,
+                            handle_new_schemas=handle_new_schemas,
+                        )
+
+                        # update index
+                        self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
+                        with open(index_filename) as r:
+                            index = json.load(r)
+                        classes = index.get("classes", {})
+
+                    # propagate new classes to self.as_python_type
+                    self.classes = classes
+                    self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
+
+                def is_not_dict_type(python_type: GithubClass | PythonType | None) -> bool:
+                    return (
+                        python_type is None
+                        or isinstance(python_type, GithubClass)
+                        or isinstance(python_type, PythonType)
+                        and (
+                            python_type.type != "dict"
+                            and (python_type.type != "list" or is_not_dict_type(python_type.inner_types[0]))
+                        )
+                    )
+
+                def is_supported_type(
+                    property_name: str,
+                    property_spec: dict[str, Any],
+                    property_type: PythonType | GithubClass | None,
+                    verbose: bool,
+                ) -> bool:
+                    if isinstance(property_type, PythonType):
+                        if property_type.type == "union":
+                            if not all(isinstance(inner_type, GithubClass) for inner_type in property_type.inner_types):
+                                if verbose:
+                                    print(f"Unsupported property '{property_name}' of type {property_type}")
+                                return False
+                        if property_type.type == "list":
+                            if not is_supported_type(
+                                property_name, property_spec, property_type.inner_types[0], verbose=False
+                            ):
+                                if verbose:
+                                    print(f"Unsupported property '{property_name}' of type {property_type}")
+                                return False
+                    return True
+
                 all_properties = {
-                    k: (self.as_python_type(v, schema_path + ["properties", k]), v.get("deprecated", False))
+                    k: (python_type, v.get("deprecated", False))
                     for k, v in schema.get("properties", {}).items()
+                    for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
+                    if is_supported_type(k, v, python_type, self.verbose)
+                    and (is_not_dict_type(python_type) or new_schemas_as_dict)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -1471,7 +2140,7 @@ class OpenApi:
                 )
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(transformer)
-                changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
+                class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
                 if tests and os.path.exists(clazz.test_filename):
                     with open(clazz.test_filename) as r:
@@ -1482,9 +2151,15 @@ class OpenApi:
                     )
                     tree = cst.parse_module(code)
                     tree_updated = tree.visit(transformer)
-                    changed = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or changed
+                    test_change = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or test_change
 
-                return changed
+            any_change = any_change or class_change or test_change
+            if class_change or test_change:
+                print(f"Class {class_name} changed")
+                if test_change:
+                    print(f"Test {clazz.test_filename} changed")
+
+        return any_change
 
     def fetch(self, api: str, api_version: str, commit: str | None, spec_file: str) -> bool:
         ref = "refs/heads/main" if commit is None else commit
@@ -1503,8 +2178,17 @@ class OpenApi:
             print(f"written {written // 1024 / 1024:.3f} MBytes")
         return True
 
-    def index(self, github_path: str, index_filename: str, dry_run: bool) -> bool:
+    def index(
+        self, github_path: str, spec_file: str | None, index_filename: str, check_verbs: bool, dry_run: bool
+    ) -> bool:
         import multiprocessing
+
+        config = {}
+        config_file = Path(github_path) / "openapi.index.json"
+        if config_file.exists():
+            with config_file.open("r") as r:
+                ignored_schemas = json.load(r).get("ignored OpenAPI schemas", [])
+            config["ignored_schemas"] = ignored_schemas
 
         files = [f for f in listdir(github_path) if isfile(join(github_path, f)) and f.endswith(".py")]
         print(f"Indexing {len(files)} Python files")
@@ -1512,85 +2196,293 @@ class OpenApi:
         # index files in parallel
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
-            indexer = IndexFileWorker(classes)
+            paths = manager.list()
+            if check_verbs and not config_file.exists():
+                raise RuntimeError(f"Cannot check verbs without config: {config_file}")
+            indexer = IndexFileWorker(classes, config_file, paths, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
+            paths = merge_paths(paths)
 
-            # construct inheritance list
-            while self.extend_inheritance(classes):
-                pass
+        # construct inheritance list
+        while self.extend_inheritance(classes):
+            pass
 
-            # propagate ids of base classes to derived classes
-            while self.propagate_ids(classes):
-                pass
+        # propagate ids of base classes to derived classes
+        while self.propagate_ids(classes):
+            pass
 
-            # construct class_to_descendants
-            class_to_descendants = {}
-            for name, descendant in classes.items():
-                for cls in descendant.get("inheritance", []):
-                    if cls not in class_to_descendants:
-                        class_to_descendants[cls] = []
-                    class_to_descendants[cls].append(name)
-            class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
+        # construct class_to_descendants
+        class_to_descendants = {}
+        for name, descendant in classes.items():
+            for cls in descendant.get("inheritance", []):
+                if cls not in class_to_descendants:
+                    class_to_descendants[cls] = []
+                class_to_descendants[cls].append(name)
+        class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
 
-            path_to_classes = {}
-            schema_to_classes = {}
-            for name, cls in classes.items():
-                # construct path-to-class index
-                for method in cls.get("methods", {}).values():
-                    path = method.get("call", {}).get("path")
-                    if not path:
-                        continue
-                    verb = method.get("call", {}).get("method", "").lower()
-                    if not verb:
-                        if self.verbose:
-                            print(f"Unknown verb for path {path} of class {name}")
-                        continue
+        path_to_call_methods = {}
+        path_to_return_classes = {}
+        schema_to_classes = {}
+        for cls_name, cls in classes.items():
+            # construct path-to-class index
+            for method_name, method in cls.get("methods", {}).items():
+                path = method.get("call", {}).get("path")
+                if not path:
+                    continue
+                verb = method.get("call", {}).get("verb", "").lower()
+                if not verb:
+                    if self.verbose:
+                        print(f"Unknown verb for path {path} of class {cls_name}")
+                    continue
 
-                    if not path.startswith("/") and self.verbose:
-                        print(f"Unsupported path: {path}")
-                    returns = method.get("returns", [])
-                    if path not in path_to_classes:
-                        path_to_classes[path] = {}
-                    if verb not in path_to_classes[path]:
-                        path_to_classes[path][verb] = set()
-                    path_to_classes[path][verb] = sorted(list(set(path_to_classes[path][verb]).union(set(returns))))
+                if not path.startswith("/") and self.verbose:
+                    print(f"Unsupported path: {path}")
 
-                # construct schema-to-class index
-                for schema in cls.get("schemas"):
-                    if schema not in schema_to_classes:
-                        schema_to_classes[schema] = []
-                    schema_to_classes[schema].append(name)
+                if path not in path_to_call_methods:
+                    path_to_call_methods[path] = {}
+                if verb not in path_to_call_methods[path]:
+                    path_to_call_methods[path][verb] = set()
+                path_to_call_methods[path][verb] = sorted(
+                    list(set(path_to_call_methods[path][verb]).union({".".join([cls_name, method_name])}))
+                )
 
-            print(f"Indexed {len(classes)} classes")
-            print(f"Indexed {len(path_to_classes)} paths")
-            print(f"Indexed {len(schema_to_classes)} schemas")
+                returns = method.get("returns", [])
+                if path not in path_to_return_classes:
+                    path_to_return_classes[path] = {}
+                if verb not in path_to_return_classes[path]:
+                    path_to_return_classes[path][verb] = set()
+                path_to_return_classes[path][verb] = sorted(
+                    list(set(path_to_return_classes[path][verb]).union(set(returns)))
+                )
 
-            data = {
-                "sources": github_path,
-                "classes": classes,
-                "indices": {
-                    "class_to_descendants": class_to_descendants,
-                    "path_to_classes": path_to_classes,
-                    "schema_to_classes": schema_to_classes,
-                },
-            }
+            # construct schema-to-class index
+            for schema in cls.get("schemas"):
+                if schema not in schema_to_classes:
+                    schema_to_classes[schema] = []
+                schema_to_classes[schema].append(cls_name)
 
-            if dry_run:
-                if os.path.exists(index_filename):
-                    with open(index_filename) as w:
-                        orig_json = w.read()
-                    # compare the serialized json for stability, not the dict
-                    data_json = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
-                    return orig_json != data_json
-            else:
-                with open(index_filename, "w") as w:
-                    json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+        print(f"Indexed {len(classes)} classes")
+        print(f"Indexed {len(path_to_return_classes)} paths")
+        print(f"Indexed {len(schema_to_classes)} schemas")
 
-            return True
+        data = {
+            "config": config,
+            "sources": github_path,
+            "classes": classes,
+            "paths": paths,
+            "indices": {
+                "class_to_descendants": class_to_descendants,
+                "path_to_call_methods": path_to_call_methods,
+                "path_to_return_classes": path_to_return_classes,
+                "schema_to_classes": schema_to_classes,
+            },
+        }
 
-    def suggest(
+        if spec_file is not None:
+            print("Indexing OpenAPI spec")
+            with open(spec_file) as r:
+                spec = json.load(r)
+
+            # construct schema to path index
+            return_schema_to_paths = defaultdict(list)
+            for path, path_spec in spec.get("paths", {}).items():
+                spec_type = (
+                    path_spec.get("get", {})
+                    .get("responses", {})
+                    .get("200", {})
+                    .get("content", {})
+                    .get("application/json", {})
+                    .get("schema", {})
+                )
+                if spec_type:
+                    for schema in self.get_spec_types(
+                        spec_type, [f'"{path}"', "get", "responses", '"200"', "content", '"application/json"', "schema"]
+                    ):
+                        if schema.startswith("#/components/"):
+                            return_schema_to_paths[schema[1:]].append(path)
+
+            data["indices"]["return_schema_to_paths"] = return_schema_to_paths
+
+        if dry_run:
+            if os.path.exists(index_filename):
+                with open(index_filename) as w:
+                    orig_json = w.read()
+                # compare the serialized json for stability, not the dict
+                data_json = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+                return orig_json != data_json
+        else:
+            with open(index_filename, "w") as w:
+                json.dump(data, w, indent=2, sort_keys=True, ensure_ascii=False, cls=JsonSerializer)
+
+        return True
+
+    def suggest_paths(self, spec_file: str, index_filename: str, class_names: list[str] | None, dry_run: bool) -> bool:
+        print(f"Using spec {spec_file}")
+        with open(spec_file) as r:
+            spec = json.load(r)
+        with open(index_filename) as r:
+            index = json.load(r)
+
+        if not class_names:
+            class_names = index.get("classes", {}).keys()
+
+        if len(class_names) == 1:
+            print(f"Suggesting API paths for PyGithub class {class_names[0]}")
+        else:
+            print(f"Suggesting API paths for {len(class_names)} PyGithub classes")
+        print()
+
+        paths = spec.get("paths", {})
+        classes = index.get("classes", {})
+        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
+        if return_schema_to_paths is None:
+            raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
+        implemented_paths = index.get("paths", {})
+
+        self.suggest_path_corrections(paths, implemented_paths)
+
+        for cls in class_names:
+            clazz = classes.get(cls)
+            print(f"Class {cls}")
+            for schema in clazz.get("schemas", []):
+                print(f"- Implements schema {schema}")
+                for path in return_schema_to_paths.get(schema, []):
+                    print(f"  - Returned by path {path}")
+                    for candidate_path in paths:
+                        verbs = paths[candidate_path].keys()
+                        if len(candidate_path) > len(path) and candidate_path.startswith(f"{path}/"):
+                            rel_path = candidate_path[len(path) + 1 :]
+                            rel_path_fields = rel_path.split("/")
+                            rel_path_params = [
+                                field.startswith("{") and field.endswith("}") for field in rel_path_fields
+                            ]
+                            # we skip paths where multiple path parameters exist, or
+                            # the path parameter is not at the end of the path
+                            if sum(rel_path_params) > 1 or sum(rel_path_params) == 1 and not rel_path_params[-1]:
+                                continue
+
+                            skip = False
+                            rel_subpath = []
+                            for rel_field in rel_path_fields:
+                                rel_subpath.append(rel_field)
+                                subpath = "/".join([path] + rel_subpath)
+                                for method in implemented_paths.get(subpath, {}).get("GET", {}).get("methods", []):
+                                    for return_type in method.get("returns", []):
+                                        if return_type in classes:
+                                            if self.verbose:
+                                                print(f"\n      - Parent path {subpath} returns {return_type}", end="")
+                                            skip = True
+                            if skip:
+                                continue
+
+                            for verb in verbs:
+                                if implemented_paths.get(candidate_path, {}).get(verb.upper, {}).get("methods", []):
+                                    methods = [
+                                        f"{method.get('class')}.{method.get('name')}"
+                                        for method in implemented_paths.get(candidate_path, {})
+                                        .get("GET", {})
+                                        .get("methods")
+                                    ]
+                                    if self.verbose:
+                                        print(f"    - {verb} {candidate_path} implemented by {", ".join(methods)}")
+                                    continue
+
+                                suggested_methods = self.suggest_method_names(verb, path, candidate_path, spec)
+                                if suggested_methods:
+                                    implementations = " or ".join(
+                                        [f"{cls}.{suggested_method}()" for suggested_method in suggested_methods]
+                                    )
+                                    print(f"    - {verb} {candidate_path} should be implemented as {implementations}")
+                                    for suggested_method in suggested_methods:
+                                        print(
+                                            f"      {sys.executable} {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
+                                        )
+                            print()
+            print()
+
+        return False
+
+    def suggest_path_corrections(self, paths: dict[str, Any], implemented_paths: dict[str, Any]):
+        spec_paths = {(verb, path) for path, verbs in paths.items() for verb in verbs}
+        impl_paths = {(verb.lower(), path) for path, verbs in implemented_paths.items() for verb in verbs}
+        unspec_paths = impl_paths - spec_paths
+        impl_spec_paths = spec_paths.intersection(impl_paths)
+        print(
+            f"There are {len(impl_spec_paths)} out of {len(spec_paths)} verbs ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented"
+        )
+        print(f"There are {len(unspec_paths)} verbs unknown to the OpenAPI spec")
+        if self.verbose:
+            for verb, path in sorted(list(unspec_paths)):
+                print(f"- {verb} {path}")
+        print()
+
+        spec_paths = {path for (verb, path) in spec_paths}
+        impl_paths = {path for (verb, path) in impl_paths}
+        unspec_paths = impl_paths - spec_paths
+        impl_spec_paths = spec_paths.intersection(impl_paths)
+        print(
+            f"There are {len(impl_spec_paths)} out of {len(spec_paths)} paths ({len(impl_spec_paths) * 100 // len(spec_paths)}%) implemented"
+        )
+        print(f"There are {len(unspec_paths)} paths unknown to the OpenAPI spec")
+        if self.verbose:
+
+            def fingerprint(path: str) -> str:
+                return re.sub("[{][^}]+[}]", "{}", path.rstrip("/"))
+
+            spec_fingerprints = {fingerprint(path): path for path in spec_paths}
+            for path in sorted(list(unspec_paths)):
+                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), " ")}")
+        print()
+
+    def suggest_method_names(self, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
+        suffix_path = path.replace("-", "_")[len(prefix_path) + 1 :]
+        fields = suffix_path.split("/")
+        context = "_".join(fields[:-1])
+        last_field = fields[-1]
+
+        # download API paths respond with a 302 status and a Location header
+        responses = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
+        if sorted(list(responses.keys()))[0] == "302" and "Location" in responses.get("302").get("headers", {}):
+            return ["download", "get_download_link"]
+
+        # verb == "get": get_ method on the nearst object
+        # verb == "patch": .edit method on the object that is constructed by the url (get)
+        # verb == "put": .set_ method on the nearst object
+        # verb == "post": .create_ method on the nearst object
+        # verb == "delete": .delete method on the object that is constructed by the url (get)
+        if verb == "post":
+            actions = ["create", ""]
+        elif verb == "put":
+            actions = ["set"]
+        else:
+            actions = [verb]
+
+        method_names = []
+        for action in actions:
+            action = f"{action}_" if action else ""
+            context = f"{context}_" if context else ""
+            if last_field.startswith("{") and last_field.endswith("}"):
+                last_field = last_field[1:-1]
+                if last_field.endswith("_id"):
+                    method_names.append(f"{action}{context}{last_field[:-3]}(id)")
+                    continue
+                if len(fields) > 1 and not fields[-2].startswith("{"):
+                    object_name = fields[-2]
+                    if object_name.endswith("es"):
+                        object_name = object_name[:-2]
+                    elif object_name.endswith("s"):
+                        object_name = object_name[:-1]
+                    method_names.append(f"{action}{context}{object_name}({last_field})")
+                    continue
+                method_names.append(f"{action}{context}({last_field})")
+                continue
+            method_names.append(f"{action}{context}{fields[-1]}")
+
+        return method_names
+
+    def suggest_schemas(
         self, spec_file: str, index_filename: str, class_names: list[str] | None, add: bool, dry_run: bool
     ) -> bool:
         print(f"Using spec {spec_file}")
@@ -1599,6 +2491,11 @@ class OpenApi:
         with open(index_filename) as r:
             index = json.load(r)
 
+        classes = index.get("classes", {})
+        schema_to_classes = index.get("indices", {}).get("schema_to_classes", {})
+        path_to_call_methods = index.get("indices", {}).get("path_to_call_methods", {})
+        path_to_return_classes = index.get("indices", {}).get("path_to_return_classes", {})
+
         schemas_added = 0
         schemas_suggested = 0
 
@@ -1606,7 +2503,7 @@ class OpenApi:
             if len(class_names) == 1:
                 print(f"Suggesting API schemas for PyGithub class {class_names[0]}")
             else:
-                print(f"Suggesting API schemas for PyGithub {len(class_names)} classes")
+                print(f"Suggesting API schemas for {len(class_names)} PyGithub classes")
         else:
             print("Suggesting API schemas for PyGithub classes")
 
@@ -1636,6 +2533,7 @@ class OpenApi:
 
         # suggest schemas based on properties of classes
         available_schemas = {}
+        schema_returned_by = defaultdict(set)
         unimplemented_schemas = set()
         for cls in self.classes.values():
             schemas: list[str] = cls.get("schemas", [])
@@ -1653,30 +2551,38 @@ class OpenApi:
                 for property_name, property_spec_type in schema.get("properties", {}).items():
                     property = properties.get(property_name, {})
                     returns = property.get("returns", [])
-                    for ret in returns:
-                        cls_names = set(inner_return_type(ret))
-                        for cls_name in cls_names:
-                            if class_names and cls_name not in class_names:
+                    cls_names = {ir for ret in returns for ir in inner_return_type(ret)}
+                    spec_type = self.get_inner_spec_types(
+                        property_spec_type, schema_path + ["properties", property_name]
+                    )
+
+                    for cls_name in cls_names:
+                        if class_names and cls_name not in class_names:
+                            continue
+                        if cls_name in ["bool", "int", "str", "datetime", "list", "dict", "Any"]:
+                            continue
+                        if cls_name not in available_schemas:
+                            available_schemas[cls_name] = {}
+                        key = (cls.get("name"), property_name)
+                        if key not in available_schemas[cls_name]:
+                            available_schemas[cls_name][key] = []
+                        for st in spec_type:
+                            st = st.lstrip("#")
+                            # explicitly ignore these schemas
+                            if st in {"/components/schemas/empty-object"}:
                                 continue
-                            if cls_name in ["bool", "int", "str", "datetime", "list", "dict", "Any"]:
-                                continue
-                            if cls_name not in available_schemas:
-                                available_schemas[cls_name] = {}
-                            key = (cls.get("name"), property_name)
-                            if key not in available_schemas[cls_name]:
-                                available_schemas[cls_name][key] = []
-                            spec_type = self.get_inner_spec_types(
-                                property_spec_type, schema_path + ["properties", property_name]
-                            )
-                            for st in spec_type:
-                                if st.lstrip("#") not in index.get("indices", {}).get("schema_to_classes", {}):
-                                    unimplemented_schemas.add(st.lstrip("#"))
-                            available_schemas[cls_name][key].extend(spec_type)
+                            schema_returned_by[st].add(key)
+                            if st not in schema_to_classes:
+                                unimplemented_schemas.add(st)
+                            # only add as available schema for cls_name if this schema
+                            # is not implemented by any other class in the union (cls_names)
+                            if not any(
+                                st in classes.get(n, {}).get("schemas", []) for n in cls_names.difference(set(cls_name))
+                            ):
+                                available_schemas[cls_name][key].append(st)
 
         for schema in sorted(list(unimplemented_schemas)):
             print(f"schema not implemented: {schema}")
-
-        classes = index.get("classes", {})
 
         for cls, provided_schemas in sorted(available_schemas.items()):
             available = set()
@@ -1684,7 +2590,10 @@ class OpenApi:
             providing_properties = []
 
             for providing_property, spec_types in provided_schemas.items():
-                available = available.union([t.lstrip("#") for t in spec_types])
+                for spec_type in spec_types:
+                    spec_type = spec_type.lstrip("#")
+                    available.add(spec_type)
+
                 providing_properties.append(providing_property)
 
             schemas_to_implement = sorted(list(available.difference(set(implemented))))
@@ -1694,6 +2603,10 @@ class OpenApi:
                 print(f"Class {cls}:")
                 for schema_to_implement in sorted(schemas_to_implement):
                     print(f"- should implement schema {schema_to_implement}")
+                    if schema_returned_by[schema_to_implement]:
+                        print("  Properties returning the schema:")
+                        for providing_class, providing_property in sorted(schema_returned_by[schema_to_implement]):
+                            print(f"  - {providing_class}.{providing_property}")
                 # for schema_to_remove in sorted(schemas_to_remove):
                 #    print(f"- should not implement schema {schema_to_remove}")
                 print("Properties returning the class:")
@@ -1715,22 +2628,26 @@ class OpenApi:
 
         # suggest schemas based on API calls
         available_schemas = {}
-        paths = set(spec.get("paths", {}).keys()).union(index.get("indices", {}).get("path_to_classes", {}).keys())
+        schema_returned_by = defaultdict(set)
+        ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
+        paths = set(spec.get("paths", {}).keys()).union(path_to_return_classes.keys())
         for path in paths:
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
                 schema_path = ["paths", f'"{path}"', verb, "responses"]
                 # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
                 schemas_of_path = [
-                    components.lstrip("#")
+                    component
                     for status, response in responses_of_path.items()
                     if status.isnumeric() and int(status) < 400 and "content" in response
                     for schema in [response.get("content").get("application/json", {}).get("schema", {})]
-                    for components in self.get_inner_spec_types(
+                    for component in self.get_inner_spec_types(
                         schema, schema_path + [str(status), "content", '"application/json"', "schema"]
                     )
+                    for component in [component.lstrip("#")]
+                    if component not in ignored_schemas
                 ]
-                classes_of_path = index.get("indices", {}).get("path_to_classes", {}).get(path, {}).get(verb, [])
+                classes_of_path = index.get("indices", {}).get("path_to_return_classes", {}).get(path, {}).get(verb, [])
 
                 for cls in classes_of_path:
                     # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
@@ -1742,6 +2659,8 @@ class OpenApi:
                         if verb not in available_schemas[cls]:
                             available_schemas[cls][verb] = {}
                         available_schemas[cls][verb][path] = set(schemas_of_path)
+                        for schema in schemas_of_path:
+                            schema_returned_by[schema].add((verb, path))
 
         for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
             if cls in ["bool", "str", "None"]:
@@ -1770,6 +2689,15 @@ class OpenApi:
                 print(f"Class {cls}:")
                 for schema_to_implement in sorted(schemas_to_implement):
                     print(f"- should implement schema {schema_to_implement}")
+                    methods = set()
+                    for verb, verb_paths in paths.items():
+                        for path in verb_paths:
+                            if (verb, path) in schema_returned_by[schema_to_implement]:
+                                methods = methods.union(path_to_call_methods.get(path, {}).get(verb, set()))
+                    if methods:
+                        print("  Methods returning the schema:")
+                        for method in methods:
+                            print(f"  - {method}")
                 # for schema_to_remove in sorted(schemas_to_remove):
                 #    print(f"- should not implement schema {schema_to_remove}")
                 print("Paths returning the class:")
@@ -1792,7 +2720,7 @@ class OpenApi:
         print(f"Added {schemas_added} schemas")
         return schemas_suggested > 0
 
-    def create(
+    def create_class(
         self,
         github_path: str,
         spec_file: str,
@@ -1803,11 +2731,13 @@ class OpenApi:
         schemas: list[str],
         dry_run: bool,
         tests: bool,
+        handle_new_schemas: HandleNewSchemas,
     ) -> bool:
         with open(index_filename) as r:
             index = json.load(r)
 
-        clazz = GithubClass.from_class_name(class_name)
+        github_parent_path = str(Path(github_path).parent)
+        clazz = GithubClass.from_class_name(class_name, github_parent_path=github_parent_path)
         parent_class = GithubClass.from_class_name(parent_name, index)
         print(f"Creating class {clazz.full_class_name} with parent {parent_class.full_class_name} in {clazz.filename}")
         if os.path.exists(clazz.filename):
@@ -1907,14 +2837,13 @@ class OpenApi:
                 f"    def setUp(self):\n"
                 f"        super().setUp()\n"
                 f"        # TODO: create an instance of type {clazz.name} and assign to self.attr, then run:\n"
-                f"        #   pytest {clazz.test_filename} -k testAttributes --record --auth_with_token\n"
-                f'        #   sed -i -e "s/token private_token_removed/Basic login_and_password_removed/" tests/ReplayData/{clazz.name}.setUp.txt\n'
+                f"        #   pytest {clazz.test_filename} -k testAttributes --record\n"
                 f"        #   ./scripts/update-assertions.sh {clazz.test_filename} testAttributes\n"
                 f"        #   pre-commit run --all-files\n"
                 f"        self.attr = None\n"
                 f"\n"
                 f"    def testAttributes(self):\n"
-                f'        self.assertEqual(self.attr.url, "")\n'
+                f'        self.assertEqual(self.attr.__repr__(), "")\n'
             )
             self.write_code("", source, clazz.test_filename, dry_run=False)
 
@@ -1924,12 +2853,28 @@ class OpenApi:
                 with NamedTemporaryFile(delete_on_close=False) as f:
                     f.close()
                     print(f"Updating temporary index {f.name}")
-                    self.index(github_path, f.name, dry_run=False)
-                    self.apply(spec_file, f.name, [clazz.name], dry_run=False, tests=tests)
+                    self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
+                    self.apply(
+                        github_path,
+                        spec_file,
+                        f.name,
+                        [clazz.name],
+                        dry_run=False,
+                        tests=tests,
+                        handle_new_schemas=handle_new_schemas,
+                    )
             else:
                 print("Updating index")
-                self.index(github_path, index_filename, dry_run=False)
-                self.apply(spec_file, index_filename, [clazz.name], dry_run=False, tests=tests)
+                self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
+                self.apply(
+                    github_path,
+                    spec_file,
+                    index_filename,
+                    [clazz.name],
+                    dry_run=False,
+                    tests=tests,
+                    handle_new_schemas=handle_new_schemas,
+                )
         except Exception as e:
             success = False
             raise e
@@ -1950,6 +2895,52 @@ class OpenApi:
                 if tests:
                     os.unlink(clazz.test_filename)
         return True
+
+    def create_method(
+        self,
+        spec_file: str,
+        index_filename: str,
+        class_name: str,
+        method_name: str,
+        api_verb: str,
+        api_path: str,
+        api_response: str | None,
+        return_property: str | None,
+        dry_run: bool,
+    ) -> bool:
+        print(f"Using spec {spec_file}")
+        with open(spec_file) as r:
+            spec = json.load(r)
+        with open(index_filename) as r:
+            index = json.load(r)
+
+        clazz = GithubClass.from_class_name(class_name, index)
+        print(f"Creating method {clazz.full_class_name}.{method_name} in {clazz.filename}")
+        if not os.path.exists(clazz.filename):
+            raise ValueError(f"File does not exist: {clazz.filename}")
+
+        with open(clazz.filename) as r:
+            code = "".join(r.readlines())
+
+        prefix_path = None
+        return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
+        if return_schema_to_paths is None:
+            raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
+        for schema in clazz.schemas:
+            for path in return_schema_to_paths.get(schema, []):
+                if api_path.startswith(f"{path}/"):
+                    prefix_path = path
+                    break
+            if prefix_path:
+                break
+
+        transformer = CreateClassMethodTransformer(
+            spec, index, clazz, method_name, api_verb, api_path, api_response, prefix_path, return_property
+        )
+        tree = cst.parse_module(code)
+        tree_updated = tree.visit(transformer)
+        changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
+        return changed
 
     @staticmethod
     def parse_args():
@@ -1976,25 +2967,43 @@ class OpenApi:
         fetch_parser.add_argument("spec", help="Github API OpenAPI spec file to be written")
 
         index_parser = subparsers.add_parser("index")
+        index_parser.add_argument("--check-verbs", help="Check verbs in doc-string matches code", action="store_true")
         index_parser.add_argument("github_path", help="Path to PyGithub Python files")
+        index_parser.add_argument("spec", help="Github API OpenAPI spec file", nargs="?")
         index_parser.add_argument("index_filename", help="Path of index file")
 
         suggest_parser = subparsers.add_parser("suggest")
-        suggest_parser.add_argument(
-            "--add", default=False, action="store_true", help="Add suggested schemas to source code"
+        suggest_component_parsers = suggest_parser.add_subparsers(dest="component", required=True)
+        suggest_paths_parser = suggest_component_parsers.add_parser("paths")
+        suggest_paths_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        suggest_paths_parser.add_argument("index_filename", help="Path of index file")
+        suggest_paths_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="*")
+
+        suggest_schemas_parser = suggest_component_parsers.add_parser("schemas")
+        suggest_schemas_parser.add_argument(
+            "--add", default=False, action="store_true", help="Add suggestions to source code"
         )
-        suggest_parser.add_argument("spec", help="Github API OpenAPI spec file")
-        suggest_parser.add_argument("index_filename", help="Path of index file")
-        suggest_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="*")
+        suggest_schemas_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        suggest_schemas_parser.add_argument("index_filename", help="Path of index file")
+        suggest_schemas_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="*")
 
         apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
         apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
+        apply_parser.add_argument(
+            "--new-schemas",
+            type=HandleNewSchemas,
+            help="How to handle attributes that return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
+            choices=list(HandleNewSchemas),
+        )
+        apply_parser.add_argument("github_path", help="Path to PyGithub Python files")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("index_filename", help="Path of index file")
         apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
 
-        create_parser = subparsers.add_parser("create", description="Create PyGithub classes")
-        create_parser.add_argument(
+        create_parser = subparsers.add_parser("create", description="Create PyGithub classes and methods")
+        create_component_parsers = create_parser.add_subparsers(dest="component", required=True)
+        create_class_parser = create_component_parsers.add_parser("class", help="Create a PyGithub class")
+        create_class_parser.add_argument(
             "--completable",
             help="New PyGithub class is completable, implies --parent CompletableGithubObject",
             dest="parent",
@@ -2002,49 +3011,110 @@ class OpenApi:
             const="CompletableGithubObject",
             default="NonCompletableGithubObject",
         )
-        create_parser.add_argument("--parent", help="A parent PyGithub class")
-        create_parser.add_argument("--tests", help="Also create test file", action="store_true")
-        create_parser.add_argument("github_path", help="Path to PyGithub Python files")
-        create_parser.add_argument("spec", help="Github API OpenAPI spec file")
-        create_parser.add_argument("index_filename", help="Path of index file")
-        create_parser.add_argument("class_name", help="PyGithub GithubObject class name")
-        create_parser.add_argument(
+        create_class_parser.add_argument("--parent", help="A parent PyGithub class")
+        create_class_parser.add_argument("--tests", help="Also create test file", action="store_true")
+        create_class_parser.add_argument(
+            "--new-schemas",
+            type=HandleNewSchemas,
+            help="How to handle attributes that return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
+            choices=list(HandleNewSchemas),
+        )
+        create_class_parser.add_argument("github_path", help="Path to PyGithub Python files")
+        create_class_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        create_class_parser.add_argument("index_filename", help="Path of index file")
+        create_class_parser.add_argument("class_name", help="PyGithub GithubObject class name")
+        create_class_parser.add_argument(
             "docs_url",
             help="Github REST API documentation URL, for instance https://docs.github.com/en/rest/commits/commits#get-a-commit-object",
         )
-        create_parser.add_argument("schema", help="Github API OpenAPI schema name", nargs="*")
+        create_class_parser.add_argument("schema", help="Github API OpenAPI schema name", nargs="*")
+
+        create_method_parser = create_component_parsers.add_parser("method", help="Create a PyGithub method")
+        create_method_parser.add_argument(
+            "--return-property",
+            help="Return the value of this response property, instead of the entire response object",
+            nargs="?",
+        )
+        create_method_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        create_method_parser.add_argument("index_filename", help="Path of index file")
+        create_method_parser.add_argument("class_name", help="PyGithub GithubObject class name")
+        create_method_parser.add_argument("method_name", help="PyGithub method name")
+        create_method_parser.add_argument("api_verb", help="OpenAPI verb")
+        create_method_parser.add_argument("api_path", help="OpenAPI path")
+        create_method_parser.add_argument("api_response", help="OpenAPI response, e.g. 200", nargs="?")
 
         if len(sys.argv) == 1:
             args_parser.print_help()
             sys.exit(1)
-        return args_parser.parse_args()
+        args = args_parser.parse_args()
+
+        # perform some sanity checks
+        params = args.__dict__
+        if params.get("dry_run", False) is True and params.get("new_schemas") == HandleNewSchemas.create_class:
+            raise ValueError(
+                f"Cannot combine --new-schemas {HandleNewSchemas.create_class} "
+                f"(creating classes for new schemas) with --dry-run"
+            )
+
+        return args
 
     def main(self):
         changes = False
         if args.subcommand == "fetch":
             changes = self.fetch(self.args.api, self.args.api_version, self.args.commit, self.args.spec)
         elif args.subcommand == "index":
-            changes = self.index(self.args.github_path, self.args.index_filename, self.args.dry_run)
-        elif self.args.subcommand == "suggest":
-            changes = self.suggest(
-                self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
+            changes = self.index(
+                self.args.github_path,
+                self.args.spec,
+                self.args.index_filename,
+                self.args.check_verbs,
+                self.args.dry_run,
             )
+        elif self.args.subcommand == "suggest":
+            if self.args.component == "paths":
+                changes = self.suggest_paths(
+                    self.args.spec, self.args.index_filename, self.args.class_name, self.args.dry_run
+                )
+            if self.args.component == "schemas":
+                changes = self.suggest_schemas(
+                    self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
+                )
         elif self.args.subcommand == "apply":
             changes = self.apply(
-                self.args.spec, self.args.index_filename, self.args.class_name, self.args.dry_run, self.args.tests
-            )
-        elif self.args.subcommand == "create":
-            changes = self.create(
                 self.args.github_path,
                 self.args.spec,
                 self.args.index_filename,
                 self.args.class_name,
-                self.args.parent,
-                self.args.docs_url,
-                self.args.schema,
                 self.args.dry_run,
                 self.args.tests,
+                self.args.new_schemas,
             )
+        elif self.args.subcommand == "create":
+            if self.args.component == "class":
+                changes = self.create_class(
+                    self.args.github_path,
+                    self.args.spec,
+                    self.args.index_filename,
+                    self.args.class_name,
+                    self.args.parent,
+                    self.args.docs_url,
+                    self.args.schema,
+                    self.args.dry_run,
+                    self.args.tests,
+                    self.args.new_schemas,
+                )
+            if self.args.component == "method":
+                changes = self.create_method(
+                    self.args.spec,
+                    self.args.index_filename,
+                    self.args.class_name,
+                    self.args.method_name,
+                    self.args.api_verb.lower(),
+                    self.args.api_path,
+                    self.args.api_response,
+                    self.args.return_property,
+                    self.args.dry_run,
+                )
         else:
             raise RuntimeError("Subcommand not implemented " + args.subcommand)
 

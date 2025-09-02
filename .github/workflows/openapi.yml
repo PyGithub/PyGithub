@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout Git
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           ref: openapi/autosync
         continue-on-error: true
@@ -30,14 +30,16 @@ jobs:
       contents: write
     steps:
       - name: Checkout Git
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - name: Set up Git
         run: |
           # Set up Git
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Set up dependencies
@@ -47,13 +49,15 @@ jobs:
           pip install -r requirements/test.txt
           pip install -r requirements/types.txt
           pip install -r requirements/scripts.txt
+
       - name: Fetching OpenAPI spec
         run: |
           # Fetching OpenAPI spec
           python scripts/openapi.py fetch api.github.com 2022-11-28 api.github.com.2022-11-28.json
-      - name: Sync with OpenAPI spec
+
+      - name: Sync with OpenAPI spec (ignore unimplemented schemas)
         run: |
-          # Sync with OpenAPI spec
+          # Sync with OpenAPI spec (ignore unimplemented schemas)
           git checkout -b openapi/main
           ./scripts/openapi-update-classes.sh --branch-prefix openapi/autosync 2> openapi-update-classes.log
       - name: Changes
@@ -73,7 +77,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Logs
+          name: Sync logs
           path: |
             *.log
       - name: Commit changes
@@ -89,13 +93,63 @@ jobs:
 
           # push if there are changes
           if ! git diff --quiet openapi/main; then
+            if ! git diff --quiet origin/main .github/workflows/*; then
+              # this is needed to prevent this error:
+              #   refusing to allow a GitHub App to create or update workflow `.github/workflows/openapi.yml` without `workflows` permission
+              echo "Revert changes done to workflows"
+              git restore --source origin/main .github/workflows/*
+              git commit -a -m "Revert workflow changes of this branch"
+            fi
             echo "Pushing changes to origin openapi/autosync"
             git push origin openapi/autosync
           fi
+
+      - name: Sync with OpenAPI spec (create new classes)
+        run: |
+          # Sync with OpenAPI spec (create new classes)
+          git checkout openapi/autosync
+          ./scripts/openapi-update-classes.sh --create-classes --branch-prefix openapi/autosync-new-classes 2> openapi-update-classes.log
+      - name: Changes
+        run: |
+          # Show changes
+          git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
+            echo "::group::$branch"
+            git log --oneline "$branch...openapi/main"
+            git diff openapi/main "$branch"
+            echo "::endgroup::"
+          done
+      - name: Log on error
+        if: failure()
+        run: |
+          cat openapi-update-classes.log
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Create new classes logs
+          path: |
+            *.log
+      - name: Commit changes
+        run: |
+          # Commit changes
+          git checkout -b openapi/autosync-new-classes
+          git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
+            echo "::group::$branch"
+            git merge --squash "$branch" || true
+            git commit --no-edit || true
+            echo "::endgroup::"
+          done
+
+          # push if there are changes
+          if ! git diff --quiet openapi/main; then
+            echo "Pushing changes to origin openapi/autosync-new-classes"
+            git push origin openapi/autosync-new-classes
+          fi
+
       - name: Fail on changes
         run: |
           # Fail on changes
           if ! git diff --quiet openapi/main; then
-            echo "Changes exist, please investigate branch openapi/autosync"
+            echo "Changes exist, please investigate branches openapi/autosync and openapi/autosync-new-classes"
             exit 1
           fi
