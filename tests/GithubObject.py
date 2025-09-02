@@ -24,8 +24,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import unittest
 from datetime import datetime, timedelta, timezone
+from typing import Any
+from unittest import mock
 
 import github.Repository
 import github.RepositoryDiscussion
@@ -33,6 +37,8 @@ import github.RepositoryDiscussion
 from . import Framework
 
 gho = Framework.github.GithubObject
+ghusr = Framework.github.NamedUser
+ghorg = Framework.github.Organization
 
 
 class GithubObject(unittest.TestCase):
@@ -51,6 +57,95 @@ class GithubObject(unittest.TestCase):
 
         self.assertEqual(github.RepositoryDiscussion.RepositoryDiscussion.is_rest(), False)
         self.assertEqual(github.RepositoryDiscussion.RepositoryDiscussion.is_graphql(), True)
+
+    def testMakeUnionClassAttributeFromTypeName(self):
+        req = mock.Mock(is_not_lazy=False)
+        obj = TestingClass(req, {}, {})
+
+        data = {"login": "login"}
+        class_and_names = [(ghusr.NamedUser, "User"), (ghorg.Organization, "Organization")]
+
+        def make(type_name: str | None, fallback_type: str | None = "User"):
+            return obj._makeUnionClassAttributeFromTypeName(type_name, fallback_type, data, *class_and_names)
+
+        none = make(None)
+        usr = make("User")
+        org = make("Organization")
+        unknown = make("Unknown")
+        bad = make("Unknown", None)
+
+        self.assertIsInstance(none, gho._ValuedAttribute)
+        self.assertIsInstance(usr, gho._ValuedAttribute)
+        self.assertIsInstance(org, gho._ValuedAttribute)
+        self.assertIsInstance(unknown, gho._ValuedAttribute)
+        self.assertIsInstance(bad, gho._BadAttribute)
+
+        self.assertIsNone(none.value)
+        self.assertIsInstance(usr.value, ghusr.NamedUser)
+        self.assertIsInstance(org.value, ghorg.Organization)
+        self.assertIsInstance(unknown.value, ghusr.NamedUser)
+
+        self.assertEqual(str(usr.value), 'NamedUser(login="login")')
+        self.assertEqual(str(org.value), 'Organization(login="login")')
+        self.assertEqual(str(unknown.value), 'NamedUser(login="login")')
+
+    def testMakeUnionClassAttributeFromTypeKey(self):
+        req = mock.Mock(is_not_lazy=False)
+        obj = TestingClass(req, {}, {})
+
+        class_and_names = [(ghusr.NamedUser, "User"), (ghorg.Organization, "Organization")]
+
+        def make(data: dict[str, Any]):
+            return obj._makeUnionClassAttributeFromTypeKey("type", "User", data, *class_and_names)
+
+        default = make({"login": "login"})
+        usr = make({"login": "login", "type": "User"})
+        org = make({"login": "login", "type": "Organization"})
+        unknown = make({"login": "login", "type": "Unknown"})
+
+        self.assertIsInstance(default, gho._ValuedAttribute)
+        self.assertIsInstance(usr, gho._ValuedAttribute)
+        self.assertIsInstance(org, gho._ValuedAttribute)
+        self.assertIsInstance(unknown, gho._ValuedAttribute)
+
+        self.assertIsInstance(default.value, ghusr.NamedUser)
+        self.assertIsInstance(usr.value, ghusr.NamedUser)
+        self.assertIsInstance(org.value, ghorg.Organization)
+        self.assertIsInstance(unknown.value, ghusr.NamedUser)
+
+        self.assertEqual(str(default.value), 'NamedUser(login="login")')
+        self.assertEqual(str(usr.value), 'NamedUser(login="login")')
+        self.assertEqual(str(org.value), 'Organization(login="login")')
+        self.assertEqual(str(unknown.value), 'NamedUser(login="login")')
+
+    def testMakeUnionClassAttributeFromTypeKeyAndValueKey(self):
+        req = mock.Mock(is_not_lazy=False)
+        obj = TestingClass(req, {}, {})
+
+        class_and_names = [(ghusr.NamedUser, "User"), (ghorg.Organization, "Organization")]
+
+        def make(data: dict[str, Any]):
+            return obj._makeUnionClassAttributeFromTypeKeyAndValueKey("type", "data", "User", data, *class_and_names)
+
+        default = make({"data": {"login": "login"}})
+        usr = make({"data": {"login": "login"}, "type": "User"})
+        org = make({"data": {"login": "login"}, "type": "Organization"})
+        unknown = make({"data": {"login": "login"}, "type": "Unknown"})
+
+        self.assertIsInstance(default, gho._ValuedAttribute)
+        self.assertIsInstance(usr, gho._ValuedAttribute)
+        self.assertIsInstance(org, gho._ValuedAttribute)
+        self.assertIsInstance(unknown, gho._ValuedAttribute)
+
+        self.assertIsInstance(default.value, ghusr.NamedUser)
+        self.assertIsInstance(usr.value, ghusr.NamedUser)
+        self.assertIsInstance(org.value, ghorg.Organization)
+        self.assertIsInstance(unknown.value, ghusr.NamedUser)
+
+        self.assertEqual(str(default.value), 'NamedUser(login="login")')
+        self.assertEqual(str(usr.value), 'NamedUser(login="login")')
+        self.assertEqual(str(org.value), 'Organization(login="login")')
+        self.assertEqual(str(unknown.value), 'NamedUser(login="login")')
 
     def testMakeDatetimeAttribute(self):
         for value, expected in [
@@ -145,3 +240,11 @@ class GithubObject(unittest.TestCase):
             self.assertEqual(value, e.exception.actual_value)
             self.assertEqual(int, e.exception.expected_type)
             self.assertIsNone(e.exception.transformation_exception)
+
+
+class TestingClass(gho.NonCompletableGithubObject):
+    def _initAttributes(self) -> None:
+        pass
+
+    def _useAttributes(self, attributes: Any) -> None:
+        pass

@@ -370,13 +370,23 @@ class GithubObject(ABC):
         )
 
     def _makeUnionClassAttributeFromTypeName(
-        self, type_name: str | None, value: Any, *class_and_names: tuple[type[T_gh], str]
+        self, type_name: str | None, fallback_type: str | None, value: Any, *class_and_names: tuple[type[T_gh], str]
     ) -> Attribute[T_gh]:
         if value is None or type_name is None:
             return _ValuedAttribute(None)  # type: ignore
+        fallback_class = None
         for klass, name in class_and_names:
             if type_name == name:
                 return self._makeClassAttribute(klass, value)
+            if fallback_type == name:
+                fallback_class = klass
+        if fallback_type is not None:
+            if fallback_class is None:
+                # this is misconfiguration in PyGithub code, not a user's fault
+                raise ValueError(
+                    f"Fallback type {fallback_type} is not among classes and names: {[name for klass, name in class_and_names]}"
+                )
+            return self._makeClassAttribute(fallback_class, value)
         return _BadAttribute(value, type)  # type: ignore
 
     def _makeUnionClassAttributeFromTypeKey(
@@ -388,7 +398,9 @@ class GithubObject(ABC):
     ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
-        return self._makeUnionClassAttributeFromTypeName(value.get(type_key, default_type), value, *class_and_names)
+        return self._makeUnionClassAttributeFromTypeName(
+            value.get(type_key, default_type), default_type, value, *class_and_names
+        )
 
     def _makeUnionClassAttributeFromTypeKeyAndValueKey(
         self,
@@ -401,7 +413,7 @@ class GithubObject(ABC):
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
         return self._makeUnionClassAttributeFromTypeName(
-            value.get(type_key, default_type), value.get(value_key), *class_and_names
+            value.get(type_key, default_type), default_type, value.get(value_key), *class_and_names
         )
 
     @staticmethod
