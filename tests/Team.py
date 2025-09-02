@@ -159,7 +159,7 @@ class Team(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         # Ignore the warning since this method is deprecated
         warnings.filterwarnings("ignore", category=DeprecationWarning)
-        self.team.set_repo_permission(repo, "admin")
+        self.team.update_team_repository(repo, "admin")
         warnings.resetwarnings()
 
     def testUpdateTeamRepository(self):

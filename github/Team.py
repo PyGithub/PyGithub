@@ -69,8 +69,6 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.NamedUser
 import github.Organization
 import github.PaginatedList
@@ -325,26 +323,6 @@ class Team(CompletableGithubObject):
             return github.Permissions.Permissions(self._requester, headers, data["permissions"])
         except UnknownObjectException:
             return None
-
-    @deprecated(
-        """
-        Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
-        """
-    )
-    def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
-        """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
-        :param repo: :class:`github.Repository.Repository`
-        :param permission: string
-        :rtype: None
-        """
-        assert isinstance(repo, (str, github.Repository.Repository)), repo
-        put_parameters = {
-            "permission": permission,
-        }
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}", input=put_parameters
-        )
 
     def update_team_repository(self, repo: str | Repository, permission: str) -> bool:
         """
