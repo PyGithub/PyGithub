@@ -248,11 +248,7 @@ class PullRequest(Framework.TestCase):
     def testCreateMultilineReviewComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_review_comment(
-            "Comment created by PyGithub",
-            commit,
-            "src/github/Issue.py",
-            10,
-            start_line=5,
+            "Comment created by PyGithub", commit, "src/github/Issue.py", 10, start_line=5, start_side="LEFT"
         )
         self.assertEqual(comment.id, 886298)
 
@@ -264,6 +260,7 @@ class PullRequest(Framework.TestCase):
             "src/github/Issue.py",
             10,
             start_line=5,
+            start_side="RIGHT",
             as_suggestion=True,
         )
         self.assertEqual(comment.id, 886298)
@@ -672,19 +669,26 @@ class PullRequest(Framework.TestCase):
             "clientMutationId": None,
         }
 
+    def test_validate_review_comment_start_side_multiline_requires_side_and_start_side(self):
+        # if start_site is missing, validate_review_comment_start_side picks it from side
+        # so validate_review_comment_start_side only fails if neither side nore start_side are given
+        # Should raise AssertionError if side and start_side is undefined and multiline
+        with self.assertRaises(AssertionError):
+            self.pull.validate_review_comment_start_side(
+                github.GithubObject.NotSet, github.GithubObject.NotSet, 10, 5, github.GithubObject.NotSet
+            )
+
     def test_validate_review_comment_start_side_side_defined_start_side_undefined(self):
         # Use parameters similar to a single-line comment with side defined, start_side undefined
         result = self.pull.validate_review_comment_start_side(
-            "RIGHT", github.GithubObject.NotSet, 5, github.GithubObject.NotSet, github.GithubObject.NotSet
+            "RIGHT", github.GithubObject.NotSet, 10, 5, github.GithubObject.NotSet
         )
         self.assertEqual(result, "RIGHT")
 
-    def test_validate_review_comment_start_side_multiline_requires_start_side(self):
-        # Should raise AssertionError if start_side is undefined and multiline
-        with self.assertRaises(AssertionError):
-            self.pull.validate_review_comment_start_side(
-                "RIGHT", github.GithubObject.NotSet, 10, 5, github.GithubObject.NotSet
-            )
+    def test_validate_review_comment_start_side_side_defined_side_and_start_side_undefined(self):
+        # Use parameters similar to a single-line comment with side and start_side defined
+        result = self.pull.validate_review_comment_start_side("LEFT", "RIGHT", 10, 5, github.GithubObject.NotSet)
+        self.assertEqual(result, "RIGHT")
 
     def test_validate_review_comment_start_side_all_undefined(self):
         # All parameters undefined
@@ -697,7 +701,13 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(result, github.GithubObject.NotSet)
 
-    def test_validate_review_comment_start_side_start_side_already_defined(self):
+    def test_validate_review_comment_start_side_start_start_line_undefined(self):
         # start_side already defined
-        result = self.pull.validate_review_comment_start_side("LEFT", "RIGHT", 1, 1, github.GithubObject.NotSet)
-        self.assertEqual(result, "RIGHT")
+        result = self.pull.validate_review_comment_start_side(
+            github.GithubObject.NotSet,
+            github.GithubObject.NotSet,
+            10,
+            github.GithubObject.NotSet,
+            github.GithubObject.NotSet,
+        )
+        self.assertIs(result, github.GithubObject.NotSet)
