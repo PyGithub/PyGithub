@@ -52,5 +52,6 @@ class Autolink(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.link.id, 209614)
         self.assertEqual(self.link.key_prefix, "DUMMY-")
+        self.assertIsNone(self.link.updated_at)
         self.assertEqual(self.link.url_template, "https://github.com/PyGithub/PyGithub/issues/<num>")
         self.assertEqual(self.link.is_alphanumeric, True)
