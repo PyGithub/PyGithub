@@ -4,6 +4,13 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.8.1 (September 02, 2025)
+----------------------------------
+
+Bug Fixes
+^^^^^^^^^
+* Use default type if known type is not supported (`#3365 <https://github.com/PyGithub/PyGithub/pull/3365>`_) (`40506415 <https://github.com/PyGithub/PyGithub/commit/40506415>`_)
+
 Version 2.8.0 (September 02, 2025)
 ----------------------------------
 
