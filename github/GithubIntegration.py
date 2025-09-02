@@ -38,7 +38,6 @@ import urllib.parse
 from typing import Any
 
 import urllib3
-from typing_extensions import deprecated
 from urllib3 import Retry
 
 import github
@@ -190,16 +189,6 @@ class GithubIntegration:
             attributes=response,
         )
 
-    @deprecated(
-        "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
-    )
-    def create_jwt(self, expiration: int | None = None) -> str:
-        """
-        Create a signed JWT
-        https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
-        """
-        return self.auth.create_jwt(expiration)
-
     def get_access_token(
         self, installation_id: int, permissions: dict[str, str] | None = None
     ) -> InstallationAuthorization:
@@ -225,21 +214,6 @@ class GithubIntegration:
             headers=headers,
             attributes=response,
         )
-
-    @deprecated("Use get_repo_installation")
-    def get_installation(self, owner: str, repo: str) -> Installation:
-        """
-        Deprecated by get_repo_installation.
-
-        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
-        installation-for-the-authenticated-app>`
-        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
-        installation-for-the-authenticated-app>`
-
-        """
-        owner = urllib.parse.quote(owner)
-        repo = urllib.parse.quote(repo)
-        return self._get_installed_app(url=f"/repos/{owner}/{repo}/installation")
 
     def get_installations(self) -> PaginatedList[Installation]:
         """
