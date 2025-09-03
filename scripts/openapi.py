@@ -317,25 +317,33 @@ class Property:
 
 
 @dataclasses.dataclass(frozen=True)
-class Argument:
+class Parameter:
     name: str
     description: str | None
     data_type: PythonType | GithubClass | None
+    param_type: str
     required: bool
     deprecated: bool | None
 
     @staticmethod
-    def from_schema(name: str, schema: dict[str, Any], required: bool, index: dict[str, Any]) -> Argument:
+    def from_schema(
+        name: str, schema: dict[str, Any], required: bool, index: dict[str, Any], param_type: str | None = None
+    ) -> Parameter:
         classes = index.get("classes", {})
         schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         schema_to_class["default"] = ["GithubObject"]
 
         description = schema.get("description")
-        data_type = as_python_type(schema, [], schema_to_class, classes)
+        data_type = as_python_type(
+            schema.get("schema", {}) if "schema" in schema else schema, ["schema"], schema_to_class, classes
+        )
         if schema.get("nullable") is True and data_type is not None:
             data_type = data_type.as_nullable()
+        param_type = schema.get("in") if param_type is None else param_type
         deprecated = schema.get("deprecated")
-        return Argument(name, description, data_type, required, deprecated)
+        if deprecated is None and description and description.startswith("**Closing down notice**"):
+            deprecated = True
+        return Parameter(name, description, data_type, param_type, required, deprecated)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -346,7 +354,7 @@ class Method:
     path: str
     verb: str
     docs_url: str | None
-    arguments: list[Argument]
+    parameters: list[Parameter]
     return_type: PythonType | GithubClass | None
     deprecated: bool
 
@@ -363,18 +371,26 @@ class Method:
         summary = schema.get("summary")
         description = schema.get("description")
         docs_url = schema.get("docs_url")
-        arguments = [
-            Argument.from_schema(n, p, n in required, index)
+        url_parameters = [
+            Parameter.from_schema(n, s, r, index)
+            for s in schema.get("parameters", [])
+            for s in [resolve_schema(s, spec)]
+            for n, r in [(s.get("name"), s.get("required"))]
+            if n and r is not None
+        ]
+        post_parameters = [
+            Parameter.from_schema(n, p, n in required, index, param_type="body")
             for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
             for s in [resolve_schema(s, spec)]
             for required in [s.get("required", [])]
             for n, p in s.get("properties", {}).items()
         ]
+        parameters = url_parameters + post_parameters
         # TODO: turn list[str] into PythonType
         # if len(return_type) == 0 else (return_type[0] if len(return_type) == 1 else PythonType("union", return_type))
         return_type = None
         deprecated = schema.get("deprecated")
-        return Method(name, summary, description, path, verb, docs_url, arguments, return_type, deprecated)
+        return Method(name, summary, description, path, verb, docs_url, parameters, return_type, deprecated)
 
 
 class SimpleStringCollector(cst.CSTVisitor):
@@ -436,6 +452,34 @@ def is_parameter_assertion(stmt: cst.BaseStatement, parameters: set[str]) -> boo
     name = arg.value
 
     return name.value in parameters
+
+
+def is_request_parameters(stmt: cst.BaseStatement, var_name: str) -> bool:
+    if not (isinstance(stmt, cst.SimpleStatementLine) and len(stmt.body) == 1):
+        return False
+    stmt = stmt.body[0]
+
+    if not (isinstance(stmt, cst.Assign) and len(stmt.targets) == 1):
+        return False
+    target = stmt.targets[0]
+    value = stmt.value
+
+    if not (
+        isinstance(target, cst.AssignTarget) and isinstance(target.target, cst.Name) and target.target.value == var_name
+    ):
+        return False
+
+    if not (
+        isinstance(value, cst.Call)
+        and isinstance(value.func, cst.Attribute)
+        and isinstance(value.func.value, cst.Name)
+        and isinstance(value.func.attr, cst.Name)
+        and value.func.value.value == "NotSet"
+        and value.func.attr.value == "remove_unset_items"
+    ):
+        return False
+
+    return True
 
 
 def get_class_docstring(node: cst.ClassDef) -> str | None:
@@ -501,7 +545,7 @@ class CstMethods(abc.ABC):
         return sub
 
     @classmethod
-    def create_attribute(cls, names: list[str]) -> cst.BaseExpression:
+    def create_attribute(cls, names: list[str]) -> cst.Name | cst.Attribute:
         names = [cls.create_subscript(name) if "[" in name and name.endswith("]") else cst.Name(name) for name in names]
         if len(names) == 1:
             return names[0]
@@ -1695,57 +1739,95 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         if method is None:
             return updated_node
 
-        print(f"- Updating method {updated_node.name.value}")
-        print(updated_node)
+        self.check_parameters(method)
 
-        updated_node = self.update_parameters(updated_node, method)
+        print(f"- Updating method {updated_node.name.value}")
+        updated_node = self.update_func_parameters(updated_node, method)
         updated_node = self.update_docstring(updated_node, method)
         updated_node = self.update_assertions(updated_node, method)
         updated_node = self.update_deprecations(updated_node, method)
-        updated_node = self.update_post_parameters(updated_node, method)
+        updated_node = self.update_url_request_parameters(updated_node, method)
+        updated_node = self.update_post_request_parameters(updated_node, method)
 
         return updated_node
 
-    def update_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+    def check_parameters(self, method: Method) -> None:
+        paths, queries, bodies, unknowns = self.split_parameters_by_type(method.parameters, ["path", "query", "body"])
+        if unknowns:
+            print("Parameters with unsupported types:")
+            for unknown in unknowns:
+                print(f"- {unknown}")
+        for path in paths:
+            if f"{{{path.name}}}" not in method.path:
+                print(f"Path parameter {{{path.name}}} not found in path: {method.path}")
+
+    def update_func_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         # update params: create missing, update type annotation of existing params
-        arguments = {arg.name: arg for arg in method.arguments}
-        arguments_sorted = self.required_first(method.arguments)
-        existing_arguments = set()
+        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
+        parameters = query_parameters + body_parameters
+        parameters_names = {arg.name: arg for arg in parameters}
+        parameters_sorted = self.required_first(parameters)
+        existing_parameters = set()
         optional_exists = False
         updated_params = []
-        for param in node.params.params:
-            argument = arguments.get(param.name.value)
-            if argument is None:
+
+        params = node.params.params
+        if len(params) == 0:
+            return node
+
+        # special handling of 'self' arg
+        if params[0].name.value == "self":
+            updated_params.append(params[0])
+            params = params[1:]
+
+        # update existing params
+        for param in params:
+            parameter = parameters_names.get(param.name.value)
+            if parameter is None:
                 print(f"Unknown method argument: {param.name.value}")
                 updated_params.append(param)
                 continue
-            existing_arguments.add(argument.name)
-            optional_exists = optional_exists or not argument.required
+            existing_parameters.add(parameter.name)
+            optional_exists = optional_exists or not parameter.required
             param = param.with_changes(
-                annotation=self.create_annotation(argument), default=self.create_default(argument)
+                annotation=self.create_annotation(parameter), default=self.create_default(parameter)
             )
             updated_params.append(param)
-        for argument in arguments_sorted:
-            if argument.name in existing_arguments:
+
+        # add missing params
+        for parameter in parameters_sorted:
+            if parameter.name in existing_parameters:
                 continue
-            print(f"  - Adding parameter {argument.name}")
-            if argument.required and optional_exists:
+            print(f"  - Adding parameter {parameter.name}")
+            if parameter.required and optional_exists:
                 print(
-                    f"Cannot add parameter {argument.name} without a breaking change "
+                    f"Cannot add parameter {parameter.name} without a breaking change "
                     f"as this is required and other optional parameters already exist"
                 )
                 continue
             param = updated_params[-1].deep_clone()
             param = param.with_changes(
-                name=cst.Name(argument.name),
-                annotation=self.create_annotation(argument),
-                default=self.create_default(argument),
+                name=cst.Name(parameter.name),
+                annotation=self.create_annotation(parameter),
+                default=self.create_default(parameter),
             )
             # propagate the last but one param's comma to the last param (before adding the new param)
             if len(updated_params) > 1:
                 updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
             updated_params.append(param)
+
         return node.with_changes(params=node.params.with_changes(params=updated_params))
+
+    @staticmethod
+    def split_parameters_by_type(parameters: list[Parameter], param_types: list[str]) -> tuple[list[Parameter], ...]:
+        params_by_type = defaultdict(list)
+        for parameter in parameters:
+            params_by_type[parameter.param_type].append(parameter)
+        other_param_types = []
+        for param_type, params in params_by_type.items():
+            if param_type not in param_types:
+                other_param_types.extend(params)
+        return tuple([params_by_type.get(param_type, list()) for param_type in param_types] + [other_param_types])
 
     @staticmethod
     def indent_lines(string: str, indentation: str, indent_first: bool = True) -> list[str]:
@@ -1761,6 +1843,9 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return [line.strip() for line in string.split("\n")]
 
     def update_docstring(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
+        parameters = query_parameters + body_parameters
+
         docstring_stmt = node.body.body[0] if len(node.body.body) > 0 and is_comment(node.body.body[0]) else None
         stmts = node.body.body[1:] if docstring_stmt is not None else node.body.body
 
@@ -1776,14 +1861,19 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             docstrings.append(f":calls: `{method.verb.upper()} {method.path} <{method.docs_url}>`_")
         else:
             docstrings.append(f":calls: {method.verb.upper()} {method.path}")
-        for argument in method.arguments:
-            deprecation = "deprecated, " if argument.deprecated else ""
-            description = argument.description if argument.description else ""
+        for parameter in parameters:
+            deprecation = "deprecated, " if parameter.deprecated else ""
+            description = parameter.description if parameter.description else ""
             description_lines = self.indent_lines(description, "    ", indent_first=False)
-            docstrings.append(f":param {argument.name}: {deprecation}{description_lines[0]}")
-            docstrings.extend(description_lines[1:])
+            if deprecation or "".join(description_lines):
+                docstrings.append(f":param {parameter.name}: {deprecation}{description_lines[0]}")
+                docstrings.extend(description_lines[1:])
+            else:
+                docstrings.append(f":param {parameter.name}:")
         docstrings.append('"""')
-        docstring = "\n        ".join(docstrings)
+        docstring = "\n".join(
+            [("        " + line) if idx > 0 and line else line for idx, line in enumerate(docstrings)]
+        )
 
         # add docstrings as first statement
         docstring_stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
@@ -1791,35 +1881,38 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return node.with_changes(body=node.body.with_changes(body=stmts))
 
     def update_assertions(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
+        parameters = query_parameters + body_parameters
+
         # remove all existing parameter assertions
         stmts = []
         assertions_start_idx = None
-        parameters = {argument.name for argument in method.arguments}
+        parameters_names = {parameter.name for parameter in parameters}
         for idx, stmt in enumerate(node.body.body):
-            if is_parameter_assertion(stmt, parameters):
+            if is_parameter_assertion(stmt, parameters_names):
                 if assertions_start_idx is None:
                     assertions_start_idx = idx
             else:
                 stmts.append(stmt)
 
         # generate parameter assertions
-        arguments_sorted = self.required_first(method.arguments)
+        parameters_sorted = self.required_first(parameters)
         assertion_stmts = [
             cst.SimpleStatementLine(
                 body=[
                     cst.Assert(
                         test=cst.Call(
-                            func=cst.Name("isinstance") if argument.required else cst.Name("is_optional"),
+                            func=cst.Name("isinstance") if parameter.required else cst.Name("is_optional"),
                             args=[
-                                cst.Arg(cst.Name(argument.name)),
-                                cst.Arg(self.create_type(argument.data_type, union_as_tuple=True)),
+                                cst.Arg(cst.Name(parameter.name)),
+                                cst.Arg(self.create_type(parameter.data_type, union_as_tuple=True)),
                             ],
                         ),
-                        msg=cst.Name(argument.name),
+                        msg=cst.Name(parameter.name),
                     )
                 ]
             )
-            for argument in arguments_sorted
+            for parameter in parameters_sorted
         ]
 
         assertions_start_idx = (
@@ -1831,18 +1924,103 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return node.with_changes(body=node.body.with_changes(body=stmts))
 
     def update_deprecations(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
+        parameters = query_parameters + body_parameters
+
+        parameters_sorted = self.required_first(parameters)
+        deprecated_parameters = [parameter.name for parameter in parameters_sorted if parameter.deprecated]
+
+        # TODO: find all existing deprecation lines, extract deprecated parameters and index of last line,
+        # use last assertion line index+1 as default
+        for deprecated_parameter in deprecated_parameters:
+            # TODO:
+            # if no deprecation line exists for deprecated_parameter:
+            # - create such a line
+            # - add at last deprecation line index
+            pass
         return node
 
-    def update_post_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
-        return node
+    def update_url_request_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        parameters, _ = self.split_parameters_by_type(method.parameters, ["query"])
+        return self.update_request_parameters(node, "url_parameters", parameters)
+
+    def update_post_request_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        parameters, _ = self.split_parameters_by_type(method.parameters, ["body"])
+        return self.update_request_parameters(node, "post_parameters", parameters)
+
+    def update_request_parameters(
+        self, node: cst.FunctionDef, var_name: str, parameters: list[Parameter]
+    ) -> cst.FunctionDef:
+        if len(parameters) == 0:
+            return node
+
+        stmts = [stmt for stmt in node.body.body]
+
+        # find post parameters line
+        post_parameters_idx = None
+        assertions_end_idx = None
+        parameters_names = [parameter.name for parameter in parameters]
+        parameters_set = set(parameters_names)
+        for idx, stmt in enumerate(stmts):
+            if is_parameter_assertion(stmt, parameters_set):
+                assertions_end_idx = idx
+            if is_request_parameters(stmt, var_name):
+                post_parameters_idx = idx
+                break
+
+        if post_parameters_idx is None and assertions_end_idx is None:
+            # put this at the end
+            assertions_end_idx = len(stmts)
+
+        # create new post parameters line
+        indented = cst.ParenthesizedWhitespace(indent=True)
+        onetab = indented.with_changes(last_line=cst.SimpleWhitespace(value="    "))
+        twotabs = indented.with_changes(last_line=cst.SimpleWhitespace(value="        "))
+        post_parameters_stmt = cst.SimpleStatementLine(
+            body=[
+                cst.Assign(
+                    targets=[cst.AssignTarget(target=self.create_attribute([var_name]))],
+                    value=cst.Call(
+                        func=self.create_attribute(["NotSet", "remove_unset_items"]),
+                        args=[
+                            cst.Arg(
+                                value=cst.Dict(
+                                    elements=[
+                                        cst.DictElement(
+                                            key=cst.SimpleString(value=f'"{parameter}"'),
+                                            value=cst.Name(value=parameter),
+                                            comma=cst.Comma(whitespace_after=twotabs)
+                                            if idx + 1 < len(parameters_set)
+                                            else cst.Comma(),
+                                        )
+                                        for idx, parameter in enumerate(parameters_names)
+                                    ],
+                                    lbrace=cst.LeftCurlyBrace(whitespace_after=twotabs),
+                                    rbrace=cst.RightCurlyBrace(whitespace_before=onetab),
+                                ),
+                                whitespace_after_arg=indented,
+                            )
+                        ],
+                        whitespace_before_args=onetab,
+                    ),
+                )
+            ]
+        )
+
+        # insert / replace post parameters line
+        if post_parameters_idx is None:
+            stmts = stmts[: assertions_end_idx + 1] + [post_parameters_stmt] + stmts[assertions_end_idx + 1 :]
+        else:
+            stmts = stmts[:post_parameters_idx] + [post_parameters_stmt] + stmts[post_parameters_idx + 1 :]
+        return node.with_changes(body=node.body.with_changes(body=stmts))
 
     @staticmethod
-    def required_first(arguments: list[Argument]) -> list[Argument]:
-        # stable sorting arguments by Argument.required, True first
-        return [a for _, a in sorted(enumerate(arguments), key=lambda a: (not a[1].required, a[0]))]
+    def required_first(parameters: list[Parameter]) -> list[Parameter]:
+        # stable sorting parameters by Argument.required, True first
+        return [a for _, a in sorted(enumerate(parameters), key=lambda a: (not a[1].required, a[0]))]
 
     @classmethod
-    def create_annotation(cls, argument: Argument) -> cst.Annotation:
+    def create_annotation(cls, argument: Parameter) -> cst.Annotation:
         data_type = cls.create_type(argument.data_type)
         if argument.required:
             return cst.Annotation(data_type)
@@ -1854,7 +2032,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             )
 
     @staticmethod
-    def create_default(argument: Argument) -> cst.BaseExpression:
+    def create_default(argument: Parameter) -> cst.BaseExpression:
         if not argument.required:
             return cst.Name(value="NotSet")
 
