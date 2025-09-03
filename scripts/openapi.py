@@ -273,6 +273,57 @@ class Property:
     data_type: PythonType | GithubClass | None
     deprecated: bool
 
+    @staticmethod
+    def from_tuples(properties: dict[str, (PythonType | GithubClass | None, bool)]) -> list[Property]:
+        return [Property(name=n, data_type=t, deprecated=d) for n, (t, d) in properties.items()]
+
+
+@dataclasses.dataclass(frozen=True)
+class Argument:
+    name: str
+    description: str | None
+    data_type: PythonType | GithubClass | None
+    required: bool
+    nullable: bool | None
+    deprecated: bool | None
+
+    @staticmethod
+    def from_schema(name: str, schema: dict[str, Any], required: bool) -> Argument:
+        description = schema.get("description")
+        data_type = schema.get("type")
+        nullable = schema.get("nullable")
+        deprecated = schema.get("deprecated")
+        return Argument(name, description, data_type, required, nullable, deprecated)
+
+
+@dataclasses.dataclass(frozen=True)
+class Method:
+    name: str
+    summary: str | None
+    description: str | None
+    docs_url: str | None
+    arguments: list[Argument]
+    return_type: PythonType | GithubClass | None
+    deprecated: bool
+
+    @staticmethod
+    def from_schema(name: str, schema: dict[str, Any], return_type: list[str], spec: dict[str, Any]) -> Method:
+        summary = schema.get("summary")
+        description = schema.get("description")
+        docs_url = schema.get("docs_url")
+        arguments = [
+            Argument.from_schema(n, p, n in required)
+            for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
+            for s in [resolve_schema(s, spec)]
+            for required in [s.get("required", [])]
+            for n, p in s.get("properties", {}).items()
+        ]
+        # TODO: turn list[str] into PythonType
+        # if len(return_type) == 0 else (return_type[0] if len(return_type) == 1 else PythonType("union", return_type))
+        return_type = None
+        deprecated = schema.get("deprecated")
+        return Method(name, summary, description, docs_url, arguments, return_type, deprecated)
+
 
 class SimpleStringCollector(cst.CSTVisitor):
     def __init__(self):
@@ -761,13 +812,12 @@ class ApplySchemaBaseTransformer(CstTransformerBase, abc.ABC):
         self,
         module_name: str,
         class_name: str,
-        properties: dict[str, (PythonType | GithubClass | None, bool)],
+        properties: list[Property],
         deprecate: bool,
     ):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
-        properties = [Property(name=n, data_type=t, deprecated=d) for n, (t, d) in properties.items()]
         self.properties = sorted(properties, key=lambda p: p.name)
         self.all_properties = self.properties.copy()
         self.deprecate = deprecate
@@ -784,7 +834,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         self,
         module_name: str,
         class_name: str,
-        properties: dict[str, (PythonType | GithubClass | None, bool)],
+        properties: list[Property],
         completable: bool,
         deprecate: bool,
     ):
@@ -1200,7 +1250,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         ids: dict[str, list[str]],
         module_name: str,
         class_name: str,
-        properties: dict[str, (str | dict | list | None, bool)],
+        properties: list[Property],
         deprecate: bool,
     ):
         super().__init__(module_name, class_name, properties, deprecate)
@@ -1499,6 +1549,19 @@ class AddSchemasTransformer(CstTransformerBase):
                 self.schema_added += after - before
 
         return super().leave_ClassDef(original_node, updated_node)
+
+
+class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
+    def __init__(
+        self,
+        module_name: str,
+        class_name: str,
+        methods: list[Method],
+    ):
+        super().__init__()
+        self.module_name = module_name
+        self.class_name = class_name
+        self.methods = {method.name: method for method in methods}
 
 
 class CreateClassMethodTransformer(CstTransformerBase):
@@ -2041,6 +2104,7 @@ class OpenApi:
             spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
+        paths = spec.get("paths", {})
         classes = index.get("classes", {})
 
         if not class_names:
@@ -2069,6 +2133,7 @@ class OpenApi:
             completable = "CompletableGithubObject" in cls.get("inheritance", [])
             cls_schemas = cls.get("schemas", [])
             cls_properties = cls.get("properties", [])
+            cls_methods = cls.get("methods", [])
             class_change = False
             test_change = False
             for schema_name in cls_schemas:
@@ -2135,23 +2200,54 @@ class OpenApi:
                 with open(clazz.filename) as r:
                     code = "".join(r.readlines())
 
-                transformer = ApplySchemaTransformer(
-                    clazz.module, class_name, genuine_properties.copy(), completable=completable, deprecate=False
+                apply_transformer = ApplySchemaTransformer(
+                    clazz.module,
+                    class_name,
+                    Property.from_tuples(genuine_properties),
+                    completable=completable,
+                    deprecate=False,
                 )
+
                 tree = cst.parse_module(code)
-                tree_updated = tree.visit(transformer)
+                tree_updated = tree.visit(apply_transformer)
                 class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
                 if tests and os.path.exists(clazz.test_filename):
                     with open(clazz.test_filename) as r:
                         code = "".join(r.readlines())
 
-                    transformer = ApplySchemaTestTransformer(
-                        cls.get("ids", []), clazz.module, class_name, all_properties.copy(), deprecate=False
+                    apply_transformer = ApplySchemaTestTransformer(
+                        cls.get("ids", []),
+                        clazz.module,
+                        class_name,
+                        Property.from_tuples(all_properties),
+                        deprecate=False,
                     )
                     tree = cst.parse_module(code)
-                    tree_updated = tree.visit(transformer)
+                    tree_updated = tree.visit(apply_transformer)
                     test_change = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or test_change
+
+            # update methods
+            methods = [
+                Method.from_schema(n, schema, returns, spec)
+                for n, m in cls_methods.items()
+                for call in [m.get("call", {})]
+                for path, verb, returns in [(call.get("path"), call.get("verb"), call.get("returns"))]
+                if verb
+                for schema in [paths.get(path, {}).get(verb.lower())]
+                if schema is not None
+            ]
+
+            if methods:
+                print("Updating methods")
+
+                with open(clazz.filename) as r:
+                    code = "".join(r.readlines())
+
+                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods)
+                tree = cst.parse_module(code)
+                tree_updated = tree.visit(method_transformer)
+                class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
             any_change = any_change or class_change or test_change
             if class_change or test_change:
