@@ -1728,11 +1728,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         module_name: str,
         class_name: str,
         methods: list[Method],
+        update_docstring_mode: UpdateDocstringMode,
     ):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
         self.methods = {method.name: method for method in methods}
+        self.update_docstring_mode = update_docstring_mode
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         method = self.methods.get(updated_node.name.value)
@@ -1842,6 +1844,19 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
     def split_and_strip_lines(string: str) -> list[str]:
         return [line.strip() for line in string.split("\n")]
 
+    @classmethod
+    def create_param_docstring(cls, parameter: Parameter) -> list[str]:
+        deprecation = "deprecated, " if parameter.deprecated else ""
+        description = parameter.description if parameter.description else ""
+        description_lines = cls.indent_lines(description, "    ", indent_first=False)
+        docstrings = []
+        if deprecation or "".join(description_lines):
+            docstrings.append(f":param {parameter.name}: {deprecation}{description_lines[0]}")
+            docstrings.extend(description_lines[1:])
+        else:
+            docstrings.append(f":param {parameter.name}:")
+        return docstrings
+
     def update_docstring(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
         parameters = query_parameters + body_parameters
@@ -1850,32 +1865,43 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         stmts = node.body.body[1:] if docstring_stmt is not None else node.body.body
 
         docstrings = []
-        docstrings.append('"""')
-        if method.summary:
-            docstrings.extend(self.split_and_strip_lines(method.summary))
-            docstrings.append("")
-        if method.description:
-            docstrings.extend(self.split_and_strip_lines(method.description))
-            docstrings.append("")
-        if method.docs_url:
-            docstrings.append(f":calls: `{method.verb.upper()} {method.path} <{method.docs_url}>`_")
-        else:
-            docstrings.append(f":calls: {method.verb.upper()} {method.path}")
-        for parameter in parameters:
-            deprecation = "deprecated, " if parameter.deprecated else ""
-            description = parameter.description if parameter.description else ""
-            description_lines = self.indent_lines(description, "    ", indent_first=False)
-            if deprecation or "".join(description_lines):
-                docstrings.append(f":param {parameter.name}: {deprecation}{description_lines[0]}")
-                docstrings.extend(description_lines[1:])
+        if self.update_docstring_mode == UpdateDocstringMode.extend:
+            docstrings = docstring_stmt.body[0].value.value.split("\n")
+            docstrings = [line.strip() for line in docstrings]
+            last_param_idx = None
+            existing_params = set()
+            for idx, line in enumerate(docstrings):
+                if line.startswith(":param "):
+                    existing_params.add(line.split(":")[1].split(" ", 1)[1].strip())
+                    last_param_idx = idx
+            if last_param_idx is None:
+                # point to last but one line
+                last_param_idx = len(docstrings) - 2
+            for parameter in parameters:
+                if parameter.name not in existing_params:
+                    for line in self.create_param_docstring(parameter):
+                        last_param_idx = last_param_idx + 1
+                        docstrings.insert(last_param_idx, line)
+        elif self.update_docstring_mode == UpdateDocstringMode.rewrite:
+            docstrings.append('"""')
+            if method.summary:
+                docstrings.extend(self.split_and_strip_lines(method.summary))
+                docstrings.append("")
+            if method.description:
+                docstrings.extend(self.split_and_strip_lines(method.description))
+                docstrings.append("")
+            if method.docs_url:
+                docstrings.append(f":calls: `{method.verb.upper()} {method.path} <{method.docs_url}>`_")
             else:
-                docstrings.append(f":param {parameter.name}:")
-        docstrings.append('"""')
+                docstrings.append(f":calls: {method.verb.upper()} {method.path}")
+            for parameter in parameters:
+                docstrings.extend(self.create_param_docstring(parameter))
+            docstrings.append('"""')
+
+        # add docstrings as first statement
         docstring = "\n".join(
             [("        " + line) if idx > 0 and line else line for idx, line in enumerate(docstrings)]
         )
-
-        # add docstrings as first statement
         docstring_stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
         stmts = [docstring_stmt] + list(stmts)
         return node.with_changes(body=node.body.with_changes(body=stmts))
@@ -2389,13 +2415,20 @@ class IndexFileWorker:
             raise RuntimeError(f"Failed to parse {filename}", e)
 
 
-class HandleNewSchemas(Enum):
+class StringEnum(Enum):
+    def __str__(self):
+        return self.value
+
+
+class HandleNewSchemas(StringEnum):
     ignore = "ignore"
     create_class = "create-class"
     as_dict = "as-dict"
 
-    def __str__(self):
-        return self.value
+
+class UpdateDocstringMode(StringEnum):
+    extend = "extend"
+    rewrite = "rewrite"
 
 
 class OpenApi:
@@ -2577,6 +2610,7 @@ class OpenApi:
         dry_run: bool,
         tests: bool,
         handle_new_schemas: HandleNewSchemas,
+        update_docstrings: UpdateDocstringMode,
     ) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
@@ -2724,7 +2758,7 @@ class OpenApi:
                 with open(clazz.filename) as r:
                     code = "".join(r.readlines())
 
-                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods)
+                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods, update_docstrings)
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(method_transformer)
                 class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
@@ -3674,6 +3708,12 @@ class OpenApi:
             help="How to handle attributes that return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
             choices=list(HandleNewSchemas),
         )
+        apply_parser.add_argument(
+            "--update-docstrings",
+            type=UpdateDocstringMode,
+            help="How to update docstrings: only 'extend' existing docstrings, entirely 'rewrite' docstrings.",
+            choices=list(UpdateDocstringMode),
+        )
         apply_parser.add_argument("github_path", help="Path to PyGithub Python files")
         apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_parser.add_argument("index_filename", help="Path of index file")
@@ -3773,6 +3813,7 @@ class OpenApi:
                 self.args.dry_run,
                 self.args.tests,
                 self.args.new_schemas,
+                self.args.update_docstrings,
             )
         elif self.args.subcommand == "create":
             if self.args.component == "class":
