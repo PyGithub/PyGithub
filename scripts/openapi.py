@@ -42,7 +42,7 @@ from typing import Any
 
 import libcst as cst
 import requests
-from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
+from libcst import IndentedBlock, Module, SimpleStatementLine, SimpleString
 
 equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
 
@@ -64,7 +64,7 @@ def as_python_type(
     schema_type: dict[str, Any],
     schema_path: list[str],
     schema_to_class: dict[str, str],
-    classes,
+    classes: dict[str, Any],
     *,
     verbose: bool = False,
     collect_new_schemas: list[str] | None = None,
@@ -179,6 +179,10 @@ class PythonType:
     type: str
     inner_types: list[PythonType | GithubClass] | None = None
 
+    @staticmethod
+    def union(*types: PythonType | GithubClass | None) -> PythonType:
+        return PythonType("union", inner_types=[t for t in types])
+
     def __hash__(self):
         return hash(self.__repr__())
 
@@ -189,6 +193,9 @@ class PythonType:
 
     def __lt__(self, other) -> bool:
         return self.__repr__() < other.__repr__()
+
+    def as_nullable(self) -> PythonType:
+        return self.union(self, None)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -214,6 +221,9 @@ class GithubClass:
 
     def __lt__(self, other) -> bool:
         return self.__repr__() < other.__repr__()
+
+    def as_nullable(self) -> PythonType:
+        return PythonType.union(self, None)
 
     @property
     def short_class_name(self) -> str:
@@ -284,16 +294,20 @@ class Argument:
     description: str | None
     data_type: PythonType | GithubClass | None
     required: bool
-    nullable: bool | None
     deprecated: bool | None
 
     @staticmethod
-    def from_schema(name: str, schema: dict[str, Any], required: bool) -> Argument:
+    def from_schema(name: str, schema: dict[str, Any], required: bool, index: dict[str, Any]) -> Argument:
+        classes = index.get("classes", {})
+        schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
+        schema_to_class["default"] = ["GithubObject"]
+
         description = schema.get("description")
-        data_type = schema.get("type")
-        nullable = schema.get("nullable")
+        data_type = as_python_type(schema, [], schema_to_class, classes)
+        if schema.get("nullable") is True and data_type is not None:
+            data_type = data_type.as_nullable()
         deprecated = schema.get("deprecated")
-        return Argument(name, description, data_type, required, nullable, deprecated)
+        return Argument(name, description, data_type, required, deprecated)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -301,18 +315,28 @@ class Method:
     name: str
     summary: str | None
     description: str | None
+    path: str
+    verb: str
     docs_url: str | None
     arguments: list[Argument]
     return_type: PythonType | GithubClass | None
     deprecated: bool
 
     @staticmethod
-    def from_schema(name: str, schema: dict[str, Any], return_type: list[str], spec: dict[str, Any]) -> Method:
+    def from_schema(
+        name: str,
+        schema: dict[str, Any],
+        path: str,
+        verb: str,
+        return_type: list[str],
+        spec: dict[str, Any],
+        index: dict[str, Any],
+    ) -> Method:
         summary = schema.get("summary")
         description = schema.get("description")
         docs_url = schema.get("docs_url")
         arguments = [
-            Argument.from_schema(n, p, n in required)
+            Argument.from_schema(n, p, n in required, index)
             for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
             for s in [resolve_schema(s, spec)]
             for required in [s.get("required", [])]
@@ -322,7 +346,7 @@ class Method:
         # if len(return_type) == 0 else (return_type[0] if len(return_type) == 1 else PythonType("union", return_type))
         return_type = None
         deprecated = schema.get("deprecated")
-        return Method(name, summary, description, docs_url, arguments, return_type, deprecated)
+        return Method(name, summary, description, path, verb, docs_url, arguments, return_type, deprecated)
 
 
 class SimpleStringCollector(cst.CSTVisitor):
@@ -354,14 +378,41 @@ class FunctionCallCollector(cst.CSTVisitor):
         self._calls.append((func_name, args))
 
 
+def is_comment(stmt: cst.BaseStatement) -> bool:
+    return (
+        isinstance(stmt, SimpleStatementLine)
+        and len(stmt.body) > 0
+        and isinstance(stmt.body[0], cst.Expr)
+        and isinstance(stmt.body[0].value, SimpleString)
+    )
+
+
+def is_parameter_assertion(stmt: cst.BaseStatement, parameters: set[str]) -> bool:
+    if not (isinstance(stmt, SimpleStatementLine) and len(stmt.body) == 1):
+        return False
+    stmt = stmt.body[0]
+
+    if not (isinstance(stmt, cst.Assert) and isinstance(stmt.test, cst.Call)):
+        return False
+    call = stmt.test
+
+    if not (isinstance(call.func, cst.Name) and call.func.value in ["isinstance", "is_optional"]):
+        return False
+
+    if not (len(call.args) == 2 and isinstance(call.args[0], cst.Arg)):
+        return False
+    arg = call.args[0]
+
+    if not isinstance(arg.value, cst.Name):
+        return False
+    name = arg.value
+
+    return name.value in parameters
+
+
 def get_class_docstring(node: cst.ClassDef) -> str | None:
     try:
-        if (
-            isinstance(node.body, IndentedBlock)
-            and isinstance(node.body.body[0], SimpleStatementLine)
-            and isinstance(node.body.body[0].body[0], Expr)
-            and isinstance(node.body.body[0].body[0].value, SimpleString)
-        ):
+        if isinstance(node.body, IndentedBlock) and len(node.body.body) > 0 and is_comment(node.body.body[0]):
             return node.body.body[0].body[0].value.value
     except Exception as e:
         print(f"Extracting docstring of class {node.name.value} failed", e)
@@ -411,7 +462,7 @@ class CstMethods(abc.ABC):
 
     @classmethod
     def create_type(
-        cls, data_type: PythonType | GithubClass | None, short_class_name: bool = False
+        cls, data_type: PythonType | GithubClass | None, short_class_name: bool = False, union_as_tuple: bool = False
     ) -> cst.BaseExpression:
         if data_type is None:
             return cst.Name("None")
@@ -424,13 +475,25 @@ class CstMethods(abc.ABC):
                 return cst.Name("None")
             if len(data_type.inner_types) == 1:
                 return cls.create_type(data_type.inner_types[0], short_class_name)
-            result = cst.BinaryOperation(
-                cls.create_type(data_type.inner_types[0], short_class_name),
-                cst.BitOr(),
-                cls.create_type(data_type.inner_types[1], short_class_name),
-            )
-            for dt in data_type.inner_types[2:]:
-                result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt, short_class_name))
+            if union_as_tuple:
+                result = cst.Tuple(
+                    elements=[
+                        cst.Element(
+                            value=cls.create_type(
+                                inner, short_class_name=short_class_name, union_as_tuple=union_as_tuple
+                            )
+                        )
+                        for inner in data_type.inner_types
+                    ]
+                )
+            else:
+                result = cst.BinaryOperation(
+                    cls.create_type(data_type.inner_types[0], short_class_name),
+                    cst.BitOr(),
+                    cls.create_type(data_type.inner_types[1], short_class_name),
+                )
+                for dt in data_type.inner_types[2:]:
+                    result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt, short_class_name))
             return result
         if data_type.inner_types:
             elems = [
@@ -1571,23 +1634,148 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         print(f"- Updating method {updated_node.name.value}")
         print(updated_node)
 
+        updated_node = self.update_parameters(updated_node, method)
+        updated_node = self.update_docstring(updated_node, method)
+        updated_node = self.update_assertions(updated_node, method)
+        updated_node = self.update_deprecations(updated_node, method)
+        updated_node = self.update_post_parameters(updated_node, method)
+
+        return updated_node
+
+    def update_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         # update params: create missing, update type annotation of existing params
         arguments = {arg.name: arg for arg in method.arguments}
+        arguments_sorted = self.required_first(method.arguments)
         existing_arguments = set()
+        optional_exists = False
         updated_params = []
-        for param in updated_node.params.params:
+        for param in node.params.params:
             argument = arguments.get(param.name.value)
             if argument is None:
                 print(f"Unknown method argument: {param.name.value}")
                 updated_params.append(param)
                 continue
-            existing_arguments.add(not argument.name)
+            existing_arguments.add(argument.name)
+            optional_exists = optional_exists or not argument.required
             param = param.with_changes(
                 annotation=self.create_annotation(argument), default=self.create_default(argument)
             )
             updated_params.append(param)
-        updated_node = updated_node.with_changes(params=updated_node.params.with_changes(params=updated_params))
-        return updated_node
+        for argument in arguments_sorted:
+            if argument.name in existing_arguments:
+                continue
+            print(f"  - Adding parameter {argument.name}")
+            if argument.required and optional_exists:
+                print(
+                    f"Cannot add parameter {argument.name} without a breaking change "
+                    f"as this is required and other optional parameters already exist"
+                )
+                continue
+            param = updated_params[-1].deep_clone()
+            param = param.with_changes(
+                name=cst.Name(argument.name),
+                annotation=self.create_annotation(argument),
+                default=self.create_default(argument),
+            )
+            # propagate the last but one param's comma to the last param (before adding the new param)
+            if len(updated_params) > 1:
+                updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
+            updated_params.append(param)
+        return node.with_changes(params=node.params.with_changes(params=updated_params))
+
+    @staticmethod
+    def indent_lines(string: str, indentation: str, indent_first: bool = True) -> list[str]:
+        lines = UpdateMethodsTransformer.split_and_strip_lines(string)
+        if indent_first:
+            lines = [indentation + line for line in lines]
+        else:
+            lines = [lines[0]] + [indentation + line for line in lines[1:]]
+        return lines
+
+    @staticmethod
+    def split_and_strip_lines(string: str) -> list[str]:
+        return [line.strip() for line in string.split("\n")]
+
+    def update_docstring(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        docstring_stmt = node.body.body[0] if len(node.body.body) > 0 and is_comment(node.body.body[0]) else None
+        stmts = node.body.body[1:] if docstring_stmt is not None else node.body.body
+
+        docstrings = []
+        docstrings.append('"""')
+        if method.summary:
+            docstrings.extend(self.split_and_strip_lines(method.summary))
+            docstrings.append("")
+        if method.description:
+            docstrings.extend(self.split_and_strip_lines(method.description))
+            docstrings.append("")
+        if method.docs_url:
+            docstrings.append(f":calls: `{method.verb.upper()} {method.path} <{method.docs_url}>`_")
+        else:
+            docstrings.append(f":calls: {method.verb.upper()} {method.path}")
+        for argument in method.arguments:
+            deprecation = "deprecated, " if argument.deprecated else ""
+            description = argument.description if argument.description else ""
+            description_lines = self.indent_lines(description, "    ", indent_first=False)
+            docstrings.append(f":param {argument.name}: {deprecation}{description_lines[0]}")
+            docstrings.extend(description_lines[1:])
+        docstrings.append('"""')
+        docstring = "\n        ".join(docstrings)
+
+        # add docstrings as first statement
+        docstring_stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
+        stmts = [docstring_stmt] + list(stmts)
+        return node.with_changes(body=node.body.with_changes(body=stmts))
+
+    def update_assertions(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        # remove all existing parameter assertions
+        stmts = []
+        assertions_start_idx = None
+        parameters = {argument.name for argument in method.arguments}
+        for idx, stmt in enumerate(node.body.body):
+            if is_parameter_assertion(stmt, parameters):
+                if assertions_start_idx is None:
+                    assertions_start_idx = idx
+            else:
+                stmts.append(stmt)
+
+        # generate parameter assertions
+        arguments_sorted = self.required_first(method.arguments)
+        assertion_stmts = [
+            cst.SimpleStatementLine(
+                body=[
+                    cst.Assert(
+                        test=cst.Call(
+                            func=cst.Name("isinstance") if argument.required else cst.Name("is_optional"),
+                            args=[
+                                cst.Arg(cst.Name(argument.name)),
+                                cst.Arg(self.create_type(argument.data_type, union_as_tuple=True)),
+                            ],
+                        ),
+                        msg=cst.Name(argument.name),
+                    )
+                ]
+            )
+            for argument in arguments_sorted
+        ]
+
+        assertions_start_idx = (
+            1
+            if assertions_start_idx is None and len(node.body.body) > 0 and is_comment(node.body.body[0])
+            else assertions_start_idx
+        )
+        stmts = stmts[:assertions_start_idx] + assertion_stmts + stmts[assertions_start_idx:]
+        return node.with_changes(body=node.body.with_changes(body=stmts))
+
+    def update_deprecations(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        return node
+
+    def update_post_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        return node
+
+    @staticmethod
+    def required_first(arguments: list[Argument]) -> list[Argument]:
+        # stable sorting arguments by Argument.required, True first
+        return [a for _, a in sorted(enumerate(arguments), key=lambda a: (not a[1].required, a[0]))]
 
     @classmethod
     def create_annotation(cls, argument: Argument) -> cst.Annotation:
@@ -1739,6 +1927,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         if url_params:
             raise ValueError(f"URL parameter not implemented: {', '.join(url_params)}")
 
+        # TODO: use Method.from_schema
         request_schema = (
             self.api.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", None)
         )
@@ -1770,6 +1959,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
 
         stmts = []
 
+        # TODO: combine this with UpdateMethodsTransformer.update_docstring
         docstrings = []
         docstrings.append('"""')
         if self.api_docs:
@@ -2272,7 +2462,7 @@ class OpenApi:
 
             # update methods
             methods = [
-                Method.from_schema(n, schema, returns, spec)
+                Method.from_schema(n, schema, path, verb, returns, spec, index)
                 for n, m in cls_methods.items()
                 for call in [m.get("call", {})]
                 for path, verb, returns in [(call.get("path"), call.get("verb"), call.get("returns"))]
