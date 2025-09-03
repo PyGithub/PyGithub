@@ -451,7 +451,7 @@ def is_request_parameters(stmt: cst.BaseStatement, var_name: str) -> bool:
         and isinstance(value.func.attr, cst.Name)
         and value.func.value.value == "NotSet"
         and value.func.attr.value == "remove_unset_items"
-    ):
+    ) and not (isinstance(value, cst.Dict)):
         return False
 
     return True
