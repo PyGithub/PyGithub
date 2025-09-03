@@ -49,6 +49,8 @@ from datetime import datetime, timezone
 
 from . import Framework
 
+gho = Framework.github.GithubObject
+
 
 class Issue(Framework.TestCase):
     def setUp(self):
@@ -145,16 +147,18 @@ class Issue(Framework.TestCase):
         self.issue.edit(
             "Title edited by PyGithub",
             "Body edited by PyGithub",
-            user,
-            "open",
+            gho.NotSet,
+            "closed",
             milestone,
             ["Bug"],
-            ["jacquev6"],
+            [user],
+            "completed",
         )
         self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
-        self.assertEqual(self.issue.state, "open")
+        self.assertEqual(self.issue.state, "closed")
+        self.assertEqual(self.issue.state_reason, "completed")
         self.assertEqual(self.issue.title, "Title edited by PyGithub")
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["Bug"])
 
@@ -164,8 +168,14 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.milestone, None)
 
     def testEditResetAssignee(self):
+        with self.replayData("Issue.testEditResetAssignees.txt"):
+            self.assertEqual(self.issue.assignee.login, "jacquev6")
+            self.issue.edit(assignee=None)
+            self.assertEqual(self.issue.assignee, None)
+
+    def testEditResetAssignees(self):
         self.assertEqual(self.issue.assignee.login, "jacquev6")
-        self.issue.edit(assignee=None)
+        self.issue.edit(assignees=[])
         self.assertEqual(self.issue.assignee, None)
 
     def testEditWithStateReasonNotPlanned(self):
