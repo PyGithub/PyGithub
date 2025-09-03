@@ -350,14 +350,14 @@ class Method:
             for n, r in [(s.get("name"), s.get("required"))]
             if n and r is not None
         ]
-        post_parameters = [
+        body_parameters = [
             Parameter.from_schema(n, p, n in required, index, param_type="body")
             for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
             for s in [resolve_schema(s, spec)]
             for required in [s.get("required", [])]
             for n, p in s.get("properties", {}).items()
         ]
-        parameters = url_parameters + post_parameters
+        parameters = url_parameters + body_parameters
         # TODO: turn list[str] into PythonType
         # if len(return_type) == 0 else (return_type[0] if len(return_type) == 1 else PythonType("union", return_type))
         return_type = None
@@ -1688,7 +1688,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         updated_node = self.update_assertions(updated_node, method)
         updated_node = self.update_deprecations(updated_node, method)
         updated_node = self.update_url_request_parameters(updated_node, method)
-        updated_node = self.update_post_request_parameters(updated_node, method)
+        updated_node = self.update_verb_request_parameters(updated_node, method, method.verb)
 
         return updated_node
 
@@ -1917,9 +1917,9 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         parameters, _ = self.split_parameters_by_type(method.parameters, ["query"])
         return self.update_request_parameters(node, "url_parameters", parameters)
 
-    def update_post_request_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+    def update_verb_request_parameters(self, node: cst.FunctionDef, method: Method, verb: str) -> cst.FunctionDef:
         parameters, _ = self.split_parameters_by_type(method.parameters, ["body"])
-        return self.update_request_parameters(node, "post_parameters", parameters)
+        return self.update_request_parameters(node, f"{verb.lower()}_parameters", parameters)
 
     def update_request_parameters(
         self, node: cst.FunctionDef, var_name: str, parameters: list[Parameter]
