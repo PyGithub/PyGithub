@@ -1563,6 +1563,49 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         self.class_name = class_name
         self.methods = {method.name: method for method in methods}
 
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        method = self.methods.get(updated_node.name.value)
+        if method is None:
+            return updated_node
+
+        print(f"- Updating method {updated_node.name.value}")
+        print(updated_node)
+
+        # update params: create missing, update type annotation of existing params
+        arguments = {arg.name: arg for arg in method.arguments}
+        existing_arguments = set()
+        updated_params = []
+        for param in updated_node.params.params:
+            argument = arguments.get(param.name.value)
+            if argument is None:
+                print(f"Unknown method argument: {param.name.value}")
+                updated_params.append(param)
+                continue
+            existing_arguments.add(not argument.name)
+            param = param.with_changes(
+                annotation=self.create_annotation(argument), default=self.create_default(argument)
+            )
+            updated_params.append(param)
+        updated_node = updated_node.with_changes(params=updated_node.params.with_changes(params=updated_params))
+        return updated_node
+
+    @classmethod
+    def create_annotation(cls, argument: Argument) -> cst.Annotation:
+        data_type = cls.create_type(argument.data_type)
+        if argument.required:
+            return cst.Annotation(data_type)
+        else:
+            return cst.Annotation(
+                annotation=cst.Subscript(
+                    value=cst.Name(value="Opt"), slice=[cst.SubscriptElement(slice=cst.Index(value=data_type))]
+                )
+            )
+
+    @staticmethod
+    def create_default(argument: Argument) -> cst.BaseExpression:
+        if not argument.required:
+            return cst.Name(value="NotSet")
+
 
 class CreateClassMethodTransformer(CstTransformerBase):
     def __init__(
