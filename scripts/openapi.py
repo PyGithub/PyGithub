@@ -431,15 +431,18 @@ def is_request_parameters(stmt: cst.BaseStatement, var_name: str) -> bool:
         return False
     stmt = stmt.body[0]
 
-    if not (isinstance(stmt, cst.Assign) and len(stmt.targets) == 1):
+    if isinstance(stmt, cst.Assign) and len(stmt.targets) == 1:
+        target = stmt.targets[0]
+        if not isinstance(target, cst.AssignTarget):
+            return False
+        target = target.target
+    elif isinstance(stmt, cst.AnnAssign):
+        target = stmt.target
+    else:
         return False
-    target = stmt.targets[0]
+    if not (isinstance(target, cst.Name) and target.value == var_name):
+        return False
     value = stmt.value
-
-    if not (
-        isinstance(target, cst.AssignTarget) and isinstance(target.target, cst.Name) and target.target.value == var_name
-    ):
-        return False
 
     if not (
         isinstance(value, cst.Call)
