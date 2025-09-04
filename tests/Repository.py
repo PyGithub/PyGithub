@@ -76,9 +76,10 @@
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
+# Copyright 2025 Matt Ball <96152357+mball-agathos@users.noreply.github.com>   #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
-# Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
+# Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -104,6 +105,7 @@ from datetime import date, datetime, timezone
 from unittest import mock
 
 import github
+import github.Repository
 
 from . import Framework
 
@@ -267,6 +269,15 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.watchers_count, 7122)
         self.assertEqual(self.repo.web_commit_signoff_required, False)
         self.assertEqual(self.repo.custom_properties, {})
+
+    def testAsUrlParam(self):
+        self.assertEqual(github.Repository.Repository.as_url_param(self.repo), "PyGithub/PyGithub")
+        self.assertEqual(github.Repository.Repository.as_url_param(self.repo._identity), "PyGithub/PyGithub")
+
+        for repo in ["repo", "repo/name/slash"]:
+            with self.assertRaises(AssertionError) as raisedexp:
+                github.Repository.Repository.as_url_param(repo)
+            self.assertEqual(raisedexp.exception.args, (repo,))
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
@@ -544,6 +555,32 @@ class Repository(Framework.TestCase):
         self.assertEqual(release.prerelease, True)
         tag = [tag for tag in self.repo.get_tags() if tag.name == "vX.Y.Z-by-PyGithub-acctest2"].pop()
         self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
+
+    def testGenerateReleaseNotes(self):
+        notes = self.repo.generate_release_notes("vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(notes.name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(
+            notes.body, "**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest"
+        )
+        self.assertEqual(
+            repr(notes),
+            'GeneratedReleaseNotes(name="vX.Y.Z-by-PyGithub-acctest", body="**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest")',
+        )
+
+    def testGenerateReleaseNotesWithAllArguments(self):
+        self.repo.create_git_release(
+            tag="vX.Y.Z-by-PyGithub-acctest-previous",
+            name="vX.Y.Z: PyGithub acctest",
+            message="This release is created by PyGithub",
+        )
+        notes = self.repo.generate_release_notes(
+            tag_name="vX.Y.Z-by-PyGithub-acctest",
+            previous_tag_name="vX.Y.Z-by-PyGithub-acctest-previous",
+            target_commitish="main",
+            configuration_file_path="tests/test_release_notes.yml",
+        )
+        self.assertEqual(notes.name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertIn("Release notes generated using configuration in tests/test_release_notes.yml at main", notes.body)
 
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag(

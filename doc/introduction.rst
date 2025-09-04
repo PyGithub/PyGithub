@@ -58,7 +58,17 @@ What next?
 
 You need to use a Github API and wonder which class implements it? `Reference of APIs <https://pygithub.readthedocs.io/en/latest/apis.html>`__.
 
-You want all the details about PyGithub classes? `Reference of Classes <https://pygithub.readthedocs.io/en/latest/github_objects.html>`__.
+Contributing
+------------
+
+This project is community-driven. New PyGithub classes, methods and fixes are authored by the community, then reviewed and released by the project maintainers.
+
+See our :doc:`development` guide for further details.
+
+Sponsoring
+----------
+
+Please consider sponsoring this project. Look out for the "Sponsor this project" area on the `PyGithub project page <https://github.com/PyGithub/PyGithub>`__.
 
 Projects using PyGithub
 -----------------------

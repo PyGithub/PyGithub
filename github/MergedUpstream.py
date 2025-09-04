@@ -36,6 +36,7 @@ class MergedUpstream(NonCompletableGithubObject):
     This class represents a result of merge-upstream call.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/merged-upstream
 
     """

@@ -133,6 +133,7 @@ class EmailData(NamedTuple):
     http://docs.github.com/en/rest/reference/users#emails
 
     The OpenAPI schema can be found at
+
     - /components/schemas/email
 
     """

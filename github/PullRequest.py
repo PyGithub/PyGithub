@@ -50,6 +50,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Eddie Santos <9561596+eddie-santos@users.noreply.github.com>  #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Matt Tuchfarber <matt@tuchfarber.com>                         #
 # Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
@@ -146,6 +147,7 @@ class PullRequest(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/pulls
 
     The OpenAPI schema can be found at
+
     - /components/schemas/pull-request
     - /components/schemas/pull-request-minimal
     - /components/schemas/pull-request-simple

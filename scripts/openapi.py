@@ -31,13 +31,14 @@ import os.path
 import re
 import sys
 from collections import Counter, defaultdict
+from collections.abc import Callable, Sequence
 from enum import Enum
 from json import JSONEncoder
 from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Sequence
+from typing import Any
 
 import libcst as cst
 import requests
@@ -72,6 +73,24 @@ def as_python_type(
     data_type = schema_type.get("type")
     if "$ref" in schema_type:
         schema = schema_type.get("$ref").strip("# ")
+    elif "oneOf" in schema_type:
+        types = [
+            as_python_type(
+                t,
+                schema_path + ["oneOf", str(idx)],
+                schema_to_class,
+                classes,
+                verbose=verbose,
+                collect_new_schemas=collect_new_schemas,
+            )
+            for idx, t in enumerate(schema_type.get("oneOf"))
+        ]
+        types = list({t for t in types if t is not None})
+        if len(types) == 0:
+            return None
+        if len(types) == 1:
+            return types[0]
+        return PythonType("union", sorted(types))
     elif "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
         return as_python_type(
             schema_type.get("allOf")[0],
@@ -84,6 +103,9 @@ def as_python_type(
     if data_type == "object":
         schema = "/".join([""] + schema_path)
     if schema is not None:
+        # these schemas are explicitly ignored
+        if schema in {"/components/schemas/empty-object"}:
+            return None
         if schema in schema_to_class:
             classes_of_schema = schema_to_class[schema]
             if not isinstance(classes_of_schema, list):
@@ -103,7 +125,7 @@ def as_python_type(
                         print(f"Class not found in index: {class_name}")
             return PythonType(
                 type="union",
-                inner_types=[GithubClass(**classes.get(cls)) for cls in classes_of_schema if cls in classes],
+                inner_types=[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes],
             )
         if collect_new_schemas is not None:
             collect_new_schemas.append(schema or ".".join([""] + schema_path))
@@ -157,10 +179,16 @@ class PythonType:
     type: str
     inner_types: list[PythonType | GithubClass] | None = None
 
+    def __hash__(self):
+        return hash(self.__repr__())
+
     def __repr__(self):
         return (
             f"{self.type}[{', '.join([str(inner) for inner in self.inner_types])}]" if self.inner_types else self.type
         )
+
+    def __lt__(self, other) -> bool:
+        return self.__repr__() < other.__repr__()
 
 
 @dataclasses.dataclass(frozen=True)
@@ -183,6 +211,9 @@ class GithubClass:
 
     def __repr__(self):
         return ".".join([self.package, self.module, self.name])
+
+    def __lt__(self, other) -> bool:
+        return self.__repr__() < other.__repr__()
 
     @property
     def short_class_name(self) -> str:
@@ -529,6 +560,8 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             lines = class_docstring.splitlines()
             for idx, line in enumerate(lines):
                 if "The OpenAPI schema can be found at" in line:
+                    while len(lines) > idx + 1 and not lines[idx + 1].strip():
+                        idx = idx + 1
                     for schema in lines[idx + 1 :]:
                         if not schema.strip().lstrip("- "):
                             break
@@ -856,8 +889,12 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             node = node.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
 
         # insert typing classes if needed
-        if isinstance(node.body[-2], cst.If):
-            if_node = node.body[-2]
+        # find first If statement in node.body
+        if_idx_node_or_none = next(
+            ((idx, stmt) for idx, stmt in enumerate(node.body) if isinstance(stmt, cst.If)), None
+        )
+        if if_idx_node_or_none is not None:
+            if_idx, if_node = if_idx_node_or_none
             i = 0
             while i < len(if_node.body.body) and isinstance(if_node.body.body[i].body[0], (cst.Import, cst.ImportFrom)):
                 imported_module = if_node.body.body[i].body[0].module.attr.value
@@ -896,7 +933,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                     body=if_node.body.with_changes(body=tuple(stmts[:i]) + (import_stmt,) + tuple(stmts[i:]))
                 )
 
-            node = node.with_changes(body=tuple(node.body[:-2]) + (if_node, node.body[-1]))
+            node = node.with_changes(body=tuple(node.body[:if_idx]) + (if_node,) + tuple(node.body[if_idx + 1 :]))
 
         return node
 
@@ -1062,8 +1099,19 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             and prop.data_type.inner_types
             and isinstance(prop.data_type.inner_types[0], GithubClass)
         ):
-            func_name = "_makeClassAttribute"
-            args = [cst.Arg(cls.create_type(prop.data_type)), cst.Arg(attr)]
+            func_name = "_makeUnionClassAttributeFromTypeKey"
+            args = [
+                cst.Arg(cst.SimpleString('"type"')),
+                cst.Arg(cst.SimpleString(f'"{prop.data_type.inner_types[0].name}"')),
+                cst.Arg(attr),
+            ] + [
+                cst.Arg(
+                    cst.Tuple(
+                        elements=[cst.Element(cls.create_type(dt)), cst.Element(cst.SimpleString(f'"{dt.name}"'))]
+                    )
+                )
+                for dt in prop.data_type.inner_types
+            ]
         if func_name is None:
             raise ValueError(f"Unsupported data type {prop.data_type}")
         return cst.Call(func=cls.create_attribute(["self", func_name]), args=args)
@@ -1428,15 +1476,18 @@ class AddSchemasTransformer(CstTransformerBase):
                         heading = idx
                         schema_lines = lines[idx + 1 : -2 if empty_footing else -1]
                         break
+                schema_lines = {schema_line for schema_line in schema_lines if schema_line}
                 before = len(schema_lines)
-                schema_lines = sorted(list(set(schema_lines).union({f"{indent}- {schema}" for schema in self.schemas})))
+                schema_lines = sorted(list(schema_lines.union({f"{indent}- {schema}" for schema in self.schemas})))
                 after = len(schema_lines)
                 lines = (
                     lines[:heading]
                     +
-                    # we add an empty line before the schema lines if there is none
+                    # we add an empty line before the schema lines title if there is none
                     ([""] if lines[heading - 1].strip() else [])
                     + [indent + "The OpenAPI schema can be found at"]
+                    # we add an empty line after the schema lines title to get a proper bullet list in the docs
+                    + [""]
                     + schema_lines
                     + [""]
                     + lines[-1:]
@@ -1462,6 +1513,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         api_response: str | None,
         prefix_path,
         return_property: str | None,
+        create_new_class_func: Callable[str] | None,
     ):
         super().__init__()
         self.spec = spec
@@ -1517,6 +1569,19 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 )
             content_schema = content_schema.get("properties", {}).get(return_property, {})
             schema_path.extend(["properties", return_property])
+        if create_new_class_func is not None:
+            new_schemas = []
+            as_python_type(
+                content_schema,
+                schema_path,
+                self.schema_to_class,
+                self.classes,
+                verbose=False,
+                collect_new_schemas=new_schemas,
+            )
+            for new_schema in new_schemas:
+                print(f"creating new class for schea {new_schema}")
+                create_new_class_func(new_schema)
         self.api_content = (
             as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, verbose=True)
             if content_schema
@@ -2018,35 +2083,9 @@ class OpenApi:
                             self.as_python_type(v, schema_path + ["properties", k], collect_new_schemas=new_schemas)
                     # handle new schemas
                     for new_schema in new_schemas:
-                        new_class_name = "".join(
-                            [term[0].upper() + term[1:] for term in re.split("[-_]", new_schema.split("/")[-1])]
+                        self.create_class_for_schema(
+                            github_path, spec_file, index_filename, spec, classes, tests, new_schema
                         )
-                        if new_class_name in classes:
-                            # we probably created that class in an earlier iteration, or we have a name collision here
-                            continue
-                        is_completable = "url" in self.get_schema(spec, new_schema)[1].get("properties", [])
-                        parent_name = "CompletableGithubObject" if is_completable else "NonCompletableGithubObject"
-                        # TODO: get path from schema via indices.path_to_return_classes, get from spec.paths.PATH.get.externalDocs,url
-                        docs_url = "https://docs.github.com/en/rest"
-                        print(f"Drafting class {new_class_name} for new schema {new_schema}")
-                        self.create_class(
-                            github_path,
-                            spec_file,
-                            index_filename,
-                            new_class_name,
-                            parent_name,
-                            docs_url,
-                            [new_schema],
-                            dry_run=False,
-                            tests=tests,
-                            handle_new_schemas=handle_new_schemas,
-                        )
-
-                        # update index
-                        self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
-                        with open(index_filename) as r:
-                            index = json.load(r)
-                        classes = index.get("classes", {})
 
                     # propagate new classes to self.as_python_type
                     self.classes = classes
@@ -2063,11 +2102,33 @@ class OpenApi:
                         )
                     )
 
+                def is_supported_type(
+                    property_name: str,
+                    property_spec: dict[str, Any],
+                    property_type: PythonType | GithubClass | None,
+                    verbose: bool,
+                ) -> bool:
+                    if isinstance(property_type, PythonType):
+                        if property_type.type == "union":
+                            if not all(isinstance(inner_type, GithubClass) for inner_type in property_type.inner_types):
+                                if verbose:
+                                    print(f"Unsupported property '{property_name}' of type {property_type}")
+                                return False
+                        if property_type.type == "list":
+                            if not is_supported_type(
+                                property_name, property_spec, property_type.inner_types[0], verbose=False
+                            ):
+                                if verbose:
+                                    print(f"Unsupported property '{property_name}' of type {property_type}")
+                                return False
+                    return True
+
                 all_properties = {
                     k: (python_type, v.get("deprecated", False))
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
-                    if is_not_dict_type(python_type) or new_schemas_as_dict
+                    if is_supported_type(k, v, python_type, self.verbose)
+                    and (is_not_dict_type(python_type) or new_schemas_as_dict)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -2325,7 +2386,7 @@ class OpenApi:
                                         .get("methods")
                                     ]
                                     if self.verbose:
-                                        print(f"    - {verb} {candidate_path} implemented by {", ".join(methods)}")
+                                        print(f"    - {verb} {candidate_path} implemented by {', '.join(methods)}")
                                     continue
 
                                 suggested_methods = self.suggest_method_names(verb, path, candidate_path, spec)
@@ -2372,7 +2433,7 @@ class OpenApi:
 
             spec_fingerprints = {fingerprint(path): path for path in spec_paths}
             for path in sorted(list(unspec_paths)):
-                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), " ")}")
+                print(f"- {path}: {spec_fingerprints.get(fingerprint(path), ' ')}")
         print()
 
     def suggest_method_names(self, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
@@ -2507,6 +2568,9 @@ class OpenApi:
                             available_schemas[cls_name][key] = []
                         for st in spec_type:
                             st = st.lstrip("#")
+                            # explicitly ignore these schemas
+                            if st in {"/components/schemas/empty-object"}:
+                                continue
                             schema_returned_by[st].add(key)
                             if st not in schema_to_classes:
                                 unimplemented_schemas.add(st)
@@ -2740,6 +2804,7 @@ class OpenApi:
         self.write_code("", source, clazz.filename, dry_run=False)
 
         if tests:
+            attr_name = re.sub("[a-z]", "", class_name).lower()
             source = (
                 f"############################ Copyrights and license ############################\n"
                 f"#                                                                              #\n"
@@ -2772,14 +2837,15 @@ class OpenApi:
                 f"class {clazz.name}(Framework.TestCase):\n"
                 f"    def setUp(self):\n"
                 f"        super().setUp()\n"
-                f"        # TODO: create an instance of type {clazz.name} and assign to self.attr, then run:\n"
+                f"        # TODO: create an instance of type {clazz.name} and assign to self.{attr_name}, then run:\n"
                 f"        #   pytest {clazz.test_filename} -k testAttributes --record\n"
                 f"        #   ./scripts/update-assertions.sh {clazz.test_filename} testAttributes\n"
                 f"        #   pre-commit run --all-files\n"
-                f"        self.attr = None\n"
+                f"        self.{attr_name} = None\n"
                 f"\n"
                 f"    def testAttributes(self):\n"
-                f'        self.assertEqual(self.attr.url, "")\n'
+                f"        {attr_name} = self.{attr_name}\n"
+                f'        self.assertEqual({attr_name}.__repr__(), "")\n'
             )
             self.write_code("", source, clazz.test_filename, dry_run=False)
 
@@ -2832,6 +2898,45 @@ class OpenApi:
                     os.unlink(clazz.test_filename)
         return True
 
+    def create_class_for_schema(
+        self,
+        github_path: str,
+        spec_file: str,
+        index_filename: str,
+        spec: dict[str, Any],
+        classes: dict[str, Any],
+        tests: bool,
+        schema: str,
+    ) -> None:
+        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", schema.split("/")[-1])])
+        if new_class_name in classes:
+            # we probably created that class in an earlier iteration, or we have a name collision here
+            return
+        is_completable = "url" in self.get_schema(spec, schema)[1].get("properties", [])
+        parent_name = "CompletableGithubObject" if is_completable else "NonCompletableGithubObject"
+        # TODO: get path from schema via indices.path_to_return_classes, get docs from spec.paths.PATH.get.externalDocs.url
+        docs_url = "https://docs.github.com/en/rest"
+        print(f"Drafting class {new_class_name} for new schema {schema}")
+        self.create_class(
+            github_path,
+            spec_file,
+            index_filename,
+            new_class_name,
+            parent_name,
+            docs_url,
+            [schema],
+            dry_run=False,
+            tests=tests,
+            handle_new_schemas=HandleNewSchemas.create_class,
+        )
+
+        # update index
+        self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
+        with open(index_filename) as r:
+            index = json.load(r)
+        classes.clear()
+        classes.update(**index.get("classes", {}))
+
     def create_method(
         self,
         spec_file: str,
@@ -2843,6 +2948,7 @@ class OpenApi:
         api_response: str | None,
         return_property: str | None,
         dry_run: bool,
+        handle_new_schemas: HandleNewSchemas,
     ) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
@@ -2870,8 +2976,29 @@ class OpenApi:
             if prefix_path:
                 break
 
+        create_new_class_func = None
+        if handle_new_schemas == HandleNewSchemas.create_class:
+
+            def create_new_class(schema: str) -> None:
+                classes = index.get("classes", {})
+                github_path = index.get("sources")
+                self.create_class_for_schema(
+                    github_path, spec_file, index_filename, spec, classes, tests=True, schema=schema
+                )
+
+            create_new_class_func = create_new_class
+
         transformer = CreateClassMethodTransformer(
-            spec, index, clazz, method_name, api_verb, api_path, api_response, prefix_path, return_property
+            spec,
+            index,
+            clazz,
+            method_name,
+            api_verb,
+            api_path,
+            api_response,
+            prefix_path,
+            return_property,
+            create_new_class_func,
         )
         tree = cst.parse_module(code)
         tree_updated = tree.visit(transformer)
@@ -2967,6 +3094,12 @@ class OpenApi:
 
         create_method_parser = create_component_parsers.add_parser("method", help="Create a PyGithub method")
         create_method_parser.add_argument(
+            "--new-schemas",
+            type=HandleNewSchemas,
+            help="How to return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
+            choices=list(HandleNewSchemas),
+        )
+        create_method_parser.add_argument(
             "--return-property",
             help="Return the value of this response property, instead of the entire response object",
             nargs="?",
@@ -3045,11 +3178,12 @@ class OpenApi:
                     self.args.index_filename,
                     self.args.class_name,
                     self.args.method_name,
-                    self.args.api_verb,
+                    self.args.api_verb.lower(),
                     self.args.api_path,
                     self.args.api_response,
                     self.args.return_property,
                     self.args.dry_run,
+                    self.args.new_schemas,
                 )
         else:
             raise RuntimeError("Subcommand not implemented " + args.subcommand)

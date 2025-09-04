@@ -20,6 +20,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Alex Olieman <alex@olieman.net>                               #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 #                                                                              #
@@ -43,8 +44,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Any, Iterator
+from typing import Any
 
 import github.NamedUser
 import github.Organization
@@ -59,6 +61,7 @@ class GitReleaseAsset(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#releases
 
     The OpenAPI schema can be found at
+
     - /components/schemas/release-asset
 
     """

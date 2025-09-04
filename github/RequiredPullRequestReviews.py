@@ -68,6 +68,7 @@ class BypassPullRequestAllowances(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-pull-request-review/properties/bypass_pull_request_allowances
     - /components/schemas/protected-branch/properties/required_pull_request_reviews/properties/bypass_pull_request_allowances
 
@@ -110,6 +111,7 @@ class DismissalRestrictions(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-pull-request-review/properties/dismissal_restrictions
     - /components/schemas/protected-branch/properties/required_pull_request_reviews/properties/dismissal_restrictions
 
@@ -173,6 +175,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-pull-request-review
     - /components/schemas/protected-branch/properties/required_pull_request_reviews
 
