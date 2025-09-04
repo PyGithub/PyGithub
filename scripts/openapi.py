@@ -1879,6 +1879,22 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         if self.update_docstring_mode == UpdateDocstringMode.extend:
             docstrings = docstring_stmt.body[0].value.value.split("\n")
             docstrings = [line.strip() for line in docstrings]
+
+            # add description if none exists
+            if (
+                len(docstrings) > 1
+                and docstrings[0].strip() == '"""'
+                and all(line.strip().startswith(":") or line.strip().startswith('"""') for line in docstrings)
+            ):
+                # inserted description before summary, as the latter will move the former further down
+                if method.description:
+                    docstrings = (
+                        [docstrings[0]] + self.split_and_strip_lines(method.description) + [""] + docstrings[1:]
+                    )
+                if method.summary:
+                    docstrings = [docstrings[0]] + self.split_and_strip_lines(method.summary) + [""] + docstrings[1:]
+
+            # extend params
             last_param_idx = None
             existing_params = set()
             for idx, line in enumerate(docstrings):
