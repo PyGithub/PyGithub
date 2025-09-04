@@ -57,10 +57,13 @@ class CodeScanRule(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._description: Attribute[str] = NotSet
+        self._full_description: Attribute[str] = NotSet
+        self._help: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._security_severity_level: Attribute[str] = NotSet
         self._severity: Attribute[str] = NotSet
+        self._tags: Attribute[list[str]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self.id, "name": self.name})
@@ -68,6 +71,14 @@ class CodeScanRule(NonCompletableGithubObject):
     @property
     def description(self) -> str:
         return self._description.value
+
+    @property
+    def full_description(self) -> str:
+        return self._full_description.value
+
+    @property
+    def help(self) -> str:
+        return self._help.value
 
     @property
     def id(self) -> str:
@@ -85,9 +96,17 @@ class CodeScanRule(NonCompletableGithubObject):
     def severity(self) -> str:
         return self._severity.value
 
+    @property
+    def tags(self) -> list[str]:
+        return self._tags.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "full_description" in attributes:  # pragma no branch
+            self._full_description = self._makeStringAttribute(attributes["full_description"])
+        if "help" in attributes:  # pragma no branch
+            self._help = self._makeStringAttribute(attributes["help"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
@@ -96,3 +115,5 @@ class CodeScanRule(NonCompletableGithubObject):
             self._security_severity_level = self._makeStringAttribute(attributes["security_severity_level"])
         if "severity" in attributes:  # pragma no branch
             self._severity = self._makeStringAttribute(attributes["severity"])
+        if "tags" in attributes:  # pragma no branch
+            self._tags = self._makeListOfStringsAttribute(attributes["tags"])
