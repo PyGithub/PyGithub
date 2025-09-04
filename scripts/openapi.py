@@ -1773,7 +1773,6 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         parameters_names = {arg.name: arg for arg in parameters}
         parameters_sorted = self.required_first(parameters)
         existing_parameters = set()
-        required_exists = False
         optional_exists = False
         updated_params = []
 
@@ -1786,26 +1785,26 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             updated_params.append(params[0])
             params = params[1:]
 
-        # update existing params in reverse order so we can detect situation where making a param optional
-        # would conflict with later required
-        params_insert_idx = len(updated_params)
-        for param in reversed(params):
+        # update existing params
+        for idx, param in enumerate(params):
             parameter = parameters_names.get(param.name.value)
             if parameter is None:
                 print(f"Unknown method argument: {param.name.value}")
-                updated_params.insert(params_insert_idx, param)
+                updated_params.append(param)
                 continue
             existing_parameters.add(parameter.name)
-            if required_exists and not parameter.required:
-                print(f"Cannot make argument '{parameter.name}' optional because a later parameter is required")
-                param = param.with_changes(annotation=self.create_annotation(parameter))
+            if not parameter.required and param.default is None:
+                print(f"Cannot update optional parameter '{parameter.name}' as it is required")
+            elif parameter.required and param.default is not None:
+                print(f"Cannot update required parameter '{parameter.name}' as it is optional")
+                optional_exists = True
             else:
+                print(f"Updating parameter '{parameter.name}'")
                 param = param.with_changes(
                     annotation=self.create_annotation(parameter), default=self.create_default(parameter)
                 )
-            updated_params.insert(params_insert_idx, param)
-            required_exists = required_exists or parameter.required
             optional_exists = optional_exists or not parameter.required
+            updated_params.append(param)
 
         # add missing params
         for parameter in parameters_sorted:
