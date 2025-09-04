@@ -2627,7 +2627,7 @@ class OpenApi:
                     w.write(updated_code)
             return True
 
-    def apply(
+    def apply_properties(
         self,
         github_path: str,
         spec_file: str,
@@ -2636,14 +2636,12 @@ class OpenApi:
         dry_run: bool,
         tests: bool,
         handle_new_schemas: HandleNewSchemas,
-        update_docstrings: UpdateDocstringMode,
     ) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
             spec = json.load(r)
         with open(index_filename) as r:
             index = json.load(r)
-        paths = spec.get("paths", {})
         classes = index.get("classes", {})
 
         if not class_names:
@@ -2673,7 +2671,6 @@ class OpenApi:
             completable = "CompletableGithubObject" in cls.get("inheritance", [])
             cls_schemas = cls.get("schemas", [])
             cls_properties = cls.get("properties", [])
-            cls_methods = cls.get("methods", [])
             class_change = False
             test_change = False
             for schema_name in cls_schemas:
@@ -2767,6 +2764,46 @@ class OpenApi:
                     tree_updated = tree.visit(apply_transformer)
                     test_change = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or test_change
 
+            any_change = any_change or class_change or test_change
+            if class_change or test_change:
+                print(f"Class {class_name} changed")
+                if test_change:
+                    print(f"Test {clazz.test_filename} changed")
+
+        return any_change
+
+    def apply_methods(
+        self,
+        spec_file: str,
+        index_filename: str,
+        class_names: list[str] | None,
+        dry_run: bool,
+        update_docstrings: UpdateDocstringMode,
+    ) -> bool:
+        print(f"Using spec {spec_file}")
+        with open(spec_file) as r:
+            spec = json.load(r)
+        with open(index_filename) as r:
+            index = json.load(r)
+        paths = spec.get("paths", {})
+        classes = index.get("classes", {})
+
+        if not class_names:
+            class_names = classes.keys()
+        if len(class_names) == 1:
+            print(f"Applying API schemas to PyGithub class {class_names[0]}")
+        else:
+            print(f"Applying API schemas to {len(class_names)} PyGithub classes")
+
+        any_change = False
+        for class_name in class_names:
+            clazz = GithubClass.from_class_name(class_name, index)
+
+            print(f"Applying spec {spec_file} to {clazz.full_class_name} ({clazz.filename})")
+            cls = classes.get(clazz.short_class_name, {})
+            cls_methods = cls.get("methods", [])
+            class_change = False
+
             # update methods
             methods = [
                 Method.from_schema(n, schema, path, verb, returns, spec, index)
@@ -2789,11 +2826,9 @@ class OpenApi:
                 tree_updated = tree.visit(method_transformer)
                 class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
-            any_change = any_change or class_change or test_change
-            if class_change or test_change:
+            any_change = any_change or class_change
+            if class_change:
                 print(f"Class {class_name} changed")
-                if test_change:
-                    print(f"Test {clazz.test_filename} changed")
 
         return any_change
 
@@ -3529,7 +3564,7 @@ class OpenApi:
                     f.close()
                     print(f"Updating temporary index {f.name}")
                     self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
-                    self.apply(
+                    self.apply_properties(
                         github_path,
                         spec_file,
                         f.name,
@@ -3541,7 +3576,7 @@ class OpenApi:
             else:
                 print("Updating index")
                 self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
-                self.apply(
+                self.apply_properties(
                     github_path,
                     spec_file,
                     index_filename,
@@ -3727,23 +3762,31 @@ class OpenApi:
         suggest_schemas_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="*")
 
         apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
-        apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
-        apply_parser.add_argument(
+        apply_area_parsers = apply_parser.add_subparsers(dest="area", required=True)
+        apply_properties_parser = apply_area_parsers.add_parser("properties", help="Apply schema to class properties")
+        apply_properties_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
+        apply_properties_parser.add_argument(
             "--new-schemas",
             type=HandleNewSchemas,
             help="How to handle attributes that return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
             choices=list(HandleNewSchemas),
         )
-        apply_parser.add_argument(
+        apply_properties_parser.add_argument("github_path", help="Path to PyGithub Python files")
+        apply_properties_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        apply_properties_parser.add_argument("index_filename", help="Path of index file")
+        apply_properties_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
+
+        apply_methods_parser = apply_area_parsers.add_parser("methods", help="Apply schema to class method")
+        apply_methods_parser.add_argument(
             "--update-docstrings",
             type=UpdateDocstringMode,
+            default=UpdateDocstringMode.extend,
             help="How to update docstrings: only 'extend' existing docstrings, entirely 'rewrite' docstrings.",
             choices=list(UpdateDocstringMode),
         )
-        apply_parser.add_argument("github_path", help="Path to PyGithub Python files")
-        apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
-        apply_parser.add_argument("index_filename", help="Path of index file")
-        apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
+        apply_methods_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        apply_methods_parser.add_argument("index_filename", help="Path of index file")
+        apply_methods_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
 
         create_parser = subparsers.add_parser("create", description="Create PyGithub classes and methods")
         create_component_parsers = create_parser.add_subparsers(dest="component", required=True)
@@ -3831,16 +3874,24 @@ class OpenApi:
                     self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
                 )
         elif self.args.subcommand == "apply":
-            changes = self.apply(
-                self.args.github_path,
-                self.args.spec,
-                self.args.index_filename,
-                self.args.class_name,
-                self.args.dry_run,
-                self.args.tests,
-                self.args.new_schemas,
-                self.args.update_docstrings,
-            )
+            if self.args.area == "properties":
+                changes = self.apply_properties(
+                    self.args.github_path,
+                    self.args.spec,
+                    self.args.index_filename,
+                    self.args.class_name,
+                    self.args.dry_run,
+                    self.args.tests,
+                    self.args.new_schemas,
+                )
+            if self.args.area == "methods":
+                changes = self.apply_methods(
+                    self.args.spec,
+                    self.args.index_filename,
+                    self.args.class_name,
+                    self.args.dry_run,
+                    self.args.update_docstrings,
+                )
         elif self.args.subcommand == "create":
             if self.args.component == "class":
                 changes = self.create_class(
