@@ -342,7 +342,7 @@ class Method:
     ) -> Method:
         summary = schema.get("summary")
         description = schema.get("description")
-        docs_url = schema.get("docs_url")
+        docs_url = schema.get("externalDocs", {}).get("url")
         url_parameters = [
             Parameter.from_schema(n, s, r, index)
             for s in schema.get("parameters", [])
