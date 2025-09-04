@@ -426,35 +426,40 @@ def is_parameter_assertion(stmt: cst.BaseStatement, parameters: set[str]) -> boo
     return name.value in parameters
 
 
-def is_request_parameters(stmt: cst.BaseStatement, var_name: str) -> bool:
+def get_request_parameters(stmt: cst.BaseStatement, var_name: str) -> cst.Dict | None:
     if not (isinstance(stmt, cst.SimpleStatementLine) and len(stmt.body) == 1):
-        return False
+        return None
     stmt = stmt.body[0]
 
     if isinstance(stmt, cst.Assign) and len(stmt.targets) == 1:
         target = stmt.targets[0]
         if not isinstance(target, cst.AssignTarget):
-            return False
+            return None
         target = target.target
     elif isinstance(stmt, cst.AnnAssign):
         target = stmt.target
     else:
-        return False
+        return None
     if not (isinstance(target, cst.Name) and target.value == var_name):
-        return False
+        return None
     value = stmt.value
 
-    if not (
+    if isinstance(value, cst.Dict):
+        return value
+
+    if (
         isinstance(value, cst.Call)
         and isinstance(value.func, cst.Attribute)
         and isinstance(value.func.value, cst.Name)
         and isinstance(value.func.attr, cst.Name)
         and value.func.value.value == "NotSet"
         and value.func.attr.value == "remove_unset_items"
-    ) and not (isinstance(value, cst.Dict)):
-        return False
+        and len(value.args) == 1
+        and isinstance(value.args[0].value, cst.Dict)
+    ):
+        return value.args[0].value
 
-    return True
+    return None
 
 
 def get_class_docstring(node: cst.ClassDef) -> str | None:
@@ -1966,62 +1971,94 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
         stmts = [stmt for stmt in node.body.body]
 
-        # find post parameters line
-        post_parameters_idx = None
+        # find request parameters line
+        request_parameters_idx = None
         assertions_end_idx = None
         parameters_names = [parameter.name for parameter in parameters]
         parameters_set = set(parameters_names)
         for idx, stmt in enumerate(stmts):
             if is_parameter_assertion(stmt, parameters_set):
                 assertions_end_idx = idx
-            if is_request_parameters(stmt, var_name):
-                post_parameters_idx = idx
+            if get_request_parameters(stmt, var_name):
+                request_parameters_idx = idx
                 break
 
-        if post_parameters_idx is None and assertions_end_idx is None:
+        if request_parameters_idx is None and assertions_end_idx is None:
             # put this at the end
             assertions_end_idx = len(stmts)
 
-        # create new post parameters line
         indented = cst.ParenthesizedWhitespace(indent=True)
         onetab = indented.with_changes(last_line=cst.SimpleWhitespace(value="    "))
         twotabs = indented.with_changes(last_line=cst.SimpleWhitespace(value="        "))
-        post_parameters_stmt = cst.SimpleStatementLine(
-            body=[
-                cst.Assign(
-                    targets=[cst.AssignTarget(target=self.create_attribute([var_name]))],
-                    value=cst.Call(
-                        func=self.create_attribute(["NotSet", "remove_unset_items"]),
-                        args=[
-                            cst.Arg(
-                                value=cst.Dict(
-                                    elements=[
-                                        cst.DictElement(
-                                            key=cst.SimpleString(value=f'"{parameter}"'),
-                                            value=cst.Name(value=parameter),
-                                            comma=cst.Comma(whitespace_after=twotabs)
-                                            if idx + 1 < len(parameters_set)
-                                            else cst.Comma(),
-                                        )
-                                        for idx, parameter in enumerate(parameters_names)
-                                    ],
-                                    lbrace=cst.LeftCurlyBrace(whitespace_after=twotabs),
-                                    rbrace=cst.RightCurlyBrace(whitespace_before=onetab),
-                                ),
-                                whitespace_after_arg=indented,
-                            )
-                        ],
-                        whitespace_before_args=onetab,
+        if self.rewrite:
+            # create new request parameters line
+            request_parameters_stmt = cst.SimpleStatementLine(
+                body=[
+                    cst.Assign(
+                        targets=[cst.AssignTarget(target=self.create_attribute([var_name]))],
+                        value=cst.Call(
+                            func=self.create_attribute(["NotSet", "remove_unset_items"]),
+                            args=[
+                                cst.Arg(
+                                    value=cst.Dict(
+                                        elements=[
+                                            cst.DictElement(
+                                                key=cst.SimpleString(value=f'"{parameter}"'),
+                                                value=cst.Name(value=parameter),
+                                                comma=cst.Comma(whitespace_after=twotabs)
+                                                if idx + 1 < len(parameters_set)
+                                                else cst.Comma(),
+                                            )
+                                            for idx, parameter in enumerate(parameters_names)
+                                        ],
+                                        lbrace=cst.LeftCurlyBrace(whitespace_after=twotabs),
+                                        rbrace=cst.RightCurlyBrace(whitespace_before=onetab),
+                                    ),
+                                    whitespace_after_arg=indented,
+                                )
+                            ],
+                            whitespace_before_args=onetab,
+                        ),
+                    )
+                ]
+            )
+        else:
+            if request_parameters_idx is None:
+                print(f"Cannot update {var_name} is statement cannot be found.")
+                return node
+            request_parameters_stmt = stmts[request_parameters_idx]
+            dict_node = get_request_parameters(request_parameters_stmt, var_name)
+            last_existing_element = dict_node.elements[-1]
+            existing_keys = {e.key.value.strip('"') for e in dict_node.elements}
+            new_parameter_names = [name for name in parameters_names if name not in existing_keys]
+            new_elements = [
+                cst.DictElement(
+                    key=cst.SimpleString(value=f'"{parameter}"'),
+                    value=cst.Name(value=parameter),
+                    comma=cst.Comma(whitespace_after=twotabs)
+                    if idx + 1 < len(new_parameter_names)
+                    else (
+                        cst.MaybeSentinel.DEFAULT
+                        if last_existing_element.comma is cst.MaybeSentinel.DEFAULT
+                        else cst.Comma()
                     ),
                 )
+                for idx, parameter in enumerate(new_parameter_names)
             ]
-        )
+            if new_parameter_names:
+                last_existing_element = last_existing_element.with_changes(
+                    comma=cst.MaybeSentinel.DEFAULT
+                    if last_existing_element.comma is cst.MaybeSentinel.DEFAULT
+                    else cst.Comma(whitespace_after=onetab)
+                )
+            elements = [e for e in dict_node.elements[:-1]] + [last_existing_element] + new_elements
+            request_parameters_stmt = request_parameters_stmt.with_deep_changes(dict_node, elements=elements)
 
-        # insert / replace post parameters line
-        if post_parameters_idx is None:
-            stmts = stmts[: assertions_end_idx + 1] + [post_parameters_stmt] + stmts[assertions_end_idx + 1 :]
+        # insert / replace request parameters line
+        if request_parameters_idx is None:
+            stmts = stmts[: assertions_end_idx + 1] + [request_parameters_stmt] + stmts[assertions_end_idx + 1 :]
         else:
-            stmts = stmts[:post_parameters_idx] + [post_parameters_stmt] + stmts[post_parameters_idx + 1 :]
+            stmts = stmts[:request_parameters_idx] + [request_parameters_stmt] + stmts[request_parameters_idx + 1 :]
         return node.with_changes(body=node.body.with_changes(body=stmts))
 
     @staticmethod
