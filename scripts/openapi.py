@@ -1928,8 +1928,9 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         docstring = "\n".join(
             [("        " + line) if idx > 0 and line else line for idx, line in enumerate(docstrings)]
         )
-        docstring_stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
-        stmts = [docstring_stmt] + list(stmts)
+        if docstring:
+            docstring_stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
+            stmts = [docstring_stmt] + list(stmts)
         return node.with_changes(body=node.body.with_changes(body=stmts))
 
     def update_assertions(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
