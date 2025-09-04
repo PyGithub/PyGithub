@@ -472,9 +472,6 @@ def get_request_parameters(stmt: cst.BaseStatement, var_name: str) -> cst.Dict |
         return None
     value = stmt.value
 
-    if isinstance(value, cst.Dict):
-        return value
-
     if (
         isinstance(value, cst.Call)
         and isinstance(value.func, cst.Attribute)
@@ -485,7 +482,10 @@ def get_request_parameters(stmt: cst.BaseStatement, var_name: str) -> cst.Dict |
         and len(value.args) == 1
         and isinstance(value.args[0].value, cst.Dict)
     ):
-        return value.args[0].value
+        value = value.args[0].value
+
+    if isinstance(value, cst.Dict):
+        return value
 
     return None
 
@@ -1772,7 +1772,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                 print(f"Path parameter {{{path.name}}} not found in path: {method.path}")
 
     @classmethod
-    def create_parameter(cls, parameter: Parameter, template: cst.Param, allow_required: bool):
+    def create_parameter(cls, parameter: Parameter, template: cst.Param, allow_required: bool) -> cst.Param | None:
         if parameter.required and not allow_required:
             print(
                 f"Cannot add parameter {parameter.name} without a breaking change "
@@ -1835,7 +1835,6 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                     print(f"Cannot update required parameter '{parameter.name}' as it is optional")
                     optional_exists = True
                 else:
-                    print(f"Updating parameter '{parameter.name}'")
                     param = param.with_changes(
                         annotation=self.create_annotation(parameter), default=self.create_default(parameter)
                     )
@@ -1849,10 +1848,11 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
                 print(f"  - Adding parameter {parameter.name}")
                 param = self.create_parameter(parameter, updated_params[-1], not optional_exists)
-                # propagate the last but one param's comma to the last param (before adding the new param)
-                if last_param_has_comma and len(updated_params) > 1:
-                    updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
-                updated_params.append(param)
+                if param:
+                    # propagate the last but one param's comma to the last param (before adding the new param)
+                    if last_param_has_comma and len(updated_params) > 1:
+                        updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
+                    updated_params.append(param)
 
         return node.with_changes(params=node.params.with_changes(params=updated_params))
 
@@ -2090,8 +2090,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             if request_parameters_idx is None:
                 print(f"Cannot update {var_name} is statement cannot be found.")
                 return node
+
             request_parameters_stmt = stmts[request_parameters_idx]
             dict_node = get_request_parameters(request_parameters_stmt, var_name)
+            if len(dict_node.elements) == 0:
+                print(f"Cannot update {var_name} is is an empty dict indicating.")
+                return node
+
             last_existing_element = dict_node.elements[-1]
             existing_keys = {e.key.value.strip('"') for e in dict_node.elements}
             new_parameter_names = [name for name in parameters_names if name not in existing_keys]
@@ -2897,8 +2902,6 @@ class OpenApi:
             ]
 
             if methods:
-                print("Updating methods")
-
                 with open(clazz.filename) as r:
                     code = "".join(r.readlines())
 
