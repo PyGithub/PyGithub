@@ -1702,6 +1702,23 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             if f"{{{path.name}}}" not in method.path:
                 print(f"Path parameter {{{path.name}}} not found in path: {method.path}")
 
+    @classmethod
+    def create_parameter(cls, parameter: Parameter, template: cst.Param, allow_required: bool):
+        if parameter.required and not allow_required:
+            print(
+                f"Cannot add parameter {parameter.name} without a breaking change "
+                f"as this is required and other optional parameters already exist"
+            )
+            return
+        param = template.deep_clone()
+        param = param.with_changes(
+            name=cst.Name(parameter.name),
+            annotation=cls.create_annotation(parameter),
+            equal=cst.MaybeSentinel.DEFAULT if parameter.required else cst.AssignEqual(),
+            default=cls.create_default(parameter),
+        )
+        return param
+
     def update_func_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         # update params: create missing, update type annotation of existing params
         query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
@@ -1715,54 +1732,58 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         params = node.params.params
         if len(params) == 0:
             return node
+        last_param_has_comma = params[-1].comma is not cst.MaybeSentinel.DEFAULT
 
-        # special handling of 'self' arg
-        if params[0].name.value == "self":
-            updated_params.append(params[0])
-            params = params[1:]
+        if params[0].name.value != "self":
+            print("Cannot update function parameter list as it does not have the 'self' parameter")
+            return node
+        # move 'self' parameter to updated_params
+        updated_params.append(params[0])
+        params = params[1:]
 
-        # update existing params
-        for idx, param in enumerate(params):
-            parameter = parameters_names.get(param.name.value)
-            if parameter is None:
-                print(f"Unknown method argument: {param.name.value}")
+        if self.rewrite:
+            # rewrite params list
+            for parameter in parameters_sorted:
+                param = self.create_parameter(
+                    parameter, params[-1] if params else updated_params[-1], not optional_exists
+                )
+                # propagate the last but one param's comma to the last param (before adding the new param)
+                if len(params) > 1:
+                    updated_params[-1] = updated_params[-1].with_changes(comma=params[-2].comma)
                 updated_params.append(param)
-                continue
-            existing_parameters.add(parameter.name)
-            if not parameter.required and param.default is None:
-                print(f"Cannot update optional parameter '{parameter.name}' as it is required")
-            elif parameter.required and param.default is not None:
-                print(f"Cannot update required parameter '{parameter.name}' as it is optional")
-                optional_exists = True
-            else:
-                print(f"Updating parameter '{parameter.name}'")
-                param = param.with_changes(
-                    annotation=self.create_annotation(parameter), default=self.create_default(parameter)
-                )
-            optional_exists = optional_exists or not parameter.required
-            updated_params.append(param)
+        else:
+            # update existing params
+            for idx, param in enumerate(params):
+                parameter = parameters_names.get(param.name.value)
+                if parameter is None:
+                    print(f"Unknown method argument: {param.name.value}")
+                    updated_params.append(param)
+                    continue
+                existing_parameters.add(parameter.name)
+                if not parameter.required and param.default is None:
+                    print(f"Cannot update optional parameter '{parameter.name}' as it is required")
+                elif parameter.required and param.default is not None:
+                    print(f"Cannot update required parameter '{parameter.name}' as it is optional")
+                    optional_exists = True
+                else:
+                    print(f"Updating parameter '{parameter.name}'")
+                    param = param.with_changes(
+                        annotation=self.create_annotation(parameter), default=self.create_default(parameter)
+                    )
+                optional_exists = optional_exists or not parameter.required
+                updated_params.append(param)
 
-        # add missing params
-        for parameter in parameters_sorted:
-            if parameter.name in existing_parameters:
-                continue
-            print(f"  - Adding parameter {parameter.name}")
-            if parameter.required and optional_exists:
-                print(
-                    f"Cannot add parameter {parameter.name} without a breaking change "
-                    f"as this is required and other optional parameters already exist"
-                )
-                continue
-            param = updated_params[-1].deep_clone()
-            param = param.with_changes(
-                name=cst.Name(parameter.name),
-                annotation=self.create_annotation(parameter),
-                default=self.create_default(parameter),
-            )
-            # propagate the last but one param's comma to the last param (before adding the new param)
-            if len(updated_params) > 1:
-                updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
-            updated_params.append(param)
+            # add missing params
+            for parameter in parameters_sorted:
+                if parameter.name in existing_parameters:
+                    continue
+
+                print(f"  - Adding parameter {parameter.name}")
+                param = self.create_parameter(parameter, updated_params[-1], not optional_exists)
+                # propagate the last but one param's comma to the last param (before adding the new param)
+                if last_param_has_comma and len(updated_params) > 1:
+                    updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
+                updated_params.append(param)
 
         return node.with_changes(params=node.params.with_changes(params=updated_params))
 
