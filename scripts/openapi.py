@@ -2777,7 +2777,7 @@ class OpenApi:
         self,
         spec_file: str,
         index_filename: str,
-        class_names: list[str] | None,
+        class_or_class_method_names: list[str] | None,
         dry_run: bool,
         update_docstrings: UpdateDocstringMode,
     ) -> bool:
@@ -2789,15 +2789,41 @@ class OpenApi:
         paths = spec.get("paths", {})
         classes = index.get("classes", {})
 
-        if not class_names:
-            class_names = classes.keys()
-        if len(class_names) == 1:
-            print(f"Applying API schemas to PyGithub class {class_names[0]}")
+        if class_or_class_method_names:
+            # parse given classes and optional methods into class_methods dict
+            class_methods: dict[str, list[str] | None] = defaultdict(list)
+            for class_or_class_method_name in class_or_class_method_names:
+                fields = class_or_class_method_name.split(".")
+                if len(fields) == 1:
+                    class_name = fields[0]
+                    method_name = None  # all methods
+                elif len(fields) == 2:
+                    class_name = fields[0]
+                    method_name = fields[1]
+                elif len(fields) == 4:
+                    class_name = ".".join(fields[0:2])
+                    method_name = fields[3]
+                else:
+                    print(f"Could not parse as class name or class method name: {class_or_class_method_name}")
+                    sys.exit(1)
+                if method_name is None:
+                    class_methods[class_name] = None
+                # "all methods2 have precedence over stated methods
+                elif class_methods[class_name] is not None:
+                    class_methods[class_name].append(method_name)
         else:
-            print(f"Applying API schemas to {len(class_names)} PyGithub classes")
+            # take all known classes as keys for class_methods dict and None values (meaning all methods)
+            class_methods = {}
+            for class_name in classes:
+                class_methods[class_name] = None
+
+        if len(class_methods) == 1:
+            print(f"Applying API schemas to PyGithub class {next(iter(class_methods))}")
+        else:
+            print(f"Applying API schemas to {len(class_methods)} PyGithub classes")
 
         any_change = False
-        for class_name in class_names:
+        for class_name, method_names in class_methods.items():
             clazz = GithubClass.from_class_name(class_name, index)
 
             print(f"Applying spec {spec_file} to {clazz.full_class_name} ({clazz.filename})")
@@ -2809,6 +2835,7 @@ class OpenApi:
             methods = [
                 Method.from_schema(n, schema, path, verb, returns, spec, index)
                 for n, m in cls_methods.items()
+                if method_names is None or n in method_names
                 for call in [m.get("call", {})]
                 for path, verb, returns in [(call.get("path"), call.get("verb"), call.get("returns"))]
                 if verb
@@ -3787,7 +3814,11 @@ class OpenApi:
         )
         apply_methods_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_methods_parser.add_argument("index_filename", help="Path of index file")
-        apply_methods_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
+        apply_methods_parser.add_argument(
+            "class_or_class_method_name",
+            help="PyGithub GithubObject class name (like 'Commit') or class method name (like 'Commit.edit').",
+            nargs="*",
+        )
 
         create_parser = subparsers.add_parser("create", description="Create PyGithub classes and methods")
         create_component_parsers = create_parser.add_subparsers(dest="component", required=True)
@@ -3889,7 +3920,7 @@ class OpenApi:
                 changes = self.apply_methods(
                     self.args.spec,
                     self.args.index_filename,
-                    self.args.class_name,
+                    self.args.class_or_class_method_name,
                     self.args.dry_run,
                     self.args.update_docstrings,
                 )
