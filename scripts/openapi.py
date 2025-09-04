@@ -1667,13 +1667,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         module_name: str,
         class_name: str,
         methods: list[Method],
-        update_docstring_mode: UpdateDocstringMode,
+        rewrite: bool,
     ):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
         self.methods = {method.name: method for method in methods}
-        self.update_docstring_mode = update_docstring_mode
+        self.rewrite = rewrite
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         method = self.methods.get(updated_node.name.value)
@@ -1811,7 +1811,22 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         stmts = node.body.body[1:] if docstring_stmt is not None else node.body.body
 
         docstrings = []
-        if self.update_docstring_mode == UpdateDocstringMode.extend:
+        if self.rewrite:
+            docstrings.append('"""')
+            if method.summary:
+                docstrings.extend(self.split_and_strip_lines(method.summary))
+                docstrings.append("")
+            if method.description:
+                docstrings.extend(self.split_and_strip_lines(method.description))
+                docstrings.append("")
+            if method.docs_url:
+                docstrings.append(f":calls: `{method.verb.upper()} {method.path} <{method.docs_url}>`_")
+            else:
+                docstrings.append(f":calls: {method.verb.upper()} {method.path}")
+            for parameter in parameters:
+                docstrings.extend(self.create_param_docstring(parameter))
+            docstrings.append('"""')
+        else:
             docstrings = docstring_stmt.body[0].value.value.split("\n")
             docstrings = [line.strip() for line in docstrings]
 
@@ -1844,21 +1859,6 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                     for line in self.create_param_docstring(parameter):
                         last_param_idx = last_param_idx + 1
                         docstrings.insert(last_param_idx, line)
-        elif self.update_docstring_mode == UpdateDocstringMode.rewrite:
-            docstrings.append('"""')
-            if method.summary:
-                docstrings.extend(self.split_and_strip_lines(method.summary))
-                docstrings.append("")
-            if method.description:
-                docstrings.extend(self.split_and_strip_lines(method.description))
-                docstrings.append("")
-            if method.docs_url:
-                docstrings.append(f":calls: `{method.verb.upper()} {method.path} <{method.docs_url}>`_")
-            else:
-                docstrings.append(f":calls: {method.verb.upper()} {method.path}")
-            for parameter in parameters:
-                docstrings.extend(self.create_param_docstring(parameter))
-            docstrings.append('"""')
 
         # add docstrings as first statement
         docstring = "\n".join(
@@ -2388,11 +2388,6 @@ class HandleNewSchemas(StringEnum):
     as_dict = "as-dict"
 
 
-class UpdateDocstringMode(StringEnum):
-    extend = "extend"
-    rewrite = "rewrite"
-
-
 class OpenApi:
     def __init__(self, args: argparse.Namespace):
         self.args = args
@@ -2710,7 +2705,7 @@ class OpenApi:
         index_filename: str,
         class_or_class_method_names: list[str] | None,
         dry_run: bool,
-        update_docstrings: UpdateDocstringMode,
+        rewrite: bool,
     ) -> bool:
         print(f"Using spec {spec_file}")
         with open(spec_file) as r:
@@ -2780,7 +2775,7 @@ class OpenApi:
                 with open(clazz.filename) as r:
                     code = "".join(r.readlines())
 
-                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods, update_docstrings)
+                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods, rewrite)
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(method_transformer)
                 class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
@@ -3697,17 +3692,15 @@ class OpenApi:
 
         apply_methods_parser = apply_area_parsers.add_parser("methods", help="Apply schema to class method")
         apply_methods_parser.add_argument(
-            "--update-docstrings",
-            type=UpdateDocstringMode,
-            default=UpdateDocstringMode.extend,
-            help="How to update docstrings: only 'extend' existing docstrings, entirely 'rewrite' docstrings.",
-            choices=list(UpdateDocstringMode),
+            "--rewrite",
+            help="Applying schema to methods is free to rewrite existing code. No care is taken to preserve existing documentation or avoid breaking changes.",
+            action="store_true",
         )
         apply_methods_parser.add_argument("spec", help="Github API OpenAPI spec file")
         apply_methods_parser.add_argument("index_filename", help="Path of index file")
         apply_methods_parser.add_argument(
             "class_or_class_method_name",
-            help="PyGithub GithubObject class name (like 'Commit') or class method name (like 'Commit.edit').",
+            help="PyGithub GithubObject class name (like 'Commit') or class method name (like 'Commit.edit')",
             nargs="*",
         )
 
@@ -3813,7 +3806,7 @@ class OpenApi:
                     self.args.index_filename,
                     self.args.class_or_class_method_name,
                     self.args.dry_run,
-                    self.args.update_docstrings,
+                    self.args.rewrite,
                 )
         elif self.args.subcommand == "create":
             if self.args.component == "class":
