@@ -421,6 +421,7 @@ class Property:
 @dataclasses.dataclass(frozen=True)
 class Parameter:
     name: str
+    python_name: str
     description: str | None
     data_type: PythonType | GithubClass | None
     param_type: str
@@ -448,7 +449,7 @@ class Parameter:
         deprecated = schema.get("deprecated")
         if deprecated is None and description and description.startswith("**Closing down notice**"):
             deprecated = True
-        return Parameter(name, description, data_type, param_type, required, deprecated)
+        return Parameter(name, name, description, data_type, param_type, required, deprecated)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -1894,6 +1895,8 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             type = decorator["type"]
             type = string_as_python_type(type, self.classes)
             parameter = dataclasses.replace(parameter, data_type=type)
+        if "matches" in decorator:
+            parameter = dataclasses.replace(parameter, python_name=decorator["matches"])
         return parameter
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
@@ -1929,13 +1932,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
     def create_parameter(cls, parameter: Parameter, template: cst.Param, allow_required: bool) -> cst.Param | None:
         if parameter.required and not allow_required:
             print(
-                f"Cannot add parameter {parameter.name} without a breaking change "
+                f"Cannot add parameter {parameter.python_name} without a breaking change "
                 f"as this is required and other optional parameters already exist"
             )
             return
         param = template.deep_clone()
         param = param.with_changes(
-            name=cst.Name(parameter.name),
+            name=cst.Name(parameter.python_name),
             annotation=cls.create_annotation(parameter),
             equal=cst.MaybeSentinel.DEFAULT if parameter.required else cst.AssignEqual(),
             default=cls.create_default(parameter),
@@ -1946,7 +1949,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         # update params: create missing, update type annotation of existing params
         query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
         parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
-        parameters_names = {arg.name: arg for arg in parameters}
+        parameters_names = {arg.python_name: arg for arg in parameters}
         parameters_sorted = self.required_first(parameters)
         existing_parameters = set()
         optional_exists = False
@@ -1982,11 +1985,11 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                     print(f"Unknown method argument: {param.name.value}")
                     updated_params.append(param)
                     continue
-                existing_parameters.add(parameter.name)
+                existing_parameters.add(parameter.python_name)
                 if not parameter.required and param.default is None:
-                    print(f"Cannot update optional parameter '{parameter.name}' as it is required")
+                    print(f"Cannot update optional parameter '{parameter.python_name}' as it is required")
                 elif parameter.required and param.default is not None:
-                    print(f"Cannot update required parameter '{parameter.name}' as it is optional")
+                    print(f"Cannot update required parameter '{parameter.python_name}' as it is optional")
                     optional_exists = True
                 else:
                     param = param.with_changes(
@@ -1997,10 +2000,10 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
             # add missing params
             for parameter in parameters_sorted:
-                if parameter.name in existing_parameters:
+                if parameter.python_name in existing_parameters:
                     continue
 
-                print(f"  - Adding parameter {parameter.name}")
+                print(f"  - Adding parameter {parameter.python_name}")
                 param = self.create_parameter(parameter, updated_params[-1], not optional_exists)
                 if param:
                     # propagate the last but one param's comma to the last param (before adding the new param)
@@ -2056,10 +2059,10 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         description_lines = cls.indent_lines(description, "    ", indent_first=False)
         docstrings = []
         if deprecation or "".join(description_lines):
-            docstrings.append(f":param {parameter.name}: {deprecation}{description_lines[0]}")
+            docstrings.append(f":param {parameter.python_name}: {deprecation}{description_lines[0]}")
             docstrings.extend(description_lines[1:])
         else:
-            docstrings.append(f":param {parameter.name}:")
+            docstrings.append(f":param {parameter.python_name}:")
         return docstrings
 
     def update_docstring(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
@@ -2114,7 +2117,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                 # point to last but one line
                 last_param_idx = len(docstrings) - 2
             for parameter in parameters:
-                if parameter.name not in existing_params:
+                if parameter.python_name not in existing_params:
                     for line in self.create_param_docstring(parameter):
                         last_param_idx = last_param_idx + 1
                         docstrings.insert(last_param_idx, line)
@@ -2135,7 +2138,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         # remove all existing parameter assertions
         stmts = []
         assertions_start_idx = None
-        parameters_names = {parameter.name for parameter in parameters}
+        parameters_names = {parameter.python_name for parameter in parameters}
         for idx, stmt in enumerate(node.body.body):
             if is_parameter_assertion(stmt, parameters_names):
                 if assertions_start_idx is None:
@@ -2152,11 +2155,11 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                         test=cst.Call(
                             func=cst.Name("isinstance") if parameter.required else cst.Name("is_optional"),
                             args=[
-                                cst.Arg(cst.Name(parameter.name)),
+                                cst.Arg(cst.Name(parameter.python_name)),
                                 cst.Arg(self.create_type(parameter.data_type, union_as_tuple=True)),
                             ],
                         ),
-                        msg=cst.Name(parameter.name),
+                        msg=cst.Name(parameter.python_name),
                     )
                 ]
             )
@@ -2176,7 +2179,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
 
         parameters_sorted = self.required_first(parameters)
-        deprecated_parameters = [parameter.name for parameter in parameters_sorted if parameter.deprecated]
+        deprecated_parameters = [parameter.python_name for parameter in parameters_sorted if parameter.deprecated]
 
         # TODO: find all existing deprecation lines, extract deprecated parameters and index of last line,
         # use last assertion line index+1 as default
@@ -2208,7 +2211,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         # find request parameters line
         request_parameters_idx = None
         assertions_end_idx = None
-        parameters_names = [parameter.name for parameter in parameters]
+        parameters_names = [parameter.python_name for parameter in parameters]
         parameters_set = set(parameters_names)
         for idx, stmt in enumerate(stmts):
             if is_parameter_assertion(stmt, parameters_set):
@@ -2237,13 +2240,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                                     value=cst.Dict(
                                         elements=[
                                             cst.DictElement(
-                                                key=cst.SimpleString(value=f'"{parameter}"'),
-                                                value=cst.Name(value=parameter),
+                                                key=cst.SimpleString(value=f'"{parameter.name}"'),
+                                                value=cst.Name(value=parameter.python_name),
                                                 comma=cst.Comma(whitespace_after=twotabs)
                                                 if idx + 1 < len(parameters_set)
                                                 else cst.Comma(),
                                             )
-                                            for idx, parameter in enumerate(parameters_names)
+                                            for idx, parameter in enumerate(parameters)
                                         ],
                                         lbrace=cst.LeftCurlyBrace(whitespace_after=twotabs),
                                         rbrace=cst.RightCurlyBrace(whitespace_before=onetab),
@@ -2269,22 +2272,22 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
             last_existing_element = dict_node.elements[-1]
             existing_keys = {e.key.value.strip('"') for e in dict_node.elements}
-            new_parameter_names = [name for name in parameters_names if name not in existing_keys]
+            new_parameters = [parameter for parameter in parameters if parameter.name not in existing_keys]
             new_elements = [
                 cst.DictElement(
-                    key=cst.SimpleString(value=f'"{parameter}"'),
-                    value=cst.Name(value=parameter),
+                    key=cst.SimpleString(value=f'"{parameter.name}"'),
+                    value=cst.Name(value=parameter.python_name),
                     comma=cst.Comma(whitespace_after=twotabs)
-                    if idx + 1 < len(new_parameter_names)
+                    if idx + 1 < len(new_parameters)
                     else (
                         cst.MaybeSentinel.DEFAULT
                         if last_existing_element.comma is cst.MaybeSentinel.DEFAULT
                         else cst.Comma()
                     ),
                 )
-                for idx, parameter in enumerate(new_parameter_names)
+                for idx, parameter in enumerate(new_parameters)
             ]
-            if new_parameter_names:
+            if new_parameters:
                 last_existing_element = last_existing_element.with_changes(
                     comma=cst.MaybeSentinel.DEFAULT
                     if last_existing_element.comma is cst.MaybeSentinel.DEFAULT
