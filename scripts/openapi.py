@@ -72,6 +72,7 @@ def as_python_type(
     schema_to_class: dict[str, str],
     classes: dict[str, Any],
     *,
+    paginated: bool = False,
     verbose: bool = False,
     collect_new_schemas: list[str] | None = None,
 ) -> PythonType | GithubClass | None:
@@ -86,6 +87,7 @@ def as_python_type(
                 schema_path + ["oneOf", str(idx)],
                 schema_to_class,
                 classes,
+                paginated=paginated,
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
             )
@@ -103,11 +105,24 @@ def as_python_type(
             schema_path + ["allOf", "0"],
             schema_to_class,
             classes,
+            paginated=paginated,
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
         )
     if data_type == "object":
-        schema = "/".join([""] + schema_path)
+        if paginated and is_pagination_object(schema_type):
+            schema_type, schema_path = get_paginated_property(schema_type, schema_path)
+            return as_python_type(
+                schema_type,
+                schema_path,
+                schema_to_class,
+                classes,
+                paginated=paginated,
+                verbose=verbose,
+                collect_new_schemas=collect_new_schemas,
+            )
+        else:
+            schema = "/".join([""] + schema_path)
     if schema is not None:
         # these schemas are explicitly ignored
         if schema in {"/components/schemas/empty-object"}:
@@ -146,13 +161,14 @@ def as_python_type(
 
     if data_type == "array":
         return PythonType(
-            type="list",
+            type="PaginatedList" if paginated else "list",
             inner_types=[
                 as_python_type(
                     schema_type.get("items"),
                     schema_path + ["items"],
                     schema_to_class,
                     classes,
+                    paginated=False,
                     verbose=verbose,
                     collect_new_schemas=collect_new_schemas,
                 )
@@ -206,6 +222,64 @@ def string_as_python_type(type: str, classes: dict[str, dict]) -> PythonType | G
 
     print(f"Unknown type: {type}")
     return None
+
+
+def is_pagination_object(schema: dict[str, Any]) -> bool:
+    # {
+    #   "type": "object",
+    #   "properties": {
+    #     "total_…": {"type": "integer"},
+    #     "…": {"type": "array", "items": …},
+    # }
+    return (
+        schema.get("type") == "object"
+        and "properties" in schema
+        and len(
+            [n for n, p in schema.get("properties").items() if n.startswith("total_") and p.get("type") == "integer"]
+        )
+        == 1
+        and len([p for p in schema.get("properties").values() if p.get("type") == "array" and "items" in p]) == 1
+    )
+
+
+def get_paginated_property(schema: dict[str, Any], schema_path: list[str]) -> (dict[str, Any], list[str]):
+    # assumes is_pagination_object returns True for this schema
+    props = schema.get("properties")
+    list_item = next(((n, p) for n, p in props.items() if p.get("type") == "array" and "items" in p))
+    return list_item[1], schema_path + ["properties", list_item[0]]
+
+
+def responses_as_python_type(
+    responses: dict[str, Any],
+    schema_path: list[str],
+    schema_to_class: dict[str, str],
+    classes: dict[str, Any],
+    spec: dict[str, Any],
+    paginated: bool,
+) -> PythonType | GithubClass | None:
+    # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
+    schemas = [
+        (int(status), data_type)
+        for status, response in responses.items()
+        if status.isnumeric() and int(status) < 400 and "content" in response
+        for schema, inner_schema_path in [
+            (
+                resolve_schema(response, spec).get("content").get("application/json", {}).get("schema", {}),
+                schema_path + [str(status), "content", '"application/json"', "schema"],
+            )
+        ]
+        for data_type in [as_python_type(schema, inner_schema_path, schema_to_class, classes, paginated=paginated)]
+    ]
+    schemas = sorted(schemas, key=lambda e: e[0])
+    if len(schemas) == 0:
+        return None
+    elif len(schemas) > 1:
+        schema_names = {str(schema) for status, schema in schemas}
+        if len(schema_names) > 1:
+            print(f"Found multiple python types for responses: {', '.join(schema_names)}")
+    schema = schemas[0][1]
+
+    return schema
 
 
 @dataclasses.dataclass(frozen=True)
@@ -331,6 +405,9 @@ class Parameter:
     required: bool
     deprecated: bool | None
 
+    def supports_pagination(self) -> bool:
+        return self.param_type == "query" and self.name in {"page", "per_page"}
+
     @staticmethod
     def from_schema(
         name: str, schema: dict[str, Any], required: bool, index: dict[str, Any], param_type: str | None = None
@@ -370,20 +447,21 @@ class Method:
         schema: dict[str, Any],
         path: str,
         verb: str,
-        return_type: list[str],
         spec: dict[str, Any],
         index: dict[str, Any],
     ) -> Method:
         classes = index.get("classes", {})
+        schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
+        schema_to_class["default"] = ["GithubObject"]
         summary = schema.get("summary")
         description = schema.get("description")
         docs_url = schema.get("externalDocs", {}).get("url")
         url_parameters = [
-            Parameter.from_schema(n, s, r, index)
+            Parameter.from_schema(n, s, r if r is not None else False, index)
             for s in schema.get("parameters", [])
             for s in [resolve_schema(s, spec)]
             for n, r in [(s.get("name"), s.get("required"))]
-            if n and r is not None
+            if n
         ]
         body_parameters = [
             Parameter.from_schema(n, p, n in required, index, param_type="body")
@@ -393,7 +471,14 @@ class Method:
             for n, p in s.get("properties", {}).items()
         ]
         parameters = url_parameters + body_parameters
-        return_type = string_as_python_type("|".join(return_type), classes) if return_type is not None else None
+        return_type = responses_as_python_type(
+            schema.get("responses", {}),
+            ["paths", f'"{path}"', verb, "responses"],
+            schema_to_class,
+            classes,
+            spec,
+            any(p.supports_pagination() for p in url_parameters),
+        )
         deprecated = schema.get("deprecated")
         return Method(name, summary, description, path, verb, docs_url, parameters, return_type, deprecated)
 
@@ -1802,7 +1887,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
     def update_func_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         # update params: create missing, update type annotation of existing params
         query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = query_parameters + body_parameters
+        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
         parameters_names = {arg.name: arg for arg in parameters}
         parameters_sorted = self.required_first(parameters)
         existing_parameters = set()
@@ -1886,6 +1971,14 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return tuple([params_by_type.get(param_type, list()) for param_type in param_types] + [other_param_types])
 
     @staticmethod
+    def remove_pagination_parameters(parameters: list[Parameter]) -> list[Parameter]:
+        return [
+            parameter
+            for parameter in parameters
+            if not (parameter.param_type == "query" and parameter.name in {"page", "per_page"})
+        ]
+
+    @staticmethod
     def indent_lines(string: str, indentation: str, indent_first: bool = True) -> list[str]:
         lines = UpdateMethodsTransformer.split_and_strip_lines(string)
         if indent_first:
@@ -1913,7 +2006,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
     def update_docstring(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = query_parameters + body_parameters
+        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
 
         docstring_stmt = node.body.body[0] if len(node.body.body) > 0 and is_comment(node.body.body[0]) else None
         stmts = node.body.body[1:] if docstring_stmt is not None else node.body.body
@@ -1979,7 +2072,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
     def update_assertions(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = query_parameters + body_parameters
+        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
 
         # remove all existing parameter assertions
         stmts = []
@@ -2022,7 +2115,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
     def update_deprecations(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = query_parameters + body_parameters
+        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
 
         parameters_sorted = self.required_first(parameters)
         deprecated_parameters = [parameter.name for parameter in parameters_sorted if parameter.deprecated]
@@ -2039,6 +2132,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
     def update_url_request_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         parameters, _ = self.split_parameters_by_type(method.parameters, ["query"])
+        parameters = self.remove_pagination_parameters(parameters)
         return self.update_request_parameters(node, "url_parameters", parameters)
 
     def update_verb_request_parameters(self, node: cst.FunctionDef, method: Method, verb: str) -> cst.FunctionDef:
@@ -2904,11 +2998,11 @@ class OpenApi:
 
             # update methods
             methods = [
-                Method.from_schema(n, schema, path, verb, returns, spec, index)
+                Method.from_schema(n, schema, path, verb, spec, index)
                 for n, m in cls_methods.items()
                 if method_names is None or n in method_names
                 for call in [m.get("call", {})]
-                for path, verb, returns in [(call.get("path"), call.get("verb"), call.get("returns"))]
+                for path, verb in [(call.get("path"), call.get("verb"))]
                 if verb
                 for schema in [paths.get(path, {}).get(verb.lower())]
                 if schema is not None
