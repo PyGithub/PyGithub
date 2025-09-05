@@ -653,6 +653,16 @@ Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
 
 
+# decorator to annotate methods with method metadata
+def method_parameter(
+    name: str, *, required: bool = False, merge: list[str] | None = None, docstring_prepend: str | None = None
+):
+    def openapi_property_decorator(fn):
+        return fn
+
+    return openapi_property_decorator
+
+
 # decorator to annotate methods with OpenAPI metadata
 def method_returns(
     *, schema_property: str | None = None
@@ -662,8 +672,16 @@ def method_returns(
 
     return openapi_method_decorator
 
+
 # decorator to annotate methods with OpenAPI mapping information
-def openapi_parameter(name: str, *, type: str | None = None, matches: str | None = None):
+def openapi_parameter(
+    name: str,
+    *,
+    matches: str | None = None,
+    type: str | None = None,
+    input: bool | None = None,
+    docstring_prepend: str | None = None,
+):
     def openapi_property_decorator(fn):
         return fn
 

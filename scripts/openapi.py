@@ -63,7 +63,7 @@ def cst_to_python(value: cst.BaseExpression) -> Any:
     if isinstance(value, cst.List):
         return [cst_to_python(item.value) for item in value.elements]
     if isinstance(value, cst.SimpleString):
-        return value.evaluated_value  # maybe .strip("'\"")
+        return value.evaluated_value
     if isinstance(value, cst.Name):
         if value.value == "True":
             return True
@@ -308,8 +308,28 @@ class PythonType:
     inner_types: list[PythonType | GithubClass] | None = None
 
     @staticmethod
-    def union(*types: PythonType | GithubClass | None) -> PythonType:
-        return PythonType("union", inner_types=[t for t in types])
+    def union(*types: PythonType | GithubClass | None) -> PythonType | None:
+        # remove None (unknown) types
+        types = [type for type in types if type is not None]
+
+        # flatten union types
+        types = [
+            inner
+            for type in types
+            for inner in (type.inner_types if isinstance(type, PythonType) and type.type == "union" else [type])
+        ]
+
+        # make types distinct, preserve order
+        distinct_types = []
+        for type in types:
+            if type not in distinct_types:
+                distinct_types.append(type)
+
+        if len(distinct_types) == 0:
+            return None
+        if len(distinct_types) == 1:
+            return distinct_types[0]
+        return PythonType("union", inner_types=distinct_types)
 
     def __hash__(self):
         return hash(self.__repr__())
@@ -1860,46 +1880,119 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         self.rewrite = rewrite
         self.classes = index.get("classes", {})
 
-    def apply_decorators(self, method: Method, function: cst.FunctionDef) -> Method:
-        # get openapi decorator args of method
-        decorators = {
-            cst_to_python(name): {
-                arg.keyword.value: cst_to_python(arg.value)
-                for arg in args[1:]
-                if isinstance(arg, cst.Arg) and isinstance(arg.keyword, cst.Name)
+    @staticmethod
+    def get_decorators(decorators: Sequence[cst.Decorator], decorator_name: str) -> list[dict[str, Any]]:
+        return [
+            {
+                k: v
+                for k, v in [
+                    ("name", cst_to_python(name)),
+                ]
+                + [
+                    (arg.keyword.value, cst_to_python(arg.value))
+                    for arg in args[1:]
+                    if isinstance(arg, cst.Arg) and isinstance(arg.keyword, cst.Name)
+                ]
             }
-            for decorator in function.decorators
+            for decorator in decorators
             for decorator in [decorator.decorator]
             if isinstance(decorator, cst.Call)
             and isinstance(decorator.func, cst.Name)
-            and decorator.func.value == "openapi_parameter"
+            and decorator.func.value == decorator_name
             for args in [decorator.args]
             if len(args) > 0
             for name in [args[0].value]
             if isinstance(name, SimpleString)
-        }
+        ]
 
-        if decorators:
+    def apply_decorators(self, method: Method, function: cst.FunctionDef) -> Method:
+        # get openapi decorator args of method
+        openapi_decorators = {
+            decorator["name"]: decorator for decorator in self.get_decorators(function.decorators, "openapi_parameter")
+        }
+        if openapi_decorators:
             # clone method and its parameter list so we do not mutate the input argument
             method = dataclasses.replace(method, parameters=[p for p in method.parameters])
             for idx, parameter in enumerate(method.parameters):
-                if parameter.name in decorators:
-                    decorator = decorators.get(parameter.name)
-                    parameter = self.apply_decorator(parameter, decorator)
+                if parameter.name in openapi_decorators:
+                    decorator = openapi_decorators.get(parameter.name)
+                    parameter = self.apply_openapi_decorator(parameter, decorator)
                     method.parameters[idx] = parameter
+
+        method_decorators = self.get_decorators(function.decorators, "method_parameter")
+        if method_decorators:
+            for decorator in method_decorators:
+                method = self.apply_method_decorator(method, decorator)
 
         return method
 
-    def apply_decorator(self, parameter: Parameter, decorator: dict[str, Any]) -> Parameter:
+    def apply_openapi_decorator(self, parameter: Parameter, decorator: dict[str, Any]) -> Parameter:
+        if "matches" in decorator:
+            parameter = dataclasses.replace(parameter, python_name=decorator["matches"])
         if "type" in decorator:
             type = decorator["type"]
             type = string_as_python_type(type, self.classes)
             parameter = dataclasses.replace(parameter, data_type=type)
-        if "matches" in decorator:
-            parameter = dataclasses.replace(parameter, python_name=decorator["matches"])
         if "input" in decorator:
             parameter = dataclasses.replace(parameter, param_type="input")
+        if "docstring_prepend" in decorator:
+            docstring = decorator["docstring_prepend"]
+            docstring = docstring if parameter.description is None else "".join([docstring, parameter.description])
+            parameter = dataclasses.replace(parameter, description=docstring)
         return parameter
+
+    def apply_method_decorator(self, method: Method, decorator: dict[str, Any]) -> Method:
+        # clone method to not mutate input
+        method: Method = dataclasses.replace(method)
+
+        name = decorator["name"]
+        parameters = {parameter.name: (idx, parameter) for idx, parameter in enumerate(method.parameters)}
+        parameter_and_idx = parameters.get(name)
+        if parameter_and_idx is not None:
+            parameter_idx, parameter = parameter_and_idx
+        else:
+            parameter = Parameter(name, name, None, None, "input", False, None)
+            parameter_idx = len(method.parameters)
+            parameters[name] = (parameter_idx, parameter)
+            method.parameters.append(parameter)
+
+        if "required" in decorator:
+            required = decorator["required"]
+            parameter = dataclasses.replace(parameter, required=required)
+        if "docstring_prepend" in decorator:
+            docstring = decorator["docstring_prepend"]
+            docstring = docstring if parameter.description is None else "".join([docstring, parameter.description])
+            parameter = dataclasses.replace(parameter, description=docstring)
+
+        # subsequent operations require method and parameters to be up-to-date
+        parameters[name] = (parameter_idx, parameter)
+        method.parameters[parameter_idx] = parameter
+
+        if "merge" in decorator:
+            merge = decorator["merge"]
+            for merge_parameter in merge:
+                if merge_parameter not in parameters:
+                    print(f"Cannot find parameter to merge: {merge_parameter}")
+                    continue
+                idx, merged_parameter = parameters.pop(merge_parameter)
+                description = (
+                    merged_parameter.description
+                    if parameter.description is None
+                    else (
+                        parameter.description
+                        if merged_parameter.description is None
+                        else "\n".join([parameter.description, merged_parameter.description])
+                    )
+                )
+                data_type = PythonType.union(parameter.data_type, merged_parameter.data_type)
+                parameter: Parameter = dataclasses.replace(parameter, description=description, data_type=data_type)
+            parameters[name] = (parameter_idx, parameter)
+            method.parameters[parameter_idx] = parameter
+            # remove merged parameters from method
+            method_parameters = [parameter for parameter in method.parameters if parameter.name not in merge]
+            method = dataclasses.replace(method, parameters=method_parameters)
+
+        return method
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         method = self.methods.get(updated_node.name.value)
