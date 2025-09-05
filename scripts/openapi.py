@@ -553,7 +553,7 @@ def is_parameter_assertion(stmt: cst.BaseStatement, parameters: set[str]) -> boo
         return False
     call = stmt.test
 
-    if not (isinstance(call.func, cst.Name) and call.func.value in ["isinstance", "is_optional"]):
+    if not (isinstance(call.func, cst.Name) and call.func.value in ["isinstance", "is_optional", "is_optional_list"]):
         return False
 
     if not (len(call.args) == 2 and isinstance(call.args[0], cst.Arg)):
@@ -2153,10 +2153,17 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                 body=[
                     cst.Assert(
                         test=cst.Call(
-                            func=cst.Name("isinstance") if parameter.required else cst.Name("is_optional"),
+                            func=cst.Name("isinstance")
+                            if parameter.required
+                            else (cst.Name("is_optional_list") if is_list else cst.Name("is_optional")),
                             args=[
                                 cst.Arg(cst.Name(parameter.python_name)),
-                                cst.Arg(self.create_type(parameter.data_type, union_as_tuple=True)),
+                                cst.Arg(
+                                    self.create_type(
+                                        parameter.data_type.inner_types[0] if is_list else parameter.data_type,
+                                        union_as_tuple=True,
+                                    )
+                                ),
                             ],
                         ),
                         msg=cst.Name(parameter.python_name),
@@ -2164,6 +2171,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                 ]
             )
             for parameter in parameters_sorted
+            for is_list in [isinstance(parameter.data_type, PythonType) and parameter.data_type.type == "list"]
         ]
 
         assertions_start_idx = (
