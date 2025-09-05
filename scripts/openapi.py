@@ -453,7 +453,12 @@ class Parameter:
 
     @staticmethod
     def from_schema(
-        name: str, schema: dict[str, Any], required: bool, index: dict[str, Any], param_type: str | None = None
+        name: str,
+        schema: dict[str, Any],
+        schema_path: list[str],
+        required: bool,
+        index: dict[str, Any],
+        param_type: str | None = None,
     ) -> Parameter:
         classes = index.get("classes", {})
         schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
@@ -461,7 +466,10 @@ class Parameter:
 
         description = schema.get("description")
         data_type = as_python_type(
-            schema.get("schema", {}) if "schema" in schema else schema, ["schema"], schema_to_class, classes
+            schema.get("schema", {}) if "schema" in schema else schema,
+            schema_path + ["schema"],
+            schema_to_class,
+            classes,
         )
         if schema.get("nullable") is True and data_type is not None:
             data_type = data_type.as_nullable()
@@ -493,30 +501,40 @@ class Method:
         spec: dict[str, Any],
         index: dict[str, Any],
     ) -> Method:
+        schema_path = ["paths", f'"{path}"', verb]
         classes = index.get("classes", {})
         schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         schema_to_class["default"] = ["GithubObject"]
         summary = schema.get("summary")
         description = schema.get("description")
         docs_url = schema.get("externalDocs", {}).get("url")
+        url_parameters_schema_path = schema_path + ["parameters"]
         url_parameters = [
-            Parameter.from_schema(n, s, r if r is not None else False, index)
+            Parameter.from_schema(n, s, url_parameters_schema_path, r if r is not None else False, index)
             for s in schema.get("parameters", [])
             for s in [resolve_schema(s, spec)]
             for n, r in [(s.get("name"), s.get("required"))]
             if n
         ]
+        body_parameters_schema_path = schema_path + [
+            "requestBody",
+            "content",
+            '"application/json"',
+            "schema",
+            "properties",
+        ]
         body_parameters = [
-            Parameter.from_schema(n, p, n in required, index, param_type="body")
+            Parameter.from_schema(n, p, body_parameters_schema_path + [n], n in required, index, param_type="body")
             for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
             for s in [resolve_schema(s, spec)]
             for required in [s.get("required", [])]
             for n, p in s.get("properties", {}).items()
         ]
         parameters = url_parameters + body_parameters
+        return_type_schema_path = schema_path + ["responses"]
         return_type = responses_as_python_type(
             schema.get("responses", {}),
-            ["paths", f'"{path}"', verb, "responses"],
+            return_type_schema_path,
             schema_to_class,
             classes,
             spec,
