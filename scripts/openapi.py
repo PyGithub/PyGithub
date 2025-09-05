@@ -60,6 +60,12 @@ def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[st
     return schema_type
 
 
+def cst_to_python(value: cst.BaseExpression) -> Any:
+    if isinstance(value, cst.SimpleString):
+        return value.value.strip("'\"")
+    raise ValueError(f"unsupported expr: {value}")
+
+
 def as_python_type(
     schema_type: dict[str, Any],
     schema_path: list[str],
@@ -172,6 +178,34 @@ def as_python_type(
 
     formats = data_types.get(data_type)
     return PythonType(type=formats.get(format) or formats.get(None))
+
+
+def string_as_python_type(type: str, classes: dict[str, dict]) -> PythonType | GithubClass | None:
+    type = type.strip()
+    if type == "None":
+        return PythonType("None")
+    if type.startswith("Optional[") and type.endswith("]"):
+        inner_type = string_as_python_type(type[9:-1], classes)
+        return PythonType("union", [inner_type, PythonType("None")])
+    if type.startswith("list[") and type.endswith("]"):
+        inner_type = string_as_python_type(type[5:-1], classes)
+        return PythonType("list", [inner_type])
+    if type.startswith("dict[") and "," in type and type.endswith("]"):
+        inner_types = [string_as_python_type(t, classes) for t in type[5:-1].split(",")]
+        return PythonType("dict", inner_types)
+    if "|" in type:
+        inner_types = [string_as_python_type(t, classes) for t in type.split("|")]
+        return PythonType("union", inner_types)
+    # return the pure class name, no outer class, module or package names
+    if "." in type:
+        return string_as_python_type(type.split(".")[-1], classes)
+    if type in classes:
+        return GithubClass(**classes[type])
+    if type in {"int", "float", "str"}:
+        return PythonType(type)
+
+    print(f"Unknown type: {type}")
+    return None
 
 
 @dataclasses.dataclass(frozen=True)
@@ -340,6 +374,7 @@ class Method:
         spec: dict[str, Any],
         index: dict[str, Any],
     ) -> Method:
+        classes = index.get("classes", {})
         summary = schema.get("summary")
         description = schema.get("description")
         docs_url = schema.get("externalDocs", {}).get("url")
@@ -358,9 +393,7 @@ class Method:
             for n, p in s.get("properties", {}).items()
         ]
         parameters = url_parameters + body_parameters
-        # TODO: turn list[str] into PythonType
-        # if len(return_type) == 0 else (return_type[0] if len(return_type) == 1 else PythonType("union", return_type))
-        return_type = None
+        return_type = string_as_python_type("|".join(return_type), classes) if return_type is not None else None
         deprecated = schema.get("deprecated")
         return Method(name, summary, description, path, verb, docs_url, parameters, return_type, deprecated)
 
@@ -1672,13 +1705,53 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         module_name: str,
         class_name: str,
         methods: list[Method],
+        index: dict[str, Any],
         rewrite: bool,
     ):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
         self.methods = {method.name: method for method in methods}
+        self.index = index
         self.rewrite = rewrite
+        self.classes = index.get("classes", {})
+
+    def apply_decorators(self, method: Method, function: cst.FunctionDef) -> Method:
+        # get openapi decorator args of method
+        decorators = {
+            cst_to_python(name): {
+                arg.keyword.value: cst_to_python(arg.value)
+                for arg in args[1:]
+                if isinstance(arg, cst.Arg) and isinstance(arg.keyword, cst.Name)
+            }
+            for decorator in function.decorators
+            for decorator in [decorator.decorator]
+            if isinstance(decorator, cst.Call)
+            and isinstance(decorator.func, cst.Name)
+            and decorator.func.value == "openapi_parameter"
+            for args in [decorator.args]
+            if len(args) > 0
+            for name in [args[0].value]
+            if isinstance(name, SimpleString)
+        }
+
+        if decorators:
+            # clone method and its parameter list so we do not mutate the input argument
+            method = dataclasses.replace(method, parameters=[p for p in method.parameters])
+            for idx, parameter in enumerate(method.parameters):
+                if parameter.name in decorators:
+                    decorator = decorators.get(parameter.name)
+                    parameter = self.apply_decorator(parameter, decorator)
+                    method.parameters[idx] = parameter
+
+        return method
+
+    def apply_decorator(self, parameter: Parameter, decorator: dict[str, Any]) -> Parameter:
+        if "type" in decorator:
+            type = decorator["type"]
+            type = string_as_python_type(type, self.classes)
+            parameter = dataclasses.replace(parameter, data_type=type)
+        return parameter
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
         method = self.methods.get(updated_node.name.value)
@@ -1686,9 +1759,11 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             return updated_node
 
         self.check_parameters(method)
+        method = self.apply_decorators(method, updated_node)
 
         print(f"- Updating method {updated_node.name.value}")
         updated_node = self.update_func_parameters(updated_node, method)
+        updated_node = self.update_func_return(updated_node, method)
         updated_node = self.update_docstring(updated_node, method)
         updated_node = self.update_assertions(updated_node, method)
         updated_node = self.update_deprecations(updated_node, method)
@@ -1791,6 +1866,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                     updated_params.append(param)
 
         return node.with_changes(params=node.params.with_changes(params=updated_params))
+
+    def update_func_return(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        if self.rewrite or node.returns is None:
+            node = node.with_changes(
+                returns=cst.Annotation(annotation=self.create_type(method.return_type, short_class_name=True))
+            )
+        return node
 
     @staticmethod
     def split_parameters_by_type(parameters: list[Parameter], param_types: list[str]) -> tuple[list[Parameter], ...]:
@@ -2836,7 +2918,7 @@ class OpenApi:
                 with open(clazz.filename) as r:
                     code = "".join(r.readlines())
 
-                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods, rewrite)
+                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods, index, rewrite)
                 tree = cst.parse_module(code)
                 tree_updated = tree.visit(method_transformer)
                 class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
