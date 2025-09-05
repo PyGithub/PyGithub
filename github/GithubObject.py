@@ -661,3 +661,11 @@ def method_returns(
         return fn
 
     return openapi_method_decorator
+
+# decorator to annotate methods with OpenAPI mapping information
+def openapi_parameter(name: str, *, type: str | None = None, matches: str | None = None):
+    def openapi_property_decorator(fn):
+        return fn
+
+    return openapi_property_decorator
+
