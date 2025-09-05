@@ -2155,7 +2155,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
     @classmethod
     def create_annotation(cls, argument: Parameter) -> cst.Annotation:
-        data_type = cls.create_type(argument.data_type)
+        data_type = cls.create_type(argument.data_type, short_class_name=True)
         if argument.required:
             return cst.Annotation(data_type)
         else:
