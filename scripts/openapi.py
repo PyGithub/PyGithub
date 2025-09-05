@@ -63,6 +63,11 @@ def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[st
 def cst_to_python(value: cst.BaseExpression) -> Any:
     if isinstance(value, cst.SimpleString):
         return value.value.strip("'\"")
+    if isinstance(value, cst.Name):
+        if value.value == "True":
+            return True
+        if value.value == "False":
+            return False
     raise ValueError(f"unsupported expr: {value}")
 
 
@@ -1839,6 +1844,8 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             parameter = dataclasses.replace(parameter, data_type=type)
         if "matches" in decorator:
             parameter = dataclasses.replace(parameter, python_name=decorator["matches"])
+        if "input" in decorator:
+            parameter = dataclasses.replace(parameter, param_type="input")
         return parameter
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
@@ -1889,8 +1896,10 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
     def update_func_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         # update params: create missing, update type annotation of existing params
-        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
         parameters_names = {arg.python_name: arg for arg in parameters}
         parameters_sorted = self.required_first(parameters)
         existing_parameters = set()
@@ -2008,8 +2017,10 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return docstrings
 
     def update_docstring(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
-        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
 
         docstring_stmt = node.body.body[0] if len(node.body.body) > 0 and is_comment(node.body.body[0]) else None
         stmts = node.body.body[1:] if docstring_stmt is not None else node.body.body
@@ -2074,8 +2085,10 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return node.with_changes(body=node.body.with_changes(body=stmts))
 
     def update_assertions(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
-        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
 
         # remove all existing parameter assertions
         stmts = []
@@ -2125,8 +2138,10 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return node.with_changes(body=node.body.with_changes(body=stmts))
 
     def update_deprecations(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
-        query_parameters, body_parameters, _ = self.split_parameters_by_type(method.parameters, ["query", "body"])
-        parameters = self.remove_pagination_parameters(query_parameters) + body_parameters
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
 
         parameters_sorted = self.required_first(parameters)
         deprecated_parameters = [parameter.python_name for parameter in parameters_sorted if parameter.deprecated]
