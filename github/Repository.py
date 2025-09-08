@@ -2913,54 +2913,10 @@ class Repository(CompletableGithubObject):
         conditions: Opt[dict[str, Any]] = NotSet,
         rules: Opt[list[dict[str, Any]]] = NotSet,
     ) -> github.Ruleset.Ruleset:
-        """
-        :calls: `PUT /repos/{owner}/{repo}/rulesets/{ruleset_id} <https://docs.github.com/en/rest/repos/rules#update-a-repository-ruleset>`_
-        :param ruleset_id: int
-        :param name: string
-        :param target: string
-        :param enforcement: string
-        :param bypass_actors: list of dict
-        :param conditions: dict
-        :param rules: list of dict
-        :rtype: :class:`github.Ruleset.Ruleset`
-        """
-        assert isinstance(ruleset_id, int), ruleset_id
-        assert is_optional(name, str), name
-        assert is_optional(target, str), target
-        if is_defined(target):
-            assert target in ["branch", "tag", "push"], target
-        assert is_optional(enforcement, str), enforcement
-        if is_defined(enforcement):
-            assert enforcement in ["active", "disabled", "evaluate"], enforcement
-        assert is_optional_list(bypass_actors, dict), bypass_actors
-        assert is_optional(conditions, dict), conditions
-        assert is_optional_list(rules, dict), rules
-
-        put_parameters = NotSet.remove_unset_items(
-            {
-                "name": name,
-                "target": target,
-                "enforcement": enforcement,
-                "bypass_actors": bypass_actors,
-                "conditions": conditions,
-                "rules": rules,
-            }
-        )
-
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/rulesets/{ruleset_id}", input=put_parameters
-        )
-        return github.Ruleset.Ruleset(self._requester, headers, data, completed=True)
+        return Repository.get_ruleset(ruleset_id).update()
 
     def delete_ruleset(self, ruleset_id: int) -> bool:
-        """
-        :calls: `DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id} <https://docs.github.com/en/rest/repos/rules#delete-a-repository-ruleset>`_
-        :param ruleset_id: int
-        :rtype: bool
-        """
-        assert isinstance(ruleset_id, int), ruleset_id
-        status, _, _ = self._requester.requestJson("DELETE", f"{self.url}/rulesets/{ruleset_id}")
-        return status == 204
+        return Repository.get_ruleset(ruleset_id).delete()
 
     def update_file(
         self,

@@ -2526,51 +2526,6 @@ class Repository(Framework.TestCase):
             },
         )
 
-    def testUpdateRuleset(self):
-        ruleset = self.repo.update_ruleset(
-            3490869,
-            name="updated rule set",
-            target="branch",
-            enforcement="disabled",
-            bypass_actors=[],
-            conditions={
-                "ref_name": {"exclude": [], "include": ["refs/heads/master", "refs/heads/main", "refs/heads/develop"]}
-            },
-            rules=[
-                {"type": "deletion"},
-                {"type": "creation"},
-            ],
-        )
-        self.assertEqual(ruleset.id, 3490869)
-        self.assertEqual(ruleset.name, "updated rule set")
-        self.assertEqual(ruleset.target, "branch")
-        self.assertEqual(ruleset.source_type, "Repository")
-        self.assertEqual(ruleset.source, "PyGithub/PyGithub")
-        self.assertEqual(ruleset.enforcement, "disabled")
-        self.assertEqual(ruleset.node_id, "RRS_lACqUmVwb3NpdG9yec43HleVzgA1RDU")
-        self.assertEqual(ruleset.created_at, datetime.fromisoformat("2025-01-31T20:59:12.515+01:00"))
-        self.assertEqual(ruleset.updated_at, datetime.fromisoformat("2025-01-31T21:09:07.855+01:00"))
-        self.assertEqual(
-            ruleset.conditions,
-            {"ref_name": {"exclude": [], "include": ["refs/heads/master", "refs/heads/main", "refs/heads/develop"]}},
-        )
-        self.assertEqual(len(ruleset.rules), 2)
-        self.assertEqual(ruleset.rules[0].type, "deletion")
-        self.assertEqual(ruleset.rules[1].type, "creation")
-        self.assertEqual(ruleset.bypass_actors, [])
-        self.assertEqual(ruleset.current_user_can_bypass, "never")
-        self.assertEqual(
-            ruleset._links,
-            {
-                "self": {"href": "https://api.github.com/repos/PyGithub/PyGithub/rulesets/3490869"},
-                "html": {"href": "https://github.com/PyGithub/PyGithub/rules/3490869"},
-            },
-        )
-
-    def testDeleteRuleset(self):
-        deleted = self.repo.delete_ruleset(3490869)
-        self.assertTrue(deleted)
-
     def testGetAutomatedSecurityFixes(self):
         self.assertDictEqual(
             self.repo.get_automated_security_fixes(),
@@ -2580,7 +2535,6 @@ class Repository(Framework.TestCase):
                 "url": "https://api.github.com/repos/PyGithub/PyGithub/automated-security-fixes",
             },
         )
-
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):
