@@ -53,6 +53,7 @@ class Path(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#traffic
 
     The OpenAPI schema can be found at
+
     - /components/schemas/content-traffic
 
     """

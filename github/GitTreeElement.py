@@ -48,6 +48,7 @@ class GitTreeElement(NonCompletableGithubObject):
     This class represents GitTreeElements.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/git-tree/properties/tree/items
 
     """

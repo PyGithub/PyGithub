@@ -1,0 +1,25 @@
+name: 'Sort classes'
+author: 'EnricoMi'
+description: 'A GitHub Action that sorts classes'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+    - name: Set up dependencies
+      run: |
+        pip install -r requirements/scripts.txt
+      shell: bash
+    - name: Sort classes
+      shell: bash
+      run: |
+        # Sort classes
+        set -euo pipefail
+
+        echo "::group::Sort classes"
+        python scripts/openapi.py index github openapi.index
+        python scripts/sort_class.py openapi.index $(jq -r ".indices.class_to_descendants.GithubObject | @tsv" < openapi.index)
+        echo "::endgroup::"

@@ -68,6 +68,7 @@ class ContentFile(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#contents
 
     The OpenAPI schema can be found at
+
     - /components/schemas/content-directory
     - /components/schemas/content-file
     - /components/schemas/content-submodule
@@ -279,6 +280,7 @@ class ContentFileSearchResult(ContentFile):
     https://docs.github.com/en/rest/reference/search#search-code
 
     The OpenAPI schema can be found at
+
     - /components/schemas/code-search-result-item
 
     """

@@ -72,6 +72,7 @@ class Gist(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/gists
 
     The OpenAPI schema can be found at
+
     - /components/schemas/base-gist
     - /components/schemas/gist-simple
     - /components/schemas/gist-simple/properties/fork_of
@@ -81,6 +82,7 @@ class Gist(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._comments: Attribute[int] = NotSet
+        self._comments_enabled: Attribute[bool] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commits_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -109,6 +111,11 @@ class Gist(CompletableGithubObject):
     def comments(self) -> int:
         self._completeIfNotSet(self._comments)
         return self._comments.value
+
+    @property
+    def comments_enabled(self) -> bool:
+        self._completeIfNotSet(self._comments_enabled)
+        return self._comments_enabled.value
 
     @property
     def comments_url(self) -> str:
@@ -292,6 +299,8 @@ class Gist(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
+        if "comments_enabled" in attributes:  # pragma no branch
+            self._comments_enabled = self._makeBoolAttribute(attributes["comments_enabled"])
         if "comments_url" in attributes:  # pragma no branch
             self._comments_url = self._makeStringAttribute(attributes["comments_url"])
         if "commits_url" in attributes:  # pragma no branch

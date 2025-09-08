@@ -53,8 +53,12 @@ from __future__ import annotations
 
 import warnings
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
 
 from . import Framework
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class Team(Framework.TestCase):
@@ -67,6 +71,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.created_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.description, "a team")
         self.assertIsNone(self.team.group_id)
+        self.assertIsNone(self.team.group_name)
         self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
         self.assertEqual(self.team.id, 12345678)
         self.assertIsNone(self.team.ldap_dn)
@@ -78,6 +83,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.node_id, "AbCdEfG")
         self.assertEqual(self.team.notification_setting, "notifications_disabled")
         self.assertEqual(self.team.organization.login, "BeaverSoftware")
+        self.assertIsNone(self.team.organization_selection_type)
         self.assertIsNone(self.team.parent)
         self.assertEqual(self.team.permission, "pull")
         self.assertIsNone(self.team.permissions)
@@ -160,8 +166,7 @@ class Team(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         self.assertTrue(self.team.update_team_repository(repo, "admin"))
 
-    def testRepos(self):
-        repo = self.org.get_repo("FatherBeaver")
+    def doTestRepos(self, repo: str | Repository):
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
         self.assertIsNone(self.team.get_repo_permission(repo))
@@ -173,6 +178,13 @@ class Team(Framework.TestCase):
         self.team.remove_from_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
+
+    def testRepos(self):
+        self.doTestRepos(self.org.get_repo("FatherBeaver"))
+
+    def testReposStr(self):
+        with self.replayData("Team.testRepos.txt"):
+            self.doTestRepos(self.org.get_repo("FatherBeaver")._identity)
 
     def testEditWithoutArguments(self):
         self.team.edit("Name edited by PyGithub")

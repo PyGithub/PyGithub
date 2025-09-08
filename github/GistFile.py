@@ -48,6 +48,7 @@ class GistFile(NonCompletableGithubObject):
     This class represents GistFiles.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/base-gist/properties/files
     - /components/schemas/gist-simple/properties/files
     - /components/schemas/gist-simple/properties/fork_of/properties/files

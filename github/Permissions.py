@@ -49,6 +49,7 @@ class Permissions(NonCompletableGithubObject):
     This class represents Permissions.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/collaborator/properties/permissions
     - /components/schemas/full-repository/properties/permissions
     - /components/schemas/minimal-repository/properties/permissions

@@ -55,6 +55,7 @@ class GitCommitVerification(NonCompletableGithubObject):
     https://docs.github.com/en/rest/commits/commits
 
     The OpenAPI schema can be found at
+
     - /components/schemas/file-commit/properties/commit/properties/verification
     - /components/schemas/git-commit/properties/verification
     - /components/schemas/verification

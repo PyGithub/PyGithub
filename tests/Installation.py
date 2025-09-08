@@ -66,6 +66,7 @@ class Installation(Framework.BasicTestCase):
         self.assertEqual(self.installation.account.login, "EnricoMi")
         self.assertEqual(self.installation.app_id, 319953)
         self.assertEqual(self.installation.app_slug, "publish-test-results")
+        self.assertIsNone(self.installation.client_id)
         self.assertIsNone(self.installation.contact_email)
         self.assertEqual(self.installation.created_at, datetime(2023, 4, 17, 16, 18, 5, tzinfo=timezone.utc))
         self.assertEqual(self.installation.events, [])

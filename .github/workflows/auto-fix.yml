@@ -1,0 +1,60 @@
+name: Auto Fix
+on:
+  workflow_dispatch:
+permissions: {}
+
+jobs:
+  sort:
+    name: "sort classes"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/sort-classes
+        continue-on-error: true
+      - name: Commit and push changes
+        run: |
+          # Commit and push changes
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
+          git commit -a -m "Sorting classes" || true
+          git fetch origin $GITHUB_REF_NAME
+          git rebase origin/$GITHUB_REF_NAME
+          git push origin HEAD:$GITHUB_REF_NAME
+
+  mypy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/mypy
+        continue-on-error: true
+      - name: Commit and push changes
+        run: |
+          # Commit and push changes
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
+          git commit -a -m "Fixing MyPy" || true
+          git fetch origin $GITHUB_REF_NAME
+          git rebase origin/$GITHUB_REF_NAME
+          git push origin HEAD:$GITHUB_REF_NAME
+
+  pre-commit-fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/pre-commit
+        continue-on-error: true
+      - name: Commit and push changes
+        run: |
+          # Commit and push changes
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "github-action-${{ github.actor }}@users.noreply.github.com"
+          git commit -a -m "Fixing pre-compile" || true
+          git fetch origin $GITHUB_REF_NAME
+          git rebase origin/$GITHUB_REF_NAME
+          git push origin HEAD:$GITHUB_REF_NAME

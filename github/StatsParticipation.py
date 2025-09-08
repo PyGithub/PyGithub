@@ -53,6 +53,7 @@ class StatsParticipation(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count
 
     The OpenAPI schema can be found at
+
     - /components/schemas/participation-stats
 
     """

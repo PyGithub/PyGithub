@@ -31,24 +31,27 @@ if ! "$git" diff --quiet; then
 fi
 
 # check for some options
+create_classes=
 single_branch=
 branch_prefix="openapi/update"
-while [ $# -ge 2 ]; do
-  if [ "$1" == "--branch" ]; then
+while [ $# -ge 1 ]; do
+  if [ "$1" == "--create-classes" ]; then
+    create_classes="true"
+    shift 1
+  elif [ $# -ge 2  ] && [ "$1" == "--branch" ]; then
     single_branch="$2"
     shift 2
-  elif [ "$1" == "--branch-prefix" ]; then
+  elif [ $# -ge 2  ] && [ "$1" == "--branch-prefix" ]; then
     branch_prefix="$2"
     shift 2
   else
-    echo "Unknown option: $*"
-    exit 1
+    break
   fi
 done
 
 # update index
 echo -n "Updating index ($index)" | tee >(cat 1>&2)
-"$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
+"$python" "$openapi" index "$source_path" "$spec" "$index" | while read -r line; do echo -n .; done
 echo | tee >(cat 1>&2)
 
 # get all GithubObject classes
@@ -59,7 +62,7 @@ else
 fi
 
 # skip abstract classes
-declare -a concrete_github_classes
+concrete_github_classes=()
 for class in "${github_classes[@]}"; do
   if [[ "$("$jq" ".classes.$class.bases | index(\"ABC\")" < "$index")" == "null" ]]; then
     concrete_github_classes+=($class)
@@ -109,8 +112,8 @@ commit() {
 last_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
 echo -n "Adding schemas to ${#github_classes[@]} classes:" | tee >(cat 1>&2)
 while true; do
-  "$python" "$openapi" suggest --add "$spec" "$index" "${github_classes[@]}" 1>&2
-  "$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
+  "$python" "$openapi" suggest schemas --add "$spec" "$index" "${github_classes[@]}" 1>&2
+  "$python" "$openapi" index "$source_path" "$spec" "$index" | while read -r line; do echo -n .; done
   now_schemas=$("$jq" ".indices.schema_to_classes | length" < "$index")
   if [ "$now_schemas" -eq "$last_schemas" ]; then break; fi
   echo -n "$now_schemas" | tee >(cat 1>&2)
@@ -187,7 +190,7 @@ update() {
 
   # classes with test files
   test_files=()
-  declare -a classes_with_tests
+  classes_with_tests=()
   for github_class in "${classes[@]}"; do
     test_file="tests/$github_class.py"
     if [ -f "$test_file" ]; then
@@ -198,23 +201,26 @@ update() {
 
   # add schemas to class
   for github_class in "${classes[@]}"; do
-    ("$python" "$openapi" suggest --add "$spec" "$index" "$github_class" && echo) 1>&2
+    ("$python" "$openapi" suggest schemas --add "$spec" "$index" "$github_class" && echo) 1>&2
   done || failed "schemas" || return 0
   commit "Add OpenAPI schemas to $class" && unchanged "schemas" || changed "schemas" "schemas" || return 0
 
   # update index
-  "$python" "$openapi" index "$source_path" "$index" 1>&2
+  "$python" "$openapi" index "$source_path" "$spec" "$index" 1>&2
 
   # sort the class
   ("$python" "$sort_class" "$index" "${classes[@]}" && echo) 1>&2 || failed "sort" || return 0
   commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort" || return 0
 
   # apply schemas to class
-  ("$python" "$openapi" apply "$spec" "$index" "${classes[@]}" && echo) 1>&2 || failed "$class" || return 0
+  ("$python" "$openapi" apply ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes[@]}" && echo) 1>&2 || failed "$class" || return 0
+  if [ -n "$create_classes" ]; then git add github/; fi
   commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class" || return 0
 
   # apply schemas to test class
-  ("$python" "$openapi" apply --tests "$spec" "$index" "${classes_with_tests[@]}" && echo) 1>&2 || failed "tests" || return 0
+  if [ ${#classes_with_tests[@]} -gt 0 ]; then
+    ("$python" "$openapi" apply --tests ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes_with_tests[@]}" && if [ -n "$create_classes" ]; then git add tests/; fi; echo) 1>&2 || failed "tests" || return 0
+  fi
   # do not perform linting as part of the commit as this step
   # introduces imports that might be needed by assertions
   # committing assertions will run linting to clean this up
@@ -256,7 +262,7 @@ base=$("$git" rev-parse --abbrev-ref HEAD)
 
 # update index
 echo -n "Updating index ($index)" | tee >(cat 1>&2)
-"$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
+"$python" "$openapi" index "$source_path" "$spec" "$index" | while read -r line; do echo -n .; done
 echo | tee >(cat 1>&2)
 
 # update all classes
@@ -273,5 +279,5 @@ fi
 
 # recreate index
 echo -n "Updating index ($index)" | tee >(cat 1>&2)
-"$python" "$openapi" index "$source_path" "$index" | while read -r line; do echo -n .; done
+"$python" "$openapi" index "$source_path" "$spec" "$index" | while read -r line; do echo -n .; done
 echo | tee >(cat 1>&2)

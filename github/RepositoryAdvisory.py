@@ -30,8 +30,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Iterable
+from typing import TYPE_CHECKING, Any
 
 import github.AdvisoryCredit
 import github.AdvisoryCreditDetailed
@@ -59,6 +60,7 @@ class RepositoryAdvisory(AdvisoryBase):
     https://docs.github.com/en/rest/security-advisories/repository-advisories
 
     The OpenAPI schema can be found at
+
     - /components/schemas/repository-advisory
 
     """

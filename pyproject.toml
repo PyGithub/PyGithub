@@ -12,18 +12,18 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Software Development",
 ]
 description = "Use the full Github API v3"
 keywords = ["github"]
 name = "PyGithub"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 
 dynamic = ["version"]
 
@@ -52,7 +52,7 @@ packages = ["github"]
 github = ["py.typed", '*.pyi']
 
 [tool.mypy]
-python_version = '3.8'
+python_version = '3.9'
 ignore_missing_imports = true
 namespace_packages = true
 
@@ -82,7 +82,7 @@ quiet-level = 3
 #  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
 # also adding links until they ignored by its: nature
 #  https://github.com/codespell-project/codespell/issues/2243#issuecomment-1732019960
-ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel"
+ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel,commitish"
 
 [tool.ruff]
 line-length = 120

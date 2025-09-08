@@ -103,13 +103,13 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "prevent_self_review" in attributes:
+            self._prevent_self_review = self._makeBoolAttribute(attributes["prevent_self_review"])
         if "reviewers" in attributes:  # pragma no branch
             self._reviewers = self._makeListOfClassesAttribute(
                 github.EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer,
                 attributes["reviewers"],
             )
-        if "prevent_self_review" in attributes:
-            self._prevent_self_review = self._makeBoolAttribute(attributes["prevent_self_review"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "wait_timer" in attributes:  # pragma no branch

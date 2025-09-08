@@ -9,4 +9,5 @@ Reference
    github_integration
    apis
    utilities
+   scripts
    github_objects

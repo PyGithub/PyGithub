@@ -1,0 +1,32 @@
+{
+  "known method verbs": {
+    "AuthenticatedUser.create_fork": "POST",
+    "Github.get_enterprise": "GET",
+    "GithubIntegration.get_installation": "GET",
+    "GithubIntegration.get_org_installation": "GET",
+    "GithubIntegration.get_repo_installation": "GET",
+    "GithubIntegration.get_user_installation": "GET",
+    "GithubIntegration.get_app_installation": "GET",
+    "Organization.create_fork": "POST",
+    "PullRequest.create_comment": "POST",
+    "PullRequest.get_comment": "GET",
+    "PullRequest.get_comments": "GET",
+    "Repository.attach_security_config": "POST",
+    "Repository.create_repository_advisory": "POST",
+    "Repository.detach_security_config": "DELETE",
+    "Repository.get_dir_contents": "GET",
+    "Repository.get_pulls_comments": "GET",
+    "Repository.report_security_vulnerability": "POST",
+    "Repository.subscribe_to_hub": "POST",
+    "Repository.unsubscribe_from_hub": "POST",
+    "RepositoryAdvisory.add_vulnerability": "PATCH",
+    "RepositoryAdvisory.offer_credit": "PATCH",
+    "Requester.graphql_node": "POST",
+    "Requester.graphql_node_class": "POST",
+    "Requester.graphql_query": "POST",
+    "Requester.graphql_query_class": "POST"
+  },
+  "ignored OpenAPI schemas": [
+    "/paths/\"/repos/{owner}/{repo}/deployments\"/post/responses/202/content/\"application/json\"/schema"
+  ]
+}

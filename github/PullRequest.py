@@ -50,6 +50,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Eddie Santos <9561596+eddie-santos@users.noreply.github.com>  #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Matt Tuchfarber <matt@tuchfarber.com>                         #
 # Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
@@ -146,6 +147,7 @@ class PullRequest(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/pulls
 
     The OpenAPI schema can be found at
+
     - /components/schemas/pull-request
     - /components/schemas/pull-request-minimal
     - /components/schemas/pull-request-simple
@@ -553,14 +555,14 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(body, str), body
         assert is_optional(event, str), event
         assert is_optional_list(comments, dict), comments
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"body": body})
-        post_parameters["event"] = "COMMENT" if is_undefined(event) else event
-        if is_defined(commit):
-            post_parameters["commit_id"] = commit.sha
-        if is_defined(comments):
-            post_parameters["comments"] = comments
-        else:
-            post_parameters["comments"] = []
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "body": body,
+                "event": event,
+                "commit_id": commit.sha if is_defined(commit) else NotSet,
+                "comments": comments if is_defined(comments) else [],
+            }
+        )
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 

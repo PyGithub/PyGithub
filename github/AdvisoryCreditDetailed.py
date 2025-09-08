@@ -56,6 +56,7 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
     https://docs.github.com/en/rest/security-advisories/repository-advisories
 
     The OpenAPI schema can be found at
+
     - /components/schemas/global-advisory/properties/credits/items
     - /components/schemas/repository-advisory-credit
 

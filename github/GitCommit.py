@@ -63,6 +63,7 @@ class GitCommit(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/git#commits
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit-search-result-item/properties/commit
     - /components/schemas/commit/properties/commit
     - /components/schemas/file-commit/properties/commit

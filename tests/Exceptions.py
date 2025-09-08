@@ -74,7 +74,7 @@ class Exceptions(Framework.TestCase):
         # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
         with self.assertRaises(github.GithubException) as raisedexp:
             # 503 would be retried, disable retries
-            self.get_github(retry=None, pool_size=self.pool_size).get_user("jacquev6")
+            self.get_github(self.authMode, retry=None).get_user("jacquev6")
         self.assertIsInstance(raisedexp.exception, github.GithubException)
         self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 503)

@@ -49,6 +49,7 @@ class GitAuthor(NonCompletableGithubObject):
     This class represents GitAuthors.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit-search-result-item/properties/commit/properties/author
     - /components/schemas/file-commit/properties/commit/properties/author
     - /components/schemas/file-commit/properties/commit/properties/committer

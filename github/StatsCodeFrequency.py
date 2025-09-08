@@ -52,6 +52,7 @@ class StatsCodeFrequency(NonCompletableGithubObject):
     https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-weekly-commit-activity
 
     The OpenAPI schema can be found at
+
     - /components/schemas/code-frequency-stat
 
     """
