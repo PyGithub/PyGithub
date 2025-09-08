@@ -252,7 +252,6 @@ class Ruleset(CompletableGithubObject):
     def delete(self) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id} <https://docs.github.com/en/rest/repos/rules#delete-a-repository-ruleset>`_
-        :rtype: bool
         """
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
