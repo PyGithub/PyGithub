@@ -2839,7 +2839,6 @@ class Repository(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/rulesets/{ruleset_id} <https://docs.github.com/en/rest/repos/rules#get-a-repository-ruleset>`_
         :param ruleset_id: int
-        :rtype: :class:`github.Ruleset.Ruleset`
         """
         assert isinstance(ruleset_id, int), ruleset_id
         attrs = {"id": ruleset_id, "url": f"{self.url}/rulesets/{ruleset_id}"}
