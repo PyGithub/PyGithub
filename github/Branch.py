@@ -659,14 +659,3 @@ class Branch(NonCompletableGithubObject):
             self._required_approving_review_count = self._makeIntAttribute(
                 attributes["required_approving_review_count"]
             )
-    def get_rules(self) -> PaginatedList[github.Rule.Rule]:
-        """
-        :calls: `GET /repos/{owner}/{repo}/rules/branches/{branch} <https://docs.github.com/en/rest/repos/rules#get-rules-for-a-branch>`_
-        :rtype: :class:`PaginatedList` of :class:`github.Rule.Rule`
-        """
-        repo_url = "TBD"
-        return PaginatedList(
-            github.Rule.Rule,
-            self._requester,
-            f"{repo_url}/rules/branches/{self._name.value}",
-            None,)
