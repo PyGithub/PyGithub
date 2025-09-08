@@ -219,7 +219,6 @@ class Ruleset(CompletableGithubObject):
         :param bypass_actors: list of dict
         :param conditions: dict
         :param rules: list of dict
-        :rtype: :class:`github.Ruleset.Ruleset`
         """
         assert is_optional(name, str), name
         assert is_optional(target, str), target
