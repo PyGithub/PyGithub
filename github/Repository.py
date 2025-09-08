@@ -2822,7 +2822,6 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#get-all-repository-rulesets>`_
         :param includes_parents: bool
         :param targets: list of string
-        :rtype: :class:`PaginatedList` of :class:`github.Ruleset.Ruleset`
         """
         assert isinstance(includes_parents, bool), includes_parents
         assert is_optional_list(targets, str), targets
