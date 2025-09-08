@@ -151,8 +151,6 @@ class Commit(CompletableGithubObject):
             headers=None,
             list_item="files",
             total_count_item="total_files",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
         )
 
     @property
