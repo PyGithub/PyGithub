@@ -2530,11 +2530,24 @@ class CreateClassMethodTransformer(CstTransformerBase):
         return (function_name,)
 
     def create_method(self) -> cst.FunctionDef:
+        # extract url parameters that are not given by the class' GET url
         url_params = [
             elem[1:-1] for elem in self.relative_path.split("/") if elem.startswith("{") and elem.endswith("}")
         ]
-        if url_params:
-            raise ValueError(f"URL parameter not implemented: {', '.join(url_params)}")
+        # add an input decorator to pull these url parameters into method parameters
+        decorators = [
+            cst.Decorator(
+                decorator=cst.Call(
+                    func=cst.Name("openapi_parameter"),
+                    args=[
+                        cst.Arg(cst.SimpleString(f'"{url_param}"')),
+                        cst.Arg(keyword=cst.Name("input"), value=cst.Name("True"), equal=equal),
+                    ],
+                ),
+                leading_lines=[cst.EmptyLine()] if idx == 0 else [],
+            )
+            for idx, url_param in enumerate(url_params)
+        ]
 
         # TODO: use Method.from_schema
         request_schema = (
@@ -2550,6 +2563,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
             "schema",
             "properties",
         )
+        request_properties_var = f"{self.api_verb}_parameters"
         request_properties = (
             {
                 prop: as_python_type(
@@ -2562,26 +2576,17 @@ class CreateClassMethodTransformer(CstTransformerBase):
         )
         required_properties = request_schema.get("required") if request_schema else []
         # TODO: ignore parameters:
-        #       - those covered by prefix_path
         #       - those referring to pagination
-        #       - add all others to method name, e.g dir in /repos/{owner}/{repo}/readme/{dir}
 
         stmts = []
 
-        # TODO: combine this with UpdateMethodsTransformer.update_docstring
+        # add docstring template, this will be populated when calling apply_methods
         docstrings = []
         docstrings.append('"""')
         if self.api_docs:
             docstrings.append(f":calls: `{self.api_verb.upper()} {self.api_path} <{self.api_docs}>`_")
         else:
             docstrings.append(f":calls: {self.api_verb.upper()} {self.api_path}")
-        for prop_name, prop_type in request_properties.items():
-            docstrings.append(f":param {prop_name}: {prop_type}")
-        if self.api_content:
-            docstrings.append(f":rtype: {self.api_content}")
-        if self.api_descr:
-            docstrings.append("")
-            docstrings.append(self.api_descr)
         docstrings.append('"""')
         docstring = "\n        ".join(docstrings)
         stmts.append(cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))]))
@@ -2609,7 +2614,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
             parameter_stmt = cst.SimpleStatementLine(
                 body=[
                     cst.Assign(
-                        targets=[cst.AssignTarget(cst.Name("parameters"))],
+                        targets=[cst.AssignTarget(cst.Name(request_properties_var))],
                         value=cst.Dict(
                             [
                                 cst.DictElement(key=cst.SimpleString(f'"{prop_name}"'), value=cst.Name(prop_name))
@@ -2648,7 +2653,12 @@ class CreateClassMethodTransformer(CstTransformerBase):
                             ),
                         )
                         + (
-                            (cst.Arg(keyword=cst.Name("input"), value=cst.Name("parameters"), equal=equal),)
+                            (cst.Arg(keyword=cst.Name("parameters"), value=cst.Name("url_parameters"), equal=equal),)
+                            if url_params
+                            else ()
+                        )
+                        + (
+                            (cst.Arg(keyword=cst.Name("input"), value=cst.Name(request_properties_var), equal=equal),)
                             if request_properties
                             else ()
                         ),
@@ -2703,11 +2713,12 @@ class CreateClassMethodTransformer(CstTransformerBase):
         body = cst.IndentedBlock(body=stmts)
 
         return cst.FunctionDef(
+            decorators=decorators,
             name=cst.Name(value=self.method_name),
             params=params,
             body=body,
             returns=returns,
-            lines_after_decorators=[cst.EmptyLine()],
+            lines_after_decorators=[] if decorators else [cst.EmptyLine()],
         )
 
 
@@ -3965,17 +3976,20 @@ class OpenApi:
         with open(clazz.filename) as r:
             code = "".join(r.readlines())
 
-        prefix_path = None
         return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
         if return_schema_to_paths is None:
             raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
-        for schema in clazz.schemas:
-            for path in return_schema_to_paths.get(schema, []):
-                if api_path.startswith(f"{path}/"):
-                    prefix_path = path
-                    break
-            if prefix_path:
-                break
+
+        # get all paths that return clazz, that are a prefix of api_path
+        class_paths = [
+            path
+            for schema in clazz.schemas
+            for path in return_schema_to_paths.get(schema, [])
+            if api_path.startswith(f"{path}/")
+        ]
+        # pick the longest match
+        class_paths = sorted(class_paths, key=lambda p: len(p), reverse=True)
+        prefix_path = next(iter(class_paths), None)
 
         create_new_class_func = None
         if handle_new_schemas == HandleNewSchemas.create_class:
@@ -3989,6 +4003,7 @@ class OpenApi:
 
             create_new_class_func = create_new_class
 
+        # add the method template
         transformer = CreateClassMethodTransformer(
             spec,
             index,
