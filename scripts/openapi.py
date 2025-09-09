@@ -156,8 +156,12 @@ def as_python_type(
                 inner_types=[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes],
             )
         if collect_new_schemas is not None:
-            collect_new_schemas.append(schema or ".".join([""] + schema_path))
+            if schema.split("/")[-1].startswith("_"):
+                print(f"Not creating schema {schema}")
+            else:
+                collect_new_schemas.append(schema)
         if verbose:
+            # here we use dot-notation to ease usage with jq
             print(f"Schema not implemented: {schema or '.'.join([''] + schema_path)}")
         return PythonType(type="dict", inner_types=[PythonType("str"), PythonType("Any")])
 
@@ -768,6 +772,11 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
     def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef):
         self.visit_class_name.pop()
         return super().leave_ClassDef(original_node, updated_node)
+
+    @staticmethod
+    def read_index(filename: str) -> dict[str, Any]:
+        with open(filename) as r:
+            return json.load(r)
 
     @property
     def current_class_name(self) -> str:
@@ -2416,7 +2425,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         api_response: str | None,
         prefix_path,
         return_property: str | None,
-        create_new_class_func: Callable[str] | None,
+        create_new_class_func: Callable[[str], dict[str, Any]] | None,
     ):
         super().__init__()
         self.spec = spec
@@ -2482,9 +2491,13 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 verbose=False,
                 collect_new_schemas=new_schemas,
             )
-            for new_schema in new_schemas:
-                print(f"creating new class for schea {new_schema}")
-                create_new_class_func(new_schema)
+            if new_schemas:
+                for new_schema in new_schemas:
+                    print(f"Creating new class for schema {new_schema}")
+                    index = create_new_class_func(new_schema)
+                self.classes = index.get("classes", {})
+                self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
+                self.schema_to_class["default"] = ["GithubObject"]
         self.api_content = (
             as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, verbose=True)
             if content_schema
@@ -3001,7 +3014,7 @@ class OpenApi:
                             self.as_python_type(v, schema_path + ["properties", k], collect_new_schemas=new_schemas)
                     # handle new schemas
                     for new_schema in new_schemas:
-                        self.create_class_for_schema(
+                        index = self.create_class_for_schema(
                             github_path, spec_file, index_filename, spec, classes, tests, new_schema
                         )
 
@@ -3797,7 +3810,7 @@ class OpenApi:
             f"    The reference can be found here\n"
             f"    {docs_url}\n"
             f"\n"
-            f"    The OpenAPI schema can be found at\n" + "".join(f"    - {schema}\n" for schema in schemas) + "\n"
+            f"    The OpenAPI schema can be found at\n\n" + "".join(f"    - {schema}\n" for schema in schemas) + "\n"
             '    """\n'
             "\n"
             "    def _initAttributes(self) -> None:\n"
@@ -3919,11 +3932,13 @@ class OpenApi:
         classes: dict[str, Any],
         tests: bool,
         schema: str,
-    ) -> None:
+    ) -> dict[str, Any]:
+        print(schema)
         new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", schema.split("/")[-1])])
         if new_class_name in classes:
             # we probably created that class in an earlier iteration, or we have a name collision here
-            return
+            with open(index_filename) as r:
+                return json.load(r)
         is_completable = "url" in self.get_schema(spec, schema)[1].get("properties", [])
         parent_name = "CompletableGithubObject" if is_completable else "NonCompletableGithubObject"
         # TODO: get path from schema via indices.path_to_return_classes, get docs from spec.paths.PATH.get.externalDocs.url
@@ -3948,9 +3963,11 @@ class OpenApi:
             index = json.load(r)
         classes.clear()
         classes.update(**index.get("classes", {}))
+        return index
 
     def create_method(
         self,
+        github_path: str,
         spec_file: str,
         index_filename: str,
         class_name: str,
@@ -3994,12 +4011,15 @@ class OpenApi:
         create_new_class_func = None
         if handle_new_schemas == HandleNewSchemas.create_class:
 
-            def create_new_class(schema: str) -> None:
+            def create_new_class(schema: str) -> dict[str, Any]:
                 classes = index.get("classes", {})
                 github_path = index.get("sources")
-                self.create_class_for_schema(
+                new_index = self.create_class_for_schema(
                     github_path, spec_file, index_filename, spec, classes, tests=True, schema=schema
                 )
+                index.clear()
+                index.update(**new_index)
+                return index
 
             create_new_class_func = create_new_class
 
@@ -4019,6 +4039,13 @@ class OpenApi:
         tree = cst.parse_module(code)
         tree_updated = tree.visit(transformer)
         changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
+
+        # populate the method (this only works on actual file changes)
+        if not dry_run:
+            print("Updating index")
+            self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
+            self.apply_methods(spec_file, index_filename, [f"{class_name}.{method_name}"], dry_run, rewrite=True)
+
         return changed
 
     @staticmethod
@@ -4136,6 +4163,7 @@ class OpenApi:
             help="Return the value of this response property, instead of the entire response object",
             nargs="?",
         )
+        create_method_parser.add_argument("github_path", help="Path to PyGithub Python files")
         create_method_parser.add_argument("spec", help="Github API OpenAPI spec file")
         create_method_parser.add_argument("index_filename", help="Path of index file")
         create_method_parser.add_argument("class_name", help="PyGithub GithubObject class name")
@@ -4215,6 +4243,7 @@ class OpenApi:
                 )
             if self.args.component == "method":
                 changes = self.create_method(
+                    self.args.github_path,
                     self.args.spec,
                     self.args.index_filename,
                     self.args.class_name,
