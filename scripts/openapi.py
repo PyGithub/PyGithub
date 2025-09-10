@@ -2982,6 +2982,7 @@ class OpenApi:
             print(f"Applying API schemas to {len(class_names)} PyGithub classes")
 
         new_schemas_as_dict = handle_new_schemas == HandleNewSchemas.as_dict
+        new_schemas_create_class = handle_new_schemas == HandleNewSchemas.create_class
         any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
@@ -3006,7 +3007,7 @@ class OpenApi:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
 
-                if handle_new_schemas == HandleNewSchemas.create_class:
+                if new_schemas_create_class:
                     new_schemas = []
                     for k, v in schema.get("properties", {}).items():
                         # only check for new schemas of new attributes
@@ -3059,7 +3060,7 @@ class OpenApi:
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
                     if is_supported_type(k, v, python_type, self.verbose)
-                    and (is_not_dict_type(python_type) or new_schemas_as_dict)
+                    and (is_not_dict_type(python_type) or new_schemas_as_dict or new_schemas_create_class)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
