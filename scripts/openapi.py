@@ -49,13 +49,12 @@ equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
 
 def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
     if "$ref" in schema_type:
-        schema = schema_type.get("$ref").strip("# ")
+        schema = schema_type.get("$ref").strip("# /")
         ref_schema_type = spec
         for step in schema.split("/"):
-            if step:
-                if step not in ref_schema_type:
-                    raise ValueError(f"Could not find schema in spec: {schema}")
-                ref_schema_type = ref_schema_type[step]
+            if step not in ref_schema_type:
+                raise ValueError(f"Could not find schema in spec: {schema}")
+            ref_schema_type = ref_schema_type[step]
         return ref_schema_type
     return schema_type
 
@@ -78,6 +77,7 @@ def as_python_type(
     schema_path: list[str],
     schema_to_class: dict[str, str],
     classes: dict[str, Any],
+    spec: dict[str, Any],
     *,
     paginated: bool = False,
     verbose: bool = False,
@@ -86,7 +86,18 @@ def as_python_type(
     schema = None
     data_type = schema_type.get("type")
     if "$ref" in schema_type:
-        schema = schema_type.get("$ref").strip("# ")
+        schema_path = schema_type.get("$ref").strip("# /").split("/")
+        schema_type = resolve_schema(schema_type, spec)
+        return as_python_type(
+            schema_type,
+            schema_path,
+            schema_to_class,
+            classes,
+            spec,
+            paginated=paginated,
+            verbose=verbose,
+            collect_new_schemas=collect_new_schemas,
+        )
     elif "oneOf" in schema_type:
         types = [
             as_python_type(
@@ -94,6 +105,7 @@ def as_python_type(
                 schema_path + ["oneOf", str(idx)],
                 schema_to_class,
                 classes,
+                spec,
                 paginated=paginated,
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
@@ -112,6 +124,7 @@ def as_python_type(
             schema_path + ["allOf", "0"],
             schema_to_class,
             classes,
+            spec,
             paginated=paginated,
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
@@ -124,6 +137,7 @@ def as_python_type(
                 schema_path,
                 schema_to_class,
                 classes,
+                spec,
                 paginated=paginated,
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
@@ -179,6 +193,7 @@ def as_python_type(
                     schema_path + ["items"],
                     schema_to_class,
                     classes,
+                    spec,
                     paginated=False,
                     verbose=verbose,
                     collect_new_schemas=collect_new_schemas,
@@ -279,7 +294,9 @@ def responses_as_python_type(
                 schema_path + [str(status), "content", '"application/json"', "schema"],
             )
         ]
-        for data_type in [as_python_type(schema, inner_schema_path, schema_to_class, classes, paginated=paginated)]
+        for data_type in [
+            as_python_type(schema, inner_schema_path, schema_to_class, classes, spec, paginated=paginated)
+        ]
     ]
     schemas = sorted(schemas, key=lambda e: e[0])
     if len(schemas) == 0:
@@ -447,6 +464,7 @@ class Parameter:
         schema_path: list[str],
         required: bool,
         index: dict[str, Any],
+        spec: dict[str, Any],
         param_type: str | None = None,
     ) -> Parameter:
         classes = index.get("classes", {})
@@ -459,6 +477,7 @@ class Parameter:
             schema_path + ["schema"],
             schema_to_class,
             classes,
+            spec,
         )
         if schema.get("nullable") is True and data_type is not None:
             data_type = data_type.as_nullable()
@@ -499,7 +518,7 @@ class Method:
         docs_url = schema.get("externalDocs", {}).get("url")
         url_parameters_schema_path = schema_path + ["parameters"]
         url_parameters = [
-            Parameter.from_schema(n, s, url_parameters_schema_path, r if r is not None else False, index)
+            Parameter.from_schema(n, s, url_parameters_schema_path, r if r is not None else False, index, spec)
             for s in schema.get("parameters", [])
             for s in [resolve_schema(s, spec)]
             for n, r in [(s.get("name"), s.get("required"))]
@@ -513,7 +532,9 @@ class Method:
             "properties",
         ]
         body_parameters = [
-            Parameter.from_schema(n, p, body_parameters_schema_path + [n], n in required, index, param_type="body")
+            Parameter.from_schema(
+                n, p, body_parameters_schema_path + [n], n in required, index, spec, param_type="body"
+            )
             for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
             for s in [resolve_schema(s, spec)]
             for required in [s.get("required", [])]
@@ -2488,6 +2509,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 schema_path,
                 self.schema_to_class,
                 self.classes,
+                self.spec,
                 verbose=False,
                 collect_new_schemas=new_schemas,
             )
@@ -2499,7 +2521,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
                 self.schema_to_class["default"] = ["GithubObject"]
         self.api_content = (
-            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, verbose=True)
+            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, self.spec, verbose=True)
             if content_schema
             else None
         )
@@ -2798,11 +2820,12 @@ class OpenApi:
         self.verbose = args.verbose
 
         index = (
-            OpenApi.read_index(args.index_filename) if self.subcommand != "index" and "index_filename" in args else {}
+            OpenApi.read_json(args.index_filename) if self.subcommand != "index" and "index_filename" in args else {}
         )
         self.classes = index.get("classes", {})
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         self.schema_to_class["default"] = ["GithubObject"]
+        self.spec = OpenApi.read_json(args.spec) if self.subcommand != "index" and "spec" in args else {}
 
     def as_python_type(
         self,
@@ -2816,12 +2839,13 @@ class OpenApi:
             schema_path,
             self.schema_to_class,
             self.classes,
+            self.spec,
             verbose=self.verbose,
             collect_new_schemas=collect_new_schemas,
         )
 
     @staticmethod
-    def read_index(filename: str) -> dict[str, Any]:
+    def read_json(filename: str) -> dict[str, Any]:
         with open(filename) as r:
             return json.load(r)
 
