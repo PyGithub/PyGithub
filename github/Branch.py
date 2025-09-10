@@ -77,6 +77,7 @@ if TYPE_CHECKING:
     from github.BranchProtection import BranchProtection
     from github.Commit import Commit
     from github.NamedUser import NamedUser
+    from github.PaginatedList import PaginatedList
     from github.RequiredPullRequestReviews import RequiredPullRequestReviews
     from github.RequiredStatusChecks import RequiredStatusChecks
     from github.Team import Team
