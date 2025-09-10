@@ -2817,7 +2817,7 @@ class Repository(CompletableGithubObject):
 
     def get_rulesets(
         self, includes_parents: bool = True, targets: Opt[list[str]] = NotSet
-    ) -> PaginatedList[github.Ruleset.Ruleset]:
+    ) -> PaginatedList[Ruleset]:
         """
         :calls: `GET /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#get-all-repository-rulesets>`_
         :param includes_parents: bool
