@@ -440,6 +440,24 @@ class GithubObject(ABC):
         else:
             return _BadAttribute(value, [dict])
 
+    def _makeListOfUnionClassesAttributeFromTypeKey(
+        self, type_key: str, default_type: str, value: Any, *class_and_names: tuple[type[T_gh], str]
+    ) -> Attribute[list[T_gh]]:
+        class_and_name_index = {name: clazz for clazz, name in class_and_names}
+        assert default_type in class_and_name_index
+        default_class = class_and_name_index.get(default_type)
+        if isinstance(value, list) and all(isinstance(element, dict) for element in value):
+            return _ValuedAttribute(
+                [
+                    klass(self._requester, self._headers, element)
+                    for element in value
+                    for type_name in [element.get(type_key, default_type)]
+                    for klass in [class_and_name_index.get(type_name, default_class)]
+                ]
+            )
+        else:
+            return _BadAttribute(value, [dict])
+
     def _makeDictOfStringsToClassesAttribute(
         self,
         klass: type[T_gh],

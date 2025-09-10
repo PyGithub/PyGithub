@@ -1438,6 +1438,22 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 func_name = "_makeListOfClassesAttribute"
                 args = [cst.Arg(cls.create_type(prop.data_type.inner_types[0])), cst.Arg(attr)]
                 # TODO: warn about unknown / supported type
+            elif prop.data_type.inner_types[0].type == "union" and all(
+                isinstance(t, GithubClass) for t in prop.data_type.inner_types[0].inner_types
+            ):
+                func_name = "_makeListOfUnionClassesAttributeFromTypeKey"
+                args = [
+                    cst.Arg(cst.SimpleString('"type"')),
+                    cst.Arg(cst.SimpleString("unknown")),
+                    cst.Arg(attr),
+                ] + [
+                    cst.Arg(
+                        cst.Tuple(
+                            elements=[cst.Element(cls.create_type(dt)), cst.Element(cst.SimpleString(f'"{dt.name}"'))]
+                        )
+                    )
+                    for dt in prop.data_type.inner_types[0].inner_types
+                ]
             elif prop.data_type.inner_types[0].type == "int":
                 func_name = "_makeListOfIntsAttribute"
                 args = [cst.Arg(attr)]
