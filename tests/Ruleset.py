@@ -65,9 +65,10 @@ class Ruleset(Framework.TestCase):
             },
         )
         self.assertEqual(len(self.ruleset.bypass_actors), 1)
-        self.assertEqual(
-            self.ruleset.bypass_actors[0], {"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}
-        )
+        bypass_actor = self.ruleset.bypass_actors[0]
+        self.assertEqual(bypass_actor.actor_id, 5)
+        self.assertEqual(bypass_actor.actor_type, "RepositoryRole")
+        self.assertEqual(bypass_actor.bypass_mode, "always")
         self.assertEqual(self.ruleset.current_user_can_bypass, "always")
         self.assertEqual(
             self.ruleset._links,
@@ -92,7 +93,7 @@ class Ruleset(Framework.TestCase):
             ],
         )
         self.assertEqual(ruleset.id, 3474546)
-        self.assertEqual(ruleset.name, "updated rule set")
+        self.assertEqual(ruleset.name, "edited rule set")
         self.assertEqual(ruleset.target, "branch")
         self.assertEqual(ruleset.source_type, "Repository")
         self.assertEqual(ruleset.source, "PyGithub/PyGithub")
@@ -107,7 +108,7 @@ class Ruleset(Framework.TestCase):
         self.assertEqual(len(ruleset.rules), 2)
         self.assertEqual(ruleset.rules[0].type, "deletion")
         self.assertEqual(ruleset.rules[1].type, "creation")
-        self.assertEqual(ruleset.bypass_actors, [])
+        self.assertEqual(len(ruleset.bypass_actors), 0)
         self.assertEqual(ruleset.current_user_can_bypass, "never")
         self.assertEqual(
             ruleset._links,
