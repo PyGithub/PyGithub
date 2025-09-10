@@ -26,9 +26,6 @@ from typing import TYPE_CHECKING, Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
-if TYPE_CHECKING:
-    pass
-
 
 class Rule(NonCompletableGithubObject):
     """
