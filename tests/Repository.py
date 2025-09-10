@@ -108,6 +108,7 @@ from unittest import mock
 import github
 import github.Repository
 import github.Requester
+import github.RepositoryRulesetBypassActor
 from github.GithubObject import is_undefined
 
 from . import Framework
@@ -2373,9 +2374,10 @@ class Repository(Framework.TestCase):
             },
         )
         self.assertEqual(len(ruleset.bypass_actors), 1)
-        self.assertEqual(
-            ruleset.bypass_actors[0], {"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}
-        )
+        bypass_actor = ruleset.bypass_actors[0]
+        self.assertEqual(bypass_actor.actor_id, 5)
+        self.assertEqual(bypass_actor.actor_type, "RepositoryRole")
+        self.assertEqual(bypass_actor.bypass_mode, "always")
         self.assertEqual(ruleset.current_user_can_bypass, "always")
         self.assertEqual(
             ruleset._links,
@@ -2420,9 +2422,10 @@ class Repository(Framework.TestCase):
             },
         )
         self.assertEqual(len(ruleset.bypass_actors), 1)
-        self.assertEqual(
-            ruleset.bypass_actors[0], {"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}
-        )
+        bypass_actor = ruleset.bypass_actors[0]
+        self.assertEqual(bypass_actor.actor_id, 5)
+        self.assertEqual(bypass_actor.actor_type, "RepositoryRole")
+        self.assertEqual(bypass_actor.bypass_mode, "always")
         self.assertEqual(ruleset.current_user_can_bypass, "always")
         self.assertEqual(
             ruleset._links,
@@ -2462,9 +2465,11 @@ class Repository(Framework.TestCase):
         self.assertEqual(ruleset.rules[1].type, "non_fast_forward")
         self.assertEqual(ruleset.rules[2].type, "creation")
         self.assertEqual(len(ruleset.bypass_actors), 1)
-        self.assertEqual(
-            ruleset.bypass_actors[0], {"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}
-        )
+        bypass_actor = ruleset.bypass_actors[0]
+        self.assertEqual(bypass_actor.actor_id, 5)
+        self.assertEqual(bypass_actor.actor_type, "RepositoryRole")
+        self.assertEqual(bypass_actor.bypass_mode, "always")
+
         self.assertEqual(ruleset.current_user_can_bypass, "always")
         self.assertEqual(
             ruleset._links,

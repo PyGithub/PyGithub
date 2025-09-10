@@ -34,6 +34,7 @@ from github.GithubObject import (
     is_optional,
     is_optional_list,
 )
+from github.RepositoryRulesetBypassActor import RepositoryRulesetBypassActor
 from github.Rule import Rule
 
 if TYPE_CHECKING:
@@ -60,7 +61,7 @@ class Ruleset(CompletableGithubObject):
         self._source_type: Attribute[str] = NotSet
         self._source: Attribute[str] = NotSet
         self._enforcement: Attribute[str] = NotSet
-        self._bypass_actors: Attribute[list[dict[str, Any]]] = NotSet
+        self._bypass_actors: Attribute[list[RepositoryRulesetBypassActor]] = NotSet
         self._conditions: Attribute[dict[str, Any]] = NotSet
         self._rules: Attribute[list[Rule]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -135,9 +136,9 @@ class Ruleset(CompletableGithubObject):
         return self._enforcement.value
 
     @property
-    def bypass_actors(self) -> list[dict[str, Any]]:
+    def bypass_actors(self) -> list[RepositoryRulesetBypassActor]:
         """
-        :type: list[dict]
+        :type: list[RepositoryRulesetBypassActor]
         :return: The actors that can bypass the rules in this ruleset
         """
         self._completeIfNotSet(self._bypass_actors)
@@ -272,7 +273,7 @@ class Ruleset(CompletableGithubObject):
         if "enforcement" in attributes:  # pragma no branch
             self._enforcement = self._makeStringAttribute(attributes["enforcement"])
         if "bypass_actors" in attributes:  # pragma no branch
-            self._bypass_actors = self._makeListOfDictsAttribute(attributes["bypass_actors"])
+            self._bypass_actors = self._makeListOfClassesAttribute(RepositoryRulesetBypassActor, attributes["bypass_actors"])
         if "conditions" in attributes:  # pragma no branch
             self._conditions = self._makeDictAttribute(attributes["conditions"])
         if "rules" in attributes:  # pragma no branch

@@ -234,6 +234,7 @@ import github.RepositoryAdvisory
 import github.RepositoryDiscussion
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.Ruleset
 import github.Secret
 import github.SecretScanAlert
 import github.SecurityAndAnalysis
