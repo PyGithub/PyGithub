@@ -2852,7 +2852,7 @@ class Repository(CompletableGithubObject):
         bypass_actors: Opt[list[dict[str, Any]]] = NotSet,
         conditions: Opt[dict[str, Any]] = NotSet,
         rules: Opt[list[dict[str, Any]]] = NotSet,
-    ) -> github.Ruleset.Ruleset:
+    ) -> Ruleset:
         """
         :calls: `POST /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#create-a-repository-ruleset>`_
         :param name: string
