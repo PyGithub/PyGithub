@@ -3171,7 +3171,7 @@ class Repository(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-        creator: Opt[NamedUser] = NotSet,
+        creator: Opt[str | NamedUser] = NotSet,
     ) -> PaginatedList[Issue]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -3224,7 +3224,7 @@ class Repository(CompletableGithubObject):
             if isinstance(creator, str):
                 url_parameters["creator"] = creator
             else:
-                url_parameters["creator"] = creator._identity
+                url_parameters["creator"] = creator._identity  # type: ignore[union-attr]
         return PaginatedList(github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters)
 
     def get_issues_comments(
