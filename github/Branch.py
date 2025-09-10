@@ -71,8 +71,6 @@ from github.GithubObject import (
     is_undefined,
 )
 
-from github.PaginatedList import PaginatedList
-
 if TYPE_CHECKING:
     from github.BranchProtection import BranchProtection
     from github.Commit import Commit
