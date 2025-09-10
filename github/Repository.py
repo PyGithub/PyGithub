@@ -237,7 +237,6 @@ import github.RepositoryAdvisory
 import github.RepositoryDiscussion
 import github.RepositoryKey
 import github.RepositoryPreferences
-import github.Ruleset
 import github.Secret
 import github.SecretScanAlert
 import github.SecurityAndAnalysis
@@ -325,6 +324,7 @@ if TYPE_CHECKING:
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
     from github.SecretScanAlert import SecretScanAlert
+    from github.Ruleset import Ruleset
     from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SourceImport import SourceImport
