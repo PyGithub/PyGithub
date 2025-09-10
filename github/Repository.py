@@ -147,7 +147,6 @@
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 # Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
 # Copyright 2025 Jens Keiner <jens.keiner@gmail.com>                           #
-
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
