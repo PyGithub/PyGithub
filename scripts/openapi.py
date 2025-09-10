@@ -2909,7 +2909,10 @@ class OpenApi:
         tests: bool,
         schema: str,
     ) -> None:
-        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", schema.split("/")[-1])])
+        item = schema.split("/")[-1]
+        if item.startswith("_"):
+            return None
+        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)])
         if new_class_name in classes:
             # we probably created that class in an earlier iteration, or we have a name collision here
             return
