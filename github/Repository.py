@@ -2835,7 +2835,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    def get_ruleset(self, ruleset_id: int) -> github.Ruleset.Ruleset:
+    def get_ruleset(self, ruleset_id: int) -> Ruleset:
         """
         :calls: `GET /repos/{owner}/{repo}/rulesets/{ruleset_id} <https://docs.github.com/en/rest/repos/rules#get-a-repository-ruleset>`_
         :param ruleset_id: int
