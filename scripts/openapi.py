@@ -1006,7 +1006,28 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         returns = self.return_types(cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None)
 
         if self.is_github_object_property(node):
-            self._properties[method_name] = {"name": method_name, "returns": returns}
+            # collect schemas of this property
+            schema = None
+            schemas = None
+            if self._spec and self._class:
+                schemas = {
+                    "/".join([""] + schema_path): schema["properties"][method_name]
+                    for schema in self._class.get("schemas", [])
+                    for schema_path, schema in [OpenApi.get_schema(self._spec, schema)]
+                    if "properties" in schema and method_name in schema["properties"]
+                }
+                # consolidate schema
+                schema = next(iter(schemas.values()), None)
+                if schema is not None and any(schema != s for s in schemas.values()):
+                    schema = None
+            # memorize this property
+            self._properties[method_name] = {
+                "name": method_name,
+                "returns": returns,
+                "schemas": schemas,
+                "schema": schema,
+            }
+            return
 
         visitor = SimpleStringCollector()
         node.body.visit(visitor)
@@ -1427,6 +1448,20 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             ]
         )
 
+    @staticmethod
+    def get_type_value(clazz: GithubClass) -> str:
+        if "type" in clazz.properties:
+            type_property = clazz.properties["type"]
+            schema = type_property.get("schema")
+            if (
+                type_property.get("returns") == ["str"]
+                and schema
+                and schema.get("type") == "string"
+                and len(schema.get("enum", [])) == 1
+            ):
+                return schema["enum"][0]
+        return clazz.name
+
     @classmethod
     def make_attribute(cls, prop: Property) -> cst.Call:
         func_name = None
@@ -1478,12 +1513,15 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 func_name = "_makeListOfUnionClassesAttributeFromTypeKey"
                 args = [
                     cst.Arg(cst.SimpleString('"type"')),
-                    cst.Arg(cst.SimpleString("unknown")),
+                    cst.Arg(cst.SimpleString('"unknown"')),
                     cst.Arg(attr),
                 ] + [
                     cst.Arg(
                         cst.Tuple(
-                            elements=[cst.Element(cls.create_type(dt)), cst.Element(cst.SimpleString(f'"{dt.name}"'))]
+                            elements=[
+                                cst.Element(cls.create_type(dt)),
+                                cst.Element(cst.SimpleString(f'"{cls.get_type_value(dt)}"')),
+                            ]
                         )
                     )
                     for dt in prop.data_type.inner_types[0].inner_types
@@ -1511,12 +1549,15 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             func_name = "_makeUnionClassAttributeFromTypeKey"
             args = [
                 cst.Arg(cst.SimpleString('"type"')),
-                cst.Arg(cst.SimpleString(f'"{prop.data_type.inner_types[0].name}"')),
+                cst.Arg(cst.SimpleString('"unknown"')),
                 cst.Arg(attr),
             ] + [
                 cst.Arg(
                     cst.Tuple(
-                        elements=[cst.Element(cls.create_type(dt)), cst.Element(cst.SimpleString(f'"{dt.name}"'))]
+                        elements=[
+                            cst.Element(cls.create_type(dt)),
+                            cst.Element(cst.SimpleString(f'"{cls.get_type_value(dt)}"')),
+                        ]
                     )
                 )
                 for dt in prop.data_type.inner_types
