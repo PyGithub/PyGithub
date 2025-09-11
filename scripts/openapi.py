@@ -3977,12 +3977,11 @@ class OpenApi:
         print(schema)
         item = schema.split("/")[-1]
         if item.startswith("_"):
-            return None
+            return self.read_json(index_filename)
         new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)])
         if new_class_name in classes:
             # we probably created that class in an earlier iteration, or we have a name collision here
-            with open(index_filename) as r:
-                return json.load(r)
+            return self.read_json(index_filename)
         is_completable = "url" in self.get_schema(spec, schema)[1].get("properties", [])
         parent_name = "CompletableGithubObject" if is_completable else "NonCompletableGithubObject"
         # TODO: get path from schema via indices.path_to_return_classes, get docs from spec.paths.PATH.get.externalDocs.url
@@ -4003,8 +4002,7 @@ class OpenApi:
 
         # update index
         self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
-        with open(index_filename) as r:
-            index = json.load(r)
+        index = self.read_json(index_filename)
         classes.clear()
         classes.update(**index.get("classes", {}))
         return index
