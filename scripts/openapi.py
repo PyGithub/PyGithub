@@ -3988,6 +3988,19 @@ class OpenApi:
                     os.unlink(clazz.test_filename)
         return True
 
+    @staticmethod
+    def class_name_from_schema(schema: str) -> str:
+        item_pos = 1  # from right
+        schema_path = schema.split("/")
+        name = ""
+        while len(schema) >= item_pos:
+            item = schema_path[-item_pos]
+            name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)]) + name
+            if len(schema_path) > item_pos and schema_path[-(item_pos + 1)] != "properties":
+                return name
+            item_pos += 2
+        return name
+
     def create_class_for_schema(
         self,
         github_path: str,
@@ -4002,7 +4015,7 @@ class OpenApi:
         item = schema.split("/")[-1]
         if item.startswith("_"):
             return self.read_json(index_filename)
-        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)])
+        new_class_name = self.class_name_from_schema(schema)
         if new_class_name in classes:
             # we probably created that class in an earlier iteration, or we have a name collision here
             return self.read_json(index_filename)
