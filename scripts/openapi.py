@@ -874,12 +874,22 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
 
 
 class IndexPythonClassesVisitor(CstVisitorBase):
-    def __init__(self, classes: dict[str, Any], paths: dict[str, Any], method_verbs: dict[str, str] | None):
+    # This visitor does not work with classes that have inner classes
+    # except for inner classes defined at the top of the outer class
+    def __init__(
+        self,
+        spec: dict[str, Any] | None,
+        classes: dict[str, Any],
+        paths: dict[str, Any],
+        method_verbs: dict[str, str] | None,
+    ):
         super().__init__()
         self._module = None
         self._package = None
         self._filename = None
         self._test_filename = None
+        self._spec = spec
+        self._class = None
         self._classes = classes
         self._paths = paths
         self._ids = []
@@ -903,8 +913,8 @@ class IndexPythonClassesVisitor(CstVisitorBase):
     def classes(self) -> dict[str, Any]:
         return self._classes
 
-    def leave_ClassDef(self, node: cst.ClassDef) -> bool | None:
-        class_name = self.current_class_name
+    @staticmethod
+    def process_class_def(node: cst.ClassDef, classes: dict[str, Any]) -> dict[str, Any]:
         class_name_short = node.name.value
         class_docstring = get_class_docstring(node)
         class_docstring = class_docstring.strip('"\r\n ') if class_docstring else None
@@ -927,27 +937,47 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             break
                         class_schemas.append(schema.strip().lstrip("- "))
 
-        if class_name_short in self._classes:
+        if class_name_short in classes:
             print(f"Duplicate class definition for {class_name_short}")
 
         # TODO: ideally, the key should be the fully qualified class name and there
         #       should be an index from class_name to the fully qualified class name
-        self._classes[class_name_short] = {
-            "ids": self._ids,
-            "name": class_name,
-            "module": self._module,
-            "package": self._package,
-            "filename": self._filename,
-            "test_filename": self._test_filename,
+        return {
             "docstring": class_docstring,
             "schemas": class_schemas,
             "bases": class_bases,
-            "properties": self._properties,
-            "methods": self._methods,
         }
+
+    def visit_ClassDef(self, node: cst.ClassDef) -> bool | None:
+        super().visit_ClassDef(node)
+        class_name = self.current_class_name
+        self._class = self.process_class_def(node, self._classes)
+        self._class.update(name=class_name)
+
+    def leave_ClassDef(self, node: cst.ClassDef) -> bool | None:
+        class_name = self.current_class_name
+        class_name_short = node.name.value
+        self._class = self.process_class_def(node, self._classes)
+        self._class.update(
+            **{
+                "name": class_name,
+                "ids": self._ids,
+                "module": self._module,
+                "package": self._package,
+                "filename": self._filename,
+                "test_filename": self._test_filename,
+                "properties": self._properties,
+                "methods": self._methods,
+            }
+        )
+        self._classes[class_name_short] = self._class
+
         self._ids = []
         self._properties = {}
         self._methods = {}
+        self._filename = None
+        self._test_filename = None
+        self._class = None
 
         return super().leave_ClassDef(node)
 
@@ -2794,8 +2824,14 @@ class JsonSerializer(JSONEncoder):
 
 class IndexFileWorker:
     def __init__(
-        self, classes: dict[str, Any], index_config_file: Path, paths: list[dict[str, Any]], check_verbs: bool
+        self,
+        spec: dict[str, Any] | None,
+        classes: dict[str, Any],
+        index_config_file: Path,
+        paths: list[dict[str, Any]],
+        check_verbs: bool,
     ):
+        self.spec = spec
         self.classes = classes
         self.paths = paths
         self.config = {}
@@ -2814,7 +2850,7 @@ class IndexFileWorker:
 
         paths = {}
         visitor = IndexPythonClassesVisitor(
-            self.classes, paths, self.config.get("known method verbs", {}) if self.check_verbs else None
+            self.spec, self.classes, paths, self.config.get("known method verbs", {}) if self.check_verbs else None
         )
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
@@ -3272,12 +3308,13 @@ class OpenApi:
         print(f"Indexing {len(files)} Python files")
 
         # index files in parallel
+        spec = self.read_json(spec_file) if spec_file is not None else None
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
             paths = manager.list()
             if check_verbs and not config_file.exists():
                 raise RuntimeError(f"Cannot check verbs without config: {config_file}")
-            indexer = IndexFileWorker(classes, config_file, paths, check_verbs)
+            indexer = IndexFileWorker(spec, classes, config_file, paths, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
