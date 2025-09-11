@@ -1156,6 +1156,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         decorators.append(cst.Decorator(decorator=cst.Name(value="deprecated")))
         return node.with_changes(decorators=decorators)
 
+    @staticmethod
+    def code(node: cst.Node) -> str:
+        return cst.Module([]).code_for_node(node)
+
     def inner_github_type(self, data_type: PythonType | GithubClass | list[PythonType | GithubClass]) -> [GithubClass]:
         if data_type is None:
             return []
@@ -1538,6 +1542,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         while new_statements:
             updated_statements.append(new_statements.pop(0))
 
+        # remove dangling pass command
+        if len(updated_statements) > 1 and self.code(updated_statements[0]).strip().strip() == "pass":
+            updated_statements = updated_statements[1:]
+
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
     def update_use_attrs(self, func: cst.FunctionDef) -> cst.FunctionDef:
@@ -1565,6 +1573,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 updated_statements.append(statement)
         while new_statements:
             updated_statements.append(new_statements.pop(0))
+
+        # remove dangling pass command
+        if len(updated_statements) > 1 and self.code(updated_statements[0]).strip() == "pass":
+            updated_statements = updated_statements[1:]
 
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
@@ -3812,60 +3824,72 @@ class OpenApi:
             raise ValueError(f"File exists already: {clazz.test_filename}")
 
         source = (
-            f"############################ Copyrights and license ############################\n"
-            f"#                                                                              #\n"
-            f"#                                                                              #\n"
-            f"# This file is part of PyGithub.                                               #\n"
-            f"# http://pygithub.readthedocs.io/                                              #\n"
-            f"#                                                                              #\n"
-            f"# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
-            f"# the terms of the GNU Lesser General Public License as published by the Free  #\n"
-            f"# Software Foundation, either version 3 of the License, or (at your option)    #\n"
-            f"# any later version.                                                           #\n"
-            f"#                                                                              #\n"
-            f"# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
-            f"# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
-            f"# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
-            f"# details.                                                                     #\n"
-            f"#                                                                              #\n"
-            f"# You should have received a copy of the GNU Lesser General Public License     #\n"
-            f"# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
-            f"#                                                                              #\n"
-            f"################################################################################\n"
-            f"\n"
-            f"from __future__ import annotations\n"
-            f"\n"
-            f"from typing import Any, TYPE_CHECKING\n"
-            f"\n"
-            f"from {parent_class.package}.{parent_class.module} import {parent_class.name}\n"
-            f"from github.GithubObject import Attribute, NotSet\n"
-            f"\n"
-            f"if TYPE_CHECKING:\n"
-            f"    from {parent_class.package}.{parent_class.module} import {parent_class.name}\n"
-            f"\n"
-            f"\n"
-            f"class {clazz.name}({parent_class.name}):\n"
-            f'    """\n'
-            f"    This class represents {clazz.name}.\n"
-            f"\n"
-            f"    The reference can be found here\n"
-            f"    {docs_url}\n"
-            f"\n"
-            f"    The OpenAPI schema can be found at\n\n" + "".join(f"    - {schema}\n" for schema in schemas) + "\n"
-            '    """\n'
-            "\n"
-            "    def _initAttributes(self) -> None:\n"
-            "        # TODO: remove if parent does not implement this\n"
-            "        super()._initAttributes()\n"
-            "\n"
-            "    def __repr__(self) -> str:\n"
-            '        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:\n'
-            '        return self.get__repr__({"some_attribute": self._some_attribute.value})\n'
-            "\n"
-            "    def _useAttributes(self, attributes: dict[str, Any]) -> None:\n"
-            "        # TODO: remove if parent does not implement this\n"
-            "        super()._useAttributes(attributes)\n"
-            "\n"
+            (
+                f"############################ Copyrights and license ############################\n"
+                f"#                                                                              #\n"
+                f"#                                                                              #\n"
+                f"# This file is part of PyGithub.                                               #\n"
+                f"# http://pygithub.readthedocs.io/                                              #\n"
+                f"#                                                                              #\n"
+                f"# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
+                f"# the terms of the GNU Lesser General Public License as published by the Free  #\n"
+                f"# Software Foundation, either version 3 of the License, or (at your option)    #\n"
+                f"# any later version.                                                           #\n"
+                f"#                                                                              #\n"
+                f"# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
+                f"# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
+                f"# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
+                f"# details.                                                                     #\n"
+                f"#                                                                              #\n"
+                f"# You should have received a copy of the GNU Lesser General Public License     #\n"
+                f"# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
+                f"#                                                                              #\n"
+                f"################################################################################\n"
+                f"\n"
+                f"from __future__ import annotations\n"
+                f"\n"
+                f"from typing import Any, TYPE_CHECKING\n"
+                f"\n"
+                f"from {parent_class.package}.{parent_class.module} import {parent_class.name}\n"
+                f"from github.GithubObject import Attribute, NotSet\n"
+                f"\n"
+                f"if TYPE_CHECKING:\n"
+                f"    pass\n"
+                f"\n"
+                f"\n"
+                f"class {clazz.name}({parent_class.name}):\n"
+                f'    """\n'
+                f"    This class represents {clazz.name}.\n"
+                f"\n"
+                f"    The reference can be found here\n"
+                f"    {docs_url}\n"
+                f"\n"
+                f"    The OpenAPI schema can be found at\n\n"
+                + "".join(f"    - {schema}\n" for schema in schemas)
+                + "\n"
+                '    """\n'
+                "\n"
+                "    def _initAttributes(self) -> None:\n"
+            )
+            + (
+                "        pass\n"
+                if parent_class.name == "NonCompletableGithubObject"
+                else "        super()._initAttributes()\n"
+            )
+            + (
+                "\n"
+                "    def __repr__(self) -> str:\n"
+                '        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:\n'
+                '        return self.get__repr__({"some_attribute": self._some_attribute.value})\n'
+                "\n"
+                "    def _useAttributes(self, attributes: dict[str, Any]) -> None:\n"
+            )
+            + (
+                "        pass\n"
+                if parent_class.name == "NonCompletableGithubObject"
+                else "        super()._useAttributes(attributes)\n"
+            )
+            + ("\n")
         )
         self.write_code("", source, clazz.filename, dry_run=False)
 
