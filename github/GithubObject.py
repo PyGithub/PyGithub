@@ -372,48 +372,58 @@ class GithubObject(ABC):
     def _makeUnionClassAttributeFromTypeName(
         self, type_name: str | None, fallback_type: str | None, value: Any, *class_and_names: tuple[type[T_gh], str]
     ) -> Attribute[T_gh]:
+        class_and_name_index = {name: clazz for clazz, name in class_and_names}
+        if fallback_type is not None:
+            assert fallback_type in class_and_name_index
+
         if value is None or type_name is None:
             return _ValuedAttribute(None)  # type: ignore
-        fallback_class = None
-        for klass, name in class_and_names:
-            if type_name == name:
-                return self._makeClassAttribute(klass, value)
-            if fallback_type == name:
-                fallback_class = klass
+
+        klass = class_and_name_index.get(type_name)
+        if klass is not None:
+            return self._makeClassAttribute(klass, value)
+
         if fallback_type is not None:
-            if fallback_class is None:
-                # this is misconfiguration in PyGithub code, not a user's fault
-                raise ValueError(
-                    f"Fallback type {fallback_type} is not among classes and names: {[name for klass, name in class_and_names]}"
-                )
+            fallback_class = class_and_name_index.get(fallback_type)
             return self._makeClassAttribute(fallback_class, value)
+
         return _BadAttribute(value, type)  # type: ignore
 
     def _makeUnionClassAttributeFromTypeKey(
         self,
         type_key: str,
-        default_type: str | None,
+        default_and_fallback_type: str | tuple[str, str] | None,
         value: Any,
         *class_and_names: tuple[type[T_gh], str],
     ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
+        if isinstance(default_and_fallback_type, tuple):
+            default_type, fallback_type = default_and_fallback_type
+        else:
+            default_type = default_and_fallback_type
+            fallback_type = default_and_fallback_type
         return self._makeUnionClassAttributeFromTypeName(
-            value.get(type_key, default_type), default_type, value, *class_and_names
+            value.get(type_key, default_type), fallback_type, value, *class_and_names
         )
 
     def _makeUnionClassAttributeFromTypeKeyAndValueKey(
         self,
         type_key: str,
         value_key: str,
-        default_type: str | None,
+        default_and_fallback_type: str | tuple[str, str] | None,
         value: Any,
         *class_and_names: tuple[type[T_gh], str],
     ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
+        if isinstance(default_and_fallback_type, tuple):
+            default_type, fallback_type = default_and_fallback_type
+        else:
+            default_type = default_and_fallback_type
+            fallback_type = default_and_fallback_type
         return self._makeUnionClassAttributeFromTypeName(
-            value.get(type_key, default_type), default_type, value.get(value_key), *class_and_names
+            value.get(type_key, default_type), fallback_type, value.get(value_key), *class_and_names
         )
 
     @staticmethod
@@ -437,6 +447,34 @@ class GithubObject(ABC):
     def _makeListOfClassesAttribute(self, klass: type[T_gh], value: Any) -> Attribute[list[T_gh]]:
         if isinstance(value, list) and all(isinstance(element, dict) for element in value):
             return _ValuedAttribute([klass(self._requester, self._headers, element) for element in value])
+        else:
+            return _BadAttribute(value, [dict])
+
+    def _makeListOfUnionClassesAttributeFromTypeKey(
+        self,
+        type_key: str,
+        default_and_fallback_type: str | tuple[str, str],
+        value: Any,
+        *class_and_names: tuple[type[T_gh], str],
+    ) -> Attribute[list[T_gh]]:
+        class_and_name_index = {name: clazz for clazz, name in class_and_names}
+        if isinstance(default_and_fallback_type, str):
+            default_type = default_and_fallback_type
+            fallback_type = default_and_fallback_type
+        else:
+            default_type, fallback_type = default_and_fallback_type
+        assert default_type in class_and_name_index
+        assert fallback_type in class_and_name_index
+        fallback_class = class_and_name_index.get(fallback_type)
+        if isinstance(value, list) and all(isinstance(element, dict) for element in value):
+            return _ValuedAttribute(
+                [
+                    klass(self._requester, self._headers, element)
+                    for element in value
+                    for type_name in [element.get(type_key, default_type)]
+                    for klass in [class_and_name_index.get(type_name, fallback_class)]
+                ]
+            )
         else:
             return _BadAttribute(value, [dict])
 
