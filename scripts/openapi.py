@@ -49,13 +49,12 @@ equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
 
 def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
     if "$ref" in schema_type:
-        schema = schema_type.get("$ref").strip("# ")
+        schema = schema_type.get("$ref").strip("# /")
         ref_schema_type = spec
         for step in schema.split("/"):
-            if step:
-                if step not in ref_schema_type:
-                    raise ValueError(f"Could not find schema in spec: {schema}")
-                ref_schema_type = ref_schema_type[step]
+            if step not in ref_schema_type:
+                raise ValueError(f"Could not find schema in spec: {schema}")
+            ref_schema_type = ref_schema_type[step]
         return ref_schema_type
     return schema_type
 
@@ -65,6 +64,7 @@ def as_python_type(
     schema_path: list[str],
     schema_to_class: dict[str, str],
     classes,
+    spec: dict[str, Any],
     *,
     verbose: bool = False,
     collect_new_schemas: list[str] | None = None,
@@ -72,7 +72,17 @@ def as_python_type(
     schema = None
     data_type = schema_type.get("type")
     if "$ref" in schema_type:
-        schema = schema_type.get("$ref").strip("# ")
+        schema_path = schema_type.get("$ref").strip("# /").split("/")
+        schema_type = resolve_schema(schema_type, spec)
+        return as_python_type(
+            schema_type,
+            schema_path,
+            schema_to_class,
+            classes,
+            spec,
+            verbose=verbose,
+            collect_new_schemas=collect_new_schemas,
+        )
     elif "oneOf" in schema_type:
         types = [
             as_python_type(
@@ -80,6 +90,7 @@ def as_python_type(
                 schema_path + ["oneOf", str(idx)],
                 schema_to_class,
                 classes,
+                spec,
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
             )
@@ -97,6 +108,7 @@ def as_python_type(
             schema_path + ["allOf", "0"],
             schema_to_class,
             classes,
+            spec,
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
         )
@@ -147,6 +159,7 @@ def as_python_type(
                     schema_path + ["items"],
                     schema_to_class,
                     classes,
+                    spec,
                     verbose=verbose,
                     collect_new_schemas=collect_new_schemas,
                 )
@@ -1576,6 +1589,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 schema_path,
                 self.schema_to_class,
                 self.classes,
+                self.spec,
                 verbose=False,
                 collect_new_schemas=new_schemas,
             )
@@ -1583,7 +1597,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 print(f"creating new class for schea {new_schema}")
                 create_new_class_func(new_schema)
         self.api_content = (
-            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, verbose=True)
+            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, self.spec, verbose=True)
             if content_schema
             else None
         )
@@ -1649,7 +1663,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         request_properties = (
             {
                 prop: as_python_type(
-                    desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, verbose=True
+                    desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, self.spec, verbose=True
                 )
                 for prop, desc in request_schema.get("properties", {}).items()
             }
@@ -1867,11 +1881,12 @@ class OpenApi:
         self.verbose = args.verbose
 
         index = (
-            OpenApi.read_index(args.index_filename) if self.subcommand != "index" and "index_filename" in args else {}
+            OpenApi.read_json(args.index_filename) if self.subcommand != "index" and "index_filename" in args else {}
         )
         self.classes = index.get("classes", {})
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         self.schema_to_class["default"] = ["GithubObject"]
+        self.spec = OpenApi.read_json(args.spec) if self.subcommand != "index" and "spec" in args else {}
 
     def as_python_type(
         self,
@@ -1885,12 +1900,13 @@ class OpenApi:
             schema_path,
             self.schema_to_class,
             self.classes,
+            self.spec,
             verbose=self.verbose,
             collect_new_schemas=collect_new_schemas,
         )
 
     @staticmethod
-    def read_index(filename: str) -> dict[str, Any]:
+    def read_json(filename: str) -> dict[str, Any]:
         with open(filename) as r:
             return json.load(r)
 
@@ -2051,6 +2067,7 @@ class OpenApi:
             print(f"Applying API schemas to {len(class_names)} PyGithub classes")
 
         new_schemas_as_dict = handle_new_schemas == HandleNewSchemas.as_dict
+        new_schemas_create_class = handle_new_schemas == HandleNewSchemas.create_class
         any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
@@ -2075,7 +2092,7 @@ class OpenApi:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
 
-                if handle_new_schemas == HandleNewSchemas.create_class:
+                if new_schemas_create_class:
                     new_schemas = []
                     for k, v in schema.get("properties", {}).items():
                         # only check for new schemas of new attributes
@@ -2128,7 +2145,7 @@ class OpenApi:
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
                     if is_supported_type(k, v, python_type, self.verbose)
-                    and (is_not_dict_type(python_type) or new_schemas_as_dict)
+                    and (is_not_dict_type(python_type) or new_schemas_as_dict or new_schemas_create_class)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -2908,7 +2925,10 @@ class OpenApi:
         tests: bool,
         schema: str,
     ) -> None:
-        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", schema.split("/")[-1])])
+        item = schema.split("/")[-1]
+        if item.startswith("_"):
+            return None
+        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)])
         if new_class_name in classes:
             # we probably created that class in an earlier iteration, or we have a name collision here
             return
