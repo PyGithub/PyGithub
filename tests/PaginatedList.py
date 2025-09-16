@@ -377,6 +377,36 @@ class PaginatedList(Framework.TestCase):
             [comment.created_at for comment in comments],
         )
 
+    def testCustomPerPageWithCommitFiles(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        pull = repo.get_pull(3370)
+        commits = list(pull.get_commits())
+        self.assertEqual(len(commits), 1)
+        commit = commits[0]
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+        reversed_files = list(reversed(commit.files))
+        self.assertListKeyEqual(
+            reversed_files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/openapi.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/_build-pkg.yml",
+            ],
+        )
+
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))
 
