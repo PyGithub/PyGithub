@@ -2398,7 +2398,11 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         sha = urllib.parse.quote(sha)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}")
+        # the files property uses pagination, set per-page if it is not the default value
+        url = f"{self.url}/commits/{sha}"
+        if self._requester.per_page != Consts.DEFAULT_PER_PAGE:
+            url = f"{url}?per_page={self._requester.per_page}"
+        headers, data = self._requester.requestJsonAndCheck("GET", url)
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
     def get_commits(
