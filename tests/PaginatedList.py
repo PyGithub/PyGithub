@@ -377,10 +377,49 @@ class PaginatedList(Framework.TestCase):
             [comment.created_at for comment in comments],
         )
 
-    def testCustomPerPageWithCommitFiles(self):
+    def testCustomPerPageWithRepoCommitFiles(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testCustomPerPageWithRepoCommitFilesReversed(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+        files = list(reversed(commit.files))
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/openapi.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/_build-pkg.yml",
+            ],
+        )
+
+    def testCustomPerPageWithPullCommitFiles(self):
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         pull = repo.get_pull(3370)
+        # TODO: test with pull request that hase more than per_page commits and more than 300 files
+        # this paginated list has pagination headers, which are used to create the inner commit instances
+        # however, they refer to the commit pagination
+        # files of individual commits use pagination, but the first page does not have pagination headers
+        # if the individual commits have files at all (below example they don't)
+        # the commits: /repos/PyGithub/PyGithub/pulls/3370/commits?per_page=2 (no files property)
+        # the files of one commit: /repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?per_page=2
         commits = list(pull.get_commits())
         self.assertEqual(len(commits), 1)
         commit = commits[0]
@@ -395,6 +434,14 @@ class PaginatedList(Framework.TestCase):
                 ".github/workflows/openapi.yml",
             ],
         )
+
+    def testCustomPerPageWithPullCommitFilesReversed(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        pull = repo.get_pull(3370)
+        commits = list(pull.get_commits())
+        self.assertEqual(len(commits), 1)
+        commit = commits[0]
         reversed_files = list(reversed(commit.files))
         self.assertListKeyEqual(
             reversed_files,

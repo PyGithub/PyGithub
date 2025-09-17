@@ -197,6 +197,7 @@ class PaginatedList(PaginatedListBase[T]):
         self.__firstParams: dict[str, Any] = firstParams or {}
         self.__nextUrl = firstUrl
         self.__nextParams: dict[str, Any] = firstParams or {}
+        self.__lastUrl: str | None = None
         self.__headers = headers
         self.__list_item = list_item
         self.__total_count_item = total_count_item
@@ -283,19 +284,20 @@ class PaginatedList(PaginatedListBase[T]):
             self.__firstParams,
             headers=self.__headers,
             list_item=self.__list_item,
+            total_count_item=self.__total_count_item,
             attributesTransformer=self._attributesTransformer,
             graphql_query=self.__graphql_query,
             graphql_variables=self.__graphql_variables,
         )
-        r.__reverse()
+        r.__reverse(self.__lastUrl)
         return r
 
-    def __reverse(self) -> None:
+    def __reverse(self, last_url: str | None) -> None:
         self._reversed = True
         if self.is_rest:
-            lastUrl = self._getLastPageUrl()
-            if lastUrl:
-                self.__nextUrl = lastUrl
+            self.__lastUrl = self._getLastPageUrl() if last_url is None else last_url
+            if self.__lastUrl:
+                self.__nextUrl = self.__lastUrl
                 if self.__nextParams:
                     # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
                     self.__nextParams = {
@@ -364,6 +366,8 @@ class PaginatedList(PaginatedListBase[T]):
                         self.__nextUrl = links["prev"]
                 elif "next" in links:
                     self.__nextUrl = links["next"]
+                if "last" in links:
+                    self.__lastUrl = links["last"]
             self.__nextParams = {}
             if self.__list_item in data:
                 self.__totalCount = data.get(self.__total_count_item)

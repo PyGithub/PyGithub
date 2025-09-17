@@ -434,6 +434,7 @@ class Requester:
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
+        assert isinstance(per_page, int), per_page
         self.per_page = per_page
 
         self.oauth_scopes = None
