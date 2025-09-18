@@ -667,28 +667,45 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
         *,
         url: str | None = None,
         accept: str | None = None,
+        per_page: int | None = None,
     ):
-        if requester.per_page != Consts.DEFAULT_PER_PAGE:
-            # add per_page to the URL in the attributes
-            if attributes is not None and "url" in attributes:
-                attributes["url"] = self.set_per_page_if_not_set(attributes["url"], requester.per_page)
-            # add per_page to request URL if instance is incomplete
-            if completed is None or completed is False:
-                url = self.set_per_page_if_not_set(url, requester.per_page)
+        assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
+        if per_page is None and requester.per_page != Consts.DEFAULT_PER_PAGE:
+            per_page = requester.per_page
+
+        # add per_page to URL if instance is incomplete
+        # we only modify the URL if this instance is incomplete
+        if completed is None or completed is False:
+            if per_page is None:
+                # we use the default per_page (not Consts.DEFAULT_PER_PAGE as this URL might have a different default)
+                # we set page=1 to get pagination links, PaginatedList can work from there
+                url = self.set_if_not_set(attributes, url, page=1)
+            else:
+                # we set the given per_page
+                url = self.set_if_not_set(attributes, url, unless={"page"}, per_page=per_page)
+
         super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
 
+    @classmethod
+    def set_if_not_set(cls, attributes: dict[str, Any] | None, url: str | None, **kwargs) -> str | None:
+        # add values to the URL in the attributes
+        if attributes is not None and "url" in attributes:
+            attributes["url"] = cls.set_values_if_not_set(attributes["url"], **kwargs)
+        # add values to the request URL
+        return cls.set_values_if_not_set(url, **kwargs)
+
     @staticmethod
-    def set_per_page_if_not_set(url: str | None, per_page: int) -> str | None:
+    def set_values_if_not_set(url: str | None, **kwargs) -> str | None:
         if url is None:
             return url
 
         from .Requester import Requester
 
         params = Requester.get_parameters_of_url(url)
-        if "per_page" not in params:
-            params["per_page"] = [str(per_page)]
-            return Requester.add_parameters_to_url(url, params)
-        return url
+        for k, v in kwargs.items():
+            if k not in params:
+                params[k] = [str(v)]
+        return Requester.add_parameters_to_url(url, params)
 
 
 Param = ParamSpec("Param")

@@ -1366,18 +1366,26 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/invitations/{invite_id}")
 
-    def compare(self, base: str, head: str) -> Comparison:
+    def compare(self, base: str, head: str, *, comparison_commits_per_page: int | None = None) -> Comparison:
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{basehead} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
+        :param comparison_commits_per_page: int Number of commits retrieved with the comparison. Iterating over the paginated list of commits will fetch pages of this size.
         :rtype: :class:`github.Comparison.Comparison`
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
+        assert (
+            comparison_commits_per_page is None
+            or isinstance(comparison_commits_per_page, int)
+            and comparison_commits_per_page > 0
+        ), comparison_commits_per_page
         base = urllib.parse.quote(base)
         head = urllib.parse.quote(head)
-        return github.Comparison.Comparison(self._requester, url=f"{self.url}/compare/{base}...{head}")
+        return github.Comparison.Comparison(
+            self._requester, url=f"{self.url}/compare/{base}...{head}", per_page=comparison_commits_per_page
+        )
 
     def create_autolink(
         self, key_prefix: str, url_template: str, is_alphanumeric: Opt[bool] = NotSet
@@ -2388,16 +2396,20 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def get_commit(self, sha: str) -> Commit:
+    def get_commit(self, sha: str, *, commit_files_per_page: int | None = None) -> Commit:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
+        :param commit_files_per_page: int Number of files retrieved with the commit. Iterating over the paginated list of files will fetch pages of this size.
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
+        assert (
+            commit_files_per_page is None or isinstance(commit_files_per_page, int) and commit_files_per_page > 0
+        ), commit_files_per_page
         sha = urllib.parse.quote(sha)
         url = f"{self.url}/commits/{sha}"
-        return github.Commit.Commit(self._requester, url=url)
+        return github.Commit.Commit(self._requester, url=url, per_page=commit_files_per_page)
 
     def get_commits(
         self,

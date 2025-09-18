@@ -393,6 +393,22 @@ class PaginatedList(Framework.TestCase):
             ],
         )
 
+    def testCustomPerPageWithRepoCommitFilesWithPerPage(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5", commit_files_per_page=3)
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
     def testCustomPerPageWithRepoCommitsFiles(self):
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
