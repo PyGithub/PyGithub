@@ -435,26 +435,6 @@ class PaginatedList(PaginatedListBase[T]):
             data = data[self.__list_item]
         return [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
 
-    # Some `GithubObject` classes contain a property that is subject to pagination, e.g. Commit.files.
-    # Created from a `get_*s` method that return a `PaginatedList` of GithubObject instances, that property will
-    # be empty, and the instances are incomplete `CompletableGithubObject`s. Getting the paginated property
-    # will first complete the `GithubObject`.
-    # The url used for completing the object has to contain the `per_page` parameter.
-    # This attribute transformer can be used to inject the `per_page` parameter into the objects
-    # while iterating over the `PaginatedList`.
-    @staticmethod
-    def add_per_page_to_url_transformer(per_page: int) -> Callable[[dict[str, Any]], dict[str, Any]]:
-        def func(attributes: dict[str, Any]) -> dict[str, Any]:
-            if per_page != Consts.DEFAULT_PER_PAGE and "url" in attributes:
-                url = attributes["url"]
-                params = Requester.get_parameters_of_url(url)
-                params["per_page"] = [str(per_page)]
-                url = Requester.add_parameters_to_url(url, params)
-                attributes["url"] = url
-            return attributes
-
-        return func
-
     @classmethod
     def override_attributes(cls, overrides: dict[str, Any]) -> Callable[[dict[str, Any]], dict[str, Any]]:
         def attributes_transformer(element: dict[str, Any]) -> dict[str, Any]:

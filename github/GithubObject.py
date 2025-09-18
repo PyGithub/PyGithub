@@ -649,6 +649,48 @@ class CompletableGithubObject(GithubObject, ABC):
             return True
 
 
+class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
+    """
+    A CompletableGithubObject that has a property that is subject to pagination.
+
+    An instance created from a Requester with a non-default value for `per_page` must have the
+    `per_page` value in the URL in order for the paginated property to use the `per_page` value.
+
+    """
+
+    def __init__(
+        self,
+        requester: Requester,
+        headers: dict[str, str | int] | None = None,
+        attributes: dict[str, Any] | None = None,
+        completed: bool | None = None,
+        *,
+        url: str | None = None,
+        accept: str | None = None,
+    ):
+        if requester.per_page != Consts.DEFAULT_PER_PAGE:
+            # add per_page to the URL in the attributes
+            if attributes is not None and "url" in attributes:
+                attributes["url"] = self.set_per_page_if_not_set(attributes["url"], requester.per_page)
+            # add per_page to request URL if instance is incomplete
+            if completed is None or completed is False:
+                url = self.set_per_page_if_not_set(url, requester.per_page)
+        super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
+
+    @staticmethod
+    def set_per_page_if_not_set(url: str | None, per_page: int) -> str | None:
+        if url is None:
+            return url
+
+        from .Requester import Requester
+
+        params = Requester.get_parameters_of_url(url)
+        if "per_page" not in params:
+            params["per_page"] = [str(per_page)]
+            return Requester.add_parameters_to_url(url, params)
+        return url
+
+
 Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
 

@@ -31,6 +31,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from unittest import mock
 
+from GithubObject import CompletableGithubObjectWithPaginatedProperty
+
 import github.Repository
 import github.RepositoryDiscussion
 
@@ -240,6 +242,27 @@ class GithubObject(unittest.TestCase):
             self.assertEqual(value, e.exception.actual_value)
             self.assertEqual(int, e.exception.expected_type)
             self.assertIsNone(e.exception.transformation_exception)
+
+    def testSetPerPageIfNotSet(self):
+        set_per_page = CompletableGithubObjectWithPaginatedProperty.set_per_page_if_not_set
+        self.assertIsNone(set_per_page(None, 123))
+        self.assertEqual(set_per_page("/path/to/resource", 123), "/path/to/resource?per_page=123")
+        self.assertEqual(
+            set_per_page("https://host/path/to/resource", 123), "https://host/path/to/resource?per_page=123"
+        )
+        self.assertEqual(
+            set_per_page("https://host/path/to/resource?param=one&param=2", 123),
+            "https://host/path/to/resource?param=one&param=2&per_page=123",
+        )
+
+        for url in [
+            "/path/to/resource",
+            "https://host/path/to/resource",
+            "https://host/path/to/resource?param=one&param=2",
+        ]:
+            # add per_page to url
+            url = f"{url}{'&' if '?' in url else '?'}per_page=42"
+            self.assertEqual(set_per_page(url, 123), url)
 
 
 class TestingClass(gho.NonCompletableGithubObject):

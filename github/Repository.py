@@ -2400,11 +2400,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
-        sha = urllib.parse.quote(sha, safe="")
+        sha = urllib.parse.quote(sha)
         url = f"{self.url}/commits/{sha}"
-        # the files property uses pagination, set per-page if it is not the default value
-        if self._requester.per_page != Consts.DEFAULT_PER_PAGE:
-            url = f"{url}?per_page={self._requester.per_page}"
         return github.Commit.Commit(self._requester, url=url)
 
     def get_commits(
@@ -2449,14 +2446,7 @@ class Repository(CompletableGithubObject):
                 url_parameters["author"] = author.login
             else:
                 url_parameters["author"] = author
-        transformer = PaginatedList.add_per_page_to_url_transformer(self._requester.per_page)
-        return PaginatedList(
-            github.Commit.Commit,
-            self._requester,
-            f"{self.url}/commits",
-            url_parameters,
-            attributesTransformer=transformer,
-        )
+        return PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", url_parameters)
 
     def get_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile] | ContentFile:
         """
