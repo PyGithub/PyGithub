@@ -409,7 +409,41 @@ class PaginatedList(Framework.TestCase):
             ],
         )
 
-    def testCustomPerPageWithPullCommitFiles(self):
+    def testCustomPerPageWithRepoCommitsFiles(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commits = repo.get_commits(sha="dependabot/github_actions/actions/setup-python-6")
+        commit = commits[0]
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testCustomPerPageWithRepoCommitsFilesReversed(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commits = repo.get_commits(sha="dependabot/github_actions/actions/setup-python-6")
+        commit = commits[0]
+        files = list(reversed(commit.files))
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/openapi.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/_build-pkg.yml",
+            ],
+        )
+
+    def testCustomPerPageWithPullCommitsFiles(self):
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         pull = repo.get_pull(3370)
@@ -435,7 +469,7 @@ class PaginatedList(Framework.TestCase):
             ],
         )
 
-    def testCustomPerPageWithPullCommitFilesReversed(self):
+    def testCustomPerPageWithPullCommitsFilesReversed(self):
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         pull = repo.get_pull(3370)

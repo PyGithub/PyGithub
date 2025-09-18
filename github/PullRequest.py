@@ -708,25 +708,16 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/commits <https://docs.github.com/en/rest/reference/pulls>`_
         """
-
         # issue #3372: Commits created here are incomplete. Getting their files will first complete the object before
         # files are being fetched. That completing request has to contain the per-page for the first page of files.
         # Set per-page here if it is not the default.
-        def attributes_transformer(attributes: dict[str, Any]) -> dict[str, Any]:
-            if self._requester.per_page != Consts.DEFAULT_PER_PAGE and "url" in attributes:
-                url = attributes["url"]
-                params = self._requester.get_parameters_of_url(url)
-                params["per_page"] = [str(self._requester.per_page)]
-                url = self._requester.add_parameters_to_url(url, params)
-                attributes["url"] = url
-            return attributes
-
+        transformer = PaginatedList.add_per_page_to_url_transformer(self._requester.per_page)
         return PaginatedList(
             github.Commit.Commit,
             self._requester,
             f"{self.url}/commits",
             None,
-            attributesTransformer=attributes_transformer,
+            attributesTransformer=transformer,
         )
 
     def get_files(self) -> PaginatedList[File]:

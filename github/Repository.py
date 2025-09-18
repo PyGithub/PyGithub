@@ -2449,7 +2449,14 @@ class Repository(CompletableGithubObject):
                 url_parameters["author"] = author.login
             else:
                 url_parameters["author"] = author
-        return PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", url_parameters)
+        transformer = PaginatedList.add_per_page_to_url_transformer(self._requester.per_page)
+        return PaginatedList(
+            github.Commit.Commit,
+            self._requester,
+            f"{self.url}/commits",
+            url_parameters,
+            attributesTransformer=transformer,
+        )
 
     def get_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile] | ContentFile:
         """
