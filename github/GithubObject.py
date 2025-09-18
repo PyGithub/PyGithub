@@ -639,3 +639,7 @@ class CompletableGithubObject(GithubObject, ABC):
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True
+
+
+class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
+    paginatedPropertyName: str
