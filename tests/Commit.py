@@ -60,23 +60,6 @@ class Commit(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
         self.assertEqual(self.commit.committer.login, "jacquev6")
-        self.assertEqual(len(list(self.commit.files)), 1)
-        self.assertEqual(self.commit.files.totalCount, 1)
-        self.assertEqual(self.commit.files[0].additions, 0)
-        self.assertEqual(
-            self.commit.files[0].blob_url,
-            "https://github.com/jacquev6/PyGithub/blob/1292bf0e22c796e91cc3d6e24b544aece8c21f2a/github%2FGithubObjects%2FGitAuthor.py",
-        )
-        self.assertEqual(self.commit.files[0].changes, 20)
-        self.assertEqual(self.commit.files[0].deletions, 20)
-        self.assertEqual(self.commit.files[0].filename, "github/GithubObjects/GitAuthor.py")
-        self.assertTrue(isinstance(self.commit.files[0].patch, str))
-        self.assertEqual(
-            self.commit.files[0].raw_url,
-            "https://github.com/jacquev6/PyGithub/raw/1292bf0e22c796e91cc3d6e24b544aece8c21f2a/github%2FGithubObjects%2FGitAuthor.py",
-        )
-        self.assertEqual(self.commit.files[0].sha, "ca6a3c616fc1367b6d01d04a7cf6ee27cf216f26")
-        self.assertEqual(self.commit.files[0].status, "modified")
         self.assertEqual(
             self.commit.html_url, "https://github.com/jacquev6/PyGithub/commit/1292bf0e22c796e91cc3d6e24b544aece8c21f2a"
         )
@@ -97,6 +80,26 @@ class Commit(Framework.TestCase):
         )
         self.assertEqual(self.commit.commit.tree.sha, "4c6bd50994f0f9823f898b1c6c964ad7d4fa11ab")
         self.assertEqual(repr(self.commit), 'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")')
+
+    def testGetFiles(self):
+        files = self.commit.get_files()
+        self.assertEqual(len(list(files)), 1)
+        self.assertEqual(files.totalCount, 1)
+        self.assertEqual(files[0].additions, 0)
+        self.assertEqual(
+            files[0].blob_url,
+            "https://github.com/jacquev6/PyGithub/blob/1292bf0e22c796e91cc3d6e24b544aece8c21f2a/github%2FGithubObjects%2FGitAuthor.py",
+        )
+        self.assertEqual(files[0].changes, 20)
+        self.assertEqual(files[0].deletions, 20)
+        self.assertEqual(files[0].filename, "github/GithubObjects/GitAuthor.py")
+        self.assertTrue(isinstance(files[0].patch, str))
+        self.assertEqual(
+            files[0].raw_url,
+            "https://github.com/jacquev6/PyGithub/raw/1292bf0e22c796e91cc3d6e24b544aece8c21f2a/github%2FGithubObjects%2FGitAuthor.py",
+        )
+        self.assertEqual(files[0].sha, "ca6a3c616fc1367b6d01d04a7cf6ee27cf216f26")
+        self.assertEqual(files[0].status, "modified")
 
     def testGetBranchesWhereHead(self):
         repo = self.g.get_repo("PyGithub/PyGithub")

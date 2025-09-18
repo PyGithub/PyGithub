@@ -148,11 +148,14 @@ class ExposeAllAttributes(Framework.TestCase):
     def findMissingAttributes(self, obj):
         if isinstance(obj, github.GithubObject.CompletableGithubObject):
             obj.update()
+        paginatedPropertyName = None
+        if isinstance(obj, github.GithubObject.CompletableGithubObjectWithPaginatedProperty):
+            paginatedPropertyName = obj.paginatedPropertyName
         className = obj.__class__.__name__
         missingAttributes = {}
         for attribute in obj.raw_data:
             if attribute != "_links":
-                if not hasattr(obj, attribute):
+                if not hasattr(obj, attribute) and attribute != paginatedPropertyName:
                     missingAttributes[attribute] = obj.raw_data[attribute]
         return (className, missingAttributes)
 

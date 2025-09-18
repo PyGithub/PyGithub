@@ -846,7 +846,7 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(comparison.base_commit.sha, "4303c5b90e2216d927155e9609436ccb8984c495")
         self.assertListKeyEqual(
-            comparison.commits,
+            comparison.get_commits(),
             lambda c: c.sha,
             [
                 "5bb654d26dd014d36794acd1e6ecf3736f12aad7",
@@ -872,9 +872,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(comparison.behind_by, 0)
         self.assertEqual(comparison.total_commits, 10)
         self.assertEqual(len(comparison.files), 228)
-        self.assertEqual(comparison.commits.totalCount, 10)
+        commits = comparison.get_commits()
+        self.assertEqual(commits.totalCount, 10)
         self.assertListKeyEqual(
-            comparison.commits,
+            commits,
             lambda c: c.sha,
             [
                 "fab682a5ccfc275c31ec37f1f541254c7bd780f3",

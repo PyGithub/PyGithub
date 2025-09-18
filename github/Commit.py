@@ -49,6 +49,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import deprecated
+
 import github.Branch
 import github.CheckRun
 import github.CheckSuite
@@ -61,7 +63,7 @@ import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
 import github.Repository
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -79,7 +81,7 @@ if TYPE_CHECKING:
     from github.Repository import Repository
 
 
-class Commit(CompletableGithubObject):
+class Commit(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Commits.
 
@@ -96,6 +98,8 @@ class Commit(CompletableGithubObject):
     - /components/schemas/tag/properties/commit
 
     """
+
+    paginatedPropertyName = "files"
 
     def _initAttributes(self) -> None:
         self._author: Attribute[NamedUser] = NotSet
@@ -139,21 +143,10 @@ class Commit(CompletableGithubObject):
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
-    # This should be a method, but this used to be a property and cannot be changed without breaking user code
-    # TODO: remove @property on version 3
     @property
+    @deprecated("use get_files instead")
     def files(self) -> PaginatedList[File]:
-        return PaginatedList(
-            github.File.File,
-            self._requester,
-            self.url,
-            {},
-            headers=None,
-            list_item="files",
-            total_count_item="total_files",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
-        )
+        return self.get_files()
 
     @property
     def html_url(self) -> str:
@@ -260,6 +253,22 @@ class Commit(CompletableGithubObject):
             self._requester,
             f"{self.url}/comments",
             None,
+        )
+
+    def get_files(self) -> PaginatedList[File]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha} <https://docs.github.com/en/rest/reference/repos#commits>`_
+        """
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            {},
+            headers=None,
+            list_item="files",
+            total_count_item="total_files",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
         )
 
     def get_statuses(self) -> PaginatedList[CommitStatus]:

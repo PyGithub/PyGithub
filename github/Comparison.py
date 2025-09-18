@@ -39,16 +39,20 @@ from __future__ import annotations
 
 from typing import Any
 
+from typing_extensions import deprecated
+
 import github.Commit
 import github.File
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
 from github.PaginatedList import PaginatedList
 
 
-class Comparison(CompletableGithubObject):
+class Comparison(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Comparisons.
     """
+
+    paginatedPropertyName = "commits"
 
     def _initAttributes(self) -> None:
         self._ahead_by: Attribute[int] = NotSet
@@ -82,21 +86,10 @@ class Comparison(CompletableGithubObject):
         self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
-    # This should be a method, but this used to be a property and cannot be changed without breaking user code
-    # TODO: remove @property on version 3
     @property
+    @deprecated("use get_commits instead")
     def commits(self) -> PaginatedList[github.Commit.Commit]:
-        return PaginatedList(
-            github.Commit.Commit,
-            self._requester,
-            self.url,
-            {},
-            headers=None,
-            list_item="commits",
-            total_count_item="total_commits",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
-        )
+        return self.get_commits()
 
     @property
     def diff_url(self) -> str:
@@ -142,6 +135,22 @@ class Comparison(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    def get_commits(self) -> PaginatedList[github.Commit.Commit]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
+        """
+        return PaginatedList(
+            github.Commit.Commit,
+            self._requester,
+            self.url,
+            {},
+            headers=None,
+            list_item="commits",
+            total_count_item="total_commits",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "ahead_by" in attributes:  # pragma no branch
