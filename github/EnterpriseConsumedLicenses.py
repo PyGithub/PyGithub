@@ -42,12 +42,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
 from github.NamedEnterpriseUser import NamedEnterpriseUser
 from github.PaginatedList import PaginatedList
 
 
-class EnterpriseConsumedLicenses(CompletableGithubObject):
+class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents license consumed by enterprises.
 
