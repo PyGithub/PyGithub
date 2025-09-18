@@ -146,7 +146,6 @@ class Issue(Framework.TestCase):
         self.issue.edit(
             "Title edited by PyGithub",
             "Body edited by PyGithub",
-            gho.NotSet,
             "closed",
             milestone,
             ["Bug"],
