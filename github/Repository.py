@@ -2398,12 +2398,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(sha, str), sha
         sha = urllib.parse.quote(sha)
-        # the files property uses pagination, set per-page if it is not the default value
-        url = f"{self.url}/commits/{sha}"
-        if self._requester.per_page != Consts.DEFAULT_PER_PAGE:
-            url = f"{url}?per_page={self._requester.per_page}"
-        headers, data = self._requester.requestJsonAndCheck("GET", url)
-        return github.Commit.Commit(self._requester, headers, data, completed=True)
+        return github.Commit.Commit(self._requester, url=f"{self.url}/commits/{sha}")
 
     def get_commits(
         self,
@@ -2447,14 +2442,7 @@ class Repository(CompletableGithubObject):
                 url_parameters["author"] = author.login
             else:
                 url_parameters["author"] = author
-        transformer = PaginatedList.add_per_page_to_url_transformer(self._requester.per_page)
-        return PaginatedList(
-            github.Commit.Commit,
-            self._requester,
-            f"{self.url}/commits",
-            url_parameters,
-            attributesTransformer=transformer,
-        )
+        return PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", url_parameters)
 
     def get_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile] | ContentFile:
         """
