@@ -139,12 +139,12 @@ class Branch(Framework.TestCase):
         self.organization_branch.edit_protection(dismissal_users=["jacquev6"], user_push_restrictions=["jacquev6"])
         branch_protection = self.organization_branch.get_protection()
         self.assertListKeyEqual(
-            branch_protection.required_pull_request_reviews.dismissal_users,
+            branch_protection.required_pull_request_reviews.dismissal_restrictions.users,
             lambda u: u.login,
             ["jacquev6"],
         )
         self.assertListKeyEqual(
-            branch_protection.required_pull_request_reviews.dismissal_teams,
+            branch_protection.required_pull_request_reviews.dismissal_restrictions.teams,
             lambda u: u.slug,
             [],
         )

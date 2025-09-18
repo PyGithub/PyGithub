@@ -133,10 +133,10 @@ class Team(Framework.TestCase):
         user = self.g.get_user("jacquev6")
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
-        self.team.add_to_members(user)
+        self.team.add_membership(user)
         self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, ["jacquev6"])
         self.assertTrue(self.team.has_in_members(user))
-        self.team.remove_from_members(user)
+        self.team.remove_membership(user)
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_membership(user, "maintainer")
@@ -159,7 +159,7 @@ class Team(Framework.TestCase):
         repo = self.org.get_repo("FatherBeaver")
         # Ignore the warning since this method is deprecated
         warnings.filterwarnings("ignore", category=DeprecationWarning)
-        self.team.set_repo_permission(repo, "admin")
+        self.team.update_team_repository(repo, "admin")
         warnings.resetwarnings()
 
     def testUpdateTeamRepository(self):

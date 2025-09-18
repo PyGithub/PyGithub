@@ -36,8 +36,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.CheckRunAnnotation
 import github.CheckRunOutput
 import github.CheckSuite
@@ -89,7 +87,6 @@ class CheckRun(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._app: Attribute[GithubApp] = NotSet
         self._check_suite: Attribute[CheckSuite] = NotSet
-        self._check_suite_id: Attribute[int] = NotSet
         self._completed_at: Attribute[datetime | None] = NotSet
         self._conclusion: Attribute[str] = NotSet
         self._deployment: Attribute[Deployment] = NotSet
@@ -118,12 +115,6 @@ class CheckRun(CompletableGithubObject):
     def check_suite(self) -> CheckSuite:
         self._completeIfNotSet(self._check_suite)
         return self._check_suite.value
-
-    @property
-    @deprecated("Use property check_suite.id instead")
-    def check_suite_id(self) -> int:
-        self._completeIfNotSet(self._check_suite_id)
-        return self._check_suite_id.value
 
     @property
     def completed_at(self) -> datetime | None:
@@ -273,8 +264,6 @@ class CheckRun(CompletableGithubObject):
                 url = attributes["url"].split("/")[:-2] + ["check-suites", str(id)]
                 attributes["check_suite"]["url"] = "/".join(url)
             self._check_suite = self._makeClassAttribute(github.CheckSuite.CheckSuite, attributes["check_suite"])
-            # deprecated check suite id property
-            self._check_suite_id = self._makeIntAttribute(id)
         if "completed_at" in attributes:  # pragma no branch
             self._completed_at = self._makeDatetimeAttribute(attributes["completed_at"])
         if "conclusion" in attributes:  # pragma no branch

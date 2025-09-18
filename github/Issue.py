@@ -127,7 +127,6 @@ class Issue(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._active_lock_reason: Attribute[str | None] = NotSet
-        self._assignee: Attribute[NamedUser | None] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
         self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
@@ -176,11 +175,6 @@ class Issue(CompletableGithubObject):
     def active_lock_reason(self) -> str | None:
         self._completeIfNotSet(self._active_lock_reason)
         return self._active_lock_reason.value
-
-    @property
-    def assignee(self) -> NamedUser | None:
-        self._completeIfNotSet(self._assignee)
-        return self._assignee.value
 
     @property
     def assignees(self) -> list[NamedUser]:
@@ -418,7 +412,6 @@ class Issue(CompletableGithubObject):
         self,
         title: Opt[str] = NotSet,
         body: Opt[str] = NotSet,
-        assignee: Opt[str | NamedUser | None] = NotSet,
         state: Opt[str] = NotSet,
         milestone: Opt[Milestone | None] = NotSet,
         labels: Opt[list[str]] = NotSet,
@@ -427,16 +420,20 @@ class Issue(CompletableGithubObject):
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
-        :param assignee: deprecated, use `assignees` instead. `assignee=None` means to remove current assignee.
         :param milestone: `milestone=None` means to remove current milestone.
         """
         assert is_optional(title, str), title
         assert is_optional(body, str), body
-        assert assignee is None or is_optional(assignee, (github.NamedUser.NamedUser, str)), assignee
         assert is_optional_list(assignees, (github.NamedUser.NamedUser, str)), assignees
         assert is_optional(state, str), state
         assert milestone is None or is_optional(milestone, github.Milestone.Milestone), milestone
         assert is_optional_list(labels, str), labels
+
+        if is_defined(assignees):
+            assignees = [
+                element._identity if isinstance(element, github.NamedUser.NamedUser) else element
+                for element in assignees
+            ]
 
         post_parameters = NotSet.remove_unset_items(
             {
@@ -445,20 +442,12 @@ class Issue(CompletableGithubObject):
                 "state": state,
                 "state_reason": state_reason,
                 "labels": labels,
-                "assignee": assignee._identity
-                if isinstance(assignee, github.NamedUser.NamedUser)
-                else (assignee or ""),
+                "assignees": assignees,
                 "milestone": milestone._identity
                 if isinstance(milestone, github.Milestone.Milestone)
                 else (milestone or ""),
             }
         )
-
-        if is_defined(assignees):
-            post_parameters["assignees"] = [
-                element._identity if isinstance(element, github.NamedUser.NamedUser) else element
-                for element in assignees
-            ]
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
@@ -697,15 +686,8 @@ class Issue(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
-        if "assignee" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
         if "assignees" in attributes:  # pragma no branch
             self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
-        elif "assignee" in attributes:
-            if attributes["assignee"] is not None:
-                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
-            else:
-                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
         if "author_association" in attributes:  # pragma no branch
             self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
