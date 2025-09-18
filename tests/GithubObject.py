@@ -264,6 +264,21 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             url = f"{url}{'&' if '?' in url else '?'}per_page=42"
             self.assertEqual(set_value(url, per_page=123), url)
 
+    def testRepoCommitFilesDefault(self):
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
     def testRepoCommitFiles(self):
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
@@ -285,6 +300,22 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5", commit_files_per_page=3)
         files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testRepoCommitFilesWithPerPage2(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+        files = list(commit.files(commit_files_per_page=3))
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -333,11 +364,51 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             ],
         )
 
+    def testRepoComparisonCommitsFilesWithPerPage(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations", comparison_commits_per_page=3)
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(comparison.commits)
+        commit = commits[0]
+        # files is a PaginatedList, which should respect per_page
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "github/GithubIntegration.py",
+                "tests/GithubIntegration.py",
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+            ],
+        )
+
     def testRepoComparisonCommitsFilesReversed(self):
         # tests paginated property of Comparison.commits and Commit.files
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         comparison = repo.compare("main", "remove-deprecations")
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(reversed(comparison.commits))
+        commit = commits[-1]
+        # files is a PaginatedList, which should respect per_page
+        files = list(reversed(commit.files))
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+                "tests/GithubIntegration.py",
+                "github/GithubIntegration.py",
+            ],
+        )
+
+    def testRepoComparisonCommitsFilesReversedWithPerPage(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations", comparison_commits_per_page=3)
         # commits is a PaginatedList, which should respect per_page
         commits = list(reversed(comparison.commits))
         commit = commits[-1]
