@@ -243,15 +243,15 @@ class GithubObject(unittest.TestCase):
             self.assertEqual(int, e.exception.expected_type)
             self.assertIsNone(e.exception.transformation_exception)
 
-    def testSetPerPageIfNotSet(self):
-        set_per_page = CompletableGithubObjectWithPaginatedProperty.set_per_page_if_not_set
-        self.assertIsNone(set_per_page(None, 123))
-        self.assertEqual(set_per_page("/path/to/resource", 123), "/path/to/resource?per_page=123")
+    def testSetValuesIfNotSet(self):
+        set_per_page = CompletableGithubObjectWithPaginatedProperty.set_values_if_not_set
+        self.assertIsNone(set_per_page(None, per_page=123))
+        self.assertEqual(set_per_page("/path/to/resource", per_page=123), "/path/to/resource?per_page=123")
         self.assertEqual(
-            set_per_page("https://host/path/to/resource", 123), "https://host/path/to/resource?per_page=123"
+            set_per_page("https://host/path/to/resource", per_page=123), "https://host/path/to/resource?per_page=123"
         )
         self.assertEqual(
-            set_per_page("https://host/path/to/resource?param=one&param=2", 123),
+            set_per_page("https://host/path/to/resource?param=one&param=2", per_page=123),
             "https://host/path/to/resource?param=one&param=2&per_page=123",
         )
 
@@ -262,7 +262,7 @@ class GithubObject(unittest.TestCase):
         ]:
             # add per_page to url
             url = f"{url}{'&' if '?' in url else '?'}per_page=42"
-            self.assertEqual(set_per_page(url, 123), url)
+            self.assertEqual(set_per_page(url, per_page=123), url)
 
 
 class TestingClass(gho.NonCompletableGithubObject):
