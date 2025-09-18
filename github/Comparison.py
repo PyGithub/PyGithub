@@ -41,14 +41,14 @@ from typing import TYPE_CHECKING, Any
 
 import github.Commit
 import github.File
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Commit import Commit
 
 
-class Comparison(CompletableGithubObject):
+class Comparison(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Comparisons.
 
@@ -60,13 +60,13 @@ class Comparison(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._ahead_by: Attribute[int] = NotSet
-        self._base_commit: Attribute[github.Commit.Commit] = NotSet
+        self._base_commit: Attribute[Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
         self._commits: Attribute[list[Commit]] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._files: Attribute[list[github.File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
-        self._merge_base_commit: Attribute[github.Commit.Commit] = NotSet
+        self._merge_base_commit: Attribute[Commit] = NotSet
         self._patch_url: Attribute[str] = NotSet
         self._permalink_url: Attribute[str] = NotSet
         self._status: Attribute[str] = NotSet
@@ -82,7 +82,7 @@ class Comparison(CompletableGithubObject):
         return self._ahead_by.value
 
     @property
-    def base_commit(self) -> github.Commit.Commit:
+    def base_commit(self) -> Commit:
         self._completeIfNotSet(self._base_commit)
         return self._base_commit.value
 
@@ -94,7 +94,7 @@ class Comparison(CompletableGithubObject):
     # This should be a method, but this used to be a property and cannot be changed without breaking user code
     # TODO: remove @property on version 3
     @property
-    def commits(self) -> PaginatedList[github.Commit.Commit]:
+    def commits(self) -> PaginatedList[Commit]:
         return PaginatedList(
             github.Commit.Commit,
             self._requester,
@@ -123,7 +123,7 @@ class Comparison(CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def merge_base_commit(self) -> github.Commit.Commit:
+    def merge_base_commit(self) -> Commit:
         self._completeIfNotSet(self._merge_base_commit)
         return self._merge_base_commit.value
 

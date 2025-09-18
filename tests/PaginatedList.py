@@ -443,6 +443,46 @@ class PaginatedList(Framework.TestCase):
             ],
         )
 
+    def testCustomPerPageWithRepoComparisonCommitsFiles(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations")
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(comparison.commits)
+        commit = commits[0]
+        # files is a PaginatedList, which should respect per_page
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "github/GithubIntegration.py",
+                "tests/GithubIntegration.py",
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+            ],
+        )
+
+    def testCustomPerPageWithRepoComparisonCommitsFilesReversed(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations")
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(reversed(comparison.commits))
+        commit = commits[-1]
+        # files is a PaginatedList, which should respect per_page
+        files = list(reversed(commit.files))
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+                "tests/GithubIntegration.py",
+                "github/GithubIntegration.py",
+            ],
+        )
+
     def testCustomPerPageWithPullCommitsFiles(self):
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
