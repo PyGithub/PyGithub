@@ -54,7 +54,7 @@ from . import Framework
 class NamedUser(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user("jacquev6")
+        self.user = self.g.get_user("jacquev6").complete()
 
     def testAttributes(self):
         self.assertEqual(self.user.avatar_url, "https://avatars.githubusercontent.com/u/327146?v=4")

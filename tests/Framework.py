@@ -531,7 +531,7 @@ class TestCase(BasicTestCase):
 
         self.g = self.get_github(self.authMode, self.retry, self.pool_size)
 
-    def get_github(self, authMode, retry=None, pool_size=None):
+    def get_github(self, authMode, retry=None, pool_size=None, lazy=True):
         if authMode == "token":
             auth = self.oauth_token
         elif authMode == "jwt":
@@ -550,6 +550,7 @@ class TestCase(BasicTestCase):
             pool_size=pool_size,
             seconds_between_requests=self.seconds_between_requests,
             seconds_between_writes=self.seconds_between_writes,
+            lazy=lazy,
         )
 
 

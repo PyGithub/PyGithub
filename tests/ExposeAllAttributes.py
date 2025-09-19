@@ -40,7 +40,7 @@ from . import Framework
 class ExposeAllAttributes(Framework.TestCase):
     def testAllClasses(self):
         authenticatedUser = self.g.get_user()
-        namedUser = self.g.get_user("nvie")
+        namedUser = self.g.get_user("nvie").complete()
         repository = authenticatedUser.get_repo("PyGithub")
         organization = self.g.get_organization("BeaverSoftware")
         plan = authenticatedUser.plan
