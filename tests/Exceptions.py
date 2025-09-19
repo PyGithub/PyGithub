@@ -74,7 +74,7 @@ class Exceptions(Framework.TestCase):
         # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
         with self.assertRaises(github.GithubException) as raisedexp:
             # 503 would be retried, disable retries
-            self.get_github(self.authMode, retry=None).get_user("jacquev6")
+            self.get_github(self.authMode, retry=None, lazy=False).get_user("jacquev6")
         self.assertIsInstance(raisedexp.exception, github.GithubException)
         self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 503)
@@ -96,7 +96,7 @@ class Exceptions(Framework.TestCase):
 
     def testUnknownUser(self):
         with self.assertRaises(github.GithubException) as raisedexp:
-            self.g.get_user("ThisUserShouldReallyNotExist")
+            self.g.get_user("ThisUserShouldReallyNotExist").complete()
         self.assertIsInstance(raisedexp.exception, github.UnknownObjectException)
         self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 404)
@@ -118,7 +118,7 @@ class Exceptions(Framework.TestCase):
     def testJSONParseError(self):
         # Replay data was forged to force a JSON error
         with self.assertRaises(ValueError):
-            self.g.get_user("jacquev6")
+            self.g.get_user("jacquev6").complete()
 
 
 class SpecificExceptions(Framework.TestCase):
@@ -145,7 +145,7 @@ class SpecificExceptions(Framework.TestCase):
 
     def testRateLimitExceeded(self):
         # rate limit errors would be retried if retry is not set None
-        g = github.Github(retry=None)
+        g = github.Github(retry=None, lazy=False)
 
         def exceed():
             for i in range(100):

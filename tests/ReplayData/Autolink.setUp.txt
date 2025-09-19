@@ -2,17 +2,6 @@ https
 GET
 api.github.com
 None
-/users/theCapypara
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('Server', 'GitHub.com'), ('Date', 'Tue, 02 Nov 2021 13:15:54 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"83d2773e24c62f5474d8c7daf73e643ed3be693772d094ee8fb97974adc777f4"'), ('Last-Modified', 'Tue, 02 Nov 2021 11:36:31 GMT'), ('X-OAuth-Scopes', 'admin:repo_hook, repo'), ('X-Accepted-OAuth-Scopes', ''), ('github-authentication-token-expiration', '2021-11-09 12:40:40 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4893'), ('X-RateLimit-Reset', '1635859633'), ('X-RateLimit-Used', '107'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'C176:C803:15A3D94:1617DEA:61813A0A')]
-{"login":"theCapypara","id":3512122,"node_id":"MDQ6VXNlcjM1MTIxMjI=","avatar_url":"https://avatars.githubusercontent.com/u/3512122?v=4","gravatar_id":"","url":"https://api.github.com/users/theCapypara","html_url":"https://github.com/theCapypara","followers_url":"https://api.github.com/users/theCapypara/followers","following_url":"https://api.github.com/users/theCapypara/following{/other_user}","gists_url":"https://api.github.com/users/theCapypara/gists{/gist_id}","starred_url":"https://api.github.com/users/theCapypara/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/theCapypara/subscriptions","organizations_url":"https://api.github.com/users/theCapypara/orgs","repos_url":"https://api.github.com/users/theCapypara/repos","events_url":"https://api.github.com/users/theCapypara/events{/privacy}","received_events_url":"https://api.github.com/users/theCapypara/received_events","type":"User","site_admin":false,"name":"Marco Köpcke","company":"@tudock","blog":"https://www.linkedin.com/in/marco-koepcke/","location":null,"email":"hello@capypara.de","hireable":null,"bio":"aka. Parakoopa ---\r\nProfessional Magento 2 developer that loves creating tools that help other developers.... And other weird & fun side projects :)","twitter_username":null,"public_repos":88,"public_gists":2,"followers":28,"following":16,"created_at":"2013-02-08T14:53:47Z","updated_at":"2021-11-02T11:36:31Z"}
-
-https
-GET
-api.github.com
-None
 /repos/theCapypara/PyGithub
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
