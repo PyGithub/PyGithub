@@ -3166,6 +3166,7 @@ class Repository(CompletableGithubObject):
         milestone: Milestone | Opt[str] = NotSet,
         state: Opt[str] = NotSet,
         assignee: NamedUser | Opt[str] = NotSet,
+        type: Opt[str] = NotSet,
         mentioned: Opt[NamedUser] = NotSet,
         labels: Opt[list[str] | list[Label]] = NotSet,
         sort: Opt[str] = NotSet,
@@ -3178,6 +3179,7 @@ class Repository(CompletableGithubObject):
         :param milestone: :class:`github.Milestone.Milestone` or "none" or "*"
         :param state: string. `open`, `closed`, or `all`. If this is not set the GitHub API default behavior will be used. At the moment this is to return only open issues. This might change anytime on GitHub API side and it could be clever to explicitly specify the state value.
         :param assignee: string or :class:`github.NamedUser.NamedUser` or "none" or "*"
+        :param type: string
         :param mentioned: :class:`github.NamedUser.NamedUser`
         :param labels: list of string or :class:`github.Label.Label`
         :param sort: string
@@ -3189,6 +3191,7 @@ class Repository(CompletableGithubObject):
         assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
         assert is_optional(state, str), state
         assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
+        assert is_optional(type, str), type
         assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
         assert is_optional_list(labels, (github.Label.Label, str)), labels
         assert is_optional(sort, str), sort
@@ -3208,6 +3211,8 @@ class Repository(CompletableGithubObject):
                 url_parameters["assignee"] = assignee._identity
             else:
                 url_parameters["assignee"] = assignee
+        if is_defined(type):
+            url_parameters["type"] = type
         if is_defined(mentioned):
             url_parameters["mentioned"] = mentioned._identity
         if is_defined(labels):
