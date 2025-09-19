@@ -394,27 +394,18 @@ class Github:
 
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
-    # v3: remove lazy argument, laziness is fully controlled via requester
-    def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
+    def get_user(self, login: Opt[str] = NotSet) -> NamedUser | AuthenticatedUser:
         """
         :calls: `GET /users/{username} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
-        requester = self.__requester.withLazy(lazy)
         if is_undefined(login):
             url = "/user"
-            # default is to return a lazy completable AuthenticatedUser
-            # v3: given github.Github(lazy=True) is now default, remove completed=False here
-            return github.AuthenticatedUser.AuthenticatedUser(
-                requester, url=url, completed=False if is_undefined(lazy) else None
-            )
+            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url)
         else:
             assert isinstance(login, str), login
             login = urllib.parse.quote(login)
             url = f"/users/{login}"
-            # always return a completed NamedUser
-            # v3: remove complete() here and make this as lazy as github.Github is
-            user = github.NamedUser.NamedUser(requester, url=url)
-            return user.complete() if is_undefined(lazy) else user
+            return github.NamedUser.NamedUser(self.__requester, url=url)
 
     def get_user_by_id(self, user_id: int) -> NamedUser:
         """
