@@ -229,6 +229,7 @@ class ReplayingConnection:
 
     def __init__(self, protocol, host, port, *args, **kwds):
         self.__file = self.__openFile("r")
+        self.__line = 0
         self.__protocol = protocol
         self.__host = host
         self.__port = port
@@ -262,22 +263,29 @@ class ReplayingConnection:
         self.__stream = stream
         self.__cnx.request(verb, url, input, headers, stream=stream)
 
+    def __readLine(self) -> str:
+        self.__line += 1
+        return readLine(self.__file)
+
+    def __replayDataMismatchFilePos(self) -> str:
+        return f"Replay data mismatch in {self.__file.name}:{self.__line}"
+
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
-        assert self.__protocol == readLine(self.__file)
-        assert verb == readLine(self.__file)
-        assert self.__host == readLine(self.__file)
-        assert str(self.__port) == readLine(self.__file)
-        assert self.__splitUrl(url) == self.__splitUrl(readLine(self.__file))
-        assert headers == eval(readLine(self.__file))
-        expectedInput = readLine(self.__file)
+        assert self.__protocol == self.__readLine(), self.__replayDataMismatchFilePos()
+        assert verb == self.__readLine(), self.__replayDataMismatchFilePos()
+        assert self.__host == self.__readLine(), self.__replayDataMismatchFilePos()
+        assert str(self.__port) == self.__readLine(), self.__replayDataMismatchFilePos()
+        assert self.__splitUrl(url) == self.__splitUrl(self.__readLine()), self.__replayDataMismatchFilePos()
+        assert headers == eval(self.__readLine()), self.__replayDataMismatchFilePos()
+        expectedInput = self.__readLine()
         if isinstance(input, str):
             trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
-                assert expectedInput.startswith("{"), expectedInput
-                assert json.loads(trInput) == json.loads(expectedInput)
+                assert expectedInput.startswith("{"), self.__replayDataMismatchFilePos()
+                assert json.loads(trInput) == json.loads(expectedInput), self.__replayDataMismatchFilePos()
             else:
-                assert trInput == expectedInput
+                assert trInput == expectedInput, self.__replayDataMismatchFilePos()
         else:
             # for non-string input (e.g. upload asset), let it pass.
             pass
@@ -293,19 +301,19 @@ class ReplayingConnection:
     def __request_callback(self, request, uri, response_headers):
         self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
 
-        status = int(readLine(self.__file))
-        self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
+        status = int(self.__readLine())
+        self.response_headers = CaseInsensitiveDict(eval(self.__readLine()))
         if self.__stream:
             output = BytesIO()
             while True:
-                line = readLine(self.__file)
+                line = self.__readLine()
                 if not line:
                     break
                 output.write(base64.b64decode(line))
             output = output.getvalue()
         else:
-            output = bytearray(readLine(self.__file), "utf-8")
-        readLine(self.__file)
+            output = bytearray(self.__readLine(), "utf-8")
+        self.__readLine()
 
         # make a copy of the headers and remove the ones that interfere with the response handling
         adding_headers = CaseInsensitiveDict(self.response_headers)
