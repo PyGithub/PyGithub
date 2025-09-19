@@ -551,7 +551,7 @@ class CompletableGithubObject(GithubObject, ABC):
         :param accept: use this accept header when completing this instance
 
         """
-        response_given = headers is not None or attributes is not None
+        response_given = headers is not None
 
         if headers is None:
             headers = {}

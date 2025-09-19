@@ -401,15 +401,13 @@ class Github:
         if login is NotSet:
             url = "/user"
             # always return a lazy completable AuthenticatedUser
-            # v3: given github.Github(lazy=True) is now default, remove completed=False here
-            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url)
         else:
             assert isinstance(login, str), login
             login = urllib.parse.quote(login)
             url = f"/users/{login}"
-            # always return a completed NamedUser
-            # v3: remove complete() here and make this as lazy as github.Github is
-            return github.NamedUser.NamedUser(self.__requester, url=url).complete()
+            # always return a lazy completable NamedUser
+            return github.NamedUser.NamedUser(self.__requester, attributes={"login": login}, url=url)
 
     def get_user_by_id(self, user_id: int) -> NamedUser:
         """
