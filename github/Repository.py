@@ -3166,26 +3166,26 @@ class Repository(CompletableGithubObject):
         milestone: Milestone | Opt[str] = NotSet,
         state: Opt[str] = NotSet,
         assignee: NamedUser | Opt[str] = NotSet,
-        type: Opt[str] = NotSet,
         mentioned: Opt[NamedUser] = NotSet,
         labels: Opt[list[str] | list[Label]] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
         creator: Opt[NamedUser] = NotSet,
+        type: Opt[str] = NotSet,
     ) -> PaginatedList[Issue]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
         :param milestone: :class:`github.Milestone.Milestone` or "none" or "*"
         :param state: string. `open`, `closed`, or `all`. If this is not set the GitHub API default behavior will be used. At the moment this is to return only open issues. This might change anytime on GitHub API side and it could be clever to explicitly specify the state value.
         :param assignee: string or :class:`github.NamedUser.NamedUser` or "none" or "*"
-        :param type: string
         :param mentioned: :class:`github.NamedUser.NamedUser`
         :param labels: list of string or :class:`github.Label.Label`
         :param sort: string
         :param direction: string
         :param since: datetime
         :param creator: string or :class:`github.NamedUser.NamedUser`
+        :param type: string
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
         assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
