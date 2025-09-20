@@ -464,17 +464,18 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
-    def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
+    def get_repo(self, full_name_or_id: int | str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
-        url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
-        url = f"{url_base}{full_name_or_id}"
-        if lazy:
-            return github.Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
-        headers, data = self.__requester.requestJsonAndCheck("GET", url)
-        return github.Repository.Repository(self.__requester, headers, data, completed=True)
+        if isinstance(full_name_or_id, int):
+            url = f"/repositories/{full_name_or_id}"
+            attributes = {"id": full_name_or_id}
+        else:
+            url = f"/repos/{full_name_or_id}"
+            attributes = {"full_name": full_name_or_id}
+        return github.Repository.Repository(self.__requester, attributes=attributes, url=url)
 
     def get_repos(
         self,
