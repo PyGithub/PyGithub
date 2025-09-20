@@ -462,21 +462,14 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
-    # v3: remove lazy option
-    def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
+    def get_repo(self, full_name_or_id: int | str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{repository_id} <https://docs.github.com/en/rest/reference/repos>`_
         """
-        if is_defined(lazy):
-            warnings.warn(
-                "Argument lazy is deprecated, please use Github(..., lazy=...).get_repo(...) instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
-        return github.Repository.Repository(self.__requester.withLazy(lazy), url=url)
+        return github.Repository.Repository(self.__requester, url=url)
 
     def get_repos(
         self,
