@@ -4660,6 +4660,8 @@ class Repository(CompletableGithubObject):
             self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "full_name" in attributes and attributes["full_name"] and "/" in attributes["full_name"]:
+            self._name = self._makeStringAttribute(attributes["full_name"].split("/", 2)[1])
         if "network_count" in attributes:  # pragma no branch
             self._network_count = self._makeIntAttribute(attributes["network_count"])
         if "node_id" in attributes:  # pragma no branch
@@ -4674,6 +4676,10 @@ class Repository(CompletableGithubObject):
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+        elif "full_name" in attributes and attributes["full_name"] and "/" in attributes["full_name"]:
+            login = attributes["full_name"].split("/", 2)[0]
+            owner_attributes = {"login": login, "url": f"/users/{login}"}
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, owner_attributes)
         if "parent" in attributes:  # pragma no branch
             self._parent = self._makeClassAttribute(Repository, attributes["parent"])
         if "permissions" in attributes:  # pragma no branch

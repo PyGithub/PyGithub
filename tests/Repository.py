@@ -2269,6 +2269,13 @@ class LazyRepository(Framework.TestCase):
     def getEagerRepository(self):
         return self.g.get_repo(self.repository_name, lazy=False)
 
+    def testCompletedProperties(self):
+        # none of these properties should invoke a request to Github API
+        repo = self.getLazyRepository()
+        self.assertEqual(repo.name, "PyGithub")
+        self.assertEqual(repo.full_name, "PyGithub/PyGithub")
+        self.assertEqual(repo.owner.login, "PyGithub")
+
     def testGetIssues(self):
         lazy_repo = self.getLazyRepository()
         issues = lazy_repo.get_issues()
