@@ -95,13 +95,6 @@ eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 """
 
 
-def readLine(file_):
-    line = file_.readline()
-    if isinstance(line, bytes):
-        line = line.decode("utf-8")
-    return line.strip()
-
-
 class FakeHttpResponse:
     def __init__(self, status, headers, output):
         self.status = status
@@ -229,7 +222,6 @@ class ReplayingConnection:
 
     def __init__(self, protocol, host, port, *args, **kwds):
         self.__file = self.__openFile("r")
-        self.__line = 0
         self.__protocol = protocol
         self.__host = host
         self.__port = port
@@ -263,29 +255,25 @@ class ReplayingConnection:
         self.__stream = stream
         self.__cnx.request(verb, url, input, headers, stream=stream)
 
-    def __readLine(self) -> str:
-        self.__line += 1
-        return readLine(self.__file)
-
-    def __replayDataMismatchFilePos(self) -> str:
-        return f"Replay data mismatch in {self.__file.name}:{self.__line}"
+    def __replayDataMismatchLine(self) -> str:
+        return f"Replay data mismatch in {self.__file}"
 
     def __readNextRequest(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
-        assert self.__protocol == self.__readLine(), self.__replayDataMismatchFilePos()
-        assert verb == self.__readLine(), self.__replayDataMismatchFilePos()
-        assert self.__host == self.__readLine(), self.__replayDataMismatchFilePos()
-        assert str(self.__port) == self.__readLine(), self.__replayDataMismatchFilePos()
-        assert self.__splitUrl(url) == self.__splitUrl(self.__readLine()), self.__replayDataMismatchFilePos()
-        assert headers == eval(self.__readLine()), self.__replayDataMismatchFilePos()
-        expectedInput = self.__readLine()
+        assert self.__protocol == self.__file.readline(), self.__replayDataMismatchLine()
+        assert verb == self.__file.readline(), self.__replayDataMismatchLine()
+        assert self.__host == self.__file.readline(), self.__replayDataMismatchLine()
+        assert str(self.__port) == self.__file.readline(), self.__replayDataMismatchLine()
+        assert self.__splitUrl(url) == self.__splitUrl(self.__file.readline()), self.__replayDataMismatchLine()
+        assert headers == eval(self.__file.readline()), self.__replayDataMismatchLine()
+        expectedInput = self.__file.readline()
         if isinstance(input, str):
             trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
-                assert expectedInput.startswith("{"), self.__replayDataMismatchFilePos()
-                assert json.loads(trInput) == json.loads(expectedInput), self.__replayDataMismatchFilePos()
+                assert expectedInput.startswith("{"), self.__replayDataMismatchLine()
+                assert json.loads(trInput) == json.loads(expectedInput), self.__replayDataMismatchLine()
             else:
-                assert trInput == expectedInput, self.__replayDataMismatchFilePos()
+                assert trInput == expectedInput, self.__replayDataMismatchLine()
         else:
             # for non-string input (e.g. upload asset), let it pass.
             pass
@@ -301,19 +289,19 @@ class ReplayingConnection:
     def __request_callback(self, request, uri, response_headers):
         self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
 
-        status = int(self.__readLine())
-        self.response_headers = CaseInsensitiveDict(eval(self.__readLine()))
+        status = int(self.__file.readline())
+        self.response_headers = CaseInsensitiveDict(eval(self.__file.readline()))
         if self.__stream:
             output = BytesIO()
             while True:
-                line = self.__readLine()
+                line = self.__file.readline()
                 if not line:
                     break
                 output.write(base64.b64decode(line))
             output = output.getvalue()
         else:
-            output = bytearray(self.__readLine(), "utf-8")
-        self.__readLine()
+            output = bytearray(self.__file.readline(), "utf-8")
+        self.__file.readline()
 
         # make a copy of the headers and remove the ones that interfere with the response handling
         adding_headers = CaseInsensitiveDict(self.response_headers)
@@ -349,6 +337,35 @@ class ReplayingHttpsConnection(ReplayingConnection):
 
     def __init__(self, *args, **kwds):
         super().__init__("https", *args, **kwds)
+
+
+class ReplayDataFile:
+    @staticmethod
+    def open(filename: str, mode: str, encoding: str) -> ReplayDataFile:
+        file = open(filename, mode, encoding=encoding)
+        return ReplayDataFile(filename, file)
+
+    def __init__(self, filename: str, file):
+        self.__filename = filename
+        self.__file = file
+        self.__line = 0
+
+    def __repr__(self) -> str:
+        return f"{self.__filename}:{self.__line}"
+
+    def readline(self) -> str:
+        self.__line += 1
+        line = self.__file.readline()
+        if isinstance(line, bytes):
+            line = line.decode("utf-8")
+        return line.strip()
+
+    @property
+    def line_number(self):
+        return self.__line
+
+    def close(self):
+        self.__file.close()
 
 
 class BasicTestCase(unittest.TestCase):
@@ -471,7 +488,7 @@ class BasicTestCase(unittest.TestCase):
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
-            self.__file = open(self.__fileName, mode, encoding="utf-8")
+            self.__file = ReplayDataFile.open(self.__fileName, mode, encoding="utf-8")
         return self.__file
 
     def __closeReplayFileIfNeeded(self, silent=False):
@@ -479,7 +496,7 @@ class BasicTestCase(unittest.TestCase):
             if (
                 not self.recordMode and not silent
             ):  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
-                self.assertEqual(readLine(self.__file), "", self.__fileName)
+                self.assertEqual(self.__file.readline(), "", self.__file)
             self.__file.close()
 
     def assertListKeyEqual(self, elements, key, expectedKeys):
