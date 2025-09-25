@@ -107,7 +107,8 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
 
     # rewind buffer and attempt to replay response from it
     file.seek(0)
-    replaying_connection_class.setOpenFile(lambda slf, mode: file)
+    rdf = Framework.ReplayDataFile("string", file)
+    replaying_connection_class.setOpenFile(lambda slf, mode: rdf)
     replaying_connection = replaying_connection_class(host=host, port=None)
     replaying_connection.request(verb, url, None, headers)
     replaying_connection.getresponse()
