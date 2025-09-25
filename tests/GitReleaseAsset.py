@@ -44,7 +44,7 @@ from . import Framework
 class GitReleaseAsset(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.release = self.g.get_repo("EnricoMi/PyGithub", lazy=True).get_release(197548596)
+        self.release = self.g.get_repo("EnricoMi/PyGithub").get_release(197548596)
         self.asset = self.release.assets[0]
 
     def testAttributes(self):

@@ -42,7 +42,7 @@ from . import Framework
 class Permissions(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.userRepo = self.g.get_repo("PyGithub/PyGithub")
+        self.userRepo = self.g.get_repo("PyGithub/PyGithub").complete()
 
     def testUserRepoPermissionAttributes(self):
         self.assertFalse(self.userRepo.permissions.admin)

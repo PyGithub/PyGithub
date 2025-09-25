@@ -70,9 +70,7 @@ class RequiredPullRequestReviews(Framework.TestCase):
 
     def testOrganizationOwnedTeam(self):
         required_pull_request_reviews = (
-            self.g.get_repo("PyGithub/PyGithub", lazy=True)
-            .get_branch("integrations")
-            .get_required_pull_request_reviews()
+            self.g.get_repo("PyGithub/PyGithub").get_branch("integrations").get_required_pull_request_reviews()
         )
         self.assertIsNone(required_pull_request_reviews.bypass_pull_request_allowances.apps)
         self.assertListKeyEqual(

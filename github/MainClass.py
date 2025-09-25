@@ -188,8 +188,7 @@ class Github:
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
         auth: github.Auth.Auth | None = None,
-        # v3: set lazy = True as the default
-        lazy: bool = False,
+        lazy: bool = True,
     ) -> None:
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
@@ -402,15 +401,13 @@ class Github:
         if login is NotSet:
             url = "/user"
             # always return a lazy completable AuthenticatedUser
-            # v3: given github.Github(lazy=True) is now default, remove completed=False here
-            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url)
         else:
             assert isinstance(login, str), login
             login = urllib.parse.quote(login)
             url = f"/users/{login}"
-            # always return a completed NamedUser
-            # v3: remove complete() here and make this as lazy as github.Github is
-            return github.NamedUser.NamedUser(self.__requester, url=url).complete()
+            # always return a lazy completable NamedUser
+            return github.NamedUser.NamedUser(self.__requester, attributes={"login": login}, url=url)
 
     def get_user_by_id(self, user_id: int) -> NamedUser:
         """
@@ -467,17 +464,18 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
-    def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
+    def get_repo(self, full_name_or_id: int | str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
-        url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
-        url = f"{url_base}{full_name_or_id}"
-        if lazy:
-            return github.Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
-        headers, data = self.__requester.requestJsonAndCheck("GET", url)
-        return github.Repository.Repository(self.__requester, headers, data, completed=True)
+        if isinstance(full_name_or_id, int):
+            url = f"/repositories/{full_name_or_id}"
+            attributes = {"id": full_name_or_id}
+        else:
+            url = f"/repos/{full_name_or_id}"
+            attributes = {"full_name": full_name_or_id}
+        return github.Repository.Repository(self.__requester, attributes=attributes, url=url)
 
     def get_repos(
         self,
