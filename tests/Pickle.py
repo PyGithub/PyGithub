@@ -59,7 +59,7 @@ class Pickle(Framework.TestCase):
 
     def testPicklePaginatedList(self):
         gh = github.Github()
-        repo = gh.get_repo(REPO_NAME, lazy=True)
+        repo = gh.get_repo(REPO_NAME)
         branches = repo.get_branches()
         branches2 = pickle.loads(pickle.dumps(branches))
         self.assertIsInstance(branches2, PaginatedList)
