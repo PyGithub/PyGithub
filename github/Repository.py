@@ -465,6 +465,8 @@ class Repository(CompletableGithubObject):
 
     @property
     def _identity(self) -> str:
+        if not is_defined(self._owner) or not is_defined(self._name):
+            return self.full_name
         return f"{self.owner.login}/{self.name}"
 
     @property
