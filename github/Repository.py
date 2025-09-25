@@ -961,6 +961,8 @@ class Repository(CompletableGithubObject):
         """
         :type: string
         """
+        if is_undefined(self._name) and is_defined(self._full_name) and "/" in self.full_name:
+            self._name = self._makeStringAttribute(self.full_name.split("/", 2)[1])
         self._completeIfNotSet(self._name)
         return self._name.value
 
@@ -1231,8 +1233,13 @@ class Repository(CompletableGithubObject):
 
     @property
     def url(self) -> str:
-        if is_undefined(self._url) and is_defined(self._owner) and is_defined(self._name):
-            self._url = self._makeStringAttribute(self._requester.base_url + f"/repos/{self.owner.login}/{self.name}")
+        if is_undefined(self._url):
+            if is_defined(self._owner) and is_defined(self._name):
+                self._url = self._makeStringAttribute(
+                    self._requester.base_url + f"/repos/{self.owner.login}/{self.name}"
+                )
+            elif is_defined(self._full_name):
+                self._url = self._makeStringAttribute(self._requester.base_url + f"/repos/{self.full_name}")
         self._completeIfNotSet(self._url)
         return self._url.value
 
@@ -4660,8 +4667,6 @@ class Repository(CompletableGithubObject):
             self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
-        elif "full_name" in attributes and attributes["full_name"] and "/" in attributes["full_name"]:
-            self._name = self._makeStringAttribute(attributes["full_name"].split("/", 2)[1])
         if "network_count" in attributes:  # pragma no branch
             self._network_count = self._makeIntAttribute(attributes["network_count"])
         if "node_id" in attributes:  # pragma no branch

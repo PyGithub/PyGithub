@@ -2274,6 +2274,7 @@ class LazyRepository(Framework.TestCase):
         repo = self.getLazyRepository()
         self.assertEqual(repo.name, "PyGithub")
         self.assertEqual(repo.full_name, "PyGithub/PyGithub")
+        self.assertEqual(repo.url, "/repos/PyGithub/PyGithub")
 
     def testGetIssues(self):
         lazy_repo = self.getLazyRepository()
