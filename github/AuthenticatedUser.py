@@ -508,7 +508,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            f"/repos/{repo.owner.login}/{repo.name}/generate",
+            f"/repos/{repo.full_name}/generate",
             input=post_parameters,
             headers={"Accept": "application/vnd.github.v3+json"},
         )
