@@ -2515,7 +2515,7 @@ class Repository(CompletableGithubObject):
     def get_deployment(self, id_: int) -> Deployment:
         """
         :calls: `GET /repos/{owner}/{repo}/deployments/{deployment_id} <https://docs.github.com/en/rest/reference/repos#deployments>`_
-        :param: id_: int
+        :param: id: int
         :rtype: :class:`github.Deployment.Deployment`
         """
         assert isinstance(id_, int), id_
@@ -3462,7 +3462,7 @@ class Repository(CompletableGithubObject):
         since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`__
         :param sort: string
         :param direction: string
         :param since: datetime
@@ -3477,7 +3477,7 @@ class Repository(CompletableGithubObject):
         since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_:
         :param sort: string 'created', 'updated', 'created_at'
         :param direction: string 'asc' or 'desc'
         :param since: datetime

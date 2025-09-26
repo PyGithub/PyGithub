@@ -241,22 +241,18 @@ class PaginatedList(PaginatedListBase[T]):
                 headers, data = self.__requester.requestJsonAndCheck(
                     "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
                 )
-                if "link" not in headers:
-                    if data and "total_count" in data:
-                        self.__totalCount = data["total_count"]
-                    elif data:
-                        if isinstance(data, dict):
-                            data = data[self.__list_item]
-                        self.__totalCount = len(data)
-                    else:
-                        self.__totalCount = 0
+                links = self.__parseLinkHeader(headers)
+                lastUrl = links.get("last")
+                if lastUrl:
+                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                elif data and "total_count" in data:
+                    self.__totalCount = data["total_count"]
+                elif data:
+                    if isinstance(data, dict):
+                        data = data[self.__list_item]
+                    self.__totalCount = len(data)
                 else:
-                    links = self.__parseLinkHeader(headers)
-                    lastUrl = links.get("last")
-                    if lastUrl:
-                        self.__totalCount = int(parse_qs(lastUrl)["page"][0])
-                    else:
-                        self.__totalCount = 0
+                    self.__totalCount = 0
             else:
                 variables = self.__graphql_variables.copy()
                 if not self._reversed:

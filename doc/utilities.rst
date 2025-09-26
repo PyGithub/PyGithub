@@ -21,14 +21,7 @@ Logging
 Error Handling
 --------------
 
-.. autoclass:: github.GithubException
-.. autoclass:: github.BadAttributeException
-.. autoclass:: github.BadCredentialsException
-.. autoclass:: github.TwoFactorException
-.. autoclass:: github.BadUserAgentException
-.. autoclass:: github.RateLimitExceededException
-.. autoclass:: github.IncompletableObject
-.. autoclass:: github.UnknownObjectException
+.. automodule:: github.GithubException
 
 Default argument
 ----------------
