@@ -91,7 +91,8 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
     connection.getresponse.return_value = response
 
     # write mock response to buffer
-    RecordingMockConnection.setOpenFile(lambda slf, mode: file)
+    rdf = Framework.ReplayDataFile("string", file)
+    RecordingMockConnection.setOpenFile(lambda slf, mode: rdf)
     recording_connection = RecordingMockConnection(protocol, host, None, lambda *args, **kwds: connection)
     recording_connection.request(verb, url, None, headers)
     recording_connection.getresponse()

@@ -61,7 +61,6 @@ from __future__ import annotations
 
 import base64
 import contextlib
-import io
 import json
 import os
 import traceback
@@ -140,7 +139,7 @@ class RecordingConnection:
     def __init__(self, protocol, host, port, *args, **kwds):
         self.__file = self.__openFile("w")
         # write operations make the assumption that the file is not in binary mode
-        assert isinstance(self.__file, io.TextIOBase)
+        assert isinstance(self.__file, ReplayDataFile)
         self.__protocol = protocol
         self.__host = host
         self.__port = port
@@ -352,6 +351,9 @@ class ReplayDataFile:
 
     def __repr__(self) -> str:
         return f"{self.__filename}:{self.__line}"
+
+    def write(self, string: str):
+        self.__file.write(string)
 
     def readline(self) -> str:
         self.__line += 1
