@@ -142,7 +142,7 @@ class Enterprise(NonCompletableGithubObject):
     def get_consumed_licenses(self, *, licence_users_per_page: int | None = None) -> EnterpriseConsumedLicenses:
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
-        :param licence_users_per_page: int Number of users retrieved with the licences. Iterating over the paginated list of users will fetch pages of this size.
+        :param licence_users_per_page: int Number of users retrieved with the licences. Iterating over users property will fetch pages of this size. The default page size is 30, the maximum is 100.
         """
         # licence_users_per_page asserted in EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty)
         return github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(

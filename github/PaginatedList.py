@@ -162,6 +162,34 @@ class PaginatedList(PaginatedListBase[T]):
 
         some_repos = repos.get_page(0)
         some_other_repos = repos.get_page(3)
+
+    Individual items of this list are fetched in pages. The size of those pages
+    is configured via ``per_page`` when creating the :class:`github.MainClass.Github` instance::
+
+        g = github.Github(per_page=100)
+
+    The default page size is 30. The maximum page size is usually 100.
+
+    Some classes have one property that is a paginated list. The default and maximum page size
+    for those properties is specific to the class. Use the ``*_per_page`` argument when getting
+    such an object to set the page size for the property. If no value is given for the ``*_per_page``
+    argument, the class-specific default is used.
+
+    For example::
+
+        sha = "c4ec16a18bb4401e89967a8e395103c95cca5c2f"
+        repo_name = ""PyGithub/PyGithub""
+
+        # page size for paginated lists returned by methods
+        g = github.Github(per_page=100)
+        repo = g.get_repo(repo_name)
+
+        # page size for the Commit.files property only
+        commit = repo.get_commit(sha, commit_files_per_page=300)
+
+        # files are fetched in pages of 300, not 100
+        for file in commit.files:
+            pass
     """
 
     # v3: move * before firstUrl and fix call sites
