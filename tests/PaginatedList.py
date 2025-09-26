@@ -377,6 +377,8 @@ class PaginatedList(Framework.TestCase):
             [comment.created_at for comment in comments],
         )
 
+    # more custom per page tests in CompletableGithubObjectWithPaginatedProperty
+
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))
 

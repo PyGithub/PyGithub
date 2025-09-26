@@ -242,6 +242,209 @@ class GithubObject(unittest.TestCase):
             self.assertIsNone(e.exception.transformation_exception)
 
 
+class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
+    def testSetValuesIfNotSet(self):
+        set_value = gho.CompletableGithubObjectWithPaginatedProperty.set_values_if_not_set
+        self.assertIsNone(set_value(None, per_page=123))
+        self.assertEqual(set_value("/path/to/resource", per_page=123), "/path/to/resource?per_page=123")
+        self.assertEqual(
+            set_value("https://host/path/to/resource", per_page=123), "https://host/path/to/resource?per_page=123"
+        )
+        self.assertEqual(
+            set_value("https://host/path/to/resource?param=one&param=2", per_page=123),
+            "https://host/path/to/resource?param=one&param=2&per_page=123",
+        )
+
+        for url in [
+            "/path/to/resource",
+            "https://host/path/to/resource",
+            "https://host/path/to/resource?param=one&param=2",
+        ]:
+            # add per_page to url
+            url = f"{url}{'&' if '?' in url else '?'}per_page=42"
+            self.assertEqual(set_value(url, per_page=123), url)
+
+    def testRepoCommitFilesDefault(self):
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testRepoCommitFiles(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testRepoCommitFilesWithPerPage(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5", commit_files_per_page=3)
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testRepoCommitFilesWithPerPage2(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+        files = list(commit.files(commit_files_per_page=3))
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testRepoCommitsFiles(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        commits = repo.get_commits(sha="dependabot/github_actions/actions/setup-python-6")
+        commit = commits[0]
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+    def testRepoComparisonCommitsFiles(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations")
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(comparison.commits)
+        commit = commits[0]
+        # files is a PaginatedList, which should respect per_page
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "github/GithubIntegration.py",
+                "tests/GithubIntegration.py",
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+            ],
+        )
+
+    def testRepoComparisonCommitsFilesWithPerPage(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations", comparison_commits_per_page=3)
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(comparison.commits)
+        commit = commits[0]
+        # files is a PaginatedList, which should respect per_page
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "github/GithubIntegration.py",
+                "tests/GithubIntegration.py",
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+            ],
+        )
+
+    def testRepoComparisonCommitsFilesReversed(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations")
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(reversed(comparison.commits))
+        commit = commits[-1]
+        # files is a PaginatedList, which should respect per_page
+        files = list(reversed(commit.files))
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+                "tests/GithubIntegration.py",
+                "github/GithubIntegration.py",
+            ],
+        )
+
+    def testRepoComparisonCommitsFilesReversedWithPerPage(self):
+        # tests paginated property of Comparison.commits and Commit.files
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        comparison = repo.compare("main", "remove-deprecations", comparison_commits_per_page=3)
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(reversed(comparison.commits))
+        commit = commits[-1]
+        # files is a PaginatedList, which should respect per_page
+        files = list(reversed(commit.files))
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+                "tests/GithubIntegration.py",
+                "github/GithubIntegration.py",
+            ],
+        )
+
+    def testPullCommitsFiles(self):
+        self.g.per_page = 2
+        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        pull = repo.get_pull(3370)
+        # commits is a PaginatedList, which should respect per_page
+        commits = list(pull.get_commits())
+        self.assertEqual(len(commits), 1)
+        commit = commits[0]
+        files = list(commit.files)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+
 class TestingClass(gho.NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         pass

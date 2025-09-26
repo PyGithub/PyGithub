@@ -139,16 +139,16 @@ class Enterprise(NonCompletableGithubObject):
     def from_slug(requester: Requester, slug: str) -> Enterprise:
         return github.Enterprise.Enterprise(requester, {}, {"slug": slug})
 
-    def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
+    def get_consumed_licenses(self, *, licence_users_per_page: int | None = None) -> EnterpriseConsumedLicenses:
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        :param licence_users_per_page: int Number of users retrieved with the licences. Iterating over the paginated list of users will fetch pages of this size.
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", self.url + "/consumed-licenses")
-        if "url" not in data:
-            data["url"] = self.url + "/consumed-licenses"
-
-        return github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(
-            self._requester, headers, data, completed=True
+        assert (
+            licence_users_per_page is None or isinstance(licence_users_per_page, int) and licence_users_per_page > 0
+        ), licence_users_per_page
+        return EnterpriseConsumedLicenses(
+            self._requester, url=self.url + "/consumed-licenses", per_page=licence_users_per_page
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
