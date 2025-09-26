@@ -670,8 +670,6 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
         per_page: int | None = None,
     ):
         assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
-        if per_page is None and requester.per_page != Consts.DEFAULT_PER_PAGE:
-            per_page = requester.per_page
 
         # add per_page to URL if instance is incomplete
         # we only modify the URL if this instance is incomplete
