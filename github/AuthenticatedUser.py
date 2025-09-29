@@ -885,25 +885,8 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert isinstance(package_type , github.Package.PackageType), package_type
         assert isinstance(package_name, str), package_name
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/packages/{package_type.value}/{package_name}")
-        return github.Package.Package(self._requester, headers, data, completed=True)
-
-
-    def delete_package(self, package_type: str, package_name: str) -> None:
-        """
-        :calls: `DELETE /user/packages/{package_type}/{package_name} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#delete-a-package-for-the-authenticated-user>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/packages/{package_type}/{package_name}")
-
-    def restore_package(self, package_type: str, package_name: str) -> None:
-        """
-        :calls: `POST /users/packages/{package_type}/{package_name}/restore <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#restore-a-package-for-the-authenticated-user>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        self._requester.requestJsonAndCheck("POST", f"{self.url}/packages/{package_type}/{package_name}/restore")
+        url = f"{self.url}/packages/{package_type.value}/{package_name}"
+        return github.Package.Package(self._requester, {}, {"url": url}, completed=False)
 
     def list_package_versions(self, package_type: str, package_name: str) -> PaginatedList[PackageVersion]:
         """
@@ -912,34 +895,6 @@ class AuthenticatedUser(CompletableGithubObject):
         assert isinstance(package_type, str), package_type
         assert isinstance(package_name, str), package_name
         return PaginatedList(PackageVersion, self._requester, f"{self.url}/packages/{package_type}/{package_name}/versions", None)
-
-    def get_package_version(self, package_type: str, package_name: str, package_version_id: int) -> PackageVersion:
-        """
-        :calls: `GET /user/packages/{package_type}/{package_name}/versions/{package_version_id} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#get-a-package-version-for-the-authenticated-user>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        assert isinstance(package_version_id, int), package_version_id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}")
-        return PackageVersion(self._requester, headers, data, completed=True)
-
-    def delete_package_version(self, package_type: str, package_name: str, package_version_id: int) -> None:
-        """
-        :calls: `DELETE /user/packages/{package_type}/{package_name}/versions/{package_version_id} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#delete-a-package-version-for-the-authenticated-user>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        assert isinstance(package_version_id, int), package_version_id
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}")
-
-    def restore_package_version(self, package_type: str, package_name: str, package_version_id: int) -> None:
-        """
-        :calls: `POST /user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#restore-a-package-version-for-the-authenticated-user>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        assert isinstance(package_version_id, int), package_version_id
-        self._requester.requestJsonAndCheck("POST", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore")
 
     def get_repo(self, name: str) -> Repository:
         """

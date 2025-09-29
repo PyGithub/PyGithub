@@ -1366,21 +1366,7 @@ class Organization(CompletableGithubObject):
         assert isinstance(package_type , github.Package.PackageType), package_type
         assert isinstance(package_name, str), package_name
         url = f"{self.url}/packages/{package_type.value}/{package_name}"
-        return github.Package.Package(self._requester, url=url)
-
-    def delete_package(self, package: Package) -> None:
-        """
-        :calls: `DELETE /orgs/{org}/packages/{package_type}/{package_name} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#delete-a-package-for-an-organization>`_
-        """
-        assert isinstance(package, github.Package.Package), package
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/packages/{package.package_type}/{package.name}")
-
-    def restore_package(self, package: Package) -> None:
-        """
-        :calls: `POST /orgs/{org}/packages/{package_type}/{package_name}/restore <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#restore-a-package-for-an-organization>`_
-        """
-        assert isinstance(package, github.Package.Package), package
-        self._requester.requestJsonAndCheck("POST", f"{self.url}/packages/{package.package_type}/{package.name}/restore")
+        return github.Package.Package(self._requester, {}, {"url": url}, completed=False)
 
     def list_package_versions(self, package_type: str, package_name: str) -> PaginatedList[PackageVersion]:
         """
@@ -1389,35 +1375,6 @@ class Organization(CompletableGithubObject):
         assert isinstance(package_type, str), package_type
         assert isinstance(package_name, str), package_name
         return PaginatedList(PackageVersion, self._requester, f"{self.url}/packages/{package_type}/{package_name}/versions", None)
-
-    def get_package_version(self, package_type: str, package_name: str, package_version_id: int) -> PackageVersion:
-        """
-        :calls: `GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#get-a-package-version-for-an-organization>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        assert isinstance(package_version_id, int), package_version_id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}")
-        return PackageVersion(self._requester, headers, data, completed=True)
-
-    def delete_package_version(self, package_type: str, package_name: str, package_version_id: int) -> None:
-        """
-        :calls: `DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#delete-a-package-version-for-an-organization>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        assert isinstance(package_version_id, int), package_version_id
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}")
-
-    def restore_package_version(self, package_type: str, package_name: str, package_version_id: int) -> None:
-        """
-        :calls: `POST /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#restore-a-package-version-for-an-organization>`_
-        """
-        assert isinstance(package_type, str), package_type
-        assert isinstance(package_name, str), package_name
-        assert isinstance(package_version_id, int), package_version_id
-        self._requester.requestJsonAndCheck("POST", f"{self.url}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore")
-
     def get_repo(self, name: str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_

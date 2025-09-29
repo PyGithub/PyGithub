@@ -157,6 +157,12 @@ class Package(CompletableGithubObject):
     def delete(self):
         self._requester.requestJsonAndCheck("DELETE", f"{self.url}")
 
+    def restore(self) -> None:
+        """
+        :calls: `POST /users/packages/{package_type}/{package_name}/restore <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#restore-a-package-for-the-authenticated-user>`_
+        """
+        self._requester.requestJsonAndCheck("POST", f"{self.url}/restore")
+
     def list_versions(self) -> PaginatedList[PackageVersion]:
         """
         :calls: `GET /packages/{package_type}/{package_name}/versions <https://docs.github.com/en/rest/reference/packages#get-a-package-version>`_
@@ -170,15 +176,13 @@ class Package(CompletableGithubObject):
         )
 
     def get_version(self, package_version_id: int) -> PackageVersion:
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/versions/{package_version_id}")
-        return PackageVersion(self._requester, headers, data, completed=True)
-
-    def delete_version(self, package_version_id: int) -> None:
-        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/versions/{package_version_id}")
-
-    def restore_version(self, package_version_id: int) -> None:
-        self._requester.requestJsonAndCheck("POST", f"{self.url}/versions/{package_version_id}/restore")
-
+        """
+        :calls: `GET /user/packages/{package_type}/{package_name}/versions/{package_version_id} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#get-a-package-version-for-the-authenticated-user>`_
+        :rtype: :class:`github.PackageVersion.PackageVersion`
+        """
+        assert isinstance(package_version_id, int), package_version_id
+        url = f"{self.url}/versions/{package_version_id}"
+        return PackageVersion(self._requester, {}, {"url": url}, completed=False)
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
