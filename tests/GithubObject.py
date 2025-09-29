@@ -260,9 +260,13 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             "https://host/path/to/resource",
             "https://host/path/to/resource?param=one&param=2",
         ]:
-            # add per_page to url
+            # add per_page to url, which is ignored since parameter exists already
             url = f"{url}{'&' if '?' in url else '?'}per_page=42"
             self.assertEqual(set_value(url, per_page=123), url)
+
+            # add per_page to url, which is ignored since page exists already
+            url = f"{url}{'&' if '?' in url else '?'}page=1"
+            self.assertEqual(set_value(url, unless={"page"}, per_page=123), url)
 
     def testRepoCommitFilesDefault(self):
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
@@ -315,7 +319,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
         self.g.per_page = 2
         repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
         commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
-        files = list(commit.files(commit_files_per_page=3))
+        files = list(commit.files)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -405,22 +409,38 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
         )
 
     def testRepoComparisonCommitsFilesReversedWithPerPage(self):
-        # tests paginated property of Comparison.commits and Commit.files
-        self.g.per_page = 2
-        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
-        comparison = repo.compare("main", "remove-deprecations", comparison_commits_per_page=3)
-        # commits is a PaginatedList, which should respect per_page
-        commits = list(reversed(comparison.commits))
-        commit = commits[-1]
-        # files is a PaginatedList, which should respect per_page
-        files = list(reversed(commit.files))
+        # we want to assert the requests made
+        with self.captureRequests() as requests:
+            # tests paginated property of Comparison.commits and Commit.files
+            self.g.per_page = 2
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            comparison = repo.compare("main", "remove-deprecations", comparison_commits_per_page=3)
+            # commits is a PaginatedList, which should respect per_page
+            commits = list(reversed(comparison.commits))
+            commit = commits[-1]
+            # files is a PaginatedList, which should respect per_page
+            files = list(reversed(commit.files))
+            self.assertListKeyEqual(
+                files,
+                lambda f: f.filename,
+                [
+                    "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
+                    "tests/GithubIntegration.py",
+                    "github/GithubIntegration.py",
+                ],
+            )
+
+        # assert the actual requests
         self.assertListKeyEqual(
-            files,
-            lambda f: f.filename,
+            requests,
+            lambda r: r.url,
             [
-                "tests/ReplayData/GithubIntegration.testDeprecatedAppAuth.txt",
-                "tests/GithubIntegration.py",
-                "github/GithubIntegration.py",
+                "/repos/PyGithub/PyGithub/compare/main...remove-deprecations?per_page=3",
+                "/repositories/3544490/compare/main...remove-deprecations?per_page=3&page=2",
+                "/repositories/3544490/compare/main...remove-deprecations?per_page=3&page=1",
+                "/repos/PyGithub/PyGithub/commits/f23891b5a77396c88f61957810646ceecc6d1257?page=1",
+                "/repositories/3544490/commits/f23891b5a77396c88f61957810646ceecc6d1257?page=2",
+                "/repositories/3544490/commits/f23891b5a77396c88f61957810646ceecc6d1257?page=1",
             ],
         )
 

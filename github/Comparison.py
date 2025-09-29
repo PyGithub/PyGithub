@@ -103,8 +103,8 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
             headers=None,
             list_item="commits",
             total_count_item="total_commits",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
+            firstData=self.raw_data if self.completed else None,
+            firstHeaders=self.raw_headers if self.completed else None,
         )
 
     @property
@@ -153,6 +153,7 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "ahead_by" in attributes:  # pragma no branch
             self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch

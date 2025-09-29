@@ -825,50 +825,102 @@ class Repository(Framework.TestCase):
         )
 
     def testCompare(self):
-        comparison = self.repo.compare("v0.6", "v0.7")
-        self.assertEqual(comparison.status, "ahead")
-        self.assertEqual(comparison.ahead_by, 4)
-        self.assertEqual(comparison.behind_by, 0)
-        self.assertEqual(
-            comparison.diff_url,
-            "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.diff",
-        )
-        self.assertEqual(
-            comparison.html_url,
-            "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7",
-        )
-        self.assertEqual(
-            comparison.url,
-            "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7",
-        )
-        self.assertEqual(
-            comparison.patch_url,
-            "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.patch",
-        )
-        self.assertEqual(
-            comparison.permalink_url,
-            "https://github.com/PyGithub/PyGithub/compare/jacquev6:4303c5b...jacquev6:ecda065",
-        )
-        self.assertEqual(comparison.total_commits, 4)
+        with self.captureRequests() as requests:
+            comparison = self.repo.compare("v0.6", "v0.7")
+            self.assertEqual(comparison.status, "ahead")
+            self.assertEqual(comparison.ahead_by, 4)
+            self.assertEqual(comparison.behind_by, 0)
+            self.assertEqual(
+                comparison.diff_url,
+                "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.diff",
+            )
+            self.assertEqual(
+                comparison.html_url,
+                "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7",
+            )
+            self.assertEqual(
+                comparison.url,
+                "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7?page=1",
+            )
+            self.assertEqual(
+                comparison.patch_url,
+                "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.patch",
+            )
+            self.assertEqual(
+                comparison.permalink_url,
+                "https://github.com/PyGithub/PyGithub/compare/PyGithub:4303c5b...PyGithub:ecda065",
+            )
+            self.assertEqual(comparison.total_commits, 4)
+            self.assertListKeyEqual(
+                comparison.files,
+                lambda f: f.filename,
+                [
+                    "ReferenceOfClasses.md",
+                    "github/Github.py",
+                    "github/Requester.py",
+                    "setup.py",
+                ],
+            )
+            self.assertEqual(comparison.base_commit.sha, "4303c5b90e2216d927155e9609436ccb8984c495")
+            self.assertListKeyEqual(
+                comparison.commits,
+                lambda c: c.sha,
+                [
+                    "5bb654d26dd014d36794acd1e6ecf3736f12aad7",
+                    "cb0313157bf904f2d364377d35d9397b269547a5",
+                    "0cec0d25e606c023a62a4fc7cdc815309ebf6d16",
+                    "ecda065e01876209d2bdf5fe4e91cee8ffaa9ff7",
+                ],
+            )
+
         self.assertListKeyEqual(
-            comparison.files,
-            lambda f: f.filename,
-            [
-                "ReferenceOfClasses.md",
-                "github/Github.py",
-                "github/Requester.py",
-                "setup.py",
-            ],
+            requests,
+            lambda r: r.url,
+            ["/repos/PyGithub/PyGithub/compare/v0.6...v0.7?page=1"],
         )
-        self.assertEqual(comparison.base_commit.sha, "4303c5b90e2216d927155e9609436ccb8984c495")
+
+    def testCompareCommitsPerPage(self):
+        with self.captureRequests() as requests:
+            comparison = self.repo.compare("v0.6", "v0.7", comparison_commits_per_page=3)
+
+            self.assertEqual(
+                comparison.diff_url,
+                "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.diff",
+            )
+            self.assertEqual(
+                comparison.html_url,
+                "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7",
+            )
+            self.assertEqual(
+                comparison.url,
+                "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7?per_page=3&page=1",
+            )
+            self.assertEqual(
+                comparison.patch_url,
+                "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.patch",
+            )
+            self.assertEqual(
+                comparison.permalink_url,
+                "https://github.com/PyGithub/PyGithub/compare/PyGithub:4303c5b...PyGithub:ecda065",
+            )
+            self.assertEqual(comparison.total_commits, 4)
+            self.assertListKeyEqual(
+                comparison.commits,
+                lambda c: c.sha,
+                [
+                    "5bb654d26dd014d36794acd1e6ecf3736f12aad7",
+                    "cb0313157bf904f2d364377d35d9397b269547a5",
+                    "0cec0d25e606c023a62a4fc7cdc815309ebf6d16",
+                    "ecda065e01876209d2bdf5fe4e91cee8ffaa9ff7",
+                ],
+            )
+
         self.assertListKeyEqual(
-            comparison.commits,
-            lambda c: c.sha,
+            requests,
+            lambda r: r.url,
             [
-                "5bb654d26dd014d36794acd1e6ecf3736f12aad7",
-                "cb0313157bf904f2d364377d35d9397b269547a5",
-                "0cec0d25e606c023a62a4fc7cdc815309ebf6d16",
-                "ecda065e01876209d2bdf5fe4e91cee8ffaa9ff7",
+                "/repos/PyGithub/PyGithub/compare/v0.6...v0.7?per_page=3&page=1",
+                "/repositories/3544490/compare/v0.6...v0.7?per_page=3&page=2",
             ],
         )
 

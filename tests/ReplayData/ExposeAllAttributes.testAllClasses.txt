@@ -376,7 +376,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/compare/master...develop
+/repos/jacquev6/PyGithub/compare/master...develop?page=1
 {'If-None-Match': '"ff2ab76c56b865233dfb98f5804276b6"', 'User-Agent': 'PyGithub/Python', 'Authorization': 'token private_token_removed', 'If-Modified-Since': 'Fri, 06 Sep 2013 09:04:41 GMT'}
 None
 304

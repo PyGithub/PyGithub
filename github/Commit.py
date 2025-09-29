@@ -152,8 +152,8 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
             headers=None,
             list_item="files",
             total_count_item="total_files",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
+            firstData=self.raw_data if self.completed else None,
+            firstHeaders=self.raw_headers if self.completed else None,
         )
 
     @property

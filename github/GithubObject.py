@@ -684,22 +684,48 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
 
         super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
 
+    def _useAttributes(self, attributes: Any) -> None:
+        # this object might have been created with an url while completing the object
+        # provides another url, which might reset initial pagination information
+        # we recover those pagination information here
+        if is_defined(self._url) and "url" in attributes:
+            parameters = self.requester.get_parameters_of_url(self.url)
+            pagination_params = {"per_page", "page"}
+            pagination = {
+                k: v[0] for k, v in parameters.items() if k in pagination_params and isinstance(v, list) and len(v) == 1
+            }
+            attributes["url"] = self.set_values_if_not_set(attributes["url"], unless=pagination_params, **pagination)
+
+        # TODO:
+        # ideally, we wouldn't modify attributes dict here but call
+        #   super()._useAttributes(attributes) which populates the url property
+        # then all CompletableObjects would have to call super()._useAttributes(attributes)
+        # and can remove url property
+
     @classmethod
-    def set_if_not_set(cls, attributes: dict[str, Any] | None, url: str | None, **kwargs) -> str | None:
+    def set_if_not_set(
+        cls, attributes: dict[str, Any] | None, url: str | None, unless: set[str] | None = None, **kwargs
+    ) -> str | None:
         # add values to the URL in the attributes
         if attributes is not None and "url" in attributes:
-            attributes["url"] = cls.set_values_if_not_set(attributes["url"], **kwargs)
+            attributes["url"] = cls.set_values_if_not_set(attributes["url"], unless, **kwargs)
         # add values to the request URL
-        return cls.set_values_if_not_set(url, **kwargs)
+        return cls.set_values_if_not_set(url, unless, **kwargs)
 
     @staticmethod
-    def set_values_if_not_set(url: str | None, **kwargs) -> str | None:
+    def set_values_if_not_set(url: str | None, unless: set[str] | None = None, **kwargs) -> str | None:
         if url is None:
             return url
+
+        if unless is None:
+            unless = set()
 
         from .Requester import Requester
 
         params = Requester.get_parameters_of_url(url)
+        if any(p in params for p in unless):
+            return url
+
         for k, v in kwargs.items():
             if k not in params:
                 params[k] = [str(v)]

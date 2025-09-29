@@ -377,6 +377,20 @@ class PaginatedList(Framework.TestCase):
             [comment.created_at for comment in comments],
         )
 
+    def testCustomPerPageReversedIterationSinglePage(self):
+        self.g.per_page = 4
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(3372).get_comments().reversed
+        self.assertEqual(
+            [
+                datetime(2025, 9, 17, 19, 49, 40, tzinfo=timezone.utc),
+                datetime(2025, 9, 17, 8, 44, 18, tzinfo=timezone.utc),
+                datetime(2025, 9, 16, 19, 22, 2, tzinfo=timezone.utc),
+                datetime(2025, 9, 15, 12, 15, 13, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
+
     # more custom per page tests in CompletableGithubObjectWithPaginatedProperty
 
     def testNoFirstPage(self):
