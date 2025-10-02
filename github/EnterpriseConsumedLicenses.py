@@ -83,12 +83,48 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def get_users(self) -> PaginatedList[NamedEnterpriseUser]:
+    @property
+    def users(self) -> PaginatedList[NamedEnterpriseUser]:
+        """
+        Identical to calling :meth:`github.Commit.Commit.get_files` except that this uses the pagination given when
+        getting this EnterpriseConsumedLicenses object (see
+        :meth:`github.Enterprise.Enterprise.get_consumed_licenses`).
+
+        A first page of users is retrieved when calling :meth:`github.Enterprise.Enterprise.get_consumed_licenses`.
+        Subsequent pages of the same size are retrieved while iterating over this :class:`github.PaginatedList.PaginatedList`.
+        In contrast, :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.get_users` ignores that exiting first page of users.
+
+        """
+        return PaginatedList(
+            NamedEnterpriseUser,
+            self._requester,
+            self.url,
+            headers=None,
+            list_item="users",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
+        )
+
+    def get_users(self, licence_users_per_page: int | None = None) -> PaginatedList[NamedEnterpriseUser]:
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+
+        Identical to calling :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users` except that this uses the given pagination.
+        Any existing users retrieved together with this EnterpriseConsumedLicenses object are ignored.
+
+        See :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users` for more details.
+
+        :param licence_users_per_page: int Number of users retrieved per page.
+               Iterating over the users will fetch pages of this size. The default page size is 30, the maximum is 100.
         """
 
+        assert (
+            licence_users_per_page is None or isinstance(licence_users_per_page, int) and licence_users_per_page > 0
+        ), licence_users_per_page
         url_parameters: dict[str, Any] = {}
+        if licence_users_per_page is not None:
+            url_parameters["per_page"] = licence_users_per_page
+            url_parameters["page"] = 1
         return PaginatedList(
             NamedEnterpriseUser,
             self._requester,
@@ -96,8 +132,6 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
             url_parameters,
             headers=None,
             list_item="users",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
