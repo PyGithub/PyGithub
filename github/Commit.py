@@ -140,10 +140,17 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
-    # This should be a method, but this used to be a property and cannot be changed without breaking user code
-    # TODO: remove @property on version 3
     @property
     def files(self) -> PaginatedList[File]:
+        """
+        Identical to calling :meth:`github.Commit.Commit.get_files` except that this uses the pagination given when
+        getting this commit (see :meth:`github.Repository.Repository.get_commit`).
+
+        A first page of commits is retrieved when calling :meth:`github.Repository.Repository.get_commit`.
+        Subsequent pages of the same size are retrieved while iterating over this :class:`github.PaginatedList.PaginatedList`.
+        In contrast, :meth:`github.Comparison.Comparison.get_files` ignores that exiting first page of commits.
+
+        """
         return PaginatedList(
             github.File.File,
             self._requester,
@@ -261,6 +268,33 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
             self._requester,
             f"{self.url}/comments",
             None,
+        )
+
+    def get_files(self, *, commit_files_per_page: int | None = None) -> PaginatedList[File]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha} <https://docs.github.com/en/rest/reference/repos#commits>`_
+
+        Identical to calling :meth:`github.Commit.Commit.files` except that this uses the given pagination.
+        Any existing files retrieved together with this commit are ignored.
+
+        See :meth:`github.Commit.Commit.files` for more details.
+
+        :param commit_files_per_page: int Number of files retrieved per page.
+               Iterating over the files will fetch pages of this size. The default page size is 30, the maximum is 100.
+        """
+        assert (
+            commit_files_per_page is None or isinstance(commit_files_per_page, int) and commit_files_per_page > 0
+        ), commit_files_per_page
+        url_parameters = {"page": 1}
+        if commit_files_per_page is not None:
+            url_parameters["per_page"] = commit_files_per_page
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            url_parameters,
+            headers=None,
+            list_item="files",
         )
 
     def get_statuses(self) -> PaginatedList[CommitStatus]:
