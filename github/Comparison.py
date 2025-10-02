@@ -91,15 +91,21 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
-    # This should be a method, but this used to be a property and cannot be changed without breaking user code
-    # TODO: remove @property on version 3
     @property
     def commits(self) -> PaginatedList[Commit]:
+        """
+        Identical to calling :meth:`github.Comparison.Comparison.get_commits` except that this uses the pagination
+        given when getting this comparison (see :meth:`github.Repository.Repository.compare`).
+
+        A first page of commits is retrieved when calling :meth:`github.Repository.Repository.compare`.
+        Subsequent pages of the same size are retrieved while iterating over this :class:`github.PaginatedList.PaginatedList`.
+        In contrast, :meth:`github.Comparison.Comparison.get_commits` ignores that exiting first page of commits.
+
+        """
         return PaginatedList(
             github.Commit.Commit,
             self._requester,
             self.url,
-            {},
             headers=None,
             list_item="commits",
             total_count_item="total_commits",
@@ -151,6 +157,39 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    def get_commits(self, *, comparison_commits_per_page: int | None = None) -> PaginatedList[Commit]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
+
+        Identical to calling :meth:`github.Comparison.Comparison.commits` except that this uses the given pagination.
+        Commits retrieved when calling :meth:`github.Repository.Repository.compare` are ignored.
+
+        Identical to calling :meth:`github.Comparison.Comparison.commits` except that this uses the given pagination.
+        Any existing commits retrieved together with this comparison are ignored.
+
+        See :meth:`github.Comparison.Comparison.commits` for more details.
+
+        :param comparison_commits_per_page: int Number of commits retrieved per page.
+               Iterating over the commits will fetch pages of this size. The default page size is 250, the maximum is 300.
+        """
+        assert (
+            comparison_commits_per_page is None
+            or isinstance(comparison_commits_per_page, int)
+            and comparison_commits_per_page > 0
+        ), comparison_commits_per_page
+        url_parameters: dict[str, Any] = {}
+        if comparison_commits_per_page is not None:
+            url_parameters["per_page"] = comparison_commits_per_page
+            url_parameters["page"] = 1
+        return PaginatedList(
+            github.Commit.Commit,
+            self._requester,
+            self.url,
+            url_parameters,
+            headers=None,
+            list_item="commits",
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
