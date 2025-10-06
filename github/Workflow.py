@@ -168,13 +168,15 @@ class Workflow(CompletableGithubObject):
             ref = ref.name
         if inputs is NotSet:
             inputs = {}
-        try:
-            self._requester.requestJsonAndCheck("POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs})
-        except GithubException.GithubException:
-            if throw:
-                raise
-            return False
-        return True
+        url = f"{self.url}/dispatches"
+        input = {"ref": ref, "inputs": inputs}
+
+        if throw:
+            self._requester.requestJsonAndCheck("POST", url, input=input)
+            return True
+        else:
+            status, _, _ = self._requester.requestJson("POST", url, input=input)
+            return status == 204
 
     def get_runs(
         self,
