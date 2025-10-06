@@ -150,10 +150,8 @@ class Workflow(CompletableGithubObject):
         throw: bool = False,
     ) -> bool:
         """
-        Call Create Dispatch, raises or return False without details on error, depending on the "throw" parameter.
-
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
-
+        Note: raises or return False without details on error, depending on the ``throw`` parameter.
         """
         assert (
             isinstance(ref, github.Branch.Branch)
