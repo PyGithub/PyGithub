@@ -356,7 +356,7 @@ class Github:
         """
         Rate limit overview that provides general status and status for different resources (core/search/graphql).
 
-        :calls:`GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
@@ -1000,26 +1000,6 @@ class Github:
         information like the Github credentials used in the :class:`Github` instance. But NO EFFORT is made to remove
         sensitive information from the object's attributes.
 
-        :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
-         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-             stream-format>`_ :param obj: the object to pickle :param file: the file-like object to pickle to :param
-        protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-            stream-format>`_
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-            stream-format>`_
         :param obj: the object to pickle
         :param file: the file-like object to pickle to
         :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-

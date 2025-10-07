@@ -883,7 +883,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
-        <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
+            <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
         """
         assert is_optional(author_email, str), author_email
         assert is_optional(client_mutation_id, str), client_mutation_id
@@ -917,7 +917,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to disable pull request auto merge
-        <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
+            <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -1013,7 +1013,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to convert pull request to draft
-        <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
+            <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -1038,7 +1038,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to mark pull request ready for review
-        <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
+            <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 

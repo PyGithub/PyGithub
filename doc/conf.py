@@ -275,7 +275,7 @@ texinfo_documents = [
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 # texinfo_show_urls = 'footnote'
 
-autodoc_default_flags = ["members"]
+autodoc_default_options = {"members": True}
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 

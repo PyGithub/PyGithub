@@ -180,7 +180,9 @@ class Authentication(Framework.BasicTestCase):
     def testAppInstallationAuthAuthentication(self):
         # test data copied from testAppAuthentication to test parity
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
-        g = github.Github(auth=installation_auth)
+        g = github.Github(
+            auth=installation_auth, lazy=False, seconds_between_requests=None, seconds_between_writes=None
+        )
 
         # token expires 2024-11-25 01:00:02
         token = installation_auth.token

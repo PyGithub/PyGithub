@@ -323,6 +323,12 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(review_requests[0].totalCount, 0)
         self.assertEqual(review_requests[1].totalCount, 0)
 
+    def testTotalCountWithDeprecationLink(self):
+        # Test the original reported scenario: search_issues with commit SHA
+        issues = self.g.search_issues("commit:example_sha")
+        # Should return the actual count from JSON, not 0
+        self.assertEqual(issues.totalCount, 1)
+
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100
