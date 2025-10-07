@@ -675,14 +675,14 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
 
         # add per_page to URL if instance is incomplete
         # we only modify the URL if this instance is incomplete
-        if completed is None or completed is False:
+        if not completed:
             if per_page is None:
                 # we use the default per_page (not Consts.DEFAULT_PER_PAGE as this URL might have a different default)
                 # we set page=1 to get pagination links, PaginatedList can work from there
                 url = self.set_if_not_set(attributes, url, page=1)
             else:
                 # we set the given per_page
-                url = self.set_if_not_set(attributes, url, unless={"page"}, per_page=per_page)
+                url = self.set_if_not_set(attributes, url, per_page=per_page, page=1)
 
         super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
 
