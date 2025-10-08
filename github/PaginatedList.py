@@ -111,6 +111,12 @@ class PaginatedListBase(Generic[T]):
         self.__elements += newElements
         return newElements
 
+    def _clear(self):
+        self.__elements.clear()
+
+    def _reverse(self) -> None:
+        self.__elements.reverse()
+
     class _Slice:
         def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
             self.__list = theList
@@ -363,15 +369,18 @@ class PaginatedList(PaginatedListBase[T]):
         if self.is_rest:
             if self.__lastUrl is None:
                 self.__lastUrl = self._getLastPageUrl()
-            if self.__lastUrl and self.__lastUrl != self.__firstUrl:
-                self.__nextUrl = self.__lastUrl
-                if self.__nextParams:
-                    # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
-                    self.__nextParams = {
-                        k: v
-                        for k, v in self.__nextParams.items()
-                        if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
-                    }
+            if self.__lastUrl:
+                if self.__lastUrl != self.__firstUrl:
+                    super()._clear()
+                    self.__nextUrl = self.__lastUrl
+                    if self.__nextParams:
+                        # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
+                        self.__nextParams = {
+                            k: v
+                            for k, v in self.__nextParams.items()
+                            if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
+                        }
+            super()._reverse()
 
     # To support Python's built-in `reversed()` method
     def __reversed__(self) -> PaginatedList[T]:
