@@ -59,6 +59,7 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._ahead_by: Attribute[int] = NotSet
         self._base_commit: Attribute[Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
@@ -71,7 +72,6 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         self._permalink_url: Attribute[str] = NotSet
         self._status: Attribute[str] = NotSet
         self._total_commits: Attribute[int] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
@@ -153,11 +153,6 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         self._completeIfNotSet(self._total_commits)
         return self._total_commits.value
 
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
-
     def get_commits(self, *, comparison_commits_per_page: int | None = None) -> PaginatedList[Commit]:
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
@@ -217,5 +212,3 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
             self._status = self._makeStringAttribute(attributes["status"])
         if "total_commits" in attributes:  # pragma no branch
             self._total_commits = self._makeIntAttribute(attributes["total_commits"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])

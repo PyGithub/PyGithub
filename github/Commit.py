@@ -99,6 +99,7 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._author: Attribute[NamedUser] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
@@ -111,7 +112,6 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         self._sha: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -197,11 +197,6 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
     def text_matches(self) -> dict[str, Any]:
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
 
     def create_comment(
         self,
@@ -369,6 +364,7 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "comments_url" in attributes:  # pragma no branch
@@ -397,8 +393,6 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
 
 
 class CommitSearchResult(Commit):

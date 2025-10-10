@@ -648,6 +648,18 @@ class CompletableGithubObject(GithubObject, ABC):
             self.__completed = True
             return True
 
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
+
 
 class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     """
@@ -695,12 +707,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
                 k: v[0] for k, v in parameters.items() if k in pagination_params and isinstance(v, list) and len(v) == 1
             }
             attributes["url"] = self.set_values_if_not_set(attributes["url"], unless=pagination_params, **pagination)
-
-        # TODO:
-        # ideally, we wouldn't modify attributes dict here but call
-        #   super()._useAttributes(attributes) which populates the url property
-        # then all CompletableObjects would have to call super()._useAttributes(attributes)
-        # and can remove url property
+        super()._useAttributes(attributes)
 
     @classmethod
     def set_if_not_set(

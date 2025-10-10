@@ -57,10 +57,10 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._enterprise: Attribute[str] = NotSet
         self._total_seats_consumed: Attribute[int] = NotSet
         self._total_seats_purchased: Attribute[int] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"enterprise": self._enterprise.value})
@@ -77,11 +77,6 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
     @property
     def total_seats_purchased(self) -> int:
         return self._total_seats_purchased.value
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
 
     @property
     def users(self) -> PaginatedList[NamedEnterpriseUser]:
@@ -135,11 +130,10 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "enterprise" in attributes:  # pragma no branch
             self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "total_seats_consumed" in attributes:  # pragma no branch
             self._total_seats_consumed = self._makeIntAttribute(attributes["total_seats_consumed"])
         if "total_seats_purchased" in attributes:  # pragma no branch
             self._total_seats_purchased = self._makeIntAttribute(attributes["total_seats_purchased"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
