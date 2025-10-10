@@ -115,7 +115,7 @@ jobs:
           git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git log --oneline "$branch...openapi/main"
-            git diff openapi/main "$branch"
+            git diff openapi/autosync "$branch"
             echo "::endgroup::"
           done
       - name: Log on error
@@ -141,7 +141,7 @@ jobs:
           done
 
           # push if there are changes
-          if ! git diff --quiet openapi/main; then
+          if ! git diff --quiet openapi/autosync; then
             echo "Pushing changes to origin openapi/autosync-new-classes"
             git push origin openapi/autosync-new-classes
           fi
