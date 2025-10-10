@@ -66,9 +66,10 @@ import os
 import traceback
 import unittest
 import warnings
+from collections.abc import Generator
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Any
+from typing import Any, Callable
 
 import responses
 from requests.structures import CaseInsensitiveDict
@@ -171,15 +172,16 @@ class RequestResponse(Request):
 
 
 class Connection:
-    __openFile = None
+    __openFile: Callable[[str], ReplayDataFile] | None = None
     __requests: list[RequestResponse] = []
 
     @classmethod
-    def setOpenFile(cls, func):
+    def setOpenFile(cls, func: Callable[[str], ReplayDataFile]):
         cls.__openFile = func
 
     @classmethod
     def openFile(cls, mode: str):
+        assert cls.__openFile is not None
         return cls.__openFile(mode)
 
     @classmethod
@@ -541,8 +543,8 @@ class BasicTestCase(unittest.TestCase):
             self.__customFilename = previous
 
     @contextlib.contextmanager
-    def captureRequests(self) -> list[RequestResponse]:
-        requests = []
+    def captureRequests(self) -> Generator[list[RequestResponse]]:
+        requests: list[RequestResponse] = []
         earlier_requests = Connection.resetRequests(requests)
         try:
             yield requests

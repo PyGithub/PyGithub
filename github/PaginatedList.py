@@ -111,7 +111,7 @@ class PaginatedListBase(Generic[T]):
         self.__elements += newElements
         return newElements
 
-    def _clear(self):
+    def _clear(self) -> None:
         self.__elements.clear()
 
     def _reverse(self) -> None:

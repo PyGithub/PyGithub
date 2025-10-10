@@ -711,7 +711,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
 
     @classmethod
     def set_if_not_set(
-        cls, attributes: dict[str, Any] | None, url: str | None, unless: set[str] | None = None, **kwargs
+        cls, attributes: dict[str, Any] | None, url: str | None, unless: set[str] | None = None, **kwargs: Any
     ) -> str | None:
         # add values to the URL in the attributes
         if attributes is not None and "url" in attributes:
@@ -720,7 +720,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
         return cls.set_values_if_not_set(url, unless, **kwargs)
 
     @staticmethod
-    def set_values_if_not_set(url: str | None, unless: set[str] | None = None, **kwargs) -> str | None:
+    def set_values_if_not_set(url: str | None, unless: set[str] | None = None, **kwargs: Any) -> str | None:
         if url is None:
             return url
 
