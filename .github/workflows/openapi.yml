@@ -64,7 +64,7 @@ jobs:
       - name: Changes
         run: |
           # Show changes
-          git branch -a | grep openapi/autosync- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git log --oneline "$branch...openapi/main"
             git diff openapi/main "$branch"
@@ -85,7 +85,7 @@ jobs:
         run: |
           # Commit changes
           git checkout -b openapi/autosync
-          git branch -a | grep openapi/autosync- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git merge --squash "$branch"
             git commit --no-edit
@@ -113,7 +113,7 @@ jobs:
       - name: Changes
         run: |
           # Show changes
-          git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-new-classes-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git log --oneline "$branch...openapi/main"
             git diff openapi/autosync "$branch"
@@ -134,7 +134,7 @@ jobs:
         run: |
           # Commit changes
           git checkout -b openapi/autosync-new-classes
-          git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-new-classes-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git merge --squash "$branch" || true
             git commit --no-edit || true
