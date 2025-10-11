@@ -156,6 +156,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.tag_name, tag)
         self.assertEqual(release.tarball_url, "https://api.github.com/repos/rickrickston123/RepoTest/tarball/v1.0")
         self.assertEqual(release.target_commitish, "master")
+        self.assertIsNone(release.updated_at)
         self.assertEqual(
             release.upload_url,
             f"https://uploads.github.com/repos/{user}/{repo_name}/releases/{release_id}/assets{{?name,label}}",
