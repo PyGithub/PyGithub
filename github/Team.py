@@ -111,6 +111,7 @@ class Team(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
+        self._enterprise_id: Attribute[int] = NotSet
         self._group_id: Attribute[int] = NotSet
         self._group_name: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -122,6 +123,7 @@ class Team(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._notification_setting: Attribute[str] = NotSet
         self._organization: Attribute[Organization] = NotSet
+        self._organization_id: Attribute[int] = NotSet
         self._organization_selection_type: Attribute[str] = NotSet
         self._parent: Attribute[github.Team.Team] = NotSet
         self._permission: Attribute[str] = NotSet
@@ -131,6 +133,7 @@ class Team(CompletableGithubObject):
         self._repositories_url: Attribute[str] = NotSet
         self._slug: Attribute[str] = NotSet
         self._sync_to_organizations: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -150,6 +153,11 @@ class Team(CompletableGithubObject):
     def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
+
+    @property
+    def enterprise_id(self) -> int:
+        self._completeIfNotSet(self._enterprise_id)
+        return self._enterprise_id.value
 
     @property
     def group_id(self) -> int:
@@ -207,6 +215,11 @@ class Team(CompletableGithubObject):
         return self._organization.value
 
     @property
+    def organization_id(self) -> int:
+        self._completeIfNotSet(self._organization_id)
+        return self._organization_id.value
+
+    @property
     def organization_selection_type(self) -> str:
         self._completeIfNotSet(self._organization_selection_type)
         return self._organization_selection_type.value
@@ -250,6 +263,11 @@ class Team(CompletableGithubObject):
     def sync_to_organizations(self) -> str:
         self._completeIfNotSet(self._sync_to_organizations)
         return self._sync_to_organizations.value
+
+    @property
+    def type(self) -> str:
+        self._completeIfNotSet(self._type)
+        return self._type.value
 
     @property
     def updated_at(self) -> datetime:
@@ -508,6 +526,8 @@ class Team(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "enterprise_id" in attributes:  # pragma no branch
+            self._enterprise_id = self._makeIntAttribute(attributes["enterprise_id"])
         if "group_id" in attributes:  # pragma no branch
             self._group_id = self._makeIntAttribute(attributes["group_id"])
         if "group_name" in attributes:  # pragma no branch
@@ -530,6 +550,8 @@ class Team(CompletableGithubObject):
             self._notification_setting = self._makeStringAttribute(attributes["notification_setting"])
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+        if "organization_id" in attributes:  # pragma no branch
+            self._organization_id = self._makeIntAttribute(attributes["organization_id"])
         if "organization_selection_type" in attributes:  # pragma no branch
             self._organization_selection_type = self._makeStringAttribute(attributes["organization_selection_type"])
         if "parent" in attributes:  # pragma no branch
@@ -548,6 +570,8 @@ class Team(CompletableGithubObject):
             self._slug = self._makeStringAttribute(attributes["slug"])
         if "sync_to_organizations" in attributes:  # pragma no branch
             self._sync_to_organizations = self._makeStringAttribute(attributes["sync_to_organizations"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
