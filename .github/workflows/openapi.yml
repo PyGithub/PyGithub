@@ -88,6 +88,9 @@ jobs:
           git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git merge --squash "$branch"
+            echo "Squashed changes for ${branch#openapi/autosync-}" > git-msg
+            tail -n +2 .git/COMMIT_EDITMSG >> git-msg
+            mv git-msg .git/COMMIT_EDITMSG
             git commit --no-edit
             echo "::endgroup::"
           done
@@ -137,6 +140,9 @@ jobs:
           git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-new-classes-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git merge --squash "$branch" || true
+            echo "Squashed changes for ${branch#openapi/autosync-new-classes-}" > git-msg
+            tail -n +2 .git/COMMIT_EDITMSG >> git-msg
+            mv git-msg .git/COMMIT_EDITMSG
             git commit --no-edit || true
             echo "::endgroup::"
           done
