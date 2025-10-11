@@ -149,6 +149,7 @@ class Issue(CompletableGithubObject):
         self._milestone: Attribute[Milestone] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
+        self._parent_issue_url: Attribute[str] = NotSet
         self._performed_via_github_app: Attribute[GithubApp] = NotSet
         self._pull_request: Attribute[IssuePullRequest] = NotSet
         self._reactions: Attribute[dict] = NotSet
@@ -286,6 +287,11 @@ class Issue(CompletableGithubObject):
     def number(self) -> int:
         self._completeIfNotSet(self._number)
         return self._number.value
+
+    @property
+    def parent_issue_url(self) -> str:
+        self._completeIfNotSet(self._parent_issue_url)
+        return self._parent_issue_url.value
 
     @property
     def performed_via_github_app(self) -> GithubApp:
@@ -748,6 +754,8 @@ class Issue(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        if "parent_issue_url" in attributes:  # pragma no branch
+            self._parent_issue_url = self._makeStringAttribute(attributes["parent_issue_url"])
         if "performed_via_github_app" in attributes:  # pragma no branch
             self._performed_via_github_app = self._makeClassAttribute(
                 github.GithubApp.GithubApp, attributes["performed_via_github_app"]
