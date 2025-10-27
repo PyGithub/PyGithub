@@ -162,7 +162,9 @@ class GithubIntegration(Framework.BasicTestCase):
 
     def testGetAccessToken(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
-        github_integration = github.GithubIntegration(auth=auth)
+        github_integration = github.GithubIntegration(
+            auth=auth, seconds_between_writes=None, seconds_between_requests=None
+        )
 
         # Get repo installation access token
         repo_installation_authorization = github_integration.get_access_token(self.repo_installation_id)
