@@ -75,7 +75,7 @@ jobs:
           cat openapi-update-classes.log
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Sync logs
           path: |
@@ -127,7 +127,7 @@ jobs:
           cat openapi-update-classes.log
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Create new classes logs
           path: |
