@@ -3172,6 +3172,7 @@ class Repository(CompletableGithubObject):
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
         creator: Opt[NamedUser] = NotSet,
+        type: Opt[str] = NotSet,
     ) -> PaginatedList[Issue]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -3184,11 +3185,13 @@ class Repository(CompletableGithubObject):
         :param direction: string
         :param since: datetime
         :param creator: string or :class:`github.NamedUser.NamedUser`
+        :param type: string
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
         assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
         assert is_optional(state, str), state
         assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
+        assert is_optional(type, str), type
         assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
         assert is_optional_list(labels, (github.Label.Label, str)), labels
         assert is_optional(sort, str), sort
@@ -3208,6 +3211,8 @@ class Repository(CompletableGithubObject):
                 url_parameters["assignee"] = assignee._identity
             else:
                 url_parameters["assignee"] = assignee
+        if is_defined(type):
+            url_parameters["type"] = type
         if is_defined(mentioned):
             url_parameters["mentioned"] = mentioned._identity
         if is_defined(labels):
