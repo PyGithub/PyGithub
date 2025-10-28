@@ -49,7 +49,7 @@ jobs:
           name: Test Results (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
           path: pytest.xml
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
 
   test_success:
     # this aggregates success state of all jobs listed in `needs`
