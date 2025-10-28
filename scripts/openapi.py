@@ -3182,6 +3182,33 @@ class OpenApi:
         else:
             print(f"Applying API schemas to {len(class_methods)} PyGithub classes")
 
+        def get_methods(cls_methods, method_names):
+            methods = []
+            for n, m in cls_methods.items():
+                if method_names and n not in method_names:
+                    continue
+
+                call = m.get("call")
+                if call is None:
+                    continue
+
+                path = call.get("path")
+                if not path:
+                    continue
+
+                verb = call.get("verb")
+                if not verb:
+                    print(f"Method {n} calls {path} but has no verb")
+                    continue
+
+                schema = paths.get(path, {}).get(verb.lower())
+                if schema is None:
+                    print(f"Method {n} calls {path} but no schema found")
+                    continue
+
+                methods.append(Method.from_schema(n, schema, path, verb, spec, index))
+            return methods
+
         any_change = False
         for class_name, method_names in class_methods.items():
             clazz = GithubClass.from_class_name(class_name, index)
@@ -3192,17 +3219,7 @@ class OpenApi:
             class_change = False
 
             # update methods
-            methods = [
-                Method.from_schema(n, schema, path, verb, spec, index)
-                for n, m in cls_methods.items()
-                if method_names is None or n in method_names
-                for call in [m.get("call", {})]
-                for path, verb in [(call.get("path"), call.get("verb"))]
-                if verb
-                for schema in [paths.get(path, {}).get(verb.lower())]
-                if schema is not None
-            ]
-
+            methods = get_methods(cls_methods, method_names)
             if methods:
                 with open(clazz.filename) as r:
                     code = "".join(r.readlines())
