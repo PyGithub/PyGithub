@@ -329,6 +329,23 @@ class PaginatedList(Framework.TestCase):
         # Should return the actual count from JSON, not 0
         self.assertEqual(issues.totalCount, 1)
 
+    def testSearchIncompleteResults(self):
+        issues = self.g.search_issues("is:open is:issue label:bug")
+        self.assertEqual(issues.totalCount, 1000)
+        self.assertFalse(issues.incomplete_results)
+        incomplete_prs = self.g.search_issues(
+            "type:pr repo:ClickHouse/ClickHouse -label:pr-backports-created "
+            "label:pr-must-backport,v25.3-must-backport,v25.7-must-backport"
+            ",v25.8-must-backport,v25.9-must-backport,v25.10-must-backport,pr-must-backport "
+            "merged:2025-01-01..2025-12-31"
+        )
+        # totalCount doesn't reflect the actual number of results when
+        # incomplete_results is True
+        self.assertEqual(incomplete_prs.totalCount, 0)
+        self.assertFalse(incomplete_prs.incomplete_results)
+        list(incomplete_prs)
+        self.assertTrue(incomplete_prs.incomplete_results)
+
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100
