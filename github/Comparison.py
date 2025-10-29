@@ -37,32 +37,35 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.Commit
 import github.File
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
 from github.PaginatedList import PaginatedList
 
+if TYPE_CHECKING:
+    from github.Commit import Commit
 
-class Comparison(CompletableGithubObject):
+
+class Comparison(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Comparisons.
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._ahead_by: Attribute[int] = NotSet
-        self._base_commit: Attribute[github.Commit.Commit] = NotSet
+        self._base_commit: Attribute[Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._files: Attribute[list[github.File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
-        self._merge_base_commit: Attribute[github.Commit.Commit] = NotSet
+        self._merge_base_commit: Attribute[Commit] = NotSet
         self._patch_url: Attribute[str] = NotSet
         self._permalink_url: Attribute[str] = NotSet
         self._status: Attribute[str] = NotSet
         self._total_commits: Attribute[int] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
@@ -73,7 +76,7 @@ class Comparison(CompletableGithubObject):
         return self._ahead_by.value
 
     @property
-    def base_commit(self) -> github.Commit.Commit:
+    def base_commit(self) -> Commit:
         self._completeIfNotSet(self._base_commit)
         return self._base_commit.value
 
@@ -82,20 +85,26 @@ class Comparison(CompletableGithubObject):
         self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
-    # This should be a method, but this used to be a property and cannot be changed without breaking user code
-    # TODO: remove @property on version 3
     @property
-    def commits(self) -> PaginatedList[github.Commit.Commit]:
+    def commits(self) -> PaginatedList[Commit]:
+        """
+        Identical to calling :meth:`github.Comparison.Comparison.get_commits` except that this uses the pagination
+        given when getting this comparison (see :meth:`github.Repository.Repository.compare`).
+
+        A first page of commits is retrieved when calling :meth:`github.Repository.Repository.compare`.
+        Subsequent pages of the same size are retrieved while iterating over this :class:`github.PaginatedList.PaginatedList`.
+        In contrast, :meth:`github.Comparison.Comparison.get_commits` ignores that exiting first page of commits.
+
+        """
         return PaginatedList(
             github.Commit.Commit,
             self._requester,
             self.url,
-            {},
             headers=None,
             list_item="commits",
             total_count_item="total_commits",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
+            firstData=self.raw_data if self.completed else None,
+            firstHeaders=self.raw_headers if self.completed else None,
         )
 
     @property
@@ -114,7 +123,7 @@ class Comparison(CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def merge_base_commit(self) -> github.Commit.Commit:
+    def merge_base_commit(self) -> Commit:
         self._completeIfNotSet(self._merge_base_commit)
         return self._merge_base_commit.value
 
@@ -138,12 +147,41 @@ class Comparison(CompletableGithubObject):
         self._completeIfNotSet(self._total_commits)
         return self._total_commits.value
 
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
+    def get_commits(self, *, comparison_commits_per_page: int | None = None) -> PaginatedList[Commit]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
+
+        Identical to calling :meth:`github.Comparison.Comparison.commits` except that this uses the given pagination.
+        Commits retrieved when calling :meth:`github.Repository.Repository.compare` are ignored.
+
+        Identical to calling :meth:`github.Comparison.Comparison.commits` except that this uses the given pagination.
+        Any existing commits retrieved together with this comparison are ignored.
+
+        See :meth:`github.Comparison.Comparison.commits` for more details.
+
+        :param comparison_commits_per_page: int Number of commits retrieved per page.
+               Iterating over the commits will fetch pages of this size. The default page size is 250, the maximum is 300.
+        """
+        assert (
+            comparison_commits_per_page is None
+            or isinstance(comparison_commits_per_page, int)
+            and comparison_commits_per_page > 0
+        ), comparison_commits_per_page
+        url_parameters: dict[str, Any] = {}
+        if comparison_commits_per_page is not None:
+            url_parameters["per_page"] = comparison_commits_per_page
+            url_parameters["page"] = 1
+        return PaginatedList(
+            github.Commit.Commit,
+            self._requester,
+            self.url,
+            url_parameters,
+            headers=None,
+            list_item="commits",
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "ahead_by" in attributes:  # pragma no branch
             self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch
@@ -166,5 +204,3 @@ class Comparison(CompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "total_commits" in attributes:  # pragma no branch
             self._total_commits = self._makeIntAttribute(attributes["total_commits"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])

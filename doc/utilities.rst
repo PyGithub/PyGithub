@@ -33,7 +33,13 @@ Pagination
 
 .. autoclass:: github.PaginatedList.PaginatedList()
 
-Input classes
+Getting classes with paginated properties
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- :meth:`github.Repository.Repository.compare`
+- :meth:`github.Repository.Repository.get_commit`
+- :meth:`github.Enterprise.Enterprise.get_consumed_licenses`
+
 -------------
 
 .. autoclass:: github.InputFileContent.InputFileContent
