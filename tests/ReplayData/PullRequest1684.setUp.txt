@@ -2,17 +2,6 @@ https
 GET
 api.github.com
 None
-/users/ReDASers
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('Server', 'GitHub.com'), ('Date', 'Mon, 07 Sep 2020 22:00:47 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"e03ba66cb434ea917b2213d2e622f165"'), ('Last-Modified', 'Sun, 23 Aug 2020 16:44:50 GMT'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4923'), ('X-RateLimit-Reset', '1599518262'), ('X-RateLimit-Used', '77'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'C17A:56E7:26E44F:7DEC16:5F56AD8E')]
-{"login":"ReDASers","id":67067070,"node_id":"MDEyOk9yZ2FuaXphdGlvbjY3MDY3MDcw","avatar_url":"https://avatars0.githubusercontent.com/u/67067070?v=4","gravatar_id":"","url":"https://api.github.com/users/ReDASers","html_url":"https://github.com/ReDASers","followers_url":"https://api.github.com/users/ReDASers/followers","following_url":"https://api.github.com/users/ReDASers/following{/other_user}","gists_url":"https://api.github.com/users/ReDASers/gists{/gist_id}","starred_url":"https://api.github.com/users/ReDASers/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/ReDASers/subscriptions","organizations_url":"https://api.github.com/users/ReDASers/orgs","repos_url":"https://api.github.com/users/ReDASers/repos","events_url":"https://api.github.com/users/ReDASers/events{/privacy}","received_events_url":"https://api.github.com/users/ReDASers/received_events","type":"Organization","site_admin":false,"name":null,"company":null,"blog":"","location":null,"email":null,"hireable":null,"bio":null,"twitter_username":null,"public_repos":1,"public_gists":0,"followers":0,"following":0,"created_at":"2020-06-17T16:24:55Z","updated_at":"2020-08-23T16:44:50Z"}
-
-https
-GET
-api.github.com
-None
 /repos/ReDASers/Phishing-Detection
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None

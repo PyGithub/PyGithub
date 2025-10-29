@@ -398,7 +398,7 @@ class Requester:
         pool_size: int | None,
         seconds_between_requests: float | None = None,
         seconds_between_writes: float | None = None,
-        lazy: bool = False,
+        lazy: bool = True,
     ):
         self._initializeDebugFeature()
 

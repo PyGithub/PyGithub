@@ -24,17 +24,6 @@ https
 GET
 api.github.com
 None
-/users/shahryarabaki
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('Server', 'GitHub.com'), ('Date', 'Tue, 27 Oct 2020 20:01:34 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"41eac0814954da003d4caa61d87eb4301827596dc7a117fd554c912dea4a376c"'), ('Last-Modified', 'Tue, 29 Sep 2020 03:18:45 GMT'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4911'), ('X-RateLimit-Reset', '1603831065'), ('X-RateLimit-Used', '89'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'F14B:0434:AF45A:125316:5F987C9D')]
-{"login":"shahryarabaki","id":19786497,"node_id":"MDQ6VXNlcjE5Nzg2NDk3","avatar_url":"https://avatars3.githubusercontent.com/u/19786497?v=4","gravatar_id":"","url":"https://api.github.com/users/shahryarabaki","html_url":"https://github.com/shahryarabaki","followers_url":"https://api.github.com/users/shahryarabaki/followers","following_url":"https://api.github.com/users/shahryarabaki/following{/other_user}","gists_url":"https://api.github.com/users/shahryarabaki/gists{/gist_id}","starred_url":"https://api.github.com/users/shahryarabaki/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/shahryarabaki/subscriptions","organizations_url":"https://api.github.com/users/shahryarabaki/orgs","repos_url":"https://api.github.com/users/shahryarabaki/repos","events_url":"https://api.github.com/users/shahryarabaki/events{/privacy}","received_events_url":"https://api.github.com/users/shahryarabaki/received_events","type":"User","site_admin":false,"name":"Shahryar Baki","company":"University of Houston","blog":"http://www2.cs.uh.edu/~shahryar/","location":"United State","email":"sh.baki@gmail.com","hireable":null,"bio":"Graduate Student at University of Houston","twitter_username":null,"public_repos":6,"public_gists":0,"followers":4,"following":0,"created_at":"2016-06-06T22:05:34Z","updated_at":"2020-09-29T03:18:45Z"}
-
-https
-GET
-api.github.com
-None
 /repos/ReDASers/Phishing-Detection/actions/runs?actor=shahryarabaki
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
