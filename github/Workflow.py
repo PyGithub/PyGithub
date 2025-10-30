@@ -50,7 +50,6 @@ from typing import Any
 
 import github.Branch
 import github.Commit
-import github.GithubException as GithubException
 import github.GithubObject
 import github.NamedUser
 import github.Tag
