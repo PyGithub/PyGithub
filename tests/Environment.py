@@ -191,7 +191,8 @@ class Environment(Framework.TestCase):
     def testDeleteEnvironment(self):
         self.repo.delete_environment("test")
         with pytest.raises(github.UnknownObjectException):
-            self.repo.get_environment("test")
+            # access property to trigger request
+            self.repo.get_environment("test").id
 
     def testEnvironmentVariable(self):
         repo = self.g.get_repo("AndrewJDawes/PyGithub")

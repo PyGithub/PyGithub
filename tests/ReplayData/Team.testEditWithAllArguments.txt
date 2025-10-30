@@ -13,7 +13,7 @@ https
 PATCH
 api.github.com
 None
-/organizations/1234567/team/12345678
+/teams/12345678
 {'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"name": "Name edited twice by PyGithub", "permission": "admin", "privacy": "secret", "description": "Description edited by PyGithub", "parent_team_id": 141496, "notification_setting": "notifications_disabled"}
 200

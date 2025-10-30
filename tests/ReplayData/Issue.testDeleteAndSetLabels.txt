@@ -2,28 +2,6 @@ https
 GET
 api.github.com
 None
-/repos/PyGithub/PyGithub/labels/Bug
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('status', '200 OK'), ('x-ratelimit-remaining', '4974'), ('content-length', '97'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"fe2e942523eecb156d100829a6347516"'), ('date', 'Sun, 27 May 2012 09:06:37 GMT'), ('content-type', 'application/json; charset=utf-8')]
-{"url":"https://api.github.com/repos/PyGithub/PyGithub/labels/Bug","name":"Bug","color":"e10c02"}
-
-https
-GET
-api.github.com
-None
-/repos/PyGithub/PyGithub/labels/Question
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('status', '200 OK'), ('x-ratelimit-remaining', '4973'), ('content-length', '107'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"931e58d337b2290717303141eda89cd7"'), ('date', 'Sun, 27 May 2012 09:06:38 GMT'), ('content-type', 'application/json; charset=utf-8')]
-{"color":"02e10c","url":"https://api.github.com/repos/PyGithub/PyGithub/labels/Question","name":"Question"}
-
-https
-GET
-api.github.com
-None
 /repos/PyGithub/PyGithub/issues/28/labels
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
@@ -52,6 +30,28 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4970'), ('content-length', '2'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d751713988987e9331980363e24189ce"'), ('date', 'Sun, 27 May 2012 09:06:40 GMT'), ('content-type', 'application/json; charset=utf-8')]
 []
+
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/labels/Bug
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4974'), ('content-length', '97'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"fe2e942523eecb156d100829a6347516"'), ('date', 'Sun, 27 May 2012 09:06:37 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"url":"https://api.github.com/repos/PyGithub/PyGithub/labels/Bug","name":"Bug","color":"e10c02"}
+
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/labels/Question
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4973'), ('content-length', '107'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"931e58d337b2290717303141eda89cd7"'), ('date', 'Sun, 27 May 2012 09:06:38 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"color":"02e10c","url":"https://api.github.com/repos/PyGithub/PyGithub/labels/Question","name":"Question"}
 
 https
 PUT
