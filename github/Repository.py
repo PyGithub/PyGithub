@@ -3460,6 +3460,20 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
+    def get_commit_pulls(self, commit_sha: str) -> PaginatedList[PullRequest]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`__
+        :param commit_sha: string
+        :rtype: :class:`PaginatedList` of :class:`github.PullRequest.Pull
+        """
+        return PaginatedList(
+            github.PullRequest.PullRequest,
+            self._requester,
+            f"{self.url}/commits/{commit_sha}/pulls",
+            None,
+            headers={"Accept": "application/vnd.github.groot-preview+json"},
+        )
+
     def get_pulls_comments(
         self,
         sort: Opt[str] = NotSet,

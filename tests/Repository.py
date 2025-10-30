@@ -1585,6 +1585,11 @@ class Repository(Framework.TestCase):
     def testGetPulls(self):
         self.assertListKeyEqual(self.repo.get_pulls(), lambda p: p.id, [1436310])
 
+    def testGetCommitPulls(self):
+        self.assertListKeyEqual(
+            self.repo.get_commit_pulls("e44d11d565c022496544dd6ed1f19a8d718c2b0c"), lambda p: p.id, [385799287]
+        )
+
     def testGetPullsWithArguments(self):
         self.assertListKeyEqual(self.repo.get_pulls("closed"), lambda p: p.id, [1448168, 1436310, 1436215])
 
