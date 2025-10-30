@@ -86,8 +86,9 @@ class Exceptions(Framework.TestCase):
         )
 
     def testUnknownObject(self):
+        repo = self.g.get_user().get_repo("Xxx")
         with self.assertRaises(github.GithubException) as raisedexp:
-            self.g.get_user().get_repo("Xxx")
+            repo.complete()
         self.assertIsInstance(raisedexp.exception, github.UnknownObjectException)
         self.assertIsNone(raisedexp.exception.message)
         self.assertEqual(raisedexp.exception.status, 404)
@@ -135,7 +136,8 @@ class SpecificExceptions(Framework.TestCase):
         )
 
     def testUnknownObject(self):
-        self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))
+        repo = self.g.get_user().get_repo("Xxx")
+        self.assertRaises(github.UnknownObjectException, lambda: repo.complete())
 
     def testBadUserAgent(self):
         self.assertRaises(

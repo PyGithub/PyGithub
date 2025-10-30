@@ -43,6 +43,10 @@ class Issue494(Framework.TestCase):
         self.pull = self.repo.get_pull(465)
 
     def testRepr(self):
+        self.assertEqual(self.pull.__repr__(), "PullRequest(title=None, number=None)")
+
+        # fetch lazy pull request
+        self.pull.complete()
         expected = (
             'PullRequest(title="Change SetHostnameCustomizer to check if /etc/sysconfig/network exist…", number=465)'
         )

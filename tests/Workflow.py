@@ -48,7 +48,7 @@ from . import Framework
 class Workflow(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.workflow = self.g.get_repo("PyGithub/PyGithub").get_workflow("check.yml")
+        self.workflow = self.g.withLazy(False).get_repo("PyGithub/PyGithub").get_workflow("check.yml")
 
     def testAttributes(self):
         self.assertEqual(
@@ -130,6 +130,20 @@ class Workflow(Framework.TestCase):
             lambda r: r.id,
             [3770390952],
         )
+
+
+class WorkflowLazy(Workflow):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.workflow = self.g.withLazy(True).get_repo("PyGithub/PyGithub").get_workflow("check.yml")
+
+    def testAttributes(self):
+        self.assertEqual(
+            repr(self.workflow),
+            'Workflow(url="/repos/PyGithub/PyGithub/actions/workflows/check.yml", name=None)',
+        )
+        self.workflow.complete()
+        super().testAttributes()
 
     def testCreateDispatchWithBranch(self):
         dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}

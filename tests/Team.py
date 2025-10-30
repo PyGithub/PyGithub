@@ -97,7 +97,7 @@ class Team(Framework.TestCase):
         self.assertIsNone(self.team.type)
         self.assertEqual(self.team.updated_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.url, "https://api.github.com/organizations/1234567/team/12345678")
-        self.assertEqual(self.team.organization, self.org)
+        self.assertEqual(self.team.organization.login, self.org.login)
         self.assertEqual(self.team.privacy, "closed")
         self.assertEqual(self.team.parent, None)
         self.assertEqual(repr(self.team), 'Team(name="Team", id=12345678)')
@@ -193,8 +193,7 @@ class Team(Framework.TestCase):
         self.doTestRepos(self.org.get_repo("FatherBeaver"))
 
     def testReposStr(self):
-        with self.replayData("Team.testRepos.txt"):
-            self.doTestRepos(self.org.get_repo("FatherBeaver")._identity)
+        self.doTestRepos(self.org.get_repo("FatherBeaver")._identity)
 
     def testEditWithoutArguments(self):
         self.team.edit("Name edited by PyGithub")

@@ -64,7 +64,7 @@ from . import Framework
 class AuthenticatedUser(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user().complete()
+        self.user = self.g.get_user()
 
     def testAttributes(self):
         self.assertEqual(

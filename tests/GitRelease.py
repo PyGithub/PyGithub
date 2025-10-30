@@ -122,6 +122,8 @@ class GitRelease(Framework.TestCase):
     def tearDownNewRelease(self):
         try:
             new_release = self.repo.get_release(self.new_release_id)
+            # fetch lazy release
+            new_release.complete()
             new_release.delete_release()
         except GithubException:
             pass  # Already deleted
@@ -208,6 +210,9 @@ class GitRelease(Framework.TestCase):
     def testGetRelease(self):
         release_by_id = self.release
         release_by_tag = self.repo.get_release(tag)
+        # fetch lazy releases
+        release_by_id.complete()
+        release_by_tag.complete()
         self.assertEqual(release_by_id, release_by_tag)
 
     def testGetLatestRelease(self):
