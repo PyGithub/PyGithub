@@ -263,8 +263,8 @@ class Gist(CompletableGithubObject):
         :calls: `GET /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/comments/{id}")
-        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
+        url = f"{self.url}/comments/{id}"
+        return github.GistComment.GistComment(self._requester, url=url)
 
     def get_comments(self) -> PaginatedList[GistComment]:
         """

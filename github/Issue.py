@@ -372,8 +372,8 @@ class Issue(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", "/pulls/".join(self.url.rsplit("/issues/", 1)))
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+        url = "/pulls/".join(self.url.rsplit("/issues/", 1))
+        return github.PullRequest.PullRequest(self._requester, url=url)
 
     def add_to_assignees(self, *assignees: NamedUser | str) -> None:
         """
@@ -487,8 +487,8 @@ class Issue(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.url)}/comments/{id}")
-        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+        url = f"{self._parentUrl(self.url)}/comments/{id}"
+        return github.IssueComment.IssueComment(self._requester, url=url)
 
     def get_comments(self, since: Opt[datetime] = NotSet) -> PaginatedList[IssueComment]:
         """

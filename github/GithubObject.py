@@ -551,7 +551,7 @@ class CompletableGithubObject(GithubObject, ABC):
         :param accept: use this accept header when completing this instance
 
         """
-        response_given = headers is not None or attributes is not None
+        response_given = headers is not None
 
         if headers is None:
             headers = {}
@@ -564,7 +564,7 @@ class CompletableGithubObject(GithubObject, ABC):
         self.__completeHeaders = {"Accept": accept} if accept else None
 
         # complete this completable object when requester indicates non-laziness and
-        # neither of complete, headers and attributes are given
+        # neither of complete and headers are given
         if requester.is_not_lazy and completed is None and not response_given:
             self.complete()
 

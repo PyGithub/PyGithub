@@ -451,8 +451,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        return github.Issue.Issue(self._requester, url=self.issue_url)
 
     def create_comment(self, body: str, commit: github.Commit.Commit, path: str, position: int) -> PullRequestComment:
         """
@@ -644,8 +643,8 @@ class PullRequest(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.url)}/comments/{id}")
-        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
+        url = f"{self._parentUrl(self.url)}/comments/{id}"
+        return github.PullRequestComment.PullRequestComment(self._requester, url=url)
 
     def get_comments(
         self,
@@ -721,8 +720,8 @@ class PullRequest(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.issue_url)}/comments/{id}")
-        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+        url = f"{self._parentUrl(self.issue_url)}/comments/{id}"
+        return github.IssueComment.IssueComment(self._requester, url=url)
 
     def get_issue_comments(self) -> PaginatedList[IssueComment]:
         """

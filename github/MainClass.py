@@ -419,8 +419,8 @@ class Github:
         :rtype: :class:`github.NamedUser.NamedUser`
         """
         assert isinstance(user_id, int), user_id
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/user/{user_id}")
-        return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
+        url = f"/user/{user_id}"
+        return github.NamedUser.NamedUser(self.__requester, url=url)
 
     def get_users(self, since: Opt[int] = NotSet) -> PaginatedList[NamedUser]:
         """
@@ -437,9 +437,9 @@ class Github:
         :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
         assert isinstance(org, str), org
-        org = urllib.parse.quote(org)
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{org}")
-        return github.Organization.Organization(self.__requester, headers, data, completed=True)
+        org = urllib.parse.quote(org, safe="")
+        url = f"/orgs/{org}"
+        return github.Organization.Organization(self.__requester, url=url)
 
     def get_organizations(self, since: Opt[int] = NotSet) -> PaginatedList[Organization]:
         """
@@ -510,12 +510,8 @@ class Github:
         """
         :calls: `GET /projects/{project_id} <https://docs.github.com/en/rest/reference/projects#get-a-project>`_
         """
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            f"/projects/{id:d}",
-            headers={"Accept": Consts.mediaTypeProjectsPreview},
-        )
-        return github.Project.Project(self.__requester, headers, data, completed=True)
+        url = f"/projects/{id:d}"
+        return github.Project.Project(self.__requester, url=url, accept=Consts.mediaTypeProjectsPreview)
 
     def get_project_column(self, id: int) -> ProjectColumn:
         """
@@ -533,8 +529,8 @@ class Github:
         :calls: `GET /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert isinstance(id, str), id
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/gists/{id}")
-        return github.Gist.Gist(self.__requester, headers, data, completed=True)
+        url = f"/gists/{id}"
+        return github.Gist.Gist(self.__requester, url=url)
 
     def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
         """
@@ -914,7 +910,7 @@ class Github:
         :calls: `GET /hooks/{name} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         assert isinstance(name, str), name
-        name = urllib.parse.quote(name)
+        name = urllib.parse.quote(name, safe="")
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
         return HookDescription(self.__requester, headers, attributes)
 
@@ -1041,5 +1037,5 @@ class Github:
         else:
             assert isinstance(slug, str), slug
             # with a slug given, we can lazily load the GithubApp
-            slug = urllib.parse.quote(slug)
+            slug = urllib.parse.quote(slug, safe="")
             return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)

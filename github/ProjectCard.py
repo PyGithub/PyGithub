@@ -169,8 +169,7 @@ class ProjectCard(NonCompletableGithubObject):
             retclass = github.Issue.Issue
         else:
             raise ValueError(f"Unknown content type: {content_type}")
-        headers, data = self._requester.requestJsonAndCheck("GET", url)
-        return retclass(self._requester, headers, data, completed=True)
+        return retclass(self._requester, url=url)
 
     def move(self, position: str, column: github.ProjectColumn.ProjectColumn | int) -> bool:
         """
