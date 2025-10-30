@@ -20,6 +20,7 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Alex Olieman <alex@olieman.net>                               #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 #                                                                              #
@@ -43,8 +44,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Any, Iterator
+from typing import Any
 
 import github.NamedUser
 import github.Organization
@@ -59,6 +61,7 @@ class GitReleaseAsset(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#releases
 
     The OpenAPI schema can be found at
+
     - /components/schemas/release-asset
 
     """
@@ -67,6 +70,7 @@ class GitReleaseAsset(CompletableGithubObject):
         self._browser_download_url: Attribute[str] = NotSet
         self._content_type: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._digest: Attribute[str | None] = NotSet
         self._download_count: Attribute[int] = NotSet
         self._id: Attribute[int] = NotSet
         self._label: Attribute[str] = NotSet
@@ -95,6 +99,11 @@ class GitReleaseAsset(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def digest(self) -> str | None:
+        self._completeIfNotSet(self._digest)
+        return self._digest.value
 
     @property
     def download_count(self) -> int:
@@ -181,6 +190,8 @@ class GitReleaseAsset(CompletableGithubObject):
             self._content_type = self._makeStringAttribute(attributes["content_type"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "digest" in attributes:  # pragma no branch
+            self._digest = self._makeStringAttribute(attributes["digest"])
         if "download_count" in attributes:  # pragma no branch
             self._download_count = self._makeIntAttribute(attributes["download_count"])
         if "id" in attributes:  # pragma no branch

@@ -55,6 +55,7 @@ class DefaultCodeSecurityConfig(NonCompletableGithubObject):
     https://docs.github.com/en/rest/code-security/configurations.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/code-security-default-configurations
 
     """

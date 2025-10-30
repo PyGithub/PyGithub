@@ -23,6 +23,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -35,6 +36,7 @@ class MergedUpstream(NonCompletableGithubObject):
     This class represents a result of merge-upstream call.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/merged-upstream
 
     """

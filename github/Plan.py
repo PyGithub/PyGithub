@@ -36,6 +36,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -48,6 +49,7 @@ class Plan(NonCompletableGithubObject):
     This class represents Plans.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/organization-full/properties/plan
     - /components/schemas/public-user/properties/plan
     - /components/schemas/team-organization/properties/plan

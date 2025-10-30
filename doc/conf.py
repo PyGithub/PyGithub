@@ -13,6 +13,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,7 +40,7 @@ import glob
 import os
 import re
 import sys
-from typing import Iterable
+from collections.abc import Iterable
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -72,7 +73,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "PyGithub"
-copyright = "%d, Vincent Jacques" % datetime.date.today().year
+copyright = "%d, Vincent Jacques, Liuyang Wan, Steve Kowalik, Enrico Minack" % datetime.date.today().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -274,7 +275,7 @@ texinfo_documents = [
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 # texinfo_show_urls = 'footnote'
 
-autodoc_default_flags = ["members"]
+autodoc_default_options = {"members": True}
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 

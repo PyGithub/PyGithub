@@ -22,6 +22,7 @@
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -46,7 +47,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import deprecated
+from typing_extensions import deprecated
 
 import github.GithubApp
 import github.NamedUser
@@ -67,6 +68,7 @@ class BypassPullRequestAllowances(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-pull-request-review/properties/bypass_pull_request_allowances
     - /components/schemas/protected-branch/properties/required_pull_request_reviews/properties/bypass_pull_request_allowances
 
@@ -109,6 +111,7 @@ class DismissalRestrictions(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-pull-request-review/properties/dismissal_restrictions
     - /components/schemas/protected-branch/properties/required_pull_request_reviews/properties/dismissal_restrictions
 
@@ -172,6 +175,7 @@ class RequiredPullRequestReviews(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-pull-request-review-protection
 
     The OpenAPI schema can be found at
+
     - /components/schemas/protected-branch-pull-request-review
     - /components/schemas/protected-branch/properties/required_pull_request_reviews
 
@@ -212,12 +216,12 @@ class RequiredPullRequestReviews(CompletableGithubObject):
         return self._dismissal_restrictions.value
 
     @property
-    @deprecated.deprecated("Use dismissal_restrictions.teams")
+    @deprecated("Use dismissal_restrictions.teams")
     def dismissal_teams(self) -> list[Team]:
         return self.dismissal_restrictions.teams if self.dismissal_restrictions is not None else None
 
     @property
-    @deprecated.deprecated("Use dismissal_restrictions.users")
+    @deprecated("Use dismissal_restrictions.users")
     def dismissal_users(self) -> list[NamedUser]:
         return self.dismissal_restrictions.users if self.dismissal_restrictions is not None else None
 

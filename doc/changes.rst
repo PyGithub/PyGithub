@@ -4,13 +4,74 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 2.7.0 (XXXXXXX)
------------------------
+Version 2.8.1 (September 02, 2025)
+----------------------------------
+
+Bug Fixes
+^^^^^^^^^
+* Use default type if known type is not supported (`#3365 <https://github.com/PyGithub/PyGithub/pull/3365>`_) (`40506415 <https://github.com/PyGithub/PyGithub/commit/40506415>`_)
+
+Version 2.8.0 (September 02, 2025)
+----------------------------------
+
+New Features
+^^^^^^^^^^^^
+* Add self hosted runner management to Organization (`#3203 <https://github.com/PyGithub/PyGithub/pull/3203>`_) (`4ea1c4e2 <https://github.com/PyGithub/PyGithub/commit/4ea1c4e2>`_)
+* Add support to generate release notes (`#3022 <https://github.com/PyGithub/PyGithub/pull/3022>`_) (`e359b83a <https://github.com/PyGithub/PyGithub/commit/e359b83a>`_)
+
+Improvements
+^^^^^^^^^^^^
+* Fix connection pooling to improve connection performance (`#3289 <https://github.com/PyGithub/PyGithub/pull/3289>`_)
+* Add ``Repository.get_automated_security_fixes`` method (`#3303 <https://github.com/PyGithub/PyGithub/pull/3303>`_) (`22048d83 <https://github.com/PyGithub/PyGithub/commit/22048d83>`_)
+* Sync ``Issue`` class with API spec (`#3338 <https://github.com/PyGithub/PyGithub/pull/3338>`_) (`62da467a <https://github.com/PyGithub/PyGithub/commit/62da467a>`_)
+* Return more union classes like ``NamedUser | Organization | Enterprise`` (`#3224 <https://github.com/PyGithub/PyGithub/pull/3224>`_) (`aea64148 <https://github.com/PyGithub/PyGithub/commit/aea64148>`_)
+* Sync ``Enterprise`` class with API spec (`#3342 <https://github.com/PyGithub/PyGithub/pull/3342>`_) (`01bb5ab1 <https://github.com/PyGithub/PyGithub/commit/01bb5ab1>`_)
+* Sync ``GitReleaseAsset`` class with API spec (`#3343 <https://github.com/PyGithub/PyGithub/pull/3343>`_) (`74449fed <https://github.com/PyGithub/PyGithub/commit/74449fed>`_)
+* Sync many class with OpenAPI spec (`#3344 <https://github.com/PyGithub/PyGithub/pull/3344>`_)
+* Point deprecation warnings to the caller code rather than inner class (`#3275 <https://github.com/PyGithub/PyGithub/pull/3275>`_) (`99bb5270 <https://github.com/PyGithub/PyGithub/commit/99bb5270>`_)
+* Allow for repo strings in all ``Team`` repo methods (`#3356 <https://github.com/PyGithub/PyGithub/pull/3356>`_) (`3234a21f <https://github.com/PyGithub/PyGithub/commit/3234a21f>`_)
+
+Bug Fixes
+^^^^^^^^^
+* Fix  API path of ``Repository.get_git_ref`` (`#2992 <https://github.com/PyGithub/PyGithub/pull/2992>`_) (`a6965031 <https://github.com/PyGithub/PyGithub/commit/a6965031>`_)
+* Rework redirection URL allowance check (`#3329 <https://github.com/PyGithub/PyGithub/pull/3329>`_) (`065b1319 <https://github.com/PyGithub/PyGithub/commit/065b1319>`_)
+* Fix ``GitRelease.name``, deprecate ``GitRelease.title`` (`#3346 <https://github.com/PyGithub/PyGithub/pull/3346>`_) (`fb51957f <https://github.com/PyGithub/PyGithub/commit/fb51957f>`_)
+* Remove ``"COMMENT"`` as the default event for ``create_review`` (`#3078 <https://github.com/PyGithub/PyGithub/pull/3078>`_) (`8494da5c <https://github.com/PyGithub/PyGithub/commit/8494da5c>`_)
+* Add support for public release assets (`#3339 <https://github.com/PyGithub/PyGithub/pull/3339>`_) (`abad296e <https://github.com/PyGithub/PyGithub/commit/abad296e>`_)
+* Fix GitHub breaking API change of ``maintainers`` in ``Organization.create_team`` (`#3291 <https://github.com/PyGithub/PyGithub/pull/3291>`_) (`17bc4df4 <https://github.com/PyGithub/PyGithub/commit/17bc4df4>`_)
+
+Maintenance
+^^^^^^^^^^^
+* Minor fix to release.yml (`#3201 <https://github.com/PyGithub/PyGithub/pull/3201>`_) (`f1fc6e7c <https://github.com/PyGithub/PyGithub/commit/f1fc6e7c>`_)
+* Reduce test replay data (`#3243 <https://github.com/PyGithub/PyGithub/pull/3243>`_) (`19426454 <https://github.com/PyGithub/PyGithub/commit/19426454>`_)
+* Add check to OpenAPI script to check doc-string verbs (`#3332 <https://github.com/PyGithub/PyGithub/pull/3332>`_) (`3efde77d <https://github.com/PyGithub/PyGithub/commit/3efde77d>`_)
+* Improve apply OpenAPI schemas (`#3333 <https://github.com/PyGithub/PyGithub/pull/3333>`_) (`ec189dd6 <https://github.com/PyGithub/PyGithub/commit/ec189dd6>`_)
+* Add config to OpenAPI script to ignore schemas (`#3334 <https://github.com/PyGithub/PyGithub/pull/3334>`_) (`0478d33b <https://github.com/PyGithub/PyGithub/commit/0478d33b>`_)
+* Add suggest and create method feature to OpenAPI script (`#3318 <https://github.com/PyGithub/PyGithub/pull/3318>`_)
+* Fix CI OpenApi apply command (`#3341 <https://github.com/PyGithub/PyGithub/pull/3341>`_) (`cdc10a27 <https://github.com/PyGithub/PyGithub/commit/cdc10a27>`_)
+* Improve OpenAPI scripts (`#3340 <https://github.com/PyGithub/PyGithub/pull/3340>`_) (`ad278c5f <https://github.com/PyGithub/PyGithub/commit/ad278c5f>`_)
+* Improve OpenAPI CI (`#3347 <https://github.com/PyGithub/PyGithub/pull/3347>`_) (`8165bbc9 <https://github.com/PyGithub/PyGithub/commit/8165bbc9>`_)
+* Rework test framework (`#3271 <https://github.com/PyGithub/PyGithub/pull/3271>`_) (`1b700187 <https://github.com/PyGithub/PyGithub/commit/1b700187>`_)
+* Some minor fixes to OpenAPI scripts (`#3350 <https://github.com/PyGithub/PyGithub/pull/3350>`_) (`a813a945 <https://github.com/PyGithub/PyGithub/commit/a813a945>`_)
+* Add manual workflow to fix auto-fixable issues (`#3351 <https://github.com/PyGithub/PyGithub/pull/3351>`_) (`0e6317d9 <https://github.com/PyGithub/PyGithub/commit/0e6317d9>`_)
+* Bump actions/download-artifact from 4 to 5 (`#3330 <https://github.com/PyGithub/PyGithub/pull/3330>`_) (`5206d231 <https://github.com/PyGithub/PyGithub/commit/5206d231>`_)
+* Use default per-page const in ``PaginatedList`` (`#3039 <https://github.com/PyGithub/PyGithub/pull/3039>`_) (`cffda3d7 <https://github.com/PyGithub/PyGithub/commit/cffda3d7>`_)
+* Bump actions/setup-python from 4 to 5 (`#3283 <https://github.com/PyGithub/PyGithub/pull/3283>`_) (`f742be03 <https://github.com/PyGithub/PyGithub/commit/f742be03>`_)
+* Bump actions/checkout from 3 to 5 (`#3348 <https://github.com/PyGithub/PyGithub/pull/3348>`_) (`2a1fd58d <https://github.com/PyGithub/PyGithub/commit/2a1fd58d>`_)
+* Various minor OpenAPI scripts fixes (`#3353 <https://github.com/PyGithub/PyGithub/pull/3353>`_) (`8e40043e <https://github.com/PyGithub/PyGithub/commit/8e40043e>`_)
+* Add union class support to OpenAPI script (`#3354 <https://github.com/PyGithub/PyGithub/pull/3354>`_) (`4a6bba93 <https://github.com/PyGithub/PyGithub/commit/4a6bba93>`_)
+* Add ``github_actions`` label to Maintenance section (`#3357 <https://github.com/PyGithub/PyGithub/pull/3357>`_) (`0c31f848 <https://github.com/PyGithub/PyGithub/commit/0c31f848>`_)
+* Upgrade docformatter pre-commit hook (`#3359 <https://github.com/PyGithub/PyGithub/pull/3359>`_) (`6ec3ca24 <https://github.com/PyGithub/PyGithub/commit/6ec3ca24>`_)
+* Add warning about Checks API in doc-strings (`#3229 <https://github.com/PyGithub/PyGithub/pull/3229>`_) (`12d8d10c <https://github.com/PyGithub/PyGithub/commit/12d8d10c>`_)
+* Update docs on development (`#3352 <https://github.com/PyGithub/PyGithub/pull/3352>`_) (`6f0d6efa <https://github.com/PyGithub/PyGithub/commit/6f0d6efa>`_)
+
+Version 2.7.0 (July 31, 2025)
+-----------------------------
 
 Breaking Changes
 ^^^^^^^^^^^^^^^^
 
-* Method ``Github.get_rate_limit()`` now returns ``RateLimitOverview`` rather than ``RateLimit``.
+* Method ``Github.get_rate_limit()`` now returns ``RateLimitOverview`` rather than ``RateLimit`` (`#3205 <https://github.com/PyGithub/PyGithub/pull/3205>`_) (`56ee057a <https://github.com/PyGithub/PyGithub/commit/56ee057a>`_).
 
   Code like
 
@@ -24,11 +85,88 @@ Breaking Changes
 
     gh.get_rate_limit().resources.core.remaining
 
+* Method ``GitTag.verification`` now returns ``GitCommitVerification`` rather than ``dict[str, Any]`` (`#3226 <https://github.com/PyGithub/PyGithub/pull/3226>`_) (`850932cc <https://github.com/PyGithub/PyGithub/commit/850932cc>`_).
+
+  Code like
+
+  .. code-block:: python
+
+    tag.verification["reason"]
+    tag.verification.get("reason")
+
+  should be replaced with
+
+  .. code-block:: python
+
+    tag.verification.reason
+
 Deprecations
 ^^^^^^^^^^^^
 
 * Methods ``dismissal_users`` and ``dismissal_teams`` of ``RequiredPullRequestReviews`` are deprecated,
   use ``dismissal_restrictions.users`` and ``dismissal_restrictions.teams`` instead.
+
+New Features
+^^^^^^^^^^^^
+* Add getting list of self-hosted runners of organization (`#3190 <https://github.com/PyGithub/PyGithub/pull/3190>`_) (`b4092b5d <https://github.com/PyGithub/PyGithub/commit/b4092b5d>`_)
+* Apply OpenAPI spec (`#3317 <https://github.com/PyGithub/PyGithub/pull/3317>`_) (`858b9e5b <https://github.com/PyGithub/PyGithub/commit/858b9e5b>`_)
+* Add support for Sub-Issues (`#3258 <https://github.com/PyGithub/PyGithub/pull/3258>`_) (`c7858c85 <https://github.com/PyGithub/PyGithub/commit/c7858c85>`_)
+
+Improvement
+^^^^^^^^^^^
+* Refactor search results into separate classes (`#3204 <https://github.com/PyGithub/PyGithub/pull/3204>`_) (`938f80b1 <https://github.com/PyGithub/PyGithub/commit/938f80b1>`_)
+* Add ``OrganizationInvitation`` (`#3207 <https://github.com/PyGithub/PyGithub/pull/3207>`_) (`038624c2 <https://github.com/PyGithub/PyGithub/commit/038624c2>`_)
+* Add and apply missing schemas (`#3209 <https://github.com/PyGithub/PyGithub/pull/3209>`_) (`f4d586b4 <https://github.com/PyGithub/PyGithub/commit/f4d586b4>`_)
+* Sync ``RepositoryAdvisory`` tests with OpenAPI spec (`#3215 <https://github.com/PyGithub/PyGithub/pull/3215>`_) (`6b77787a <https://github.com/PyGithub/PyGithub/commit/6b77787a>`_)
+* Sync ``ProjectColumn`` and ``ProjectCard`` tests with OpenAPI spec (`#3216 <https://github.com/PyGithub/PyGithub/pull/3216>`_) (`e91c8379 <https://github.com/PyGithub/PyGithub/commit/e91c8379>`_)
+* Sync ``CopilotSeat`` class with API spec (`#3232 <https://github.com/PyGithub/PyGithub/pull/3232>`_) (`45f26a1b <https://github.com/PyGithub/PyGithub/commit/45f26a1b>`_)
+* Sync ``HookDeliverySummary`` class with API spec (`#3233 <https://github.com/PyGithub/PyGithub/pull/3233>`_) (`bc1c5375 <https://github.com/PyGithub/PyGithub/commit/bc1c5375>`_)
+* Sync ``RequiredPullRequestReviews`` class with API spec (`#3234 <https://github.com/PyGithub/PyGithub/pull/3234>`_) (`2f991c48 <https://github.com/PyGithub/PyGithub/commit/2f991c48>`_)
+* Sync ``RequiredStatusChecks`` class with API spec (`#3236 <https://github.com/PyGithub/PyGithub/pull/3236>`_) (`0474507f <https://github.com/PyGithub/PyGithub/commit/0474507f>`_)
+* Sync ``Team`` class with API spec (`#3237 <https://github.com/PyGithub/PyGithub/pull/3237>`_) (`fa8f9dfe <https://github.com/PyGithub/PyGithub/commit/fa8f9dfe>`_)
+* Replace ``deprecated.deprecated()`` with ``typing_extensions.deprecated()`` (`#3255 <https://github.com/PyGithub/PyGithub/pull/3255>`_) (`1ac8da70 <https://github.com/PyGithub/PyGithub/commit/1ac8da70>`_)
+* fix(CodeScanAlert): add missing attributes (`#3274 <https://github.com/PyGithub/PyGithub/pull/3274>`_) (`bdc58c38 <https://github.com/PyGithub/PyGithub/commit/bdc58c38>`_)
+* Allow SHAs when creating PR comments (`#3248 <https://github.com/PyGithub/PyGithub/pull/3248>`_) (`95a6d400 <https://github.com/PyGithub/PyGithub/commit/95a6d400>`_)
+* Get collaborator role name (`#3295 <https://github.com/PyGithub/PyGithub/pull/3295>`_) (`2d4785dd <https://github.com/PyGithub/PyGithub/commit/2d4785dd>`_)
+* Adding ``prevent_self_review`` property to ``Repository.createEnvironment`` (`#3246 <https://github.com/PyGithub/PyGithub/pull/3246>`_) (`e2a05ff2 <https://github.com/PyGithub/PyGithub/commit/e2a05ff2>`_)
+* Add ``PullRequest.get_issue_timeline`` method (`#3259 <https://github.com/PyGithub/PyGithub/pull/3259>`_) (`23a5bad3 <https://github.com/PyGithub/PyGithub/commit/23a5bad3>`_)
+* Support built-in ``reversed()`` on ``PaginatedList`` (`#3260 <https://github.com/PyGithub/PyGithub/pull/3260>`_) (`95f015c8 <https://github.com/PyGithub/PyGithub/commit/95f015c8>`_)
+* Relax 404 condition in ``Requester`` exception handling (`#3299 <https://github.com/PyGithub/PyGithub/pull/3299>`_) (`e7110bf4 <https://github.com/PyGithub/PyGithub/commit/e7110bf4>`_)
+
+Bug Fixes
+^^^^^^^^^
+* Fix broken pickle support for ``Auth`` classes (`#3211 <https://github.com/PyGithub/PyGithub/pull/3211>`_) (`a1f328df <https://github.com/PyGithub/PyGithub/commit/a1f328df>`_)
+* Remove schema from ``Deployment``, remove ``message`` attribute (`#3223 <https://github.com/PyGithub/PyGithub/pull/3223>`_) (`e91713e9 <https://github.com/PyGithub/PyGithub/commit/e91713e9>`_)
+* Fix incorrect deprecated import (`#3225 <https://github.com/PyGithub/PyGithub/pull/3225>`_) (`a2071d70 <https://github.com/PyGithub/PyGithub/commit/a2071d70>`_)
+* Add ``CodeSecurityConfigRepository`` returned by ``get_repos_for_code_security_config`` (`#3219 <https://github.com/PyGithub/PyGithub/pull/3219>`_) (`dbb32eed <https://github.com/PyGithub/PyGithub/commit/dbb32eed>`_)
+* Fix ``Branch.get_required_status_checks`` return type (`#3235 <https://github.com/PyGithub/PyGithub/pull/3235>`_) (`66a3cc1c <https://github.com/PyGithub/PyGithub/commit/66a3cc1c>`_)
+* Adds ``multi_select`` and ``true_false`` options to ``CustomProperty.value_type`` (`#3173 <https://github.com/PyGithub/PyGithub/pull/3173>`_) (`f51a3f48 <https://github.com/PyGithub/PyGithub/commit/f51a3f48>`_)
+* Fix url encoding of strings with slashes in URLs (`#3263 <https://github.com/PyGithub/PyGithub/pull/3263>`_) (`da73fc8a <https://github.com/PyGithub/PyGithub/commit/da73fc8a>`_)
+* Fix side-effect when removing Authorization key from headers (`#3313 <https://github.com/PyGithub/PyGithub/pull/3313>`_) (`0378ccee <https://github.com/PyGithub/PyGithub/commit/0378ccee>`_)
+* Make ``TimingData.run_duration_ms`` optional (`#3268 <https://github.com/PyGithub/PyGithub/pull/3268>`_) (`131949b3 <https://github.com/PyGithub/PyGithub/commit/131949b3>`_)
+* Normalize App ID to String & Enhance JWT Issuer Verification (`#3272 <https://github.com/PyGithub/PyGithub/pull/3272>`_) (`01196d67 <https://github.com/PyGithub/PyGithub/commit/01196d67>`_)
+* Add ``delete_self_hosted_runner`` to ``Organization`` (`#3306 <https://github.com/PyGithub/PyGithub/pull/3306>`_)
+
+Dependencies
+^^^^^^^^^^^^
+* Bump actions/checkout from 3 to 4 (`#2754 <https://github.com/PyGithub/PyGithub/pull/2754>`_) (`3657eeb9 <https://github.com/PyGithub/PyGithub/commit/3657eeb9>`_)
+
+Maintenance
+^^^^^^^^^^^
+* Mention removal of ``AppAuth.private_key`` in changelog (`#3212 <https://github.com/PyGithub/PyGithub/pull/3212>`_) (`fae8f25d <https://github.com/PyGithub/PyGithub/commit/fae8f25d>`_)
+* Remove wrong schema from Repository (`#3220 <https://github.com/PyGithub/PyGithub/pull/3220>`_) (`aee3a350 <https://github.com/PyGithub/PyGithub/commit/aee3a350>`_)
+* Rename ``HookDeliveryRequest`` and ``…Response`` private headers fields (`#3221 <https://github.com/PyGithub/PyGithub/pull/3221>`_) (`13236d5d <https://github.com/PyGithub/PyGithub/commit/13236d5d>`_)
+* Sort classes' functions (`#3231 <https://github.com/PyGithub/PyGithub/pull/3231>`_) (`bb00062d <https://github.com/PyGithub/PyGithub/commit/bb00062d>`_)
+* Move all Python files to future annotations (`#3241 <https://github.com/PyGithub/PyGithub/pull/3241>`_) (`3602345a <https://github.com/PyGithub/PyGithub/commit/3602345a>`_)
+* Fix return type of ``PaginatedList[int]`` (`#3240 <https://github.com/PyGithub/PyGithub/pull/3240>`_)
+* Sync with OpenAPI spec (`#3244 <https://github.com/PyGithub/PyGithub/pull/3244>`_) (`5cef2c3d <https://github.com/PyGithub/PyGithub/commit/5cef2c3d>`_)
+* Make token auth default in tests (`#3242 <https://github.com/PyGithub/PyGithub/pull/3242>`_) (`7a11f840 <https://github.com/PyGithub/PyGithub/commit/7a11f840>`_)
+* Add ``Organization.get_repos_for_code_security_config`` test (`#3239 <https://github.com/PyGithub/PyGithub/pull/3239>`_) (`4d45a4f4 <https://github.com/PyGithub/PyGithub/commit/4d45a4f4>`_)
+* Add Python 3.13 to CI (`#3253 <https://github.com/PyGithub/PyGithub/pull/3253>`_) (`29e8a96b <https://github.com/PyGithub/PyGithub/commit/29e8a96b>`_)
+* Enhance PyGithub webhook documentation (`#3267 <https://github.com/PyGithub/PyGithub/pull/3267>`_) (`63438b6a <https://github.com/PyGithub/PyGithub/commit/63438b6a>`_)
+* Create codeql.yml (`#3277 <https://github.com/PyGithub/PyGithub/pull/3277>`_) (`78267263 <https://github.com/PyGithub/PyGithub/commit/78267263>`_)
+* Add schema to ``TimingData`` (`#3206 <https://github.com/PyGithub/PyGithub/pull/3206>`_) (`20b8c477 <https://github.com/PyGithub/PyGithub/commit/20b8c477>`_)
+* Remove error schemas from classes (`#3202 <https://github.com/PyGithub/PyGithub/pull/3202>`_) (`6ea33845 <https://github.com/PyGithub/PyGithub/commit/6ea33845>`_)
 
 Version 2.6.0 (February 15, 2025)
 ---------------------------------

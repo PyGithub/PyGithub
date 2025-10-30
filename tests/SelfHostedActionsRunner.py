@@ -47,6 +47,7 @@ class SelfHostedActionsRunner(Framework.TestCase):
     def testAttributes(self):
         runner = self.repo.get_self_hosted_runner(2217)
         self.assertFalse(runner.busy)
+        self.assertIsNone(runner.ephemeral)
         self.assertEqual(runner.id, 2217)
         self.assertEqual(
             runner.labels,

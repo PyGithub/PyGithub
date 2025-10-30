@@ -74,6 +74,7 @@
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 blyedev <63808441+blyedev@users.noreply.github.com>           #
+# Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -231,12 +232,14 @@ class Github:
                 "Arguments login_or_token and password are deprecated, please use "
                 "auth=github.Auth.Login(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = github.Auth.Login(login_or_token, password)  # type: ignore
         elif login_or_token is not None:
             warnings.warn(
                 "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = github.Auth.Token(login_or_token)
         elif jwt is not None:
@@ -245,12 +248,14 @@ class Github:
                 "auth=github.Auth.AppAuth(...) or "
                 "auth=github.Auth.AppAuthToken(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = github.Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
                 "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             auth = app_auth
 
@@ -351,7 +356,7 @@ class Github:
         """
         Rate limit overview that provides general status and status for different resources (core/search/graphql).
 
-        :calls:`GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
@@ -451,6 +456,7 @@ class Github:
             url_parameters,
         )
 
+    # v3: rename enterprise to slug
     def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
         """
         :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
@@ -459,7 +465,7 @@ class Github:
         """
         assert isinstance(enterprise, str), enterprise
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
-        return github.Enterprise.Enterprise(self.__requester, enterprise)
+        return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
     def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
         """
@@ -994,26 +1000,6 @@ class Github:
         information like the Github credentials used in the :class:`Github` instance. But NO EFFORT is made to remove
         sensitive information from the object's attributes.
 
-        :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
-         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-             stream-format>`_ :param obj: the object to pickle :param file: the file-like object to pickle to :param
-        protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-            stream-format>`_
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-            stream-format>`_
         :param obj: the object to pickle
         :param file: the file-like object to pickle to
         :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
@@ -1051,6 +1037,7 @@ class Github:
                 "Argument slug is mandatory, calling this method without the slug argument is deprecated, please use "
                 "github.GithubIntegration(auth=github.Auth.AppAuth(...)).get_app() instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
             return GithubIntegration(**self.__requester.kwargs).get_app()
         else:

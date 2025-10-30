@@ -37,6 +37,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -53,6 +54,7 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-the-hourly-commit-count-for-each-day
 
     The OpenAPI schema can be found at
+
     - /components/schemas/code-frequency-stat
 
     """

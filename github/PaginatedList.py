@@ -30,6 +30,9 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
+# Copyright 2025 Sam <35731946+sam93210@users.noreply.github.com>              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,11 +51,14 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
-from typing import Any, Callable, Generic, Iterator, TypeVar, overload
+from collections.abc import Callable, Iterator
+from typing import Any, Generic, TypeVar, overload
 from urllib.parse import parse_qs
 
+from github import Consts
 from github.GithubObject import GithubObject
 from github.Requester import Requester
 
@@ -128,7 +134,7 @@ class PaginatedListBase(Generic[T]):
 class PaginatedList(PaginatedListBase[T]):
     """
     This class abstracts the `pagination of the REST API <https://docs.github.com/en/rest/guides/traversing-with-pagination>`_
-    and the GraphQl API <https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api>`_.
+    and the `GraphQl API <https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api>`_.
 
     You can simply enumerate through instances of this class::
 
@@ -146,7 +152,7 @@ class PaginatedList(PaginatedListBase[T]):
 
     If you want to iterate in reversed order, just do::
 
-        for repo in user.get_repos().reversed:
+        for repo in reversed(user.get_repos()):
             print(repo.name)
 
     And if you really need it, you can explicitly access a specific page::
@@ -235,22 +241,18 @@ class PaginatedList(PaginatedListBase[T]):
                 headers, data = self.__requester.requestJsonAndCheck(
                     "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
                 )
-                if "link" not in headers:
-                    if data and "total_count" in data:
-                        self.__totalCount = data["total_count"]
-                    elif data:
-                        if isinstance(data, dict):
-                            data = data[self.__list_item]
-                        self.__totalCount = len(data)
-                    else:
-                        self.__totalCount = 0
+                links = self.__parseLinkHeader(headers)
+                lastUrl = links.get("last")
+                if lastUrl:
+                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                elif data and "total_count" in data:
+                    self.__totalCount = data["total_count"]
+                elif data:
+                    if isinstance(data, dict):
+                        data = data[self.__list_item]
+                    self.__totalCount = len(data)
                 else:
-                    links = self.__parseLinkHeader(headers)
-                    lastUrl = links.get("last")
-                    if lastUrl:
-                        self.__totalCount = int(parse_qs(lastUrl)["page"][0])
-                    else:
-                        self.__totalCount = 0
+                    self.__totalCount = 0
             else:
                 variables = self.__graphql_variables.copy()
                 if not self._reversed:
@@ -301,6 +303,10 @@ class PaginatedList(PaginatedListBase[T]):
                         for k, v in self.__nextParams.items()
                         if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
                     }
+
+    # To support Python's built-in `reversed()` method
+    def __reversed__(self) -> PaginatedList[T]:
+        return self.reversed
 
     def _couldGrow(self) -> bool:
         return (
@@ -414,7 +420,7 @@ class PaginatedList(PaginatedListBase[T]):
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
-        if self.__requester.per_page != 30:
+        if self.__requester.per_page != Consts.DEFAULT_PER_PAGE:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
             "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore

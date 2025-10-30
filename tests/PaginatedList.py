@@ -21,6 +21,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -68,14 +69,16 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len({user.github_com_login for user in users}), 102)
 
     def testSeveralIterations(self):
-        self.assertEqual(len(list(self.list)), 333)
-        self.assertEqual(len(list(self.list)), 333)
-        self.assertEqual(len(list(self.list)), 333)
-        self.assertEqual(len(list(self.list)), 333)
+        with self.replayData("PaginatedList.testIteration.txt"):
+            self.assertEqual(len(list(self.list)), 333)
+            self.assertEqual(len(list(self.list)), 333)
+            self.assertEqual(len(list(self.list)), 333)
+            self.assertEqual(len(list(self.list)), 333)
 
     def testIntIndexingInFirstPage(self):
-        self.assertEqual(self.list[0].id, 4772349)
-        self.assertEqual(self.list[24].id, 4286936)
+        with self.replayData("PaginatedList.testGetFirstPage.txt"):
+            self.assertEqual(self.list[0].id, 4772349)
+            self.assertEqual(self.list[24].id, 4286936)
 
     def testReversedIterationWithSinglePage(self):
         r = self.list.reversed
@@ -91,11 +94,21 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(r[15].id, 166214)
 
     def testReversedIterationSupportsIterator(self):
-        r = self.list.reversed
-        for i in r:
-            self.assertEqual(i.id, 4286936)
-            return
-        self.fail("empty iterator")
+        # reuse identical test data of testReversedIterationWithSinglePage
+        with self.replayData("PaginatedList.testReversedIterationWithSinglePage.txt"):
+            r = self.list.reversed
+            for i in r:
+                self.assertEqual(i.id, 4286936)
+                return
+            self.fail("empty iterator")
+
+    def testReversedIterationSupportsBuiltinReversed(self):
+        # reuse identical test data of testReversedIterationWithSinglePage
+        with self.replayData("PaginatedList.testReversedIterationWithSinglePage.txt"):
+            for i in reversed(self.list):
+                self.assertEqual(i.id, 4286936)
+                return
+            self.fail("empty iterator")
 
     def testGettingTheReversedListDoesNotModifyTheOriginalList(self):
         self.assertEqual(self.list[0].id, 18345408)
@@ -177,38 +190,40 @@ class PaginatedList(Framework.TestCase):
         )
 
     def testIntIndexingAfterIteration(self):
-        self.assertEqual(len(list(self.list)), 333)
-        self.assertEqual(self.list[11].id, 4507572)
-        self.assertEqual(self.list[73].id, 3614231)
-        self.assertEqual(self.list[332].id, 94898)
+        with self.replayData("PaginatedList.testIteration.txt"):
+            self.assertEqual(len(list(self.list)), 333)
+            self.assertEqual(self.list[11].id, 4507572)
+            self.assertEqual(self.list[73].id, 3614231)
+            self.assertEqual(self.list[332].id, 94898)
 
     def testSliceIndexingInFirstPage(self):
-        self.assertListKeyEqual(
-            self.list[:13],
-            lambda i: i.id,
-            [
-                4772349,
-                4767675,
-                4758608,
-                4700182,
-                4662873,
-                4608132,
-                4604661,
-                4588997,
-                4557803,
-                4554058,
-                4539985,
-                4507572,
-                4507492,
-            ],
-        )
-        self.assertListKeyEqual(
-            self.list[:13:3],
-            lambda i: i.id,
-            [4772349, 4700182, 4604661, 4554058, 4507492],
-        )
-        self.assertListKeyEqual(self.list[10:13], lambda i: i.id, [4539985, 4507572, 4507492])
-        self.assertListKeyEqual(self.list[5:13:3], lambda i: i.id, [4608132, 4557803, 4507572])
+        with self.replayData("PaginatedList.testGetFirstPage.txt"):
+            self.assertListKeyEqual(
+                self.list[:13],
+                lambda i: i.id,
+                [
+                    4772349,
+                    4767675,
+                    4758608,
+                    4700182,
+                    4662873,
+                    4608132,
+                    4604661,
+                    4588997,
+                    4557803,
+                    4554058,
+                    4539985,
+                    4507572,
+                    4507492,
+                ],
+            )
+            self.assertListKeyEqual(
+                self.list[:13:3],
+                lambda i: i.id,
+                [4772349, 4700182, 4604661, 4554058, 4507492],
+            )
+            self.assertListKeyEqual(self.list[10:13], lambda i: i.id, [4539985, 4507572, 4507492])
+            self.assertListKeyEqual(self.list[5:13:3], lambda i: i.id, [4608132, 4557803, 4507572])
 
     def testSliceIndexingUntilFourthPage(self):
         self.assertListKeyEqual(
@@ -239,40 +254,41 @@ class PaginatedList(Framework.TestCase):
         )
 
     def testSliceIndexingUntilEnd(self):
-        self.assertListKeyEqual(
-            self.list[310::3],
-            lambda i: i.id,
-            [268332, 204247, 169176, 166211, 165898, 163959, 132373, 104702],
-        )
-        self.assertListKeyEqual(
-            self.list[310:],
-            lambda i: i.id,
-            [
-                268332,
-                211418,
-                205935,
-                204247,
-                172424,
-                171615,
-                169176,
-                166214,
-                166212,
-                166211,
-                166209,
-                166208,
-                165898,
-                165537,
-                165409,
-                163959,
-                132671,
-                132377,
-                132373,
-                130269,
-                111018,
-                104702,
-                94898,
-            ],
-        )
+        with self.replayData("PaginatedList.testIteration.txt"):
+            self.assertListKeyEqual(
+                self.list[310::3],
+                lambda i: i.id,
+                [268332, 204247, 169176, 166211, 165898, 163959, 132373, 104702],
+            )
+            self.assertListKeyEqual(
+                self.list[310:],
+                lambda i: i.id,
+                [
+                    268332,
+                    211418,
+                    205935,
+                    204247,
+                    172424,
+                    171615,
+                    169176,
+                    166214,
+                    166212,
+                    166211,
+                    166209,
+                    166208,
+                    165898,
+                    165537,
+                    165409,
+                    163959,
+                    132671,
+                    132377,
+                    132373,
+                    130269,
+                    111018,
+                    104702,
+                    94898,
+                ],
+            )
 
     def testInterruptedIteration(self):
         # No asserts, but checks that only three pages are fetched
@@ -283,13 +299,15 @@ class PaginatedList(Framework.TestCase):
                 break
 
     def testInterruptedIterationInSlice(self):
-        # No asserts, but checks that only three pages are fetched
-        count = 0
-        # pragma no branch (exits only by break)
-        for element in self.list[:100]:
-            count += 1
-            if count == 75:
-                break
+        # reuse identical test data of testInterruptedIteration
+        with self.replayData("PaginatedList.testInterruptedIteration.txt"):
+            # No asserts, but checks that only three pages are fetched
+            count = 0
+            # pragma no branch (exits only by break)
+            for element in self.list[:100]:
+                count += 1
+                if count == 75:
+                    break
 
     def testTotalCountWithNoLastPage(self):
         # Fudged replay data, we don't need the data, only the headers
@@ -305,6 +323,12 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(review_requests[0].totalCount, 0)
         self.assertEqual(review_requests[1].totalCount, 0)
 
+    def testTotalCountWithDeprecationLink(self):
+        # Test the original reported scenario: search_issues with commit SHA
+        issues = self.g.search_issues("commit:example_sha")
+        # Should return the actual count from JSON, not 0
+        self.assertEqual(issues.totalCount, 1)
+
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100
@@ -312,22 +336,6 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
     def testCustomPerPageWithNoUrlParams(self):
-        from . import (  # Don't pollute github.tests namespace, it would conflict with github.tests.CommitComment
-            CommitComment,
-        )
-
-        self.g.per_page = 100
-        PaginatedListImpl(
-            CommitComment.CommitComment,
-            self.repo._requester,
-            f"{self.repo.url}/comments",
-            None,
-        )
-
-    def testCustomPerPageWithNoUrlParams2(self):
-        # This test is redundant and less unitary than testCustomPerPageWithNoUrlParams
-        # but I hope it will be more robust if we refactor PaginatedList,
-        # because testCustomPerPageWithNoUrlParams only tests the constructor
         self.g.per_page = 100
         self.assertEqual(len(list(self.repo.get_comments())), 325)
 

@@ -14,6 +14,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Geoffrey <geoffrey@moveparallel.com>                          #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Alejandro Perez Gancedo <37455131+LifeLex@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -64,12 +65,13 @@ class TimingData(NamedTuple):
     https://docs.github.com/en/rest/actions/workflows#get-workflow-usage
 
     The OpenAPI schema can be found at
+
     - /components/schemas/workflow-run-usage
 
     """
 
     billable: dict[str, dict[str, int]]
-    run_duration_ms: int
+    run_duration_ms: int | None
 
 
 class WorkflowRun(CompletableGithubObject):
@@ -80,6 +82,7 @@ class WorkflowRun(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/actions#workflow-runs
 
     The OpenAPI schema can be found at
+
     - /components/schemas/artifact/properties/workflow_run
     - /components/schemas/workflow-run
 
@@ -347,7 +350,7 @@ class WorkflowRun(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/timing")
-        return TimingData(billable=data["billable"], run_duration_ms=data["run_duration_ms"])  # type: ignore
+        return TimingData(billable=data["billable"], run_duration_ms=data.get("run_duration_ms"))
 
     def delete(self) -> bool:
         """

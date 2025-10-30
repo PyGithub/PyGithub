@@ -17,7 +17,7 @@ repos:
     rev: v3.15.0
     hooks:
       - id: pyupgrade
-        args: ["--py38-plus"]
+        args: ["--py39-plus"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.7
@@ -35,7 +35,7 @@ repos:
         additional_dependencies: [tomli]
 
   - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.5
+    rev: v1.7.7
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]

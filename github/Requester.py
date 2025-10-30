@@ -57,7 +57,10 @@
 # Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Alec Ostrander <alec.ostrander@gmail.com>                     #
+# Copyright 2025 Chris Kuehl <ckuehl@ckuehl.me>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
 #                                                                              #
@@ -78,6 +81,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 import io
@@ -91,19 +95,10 @@ import time
 import urllib
 import urllib.parse
 from collections import deque
+from collections.abc import Callable, ItemsView, Iterator
 from datetime import datetime, timezone
 from io import IOBase
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    BinaryIO,
-    Callable,
-    Deque,
-    Generic,
-    ItemsView,
-    Iterator,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
 
 import requests
 import requests.adapters
@@ -667,21 +662,6 @@ class Requester:
         """
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
-    def graphql_query(self, query: str, variables: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-        """
-        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
-        """
-        input_ = {"query": query, "variables": variables}
-
-        response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
-        if "errors" in data:
-            if len(data["errors"]) == 1:
-                error = data["errors"][0]
-                if error.get("type") == "NOT_FOUND":
-                    raise github.UnknownObjectException(404, data, response_headers, error.get("message"))
-            raise self.createException(400, response_headers, data)
-        return response_headers, data
-
     @classmethod
     def paths_of_dict(cls, d: dict) -> dict:
         return {key: cls.paths_of_dict(val) if isinstance(val, dict) else None for key, val in d.items()}
@@ -697,19 +677,76 @@ class Requester:
             data = as_rest_api_attributes(data)
         return klass(self, headers, data)
 
-    def graphql_node(self, node_id: str, graphql_schema: str, node_type: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    def graphql_query(self, query: str, variables: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
         """
-        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        Queries the GraphQL API.
+
+        :param query: GraphQL query
+        :param variables: GraphQL variables
+        :return: ``(headers: dict, JSON Response: dict)``
+        :raises: :class:`GithubException` for error status codes
+
         """
-        if not graphql_schema.startswith("\n"):
-            graphql_schema = f" {graphql_schema} "
+        input_ = {"query": query, "variables": variables}
+
+        response_headers, data = self.requestJsonAndCheck("POST", self.graphql_url, input=input_)
+        if "errors" in data:
+            if len(data["errors"]) == 1:
+                error = data["errors"][0]
+                if error.get("type") == "NOT_FOUND":
+                    raise github.UnknownObjectException(404, data, response_headers, error.get("message"))
+            raise self.createException(400, response_headers, data)
+        return response_headers, data
+
+    def graphql_query_class(
+        self, query: str, variables: dict[str, Any], data_path: list[str], klass: type[T_gh]
+    ) -> T_gh:
+        """
+        Queries the GraphQL API, extracts data from a given path, populates and returns a PyGithub class instance.
+
+        Uses :func:`graphql_query` to query the GraphQL API.
+
+        :param query: GraphQL query
+        :param data_path: GraphQL path in the response to extract the properties for the class to return
+        :param klass: PyGithub class
+        :return: PyGithub class instance
+        :raises: :class:`GithubException` for error status codes
+
+        """
+        headers, data = self.graphql_query(query, variables)
+        return self.data_as_class(headers, data, ["data"] + data_path, klass)
+
+    def graphql_node(self, node_id: str, output_schema: str, node_type: str) -> tuple[dict[str, Any], dict[str, Any]]:
+        """
+        Fetches a GraphQL node by id in the give schema.
+
+        This sends the following GraphQL request::
+
+            query Q($id. ID!) {
+              node(id: $id) {
+                __typename
+                ... on <node_type> {
+                  <output_schema>
+                }
+              }
+            }
+
+        :param node_id: GraphQL node id
+        :param output_schema: The schema of the retrieved properties of the node, without enclosing curly brackets
+        :param node_type: The GraphQL node type
+        :return: ``(headers: dict, JSON Response: dict)``
+        :raises: :class:`GithubException` for error status codes
+
+        """
+        if not output_schema.startswith("\n"):
+            output_schema = f" {output_schema} "
         query = (
             """
             query Q($id: ID!) {
               node(id: $id) {
                 __typename
                 ... on """
-            + f"{node_type} {{{graphql_schema}}}"
+            + f"{node_type} {{{output_schema}}}"
             + """
               }
             }
@@ -727,37 +764,50 @@ class Requester:
         return headers, data
 
     def graphql_node_class(
-        self, node_id: str, graphql_schema: str, klass: type[T_gh], node_type: str | None = None
+        self, node_id: str, output_schema: str, klass: type[T_gh], node_type: str | None = None
     ) -> T_gh:
         """
-        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
+        Fetches a GraphQL node by id in the give schema, and returns a PyGithub instance of the given class populated
+        with the retrieved properties.
+
+        Uses :func:`graph_node` to retrieve the GraphQl node.
+
+        :param node_id: GraphQL node id
+        :param output_schema: The schema of the retrieved properties of the node, without enclosing curly brackets
+        :param klass: PyGithub class
+        :param node_type: Optional GraphQL node type, defaults to the name of the PyGithub class
+        :return: PyGithub class instance
+        :raises: :class:`GithubException` for error status codes
+
         """
         if node_type is None:
             node_type = klass.__name__
 
-        headers, data = self.graphql_node(node_id, graphql_schema, node_type)
+        headers, data = self.graphql_node(node_id, output_schema, node_type)
         return self.data_as_class(headers, data, ["data", "node"], klass)
-
-    def graphql_query_class(
-        self, query: str, variables: dict[str, Any], data_path: list[str], klass: type[T_gh]
-    ) -> T_gh:
-        """
-        :calls: `POST /graphql <https://docs.github.com/en/graphql>`_
-        """
-        headers, data = self.graphql_query(query, variables)
-        return self.data_as_class(headers, data, ["data"] + data_path, klass)
 
     def graphql_named_mutation(
         self, mutation_name: str, mutation_input: dict[str, Any], output_schema: str
     ) -> tuple[dict[str, Any], dict[str, Any]]:
         """
-        Create a mutation in the format:
-            mutation Mutation($input: MutationNameInput!) {
-                mutationName(input: $input) { <output_schema> }
-            }
-        and call the self.graphql_query method.
+        Send a GraphQL mutation to the GraphQL API.
 
-        Returns the response data according to given output schema.
+        This sends the following GraphQL request::
+
+            mutation Mutation($input: MutationNameInput!) {
+              mutationName(input: $input) {
+                <output_schema>
+              }
+            }
+
+        Uses :func:`graphql_query` to send the request to the GraphQL API.
+
+        :param mutation_name: name of the mutation
+        :param mutation_input: input data for the mutation
+        :param output_schema: The schema of the retrieved properties of the mutation, without enclosing curly brackets
+        :return: ``(headers: dict, JSON Response: dict)``
+        :raises: :class:`GithubException` for error status codes
+
         """
         mutation_input_name = mutation_name[:1].upper() + mutation_name[1:] + "Input!"
         query = f"mutation Mutation($input: {mutation_input_name}) {{ {mutation_name}(input: $input) {{ {output_schema} }} }}"
@@ -768,9 +818,16 @@ class Requester:
         self, mutation_name: str, mutation_input: dict[str, Any], output_schema: str, item: str, klass: type[T_gh]
     ) -> T_gh:
         """
-        Executes a mutation and returns the output object as the given GithubObject.
+        Send a GraphQL mutation to the GraphQL API, populates and returns a PyGithub class instance.
 
-        See {@link graphql_named_mutation}.
+        Uses :func:`graphql_named_mutation` to send the mutation to the GraphQL API.
+
+        :param mutation_name: name of the mutation
+        :param mutation_input: input data for the mutation
+        :param output_schema: The schema of the retrieved properties of the mutation, without enclosing curly brackets
+        :param item: property in the response to extract the properties for the class to return
+        :return: PyGithub class instance
+        :raises: :class:`GithubException` for error status codes
 
         """
         headers, data = self.graphql_named_mutation(mutation_name, mutation_input, output_schema)
@@ -787,9 +844,35 @@ class Requester:
             raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
+    @classmethod
+    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | tuple[str, ...]) -> bool:
+        if isinstance(domain_or_domains, str):
+            if hostname == domain_or_domains:
+                return True
+            domain_suffix = f".{domain_or_domains}"
+            return hostname.endswith(domain_suffix)
+        return any(cls.__hostnameHasDomain(hostname, d) for d in domain_or_domains)
+
+    def __assertUrlAllowed(self, url: str) -> None:
+        o = urllib.parse.urlparse(url)
+        assert o.hostname is not None
+        if o.hostname == self.__hostname:
+            prefixes = [self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth"]
+            assert o.path.startswith(tuple(prefixes)), o.path
+            assert o.port == self.__port, o.port
+        else:
+            if self.__base_url == Consts.DEFAULT_BASE_URL:
+                assert self.__hostnameHasDomain(o.hostname, ("github.com", "githubusercontent.com")), o.hostname
+            else:
+                assert self.__hostnameHasDomain(o.hostname, self.__hostname), o.hostname
+
     def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:
         cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None
         if not url.startswith("/"):
+            # check URL is allowed
+            self.__assertUrlAllowed(url)
+
+            # only return connection if url deviates from base_url
             o = urllib.parse.urlparse(url)
             if (
                 o.hostname != self.__hostname
@@ -834,8 +917,10 @@ class Requester:
             exc = GithubException.BadUserAgentException
         elif status == 403 and cls.isRateLimitError(lc_message):
             exc = GithubException.RateLimitExceededException
-        elif status == 404 and (lc_message == "not found" or "no object found" in lc_message):
+        elif status == 404 and ("not found" in lc_message or "no object found" in lc_message):
             exc = GithubException.UnknownObjectException
+            if lc_message != "not found":
+                msg = message
         else:
             # for general GithubException, provide the actual message
             msg = message
@@ -1176,7 +1261,7 @@ class Requester:
                     self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
                 # remove auth to not leak authentication to redirection location
                 if o.hostname != self.__hostname:
-                    del requestHeaders["Authorization"]
+                    requestHeaders = {k: v for k, v in requestHeaders.items() if k != "Authorization"}
                 return self.__requestRaw(
                     cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
                 )
@@ -1218,15 +1303,6 @@ class Requester:
             url = f"{self.__prefix}{url}"
         else:
             o = urllib.parse.urlparse(url)
-            assert o.hostname in [
-                self.__hostname,
-                "uploads.github.com",
-                "status.github.com",
-                "github.com",
-                "objects.githubusercontent.com",
-            ], o.hostname
-            assert o.path.startswith((self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth")), o.path
-            assert o.port == self.__port, o.port
             url = o.path
             if o.query != "":
                 url += f"?{o.query}"
@@ -1235,18 +1311,20 @@ class Requester:
     def __createConnection(
         self, hostname: str | None = None
     ) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass:
-        if self.__persist and self.__connection is not None and hostname is not None and hostname == self.__hostname:
+        if hostname is None:
+            hostname = self.__hostname
+
+        if self.__persist and self.__connection is not None and hostname == self.__connection.host:
             return self.__connection
 
         with self.__connection_lock:
-            if self.__connection is not None and hostname is not None and hostname == self.__hostname:
-                if self.__persist:
-                    return self.__connection
+            if self.__persist and self.__connection is not None and hostname == self.__connection.host:
+                return self.__connection
             if self.__connection is not None:
                 self.__connection.close()
                 self.__connection = None
             self.__connection = self.__connectionClass(
-                hostname if hostname is not None else self.__hostname,
+                hostname,
                 self.__port,
                 retry=self.__retry,
                 pool_size=self.__pool_size,

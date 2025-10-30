@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,9 +32,9 @@ class EnterpriseAdmin(Framework.TestCase):
         self.enterprise = self.g.get_enterprise("beaver-group")
 
     def testAttributes(self):
-        self.assertEqual(self.enterprise.enterprise, "beaver-group")
+        self.assertEqual(self.enterprise.slug, "beaver-group")
         self.assertEqual(self.enterprise.url, "/enterprises/beaver-group")
-        self.assertEqual(repr(self.enterprise), 'Enterprise(enterprise="beaver-group")')
+        self.assertEqual(repr(self.enterprise), 'Enterprise(slug="beaver-group")')
 
     def testGetConsumedLicenses(self):
         consumed_licenses = self.enterprise.get_consumed_licenses()

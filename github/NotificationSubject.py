@@ -38,6 +38,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -53,6 +54,7 @@ class NotificationSubject(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/activity#list-notifications-for-the-authenticated-user
 
     The OpenAPI schema can be found at
+
     - /components/schemas/thread/properties/subject
 
     """

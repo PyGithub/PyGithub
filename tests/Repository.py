@@ -74,8 +74,12 @@
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
+# Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
+# Copyright 2025 Matt Ball <96152357+mball-agathos@users.noreply.github.com>   #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
+# Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -101,6 +105,7 @@ from datetime import date, datetime, timezone
 from unittest import mock
 
 import github
+import github.Repository
 
 from . import Framework
 
@@ -264,6 +269,15 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.watchers_count, 7122)
         self.assertEqual(self.repo.web_commit_signoff_required, False)
         self.assertEqual(self.repo.custom_properties, {})
+
+    def testAsUrlParam(self):
+        self.assertEqual(github.Repository.Repository.as_url_param(self.repo), "PyGithub/PyGithub")
+        self.assertEqual(github.Repository.Repository.as_url_param(self.repo._identity), "PyGithub/PyGithub")
+
+        for repo in ["repo", "repo/name/slash"]:
+            with self.assertRaises(AssertionError) as raisedexp:
+                github.Repository.Repository.as_url_param(repo)
+            self.assertEqual(raisedexp.exception.args, (repo,))
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
@@ -504,7 +518,7 @@ class Repository(Framework.TestCase):
             "This release is created by PyGithub",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest")
-        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest")
+        self.assertEqual(release.name, "vX.Y.Z: PyGithub acctest")
         self.assertEqual(release.body, "This release is created by PyGithub")
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, False)
@@ -527,12 +541,38 @@ class Repository(Framework.TestCase):
             "true",
         )
         self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
-        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest2")
+        self.assertEqual(release.name, "vX.Y.Z: PyGithub acctest2")
         self.assertEqual(release.body, "This release is also created by PyGithub")
         self.assertEqual(release.draft, False)
         self.assertEqual(release.prerelease, True)
         tag = [tag for tag in self.repo.get_tags() if tag.name == "vX.Y.Z-by-PyGithub-acctest2"].pop()
         self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
+
+    def testGenerateReleaseNotes(self):
+        notes = self.repo.generate_release_notes("vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(notes.name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(
+            notes.body, "**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest"
+        )
+        self.assertEqual(
+            repr(notes),
+            'GeneratedReleaseNotes(name="vX.Y.Z-by-PyGithub-acctest", body="**Full Changelog**: https://github.com/PyGithub/PyGithub/commits/vX.Y.Z-by-PyGithub-acctest")',
+        )
+
+    def testGenerateReleaseNotesWithAllArguments(self):
+        self.repo.create_git_release(
+            tag="vX.Y.Z-by-PyGithub-acctest-previous",
+            name="vX.Y.Z: PyGithub acctest",
+            message="This release is created by PyGithub",
+        )
+        notes = self.repo.generate_release_notes(
+            tag_name="vX.Y.Z-by-PyGithub-acctest",
+            previous_tag_name="vX.Y.Z-by-PyGithub-acctest-previous",
+            target_commitish="main",
+            configuration_file_path="tests/test_release_notes.yml",
+        )
+        self.assertEqual(notes.name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertIn("Release notes generated using configuration in tests/test_release_notes.yml at main", notes.body)
 
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag(
@@ -735,6 +775,9 @@ class Repository(Framework.TestCase):
 
     def testCollaboratorPermission(self):
         self.assertEqual(self.repo.get_collaborator_permission("jacquev6"), "admin")
+
+    def testCollaboratorRoleName(self):
+        self.assertEqual(self.repo.get_collaborator_role_name("jacquev6"), "maintain")
 
     def testAddToCollaboratorsCustomRole(self):
         lyloa = self.g.get_user("Lyloa")
@@ -1241,6 +1284,26 @@ class Repository(Framework.TestCase):
             ],
         )
         self.assertListKeyEqual(self.repo.get_issues(assignee="none"), lambda i: i.id, [3619973])
+
+    def testGetIssuesWithTypeArgument(self):
+        self.assertListKeyEqual(
+            self.repo.get_issues(type="bug"),
+            lambda i: i.id,
+            [3425963739, 3399666591, 3398817538],
+        )
+        self.assertListKeyEqual(self.repo.get_issues(type="feature", state="closed"), lambda i: i.id, [3326107606])
+
+    def testGetIssuesWithTypeWildcard(self):
+        self.assertListKeyEqual(
+            self.repo.get_issues(type="*"),
+            lambda i: i.id,
+            [3425963739, 3399666591, 3398817538],
+        )
+        self.assertListKeyEqual(
+            self.repo.get_issues(type="*", state="closed"),
+            lambda i: i.id,
+            [3375750938, 3326109475, 3326109065, 3326107606, 4653757],
+        )
 
     def testGetKeys(self):
         self.assertListKeyEqual(self.repo.get_keys(), lambda k: k.title, ["Key added through PyGithub"])
@@ -1772,7 +1835,7 @@ class Repository(Framework.TestCase):
     def testMergeUpstreamFailure(self):
         # Use fork for being able to update it
         repo = self.g.get_repo("Felixoid/PyGithub")
-        with self.assertRaises(github.GithubException) as raisedexp:
+        with self.assertRaises(github.UnknownObjectException) as raisedexp:
             repo.merge_upstream("doesNotExist")
         self.assertEqual(raisedexp.exception.status, 404)
         self.assertEqual(raisedexp.exception.message, "Branch not found")
@@ -1949,7 +2012,8 @@ class Repository(Framework.TestCase):
         self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")
 
     def testStatisticsContributors(self):
-        stats = self.repo.get_stats_contributors()
+        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
+            stats = self.repo.get_stats_contributors()
         seenJacquev6 = False
         for s in stats:
             adTotal = 0
@@ -1968,7 +2032,8 @@ class Repository(Framework.TestCase):
         self.assertTrue(seenJacquev6)
 
     def testStatisticsCommitActivity(self):
-        stats = self.repo.get_stats_commit_activity()
+        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
+            stats = self.repo.get_stats_commit_activity()
         self.assertEqual(
             stats[0].week,
             datetime(2012, 11, 18, 0, 0, tzinfo=timezone.utc),
@@ -1977,7 +2042,8 @@ class Repository(Framework.TestCase):
         self.assertEqual(stats[0].days, [0, 7, 3, 9, 7, 3, 0])
 
     def testStatisticsCodeFrequency(self):
-        stats = self.repo.get_stats_code_frequency()
+        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
+            stats = self.repo.get_stats_code_frequency()
         self.assertEqual(
             stats[0].week,
             datetime(2012, 2, 12, 0, 0, tzinfo=timezone.utc),
@@ -1986,7 +2052,8 @@ class Repository(Framework.TestCase):
         self.assertEqual(stats[0].deletions, -2098)
 
     def testStatisticsParticipation(self):
-        stats = self.repo.get_stats_participation()
+        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
+            stats = self.repo.get_stats_participation()
         self.assertEqual(
             stats.owner,
             [
@@ -2103,7 +2170,8 @@ class Repository(Framework.TestCase):
         )
 
     def testStatisticsPunchCard(self):
-        stats = self.repo.get_stats_punch_card()
+        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
+            stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
 
@@ -2201,6 +2269,12 @@ class Repository(Framework.TestCase):
                 "documentation_url": "https://docs.github.com/rest/repos/repos#transfer-a-repository",
                 "status": "422",
             },
+        )
+
+    def testGetAutomatedSecurityFixes(self):
+        self.assertDictEqual(
+            self.repo.get_automated_security_fixes(),
+            {"enabled": True, "paused": False},
         )
 
 

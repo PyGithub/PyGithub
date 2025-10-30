@@ -13,6 +13,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Cristiano Salerno <119511125+csalerno-asml@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -51,13 +52,13 @@ class GitRef(Framework.TestCase):
             self.ref.object.url,
             "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a",
         )
-        self.assertEqual(self.ref.ref, "refs/heads/BranchCreatedByPyGithub")
+        self.assertEqual(self.ref.ref, "ref/heads/BranchCreatedByPyGithub")
         self.assertEqual(
             self.ref.url,
-            "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub",
+            "https://api.github.com/repos/jacquev6/PyGithub/git/ref/heads/BranchCreatedByPyGithub",
         )
 
-        self.assertEqual(repr(self.ref), 'GitRef(ref="refs/heads/BranchCreatedByPyGithub")')
+        self.assertEqual(repr(self.ref), 'GitRef(ref="ref/heads/BranchCreatedByPyGithub")')
         self.assertEqual(
             repr(self.ref.object),
             'GitObject(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',

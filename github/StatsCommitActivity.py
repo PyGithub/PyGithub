@@ -36,6 +36,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -53,6 +54,7 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#get-the-last-year-of-commit-activity
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit-activity
 
     """

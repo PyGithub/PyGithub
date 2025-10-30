@@ -44,7 +44,11 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
+# Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
+# Copyright 2025 Pavel Abramov <31950564+uncleDecart@users.noreply.github.com> #
+# Copyright 2025 Zachary <6599715+interifter@users.noreply.github.com>         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -66,7 +70,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
@@ -89,17 +93,23 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.collaborators, 9)
         self.assertEqual(self.org.company, None)
         self.assertEqual(self.org.created_at, datetime(2014, 1, 9, 16, 56, 17, tzinfo=timezone.utc))
+        self.assertIsNone(self.org.default_repository_branch)
         self.assertIsNone(self.org.default_repository_permission)
         self.assertIsNone(self.org.dependabot_alerts_enabled_for_new_repositories)
         self.assertIsNone(self.org.dependabot_security_updates_enabled_for_new_repositories)
         self.assertIsNone(self.org.dependency_graph_enabled_for_new_repositories)
+        self.assertEqual(self.org.deploy_keys_enabled_for_repositories, True)
         self.assertEqual(self.org.description, "BeaverSoftware writes software.")
         self.assertIsNone(self.org.disk_usage)
+        self.assertIsNone(self.org.display_commenter_full_name_setting_enabled)
         self.assertIsNone(self.org.display_login)
         self.assertEqual(self.org.email, "foo@example.com")
         self.assertEqual(self.org.events_url, "https://api.github.com/orgs/BeaverSoftware/events")
         self.assertEqual(self.org.followers, 130)
+        self.assertIsNone(self.org.followers_url)
         self.assertEqual(self.org.following, 1)
+        self.assertIsNone(self.org.following_url)
+        self.assertIsNone(self.org.gists_url)
         self.assertEqual(self.org.gravatar_id, None)
         self.assertEqual(self.org.has_organization_projects, True)
         self.assertEqual(self.org.has_repository_projects, True)
@@ -111,6 +121,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.location, "Paris, France")
         self.assertEqual(self.org.login, "BeaverSoftware")
         self.assertEqual(self.org.members_allowed_repository_creation_type, "none")
+        self.assertIsNone(self.org.members_can_change_repo_visibility)
         self.assertEqual(self.org.members_can_create_internal_repositories, False)
         self.assertEqual(self.org.members_can_create_pages, True)
         self.assertEqual(self.org.members_can_create_private_pages, True)
@@ -118,10 +129,16 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.members_can_create_public_pages, True)
         self.assertEqual(self.org.members_can_create_public_repositories, False)
         self.assertEqual(self.org.members_can_create_repositories, False)
+        self.assertIsNone(self.org.members_can_create_teams)
+        self.assertIsNone(self.org.members_can_delete_issues)
+        self.assertIsNone(self.org.members_can_delete_repositories)
         self.assertEqual(self.org.members_can_fork_private_repositories, False)
+        self.assertIsNone(self.org.members_can_invite_outside_collaborators)
+        self.assertIsNone(self.org.members_can_view_dependency_insights)
         self.assertEqual(self.org.members_url, "https://api.github.com/orgs/BeaverSoftware/members{/member}")
         self.assertEqual(self.org.name, "BeaverSoftware")
         self.assertEqual(self.org.node_id, "AbCdEfG")
+        self.assertIsNone(self.org.organizations_url)
         self.assertEqual(self.org.owned_private_repos, 191)
         self.assertEqual(self.org.plan.name, "enterprise")
         self.assertEqual(self.org.plan.private_repos, 999999)
@@ -134,11 +151,17 @@ class Organization(Framework.TestCase):
             self.org.public_members_url, "https://api.github.com/orgs/BeaverSoftware/public_members{/member}"
         )
         self.assertEqual(self.org.public_repos, 121)
+        self.assertIsNone(self.org.readers_can_create_discussions)
+        self.assertIsNone(self.org.received_events_url)
         self.assertEqual(self.org.repos_url, "https://api.github.com/orgs/BeaverSoftware/repos")
         self.assertIsNone(self.org.secret_scanning_enabled_for_new_repositories)
         self.assertIsNone(self.org.secret_scanning_push_protection_custom_link)
         self.assertIsNone(self.org.secret_scanning_push_protection_custom_link_enabled)
         self.assertIsNone(self.org.secret_scanning_push_protection_enabled_for_new_repositories)
+        self.assertIsNone(self.org.site_admin)
+        self.assertIsNone(self.org.starred_at)
+        self.assertIsNone(self.org.starred_url)
+        self.assertIsNone(self.org.subscriptions_url)
         self.assertEqual(self.org.total_private_repos, 176)
         self.assertIsNone(self.org.twitter_username)
         self.assertEqual(self.org.two_factor_requirement_enabled, True)
@@ -146,6 +169,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.updated_at, datetime(2024, 8, 20, 8, 44, 26, tzinfo=timezone.utc))
         self.assertEqual(self.org.url, "https://api.github.com/orgs/BeaverSoftware")
         self.assertEqual(repr(self.org), 'Organization(login="BeaverSoftware")')
+        self.assertIsNone(self.org.user_view_type)
         self.assertEqual(self.org.web_commit_signoff_required, False)
 
     def testAddMembersDefaultRole(self):
@@ -214,13 +238,14 @@ class Organization(Framework.TestCase):
             "secret",
             "Description also created by PyGithub",
             parent_team.id,
-            [maintainer.id],
+            [maintainer.login],
             "notifications_disabled",
         )
         self.assertEqual(team.id, 189852)
         self.assertEqual(team.description, "Description also created by PyGithub")
         self.assertEqual(team.parent, parent_team)
         self.assertEqual(team.notification_setting, "notifications_disabled")
+        self.assertEqual(maintainer.login, team.get_members(role="maintainer")[0].name)
 
     def testDeleteHook(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})
@@ -684,6 +709,22 @@ class Organization(Framework.TestCase):
                 allowed_values=["foo", "bar"],
                 values_editable_by="org_and_repo_actors",
             ),
+            CustomProperty(
+                property_name="property_3",
+                value_type="multi_select",
+                required=True,
+                default_value="bar",
+                description="Lorem ipsum",
+                allowed_values=["foo", "bar"],
+                values_editable_by="org_and_repo_actors",
+            ),
+            CustomProperty(
+                property_name="property_4",
+                value_type="true_false",
+                required=False,
+                description="description",
+                values_editable_by="org_actors",
+            ),
         ]
         properties = self.org.create_custom_properties(properties)
         properties_map = {p.property_name: p for p in properties}
@@ -691,6 +732,10 @@ class Organization(Framework.TestCase):
         self.assertEqual(property_1.value_type, "string")
         property_2 = properties_map["property_2"]
         self.assertEqual(property_2.description, "Lorem ipsum")
+        property_3 = properties_map["property_3"]
+        self.assertEqual(property_3.value_type, "multi_select")
+        property_4 = properties_map["property_4"]
+        self.assertEqual(property_4.value_type, "true_false")
 
     def testCreateCustomProperty(self):
         custom_property = CustomProperty(
@@ -741,6 +786,42 @@ class Organization(Framework.TestCase):
         with self.assertRaises(github.UnknownObjectException):
             self.org.get_custom_property("property_1")
 
+    def testGetSelfHostedRunners(self):
+        runners = self.org.get_self_hosted_runners()
+        self.assertEqual(runners.totalCount, 602)
+
+    def testDeleteSelfHostedRunner(self):
+        self.org.delete_self_hosted_runner("42")
+
+    def testGetSelfHostedRunnerApplications(self):
+        self.assertListKeyEqual(
+            self.org.get_self_hosted_runner_applications(),
+            lambda h: h.os,
+            ["osx", "linux", "linux", "win", "linux", "osx", "win"],
+        )
+
+    def testSelfHostedRunnerJitConfig(self):
+        runner = self.org.create_self_hosted_runner_jitconfig(name="self_hosted", runner_group_id=1, labels=["default"])
+        # Now remove the runner
+        for runner in self.org.get_self_hosted_runners():
+            if runner.name == "self_hosted":
+                runner = self.org.get_self_hosted_runner(runner_id=runner.id)
+                self.org.delete_self_hosted_runner(runner_id=runner.id)
+
+    def testSelfHostedRunnerGetRegistrationToken(self):
+        token = self.org.create_self_hosted_runner_registration_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(
+            token.expires_at, datetime(2025, 2, 17, 21, 11, 49, 260000, tzinfo=timezone(timedelta(hours=-8)))
+        )
+
+    def testSelfHostedRunnerGetRemoveToken(self):
+        token = self.org.create_self_hosted_runner_remove_token()
+        self.assertEqual(token.token, "XXXXXX")
+        self.assertEqual(
+            token.expires_at, datetime(2025, 2, 17, 21, 12, 28, 308000, tzinfo=timezone(timedelta(hours=-8)))
+        )
+
     def testGetCodeSecurityConfigs(self):
         configs = list(self.org.get_code_security_configs())
         self.assertEqual(configs.pop().id, 17)
@@ -776,3 +857,10 @@ class Organization(Framework.TestCase):
 
         self.assertEqual(config.id, repo_config.configuration.id)
         repo.detach_security_config()
+
+    def testGetReposForCodeSecurityConfig(self):
+        repo_statuses = self.org.get_repos_for_code_security_config(id=182032)
+        status = repo_statuses[0]
+        self.assertEqual(status.status, "enforced")
+        self.assertIsNotNone(status.repository)
+        self.assertEqual(status.repository.full_name, "BeaverSoftware/truth")

@@ -36,6 +36,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -51,6 +52,7 @@ class GitignoreTemplate(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/gitignore
 
     The OpenAPI schema can be found at
+
     - /components/schemas/gitignore-template
 
     """

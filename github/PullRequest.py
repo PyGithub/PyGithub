@@ -50,7 +50,10 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Eddie Santos <9561596+eddie-santos@users.noreply.github.com>  #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matt Tuchfarber <matt@tuchfarber.com>                         #
+# Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
 # Copyright 2025 Ryan Peach <github.essential257@passmail.net>                 #
 # Copyright 2025 a-sido <andrei.sidorenko.1993@gmail.com>                      #
 #                                                                              #
@@ -94,6 +97,7 @@ import github.PullRequestMergeStatus
 import github.PullRequestPart
 import github.PullRequestReview
 import github.Team
+import github.TimelineEvent
 from github import Consts
 from github.GithubObject import (
     Attribute,
@@ -122,6 +126,7 @@ if TYPE_CHECKING:
     from github.PullRequestPart import PullRequestPart
     from github.PullRequestReview import PullRequestReview
     from github.Team import Team
+    from github.TimelineEvent import TimelineEvent
 
 
 class ReviewComment(TypedDict):
@@ -142,6 +147,7 @@ class PullRequest(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/pulls
 
     The OpenAPI schema can be found at
+
     - /components/schemas/pull-request
     - /components/schemas/pull-request-minimal
     - /components/schemas/pull-request-simple
@@ -457,7 +463,7 @@ class PullRequest(CompletableGithubObject):
     def create_review_comment(
         self,
         body: str,
-        commit: github.Commit.Commit,
+        commit: github.Commit.Commit | str,
         path: str,
         # line replaces deprecated position argument, so we put it between path and side
         line: Opt[int] = NotSet,
@@ -472,7 +478,7 @@ class PullRequest(CompletableGithubObject):
         :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(body, str), body
-        assert isinstance(commit, github.Commit.Commit), commit
+        assert isinstance(commit, (github.Commit.Commit, str)), commit
         assert isinstance(path, str), path
         assert is_optional(line, int), line
         assert is_undefined(side) or side in ["LEFT", "RIGHT"], side
@@ -489,12 +495,14 @@ class PullRequest(CompletableGithubObject):
         ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
+        commit_id = commit._identity if isinstance(commit, github.Commit.Commit) else commit
+
         if as_suggestion:
             body = f"```suggestion\n{body}\n```"
         post_parameters = NotSet.remove_unset_items(
             {
                 "body": body,
-                "commit_id": commit._identity,
+                "commit_id": commit_id,
                 "path": path,
                 "line": line,
                 "side": side,
@@ -547,14 +555,14 @@ class PullRequest(CompletableGithubObject):
         assert is_optional(body, str), body
         assert is_optional(event, str), event
         assert is_optional_list(comments, dict), comments
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"body": body})
-        post_parameters["event"] = "COMMENT" if is_undefined(event) else event
-        if is_defined(commit):
-            post_parameters["commit_id"] = commit.sha
-        if is_defined(comments):
-            post_parameters["comments"] = comments
-        else:
-            post_parameters["comments"] = []
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {
+                "body": body,
+                "event": event,
+                "commit_id": commit.sha if is_defined(commit) else NotSet,
+                "comments": comments if is_defined(comments) else [],
+            }
+        )
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reviews", input=post_parameters)
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
@@ -740,6 +748,19 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
+    def get_issue_timeline(self) -> PaginatedList[TimelineEvent]:
+        """
+        :calls `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline <https://docs.github.com/en/rest/reference/issues#timeline>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.TimelineEvent`
+        """
+        return PaginatedList(
+            github.TimelineEvent.TimelineEvent,
+            self._requester,
+            f"{self.issue_url}/timeline",
+            None,
+            headers={"Accept": Consts.mediaTypeLockReasonPreview},
+        )
+
     def get_review(self, id: int) -> PullRequestReview:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews/{id} <https://docs.github.com/en/rest/reference/pulls#reviews>`_
@@ -862,7 +883,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
-        <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
+            <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
         """
         assert is_optional(author_email, str), author_email
         assert is_optional(client_mutation_id, str), client_mutation_id
@@ -896,7 +917,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to disable pull request auto merge
-        <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
+            <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -992,7 +1013,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to convert pull request to draft
-        <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
+            <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -1017,7 +1038,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to mark pull request ready for review
-        <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
+            <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 

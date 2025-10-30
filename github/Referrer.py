@@ -37,6 +37,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -52,6 +53,7 @@ class Referrer(NonCompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#traffic
 
     The OpenAPI schema can be found at
+
     - /components/schemas/referrer-traffic
 
     """

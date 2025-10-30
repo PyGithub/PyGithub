@@ -45,22 +45,29 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Enterprise
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
+if TYPE_CHECKING:
+    from github.Enterprise import Enterprise
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
+
 
 class GithubApp(CompletableGithubObject):
     """
-    This class represents github apps.
+    This class represents GitHub apps.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/apps
 
     The OpenAPI schema can be found at
+
     - /components/schemas/integration
     - /components/schemas/nullable-integration
 
@@ -78,7 +85,7 @@ class GithubApp(CompletableGithubObject):
         self._installations_count: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._owner: Attribute[NamedUser | Organization | Enterprise] = NotSet
         self._pem: Attribute[str] = NotSet
         self._permissions: Attribute[dict[str, str]] = NotSet
         self._slug: Attribute[str] = NotSet
@@ -145,7 +152,7 @@ class GithubApp(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def owner(self) -> github.NamedUser.NamedUser:
+    def owner(self) -> NamedUser | Organization | Enterprise:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
@@ -202,7 +209,14 @@ class GithubApp(CompletableGithubObject):
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+            self._owner = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["owner"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+                (github.Enterprise.Enterprise, "Enterprise"),
+            )
         if "pem" in attributes:  # pragma no branch
             self._pem = self._makeStringAttribute(attributes["pem"])
         if "permissions" in attributes:  # pragma no branch

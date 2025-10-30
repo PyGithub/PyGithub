@@ -35,6 +35,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -47,6 +48,7 @@ class HookResponse(NonCompletableGithubObject):
     This class represents HookResponses.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/hook-response
 
     """

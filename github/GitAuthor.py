@@ -35,6 +35,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -48,6 +49,7 @@ class GitAuthor(NonCompletableGithubObject):
     This class represents GitAuthors.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit-search-result-item/properties/commit/properties/author
     - /components/schemas/file-commit/properties/commit/properties/author
     - /components/schemas/file-commit/properties/commit/properties/committer

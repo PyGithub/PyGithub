@@ -32,6 +32,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
 from __future__ import annotations
 
 from typing import Any
@@ -44,6 +45,7 @@ class CommitStats(NonCompletableGithubObject):
     This class represents CommitStats.
 
     The OpenAPI schema can be found at
+
     - /components/schemas/commit/properties/stats
     - /components/schemas/gist-history/properties/change_status
 

@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2021 Amador Pahim <apahim@redhat.com>                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,7 +31,7 @@ REPO_NAME = "PyGithub/PyGithub"
 
 class PoolSize(Framework.TestCase):
     def setUp(self):
-        Framework.setPoolSize(20)
+        self.setPoolSize(20)
         super().setUp()
 
     def testReturnsRepoAfterSettingPoolSize(self):

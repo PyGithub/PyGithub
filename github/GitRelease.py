@@ -62,6 +62,8 @@ from datetime import datetime
 from os.path import basename
 from typing import Any, BinaryIO
 
+from typing_extensions import deprecated
+
 import github.GitReleaseAsset
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
@@ -78,6 +80,7 @@ class GitRelease(CompletableGithubObject):
     https://docs.github.com/en/rest/reference/repos#releases
 
     The OpenAPI schema can be found at
+
     - /components/schemas/release
 
     """
@@ -96,6 +99,7 @@ class GitRelease(CompletableGithubObject):
         self._generate_release_notes: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._immutable: Attribute[bool] = NotSet
         self._mentions_count: Attribute[int] = NotSet
         self._message: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
@@ -107,13 +111,12 @@ class GitRelease(CompletableGithubObject):
         self._tag_name: Attribute[str] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._target_commitish: Attribute[str] = NotSet
-        self._title: Attribute[str] = NotSet
         self._upload_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"title": self._title.value})
+        return self.get__repr__({"name": self._name.value})
 
     @property
     def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
@@ -176,6 +179,11 @@ class GitRelease(CompletableGithubObject):
         return self._id.value
 
     @property
+    def immutable(self) -> bool:
+        self._completeIfNotSet(self._immutable)
+        return self._immutable.value
+
+    @property
     def mentions_count(self) -> int:
         self._completeIfNotSet(self._mentions_count)
         return self._mentions_count.value
@@ -231,9 +239,10 @@ class GitRelease(CompletableGithubObject):
         return self._target_commitish.value
 
     @property
+    @deprecated("Use name instead")
     def title(self) -> str:
-        self._completeIfNotSet(self._title)
-        return self._title.value
+        # alias for name
+        return self.name
 
     @property
     def upload_url(self) -> str:
@@ -303,7 +312,7 @@ class GitRelease(CompletableGithubObject):
         self, path: str, label: str = "", content_type: Opt[str] = NotSet, name: Opt[str] = NotSet
     ) -> github.GitReleaseAsset.GitReleaseAsset:
         """
-        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`_
+        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`__
         """
         assert isinstance(path, str), path
         assert isinstance(label, str), label
@@ -339,7 +348,7 @@ class GitRelease(CompletableGithubObject):
 
         Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
         Note that this method is more strict and requires you to specify the ``name``, since there's no file name to infer these from.
-        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
+        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`__
         :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
         :param file_size: int, size in bytes of ``file_like``
 
@@ -401,12 +410,14 @@ class GitRelease(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
+        if "immutable" in attributes:  # pragma no branch
+            self._immutable = self._makeBoolAttribute(attributes["immutable"])
         if "mentions_count" in attributes:  # pragma no branch
             self._mentions_count = self._makeIntAttribute(attributes["mentions_count"])
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
         if "name" in attributes:
-            self._title = self._makeStringAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "prerelease" in attributes:
