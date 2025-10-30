@@ -141,6 +141,7 @@ class Label(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview},
         )
         self._useAttributes(data)
+        self._set_complete()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "color" in attributes:  # pragma no branch

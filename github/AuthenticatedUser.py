@@ -668,6 +668,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", "/user", input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_authorization(self, id: int) -> Authorization:
         """

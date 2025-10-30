@@ -270,6 +270,7 @@ class PullRequestComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_reactions(self) -> PaginatedList[github.Reaction.Reaction]:
         """

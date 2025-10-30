@@ -132,6 +132,7 @@ class GistComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author_association" in attributes:  # pragma no branch

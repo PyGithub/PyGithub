@@ -388,6 +388,7 @@ class Issue(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/assignees", input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def add_to_labels(self, *labels: Label | str) -> None:
         """
@@ -462,6 +463,7 @@ class Issue(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def lock(self, lock_reason: str) -> None:
         """
@@ -537,6 +539,7 @@ class Issue(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/assignees", input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def remove_from_labels(self, label: Label | str) -> None:
         """

@@ -212,6 +212,7 @@ class Project(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         self._useAttributes(data)
+        self._set_complete()
 
     def get_columns(self) -> PaginatedList[github.ProjectColumn.ProjectColumn]:
         """

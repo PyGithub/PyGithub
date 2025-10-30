@@ -619,6 +619,9 @@ class CompletableGithubObject(GithubObject, ABC):
             raise IncompletableObject(400, message="Cannot complete object as it contains no URL")
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value, headers=self.__completeHeaders)
         self._storeAndUseAttributes(headers, data)
+        self._set_complete()
+
+    def _set_complete(self):
         self.__completed = True
 
     def update(self, additional_headers: dict[str, Any] | None = None) -> bool:

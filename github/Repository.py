@@ -2262,6 +2262,7 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_archive_link(self, archive_format: str, ref: Opt[str] = NotSet) -> str:
         """

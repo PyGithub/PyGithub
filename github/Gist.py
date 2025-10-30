@@ -256,7 +256,10 @@ class Gist(CompletableGithubObject):
         if is_defined(files):
             post_parameters["files"] = {key: None if value is None else value._identity for key, value in files.items()}
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
+
         self._useAttributes(data)
+        self._set_complete()
+        self._set_complete()
 
     def get_comment(self, id: int) -> GistComment:
         """
