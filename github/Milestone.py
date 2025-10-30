@@ -92,7 +92,7 @@ class Milestone(CompletableGithubObject):
 
     @property
     def _identity(self) -> int:
-        return self.number
+        return self._number.value
 
     @property
     def closed_at(self) -> datetime:

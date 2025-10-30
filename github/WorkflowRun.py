@@ -319,7 +319,7 @@ class WorkflowRun(CompletableGithubObject):
         return PaginatedList(
             github.Artifact.Artifact,
             self._requester,
-            self._artifacts_url.value,
+            self.artifacts_url,
             None,
             list_item="artifacts",
         )

@@ -90,7 +90,7 @@ class CommitComment(CompletableGithubObject):
         self._user: Attribute[NamedUser | Organization] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"id": self._id.value, "user": self.user})
+        return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
     def author_association(self) -> str:
