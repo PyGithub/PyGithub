@@ -850,7 +850,8 @@ class Requester:
             if hostname == domain_or_domains:
                 return True
             domain_suffix = f".{domain_or_domains}"
-            return hostname.endswith(domain_suffix)
+            hostname_suffix = f".{hostname}"
+            return hostname.endswith(domain_suffix) or domain_or_domains.endswith(hostname_suffix)
         return any(cls.__hostnameHasDomain(hostname, d) for d in domain_or_domains)
 
     def __assertUrlAllowed(self, url: str) -> None:
