@@ -57,6 +57,7 @@ import typing
 from abc import ABC
 from datetime import datetime, timezone
 from decimal import Decimal
+from enum import EnumType, Enum
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Callable, Union, overload
 
@@ -67,12 +68,13 @@ from .GithubException import BadAttributeException, IncompletableObject
 
 if TYPE_CHECKING:
     from .Requester import Requester
+    from github.Package import PackageVisibility
 
 T = typing.TypeVar("T")
 K = typing.TypeVar("K")
 T_co = typing.TypeVar("T_co", covariant=True)
 T_gh = typing.TypeVar("T_gh", bound="GithubObject")
-
+T_enum = typing.TypeVar("T_enum", bound=Enum)
 
 class Attribute(Protocol[T_co]):
     @property
@@ -361,6 +363,10 @@ class GithubObject(ABC):
     @staticmethod
     def _makeHttpDatetimeAttribute(value: str | None) -> Attribute[datetime]:
         return GithubObject.__makeTransformedAttribute(value, str, _datetime_from_http_date)  # type: ignore
+
+    @staticmethod
+    def _makeEnumAttribute(eclass: type[T_enum], value: str) -> Attribute[T_enum]:
+        return GithubObject.__makeTransformedAttribute(value, str, lambda v: eclass(v))
 
     def _makeClassAttribute(self, klass: type[T_gh], value: Any) -> Attribute[T_gh]:
         return GithubObject.__makeTransformedAttribute(
