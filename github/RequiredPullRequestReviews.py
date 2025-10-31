@@ -47,8 +47,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.GithubApp
 import github.NamedUser
 import github.Team
@@ -214,16 +212,6 @@ class RequiredPullRequestReviews(CompletableGithubObject):
     def dismissal_restrictions(self) -> DismissalRestrictions:
         self._completeIfNotSet(self._dismissal_restrictions)
         return self._dismissal_restrictions.value
-
-    @property
-    @deprecated("Use dismissal_restrictions.teams")
-    def dismissal_teams(self) -> list[Team]:
-        return self.dismissal_restrictions.teams if self.dismissal_restrictions is not None else None
-
-    @property
-    @deprecated("Use dismissal_restrictions.users")
-    def dismissal_users(self) -> list[NamedUser]:
-        return self.dismissal_restrictions.users if self.dismissal_restrictions is not None else None
 
     @property
     def require_code_owner_reviews(self) -> bool:

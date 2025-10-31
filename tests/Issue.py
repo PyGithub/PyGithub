@@ -49,6 +49,8 @@ from datetime import datetime, timezone
 
 from . import Framework
 
+gho = Framework.github.GithubObject
+
 
 class Issue(Framework.TestCase):
     def setUp(self):
@@ -58,7 +60,6 @@ class Issue(Framework.TestCase):
 
     def testAttributes(self):
         self.assertIsNone(self.issue.active_lock_reason)
-        self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(self.issue.author_association, "MEMBER")
         self.assertEqual(self.issue.body, "Body edited by PyGithub\n")
@@ -145,16 +146,16 @@ class Issue(Framework.TestCase):
         self.issue.edit(
             "Title edited by PyGithub",
             "Body edited by PyGithub",
-            user,
-            "open",
+            "closed",
             milestone,
             ["Bug"],
-            ["jacquev6"],
+            [user],
+            "completed",
         )
-        self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
-        self.assertEqual(self.issue.state, "open")
+        self.assertEqual(self.issue.state, "closed")
+        self.assertEqual(self.issue.state_reason, "completed")
         self.assertEqual(self.issue.title, "Title edited by PyGithub")
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["Bug"])
 
@@ -163,10 +164,10 @@ class Issue(Framework.TestCase):
         self.issue.edit(milestone=None)
         self.assertEqual(self.issue.milestone, None)
 
-    def testEditResetAssignee(self):
-        self.assertEqual(self.issue.assignee.login, "jacquev6")
-        self.issue.edit(assignee=None)
-        self.assertEqual(self.issue.assignee, None)
+    def testEditResetAssignees(self):
+        self.assertEqual(len(self.issue.assignees), 1)
+        self.issue.edit(assignees=[])
+        self.assertEqual(len(self.issue.assignees), 0)
 
     def testEditWithStateReasonNotPlanned(self):
         self.issue.edit(state="closed", state_reason="not_planned")
