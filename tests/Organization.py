@@ -172,6 +172,11 @@ class Organization(Framework.TestCase):
         self.assertIsNone(self.org.user_view_type)
         self.assertEqual(self.org.web_commit_signoff_required, False)
 
+    def testLazyAttributes(self):
+        org = self.g.withLazy(True).get_organization("org")
+        self.assertEqual(org.login, "org")
+        self.assertEqual(org.url, "/orgs/org")
+
     def testAddMembersDefaultRole(self):
         lyloa = self.g.get_user("lyloa")
         self.assertFalse(self.org.has_in_members(lyloa))
