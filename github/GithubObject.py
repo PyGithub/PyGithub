@@ -569,7 +569,12 @@ class CompletableGithubObject(GithubObject, ABC):
             self.complete()
 
     def __eq__(self, other: Any) -> bool:
-        return other.__class__ is self.__class__ and other._url.value == self._url.value
+        return (
+            other.__class__ is self.__class__
+            and other.requester.base_url == self.requester.base_url
+            and other._url.value.removeprefix(other.requester.base_url)
+            == self._url.value.removeprefix(self.requester.base_url)
+        )
 
     def __hash__(self) -> int:
         return hash(self._url.value)
