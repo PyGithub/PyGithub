@@ -630,6 +630,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        elif "url" in attributes and "/" in attributes["url"]:
+            login = attributes["url"].split("/")[-1]
+            # url could also reference user id (int): /user/id
+            if attributes["url"].endswith(f"/users/{login}"):
+                self._login = self._makeStringAttribute(login)
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch

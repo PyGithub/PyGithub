@@ -106,6 +106,13 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(repr(self.user.plan), "None")
         self.assertEqual(self.user.user_view_type, "public")
 
+    def testLazyAttributes(self):
+        user = self.g.withLazy(True).get_user("lazyUser")
+        self.assertEqual(str(user), 'NamedUser(login="lazyUser")')
+        self.assertEqual(user._identity, "lazyUser")
+        self.assertEqual(user.login, "lazyUser")
+        self.assertEqual(user.url, "/users/lazyUser")
+
     def testAttributesOfOtherUser(self):
         self.user = self.g.get_user("nvie")
         self.assertEqual(
