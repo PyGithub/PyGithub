@@ -751,6 +751,10 @@ class Issue(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        elif "url" in attributes:
+            number = attributes["url"].split("/")[-1]
+            if number.isnumeric():
+                self._number = self._makeIntAttribute(int(number))
         if "performed_via_github_app" in attributes:  # pragma no branch
             self._performed_via_github_app = self._makeClassAttribute(
                 github.GithubApp.GithubApp, attributes["performed_via_github_app"]
