@@ -218,6 +218,12 @@ class PullRequest(Framework.TestCase):
         )
         self.assertTrue(self.pullIssue256Conflict.rebaseable)
 
+    def testLazyAttributes(self):
+        pull = self.g.withLazy(True).get_repo("lazy/repo").get_pull(42)
+        self.assertEqual(str(pull), "PullRequest(title=None, number=42)")
+        self.assertEqual(pull.number, 42)
+        self.assertEqual(pull.url, "/repos/lazy/repo/pulls/42")
+
     def testCreateComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_comment("Comment created by PyGithub", commit, "src/github/Issue.py", 5)

@@ -1133,6 +1133,10 @@ class PullRequest(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        elif "url" in attributes:
+            number = attributes["url"].split("/")[-1]
+            if number.isnumeric():
+                self._number = self._makeIntAttribute(int(number))
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "rebaseable" in attributes:  # pragma no branch
