@@ -341,6 +341,10 @@ class PullRequestComment(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "in_reply_to_id" in attributes:  # pragma no branch
             self._in_reply_to_id = self._makeIntAttribute(attributes["in_reply_to_id"])
         if "line" in attributes:  # pragma no branch

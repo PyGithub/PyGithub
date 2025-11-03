@@ -45,6 +45,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -332,6 +333,10 @@ class Gist(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_id = attributes["url"].split("/")[-1]
+            id = urllib.parse.unquote(quoted_id)
+            self._id = self._makeStringAttribute(id)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch

@@ -517,6 +517,10 @@ class Team(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "ldap_dn" in attributes:  # pragma no branch
             self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
         if "members_count" in attributes:  # pragma no branch

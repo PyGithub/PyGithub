@@ -413,6 +413,10 @@ class WorkflowRun(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "jobs_url" in attributes:  # pragma no branch
             self._jobs_url = self._makeStringAttribute(attributes["jobs_url"])
         if "logs_url" in attributes:  # pragma no branch

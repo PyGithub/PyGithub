@@ -47,6 +47,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from typing import TYPE_CHECKING, Any
 
 import github.Branch
@@ -61,7 +62,7 @@ import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
 import github.Repository
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_optional, is_undefined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -177,6 +178,8 @@ class Commit(CompletableGithubObject):
 
     @property
     def sha(self) -> str:
+        if is_undefined(self._sha) and is_defined(self._url):
+            self._sha = self._makeStringAttribute(self.url.split("/")[-1])
         self._completeIfNotSet(self._sha)
         return self._sha.value
 
@@ -354,6 +357,10 @@ class Commit(CompletableGithubObject):
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_sha = attributes["url"].split("/")[-1]
+            sha = urllib.parse.unquote(quoted_sha)
+            self._sha = self._makeStringAttribute(sha)
         if "stats" in attributes:  # pragma no branch
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "text_matches" in attributes:  # pragma no branch

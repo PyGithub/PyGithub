@@ -3039,9 +3039,9 @@ class Repository(CompletableGithubObject):
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref
-        ref = urllib.parse.quote(ref)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}{prefix}{ref}")
-        return github.GitRef.GitRef(self._requester, headers, data, completed=True)
+        quoted_ref = urllib.parse.quote(ref)
+        url = f"{self.url}{prefix}{quoted_ref}"
+        return github.GitRef.GitRef(self._requester, url=url, attributes={"ref": ref})
 
     def get_git_refs(self) -> PaginatedList[GitRef]:
         """

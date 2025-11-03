@@ -104,6 +104,12 @@ class Gist(Framework.TestCase):
         self.assertEqual(repr(gist), 'Gist(id="6296732")')
         self.assertEqual(repr(gist.files["GithubAPI.lua"]), 'GistFile(filename="GithubAPI.lua")')
 
+    def testLazyAttributes(self):
+        gist = self.g.withLazy(True).get_gist("gist")
+        self.assertEqual(str(gist), 'Gist(id="gist")')
+        self.assertEqual(gist.id, "gist")
+        self.assertEqual(gist.url, "/gists/gist")
+
     def testEditWithoutParameters(self):
         gist = self.g.get_gist("2729810")
         gist.edit()

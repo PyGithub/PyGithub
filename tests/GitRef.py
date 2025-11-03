@@ -64,6 +64,12 @@ class GitRef(Framework.TestCase):
             'GitObject(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")',
         )
 
+    def testLazyAttributes(self):
+        ref = self.g.withLazy(True).get_repo("lazy/repo").get_git_ref("refs/heads/main")
+        self.assertEqual(str(ref), 'GitRef(ref="refs/heads/main")')
+        self.assertEqual(ref.ref, "refs/heads/main")
+        self.assertEqual(ref.url, "/repos/lazy/repo/git/ref/refs/heads/main")
+
     def testEdit(self):
         self.ref.edit("04cde900a0775b51f762735637bd30de392a2793")
 

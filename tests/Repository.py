@@ -654,6 +654,12 @@ class Repository(Framework.TestCase):
         for matched_repo_secret in matched_repo_secrets:
             matched_repo_secret.delete()
 
+    def testLazySecret(self):
+        secret = self.g.withLazy(True).get_repo("lazy/repo").get_secret("secret name")
+        self.assertEqual(str(secret), 'Secret(name="secret name")')
+        self.assertEqual(secret.name, "secret name")
+        self.assertEqual(secret.url, "/repos/lazy/repo/actions/secrets/secret%20name")
+
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
         self.assertListKeyEqual(
@@ -2205,6 +2211,12 @@ class Repository(Framework.TestCase):
         variable = self.repo.create_variable("variable_name", "variable-value")
         self.assertTrue(variable.edit("variable-value123"))
         variable.delete()
+
+    def testGetLazyVariable(self):
+        var = self.g.withLazy(True).get_repo("lazy/repo").get_variable("var name")
+        self.assertEqual(str(var), 'Variable(name="var name")')
+        self.assertEqual(var.name, "var name")
+        self.assertEqual(var.url, "/repos/lazy/repo/actions/variables/var%20name")
 
     def testRepoVariables(self):
         # GitHub will always capitalize the variable name
