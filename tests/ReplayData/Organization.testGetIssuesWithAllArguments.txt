@@ -13,17 +13,6 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/labels/Requested%20by%20user
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
-None
-200
-[('status', '200 OK'), ('x-ratelimit-remaining', '4973'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '125'), ('server', 'GitHub.com'), ('last-modified', 'Wed, 12 Sep 2012 18:38:55 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"4255e5086bc19b2096e05eb6dad041ee"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Fri, 17 May 2013 11:50:35 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8')]
-{"url":"https://api.github.com/repos/jacquev6/PyGithub/labels/Requested+by+user","name":"Requested by user","color":"e10c02"}
-
-https
-GET
-api.github.com
-None
 /orgs/BeaverSoftware/issues?sort=comments&direction=asc&since=2012-05-28T23%3A00%3A00Z&labels=Requested+by+user&filter=assigned&state=closed
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None

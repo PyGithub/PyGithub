@@ -217,6 +217,7 @@ class GitRelease(Framework.TestCase):
 
     def testGetLatestRelease(self):
         latest_release = self.repo.get_latest_release()
+        self.assertEqual(latest_release.id, 28524234)
         self.assertEqual(latest_release.tag_name, tag)
 
     def testGetAssets(self):
@@ -232,6 +233,7 @@ class GitRelease(Framework.TestCase):
         asset = repo.get_release_asset(asset_id)
         self.assertTrue(asset is not None)
         self.assertEqual(asset.id, asset_id)
+        self.assertEqual(asset.name, "fact")
 
     def testDelete(self):
         self.setUpNewRelease()
