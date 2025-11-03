@@ -461,10 +461,16 @@ class Repository(CompletableGithubObject):
         self._web_commit_signoff_required: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
+        if is_undefined(self._full_name) and is_defined(self._id):
+            return self.get__repr__({"id": self._id.value})
         return self.get__repr__({"full_name": self._full_name.value})
 
     @property
     def _identity(self) -> str:
+        if is_undefined(self._owner) or is_undefined(self._name):
+            if is_undefined(self._full_name):
+                return str(self._id.value)
+            return self.full_name
         return f"{self.owner.login}/{self.name}"
 
     @property
@@ -1231,8 +1237,6 @@ class Repository(CompletableGithubObject):
 
     @property
     def url(self) -> str:
-        if is_undefined(self._url) and is_defined(self._owner) and is_defined(self._name):
-            self._url = self._makeStringAttribute(self._requester.base_url + f"/repos/{self.owner.login}/{self.name}")
         self._completeIfNotSet(self._url)
         return self._url.value
 
@@ -4583,6 +4587,19 @@ class Repository(CompletableGithubObject):
             self._forks_url = self._makeStringAttribute(attributes["forks_url"])
         if "full_name" in attributes:  # pragma no branch
             self._full_name = self._makeStringAttribute(attributes["full_name"])
+        elif "url" in attributes and attributes["url"]:
+            url = attributes["url"]
+            if url.startswith(self.requester.base_url):
+                base_url = self.requester.base_url
+                if base_url.endswith("/"):
+                    base_url = base_url[:-1]
+                url = url[len(base_url) :]
+            if url.startswith("/repos/") and url.count("/") == 3:
+                self._full_name = self._makeStringAttribute(url.split("/", maxsplit=2)[-1])
+        elif "owner" in attributes and "login" in attributes["owner"] and "name" in attributes:
+            login = attributes["owner"]["login"]
+            name = attributes["name"]
+            self._full_name = self._makeStringAttribute(f"{login}/{name}")
         if "git_commits_url" in attributes:  # pragma no branch
             self._git_commits_url = self._makeStringAttribute(attributes["git_commits_url"])
         if "git_refs_url" in attributes:  # pragma no branch
@@ -4611,6 +4628,17 @@ class Repository(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes:
+            url = attributes["url"]
+            if url.startswith(self.requester.base_url):
+                base_url = self.requester.base_url
+                if base_url.endswith("/"):
+                    base_url = base_url[:-1]
+                url = url[len(base_url) :]
+            if url.startswith("/repositories/") and url.count("/") == 2:
+                id = url.split("/", maxsplit=2)[-1]
+                if id.isnumeric():
+                    self._id = self._makeIntAttribute(int(id))
         if "is_template" in attributes:  # pragma no branch
             self._is_template = self._makeBoolAttribute(attributes["is_template"])
         if "issue_comment_url" in attributes:  # pragma no branch
@@ -4643,6 +4671,18 @@ class Repository(CompletableGithubObject):
             self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes:
+            url = attributes["url"]
+            if url.startswith(self.requester.base_url):
+                base_url = self.requester.base_url
+                if base_url.endswith("/"):
+                    base_url = base_url[:-1]
+                url = url[len(base_url) :]
+            if url.startswith("/repos/") and url.count("/") == 3:
+                self._name = self._makeStringAttribute(attributes["url"].split("/")[-1])
+        elif "full_name" in attributes and "/" in attributes["full_name"]:
+            name = attributes["full_name"].split("/", 2)[1]
+            self._name = self._makeStringAttribute(name)
         if "network_count" in attributes:  # pragma no branch
             self._network_count = self._makeIntAttribute(attributes["network_count"])
         if "node_id" in attributes:  # pragma no branch
@@ -4719,6 +4759,12 @@ class Repository(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        elif "owner" in attributes and "login" in attributes["owner"] and "name" in attributes:
+            login = attributes["owner"]["login"]
+            name = attributes["name"]
+            self._url = self._makeStringAttribute(f"/repos/{login}/{name}")
+        elif "full_name" in attributes:
+            self._url = self._makeStringAttribute(f"/repos/{attributes['full_name']}")
         if "use_squash_pr_title_as_default" in attributes:  # pragma no branch
             self._use_squash_pr_title_as_default = self._makeBoolAttribute(attributes["use_squash_pr_title_as_default"])
         if "visibility" in attributes:  # pragma no branch

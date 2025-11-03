@@ -106,6 +106,7 @@ from unittest import mock
 
 import github
 import github.Repository
+from github.GithubObject import is_undefined
 
 from . import Framework
 
@@ -2288,6 +2289,23 @@ class LazyRepository(Framework.TestCase):
 
     def getEagerRepository(self):
         return self.g.get_repo(self.repository_name, lazy=False)
+
+    def testLazyAttributes(self):
+        repo = self.g.withLazy(True).get_repo("lazy/repo")
+        self.assertEqual(str(repo), 'Repository(full_name="lazy/repo")')
+        self.assertEqual(repo._identity, "lazy/repo")
+        self.assertTrue(is_undefined(repo._id))
+        self.assertEqual(repo.name, "repo")
+        self.assertEqual(repo.full_name, "lazy/repo")
+        self.assertEqual(repo.url, "/repos/lazy/repo")
+
+        repo = self.g.withLazy(True).get_repo(42)
+        self.assertEqual(str(repo), "Repository(id=42)")
+        self.assertEqual(repo._identity, "42")
+        self.assertEqual(repo.id, 42)
+        self.assertTrue(is_undefined(repo._name))
+        self.assertTrue(is_undefined(repo._full_name))
+        self.assertEqual(repo.url, "/repositories/42")
 
     def testGetIssues(self):
         lazy_repo = self.getLazyRepository()
