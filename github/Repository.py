@@ -212,6 +212,7 @@ import github.Invitation
 import github.Issue
 import github.IssueComment
 import github.IssueEvent
+import github.IssueType
 import github.Label
 import github.License
 import github.MergedUpstream
@@ -299,6 +300,7 @@ if TYPE_CHECKING:
     from github.Issue import Issue
     from github.IssueComment import IssueComment
     from github.IssueEvent import IssueEvent
+    from github.IssueType import IssueType
     from github.Label import Label
     from github.License import License
     from github.MergedUpstream import MergedUpstream
@@ -1678,6 +1680,7 @@ class Repository(CompletableGithubObject):
         milestone: Opt[Milestone] = NotSet,
         labels: list[Label] | Opt[list[str]] = NotSet,
         assignees: Opt[list[str]] | list[NamedUser] = NotSet,
+        issue_type: Opt[IssueType | str] = NotSet,
     ) -> Issue:
         """
         :calls: `POST /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -1687,6 +1690,7 @@ class Repository(CompletableGithubObject):
         :param assignees: list of string or :class:`github.NamedUser.NamedUser`
         :param milestone: :class:`github.Milestone.Milestone`
         :param labels: list of :class:`github.Label.Label`
+        :param issue_type: string or :class:`github.Issue.IssueType.IssueType`
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(title, str), title
@@ -1695,6 +1699,7 @@ class Repository(CompletableGithubObject):
         assert is_optional_list(assignees, (github.NamedUser.NamedUser, str)), assignees
         assert is_optional(milestone, github.Milestone.Milestone), milestone
         assert is_optional_list(labels, (github.Label.Label, str)), labels
+        assert is_optional(issue_type, (github.IssueType.IssueType, str)), issue_type
 
         post_parameters: dict[str, Any] = {
             "title": title,
@@ -1718,6 +1723,11 @@ class Repository(CompletableGithubObject):
                 element.name if isinstance(element, github.Label.Label) else element
                 for element in labels  # type: ignore
             ]
+        if is_defined(issue_type):
+            if isinstance(issue_type, IssueType):
+                post_parameters["type"] = issue_type.name
+            else:
+                post_parameters["type"] = issue_type
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/issues", input=post_parameters)
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 

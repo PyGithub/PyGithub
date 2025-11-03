@@ -424,6 +424,7 @@ class Issue(CompletableGithubObject):
         labels: Opt[list[str]] = NotSet,
         assignees: Opt[list[NamedUser | str]] = NotSet,
         state_reason: Opt[str] = NotSet,
+        issue_type: Opt[IssueType | str] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
@@ -437,6 +438,7 @@ class Issue(CompletableGithubObject):
         assert is_optional(state, str), state
         assert milestone is None or is_optional(milestone, github.Milestone.Milestone), milestone
         assert is_optional_list(labels, str), labels
+        assert is_optional(issue_type, (github.IssueType.IssueType, str)), issue_type
 
         post_parameters = NotSet.remove_unset_items(
             {
@@ -451,6 +453,9 @@ class Issue(CompletableGithubObject):
                 "milestone": milestone._identity
                 if isinstance(milestone, github.Milestone.Milestone)
                 else (milestone or ""),
+                "type": issue_type.name
+                if isinstance(issue_type, github.IssueType.IssueType)
+                else (issue_type or ""),
             }
         )
 
