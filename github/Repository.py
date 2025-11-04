@@ -1724,7 +1724,7 @@ class Repository(CompletableGithubObject):
                 for element in labels  # type: ignore
             ]
         if is_defined(issue_type):
-            if isinstance(issue_type, IssueType):
+            if isinstance(issue_type, github.IssueType.IssueType):
                 post_parameters["type"] = issue_type.name
             else:
                 post_parameters["type"] = issue_type
