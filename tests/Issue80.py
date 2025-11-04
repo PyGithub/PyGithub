@@ -39,7 +39,9 @@ from . import Framework
 
 class Issue80(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/issues/80
     def testIgnoreHttpsFromGithubEnterprise(self):
-        g = github.Github(auth=self.oauth_token, base_url="http://my.enterprise.com/some/prefix")  # http here
+        g = github.Github(
+            auth=self.oauth_token, base_url="http://my.enterprise.com/some/prefix", lazy=False
+        )  # http here
         org = g.get_organization("BeaverSoftware")
         self.assertEqual(org.url, "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware")  # https returned
         self.assertListKeyEqual(
@@ -50,6 +52,7 @@ class Issue80(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/
         g = github.Github(
             auth=self.oauth_token,
             base_url="http://my.enterprise.com:1234/some/prefix",
+            lazy=False,
         )  # http here
         org = g.get_organization("BeaverSoftware")
         self.assertEqual(org.url, "https://my.enterprise.com:1234/some/prefix/orgs/BeaverSoftware")  # https returned

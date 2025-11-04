@@ -26,7 +26,7 @@ from . import Framework
 
 class PullRequestReview1856(Framework.TestCase):
     def testDelete(self):
-        pumpkin_repo = self.g.get_repo("CS481-Team-Pumpkin/PyGithub", lazy=True)
+        pumpkin_repo = self.g.get_repo("CS481-Team-Pumpkin/PyGithub")
         pumpkin_pull = pumpkin_repo.get_pull(4)
         pullreview = pumpkin_pull.get_review(631460061)
 

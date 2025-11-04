@@ -2,7 +2,7 @@ https
 DELETE
 api.github.com
 None
-/organizations/1234567/team/12345678
+/teams/12345678
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204

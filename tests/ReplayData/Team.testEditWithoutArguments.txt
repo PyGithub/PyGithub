@@ -2,7 +2,7 @@ https
 PATCH
 api.github.com
 None
-/organizations/1234567/team/12345678
+/teams/12345678
 {'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"name": "Name edited by PyGithub"}
 200

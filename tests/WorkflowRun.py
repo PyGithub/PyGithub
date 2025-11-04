@@ -47,6 +47,11 @@ class WorkflowRun(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(
             repr(self.workflow_run),
+            'WorkflowRun(url="/repos/PyGithub/PyGithub/actions/runs/3881497935", id=3881497935)',
+        )
+        self.workflow_run.complete()
+        self.assertEqual(
+            repr(self.workflow_run),
             'WorkflowRun(url="https://api.github.com/repos/PyGithub/PyGithub/actions/runs/3881497935", id=3881497935)',
         )
         self.assertEqual(self.workflow_run.actor.login, "nuang-ee")

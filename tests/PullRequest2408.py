@@ -43,7 +43,7 @@ from . import Framework
 class PullRequest2408(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("ReDASers/Phishing-Detection")
+        self.repo = self.g.get_repo("ReDASers/PhishBench")
 
     def test_get_workflow_runs(self):
         runs = self.repo.get_workflow_runs(head_sha="7aab33f4294ba5141f17bed0aeb1a929f7afc155")

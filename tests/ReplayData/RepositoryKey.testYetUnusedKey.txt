@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repos/lra/mackup/keys/98051552
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Sat, 13 Apr 2024 10:25:13 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"5b9679b5020736bf39e0b6e78338333c755f1a12988553a672ef7ed8ce33d50a"'), ('Last-Modified', 'Sat, 13 Apr 2024 10:00:21 GMT'), ('X-OAuth-Scopes', 'repo'), ('X-Accepted-OAuth-Scopes', ''), ('github-authentication-token-expiration', '2024-07-12 09:49:57 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4944'), ('X-RateLimit-Reset', '1713006347'), ('X-RateLimit-Used', '56'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'CF76:296021:13CBA617:13E4E368:661A5D89')]
+{"id":98051552,"key":"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOXEPB9eqJ2DwZepFxrPwCDczIReVeWOOt3NMs8KOn3h","url":"https://api.github.com/repos/lra/mackup/keys/98051552","title":"PyGithub Unused Test Key","verified":true,"created_at":"2019-02-22T08:16:23Z","read_only":true,"last_used":null,"added_by":"key-admin-user"}

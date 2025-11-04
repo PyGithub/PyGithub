@@ -86,7 +86,7 @@ class RawData(Framework.TestCase):
     }
 
     def testCompletedObject(self):
-        user = self.g.get_user("jacquev6")
+        user = self.g.get_user("jacquev6").complete()
         self.assertTrue(user._CompletableGithubObject__completed)
         self.assertEqual(user.raw_data, RawData.jacquev6RawData)
 

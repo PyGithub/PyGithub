@@ -2,7 +2,7 @@ https
 DELETE
 api.github.com
 None
-/repos/PyGithub/PyGithub/labels/bug
+/repos/PyGithub/PyGithub/labels/Bug
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
