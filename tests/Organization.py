@@ -211,18 +211,6 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.location, "Location edited by PyGithub")
         self.assertEqual(self.org.name, "Name edited by PyGithub")
 
-    def testEditHookWithMinimalParameters(self):
-        hook = self.org.create_hook("web", {"url": "http://foobar.com"})
-        hook = self.org.edit_hook(hook.id, "mobile", {"url": "http://barfoo.com"})
-        self.assertEqual(hook.name, "mobile")
-
-    def testEditHookWithAllParameters(self):
-        hook = self.org.create_hook("web", {"url": "http://foobar.com"}, ["fork"], False)
-        hook = self.org.edit_hook(hook.id, "mobile", {"url": "http://barfoo.com"}, ["spoon"], True)
-        self.assertEqual(hook.name, "mobile")
-        self.assertEqual(hook.events, ["spoon"])
-        self.assertEqual(hook.active, True)
-
     def testCreateTeam(self):
         team = self.org.create_team("Team created by PyGithub")
         self.assertEqual(team.id, 189850)
