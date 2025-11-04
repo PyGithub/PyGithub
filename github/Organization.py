@@ -92,6 +92,8 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import deprecated
+
 import github.CodeSecurityConfig
 import github.CodeSecurityConfigRepository
 import github.Copilot
@@ -1131,6 +1133,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
+    @deprecated("Use Organization.get_hook(id).edit(…) instead")
     def edit_hook(
         self,
         id: int,
