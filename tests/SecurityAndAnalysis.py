@@ -44,7 +44,7 @@ from . import Framework
 class SecurityAndAnalysis(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub").complete()
         self.maxDiff = None
 
     def testAttributes(self):

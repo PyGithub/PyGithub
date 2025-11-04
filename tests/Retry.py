@@ -49,6 +49,7 @@ class Retry(Framework.TestCase):
         retry = urllib3.Retry(total=3, read=3, connect=3, status_forcelist=status_forcelist)
         self.setRetry(retry)
         super().setUp()
+        self.g = self.get_github(self.authMode, retry=self.retry, lazy=False)
 
     def testShouldNotRetryWhenStatusNotOnList(self):
         with self.assertRaises(github.GithubException):
