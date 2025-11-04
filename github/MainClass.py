@@ -123,7 +123,7 @@ import github.NamedUser
 import github.Topic
 from github import Consts
 from github.GithubIntegration import GithubIntegration
-from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined
+from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined, is_undefined
 from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.HookDescription import HookDescription
@@ -467,17 +467,15 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
-    def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
+    def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
-        if lazy:
-            return github.Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
-        headers, data = self.__requester.requestJsonAndCheck("GET", url)
-        return github.Repository.Repository(self.__requester, headers, data, completed=True)
+        requester = self.__requester if is_undefined(lazy) else self.__requester.withLazy(lazy)
+        return github.Repository.Repository(requester, url=url)
 
     def get_repos(
         self,

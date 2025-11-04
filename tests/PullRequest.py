@@ -69,10 +69,10 @@ class PullRequest(Framework.TestCase):
         self.pull = self.repo.get_pull(31)
 
         marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
-        self.pullIssue256Closed = marco_repo.get_pull(1)
-        self.pullIssue256Merged = marco_repo.get_pull(2)
-        self.pullIssue256Conflict = marco_repo.get_pull(3)
-        self.pullIssue256Uncached = marco_repo.get_pull(4)
+        self.pullIssue256Closed = marco_repo.get_pull(1).complete()
+        self.pullIssue256Merged = marco_repo.get_pull(2).complete()
+        self.pullIssue256Conflict = marco_repo.get_pull(3).complete()
+        self.pullIssue256Uncached = marco_repo.get_pull(4).complete()
 
         flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
         self.pullMaintainerCanModify = flo_repo.get_pull(2)
