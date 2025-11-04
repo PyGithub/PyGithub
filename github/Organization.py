@@ -1131,29 +1131,6 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def edit_hook(
-        self,
-        id: int,
-        name: str,
-        config: dict[str, str],
-        events: Opt[list[str]] = NotSet,
-        active: Opt[bool] = NotSet,
-    ) -> Hook:
-        """
-        :calls: `PATCH /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
-        """
-        assert isinstance(id, int), id
-        assert isinstance(name, str), name
-        assert isinstance(config, dict), config
-        assert is_optional_list(events, str), events
-        assert is_optional(active, bool), active
-        post_parameters: dict[str, Any] = NotSet.remove_unset_items(
-            {"name": name, "config": config, "events": events, "active": active}
-        )
-
-        headers, data = self._requester.requestJsonAndCheck("PATCH", f"{self.url}/hooks/{id}", input=post_parameters)
-        return github.Hook.Hook(self._requester, headers, data, completed=True)
-
     def get_events(self) -> PaginatedList[Event]:
         """
         :calls: `GET /orgs/{org}/events <https://docs.github.com/en/rest/reference/activity#events>`_
