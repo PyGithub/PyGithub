@@ -639,3 +639,93 @@ class CompletableGithubObject(GithubObject, ABC):
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True
+
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
+
+
+class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
+    """
+    A CompletableGithubObject that has a property that is subject to pagination.
+
+    An instance created from a Requester with a non-default value for `per_page` must have the
+    `per_page` value in the URL in order for the paginated property to use the `per_page` value.
+
+    """
+
+    def __init__(
+        self,
+        requester: Requester,
+        headers: dict[str, str | int] | None = None,
+        attributes: dict[str, Any] | None = None,
+        completed: bool | None = None,
+        *,
+        url: str | None = None,
+        accept: str | None = None,
+        per_page: int | None = None,
+    ):
+        assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
+
+        # add per_page to URL if instance is incomplete
+        # we only modify the URL if this instance is incomplete
+        if not completed:
+            if per_page is None:
+                # we use the default per_page (not Consts.DEFAULT_PER_PAGE as this URL might have a different default)
+                # we set page=1 to get pagination links, PaginatedList can work from there
+                url = self.set_if_not_set(attributes, url, page=1)
+            else:
+                # we set the given per_page
+                url = self.set_if_not_set(attributes, url, per_page=per_page, page=1)
+
+        super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
+
+    def _useAttributes(self, attributes: Any) -> None:
+        # this object might have been created with an url while completing the object
+        # provides another url, which might reset initial pagination information
+        # we recover those pagination information here
+        if is_defined(self._url) and "url" in attributes:
+            parameters = self.requester.get_parameters_of_url(self.url)
+            pagination_params = {"per_page", "page"}
+            pagination = {
+                k: v[0] for k, v in parameters.items() if k in pagination_params and isinstance(v, list) and len(v) == 1
+            }
+            attributes["url"] = self.set_values_if_not_set(attributes["url"], unless=pagination_params, **pagination)
+        super()._useAttributes(attributes)
+
+    @classmethod
+    def set_if_not_set(
+        cls, attributes: dict[str, Any] | None, url: str | None, unless: set[str] | None = None, **kwargs: Any
+    ) -> str | None:
+        # add values to the URL in the attributes
+        if attributes is not None and "url" in attributes:
+            attributes["url"] = cls.set_values_if_not_set(attributes["url"], unless, **kwargs)
+        # add values to the request URL
+        return cls.set_values_if_not_set(url, unless, **kwargs)
+
+    @staticmethod
+    def set_values_if_not_set(url: str | None, unless: set[str] | None = None, **kwargs: Any) -> str | None:
+        if url is None:
+            return url
+
+        if unless is None:
+            unless = set()
+
+        from .Requester import Requester
+
+        params = Requester.get_parameters_of_url(url)
+        if any(p in params for p in unless):
+            return url
+
+        for k, v in kwargs.items():
+            if k not in params:
+                params[k] = [str(v)]
+        return Requester.add_parameters_to_url(url, params)
