@@ -2337,6 +2337,26 @@ class LazyRepository(Framework.TestCase):
         lazy_repo = self.g.get_repo("random", lazy=True)
         self.assertFalse(lazy_repo.disable_vulnerability_alert())
 
+    def testGetImmutableReleases(self):
+        lazy_repo = self.getEagerRepository()
+        self.assertTrue(lazy_repo.get_immutable_releases())
+
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.get_immutable_releases())
+
+    def testEnableImmutableReleases(self):
+        lazy_repo = self.getLazyRepository()
+        self.assertTrue(lazy_repo.enable_immutable_releases())
+
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.enable_immutable_releases())
+
+    def testDisableImmutableReleases(self):
+        lazy_repo = self.getLazyRepository()
+        self.assertTrue(lazy_repo.disable_immutable_releases())
+        lazy_repo = self.g.get_repo("random", lazy=True)
+        self.assertFalse(lazy_repo.disable_immutable_releases())
+
     def testChangeAutomateFixWhenNoVulnerabilityAlert(self):
         lazy_repo = self.getLazyRepository()
         self.assertFalse(lazy_repo.enable_automated_security_fixes())
