@@ -220,6 +220,9 @@ def string_as_python_type(type: str, classes: dict[str, dict]) -> PythonType | G
     type = type.strip()
     if type == "None":
         return PythonType("None")
+    if type.startswith("Opt[") and type.endswith("]"):
+        inner_type = string_as_python_type(type[4:-1], classes)
+        return PythonType("Opt", [inner_type])
     if type.startswith("Optional[") and type.endswith("]"):
         inner_type = string_as_python_type(type[9:-1], classes)
         return PythonType("union", [inner_type, PythonType("None")])
@@ -438,6 +441,15 @@ class Property:
         return [Property(name=n, data_type=t, deprecated=d) for n, (t, d) in properties.items()]
 
 
+class ParameterOrder(Enum):
+    POSITIONAL = 1
+    STAR = 2
+    NAMED = 3
+
+    def __lt__(self, other) -> bool:
+        return isinstance(other, ParameterOrder) and other.value < self.value
+
+
 @dataclasses.dataclass(frozen=True)
 class Parameter:
     name: str
@@ -446,6 +458,7 @@ class Parameter:
     data_type: PythonType | GithubClass | None
     param_type: str
     required: bool
+    position: ParameterOrder
     deprecated: bool | None
 
     def supports_pagination(self) -> bool:
@@ -477,7 +490,9 @@ class Parameter:
         deprecated = schema.get("deprecated")
         if deprecated is None and description and description.startswith("**Closing down notice**"):
             deprecated = True
-        return Parameter(name, name, description, data_type, param_type, required, deprecated)
+        return Parameter(
+            name, name, description, data_type, param_type, required, ParameterOrder.POSITIONAL, deprecated
+        )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -2058,29 +2073,127 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         )
         return param
 
+    def amend_parameters(
+        self,
+        parameters: list[Parameter],
+        pos_params: Sequence[cst.Param],
+        star_param: cst.Param | None,
+        kw_params: Sequence[cst.Param],
+    ) -> list[Parameter]:
+        amended_parameters = []
+        pos_params_map = {param.name.value: param for param in pos_params}
+        star_name = star_param.name.value if star_param is not None else None
+        kw_params_map = {param.name.value: param for param in kw_params}
+        params = {**pos_params_map, **kw_params_map}
+        if star_name:
+            params[star_name] = star_param
+        for parameter in parameters:
+            if parameter.name in params:
+                param = params[parameter.name]
+                if parameter.name == star_name:
+                    parameter = dataclasses.replace(parameter, position=ParameterOrder.STAR)
+                elif parameter.name in kw_params:
+                    parameter = dataclasses.replace(parameter, position=ParameterOrder.NAMED)
+                else:
+                    parameter = dataclasses.replace(parameter, position=ParameterOrder.POSITIONAL)
+                if param.annotation is not None:
+                    # get data type from code
+                    code = cst.Module("").code_for_node(param.annotation.annotation)
+                    existing_data_type = string_as_python_type(code, self.classes)
+
+                    if (
+                        param.default is not None
+                        and not parameter.required
+                        and isinstance(existing_data_type, PythonType)
+                        and existing_data_type.type == "Opt"
+                        and len(existing_data_type.inner_types) == 1
+                    ):
+                        existing_data_type = existing_data_type.inner_types[0]
+
+                    # check existing data-type is compatible
+                    if parameter.position == ParameterOrder.STAR:
+                        parameter = dataclasses.replace(parameter, required=True)
+                        # check parameter type (list[T]) is compatible with existing type (*T)
+                        if isinstance(parameter.data_type, PythonType) and parameter.data_type.type == "list":
+                            parameter_inner_data_types = parameter.data_type.inner_types
+                            if (
+                                len(parameter_inner_data_types) == 1
+                                and isinstance(parameter_inner_data_types[0], PythonType)
+                                and parameter_inner_data_types[0].type == "union"
+                            ):
+                                parameter_inner_data_types = parameter_inner_data_types[0].inner_types
+                            if isinstance(existing_data_type, PythonType) and existing_data_type.type == "union":
+                                if not all(
+                                    data_type in existing_data_type.inner_types
+                                    for data_type in parameter_inner_data_types
+                                ):
+                                    print(
+                                        f"parameter type {parameter.data_type} is not compatible with existing "
+                                        f"data type *{existing_data_type.type}, ignoring existing data type."
+                                    )
+                                    continue
+                            elif (
+                                len(parameter_inner_data_types) == 1
+                                and parameter_inner_data_types[0] != existing_data_type
+                            ):
+                                print(
+                                    f"parameter type {parameter.data_type} is not compatible with existing "
+                                    f"data type *{existing_data_type.type}, ignoring existing data type."
+                                )
+                                continue
+                            elif len(parameter_inner_data_types) > 1:
+                                print(
+                                    f"parameter type {parameter.data_type} is not compatible with existing "
+                                    f"data type *{existing_data_type.type}, ignoring existing data type."
+                                )
+                                continue
+                        else:
+                            print(
+                                f"Parameter type {parameter.data_type} cannot be used for an existing "
+                                f"star parameter, ignoring existing parameter."
+                            )
+                            continue
+
+                    # check inner type is a subset of existing data-type
+                    if parameter.data_type != existing_data_type:
+                        print(f"  - Replacing {parameter.data_type} with {existing_data_type}")
+                        parameter = dataclasses.replace(parameter, data_type=existing_data_type)
+            amended_parameters.append(parameter)
+        return amended_parameters
+
     def update_func_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         # update params: create missing, update type annotation of existing params
+        if sum([1 for param in method.parameters if param.position == ParameterOrder.STAR]) > 1:
+            print("Cannot update function parameter list as there are multiple star parameters")
+            return node
+
+        params = node.params.params
+        star_param = node.params.star_arg if isinstance(node.params.star_arg, cst.Param) else None
+        kw_params = node.params.kwonly_params
+
+        if len(params) == 0:
+            return node
+        if params[0].name.value != "self":
+            print("Cannot update function parameter list as it does not have the 'self' parameter")
+            return node
+
+        last_param_has_comma = params[-1].comma is not cst.MaybeSentinel.DEFAULT
+
+        # move 'self' parameter to updated_params
+        updated_params = [params[0]]
+        params = params[1:]
+        updated_star_param = node.params.star_arg
+        updated_kw_params = []
+
         input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
             method.parameters, ["input", "query", "body"]
         )
         parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
+        parameters = self.amend_parameters(parameters, params, star_param, kw_params)
         parameters_names = {arg.python_name: arg for arg in parameters}
         parameters_sorted = self.required_first(parameters)
         existing_parameters = set()
         optional_exists = False
-        updated_params = []
-
-        params = node.params.params
-        if len(params) == 0:
-            return node
-        last_param_has_comma = params[-1].comma is not cst.MaybeSentinel.DEFAULT
-
-        if params[0].name.value != "self":
-            print("Cannot update function parameter list as it does not have the 'self' parameter")
-            return node
-        # move 'self' parameter to updated_params
-        updated_params.append(params[0])
-        params = params[1:]
 
         if self.rewrite:
             # rewrite params list
@@ -2091,9 +2204,15 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                 # propagate the last but one param's comma to the last param (before adding the new param)
                 if len(params) > 1:
                     updated_params[-1] = updated_params[-1].with_changes(comma=params[-2].comma)
-                updated_params.append(param)
+                if parameter.position == ParameterOrder.POSITIONAL:
+                    updated_params.append(param)
+                elif parameter.position == ParameterOrder.STAR:
+                    updated_star_param = param.with_changes(star="*")
+                elif parameter.position == ParameterOrder.NAMED:
+                    updated_kw_params.append(param)
         else:
             # update existing params
+            # TODO: consider node.params.star_arg and node.params.kw_params
             for idx, param in enumerate(params):
                 parameter = parameters_names.get(param.name.value)
                 if parameter is None:
@@ -2126,7 +2245,11 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                         updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
                     updated_params.append(param)
 
-        return node.with_changes(params=node.params.with_changes(params=updated_params))
+        return node.with_changes(
+            params=node.params.with_changes(
+                params=updated_params, star_arg=updated_star_param, kwonly_params=updated_kw_params
+            )
+        )
 
     def update_func_return(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         if self.rewrite or node.returns is None:
