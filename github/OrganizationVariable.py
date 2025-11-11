@@ -101,7 +101,7 @@ class OrganizationVariable(Variable):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: `PUT {org_url}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/variables/{name}/repositories/{repository_id} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -112,7 +112,7 @@ class OrganizationVariable(Variable):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: `DELETE {org_url}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """

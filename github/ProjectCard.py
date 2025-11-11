@@ -155,6 +155,7 @@ class ProjectCard(NonCompletableGithubObject):
     ) -> github.PullRequest.PullRequest | github.Issue.Issue | None:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls#get-a-pull-request>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{pull_number} <https://docs.github.com/en/rest/reference/pulls#get-a-pull-request>`_
         """
         assert content_type is NotSet or isinstance(content_type, str), content_type
         if self.content_url is None:

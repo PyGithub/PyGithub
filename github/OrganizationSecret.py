@@ -79,7 +79,8 @@ class OrganizationSecret(Secret):
         secret_type: str = "actions",
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/{secret_type}/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
+        :calls: `PATCH /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :calls: `PATCH /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/dependabot/secrets#create-or-update-an-organization-secret>`_
         :param variable_name: string
         :param value: string
         :param visibility: string

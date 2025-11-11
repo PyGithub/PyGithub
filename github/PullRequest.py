@@ -694,7 +694,7 @@ class PullRequest(CompletableGithubObject):
 
     def get_single_review_comments(self, id: int) -> PaginatedList[PullRequestComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/review/{review_id}/comments <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         """
         assert isinstance(id, int), id
         return PaginatedList(
