@@ -571,7 +571,7 @@ class Issue(CompletableGithubObject):
 
     def get_sub_issues(self) -> PaginatedList[SubIssue]:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues?apiVersion=2022-11-28>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues?apiVersion=2022-11-28>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         return PaginatedList(
@@ -584,7 +584,7 @@ class Issue(CompletableGithubObject):
 
     def add_sub_issue(self, sub_issue: int | Issue) -> SubIssue:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues>`_
         :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :rtype: :class:`github.Issue.SubIssue`
         """
@@ -607,7 +607,7 @@ class Issue(CompletableGithubObject):
 
     def remove_sub_issue(self, sub_issue: int | Issue) -> SubIssue:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/sub_issue <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/sub_issue <https://docs.github.com/en/rest/issues/sub-issues>`_
         :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :rtype: :class:`github.Issue.SubIssue`
         """
@@ -630,7 +630,7 @@ class Issue(CompletableGithubObject):
 
     def prioritize_sub_issue(self, sub_issue: int | Issue, after_sub_issue: int | Issue | None) -> SubIssue:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/issues/{number}/sub_issues/priority <https://docs.github.com/en/rest/issues/sub-issues>`_
+        :calls: `PATCH /repos/{owner}/{repo}/issues/{issue_number}/sub_issues/priority <https://docs.github.com/en/rest/issues/sub-issues>`_
         :param sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :param after_sub_issue: int (sub-issue ID) or Issue object. Note: Use sub_issue.id, not sub_issue.number
         :rtype: :class:`github.Issue.SubIssue`

@@ -182,6 +182,9 @@ class Environment(CompletableGithubObject):
     def get_secrets(self) -> PaginatedList[Secret]:
         """
         Gets all repository secrets.
+
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets </repos/{owner}/{repo}/environments/{environment_name}/secrets>`_
+
         """
         return PaginatedList(
             github.Secret.Secret,
@@ -241,7 +244,7 @@ class Environment(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> Variable:
         """
-        :calls: `GET /orgs/{org}/variables/{variable_name} <https://docs.github.com/en/rest/variables#get-an-organization-variable>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/rest/actions/variables#get-an-environment-variable>`_
         :param variable_name: string
         :rtype: Variable
         """

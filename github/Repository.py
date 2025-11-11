@@ -1999,7 +1999,8 @@ class Repository(CompletableGithubObject):
         secret_type: str = "actions",
     ) -> github.Secret.Secret:
         """
-        :calls: `PUT /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
@@ -2099,7 +2100,7 @@ class Repository(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> github.Variable.Variable:
         """
-        :calls: `GET /orgs/{org}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#get-a-repository-variable>`_
         :param variable_name: string
         :rtype: github.Variable.Variable
         """
@@ -2114,7 +2115,8 @@ class Repository(CompletableGithubObject):
 
     def delete_secret(self, secret_name: str, secret_type: str = "actions") -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#get-a-repository-secret>`_
         :param secret_name: string
         :param secret_type: string options actions or dependabot
         :rtype: bool
@@ -3401,7 +3403,8 @@ class Repository(CompletableGithubObject):
 
     def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
-        :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/rest/actions/secrets#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/public-key <https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key>`_
         :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
@@ -4291,7 +4294,7 @@ class Repository(CompletableGithubObject):
 
     def get_environments(self) -> PaginatedList[Environment]:
         """
-        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
+        :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
         :rtype: :class:`PaginatedList` of :class:`github.Environment.Environment`
         """
         return PaginatedList(
@@ -4307,7 +4310,7 @@ class Repository(CompletableGithubObject):
 
     def get_environment(self, environment_name: str) -> Environment:
         """
-        :calls: `GET /repo/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
@@ -4325,7 +4328,7 @@ class Repository(CompletableGithubObject):
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
     ) -> Environment:
         """
-        :calls: `PUT /repositories/{repository_id}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
         :param wait_timer: int
         :param reviewers: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
@@ -4364,7 +4367,7 @@ class Repository(CompletableGithubObject):
 
     def delete_environment(self, environment_name: str) -> None:
         """
-        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
         :param environment_name: string
         :rtype: None
         """

@@ -886,7 +886,8 @@ class Organization(CompletableGithubObject):
         :param selected_repositories: list of repositrories that the secret will be available in
         :param secret_type: string options actions or dependabot
 
-        :calls: `PUT /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -937,7 +938,9 @@ class Organization(CompletableGithubObject):
         """
         Gets all organization secrets :param secret_type: string options actions or dependabot :rtype:
 
-        :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+        :calls: `GET /orgs/{org}/actions/secrets <https://docs.github.com/rest/actions/secrets#list-organization-
+        secrets>`_ :calls: `GET /orgs/{org}/dependabot/secrets
+        <https://docs.github.com/rest/dependabot/secrets#list-organization-secrets>`_
 
         """
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
@@ -951,7 +954,8 @@ class Organization(CompletableGithubObject):
 
     def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
         """
-        :calls: `GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
         :param secret_type: string options actions or dependabot
         :rtype: github.OrganizationSecret.OrganizationSecret
@@ -1323,7 +1327,8 @@ class Organization(CompletableGithubObject):
 
     def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
-        :calls: `GET /orgs/{org}/{secret_type}/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
+        :calls: `GET /orgs/{org}/actions/secrets/public-key <http://docs.github.com/rest/actions/secrets#get-an-organization-public-key>`_
+        :calls: `GET /orgs/{org}/dependabot/secrets/public-key <http://docs.github.com/rest/dependabot/secrets#get-an-organization-public-key>`_
         :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
@@ -1703,7 +1708,7 @@ class Organization(CompletableGithubObject):
         self, repository_query: Opt[str] = NotSet
     ) -> PaginatedList[RepositoryCustomPropertyValues]:
         """
-        :calls: `GET /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-an-organization>`_
+        :calls: `GET /orgs/{org}/properties/values <https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-an-organization>`_
         :rtype: :class:`PaginatedList` of dict
         """
         return PaginatedList(
@@ -1718,7 +1723,7 @@ class Organization(CompletableGithubObject):
     ) -> None:
         """
         Create or update custom property values for organization repositories
-        :calls: `PATCH /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories>`_
+        :calls: `PATCH /orgs/{org}/properties/values <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories>`_
         :param repository_names: list of strings
         :param properties: dict of string to string, list or None
         :rtype: None
