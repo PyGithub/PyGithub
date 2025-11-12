@@ -40,6 +40,10 @@ class EnvironmentDeploymentBranchPolicy(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/deployment-branch-policy-settings
+
     """
 
     def _initAttributes(self) -> None:

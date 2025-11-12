@@ -96,6 +96,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     - /components/schemas/collaborator
     - /components/schemas/contributor
     - /components/schemas/nullable-simple-user
+    - /components/schemas/private-user
     - /components/schemas/public-user
     - /components/schemas/simple-user
 

@@ -70,6 +70,7 @@ class PullRequestComment(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/pull-request-review-comment
+    - /components/schemas/review-comment
 
     """
 

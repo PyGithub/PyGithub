@@ -48,6 +48,11 @@ from github.PaginatedList import PaginatedList
 class Comparison(CompletableGithubObject):
     """
     This class represents Comparisons.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/commit-comparison
+
     """
 
     def _initAttributes(self) -> None:

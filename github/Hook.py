@@ -60,6 +60,7 @@ class Hook(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/hook
+    - /components/schemas/org-hook
 
     """
 

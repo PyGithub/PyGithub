@@ -42,6 +42,10 @@ class OrganizationVariable(Variable):
     The reference can be found here
     https://docs.github.com/en/rest/actions/variables
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/organization-actions-variable
+
     """
 
     def _initAttributes(self) -> None:
