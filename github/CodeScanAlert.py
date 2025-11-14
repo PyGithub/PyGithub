@@ -60,6 +60,7 @@ class CodeScanAlert(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._assignees: Attribute[list[NamedUser]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._dismissal_approved_by: Attribute[NamedUser | Organization] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
@@ -79,6 +80,10 @@ class CodeScanAlert(NonCompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self.number})
+
+    @property
+    def assignees(self) -> list[NamedUser]:
+        return self._assignees.value
 
     @property
     def created_at(self) -> datetime:
@@ -156,6 +161,8 @@ class CodeScanAlert(NonCompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "assignees" in attributes:  # pragma no branch
+            self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "dismissal_approved_by" in attributes:  # pragma no branch
