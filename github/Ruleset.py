@@ -48,7 +48,7 @@ class Ruleset(CompletableGithubObject):
     The reference can be found here https://docs.github.com/en/rest/repos/rules
 
     The OpenAPI schema can be found at
-    
+
     - /components/schemas/repository-ruleset
 
     """
@@ -273,7 +273,9 @@ class Ruleset(CompletableGithubObject):
         if "enforcement" in attributes:  # pragma no branch
             self._enforcement = self._makeStringAttribute(attributes["enforcement"])
         if "bypass_actors" in attributes:  # pragma no branch
-            self._bypass_actors = self._makeListOfClassesAttribute(RepositoryRulesetBypassActor, attributes["bypass_actors"])
+            self._bypass_actors = self._makeListOfClassesAttribute(
+                RepositoryRulesetBypassActor, attributes["bypass_actors"]
+            )
         if "conditions" in attributes:  # pragma no branch
             self._conditions = self._makeDictAttribute(attributes["conditions"])
         if "rules" in attributes:  # pragma no branch
@@ -288,7 +290,7 @@ class Ruleset(CompletableGithubObject):
             self._current_user_can_bypass = self._makeStringAttribute(attributes["current_user_can_bypass"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-
-        href = attributes.get("_links", {}).get("self", {}).get("href")
-        if href and "url" not in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(href)
+        else:
+            href = attributes.get("_links", {}).get("self", {}).get("href")
+            if href:  # pragma no branch
+                self._url = self._makeStringAttribute(href)
