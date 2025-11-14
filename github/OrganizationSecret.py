@@ -79,7 +79,8 @@ class OrganizationSecret(Secret):
         secret_type: str = "actions",
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/{secret_type}/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
+        :calls: `PATCH /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :calls: `PATCH /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/dependabot/secrets#create-or-update-an-organization-secret>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
@@ -105,7 +106,7 @@ class OrganizationSecret(Secret):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name}` <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -116,7 +117,7 @@ class OrganizationSecret(Secret):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name}` <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """

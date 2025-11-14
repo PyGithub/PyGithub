@@ -394,7 +394,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def add_to_following(self, following: NamedUser) -> None:
         """
-        :calls: `PUT /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `PUT /user/following/{username} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         headers, data = self._requester.requestJsonAndCheck("PUT", f"/user/following/{following._identity}")
@@ -788,7 +788,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_key(self, id: int) -> UserKey:
         """
-        :calls: `GET /user/keys/{id} <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
+        :calls: `GET /user/keys/{key_id} <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"/user/keys/{id}")
@@ -802,7 +802,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_notification(self, id: str) -> Notification:
         """
-        :calls: `GET /notifications/threads/{id} <http://docs.github.com/en/rest/reference/activity#notifications>`_
+        :calls: `GET /notifications/threads/{thread_id} <http://docs.github.com/en/rest/reference/activity#notifications>`_
         """
 
         assert isinstance(id, str), id
@@ -841,7 +841,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_organization_events(self, org: Organization) -> PaginatedList[Event]:
         """
-        :calls: `GET /users/{user}/events/orgs/{org} <http://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{username}/events/orgs/{org} <http://docs.github.com/en/rest/reference/activity#events>`_
         """
         assert isinstance(org, github.Organization.Organization), org
         return PaginatedList(
@@ -938,7 +938,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def has_in_following(self, following: NamedUser) -> bool:
         """
-        :calls: `GET /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `GET /user/following/{username} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson("GET", f"/user/following/{following._identity}")
@@ -989,7 +989,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def remove_from_following(self, following: NamedUser) -> None:
         """
-        :calls: `DELETE /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `DELETE /user/following/{username} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"/user/following/{following._identity}")
@@ -1082,7 +1082,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_organization_memberships(self) -> PaginatedList[Membership]:
         """
-        :calls: `GET /user/memberships/orgs/ <https://docs.github.com/en/rest/orgs/members#list-organization-memberships-for-the-authenticated-user>`_
+        :calls: `GET /user/memberships/orgs <https://docs.github.com/en/rest/orgs/members#list-organization-memberships-for-the-authenticated-user>`_
         """
         return PaginatedList(
             github.Membership.Membership,

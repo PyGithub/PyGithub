@@ -253,14 +253,14 @@ class PullRequestComment(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
         :rtype: None
         """
@@ -273,7 +273,7 @@ class PullRequestComment(CompletableGithubObject):
 
     def get_reactions(self) -> PaginatedList[github.Reaction.Reaction]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number}/reactions
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-pull-request-review-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
@@ -287,7 +287,7 @@ class PullRequestComment(CompletableGithubObject):
 
     def create_reaction(self, reaction_type: str) -> github.Reaction.Reaction:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls/comments/{number}/reactions
+        :calls: `POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-pull-request-review-comment>`_
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`

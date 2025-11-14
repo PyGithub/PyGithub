@@ -104,7 +104,7 @@ class Variable(CompletableGithubObject):
 
     def edit(self, value: str) -> bool:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
+        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
         :param variable_name: string
         :param value: string
         :rtype: bool
@@ -123,7 +123,9 @@ class Variable(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE {variable_url} <https://docs.github.com/en/rest/actions/variables>`_
+        :calls: `DELETE /orgs/{org}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#delete-an-organization-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#delete-a-repository-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/rest/actions/variables#delete-an-environment-variable>`_
         :rtype: None
         """
         self._requester.requestJsonAndCheck("DELETE", self.url)

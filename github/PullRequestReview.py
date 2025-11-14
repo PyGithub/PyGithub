@@ -109,7 +109,7 @@ class PullRequestReview(NonCompletableGithubObject):
 
     def dismiss(self, message: str) -> None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/reviews/{review_id}/dismissals <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :calls: `PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         """
         post_parameters = {"message": message}
         headers, data = self._requester.requestJsonAndCheck(
@@ -121,13 +121,13 @@ class PullRequestReview(NonCompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews/:review_id <https://developer.github.com/v3/pulls/reviews/>`_
+        :calls: `DELETE /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id} <https://developer.github.com/v3/pulls/reviews/>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.pull_request_url}/reviews/{self.id}")
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/reviews/{review_id}
+        :calls: `PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}
                 <https://docs.github.com/en/rest/pulls/reviews#update-a-review-for-a-pull-request>`_
         """
         assert isinstance(body, str), body

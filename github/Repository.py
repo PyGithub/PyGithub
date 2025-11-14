@@ -1277,7 +1277,7 @@ class Repository(CompletableGithubObject):
 
     def add_to_collaborators(self, collaborator: str | NamedUser, permission: Opt[str] = NotSet) -> Invitation | None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
+        :calls: `PUT /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :param permission: string 'pull', 'push', 'admin', 'maintain', 'triage', or a custom repository role name, if the owning organization has defined any
         :rtype: None
@@ -1361,7 +1361,7 @@ class Repository(CompletableGithubObject):
 
     def compare(self, base: str, head: str) -> Comparison:
         """
-        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
+        :calls: `GET /repos/{owner}/{repo}/compare/{basehead} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
         :rtype: :class:`github.Comparison.Comparison`
@@ -1999,7 +1999,8 @@ class Repository(CompletableGithubObject):
         secret_type: str = "actions",
     ) -> github.Secret.Secret:
         """
-        :calls: `PUT /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
@@ -2064,7 +2065,7 @@ class Repository(CompletableGithubObject):
 
     def create_variable(self, variable_name: str, value: str) -> github.Variable.Variable:
         """
-        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
+        :calls: `POST /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -2099,7 +2100,7 @@ class Repository(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> github.Variable.Variable:
         """
-        :calls: `GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#get-a-repository-variable>`_
         :param variable_name: string
         :rtype: github.Variable.Variable
         """
@@ -2114,7 +2115,8 @@ class Repository(CompletableGithubObject):
 
     def delete_secret(self, secret_name: str, secret_type: str = "actions") -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#get-a-repository-secret>`_
         :param secret_name: string
         :param secret_type: string options actions or dependabot
         :rtype: bool
@@ -2127,7 +2129,7 @@ class Repository(CompletableGithubObject):
 
     def delete_variable(self, variable_name: str) -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
         :param variable_name: string
         :rtype: bool
         """
@@ -2370,7 +2372,7 @@ class Repository(CompletableGithubObject):
 
     def get_comment(self, id: int) -> CommitComment:
         """
-        :calls: `GET /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :param id: integer
         :rtype: :class:`github.CommitComment.CommitComment`
         """
@@ -2392,7 +2394,7 @@ class Repository(CompletableGithubObject):
 
     def get_commit(self, sha: str) -> Commit:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha} <https://docs.github.com/en/rest/reference/repos#commits>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
         :rtype: :class:`github.Commit.Commit`
         """
@@ -2805,7 +2807,7 @@ class Repository(CompletableGithubObject):
 
     def get_repository_advisory(self, ghsa: str) -> github.RepositoryAdvisory.RepositoryAdvisory:
         """
-        :calls: `GET /repos/{owner}/{repo}/security-advisories/{ghsa} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :calls: `GET /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param ghsa: string
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
@@ -3020,7 +3022,7 @@ class Repository(CompletableGithubObject):
 
     def get_git_blob(self, sha: str) -> GitBlob:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/blobs/{sha} <https://docs.github.com/en/rest/reference/git#blobs>`_
+        :calls: `GET /repos/{owner}/{repo}/git/blobs/{file_sha} <https://docs.github.com/en/rest/reference/git#blobs>`_
         :param sha: string
         :rtype: :class:`github.GitBlob.GitBlob`
         """
@@ -3031,7 +3033,7 @@ class Repository(CompletableGithubObject):
 
     def get_git_commit(self, sha: str) -> GitCommit:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/commits/{sha} <https://docs.github.com/en/rest/reference/git#commits>`_
+        :calls: `GET /repos/{owner}/{repo}/git/commits/{commit_sha} <https://docs.github.com/en/rest/reference/git#commits>`_
         :param sha: string
         :rtype: :class:`github.GitCommit.GitCommit`
         """
@@ -3077,7 +3079,7 @@ class Repository(CompletableGithubObject):
 
     def get_git_tag(self, sha: str) -> GitTag:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/tags/{sha} <https://docs.github.com/en/rest/reference/git#tags>`_
+        :calls: `GET /repos/{owner}/{repo}/git/tags/{tag_sha} <https://docs.github.com/en/rest/reference/git#tags>`_
         :param sha: string
         :rtype: :class:`github.GitTag.GitTag`
         """
@@ -3088,7 +3090,7 @@ class Repository(CompletableGithubObject):
 
     def get_git_tree(self, sha: str, recursive: Opt[bool] = NotSet) -> GitTree:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/trees/{sha} <https://docs.github.com/en/rest/reference/git#trees>`_
+        :calls: `GET /repos/{owner}/{repo}/git/trees/{tree_sha} <https://docs.github.com/en/rest/reference/git#trees>`_
         :param sha: string
         :param recursive: bool
         :rtype: :class:`github.GitTree.GitTree`
@@ -3107,7 +3109,7 @@ class Repository(CompletableGithubObject):
 
     def get_hook(self, id: int) -> Hook:
         """
-        :calls: `GET /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param id: integer
         :rtype: :class:`github.Hook.Hook`
         """
@@ -3153,7 +3155,7 @@ class Repository(CompletableGithubObject):
 
     def get_issue(self, number: int) -> Issue:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number} <https://docs.github.com/en/rest/reference/issues>`_
         :param number: integer
         :rtype: :class:`github.Issue.Issue`
         """
@@ -3264,7 +3266,7 @@ class Repository(CompletableGithubObject):
 
     def get_issues_event(self, id: int) -> IssueEvent:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/events/{id} <https://docs.github.com/en/rest/reference/issues#events>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/events/{event_id} <https://docs.github.com/en/rest/reference/issues#events>`_
         :param id: integer
         :rtype: :class:`github.IssueEvent.IssueEvent`
         """
@@ -3291,7 +3293,7 @@ class Repository(CompletableGithubObject):
 
     def get_key(self, id: int) -> RepositoryKey:
         """
-        :calls: `GET /repos/{owner}/{repo}/keys/{id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
+        :calls: `GET /repos/{owner}/{repo}/keys/{key_id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :param id: integer
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
@@ -3349,7 +3351,7 @@ class Repository(CompletableGithubObject):
 
     def get_milestone(self, number: int) -> Milestone:
         """
-        :calls: `GET /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `GET /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :param number: integer
         :rtype: :class:`github.Milestone.Milestone`
         """
@@ -3401,7 +3403,8 @@ class Repository(CompletableGithubObject):
 
     def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
-        :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/rest/actions/secrets#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/public-key <https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key>`_
         :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
@@ -3412,7 +3415,7 @@ class Repository(CompletableGithubObject):
 
     def get_pull(self, number: int) -> PullRequest:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls>`_
         :param number: integer
         :rtype: :class:`github.PullRequest.PullRequest`
         """
@@ -3520,7 +3523,7 @@ class Repository(CompletableGithubObject):
 
     def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner:
         """
-        :calls: `GET /repos/{owner}/{repo}/actions/runners/{id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository>`_
         :param runner_id: int
         :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         """
@@ -3662,7 +3665,7 @@ class Repository(CompletableGithubObject):
 
     def get_release(self, id: int | str) -> GitRelease:
         """
-        :calls: `GET /repos/{owner}/{repo}/releases/{id} <https://docs.github.com/en/rest/reference/repos#get-a-release>`_
+        :calls: `GET /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#get-a-release>`_
         :param id: int (release id), str (tag name)
         :rtype: None or :class:`github.GitRelease.GitRelease`
         """
@@ -3826,7 +3829,7 @@ class Repository(CompletableGithubObject):
 
     def has_in_collaborators(self, collaborator: str | NamedUser) -> bool:
         """
-        :calls: `GET /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `GET /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -4046,7 +4049,7 @@ class Repository(CompletableGithubObject):
 
     def remove_from_collaborators(self, collaborator: str | NamedUser) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `DELETE /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -4077,7 +4080,7 @@ class Repository(CompletableGithubObject):
 
     def remove_autolink(self, autolink: Autolink | int) -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/autolinks/{id} <https://docs.github.com/en/rest/reference/repos>`_
+        :calls: `DELETE /repos/{owner}/{repo}/autolinks/{autolink_id} <https://docs.github.com/en/rest/reference/repos>`_
         :param autolink: int or :class:`github.Autolink.Autolink`
         :rtype: None
         """
@@ -4279,7 +4282,7 @@ class Repository(CompletableGithubObject):
 
     def get_codescan_alerts(self) -> PaginatedList[CodeScanAlert]:
         """
-        :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
+        :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
         :rtype: :class:`PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
         """
         return PaginatedList(
@@ -4291,7 +4294,7 @@ class Repository(CompletableGithubObject):
 
     def get_environments(self) -> PaginatedList[Environment]:
         """
-        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
+        :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
         :rtype: :class:`PaginatedList` of :class:`github.Environment.Environment`
         """
         return PaginatedList(
@@ -4307,7 +4310,7 @@ class Repository(CompletableGithubObject):
 
     def get_environment(self, environment_name: str) -> Environment:
         """
-        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
@@ -4325,7 +4328,7 @@ class Repository(CompletableGithubObject):
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
     ) -> Environment:
         """
-        :calls: `PUT /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
         :param wait_timer: int
         :param reviewers: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
@@ -4364,7 +4367,7 @@ class Repository(CompletableGithubObject):
 
     def delete_environment(self, environment_name: str) -> None:
         """
-        :calls: `DELETE /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
         :param environment_name: string
         :rtype: None
         """
