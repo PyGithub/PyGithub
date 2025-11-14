@@ -46,13 +46,13 @@ from typing import TYPE_CHECKING, Any
 
 import github.Consts
 import github.NamedUser
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
 
 
-class Reaction(CompletableGithubObject):
+class Reaction(NonCompletableGithubObject):
     """
     This class represents Reactions.
 
@@ -72,22 +72,18 @@ class Reaction(CompletableGithubObject):
 
     @property
     def content(self) -> str:
-        self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
     def created_at(self) -> datetime:
-        self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def id(self) -> int:
-        self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
     def user(self) -> NamedUser:
-        self._completeIfNotSet(self._user)
         return self._user.value
 
     def delete(self) -> None:

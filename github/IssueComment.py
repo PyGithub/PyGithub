@@ -212,7 +212,7 @@ class IssueComment(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+        return github.Reaction.Reaction(self._requester, headers, data)
 
     def delete_reaction(self, reaction_id: int) -> bool:
         """

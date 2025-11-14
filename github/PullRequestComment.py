@@ -53,6 +53,7 @@ from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 import github.Reaction
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -302,7 +303,7 @@ class PullRequestComment(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+        return github.Reaction.Reaction(self._requester, headers, data)
 
     def delete_reaction(self, reaction_id: int) -> bool:
         """
