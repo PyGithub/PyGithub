@@ -85,6 +85,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.milestone.title, "Version 1.4")
         self.assertEqual(self.issue.node_id, "MDU6SXNzdWU0NjUzNzU3")
         self.assertEqual(self.issue.number, 28)
+        self.assertEqual(self.issue.parent_issue_url, "")
         self.assertIsNone(self.issue.performed_via_github_app)
         self.assertIsNone(self.issue.pull_request)
         self.assertEqual(

@@ -70,6 +70,7 @@ class Team(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.team.created_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.description, "a team")
+        self.assertEqual(self.team.enterprise_id, 0)
         self.assertIsNone(self.team.group_id)
         self.assertIsNone(self.team.group_name)
         self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
@@ -83,6 +84,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.node_id, "AbCdEfG")
         self.assertEqual(self.team.notification_setting, "notifications_disabled")
         self.assertEqual(self.team.organization.login, "BeaverSoftware")
+        self.assertEqual(self.team.organization_id, 0)
         self.assertIsNone(self.team.organization_selection_type)
         self.assertIsNone(self.team.parent)
         self.assertEqual(self.team.permission, "pull")
@@ -92,6 +94,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.repositories_url, "https://api.github.com/organizations/1234567/team/12345678/repos")
         self.assertEqual(self.team.slug, "team-slug")
         self.assertIsNone(self.team.sync_to_organizations)
+        self.assertEqual(self.team.type, "")
         self.assertEqual(self.team.updated_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.url, "https://api.github.com/organizations/1234567/team/12345678")
         self.assertEqual(self.team.organization, self.org)

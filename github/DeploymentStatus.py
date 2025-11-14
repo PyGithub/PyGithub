@@ -55,6 +55,7 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 if TYPE_CHECKING:
     from github.GithubApp import GithubApp
     from github.NamedUser import NamedUser
+    from github.Organization import Organization
 
 
 class DeploymentStatus(CompletableGithubObject):

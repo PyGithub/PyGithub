@@ -44,6 +44,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.GitAuthor
 import github.GitCommitVerification
+import github.GitObject
 import github.GithubObject
 import github.GitObject
 import github.GitTreeElement

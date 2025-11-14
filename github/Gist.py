@@ -60,9 +60,14 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt,
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.AuthenticatedUser import AuthenticatedUser
     from github.GistComment import GistComment
+    from github.GistFile import GistFile
     from github.GistHistoryState import GistHistoryState
     from github.InputFileContent import InputFileContent
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
+    from github.NamedUser import NamedUser
 
 
 class Gist(CompletableGithubObject):
