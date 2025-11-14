@@ -217,6 +217,7 @@ class GithubClass:
     methods: dict
     properties: dict
     schemas: list[str]
+    inherited_schemas: list[str]
     docstring: str
 
     def __hash__(self):
@@ -263,6 +264,7 @@ class GithubClass:
                     methods={},
                     properties={},
                     schemas=[],
+                    inherited_schemas=[],
                     docstring="",
                 )
         else:
@@ -594,6 +596,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             "test_filename": self._test_filename,
             "docstring": class_docstring,
             "schemas": class_schemas,
+            "inherited_schemas": [],
             "bases": class_bases,
             "properties": self._properties,
             "methods": self._methods,
@@ -1894,6 +1897,7 @@ class OpenApi:
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         self.schema_to_class["default"] = ["GithubObject"]
         self.spec = OpenApi.read_json(args.spec) if "spec" in args and self.subcommand not in ["fetch", "index"] else {}
+        self.ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
 
     def as_python_type(
         self,
@@ -2246,6 +2250,20 @@ class OpenApi:
                 class_to_descendants[cls].append(name)
         class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
 
+        # add schemas of base classes to derived classes
+        for name, clazz in sorted(classes.items(), key=lambda v: v[0]):
+            schemas = clazz.get("schemas")
+            if not schemas:
+                continue
+
+            for derived in class_to_descendants.get(name, []):
+                if derived in classes:
+                    derived_schemas = classes[derived].get("inherited_schemas", [])
+                    for schema in schemas:
+                        if schema not in derived_schemas:
+                            derived_schemas.append(schema)
+                    classes[derived]["inherited_schemas"] = derived_schemas
+
         path_to_call_methods = {}
         path_to_return_classes = {}
         schema_to_classes = {}
@@ -2592,8 +2610,7 @@ class OpenApi:
                             available_schemas[cls_name][key] = []
                         for st in spec_type:
                             st = st.lstrip("#")
-                            # explicitly ignore these schemas
-                            if st in {"/components/schemas/empty-object"}:
+                            if st in self.ignored_schemas:
                                 continue
                             schema_returned_by[st].add(key)
                             if st not in schema_to_classes:
@@ -2601,7 +2618,10 @@ class OpenApi:
                             # only add as available schema for cls_name if this schema
                             # is not implemented by any other class in the union (cls_names)
                             if not any(
-                                st in classes.get(n, {}).get("schemas", []) for n in cls_names.difference(set(cls_name))
+                                st in classes.get(n, {}).get("schemas", [])
+                                for n in cls_names.difference(set(cls_name))
+                                # remove optional module and package from class names
+                                for n in ([n.split(".")[-1]] if "." in n else [n])
                             ):
                                 available_schemas[cls_name][key].append(st)
 
@@ -2610,7 +2630,9 @@ class OpenApi:
 
         for cls, provided_schemas in sorted(available_schemas.items()):
             available = set()
-            implemented = classes.get(cls, {}).get("schemas", [])
+            clazz = classes.get(cls, {})
+            implemented = clazz.get("schemas", [])
+            implemented.extend(clazz.get("inherited_schemas", []))
             providing_properties = []
 
             for providing_property, spec_types in provided_schemas.items():
@@ -2638,7 +2660,6 @@ class OpenApi:
                     print(f"- {providing_class}.{providing_property}")
 
                 if add and schemas_to_implement:
-                    clazz = classes.get(cls, {})
                     filename = clazz.get("filename")
                     clazz_name = clazz.get("name")
                     if not filename or not clazz_name:
@@ -2653,7 +2674,6 @@ class OpenApi:
         # suggest schemas based on API calls
         available_schemas = {}
         schema_returned_by = defaultdict(set)
-        ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
         paths = set(spec.get("paths", {}).keys()).union(path_to_return_classes.keys())
         for path in paths:
             for verb in spec.get("paths", {}).get(path, {}).keys():
@@ -2669,7 +2689,7 @@ class OpenApi:
                         schema, schema_path + [str(status), "content", '"application/json"', "schema"]
                     )
                     for component in [component.lstrip("#")]
-                    if component not in ignored_schemas
+                    if component not in self.ignored_schemas
                 ]
                 classes_of_path = index.get("indices", {}).get("path_to_return_classes", {}).get(path, {}).get(verb, [])
 
@@ -2682,7 +2702,18 @@ class OpenApi:
                             available_schemas[cls] = {}
                         if verb not in available_schemas[cls]:
                             available_schemas[cls][verb] = {}
-                        available_schemas[cls][verb][path] = set(schemas_of_path)
+                        # only add schema as available schema for cls if this schema
+                        # is not implemented by any other class in the union (classes_of_path)
+                        available_schemas[cls][verb][path] = {
+                            s
+                            for s in schemas_of_path
+                            if not any(
+                                s in classes.get(n, {}).get("schemas", [])
+                                for n in classes_of_path.difference(set(cls))
+                                # remove optional module and package from class names
+                                for n in ([n.split(".")[-1]] if "." in n else [n])
+                            )
+                        }
                         for schema in schemas_of_path:
                             schema_returned_by[schema].add((verb, path))
 
@@ -2698,7 +2729,9 @@ class OpenApi:
 
             paths = {}
             available = set()
-            implemented = classes.get(cls, {}).get("schemas", [])
+            clazz = classes.get(cls, {})
+            implemented = clazz.get("schemas", [])
+            implemented.extend(clazz.get("inherited_schemas", []))
 
             for verb, available_paths in available_verbs.items():
                 if verb not in paths:
@@ -2730,7 +2763,7 @@ class OpenApi:
                         print(f"- {verb.upper()} {path}")
 
                 if add and schemas_to_implement:
-                    filename = classes.get(cls, {}).get("filename")
+                    filename = clazz.get("filename")
                     if not filename:
                         print(f"Filename for class {cls} not known")
                         sys.exit(1)
