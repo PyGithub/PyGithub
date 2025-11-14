@@ -639,3 +639,11 @@ class CompletableGithubObject(GithubObject, ABC):
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True
+
+
+# decorator to annotate methods with OpenAPI metadata
+def method_returns(*, schema_property: str | None = None):
+    def openapi_method_decorator(fn):
+        return fn
+
+    return openapi_method_decorator
