@@ -48,6 +48,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.AuthenticatedUser
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState

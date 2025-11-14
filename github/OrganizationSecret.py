@@ -59,6 +59,11 @@ class OrganizationSecret(Secret):
         self._visibility: Attribute[str] = NotSet
 
     @property
+    def selected_repositories_url(self) -> str:
+        self._completeIfNotSet(self._selected_repositories_url)
+        return self._selected_repositories_url.value
+
+    @property
     def visibility(self) -> str:
         """
         :type: string

@@ -46,6 +46,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.Consts
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
@@ -69,6 +70,7 @@ class Reaction(NonCompletableGithubObject):
         self._content: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
@@ -85,6 +87,10 @@ class Reaction(NonCompletableGithubObject):
     @property
     def id(self) -> int:
         return self._id.value
+
+    @property
+    def node_id(self) -> str:
+        return self._node_id.value
 
     @property
     def user(self) -> NamedUser:
@@ -108,5 +114,7 @@ class Reaction(NonCompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
