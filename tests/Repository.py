@@ -1285,6 +1285,26 @@ class Repository(Framework.TestCase):
         )
         self.assertListKeyEqual(self.repo.get_issues(assignee="none"), lambda i: i.id, [3619973])
 
+    def testGetIssuesWithTypeArgument(self):
+        self.assertListKeyEqual(
+            self.repo.get_issues(type="bug"),
+            lambda i: i.id,
+            [3425963739, 3399666591, 3398817538],
+        )
+        self.assertListKeyEqual(self.repo.get_issues(type="feature", state="closed"), lambda i: i.id, [3326107606])
+
+    def testGetIssuesWithTypeWildcard(self):
+        self.assertListKeyEqual(
+            self.repo.get_issues(type="*"),
+            lambda i: i.id,
+            [3425963739, 3399666591, 3398817538],
+        )
+        self.assertListKeyEqual(
+            self.repo.get_issues(type="*", state="closed"),
+            lambda i: i.id,
+            [3375750938, 3326109475, 3326109065, 3326107606, 4653757],
+        )
+
     def testGetKeys(self):
         self.assertListKeyEqual(self.repo.get_keys(), lambda k: k.title, ["Key added through PyGithub"])
 

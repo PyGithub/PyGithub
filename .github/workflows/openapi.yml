@@ -63,7 +63,7 @@ jobs:
       - name: Changes
         run: |
           # Show changes
-          git branch -a | grep openapi/autosync- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git log --oneline "$branch...openapi/main"
             git diff openapi/main "$branch"
@@ -75,7 +75,7 @@ jobs:
           cat openapi-update-classes.log
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Sync logs
           path: |
@@ -84,9 +84,12 @@ jobs:
         run: |
           # Commit changes
           git checkout -b openapi/autosync
-          git branch -a | grep openapi/autosync- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git merge --squash "$branch"
+            echo "Squashed changes for ${branch#openapi/autosync-}" > git-msg
+            tail -n +2 .git/COMMIT_EDITMSG >> git-msg
+            mv git-msg .git/COMMIT_EDITMSG
             git commit --no-edit
             echo "::endgroup::"
           done
@@ -112,10 +115,10 @@ jobs:
       - name: Changes
         run: |
           # Show changes
-          git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-new-classes-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git log --oneline "$branch...openapi/main"
-            git diff openapi/main "$branch"
+            git diff openapi/autosync "$branch"
             echo "::endgroup::"
           done
       - name: Log on error
@@ -124,7 +127,7 @@ jobs:
           cat openapi-update-classes.log
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Create new classes logs
           path: |
@@ -133,15 +136,18 @@ jobs:
         run: |
           # Commit changes
           git checkout -b openapi/autosync-new-classes
-          git branch -a | grep openapi/autosync-new-classes- | grep -v -E -e "-[0-9]+$" | while read branch; do
+          git branch -a | sed -e "s/^\s*//" | grep "^openapi/autosync-new-classes-" | grep -v -E -e "-[0-9]+$" | while read branch; do
             echo "::group::$branch"
             git merge --squash "$branch" || true
+            echo "Squashed changes for ${branch#openapi/autosync-new-classes-}" > git-msg
+            tail -n +2 .git/COMMIT_EDITMSG >> git-msg
+            mv git-msg .git/COMMIT_EDITMSG
             git commit --no-edit || true
             echo "::endgroup::"
           done
 
           # push if there are changes
-          if ! git diff --quiet openapi/main; then
+          if ! git diff --quiet openapi/autosync; then
             echo "Pushing changes to origin openapi/autosync-new-classes"
             git push origin openapi/autosync-new-classes
           fi
