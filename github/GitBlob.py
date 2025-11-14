@@ -61,6 +61,8 @@ class GitBlob(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._content: Attribute[str] = NotSet
         self._encoding: Attribute[str] = NotSet
+        self._highlighted_content: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._sha: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
@@ -77,6 +79,16 @@ class GitBlob(CompletableGithubObject):
     def encoding(self) -> str:
         self._completeIfNotSet(self._encoding)
         return self._encoding.value
+
+    @property
+    def highlighted_content(self) -> str:
+        self._completeIfNotSet(self._highlighted_content)
+        return self._highlighted_content.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def sha(self) -> str:
@@ -98,6 +110,10 @@ class GitBlob(CompletableGithubObject):
             self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch
             self._encoding = self._makeStringAttribute(attributes["encoding"])
+        if "highlighted_content" in attributes:  # pragma no branch
+            self._highlighted_content = self._makeStringAttribute(attributes["highlighted_content"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch

@@ -106,6 +106,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._avatar_url: Attribute[str] = NotSet
         self._bio: Attribute[str | None] = NotSet
         self._blog: Attribute[str | None] = NotSet
+        self._business_plus: Attribute[bool] = NotSet
         self._collaborators: Attribute[int] = NotSet
         self._company: Attribute[str | None] = NotSet
         self._contributions: Attribute[int] = NotSet
@@ -125,6 +126,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._invitation_teams_url: Attribute[str] = NotSet
         self._inviter: Attribute[NamedUser] = NotSet
+        self._ldap_dn: Attribute[str] = NotSet
         self._location: Attribute[str | None] = NotSet
         self._login: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
@@ -150,6 +152,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
         self._twitter_username: Attribute[str | None] = NotSet
+        self._two_factor_authentication: Attribute[bool] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -182,6 +185,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def blog(self) -> str | None:
         self._completeIfNotSet(self._blog)
         return self._blog.value
+
+    @property
+    def business_plus(self) -> bool:
+        return self._business_plus.value
 
     @property
     def collaborators(self) -> int | None:
@@ -276,6 +283,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def inviter(self) -> NamedUser:
         self._completeIfNotSet(self._inviter)
         return self._inviter.value
+
+    @property
+    def ldap_dn(self) -> str:
+        return self._ldap_dn.value
 
     @property
     def location(self) -> str | None:
@@ -397,6 +408,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def twitter_username(self) -> str | None:
         self._completeIfNotSet(self._twitter_username)
         return self._twitter_username.value
+
+    @property
+    def two_factor_authentication(self) -> bool:
+        return self._two_factor_authentication.value
 
     @property
     def type(self) -> str:
@@ -589,6 +604,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._bio = self._makeStringAttribute(attributes["bio"])
         if "blog" in attributes:  # pragma no branch
             self._blog = self._makeStringAttribute(attributes["blog"])
+        if "business_plus" in attributes:  # pragma no branch
+            self._business_plus = self._makeBoolAttribute(attributes["business_plus"])
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "company" in attributes:  # pragma no branch
@@ -627,6 +644,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._invitation_teams_url = self._makeStringAttribute(attributes["invitation_teams_url"])
         if "inviter" in attributes:  # pragma no branch
             self._inviter = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["inviter"])
+        if "ldap_dn" in attributes:  # pragma no branch
+            self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
@@ -677,6 +696,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "twitter_username" in attributes:  # pragma no branch
             self._twitter_username = self._makeStringAttribute(attributes["twitter_username"])
+        if "two_factor_authentication" in attributes:  # pragma no branch
+            self._two_factor_authentication = self._makeBoolAttribute(attributes["two_factor_authentication"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch

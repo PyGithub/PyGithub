@@ -41,6 +41,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -63,6 +64,7 @@ class Autolink(NonCompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._is_alphanumeric: Attribute[bool] = NotSet
         self._key_prefix: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url_template: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -81,6 +83,10 @@ class Autolink(NonCompletableGithubObject):
         return self._key_prefix.value
 
     @property
+    def updated_at(self) -> datetime:
+        return self._updated_at.value
+
+    @property
     def url_template(self) -> str:
         return self._url_template.value
 
@@ -91,5 +97,7 @@ class Autolink(NonCompletableGithubObject):
             self._is_alphanumeric = self._makeBoolAttribute(attributes["is_alphanumeric"])
         if "key_prefix" in attributes:  # pragma no branch
             self._key_prefix = self._makeStringAttribute(attributes["key_prefix"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url_template" in attributes:  # pragma no branch
             self._url_template = self._makeStringAttribute(attributes["url_template"])

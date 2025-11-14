@@ -33,6 +33,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -51,6 +53,7 @@ class Reaction(Framework.TestCase):
             datetime(2017, 12, 5, 1, 59, 33, tzinfo=timezone.utc),
         )
         self.assertEqual(reaction.id, 16916340)
+        self.assertIsNone(reaction.node_id)
         self.assertEqual(reaction.user.login, "nicolastrres")
 
         self.assertEqual(

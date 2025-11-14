@@ -50,6 +50,7 @@ from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 
@@ -67,10 +68,14 @@ class PullRequestReview(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
+        self._body_html: Attribute[str] = NotSet
+        self._body_text: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._submitted_at: Attribute[datetime] = NotSet
@@ -80,8 +85,20 @@ class PullRequestReview(NonCompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
+    def author_association(self) -> str:
+        return self._author_association.value
+
+    @property
     def body(self) -> str:
         return self._body.value
+
+    @property
+    def body_html(self) -> str:
+        return self._body_html.value
+
+    @property
+    def body_text(self) -> str:
+        return self._body_text.value
 
     @property
     def commit_id(self) -> str:
@@ -94,6 +111,10 @@ class PullRequestReview(NonCompletableGithubObject):
     @property
     def id(self) -> int:
         return self._id.value
+
+    @property
+    def node_id(self) -> str:
+        return self._node_id.value
 
     @property
     def pull_request_url(self) -> str:
@@ -146,14 +167,22 @@ class PullRequestReview(NonCompletableGithubObject):
         self._useAttributes(data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
+        if "body_html" in attributes:  # pragma no branch
+            self._body_html = self._makeStringAttribute(attributes["body_html"])
+        if "body_text" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["body_text"])
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "pull_request_url" in attributes:  # pragma no branch
             self._pull_request_url = self._makeStringAttribute(attributes["pull_request_url"])
         if "state" in attributes:  # pragma no branch
