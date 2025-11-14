@@ -27,6 +27,7 @@
     "Requester.graphql_query_class": "POST"
   },
   "ignored OpenAPI schemas": [
+    "/components/schemas/empty-object",
     "/paths/\"/repos/{owner}/{repo}/deployments\"/post/responses/202/content/\"application/json\"/schema"
   ]
 }
