@@ -59,6 +59,19 @@ def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[st
     return schema_type
 
 
+def cst_to_python(value: cst.BaseExpression) -> Any:
+    if isinstance(value, cst.List):
+        return [cst_to_python(item.value) for item in value.elements]
+    if isinstance(value, cst.SimpleString):
+        return value.evaluated_value
+    if isinstance(value, cst.Name):
+        if value.value == "True":
+            return True
+        if value.value == "False":
+            return False
+    raise ValueError(f"unsupported expr: {value}")
+
+
 def as_python_type(
     schema_type: dict[str, Any],
     schema_path: list[str],
@@ -355,6 +368,28 @@ class CstMethods(abc.ABC):
     def is_github_object_property(cls, func_def: cst.FunctionDef):
         return cls.contains_decorator(func_def.decorators, "property")
 
+    @staticmethod
+    def get_decorators(decorators: Sequence[cst.Decorator], decorator_name: str) -> list[dict[str, Any]]:
+        return [
+            {
+                k: v
+                for k, v in [
+                    (arg.keyword.value, cst_to_python(arg.value))
+                    for arg in args
+                    if isinstance(arg, cst.Arg) and isinstance(arg.keyword, cst.Name)
+                ]
+            }
+            for decorator in decorators
+            for decorator in [decorator.decorator]
+            if isinstance(decorator, cst.Call)
+            and isinstance(decorator.func, cst.Name)
+            and decorator.func.value == decorator_name
+            for args in [decorator.args]
+            if len(args) > 0
+            for name in [args[0].value]
+            if isinstance(name, SimpleString)
+        ]
+
     @classmethod
     def create_subscript(cls, name: str) -> cst.Subscript:
         fields = name.rstrip("]").split("[", maxsplit=1)
@@ -629,6 +664,10 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> None:
         method_name = node.name.value
+        decorators = self.get_decorators(node.decorators, "method_returns")
+        path_property = next(
+            iter([decorator["schema_property"] for decorator in decorators if "schema_property" in decorator]), None
+        )
         returns = self.return_types(cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None)
 
         if self.is_github_object_property(node):
@@ -640,18 +679,20 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             string = [line for line in visitor.strings[0].splitlines() if ":calls:" in line]
             if string:
                 fields = string[0].split(":calls:")[1].strip(" `").split(" ", maxsplit=2)
+                verb = fields[0] if len(fields) > 0 else None
+                path = fields[1] if len(fields) > 1 else None
+                path = f"{path}#{path_property}" if path_property else path
+                docs = fields[2] if len(fields) > 2 else None
                 self._methods[method_name] = {
                     "name": method_name,
                     "call": {
-                        "verb": fields[0] if len(fields) > 0 else None,
-                        "path": fields[1] if len(fields) > 1 else None,
-                        "docs": fields[2] if len(fields) > 2 else None,
+                        "verb": verb,
+                        "path": path,
+                        "docs": docs,
                     },
                     "returns": returns,
                 }
                 if len(fields) > 1:
-                    verb = fields[0]
-                    path = fields[1]
                     if path not in self._paths:
                         self._paths[path] = {}
                     if verb not in self._paths[path]:
@@ -666,16 +707,16 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
                 # check if method (VERB) is same as in the code
                 if len(fields) > 0 and self._method_verbs is not None:
-                    verb = f'"{fields[0]}"'
+                    quoted_verb = f'"{verb}"'
                     full_method_name = f"{self.current_class_name}.{method_name}"
 
                     if full_method_name in self._method_verbs:
                         # these are methods configured in the github/openapi.index.json file
                         known_verb = f'"{self._method_verbs[full_method_name]}"'
-                        if known_verb != verb:
+                        if known_verb != quoted_verb:
                             print(
                                 f"Method {full_method_name} is known to call {known_verb}, "
-                                f"but doc-string says {verb}"
+                                f"but doc-string says {quoted_verb}"
                             )
                     else:
                         # detect method from code
@@ -735,10 +776,10 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             if not any(
                                 func.startswith(("self._requester.request", "self.__requester.request"))
                                 and args
-                                and args[0] == verb
+                                and args[0] == quoted_verb
                                 for func, args, base in calls
                             ):
-                                print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
+                                print(f"Not found any {quoted_verb} call in {self.current_class_name}.{method_name}")
                                 for func, args, base in calls:
                                     print(f"- calls {func}({', '.join(args)})")
                             # else:
@@ -2620,7 +2661,7 @@ class OpenApi:
                             if not any(
                                 st in classes.get(n, {}).get("schemas", [])
                                 for n in cls_names.difference(set(cls_name))
-                                # remove optional module and package from class names
+                                # normalize class names, remove the module and package
                                 for n in ([n.split(".")[-1]] if "." in n else [n])
                             ):
                                 available_schemas[cls_name][key].append(st)
@@ -2675,13 +2716,19 @@ class OpenApi:
         available_schemas = {}
         schema_returned_by = defaultdict(set)
         paths = set(spec.get("paths", {}).keys()).union(path_to_return_classes.keys())
-        for path in paths:
+        # paths can have an optional #property appended
+        for path_with_property in paths:
+            path, schema_property = (
+                path_with_property.split("#", maxsplit=1) if "#" in path_with_property else (path_with_property, None)
+            )
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
                 schema_path = ["paths", f'"{path}"', verb, "responses"]
                 # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
                 schemas_of_path = [
-                    component
+                    "/".join(component.rstrip("/").split("/") + ["properties", schema_property])
+                    if schema_property
+                    else component
                     for status, response in responses_of_path.items()
                     if status.isnumeric() and int(status) < 400 and "content" in response
                     for schema in [response.get("content").get("application/json", {}).get("schema", {})]
@@ -2691,7 +2738,9 @@ class OpenApi:
                     for component in [component.lstrip("#")]
                     if component not in self.ignored_schemas
                 ]
-                classes_of_path = index.get("indices", {}).get("path_to_return_classes", {}).get(path, {}).get(verb, [])
+                classes_of_path = set(
+                    index.get("indices", {}).get("path_to_return_classes", {}).get(path_with_property, {}).get(verb, [])
+                )
 
                 for cls in classes_of_path:
                     # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
@@ -2704,18 +2753,18 @@ class OpenApi:
                             available_schemas[cls][verb] = {}
                         # only add schema as available schema for cls if this schema
                         # is not implemented by any other class in the union (classes_of_path)
-                        available_schemas[cls][verb][path] = {
+                        available_schemas[cls][verb][path_with_property] = {
                             s
                             for s in schemas_of_path
                             if not any(
                                 s in classes.get(n, {}).get("schemas", [])
                                 for n in classes_of_path.difference(set(cls))
-                                # remove optional module and package from class names
+                                # normalize class names, remove the module and package
                                 for n in ([n.split(".")[-1]] if "." in n else [n])
                             )
                         }
                         for schema in schemas_of_path:
-                            schema_returned_by[schema].add((verb, path))
+                            schema_returned_by[schema].add((verb, path_with_property))
 
         for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
             if cls in ["bool", "str", "None"]:
