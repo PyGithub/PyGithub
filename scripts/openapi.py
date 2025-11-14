@@ -1893,7 +1893,7 @@ class OpenApi:
         self.classes = index.get("classes", {})
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         self.schema_to_class["default"] = ["GithubObject"]
-        self.spec = OpenApi.read_json(args.spec) if self.subcommand != "index" and "spec" in args else {}
+        self.spec = OpenApi.read_json(args.spec) if "spec" in args and self.subcommand not in ["fetch", "index"] else {}
 
     def as_python_type(
         self,
@@ -2196,7 +2196,7 @@ class OpenApi:
             print(f"fetching {url}")
             for chunk in response.iter_content(131072):
                 w.write(chunk)
-                print(".", end="")
+                print(".", end="", flush=True)
                 written += len(chunk)
             print()
             print(f"written {written // 1024 / 1024:.3f} MBytes")
