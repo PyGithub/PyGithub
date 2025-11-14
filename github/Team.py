@@ -79,7 +79,7 @@ import github.Repository
 import github.TeamDiscussion
 from github import Consts
 from github.GithubException import UnknownObjectException
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, method_returns
 
 if TYPE_CHECKING:
     from github.Membership import Membership
@@ -311,6 +311,7 @@ class Team(CompletableGithubObject):
             "PUT", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}"
         )
 
+    @method_returns(schema_property="permissions")
     def get_repo_permission(self, repo: str | Repository) -> Permissions | None:
         """
         :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
