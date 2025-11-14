@@ -104,7 +104,6 @@ if TYPE_CHECKING:
     from github.Label import Label
     from github.Milestone import Milestone
     from github.NamedUser import NamedUser
-    from github.Organization import Organization
     from github.PullRequest import PullRequest
     from github.Reaction import Reaction
     from github.Repository import Repository

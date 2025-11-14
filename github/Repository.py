@@ -175,7 +175,6 @@ from datetime import date, datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from typing_extensions import deprecated
-from datetime import datetime, timezone
 
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability

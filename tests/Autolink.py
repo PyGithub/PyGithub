@@ -38,7 +38,6 @@
 from __future__ import annotations
 
 from tests import Framework
-from datetime import datetime, timezone
 
 
 class Autolink(Framework.TestCase):

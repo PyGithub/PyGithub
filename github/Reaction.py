@@ -51,7 +51,6 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
-    from github.Organization import Organization
 
 
 class Reaction(NonCompletableGithubObject):
