@@ -44,10 +44,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.Consts
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
-
-from . import Consts
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
@@ -99,7 +98,7 @@ class Reaction(CompletableGithubObject):
         self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self._parentUrl('')}/reactions/{self.id}",
-            headers={"Accept": Consts.mediaTypeReactionsPreview},
+            headers={"Accept": github.Consts.mediaTypeReactionsPreview},
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
