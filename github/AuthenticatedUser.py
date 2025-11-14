@@ -508,7 +508,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            f"/repos/{repo.owner.login}/{repo.name}/generate",
+            f"/repos/{repo.full_name}/generate",
             input=post_parameters,
             headers={"Accept": "application/vnd.github.v3+json"},
         )
@@ -668,6 +668,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", "/user", input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_authorization(self, id: int) -> Authorization:
         """
@@ -862,9 +863,9 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo} <http://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(name, str), name
-        name = urllib.parse.quote(name)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"/repos/{self.login}/{name}")
-        return github.Repository.Repository(self._requester, headers, data, completed=True)
+        name = urllib.parse.quote(name, safe="")
+        url = f"/repos/{self.login}/{name}"
+        return github.Repository.Repository(self._requester, url=url)
 
     def get_repos(
         self,
@@ -1096,7 +1097,7 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/memberships/orgs/{org} <https://docs.github.com/en/rest/reference/orgs#get-an-organization-membership-for-the-authenticated-user>`_
         """
         assert isinstance(org, str)
-        org = urllib.parse.quote(org)
+        org = urllib.parse.quote(org, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"/user/memberships/orgs/{org}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 

@@ -106,6 +106,7 @@ from unittest import mock
 
 import github
 import github.Repository
+from github.GithubObject import is_undefined
 
 from . import Framework
 
@@ -652,6 +653,12 @@ class Repository(Framework.TestCase):
         self.assertEqual(len(matched_repo_secrets), len(secrets))
         for matched_repo_secret in matched_repo_secrets:
             matched_repo_secret.delete()
+
+    def testLazySecret(self):
+        secret = self.g.withLazy(True).get_repo("lazy/repo").get_secret("secret name")
+        self.assertEqual(str(secret), 'Secret(name="secret name")')
+        self.assertEqual(secret.name, "secret name")
+        self.assertEqual(secret.url, "/repos/lazy/repo/actions/secrets/secret%20name")
 
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
@@ -2205,6 +2212,12 @@ class Repository(Framework.TestCase):
         self.assertTrue(variable.edit("variable-value123"))
         variable.delete()
 
+    def testGetLazyVariable(self):
+        var = self.g.withLazy(True).get_repo("lazy/repo").get_variable("var name")
+        self.assertEqual(str(var), 'Variable(name="var name")')
+        self.assertEqual(var.name, "var name")
+        self.assertEqual(var.url, "/repos/lazy/repo/actions/variables/var%20name")
+
     def testRepoVariables(self):
         # GitHub will always capitalize the variable name
         variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
@@ -2288,6 +2301,23 @@ class LazyRepository(Framework.TestCase):
 
     def getEagerRepository(self):
         return self.g.get_repo(self.repository_name, lazy=False)
+
+    def testLazyAttributes(self):
+        repo = self.g.withLazy(True).get_repo("lazy/repo")
+        self.assertEqual(str(repo), 'Repository(full_name="lazy/repo")')
+        self.assertEqual(repo._identity, "lazy/repo")
+        self.assertTrue(is_undefined(repo._id))
+        self.assertEqual(repo.name, "repo")
+        self.assertEqual(repo.full_name, "lazy/repo")
+        self.assertEqual(repo.url, "/repos/lazy/repo")
+
+        repo = self.g.withLazy(True).get_repo(42)
+        self.assertEqual(str(repo), "Repository(id=42)")
+        self.assertEqual(repo._identity, "42")
+        self.assertEqual(repo.id, 42)
+        self.assertTrue(is_undefined(repo._name))
+        self.assertTrue(is_undefined(repo._full_name))
+        self.assertEqual(repo.url, "/repositories/42")
 
     def testGetIssues(self):
         lazy_repo = self.getLazyRepository()

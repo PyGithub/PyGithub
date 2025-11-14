@@ -58,6 +58,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from os.path import basename
 from typing import Any, BinaryIO
@@ -410,6 +411,10 @@ class GitRelease(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "immutable" in attributes:  # pragma no branch
             self._immutable = self._makeBoolAttribute(attributes["immutable"])
         if "mentions_count" in attributes:  # pragma no branch
@@ -430,6 +435,10 @@ class GitRelease(CompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
+        elif "url" in attributes and attributes["url"] and isinstance(attributes["url"], str):
+            quoted_tag_name = attributes["url"].split("/")[-1]
+            tag_name = urllib.parse.unquote(quoted_tag_name)
+            self._tag_name = self._makeStringAttribute(tag_name)
         if "tarball_url" in attributes:
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "target_commitish" in attributes:

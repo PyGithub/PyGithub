@@ -506,8 +506,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(name, str), name
-        headers, data = self._requester.requestJsonAndCheck("GET", f"/repos/{self.login}/{name}")
-        return github.Repository.Repository(self._requester, headers, data, completed=True)
+        url = f"/repos/{self.login}/{name}"
+        return github.Repository.Repository(self._requester, url=url)
 
     def get_repos(
         self,
@@ -577,7 +577,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(org, str) or isinstance(org, github.Organization.Organization), org
         if isinstance(org, github.Organization.Organization):
             org = org.login  # type: ignore
-        org = urllib.parse.quote(org)
+        org = urllib.parse.quote(org, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"/orgs/{org}/memberships/{self.login}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
@@ -630,6 +630,11 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        elif "url" in attributes and "/" in attributes["url"]:
+            login = attributes["url"].split("/")[-1]
+            # url could also reference user id (int): /user/id
+            if attributes["url"].endswith(f"/users/{login}"):
+                self._login = self._makeStringAttribute(login)
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch

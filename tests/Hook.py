@@ -83,6 +83,12 @@ class Hook(Framework.TestCase):
         )
         self.assertEqual(repr(self.hook.last_response), 'HookResponse(status="ok")')
 
+    def testLazyAttributes(self):
+        hook = self.g.withLazy(True).get_repo("lazy/repo").get_hook(42)
+        self.assertEqual(str(hook), 'Hook(url="/repos/lazy/repo/hooks/42", id=42)')
+        self.assertEqual(hook.id, 42)
+        self.assertEqual(hook.url, "/repos/lazy/repo/hooks/42")
+
     def testEditWithMinimalParameters(self):
         self.hook.edit("web", {"url": "http://foobar.com/hook"})
         self.assertEqual(self.hook.config, {"url": "http://foobar.com/hook"})

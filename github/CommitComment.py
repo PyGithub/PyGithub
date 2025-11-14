@@ -90,7 +90,7 @@ class CommitComment(CompletableGithubObject):
         self._user: Attribute[NamedUser | Organization] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"id": self._id.value, "user": self.user})
+        return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
     def author_association(self) -> str:
@@ -179,6 +179,7 @@ class CommitComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_reactions(self) -> PaginatedList[Reaction]:
         """
@@ -239,6 +240,10 @@ class CommitComment(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "line" in attributes:  # pragma no branch
             self._line = self._makeIntAttribute(attributes["line"])
         if "node_id" in attributes:  # pragma no branch

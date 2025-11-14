@@ -68,6 +68,13 @@ class Milestone(Framework.TestCase):
         self.assertEqual(self.milestone.creator.login, "jacquev6")
         self.assertEqual(repr(self.milestone), 'Milestone(title="Version 0.4", number=1)')
 
+    def testLazyAttributes(self):
+        milestone = self.g.withLazy(True).get_repo("lazy/repo").get_milestone(42)
+        self.assertEqual(str(milestone), "Milestone(title=None, number=42)")
+        self.assertEqual(milestone._identity, 42)
+        self.assertEqual(milestone.number, 42)
+        self.assertEqual(milestone.url, "/repos/lazy/repo/milestones/42")
+
     def testEditWithMinimalParameters(self):
         self.milestone.edit("Title edited by PyGithub")
         self.assertEqual(self.milestone.title, "Title edited by PyGithub")

@@ -213,6 +213,10 @@ class Download(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "mime_type" in attributes:  # pragma no branch
             self._mime_type = self._makeStringAttribute(
                 attributes["mime_type"]

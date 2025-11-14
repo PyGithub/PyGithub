@@ -62,6 +62,12 @@ class Project(Framework.TestCase):
         self.assertEqual(self.proj.updated_at, datetime(2018, 8, 3, 0, 31, 17, tzinfo=timezone.utc))
         self.assertEqual(self.proj.url, "https://api.github.com/projects/1682941")
 
+    def testLazyAttributes(self):
+        project = self.g.withLazy(True).get_project(42)
+        self.assertEqual(str(project), "Project(name=None)")
+        self.assertEqual(project.id, 42)
+        self.assertEqual(project.url, "/projects/42")
+
     def testGetOrganizationProjects(self):
         expectedProjects = ["Project1", "Project2", "Project3"]
         org = self.g.get_organization("PyGithubTestOrg")

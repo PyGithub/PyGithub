@@ -310,7 +310,7 @@ class GithubIntegration:
         """
         :calls: `GET /orgs/{org}/installation <https://docs.github.com/en/rest/apps/apps#get-an-organization-installation-for-the-authenticated-app>`
         """
-        org = urllib.parse.quote(org)
+        org = urllib.parse.quote(org, safe="")
         return self._get_installed_app(url=f"/orgs/{org}/installation")
 
     def get_repo_installation(self, owner: str, repo: str) -> Installation:

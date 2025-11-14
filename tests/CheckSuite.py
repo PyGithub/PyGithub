@@ -73,6 +73,12 @@ class CheckSuite(Framework.TestCase):
             "https://api.github.com/repos/wrecker/PySample/check-suites/1004503837",
         )
 
+    def testLazyAttributes(self):
+        suite = self.g.withLazy(True).get_repo("lazy/repo").get_check_suite(42)
+        self.assertEqual(str(suite), 'CheckSuite(url="/repos/lazy/repo/check-suites/42", id=42)')
+        self.assertEqual(suite.id, 42)
+        self.assertEqual(suite.url, "/repos/lazy/repo/check-suites/42")
+
     def testGetCheckSuitesForRef(self):
         check_suites = self.commit.get_check_suites()
         self.assertEqual(check_suites.totalCount, 6)

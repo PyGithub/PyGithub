@@ -65,6 +65,12 @@ class GitReleaseAsset(Framework.TestCase):
         self.assertEqual(self.asset.uploader.login, "EnricoMi")
         self.assertEqual(self.asset.url, "https://api.github.com/repos/EnricoMi/PyGithub/releases/assets/224868540")
 
+    def testLazyAttributes(self):
+        asset = self.g.withLazy(True).get_repo("lazy/repo").get_release_asset(42)
+        self.assertEqual(str(asset), 'GitReleaseAsset(url="/repos/lazy/repo/releases/assets/42")')
+        self.assertEqual(asset.id, 42)
+        self.assertEqual(asset.url, "/repos/lazy/repo/releases/assets/42")
+
     @skipIf(os.name == "nt", "not working on Windows")
     def testDownloadAssetFile(self):
         with NamedTemporaryFile(mode="rb") as file:
