@@ -68,6 +68,10 @@ class Environment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/environment
+
     """
 
     def _initAttributes(self) -> None:

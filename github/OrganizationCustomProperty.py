@@ -160,6 +160,10 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-organization-repositories
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/org-repo-custom-property-values
+
     """
 
     def _initAttributes(self) -> None:

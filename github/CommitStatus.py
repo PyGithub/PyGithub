@@ -59,6 +59,7 @@ class CommitStatus(NonCompletableGithubObject):
 
     The OpenAPI schema can be found at
 
+    - /components/schemas/simple-commit-status
     - /components/schemas/status
 
     """

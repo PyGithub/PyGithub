@@ -57,6 +57,7 @@ class UserKey(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/key
+    - /components/schemas/key-simple
 
     """
 

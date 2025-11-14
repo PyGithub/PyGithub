@@ -60,6 +60,10 @@ class PullRequestReview(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/pulls#reviews
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/pull-request-review
+
     """
 
     def _initAttributes(self) -> None:

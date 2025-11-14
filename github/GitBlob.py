@@ -53,6 +53,7 @@ class GitBlob(CompletableGithubObject):
 
     The OpenAPI schema can be found at
 
+    - /components/schemas/blob
     - /components/schemas/short-blob
 
     """

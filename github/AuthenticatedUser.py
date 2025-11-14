@@ -149,6 +149,12 @@ class AuthenticatedUser(CompletableGithubObject):
     This class represents AuthenticatedUsers as returned by https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
 
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/private-user
+    - /components/schemas/public-user
+
     """
 
     def _initAttributes(self) -> None:
