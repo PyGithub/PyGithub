@@ -865,9 +865,16 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 import_node = node.body[i].body[0]
                 imported_module = (
                     (
-                        import_node.module.value
-                        if isinstance(import_node.module, cst.Name)
-                        else import_node.module.attr.value
+                        "".join("." for _ in import_node.relative)
+                        + (
+                            (
+                                import_node.module.value
+                                if isinstance(import_node.module, cst.Name)
+                                else import_node.module.attr.value
+                            )
+                            if import_node.module is not None
+                            else ""
+                        )
                     )
                     if isinstance(import_node, cst.ImportFrom)
                     else import_node.names[0].name.attr.value
