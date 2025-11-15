@@ -147,7 +147,7 @@ class RepositoryAdvisory(AdvisoryBase):
         vulnerable_functions: list[str] | None = None,
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`\
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`\
         """
         return self.add_vulnerabilities(
             [
@@ -165,7 +165,7 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def add_vulnerabilities(self, vulnerabilities: Iterable[AdvisoryVulnerabilityInput]) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         """
         assert isinstance(vulnerabilities, Iterable), vulnerabilities
         for vulnerability in vulnerabilities:
@@ -193,7 +193,7 @@ class RepositoryAdvisory(AdvisoryBase):
         Offers credit to a user for a vulnerability in a repository.
 
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
 
         """
         self.offer_credits([{"login": login_or_user, "type": credit_type}])
@@ -206,7 +206,7 @@ class RepositoryAdvisory(AdvisoryBase):
         Offers credit to a list of users for a vulnerability in a repository.
 
         Unless you are giving credit to yourself, the user having credit offered will need to explicitly accept the credit.
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
         :param credited: iterable of dict with keys "login" and "type"
 
         """
@@ -229,7 +229,7 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
         assert isinstance(login_or_user, (str, github.NamedUser.NamedUser)), login_or_user
         if isinstance(login_or_user, github.NamedUser.NamedUser):
@@ -248,7 +248,7 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def clear_credits(self) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
         patch_parameters: dict[str, Any] = {"credits": []}
         headers, data = self._requester.requestJsonAndCheck(
@@ -270,7 +270,7 @@ class RepositoryAdvisory(AdvisoryBase):
         state: Opt[str] = NotSet,
     ) -> RepositoryAdvisory:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
         assert summary is NotSet or isinstance(summary, str), summary
         assert description is NotSet or isinstance(description, str), description
@@ -326,7 +326,7 @@ class RepositoryAdvisory(AdvisoryBase):
         """
         Accepts the advisory reported from an external reporter via private vulnerability reporting.
 
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
 
         """
         patch_parameters = {"state": "draft"}
@@ -341,7 +341,7 @@ class RepositoryAdvisory(AdvisoryBase):
         """
         Publishes the advisory.
 
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
 
         """
         patch_parameters = {"state": "published"}
@@ -368,7 +368,7 @@ class RepositoryAdvisory(AdvisoryBase):
         """
         Closes the advisory.
 
-        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/:advisory_id <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
+        :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`
 
         """
         patch_parameters = {"state": "closed"}

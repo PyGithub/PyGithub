@@ -103,7 +103,7 @@ commit() {
   if "$git" diff --exit-code 1>&2; then return 0; fi
 
   # commit
-  "$git" commit -a -m "$message" "$@" 1>&2
+  "$git" commit --no-verify -a -m "$message" "$@" 1>&2
   echo 1>&2
   return 255
 }

@@ -57,6 +57,7 @@ class UserKey(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/key
+    - /components/schemas/key-simple
 
     """
 
@@ -115,7 +116,7 @@ class UserKey(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /user/keys/{id} <https://docs.github.com/en/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user>`_
+        :calls: `DELETE /user/keys/{key_id} <https://docs.github.com/en/rest/reference/users#get-a-public-ssh-key-for-the-authenticated-user>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)

@@ -44,21 +44,25 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.Consts
 import github.NamedUser
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
-
-from . import Consts
+import github.Organization
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     from github.NamedUser import NamedUser
 
 
-class Reaction(CompletableGithubObject):
+class Reaction(NonCompletableGithubObject):
     """
     This class represents Reactions.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/reactions
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/reaction
 
     """
 
@@ -66,6 +70,7 @@ class Reaction(CompletableGithubObject):
         self._content: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
@@ -73,22 +78,22 @@ class Reaction(CompletableGithubObject):
 
     @property
     def content(self) -> str:
-        self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
     def created_at(self) -> datetime:
-        self._completeIfNotSet(self._created_at)
         return self._created_at.value
 
     @property
     def id(self) -> int:
-        self._completeIfNotSet(self._id)
         return self._id.value
 
     @property
+    def node_id(self) -> str:
+        return self._node_id.value
+
+    @property
     def user(self) -> NamedUser:
-        self._completeIfNotSet(self._user)
         return self._user.value
 
     def delete(self) -> None:
@@ -99,7 +104,7 @@ class Reaction(CompletableGithubObject):
         self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self._parentUrl('')}/reactions/{self.id}",
-            headers={"Accept": Consts.mediaTypeReactionsPreview},
+            headers={"Accept": github.Consts.mediaTypeReactionsPreview},
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
@@ -109,5 +114,7 @@ class Reaction(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

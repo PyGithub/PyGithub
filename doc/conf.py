@@ -368,7 +368,7 @@ for githubObjectClass, module in githubObjectClasses.items():
                     ]:
                         method = None
                 isProperty = False
-            if line.startswith("        :calls: `"):
+            if line.startswith("        :calls: `") and method:
                 for callee in line[16:].split(" or "):
                     verb, url = callee[1:].split(" ")[0:2]
                     if url not in methods:
@@ -376,7 +376,6 @@ for githubObjectClass, module in githubObjectClasses.items():
                     if verb not in methods[url]:
                         methods[url][verb] = set()
                     methods[url][verb].add(":meth:`" + module + "." + githubObjectClass + "." + method + "`")
-                method = None
 
 methods["/markdown/raw"] = dict()
 methods["/markdown/raw"]["POST"] = ["Not implemented, see ``/markdown``"]

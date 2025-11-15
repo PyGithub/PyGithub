@@ -53,14 +53,22 @@ class CodeScanRule(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/code-scanning-alert-rule-summary
+
     """
 
     def _initAttributes(self) -> None:
         self._description: Attribute[str] = NotSet
+        self._full_description: Attribute[str] = NotSet
+        self._help: Attribute[str] = NotSet
+        self._help_uri: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._security_severity_level: Attribute[str] = NotSet
         self._severity: Attribute[str] = NotSet
+        self._tags: Attribute[list[str]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self.id, "name": self.name})
@@ -68,6 +76,18 @@ class CodeScanRule(NonCompletableGithubObject):
     @property
     def description(self) -> str:
         return self._description.value
+
+    @property
+    def full_description(self) -> str:
+        return self._full_description.value
+
+    @property
+    def help(self) -> str:
+        return self._help.value
+
+    @property
+    def help_uri(self) -> str:
+        return self._help_uri.value
 
     @property
     def id(self) -> str:
@@ -85,9 +105,19 @@ class CodeScanRule(NonCompletableGithubObject):
     def severity(self) -> str:
         return self._severity.value
 
+    @property
+    def tags(self) -> list[str]:
+        return self._tags.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "full_description" in attributes:  # pragma no branch
+            self._full_description = self._makeStringAttribute(attributes["full_description"])
+        if "help" in attributes:  # pragma no branch
+            self._help = self._makeStringAttribute(attributes["help"])
+        if "help_uri" in attributes:  # pragma no branch
+            self._help_uri = self._makeStringAttribute(attributes["help_uri"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
@@ -96,3 +126,5 @@ class CodeScanRule(NonCompletableGithubObject):
             self._security_severity_level = self._makeStringAttribute(attributes["security_severity_level"])
         if "severity" in attributes:  # pragma no branch
             self._severity = self._makeStringAttribute(attributes["severity"])
+        if "tags" in attributes:  # pragma no branch
+            self._tags = self._makeListOfStringsAttribute(attributes["tags"])

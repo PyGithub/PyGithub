@@ -52,6 +52,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 import github
@@ -71,6 +73,7 @@ class AuthenticatedUser(Framework.TestCase):
         )
         self.assertEqual(self.user.bio, "")
         self.assertEqual(self.user.blog, "http://vincent-jacques.net")
+        self.assertIsNone(self.user.business_plus)
         self.assertEqual(self.user.collaborators, 0)
         self.assertEqual(self.user.company, "Criteo")
         self.assertEqual(
@@ -79,15 +82,22 @@ class AuthenticatedUser(Framework.TestCase):
         )
         self.assertEqual(self.user.disk_usage, 16692)
         self.assertEqual(self.user.email, "vincent@vincent-jacques.net")
+        self.assertIsNone(self.user.events_url)
         self.assertEqual(self.user.followers, 13)
+        self.assertIsNone(self.user.followers_url)
         self.assertEqual(self.user.following, 24)
+        self.assertIsNone(self.user.following_url)
+        self.assertIsNone(self.user.gists_url)
         self.assertEqual(self.user.gravatar_id, "b68de5ae38616c296fa345d2b9df2225")
         self.assertFalse(self.user.hireable)
         self.assertEqual(self.user.html_url, "https://github.com/jacquev6")
         self.assertEqual(self.user.id, 327146)
+        self.assertIsNone(self.user.ldap_dn)
         self.assertEqual(self.user.location, "Paris, France")
         self.assertEqual(self.user.login, "jacquev6")
         self.assertEqual(self.user.name, "Vincent Jacques")
+        self.assertIsNone(self.user.notification_email)
+        self.assertIsNone(self.user.organizations_url)
         self.assertEqual(self.user.owned_private_repos, 5)
         self.assertEqual(self.user.plan.name, "micro")
         self.assertEqual(self.user.plan.collaborators, 1)
@@ -96,12 +106,20 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.private_gists, 5)
         self.assertEqual(self.user.public_gists, 1)
         self.assertEqual(self.user.public_repos, 10)
+        self.assertIsNone(self.user.received_events_url)
+        self.assertIsNone(self.user.repos_url)
+        self.assertIsNone(self.user.site_admin)
+        self.assertIsNone(self.user.starred_url)
+        self.assertIsNone(self.user.subscriptions_url)
         self.assertEqual(self.user.total_private_repos, 5)
+        self.assertIsNone(self.user.twitter_username)
         self.assertEqual(self.user.type, "User")
+        self.assertIsNone(self.user.updated_at)
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
         self.assertEqual(repr(self.user), 'AuthenticatedUser(login="jacquev6")')
         self.assertTrue(self.user.two_factor_authentication)
+        self.assertIsNone(self.user.user_view_type)
 
     def testEditWithoutArguments(self):
         self.user.edit()

@@ -60,6 +60,10 @@ class TimelineEvent(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#timeline
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/timeline-issue-events
+
     """
 
     def _initAttributes(self) -> None:

@@ -55,6 +55,10 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#statuses
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/combined-commit-status
+
     """
 
     def _initAttributes(self) -> None:

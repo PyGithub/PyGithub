@@ -133,7 +133,7 @@ class RepositoryKey(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/keys/{id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
+        :calls: `DELETE /repos/{owner}/{repo}/keys/{key_id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 

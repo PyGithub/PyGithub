@@ -49,15 +49,27 @@ equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
 
 def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
     if "$ref" in schema_type:
-        schema = schema_type.get("$ref").strip("# ")
+        schema = schema_type.get("$ref").strip("# /")
         ref_schema_type = spec
         for step in schema.split("/"):
-            if step:
-                if step not in ref_schema_type:
-                    raise ValueError(f"Could not find schema in spec: {schema}")
-                ref_schema_type = ref_schema_type[step]
+            if step not in ref_schema_type:
+                raise ValueError(f"Could not find schema in spec: {schema}")
+            ref_schema_type = ref_schema_type[step]
         return ref_schema_type
     return schema_type
+
+
+def cst_to_python(value: cst.BaseExpression) -> Any:
+    if isinstance(value, cst.List):
+        return [cst_to_python(item.value) for item in value.elements]
+    if isinstance(value, cst.SimpleString):
+        return value.evaluated_value
+    if isinstance(value, cst.Name):
+        if value.value == "True":
+            return True
+        if value.value == "False":
+            return False
+    raise ValueError(f"unsupported expr: {value}")
 
 
 def as_python_type(
@@ -65,6 +77,7 @@ def as_python_type(
     schema_path: list[str],
     schema_to_class: dict[str, str],
     classes,
+    spec: dict[str, Any],
     *,
     verbose: bool = False,
     collect_new_schemas: list[str] | None = None,
@@ -72,7 +85,17 @@ def as_python_type(
     schema = None
     data_type = schema_type.get("type")
     if "$ref" in schema_type:
-        schema = schema_type.get("$ref").strip("# ")
+        schema_path = schema_type.get("$ref").strip("# /").split("/")
+        schema_type = resolve_schema(schema_type, spec)
+        return as_python_type(
+            schema_type,
+            schema_path,
+            schema_to_class,
+            classes,
+            spec,
+            verbose=verbose,
+            collect_new_schemas=collect_new_schemas,
+        )
     elif "oneOf" in schema_type:
         types = [
             as_python_type(
@@ -80,6 +103,7 @@ def as_python_type(
                 schema_path + ["oneOf", str(idx)],
                 schema_to_class,
                 classes,
+                spec,
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
             )
@@ -97,6 +121,7 @@ def as_python_type(
             schema_path + ["allOf", "0"],
             schema_to_class,
             classes,
+            spec,
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
         )
@@ -147,6 +172,7 @@ def as_python_type(
                     schema_path + ["items"],
                     schema_to_class,
                     classes,
+                    spec,
                     verbose=verbose,
                     collect_new_schemas=collect_new_schemas,
                 )
@@ -204,6 +230,7 @@ class GithubClass:
     methods: dict
     properties: dict
     schemas: list[str]
+    inherited_schemas: list[str]
     docstring: str
 
     def __hash__(self):
@@ -250,6 +277,7 @@ class GithubClass:
                     methods={},
                     properties={},
                     schemas=[],
+                    inherited_schemas=[],
                     docstring="",
                 )
         else:
@@ -339,6 +367,28 @@ class CstMethods(abc.ABC):
     @classmethod
     def is_github_object_property(cls, func_def: cst.FunctionDef):
         return cls.contains_decorator(func_def.decorators, "property")
+
+    @staticmethod
+    def get_decorators(decorators: Sequence[cst.Decorator], decorator_name: str) -> list[dict[str, Any]]:
+        return [
+            {
+                k: v
+                for k, v in [
+                    (arg.keyword.value, cst_to_python(arg.value))
+                    for arg in args
+                    if isinstance(arg, cst.Arg) and isinstance(arg.keyword, cst.Name)
+                ]
+            }
+            for decorator in decorators
+            for decorator in [decorator.decorator]
+            if isinstance(decorator, cst.Call)
+            and isinstance(decorator.func, cst.Name)
+            and decorator.func.value == decorator_name
+            for args in [decorator.args]
+            if len(args) > 0
+            for name in [args[0].value]
+            if isinstance(name, SimpleString)
+        ]
 
     @classmethod
     def create_subscript(cls, name: str) -> cst.Subscript:
@@ -581,6 +631,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             "test_filename": self._test_filename,
             "docstring": class_docstring,
             "schemas": class_schemas,
+            "inherited_schemas": [],
             "bases": class_bases,
             "properties": self._properties,
             "methods": self._methods,
@@ -613,6 +664,10 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> None:
         method_name = node.name.value
+        decorators = self.get_decorators(node.decorators, "method_returns")
+        path_property = next(
+            iter([decorator["schema_property"] for decorator in decorators if "schema_property" in decorator]), None
+        )
         returns = self.return_types(cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None)
 
         if self.is_github_object_property(node):
@@ -624,18 +679,20 @@ class IndexPythonClassesVisitor(CstVisitorBase):
             string = [line for line in visitor.strings[0].splitlines() if ":calls:" in line]
             if string:
                 fields = string[0].split(":calls:")[1].strip(" `").split(" ", maxsplit=2)
+                verb = fields[0] if len(fields) > 0 else None
+                path = fields[1] if len(fields) > 1 else None
+                path = f"{path}#{path_property}" if path_property else path
+                docs = fields[2] if len(fields) > 2 else None
                 self._methods[method_name] = {
                     "name": method_name,
                     "call": {
-                        "verb": fields[0] if len(fields) > 0 else None,
-                        "path": fields[1] if len(fields) > 1 else None,
-                        "docs": fields[2] if len(fields) > 2 else None,
+                        "verb": verb,
+                        "path": path,
+                        "docs": docs,
                     },
                     "returns": returns,
                 }
                 if len(fields) > 1:
-                    verb = fields[0]
-                    path = fields[1]
                     if path not in self._paths:
                         self._paths[path] = {}
                     if verb not in self._paths[path]:
@@ -650,16 +707,16 @@ class IndexPythonClassesVisitor(CstVisitorBase):
 
                 # check if method (VERB) is same as in the code
                 if len(fields) > 0 and self._method_verbs is not None:
-                    verb = f'"{fields[0]}"'
+                    quoted_verb = f'"{verb}"'
                     full_method_name = f"{self.current_class_name}.{method_name}"
 
                     if full_method_name in self._method_verbs:
                         # these are methods configured in the github/openapi.index.json file
                         known_verb = f'"{self._method_verbs[full_method_name]}"'
-                        if known_verb != verb:
+                        if known_verb != quoted_verb:
                             print(
                                 f"Method {full_method_name} is known to call {known_verb}, "
-                                f"but doc-string says {verb}"
+                                f"but doc-string says {quoted_verb}"
                             )
                     else:
                         # detect method from code
@@ -719,10 +776,10 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             if not any(
                                 func.startswith(("self._requester.request", "self.__requester.request"))
                                 and args
-                                and args[0] == verb
+                                and args[0] == quoted_verb
                                 for func, args, base in calls
                             ):
-                                print(f"Not found any {verb} call in {self.current_class_name}.{method_name}")
+                                print(f"Not found any {quoted_verb} call in {self.current_class_name}.{method_name}")
                                 for func, args, base in calls:
                                     print(f"- calls {func}({', '.join(args)})")
                             # else:
@@ -852,9 +909,16 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 import_node = node.body[i].body[0]
                 imported_module = (
                     (
-                        import_node.module.value
-                        if isinstance(import_node.module, cst.Name)
-                        else import_node.module.attr.value
+                        "".join("." for _ in import_node.relative)
+                        + (
+                            (
+                                import_node.module.value
+                                if isinstance(import_node.module, cst.Name)
+                                else import_node.module.attr.value
+                            )
+                            if import_node.module is not None
+                            else ""
+                        )
                     )
                     if isinstance(import_node, cst.ImportFrom)
                     else import_node.names[0].name.attr.value
@@ -1576,6 +1640,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 schema_path,
                 self.schema_to_class,
                 self.classes,
+                self.spec,
                 verbose=False,
                 collect_new_schemas=new_schemas,
             )
@@ -1583,7 +1648,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 print(f"creating new class for schea {new_schema}")
                 create_new_class_func(new_schema)
         self.api_content = (
-            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, verbose=True)
+            as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, self.spec, verbose=True)
             if content_schema
             else None
         )
@@ -1649,7 +1714,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         request_properties = (
             {
                 prop: as_python_type(
-                    desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, verbose=True
+                    desc, list(schema_path + (prop,)), self.schema_to_class, self.classes, self.spec, verbose=True
                 )
                 for prop, desc in request_schema.get("properties", {}).items()
             }
@@ -1867,11 +1932,13 @@ class OpenApi:
         self.verbose = args.verbose
 
         index = (
-            OpenApi.read_index(args.index_filename) if self.subcommand != "index" and "index_filename" in args else {}
+            OpenApi.read_json(args.index_filename) if self.subcommand != "index" and "index_filename" in args else {}
         )
         self.classes = index.get("classes", {})
         self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
         self.schema_to_class["default"] = ["GithubObject"]
+        self.spec = OpenApi.read_json(args.spec) if "spec" in args and self.subcommand not in ["fetch", "index"] else {}
+        self.ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
 
     def as_python_type(
         self,
@@ -1885,12 +1952,13 @@ class OpenApi:
             schema_path,
             self.schema_to_class,
             self.classes,
+            self.spec,
             verbose=self.verbose,
             collect_new_schemas=collect_new_schemas,
         )
 
     @staticmethod
-    def read_index(filename: str) -> dict[str, Any]:
+    def read_json(filename: str) -> dict[str, Any]:
         with open(filename) as r:
             return json.load(r)
 
@@ -2051,6 +2119,7 @@ class OpenApi:
             print(f"Applying API schemas to {len(class_names)} PyGithub classes")
 
         new_schemas_as_dict = handle_new_schemas == HandleNewSchemas.as_dict
+        new_schemas_create_class = handle_new_schemas == HandleNewSchemas.create_class
         any_change = False
         for class_name in class_names:
             clazz = GithubClass.from_class_name(class_name, index)
@@ -2075,7 +2144,7 @@ class OpenApi:
                 print(f"Applying schema {schema_name}")
                 schema_path, schema = self.get_schema(spec, schema_name)
 
-                if handle_new_schemas == HandleNewSchemas.create_class:
+                if new_schemas_create_class:
                     new_schemas = []
                     for k, v in schema.get("properties", {}).items():
                         # only check for new schemas of new attributes
@@ -2128,7 +2197,7 @@ class OpenApi:
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
                     if is_supported_type(k, v, python_type, self.verbose)
-                    and (is_not_dict_type(python_type) or new_schemas_as_dict)
+                    and (is_not_dict_type(python_type) or new_schemas_as_dict or new_schemas_create_class)
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
@@ -2172,7 +2241,7 @@ class OpenApi:
             print(f"fetching {url}")
             for chunk in response.iter_content(131072):
                 w.write(chunk)
-                print(".", end="")
+                print(".", end="", flush=True)
                 written += len(chunk)
             print()
             print(f"written {written // 1024 / 1024:.3f} MBytes")
@@ -2221,6 +2290,20 @@ class OpenApi:
                     class_to_descendants[cls] = []
                 class_to_descendants[cls].append(name)
         class_to_descendants = {cls: sorted(descendants) for cls, descendants in class_to_descendants.items()}
+
+        # add schemas of base classes to derived classes
+        for name, clazz in sorted(classes.items(), key=lambda v: v[0]):
+            schemas = clazz.get("schemas")
+            if not schemas:
+                continue
+
+            for derived in class_to_descendants.get(name, []):
+                if derived in classes:
+                    derived_schemas = classes[derived].get("inherited_schemas", [])
+                    for schema in schemas:
+                        if schema not in derived_schemas:
+                            derived_schemas.append(schema)
+                    classes[derived]["inherited_schemas"] = derived_schemas
 
         path_to_call_methods = {}
         path_to_return_classes = {}
@@ -2568,8 +2651,7 @@ class OpenApi:
                             available_schemas[cls_name][key] = []
                         for st in spec_type:
                             st = st.lstrip("#")
-                            # explicitly ignore these schemas
-                            if st in {"/components/schemas/empty-object"}:
+                            if st in self.ignored_schemas:
                                 continue
                             schema_returned_by[st].add(key)
                             if st not in schema_to_classes:
@@ -2577,7 +2659,10 @@ class OpenApi:
                             # only add as available schema for cls_name if this schema
                             # is not implemented by any other class in the union (cls_names)
                             if not any(
-                                st in classes.get(n, {}).get("schemas", []) for n in cls_names.difference(set(cls_name))
+                                st in classes.get(n, {}).get("schemas", [])
+                                for n in cls_names.difference(set(cls_name))
+                                # normalize class names, remove the module and package
+                                for n in ([n.split(".")[-1]] if "." in n else [n])
                             ):
                                 available_schemas[cls_name][key].append(st)
 
@@ -2586,7 +2671,9 @@ class OpenApi:
 
         for cls, provided_schemas in sorted(available_schemas.items()):
             available = set()
-            implemented = classes.get(cls, {}).get("schemas", [])
+            clazz = classes.get(cls, {})
+            implemented = clazz.get("schemas", [])
+            implemented.extend(clazz.get("inherited_schemas", []))
             providing_properties = []
 
             for providing_property, spec_types in provided_schemas.items():
@@ -2614,7 +2701,6 @@ class OpenApi:
                     print(f"- {providing_class}.{providing_property}")
 
                 if add and schemas_to_implement:
-                    clazz = classes.get(cls, {})
                     filename = clazz.get("filename")
                     clazz_name = clazz.get("name")
                     if not filename or not clazz_name:
@@ -2629,15 +2715,20 @@ class OpenApi:
         # suggest schemas based on API calls
         available_schemas = {}
         schema_returned_by = defaultdict(set)
-        ignored_schemas = set(index.get("config", {}).get("ignored_schemas", {}))
         paths = set(spec.get("paths", {}).keys()).union(path_to_return_classes.keys())
-        for path in paths:
+        # paths can have an optional #property appended
+        for path_with_property in paths:
+            path, schema_property = (
+                path_with_property.split("#", maxsplit=1) if "#" in path_with_property else (path_with_property, None)
+            )
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
                 schema_path = ["paths", f'"{path}"', verb, "responses"]
                 # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
                 schemas_of_path = [
-                    component
+                    "/".join(component.rstrip("/").split("/") + ["properties", schema_property])
+                    if schema_property
+                    else component
                     for status, response in responses_of_path.items()
                     if status.isnumeric() and int(status) < 400 and "content" in response
                     for schema in [response.get("content").get("application/json", {}).get("schema", {})]
@@ -2645,9 +2736,11 @@ class OpenApi:
                         schema, schema_path + [str(status), "content", '"application/json"', "schema"]
                     )
                     for component in [component.lstrip("#")]
-                    if component not in ignored_schemas
+                    if component not in self.ignored_schemas
                 ]
-                classes_of_path = index.get("indices", {}).get("path_to_return_classes", {}).get(path, {}).get(verb, [])
+                classes_of_path = set(
+                    index.get("indices", {}).get("path_to_return_classes", {}).get(path_with_property, {}).get(verb, [])
+                )
 
                 for cls in classes_of_path:
                     # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
@@ -2658,9 +2751,20 @@ class OpenApi:
                             available_schemas[cls] = {}
                         if verb not in available_schemas[cls]:
                             available_schemas[cls][verb] = {}
-                        available_schemas[cls][verb][path] = set(schemas_of_path)
+                        # only add schema as available schema for cls if this schema
+                        # is not implemented by any other class in the union (classes_of_path)
+                        available_schemas[cls][verb][path_with_property] = {
+                            s
+                            for s in schemas_of_path
+                            if not any(
+                                s in classes.get(n, {}).get("schemas", [])
+                                for n in classes_of_path.difference(set(cls))
+                                # normalize class names, remove the module and package
+                                for n in ([n.split(".")[-1]] if "." in n else [n])
+                            )
+                        }
                         for schema in schemas_of_path:
-                            schema_returned_by[schema].add((verb, path))
+                            schema_returned_by[schema].add((verb, path_with_property))
 
         for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
             if cls in ["bool", "str", "None"]:
@@ -2674,7 +2778,9 @@ class OpenApi:
 
             paths = {}
             available = set()
-            implemented = classes.get(cls, {}).get("schemas", [])
+            clazz = classes.get(cls, {})
+            implemented = clazz.get("schemas", [])
+            implemented.extend(clazz.get("inherited_schemas", []))
 
             for verb, available_paths in available_verbs.items():
                 if verb not in paths:
@@ -2706,7 +2812,7 @@ class OpenApi:
                         print(f"- {verb.upper()} {path}")
 
                 if add and schemas_to_implement:
-                    filename = classes.get(cls, {}).get("filename")
+                    filename = clazz.get("filename")
                     if not filename:
                         print(f"Filename for class {cls} not known")
                         sys.exit(1)
@@ -2908,7 +3014,10 @@ class OpenApi:
         tests: bool,
         schema: str,
     ) -> None:
-        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", schema.split("/")[-1])])
+        item = schema.split("/")[-1]
+        if item.startswith("_"):
+            return None
+        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)])
         if new_class_name in classes:
             # we probably created that class in an earlier iteration, or we have a name collision here
             return

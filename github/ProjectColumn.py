@@ -164,7 +164,7 @@ class ProjectColumn(NonCompletableGithubObject):
 
     def move(self, position: str) -> bool:
         """
-        :calls: `POST POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects#move-a-project-column>`_
+        :calls: `POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects#move-a-project-column>`_
         """
         assert isinstance(position, str), position
         post_parameters = {"position": position}

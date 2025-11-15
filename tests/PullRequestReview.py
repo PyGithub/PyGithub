@@ -42,6 +42,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -78,7 +80,11 @@ class PullRequestReview(Framework.TestCase):
         self.assertEqual(self.pullreview.state, "DISMISSED")
 
     def testAttributes(self):
+        self.assertEqual(self.pullreview.author_association, "OWNER")
+        self.assertIsNone(self.pullreview.body_html)
+        self.assertIsNone(self.pullreview.body_text)
         self.assertEqual(self.pullreview.id, 28482091)
+        self.assertIsNone(self.pullreview.node_id)
         self.assertEqual(self.pullreview.user.login, "jzelinskie")
         self.assertEqual(self.pullreview.body, "")
         self.assertEqual(self.pullreview.commit_id, "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc")
