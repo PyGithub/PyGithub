@@ -389,6 +389,13 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(issue.number, 30)
 
+    def testCreateIssueWithType(self):
+        issue = self.repo.create_issue(
+            "Issue created by PyGithub with type",
+            issue_type="bug",
+        )
+        self.assertEqual(issue.type.name, "bug")
+
     def testCreateLabel(self):
         label = self.repo.create_label(
             "Label with silly name % * + created by PyGithub",
