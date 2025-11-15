@@ -293,5 +293,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v5
         with:
-          name: Event File
+          name: Event file
           path: ${{ github.event_path }}
