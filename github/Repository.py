@@ -145,7 +145,8 @@
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
-# Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
+# Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
+# Copyright 2025 Jens Keiner <jens.keiner@gmail.com>                           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -232,6 +233,7 @@ import github.RepositoryAdvisory
 import github.RepositoryDiscussion
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.Ruleset
 import github.Secret
 import github.SecurityAndAnalysis
 import github.SelfHostedActionsRunner
@@ -317,6 +319,7 @@ if TYPE_CHECKING:
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
+    from github.Ruleset import Ruleset
     from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SourceImport import SourceImport
@@ -2815,6 +2818,76 @@ class Repository(CompletableGithubObject):
         ghsa = urllib.parse.quote(ghsa)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/security-advisories/{ghsa}")
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data)
+
+    def get_rulesets(
+        self, includes_parents: bool = True, targets: Opt[list[str]] = NotSet
+    ) -> PaginatedList[Ruleset]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#get-all-repository-rulesets>`_
+        :param includes_parents: bool
+        :param targets: list of string
+        """
+        assert isinstance(includes_parents, bool), includes_parents
+        assert is_optional_list(targets, str), targets
+        url_parameters: dict[str, Any] = {"includes_parents": includes_parents}
+        if is_defined(targets):
+            url_parameters["targets"] = ",".join(targets)
+        return PaginatedList(
+            github.Ruleset.Ruleset,
+            self._requester,
+            f"{self.url}/rulesets",
+            url_parameters,
+        )
+
+    def get_ruleset(self, ruleset_id: int) -> Ruleset:
+        """
+        :calls: `GET /repos/{owner}/{repo}/rulesets/{ruleset_id} <https://docs.github.com/en/rest/repos/rules#get-a-repository-ruleset>`_
+        :param ruleset_id: int
+        """
+        assert isinstance(ruleset_id, int), ruleset_id
+        attrs = {"id": ruleset_id, "url": f"{self.url}/rulesets/{ruleset_id}"}
+        return github.Ruleset.Ruleset(self._requester, attributes=attrs)
+
+    def create_ruleset(
+        self,
+        name: str,
+        target: str,
+        enforcement: str,
+        bypass_actors: Opt[list[dict[str, Any]]] = NotSet,
+        conditions: Opt[dict[str, Any]] = NotSet,
+        rules: Opt[list[dict[str, Any]]] = NotSet,
+    ) -> Ruleset:
+        """
+        :calls: `POST /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#create-a-repository-ruleset>`_
+        :param name: string
+        :param target: string
+        :param enforcement: string
+        :param bypass_actors: list of dict
+        :param conditions: dict
+        :param rules: list of dict
+        """
+        assert isinstance(name, str), name
+        assert isinstance(target, str), target
+        assert target in ["branch", "tag", "push"], target
+        assert isinstance(enforcement, str), enforcement
+        assert enforcement in ["active", "disabled", "evaluate"], enforcement
+        assert is_optional_list(bypass_actors, dict), bypass_actors
+        assert is_optional(conditions, dict), conditions
+        assert is_optional_list(rules, dict), rules
+
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "target": target,
+                "enforcement": enforcement,
+                "bypass_actors": bypass_actors,
+                "conditions": conditions,
+                "rules": rules,
+            }
+        )
+
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/rulesets", input=post_parameters)
+        return github.Ruleset.Ruleset(self._requester, headers, data, completed=True)
 
     def update_file(
         self,
