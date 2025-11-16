@@ -176,7 +176,7 @@ class Milestone(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `DELETE /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -184,7 +184,7 @@ class Milestone(CompletableGithubObject):
         self, title: str, state: Opt[str] = NotSet, description: Opt[str] = NotSet, due_on: Opt[date] = NotSet
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `PATCH /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         """
         assert isinstance(title, str), title
         assert state is NotSet or isinstance(state, str), state
@@ -206,7 +206,7 @@ class Milestone(CompletableGithubObject):
 
     def get_labels(self) -> PaginatedList[github.Label.Label]:
         """
-        :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         return PaginatedList(github.Label.Label, self._requester, f"{self.url}/labels", None)
 

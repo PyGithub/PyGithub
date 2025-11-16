@@ -43,6 +43,10 @@ class OrganizationVariable(Variable):
     The reference can be found here
     https://docs.github.com/en/rest/actions/variables
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/organization-actions-variable
+
     """
 
     def _initAttributes(self) -> None:
@@ -53,6 +57,11 @@ class OrganizationVariable(Variable):
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._visibility: Attribute[str] = NotSet
+
+    @property
+    def selected_repositories_url(self) -> str:
+        self._completeIfNotSet(self._selected_repositories_url)
+        return self._selected_repositories_url.value
 
     @property
     def visibility(self) -> str:
@@ -78,7 +87,7 @@ class OrganizationVariable(Variable):
         visibility: str = "all",
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
+        :calls: `PATCH /orgs/{org}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
@@ -102,7 +111,7 @@ class OrganizationVariable(Variable):
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: `PUT /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/variables/{name}/repositories/{repository_id} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -113,7 +122,7 @@ class OrganizationVariable(Variable):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """

@@ -112,6 +112,7 @@ class GitRelease(CompletableGithubObject):
         self._tag_name: Attribute[str] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._target_commitish: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._upload_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
@@ -246,6 +247,11 @@ class GitRelease(CompletableGithubObject):
         return self.name
 
     @property
+    def updated_at(self) -> datetime:
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
+
+    @property
     def upload_url(self) -> str:
         self._completeIfNotSet(self._upload_url)
         return self._upload_url.value
@@ -313,7 +319,7 @@ class GitRelease(CompletableGithubObject):
         self, path: str, label: str = "", content_type: Opt[str] = NotSet, name: Opt[str] = NotSet
     ) -> github.GitReleaseAsset.GitReleaseAsset:
         """
-        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`__
+        :calls: `POST /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`__
         """
         assert isinstance(path, str), path
         assert isinstance(label, str), label
@@ -349,7 +355,7 @@ class GitRelease(CompletableGithubObject):
 
         Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
         Note that this method is more strict and requires you to specify the ``name``, since there's no file name to infer these from.
-        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`__
+        :calls: `POST /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`__
         :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
         :param file_size: int, size in bytes of ``file_like``
 
@@ -443,6 +449,8 @@ class GitRelease(CompletableGithubObject):
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "target_commitish" in attributes:
             self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "upload_url" in attributes:
             self._upload_url = self._makeStringAttribute(attributes["upload_url"])
         if "url" in attributes:

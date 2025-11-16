@@ -53,6 +53,10 @@ class PullRequestMergeStatus(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/pulls#check-if-a-pull-request-has-been-merged
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/pull-request-merge-result
+
     """
 
     def _initAttributes(self) -> None:

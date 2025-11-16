@@ -149,12 +149,19 @@ class AuthenticatedUser(CompletableGithubObject):
     This class represents AuthenticatedUsers as returned by https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
 
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/private-user
+    - /components/schemas/public-user
+
     """
 
     def _initAttributes(self) -> None:
         self._avatar_url: Attribute[str] = NotSet
         self._bio: Attribute[str] = NotSet
         self._blog: Attribute[str] = NotSet
+        self._business_plus: Attribute[bool] = NotSet
         self._collaborators: Attribute[int] = NotSet
         self._company: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -170,10 +177,12 @@ class AuthenticatedUser(CompletableGithubObject):
         self._hireable: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._ldap_dn: Attribute[str] = NotSet
         self._location: Attribute[str] = NotSet
         self._login: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._notification_email: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
         self._plan: Attribute[github.Plan.Plan] = NotSet
@@ -186,10 +195,12 @@ class AuthenticatedUser(CompletableGithubObject):
         self._starred_url: Attribute[str] = NotSet
         self._subscriptions_url: Attribute[str] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
+        self._twitter_username: Attribute[str] = NotSet
         self._two_factor_authentication: Attribute[bool] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._user_view_type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"login": self._login.value})
@@ -208,6 +219,11 @@ class AuthenticatedUser(CompletableGithubObject):
     def blog(self) -> str:
         self._completeIfNotSet(self._blog)
         return self._blog.value
+
+    @property
+    def business_plus(self) -> bool:
+        self._completeIfNotSet(self._business_plus)
+        return self._business_plus.value
 
     @property
     def collaborators(self) -> int:
@@ -285,6 +301,11 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._id.value
 
     @property
+    def ldap_dn(self) -> str:
+        self._completeIfNotSet(self._ldap_dn)
+        return self._ldap_dn.value
+
+    @property
     def location(self) -> str:
         self._completeIfNotSet(self._location)
         return self._location.value
@@ -303,6 +324,11 @@ class AuthenticatedUser(CompletableGithubObject):
     def node_id(self) -> str:
         self._completeIfNotSet(self._node_id)
         return self._node_id.value
+
+    @property
+    def notification_email(self) -> str:
+        self._completeIfNotSet(self._notification_email)
+        return self._notification_email.value
 
     @property
     def organizations_url(self) -> str:
@@ -365,6 +391,11 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._total_private_repos.value
 
     @property
+    def twitter_username(self) -> str:
+        self._completeIfNotSet(self._twitter_username)
+        return self._twitter_username.value
+
+    @property
     def two_factor_authentication(self) -> bool:
         self._completeIfNotSet(self._two_factor_authentication)
         return self._two_factor_authentication.value
@@ -384,6 +415,11 @@ class AuthenticatedUser(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def user_view_type(self) -> str:
+        self._completeIfNotSet(self._user_view_type)
+        return self._user_view_type.value
+
     def add_to_emails(self, *emails: str) -> None:
         """
         :calls: `POST /user/emails <http://docs.github.com/en/rest/reference/users#emails>`_
@@ -394,7 +430,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def add_to_following(self, following: NamedUser) -> None:
         """
-        :calls: `PUT /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `PUT /user/following/{username} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         headers, data = self._requester.requestJsonAndCheck("PUT", f"/user/following/{following._identity}")
@@ -789,7 +825,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_key(self, id: int) -> UserKey:
         """
-        :calls: `GET /user/keys/{id} <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
+        :calls: `GET /user/keys/{key_id} <http://docs.github.com/en/rest/reference/users#git-ssh-keys>`_
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"/user/keys/{id}")
@@ -803,7 +839,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_notification(self, id: str) -> Notification:
         """
-        :calls: `GET /notifications/threads/{id} <http://docs.github.com/en/rest/reference/activity#notifications>`_
+        :calls: `GET /notifications/threads/{thread_id} <http://docs.github.com/en/rest/reference/activity#notifications>`_
         """
 
         assert isinstance(id, str), id
@@ -842,7 +878,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_organization_events(self, org: Organization) -> PaginatedList[Event]:
         """
-        :calls: `GET /users/{user}/events/orgs/{org} <http://docs.github.com/en/rest/reference/activity#events>`_
+        :calls: `GET /users/{username}/events/orgs/{org} <http://docs.github.com/en/rest/reference/activity#events>`_
         """
         assert isinstance(org, github.Organization.Organization), org
         return PaginatedList(
@@ -939,7 +975,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def has_in_following(self, following: NamedUser) -> bool:
         """
-        :calls: `GET /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `GET /user/following/{username} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson("GET", f"/user/following/{following._identity}")
@@ -990,7 +1026,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def remove_from_following(self, following: NamedUser) -> None:
         """
-        :calls: `DELETE /user/following/{user} <http://docs.github.com/en/rest/reference/users#followers>`_
+        :calls: `DELETE /user/following/{username} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"/user/following/{following._identity}")
@@ -1083,7 +1119,7 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def get_organization_memberships(self) -> PaginatedList[Membership]:
         """
-        :calls: `GET /user/memberships/orgs/ <https://docs.github.com/en/rest/orgs/members#list-organization-memberships-for-the-authenticated-user>`_
+        :calls: `GET /user/memberships/orgs <https://docs.github.com/en/rest/orgs/members#list-organization-memberships-for-the-authenticated-user>`_
         """
         return PaginatedList(
             github.Membership.Membership,
@@ -1108,6 +1144,8 @@ class AuthenticatedUser(CompletableGithubObject):
             self._bio = self._makeStringAttribute(attributes["bio"])
         if "blog" in attributes:  # pragma no branch
             self._blog = self._makeStringAttribute(attributes["blog"])
+        if "business_plus" in attributes:  # pragma no branch
+            self._business_plus = self._makeBoolAttribute(attributes["business_plus"])
         if "collaborators" in attributes:  # pragma no branch
             self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "company" in attributes:  # pragma no branch
@@ -1138,6 +1176,8 @@ class AuthenticatedUser(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "ldap_dn" in attributes:  # pragma no branch
+            self._ldap_dn = self._makeStringAttribute(attributes["ldap_dn"])
         if "location" in attributes:  # pragma no branch
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
@@ -1146,6 +1186,8 @@ class AuthenticatedUser(CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "notification_email" in attributes:  # pragma no branch
+            self._notification_email = self._makeStringAttribute(attributes["notification_email"])
         if "organizations_url" in attributes:  # pragma no branch
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
@@ -1170,6 +1212,8 @@ class AuthenticatedUser(CompletableGithubObject):
             self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
         if "total_private_repos" in attributes:  # pragma no branch
             self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
+        if "twitter_username" in attributes:  # pragma no branch
+            self._twitter_username = self._makeStringAttribute(attributes["twitter_username"])
         if "two_factor_authentication" in attributes:
             self._two_factor_authentication = self._makeBoolAttribute(attributes["two_factor_authentication"])
         if "type" in attributes:  # pragma no branch
@@ -1178,3 +1222,5 @@ class AuthenticatedUser(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "user_view_type" in attributes:  # pragma no branch
+            self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])

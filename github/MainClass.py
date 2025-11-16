@@ -398,7 +398,7 @@ class Github:
     # v3: remove lazy argument, laziness is fully controlled via requester
     def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
         """
-        :calls: `GET /users/{user} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
+        :calls: `GET /users/{username} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
         requester = self.__requester.withLazy(lazy)
         if is_undefined(login):
@@ -419,7 +419,7 @@ class Github:
 
     def get_user_by_id(self, user_id: int) -> NamedUser:
         """
-        :calls: `GET /user/{id} <https://docs.github.com/en/rest/reference/users>`_
+        :calls: `GET /user/{account_id} <https://docs.github.com/en/rest/reference/users>`_
         :param user_id: int
         :rtype: :class:`github.NamedUser.NamedUser`
         """
@@ -475,7 +475,7 @@ class Github:
     # v3: remove lazy option
     def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
         """
-        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
+        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{repository_id} <https://docs.github.com/en/rest/reference/repos>`_
         """
         if is_defined(lazy):
             warnings.warn(
@@ -537,7 +537,7 @@ class Github:
 
     def get_gist(self, id: str) -> Gist:
         """
-        :calls: `GET /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert isinstance(id, str), id
         url = f"/gists/{id}"
@@ -1032,7 +1032,7 @@ class Github:
 
     def get_app(self, slug: Opt[str] = NotSet) -> GithubApp:
         """
-        :calls: `GET /apps/{slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
+        :calls: `GET /apps/{app_slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
 
         if slug is NotSet:

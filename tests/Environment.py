@@ -27,6 +27,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from unittest import mock
 
@@ -52,6 +54,7 @@ class Environment(Framework.TestCase):
         self.assertEqual(self.environment.name, "dev")
         self.assertEqual(self.environment.id, 464814513)
         self.assertEqual(self.environment.node_id, "EN_kwDOHKhL9c4btIGx")
+        self.assertListKeyEqual(self.environment.protection_rules, lambda r: r.id, [216323, 216324, 216325])
         self.assertEqual(
             self.environment.url,
             "https://api.github.com/repos/alson/PyGithub/environments/dev",

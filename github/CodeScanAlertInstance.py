@@ -52,6 +52,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._analysis_key: Attribute[str] = NotSet
+        self._category: Attribute[str] = NotSet
         self._classifications: Attribute[list[str]] = NotSet
         self._commit_sha: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
@@ -67,6 +68,10 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     @property
     def analysis_key(self) -> str:
         return self._analysis_key.value
+
+    @property
+    def category(self) -> str:
+        return self._category.value
 
     @property
     def classifications(self) -> list[str]:
@@ -103,6 +108,8 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "analysis_key" in attributes:  # pragma no branch
             self._analysis_key = self._makeStringAttribute(attributes["analysis_key"])
+        if "category" in attributes:  # pragma no branch
+            self._category = self._makeStringAttribute(attributes["category"])
         if "classifications" in attributes:  # pragma no branch
             self._classifications = self._makeListOfStringsAttribute(attributes["classifications"])
         if "commit_sha" in attributes:  # pragma no branch

@@ -60,7 +60,7 @@ from decimal import Decimal
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Callable, Union, overload
 
-from typing_extensions import Protocol, Self, TypeGuard
+from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -647,3 +647,17 @@ class CompletableGithubObject(GithubObject, ABC):
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True
+
+
+Param = ParamSpec("Param")
+RetType = TypeVar("RetType")
+
+
+# decorator to annotate methods with OpenAPI metadata
+def method_returns(
+    *, schema_property: str | None = None
+) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
+    def openapi_method_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+        return fn
+
+    return openapi_method_decorator

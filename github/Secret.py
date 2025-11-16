@@ -113,8 +113,11 @@ class Secret(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE {secret_url} <https://docs.github.com/en/rest/actions/secrets>`_
-        :rtype: None
+        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets>`_
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#delete-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#get-an-organization-secret>`_
         """
         self._requester.requestJsonAndCheck("DELETE", self.url)
 

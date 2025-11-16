@@ -118,13 +118,13 @@ class GistComment(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `DELETE /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `PATCH /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         assert isinstance(body, str), body
         post_parameters = {

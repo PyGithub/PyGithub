@@ -79,7 +79,7 @@ import github.Repository
 import github.TeamDiscussion
 from github import Consts
 from github.GithubException import UnknownObjectException
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, method_returns
 
 if TYPE_CHECKING:
     from github.Membership import Membership
@@ -111,6 +111,7 @@ class Team(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
+        self._enterprise_id: Attribute[int] = NotSet
         self._group_id: Attribute[int] = NotSet
         self._group_name: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -122,6 +123,7 @@ class Team(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._notification_setting: Attribute[str] = NotSet
         self._organization: Attribute[Organization] = NotSet
+        self._organization_id: Attribute[int] = NotSet
         self._organization_selection_type: Attribute[str] = NotSet
         self._parent: Attribute[github.Team.Team] = NotSet
         self._permission: Attribute[str] = NotSet
@@ -131,6 +133,7 @@ class Team(CompletableGithubObject):
         self._repositories_url: Attribute[str] = NotSet
         self._slug: Attribute[str] = NotSet
         self._sync_to_organizations: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -150,6 +153,11 @@ class Team(CompletableGithubObject):
     def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
+
+    @property
+    def enterprise_id(self) -> int:
+        self._completeIfNotSet(self._enterprise_id)
+        return self._enterprise_id.value
 
     @property
     def group_id(self) -> int:
@@ -207,6 +215,11 @@ class Team(CompletableGithubObject):
         return self._organization.value
 
     @property
+    def organization_id(self) -> int:
+        self._completeIfNotSet(self._organization_id)
+        return self._organization_id.value
+
+    @property
     def organization_selection_type(self) -> str:
         self._completeIfNotSet(self._organization_selection_type)
         return self._organization_selection_type.value
@@ -252,6 +265,11 @@ class Team(CompletableGithubObject):
         return self._sync_to_organizations.value
 
     @property
+    def type(self) -> str:
+        self._completeIfNotSet(self._type)
+        return self._type.value
+
+    @property
     def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -266,14 +284,14 @@ class Team(CompletableGithubObject):
         This API call is deprecated. Use `add_membership` instead.
         https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
-        :calls: `PUT /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/members/{member._identity}")
 
     def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
         """
-        :calls: `PUT /teams/{id}/memberships/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/memberships/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         assert role is NotSet or isinstance(role, str), role
@@ -292,7 +310,7 @@ class Team(CompletableGithubObject):
 
     def get_team_membership(self, member: str | NamedUser) -> Membership:
         """
-        :calls: `GET /orgs/{org}/memberships/team/{team_id}/{username} <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
+        :calls: `GET /orgs/{org}/teams/{team_slug}/memberships/{username} <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
         """
         assert isinstance(member, str) or isinstance(member, github.NamedUser.NamedUser), member
         if isinstance(member, github.NamedUser.NamedUser):
@@ -304,16 +322,17 @@ class Team(CompletableGithubObject):
 
     def add_to_repos(self, repo: str | Repository) -> None:
         """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}"
         )
 
+    @method_returns(schema_property="permissions")
     def get_repo_permission(self, repo: str | Repository) -> Permissions | None:
         """
-        :calls: `GET /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         try:
@@ -333,7 +352,7 @@ class Team(CompletableGithubObject):
     )
     def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
         """
-        :calls: `PUT /teams/{id}/repos/{org}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :param permission: string
         :rtype: None
@@ -364,7 +383,7 @@ class Team(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /teams/{id} <https://docs.github.com/en/rest/reference/teams#delete-a-team>`_
+        :calls: `DELETE /teams/{team_id} <https://docs.github.com/en/rest/reference/teams#delete-a-team>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -378,7 +397,7 @@ class Team(CompletableGithubObject):
         notification_setting: Opt[str] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /teams/{id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
+        :calls: `PATCH /teams/{team_id} <https://docs.github.com/en/rest/reference/teams#update-a-team>`_
         """
         assert isinstance(name, str), name
         assert description is NotSet or isinstance(description, str), description
@@ -403,7 +422,7 @@ class Team(CompletableGithubObject):
 
     def get_teams(self) -> PaginatedList[Team]:
         """
-        :calls: `GET /teams/{id}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
+        :calls: `GET /teams/{team_id}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Team.Team,
@@ -414,7 +433,7 @@ class Team(CompletableGithubObject):
 
     def get_discussions(self) -> PaginatedList[TeamDiscussion]:
         """
-        :calls: `GET /teams/{id}/discussions <https://docs.github.com/en/rest/reference/teams#list-discussions>`_
+        :calls: `GET /teams/{team_id}/discussions <https://docs.github.com/en/rest/reference/teams#list-discussions>`_
         """
         return github.PaginatedList.PaginatedList(
             github.TeamDiscussion.TeamDiscussion,
@@ -426,7 +445,7 @@ class Team(CompletableGithubObject):
 
     def get_members(self, role: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
-        :calls: `GET /teams/{id}/members <https://docs.github.com/en/rest/reference/teams#list-team-members>`_
+        :calls: `GET /teams/{team_id}/members <https://docs.github.com/en/rest/reference/teams#list-team-members>`_
         """
         assert role is NotSet or isinstance(role, str), role
         url_parameters: dict[str, Any] = {}
@@ -442,7 +461,7 @@ class Team(CompletableGithubObject):
 
     def get_repos(self) -> PaginatedList[Repository]:
         """
-        :calls: `GET /teams/{id}/repos <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/repos <https://docs.github.com/en/rest/reference/teams>`_
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository, self._requester, f"{self.url}/repos", None
@@ -450,7 +469,7 @@ class Team(CompletableGithubObject):
 
     def invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
-        :calls: `GET /teams/{id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
+        :calls: `GET /teams/{team_id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
         """
         return github.PaginatedList.PaginatedList(
             github.NamedUser.OrganizationInvitation,
@@ -462,7 +481,7 @@ class Team(CompletableGithubObject):
 
     def has_in_members(self, member: NamedUser) -> bool:
         """
-        :calls: `GET /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
@@ -470,7 +489,7 @@ class Team(CompletableGithubObject):
 
     def has_in_repos(self, repo: str | Repository) -> bool:
         """
-        :calls: `GET /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         status, headers, data = self._requester.requestJson(
@@ -490,14 +509,14 @@ class Team(CompletableGithubObject):
         This API call is deprecated. Use `remove_membership` instead:
         https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
-        :calls: `DELETE /teams/{id}/members/{user} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `DELETE /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/members/{member._identity}")
 
     def remove_from_repos(self, repo: str | Repository) -> None:
         """
-        :calls: `DELETE /teams/{id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `DELETE /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
         headers, data = self._requester.requestJsonAndCheck(
@@ -509,6 +528,8 @@ class Team(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "enterprise_id" in attributes:  # pragma no branch
+            self._enterprise_id = self._makeIntAttribute(attributes["enterprise_id"])
         if "group_id" in attributes:  # pragma no branch
             self._group_id = self._makeIntAttribute(attributes["group_id"])
         if "group_name" in attributes:  # pragma no branch
@@ -535,6 +556,8 @@ class Team(CompletableGithubObject):
             self._notification_setting = self._makeStringAttribute(attributes["notification_setting"])
         if "organization" in attributes:  # pragma no branch
             self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+        if "organization_id" in attributes:  # pragma no branch
+            self._organization_id = self._makeIntAttribute(attributes["organization_id"])
         if "organization_selection_type" in attributes:  # pragma no branch
             self._organization_selection_type = self._makeStringAttribute(attributes["organization_selection_type"])
         if "parent" in attributes:  # pragma no branch
@@ -553,6 +576,8 @@ class Team(CompletableGithubObject):
             self._slug = self._makeStringAttribute(attributes["slug"])
         if "sync_to_organizations" in attributes:  # pragma no branch
             self._sync_to_organizations = self._makeStringAttribute(attributes["sync_to_organizations"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch

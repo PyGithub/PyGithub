@@ -69,6 +69,10 @@ class Environment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/environment
+
     """
 
     def _initAttributes(self) -> None:
@@ -149,7 +153,7 @@ class Environment(CompletableGithubObject):
 
     def get_public_key(self) -> PublicKey:
         """
-        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
         :rtype: :class:`PublicKey`
         """
         # https://stackoverflow.com/a/76474814
@@ -159,7 +163,7 @@ class Environment(CompletableGithubObject):
 
     def create_secret(self, secret_name: str, unencrypted_value: str) -> Secret:
         """
-        :calls: `PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -182,6 +186,9 @@ class Environment(CompletableGithubObject):
     def get_secrets(self) -> PaginatedList[Secret]:
         """
         Gets all repository secrets.
+
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets </repos/{owner}/{repo}/environments/{environment_name}/secrets>`_
+
         """
         return PaginatedList(
             github.Secret.Secret,
@@ -194,7 +201,7 @@ class Environment(CompletableGithubObject):
 
     def get_secret(self, secret_name: str) -> Secret:
         """
-        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         secret_name = urllib.parse.quote(secret_name, safe="")
@@ -202,7 +209,7 @@ class Environment(CompletableGithubObject):
 
     def create_variable(self, variable_name: str, value: str) -> Variable:
         """
-        :calls: `POST /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
+        :calls: `POST /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -239,7 +246,7 @@ class Environment(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> Variable:
         """
-        :calls: `GET /orgs/{org}/variables/{variable_name} <https://docs.github.com/en/rest/variables#get-an-organization-variable>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/rest/actions/variables#get-an-environment-variable>`_
         :param variable_name: string
         :rtype: Variable
         """
@@ -250,7 +257,7 @@ class Environment(CompletableGithubObject):
 
     def delete_secret(self, secret_name: str) -> bool:
         """
-        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/reference#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/reference#delete-a-repository-secret>`_
         :param secret_name: string
         :rtype: bool
         """
@@ -260,7 +267,7 @@ class Environment(CompletableGithubObject):
 
     def delete_variable(self, variable_name: str) -> bool:
         """
-        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/reference#delete-a-repository-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/en/rest/reference#delete-a-repository-variable>`_
         :param variable_name: string
         :rtype: bool
         """
