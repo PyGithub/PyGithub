@@ -86,8 +86,7 @@ class GithubIntegration:
         jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
         auth: AppAuth | None = None,
-        # v3: set lazy = True as the default
-        lazy: bool = False,
+        lazy: bool = True,
     ) -> None:
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead

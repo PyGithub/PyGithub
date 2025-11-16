@@ -44,7 +44,7 @@ class RequiredStatusChecks(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.required_status_checks = (
-            self.g.get_repo("jacquev6/PyGithub", lazy=True).get_branch("integrations").get_required_status_checks()
+            self.g.get_repo("jacquev6/PyGithub").get_branch("integrations").get_required_status_checks()
         )
 
     def testAttributes(self):

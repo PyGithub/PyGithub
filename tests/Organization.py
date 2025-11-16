@@ -519,7 +519,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(secret.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
         self.assertEqual(secret.visibility, "selected")
         self.assertEqual(list(secret.selected_repositories), repos)
-        self.assertEqual(secret.url, "https://api.github.com/orgs/BeaverSoftware/actions/secrets/secret-name")
+        self.assertEqual(secret.url, "/orgs/BeaverSoftware/actions/secrets/secret-name")
 
     def testLazySecret(self):
         secret = self.g.withLazy(True).get_organization("org").get_secret("secret name")
@@ -638,7 +638,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(variable.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
         self.assertEqual(variable.visibility, "selected")
         self.assertEqual(list(variable.selected_repositories), repos)
-        self.assertEqual(variable.url, "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name")
+        self.assertEqual(variable.url, "/orgs/BeaverSoftware/actions/variables/variable-name")
 
     def testGetLazyVariable(self):
         var = self.g.withLazy(True).get_organization("org").get_variable("var name")

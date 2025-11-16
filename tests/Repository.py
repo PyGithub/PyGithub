@@ -115,7 +115,7 @@ from . import Framework
 class Repository(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub").complete()
 
     def testAttributes(self):
         self.assertEqual(self.repo.allow_auto_merge, False)
@@ -639,7 +639,7 @@ class Repository(Framework.TestCase):
         encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
         # GitHub will always capitalize the secret name
         secrets = (("SECRET_NAME_ONE", "secret-value-one"), ("SECRET_NAME_TWO", "secret-value-two"))
-        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        repo = self.g.get_repo("AndrewJDawes/PyGithub").complete()
         for matched_repo_secret in secrets:
             repo.create_secret(matched_repo_secret[0], matched_repo_secret[1])
         repo.update()
@@ -2195,7 +2195,7 @@ class Repository(Framework.TestCase):
         self.repo.replace_topics(["github", "testing"])
 
     def testGetRepositoryWith301Redirect(self):
-        repo = self.g.get_repo("protoncoin/protoncoin")
+        repo = self.g.get_repo("protoncoin/protoncoin").complete()
         self.assertEqual(repo.full_name, "padima2/protoncoin")
 
     def testGetMatchingRefs(self):
@@ -2222,7 +2222,7 @@ class Repository(Framework.TestCase):
     def testRepoVariables(self):
         # GitHub will always capitalize the variable name
         variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
-        repo = self.g.get_repo("AndrewJDawes/PyGithub")
+        repo = self.g.get_repo("AndrewJDawes/PyGithub").complete()
         for variable in variables:
             repo.create_variable(variable[0], variable[1])
         repo.update()
@@ -2298,10 +2298,10 @@ class LazyRepository(Framework.TestCase):
         self.repository_name = "PyGithub/PyGithub"
 
     def getLazyRepository(self):
-        return self.g.get_repo(self.repository_name, lazy=True)
+        return self.g.withLazy(lazy=True).get_repo(self.repository_name)
 
     def getEagerRepository(self):
-        return self.g.get_repo(self.repository_name, lazy=False)
+        return self.g.withLazy(lazy=False).get_repo(self.repository_name)
 
     def testLazyAttributes(self):
         repo = self.g.withLazy(True).get_repo("lazy/repo")
@@ -2380,35 +2380,35 @@ class LazyRepository(Framework.TestCase):
         lazy_repo = self.getLazyRepository()
         self.assertTrue(lazy_repo.enable_vulnerability_alert())
 
-        lazy_repo = self.g.get_repo("random", lazy=True)
+        lazy_repo = self.g.get_repo("random")
         self.assertFalse(lazy_repo.enable_vulnerability_alert())
 
     def testEnableAutomatedSecurityFixes(self):
         lazy_repo = self.getLazyRepository()
         self.assertTrue(lazy_repo.enable_automated_security_fixes())
 
-        lazy_repo = self.g.get_repo("random", lazy=True)
+        lazy_repo = self.g.get_repo("random")
         self.assertFalse(lazy_repo.enable_automated_security_fixes())
 
     def testDisableAutomatedSecurityFixes(self):
         lazy_repo = self.getLazyRepository()
         self.assertTrue(lazy_repo.disable_automated_security_fixes())
 
-        lazy_repo = self.g.get_repo("random", lazy=True)
+        lazy_repo = self.g.get_repo("random")
         self.assertFalse(lazy_repo.disable_automated_security_fixes())
 
     def testGetVulnerabilityAlert(self):
         lazy_repo = self.getEagerRepository()
         self.assertTrue(lazy_repo.get_vulnerability_alert())
 
-        lazy_repo = self.g.get_repo("random", lazy=True)
+        lazy_repo = self.g.get_repo("random")
         self.assertFalse(lazy_repo.get_vulnerability_alert())
 
     def testDisableVulnerabilityAlert(self):
         lazy_repo = self.getLazyRepository()
         self.assertTrue(lazy_repo.disable_vulnerability_alert())
 
-        lazy_repo = self.g.get_repo("random", lazy=True)
+        lazy_repo = self.g.get_repo("random")
         self.assertFalse(lazy_repo.disable_vulnerability_alert())
 
     def testChangeAutomateFixWhenNoVulnerabilityAlert(self):

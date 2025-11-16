@@ -54,7 +54,7 @@ from . import Framework
 class NamedUser(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.user = self.g.get_user("jacquev6")
+        self.user = self.g.get_user("jacquev6").complete()
 
     def testAttributes(self):
         self.assertEqual(self.user.avatar_url, "https://avatars.githubusercontent.com/u/327146?v=4")
@@ -115,7 +115,7 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.user_view_type, "public")
 
     def testLazyAttributes(self):
-        user = self.g.withLazy(True).get_user("lazyUser", lazy=True)
+        user = self.g.withLazy(True).get_user("lazyUser")
         self.assertEqual(str(user), 'NamedUser(login="lazyUser")')
         self.assertEqual(user._identity, "lazyUser")
         self.assertEqual(user.login, "lazyUser")

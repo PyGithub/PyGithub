@@ -188,8 +188,7 @@ class Github:
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
         auth: github.Auth.Auth | None = None,
-        # v3: set lazy = True as the default
-        lazy: bool = False,
+        lazy: bool = True,
     ) -> None:
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
@@ -395,27 +394,18 @@ class Github:
 
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
-    # v3: remove lazy argument, laziness is fully controlled via requester
-    def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
+    def get_user(self, login: Opt[str] = NotSet) -> NamedUser | AuthenticatedUser:
         """
         :calls: `GET /users/{username} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
-        requester = self.__requester.withLazy(lazy)
         if is_undefined(login):
             url = "/user"
-            # default is to return a lazy completable AuthenticatedUser
-            # v3: given github.Github(lazy=True) is now default, remove completed=False here
-            return github.AuthenticatedUser.AuthenticatedUser(
-                requester, url=url, completed=False if is_undefined(lazy) else None
-            )
+            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url)
         else:
             assert isinstance(login, str), login
             login = urllib.parse.quote(login)
             url = f"/users/{login}"
-            # always return a completed NamedUser
-            # v3: remove complete() here and make this as lazy as github.Github is
-            user = github.NamedUser.NamedUser(requester, url=url)
-            return user.complete() if is_undefined(lazy) else user
+            return github.NamedUser.NamedUser(self.__requester, url=url)
 
     def get_user_by_id(self, user_id: int) -> NamedUser:
         """
@@ -472,21 +462,14 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
-    # v3: remove lazy option
-    def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
+    def get_repo(self, full_name_or_id: int | str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{repository_id} <https://docs.github.com/en/rest/reference/repos>`_
         """
-        if is_defined(lazy):
-            warnings.warn(
-                "Argument lazy is deprecated, please use Github(..., lazy=...).get_repo(...) instead",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
-        return github.Repository.Repository(self.__requester.withLazy(lazy), url=url)
+        return github.Repository.Repository(self.__requester, url=url)
 
     def get_repos(
         self,

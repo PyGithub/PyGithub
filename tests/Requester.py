@@ -69,9 +69,7 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
-            # v3: this should not be the default value, so if this has been changed in v3,
-            # change it here is well
-            lazy=True,
+            lazy=False,
         )
         kwargs = requester.kwargs
 
@@ -90,7 +88,7 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
-                lazy=True,
+                lazy=False,
             ),
         )
 
@@ -123,9 +121,7 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
-            # v3: this should not be the default value, so if this has been changed in v3,
-            # change it here is well
-            lazy=True,
+            lazy=False,
         )
 
         # create a copy with different auth
@@ -146,7 +142,7 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
-                lazy=True,
+                lazy=False,
             ),
         )
 
@@ -212,13 +208,13 @@ class Requester(Framework.TestCase):
         self.assertIsNone(requester._Requester__connection)
 
     def testLoggingRedirection(self):
-        self.assertEqual(self.g.get_repo("EnricoMi/test").name, "test-renamed")
+        self.assertEqual(self.g.withLazy(lazy=False).get_repo("EnricoMi/test").name, "test-renamed")
         self.logger.info.assert_called_once_with(
             "Following Github server redirection from /repos/EnricoMi/test to /repositories/638123443"
         )
 
     def testBaseUrlSchemeRedirection(self):
-        gh = github.Github(base_url="http://api.github.com")
+        gh = github.Github(base_url="http://api.github.com", lazy=False)
         with self.assertRaises(RuntimeError) as exc:
             gh.get_repo("PyGithub/PyGithub")
         self.assertEqual(
@@ -230,7 +226,7 @@ class Requester(Framework.TestCase):
         )
 
     def testBaseUrlHostRedirection(self):
-        gh = github.Github(base_url="https://www.github.com")
+        gh = github.Github(base_url="https://www.github.com", lazy=False)
         with self.assertRaises(RuntimeError) as exc:
             gh.get_repo("PyGithub/PyGithub")
         self.assertEqual(
@@ -243,7 +239,7 @@ class Requester(Framework.TestCase):
 
     def testBaseUrlPortRedirection(self):
         # replay data forged
-        gh = github.Github(base_url="https://api.github.com")
+        gh = github.Github(base_url="https://api.github.com", lazy=False)
         with self.assertRaises(RuntimeError) as exc:
             gh.get_repo("PyGithub/PyGithub")
         self.assertEqual(
@@ -258,7 +254,7 @@ class Requester(Framework.TestCase):
 
     def testBaseUrlPrefixRedirection(self):
         # replay data forged
-        gh = github.Github(base_url="https://api.github.com/api/v3")
+        gh = github.Github(base_url="https://api.github.com/api/v3", lazy=False)
         self.assertEqual(gh.get_repo("PyGithub/PyGithub").name, "PyGithub")
         self.logger.info.assert_called_once_with(
             "Following Github server redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub"
@@ -577,7 +573,7 @@ class RequesterThrottled(RequesterThrottleTestCase):
                 releases = [release for release in repository.get_releases()]
                 self.assertEqual(len(releases), 30)
 
-        self.assertEqual(sleep_mock.call_args_list, [mock.call(1), mock.call(1), mock.call(1)])
+        self.assertEqual(sleep_mock.call_args_list, [mock.call(1), mock.call(1)])
 
     def testShouldDeferWrites(self):
         with self.mock_sleep() as sleep_mock:

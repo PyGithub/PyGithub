@@ -55,6 +55,8 @@ class Issue(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.issue = self.repo.get_issue(28)
+        # fetch lazy issue
+        self.issue.complete()
 
     def testAttributes(self):
         self.assertIsNone(self.issue.active_lock_reason)

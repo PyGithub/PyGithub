@@ -31,11 +31,7 @@ from . import Framework
 class GitCommitVerification(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.commit = (
-            self.g.get_repo("PyGithub/PyGithub", lazy=True)
-            .get_commit("801d64a4c5c0fcb63f695e0f6799117e76e5fe67")
-            .complete()
-        )
+        self.commit = self.g.get_repo("PyGithub/PyGithub").get_commit("801d64a4c5c0fcb63f695e0f6799117e76e5fe67")
 
     def testAttributes(self):
         verification = self.commit.commit.verification

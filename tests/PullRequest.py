@@ -68,17 +68,14 @@ class PullRequest(Framework.TestCase):
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(31)
 
-        marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
+        marco_repo = self.g.get_repo("MarcoFalke/PyGithub")
         self.pullIssue256Closed = marco_repo.get_pull(1).complete()
         self.pullIssue256Merged = marco_repo.get_pull(2).complete()
         self.pullIssue256Conflict = marco_repo.get_pull(3).complete()
         self.pullIssue256Uncached = marco_repo.get_pull(4).complete()
 
-        flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
-        self.pullMaintainerCanModify = flo_repo.get_pull(2)
-
         self.delete_restore_repo = self.g.get_repo("austinsasko/PyGithub")
-        self.delete_restore_pull = self.delete_restore_repo.get_pull(21)
+        self.delete_restore_pull = self.delete_restore_repo.get_pull(21).complete()
 
     def testAttributesIssue256(self):
         self.assertEqual(
@@ -353,18 +350,20 @@ class PullRequest(Framework.TestCase):
         self.pull.edit()
 
     def testEditWithAllArguments(self):
-        self.pullMaintainerCanModify.edit(
+        flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
+        pull = flo_repo.get_pull(2)
+        pull.edit(
             "Title edited by PyGithub",
             "Body edited by PyGithub",
             "open",
             "master",
             True,
         )
-        self.assertEqual(self.pullMaintainerCanModify.title, "Title edited by PyGithub")
-        self.assertEqual(self.pullMaintainerCanModify.body, "Body edited by PyGithub")
-        self.assertEqual(self.pullMaintainerCanModify.state, "open")
-        self.assertEqual(self.pullMaintainerCanModify.base.ref, "master")
-        self.assertTrue(self.pullMaintainerCanModify.maintainer_can_modify)
+        self.assertEqual(pull.title, "Title edited by PyGithub")
+        self.assertEqual(pull.body, "Body edited by PyGithub")
+        self.assertEqual(pull.state, "open")
+        self.assertEqual(pull.base.ref, "master")
+        self.assertTrue(pull.maintainer_can_modify)
 
     def testGetCommits(self):
         self.assertListKeyEqual(
@@ -533,7 +532,7 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.update_branch())
 
     def testConvertToDraft(self):
-        ready_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(1)
+        ready_pr = self.g.get_repo("didot/PyGithub").get_pull(1)
         self.assertFalse(ready_pr.draft)
         response = ready_pr.convert_to_draft()
         self.assertTrue(ready_pr.draft)
@@ -545,7 +544,7 @@ class PullRequest(Framework.TestCase):
         }
 
     def testMarkReadyForReview(self):
-        draft_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(2)
+        draft_pr = self.g.get_repo("didot/PyGithub").get_pull(2)
         self.assertTrue(draft_pr.draft)
         response = draft_pr.mark_ready_for_review()
         self.assertFalse(draft_pr.draft)
