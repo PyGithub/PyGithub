@@ -400,11 +400,11 @@ class Github:
         """
         :calls: `GET /users/{user} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
+        requester = self.__requester.withLazy(lazy)
         if is_undefined(login):
             url = "/user"
             # default is to return a lazy completable AuthenticatedUser
             # v3: given github.Github(lazy=True) is now default, remove completed=False here
-            requester = self.__requester if is_undefined(lazy) else self.__requester.withLazy(lazy)
             return github.AuthenticatedUser.AuthenticatedUser(
                 requester, url=url, completed=False if is_undefined(lazy) else None
             )
@@ -414,7 +414,6 @@ class Github:
             url = f"/users/{login}"
             # always return a completed NamedUser
             # v3: remove complete() here and make this as lazy as github.Github is
-            requester = self.__requester if is_undefined(lazy) else self.__requester.withLazy(lazy)
             user = github.NamedUser.NamedUser(requester, url=url)
             return user.complete() if is_undefined(lazy) else user
 
@@ -473,15 +472,21 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
+    # v3: remove lazy option
     def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
         """
+        if is_defined(lazy):
+            warnings.warn(
+                "Argument lazy is deprecated, please use Github(..., lazy=...).get_repo(...) instead",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
-        requester = self.__requester if is_undefined(lazy) else self.__requester.withLazy(lazy)
-        return github.Repository.Repository(requester, url=url)
+        return github.Repository.Repository(self.__requester.withLazy(lazy), url=url)
 
     def get_repos(
         self,

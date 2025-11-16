@@ -62,7 +62,7 @@ import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
 import github.Repository
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_optional, is_undefined
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -178,8 +178,6 @@ class Commit(CompletableGithubObject):
 
     @property
     def sha(self) -> str:
-        if is_undefined(self._sha) and is_defined(self._url):
-            self._sha = self._makeStringAttribute(self.url.split("/")[-1])
         self._completeIfNotSet(self._sha)
         return self._sha.value
 

@@ -106,6 +106,7 @@ from unittest import mock
 
 import github
 import github.Repository
+import github.Requester
 from github.GithubObject import is_undefined
 
 from . import Framework
@@ -2318,6 +2319,49 @@ class LazyRepository(Framework.TestCase):
         self.assertTrue(is_undefined(repo._name))
         self.assertTrue(is_undefined(repo._full_name))
         self.assertEqual(repo.url, "/repositories/42")
+
+    def testCreatFromUrl(self):
+        requester = mock.Mock(github.Requester.Requester, base_url="https://test.ing/api/", is_not_lazy=False)
+
+        for base_url in [requester.base_url[:-1], ""]:
+            repo = github.Repository.Repository(requester, url=f"{base_url}/repositories/12345")
+            self.assertEqual(repo.url, f"{base_url}/repositories/12345", msg=f"base url: '{base_url}'")
+            self.assertEqual(repo.id, 12345)
+            self.assertTrue(is_undefined(repo._full_name))
+            self.assertTrue(is_undefined(repo._name))
+
+            repo = github.Repository.Repository(requester, url=f"{base_url}/repos/login/name")
+            self.assertEqual(repo.url, f"{base_url}/repos/login/name", msg=f"base url: '{base_url}'")
+            self.assertTrue(is_undefined(repo._id))
+            self.assertEqual(repo.full_name, "login/name")
+            self.assertEqual(repo.name, "name")
+
+            repo = github.Repository.Repository(requester, url=f"{base_url}/repos/login/12345")
+            self.assertEqual(repo.url, f"{base_url}/repos/login/12345", msg=f"base url: '{base_url}'")
+            self.assertTrue(is_undefined(repo._id))
+            self.assertEqual(repo.full_name, "login/12345")
+            self.assertEqual(repo.name, "12345")
+
+    def testCreatFromAttributes(self):
+        requester = mock.Mock(github.Requester.Requester, base_url="https://test.ing/api/", is_not_lazy=False)
+
+        repo = github.Repository.Repository(requester, attributes={"id": 12345})
+        self.assertEqual(repo.url, "/repositories/12345")
+        self.assertEqual(repo.id, 12345)
+        self.assertTrue(is_undefined(repo._full_name))
+        self.assertTrue(is_undefined(repo._name))
+
+        repo = github.Repository.Repository(requester, attributes={"owner": {"login": "login"}, "name": "name"})
+        self.assertEqual(repo.url, "/repos/login/name")
+        self.assertTrue(is_undefined(repo._id))
+        self.assertEqual(repo.full_name, "login/name")
+        self.assertEqual(repo.name, "name")
+
+        repo = github.Repository.Repository(requester, attributes={"full_name": "full/name"})
+        self.assertEqual(repo.url, "/repos/full/name")
+        self.assertTrue(is_undefined(repo._id))
+        self.assertEqual(repo.full_name, "full/name")
+        self.assertEqual(repo.name, "name")
 
     def testGetIssues(self):
         lazy_repo = self.getLazyRepository()

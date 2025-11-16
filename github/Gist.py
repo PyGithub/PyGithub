@@ -260,7 +260,6 @@ class Gist(CompletableGithubObject):
 
         self._useAttributes(data)
         self._set_complete()
-        self._set_complete()
 
     def get_comment(self, id: int) -> GistComment:
         """

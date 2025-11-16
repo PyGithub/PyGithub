@@ -2020,9 +2020,9 @@ class Repository(CompletableGithubObject):
         }
         self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
         return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={"name": secret_name, "url": url},
+            self._requester,
+            url=url,
+            attributes={"name": secret_name},
             completed=False,
         )
 
@@ -2069,13 +2069,15 @@ class Repository(CompletableGithubObject):
             "value": value,
         }
         self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
+
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/actions/variables/{quoted_variable_name}"
         return github.Variable.Variable(
             self._requester,
-            headers={},
+            url=url,
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": f"{self.url}/actions/variables/{variable_name}",
             },
             completed=False,
         )
@@ -4593,7 +4595,7 @@ class Repository(CompletableGithubObject):
                 base_url = self.requester.base_url
                 if base_url.endswith("/"):
                     base_url = base_url[:-1]
-                url = url[len(base_url) :]
+                url = url.removeprefix(base_url)
             if url.startswith("/repos/") and url.count("/") == 3:
                 self._full_name = self._makeStringAttribute(url.split("/", maxsplit=2)[-1])
         elif "owner" in attributes and "login" in attributes["owner"] and "name" in attributes:
@@ -4634,7 +4636,7 @@ class Repository(CompletableGithubObject):
                 base_url = self.requester.base_url
                 if base_url.endswith("/"):
                     base_url = base_url[:-1]
-                url = url[len(base_url) :]
+                url = url.removeprefix(base_url)
             if url.startswith("/repositories/") and url.count("/") == 2:
                 id = url.split("/", maxsplit=2)[-1]
                 if id.isnumeric():
@@ -4677,7 +4679,7 @@ class Repository(CompletableGithubObject):
                 base_url = self.requester.base_url
                 if base_url.endswith("/"):
                     base_url = base_url[:-1]
-                url = url[len(base_url) :]
+                url = url.removeprefix(base_url)
             if url.startswith("/repos/") and url.count("/") == 3:
                 self._name = self._makeStringAttribute(attributes["url"].split("/")[-1])
         elif "full_name" in attributes and "/" in attributes["full_name"]:
@@ -4765,6 +4767,8 @@ class Repository(CompletableGithubObject):
             self._url = self._makeStringAttribute(f"/repos/{login}/{name}")
         elif "full_name" in attributes:
             self._url = self._makeStringAttribute(f"/repos/{attributes['full_name']}")
+        elif "id" in attributes:
+            self._url = self._makeStringAttribute(f"/repositories/{attributes['id']}")
         if "use_squash_pr_title_as_default" in attributes:  # pragma no branch
             self._use_squash_pr_title_as_default = self._makeBoolAttribute(attributes["use_squash_pr_title_as_default"])
         if "visibility" in attributes:  # pragma no branch

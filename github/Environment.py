@@ -174,8 +174,8 @@ class Environment(CompletableGithubObject):
         self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
         return github.Secret.Secret(
             self._requester,
-            headers={},
-            attributes={"name": secret_name, "url": url},
+            url=url,
+            attributes={"name": secret_name},
             completed=False,
         )
 
@@ -211,14 +211,15 @@ class Environment(CompletableGithubObject):
             "value": value,
         }
         self._requester.requestJsonAndCheck("POST", f"{self.url}/variables", input=post_parameters)
-        variable_name = urllib.parse.quote(variable_name, safe="")
-        url = f"{self.url}/variables/{variable_name}"
+
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/variables/{quoted_variable_name}"
         return github.Variable.Variable(
             self._requester,
+            url=url,
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": url,
             },
             completed=False,
         )

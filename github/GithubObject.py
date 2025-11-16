@@ -621,7 +621,7 @@ class CompletableGithubObject(GithubObject, ABC):
         self._storeAndUseAttributes(headers, data)
         self._set_complete()
 
-    def _set_complete(self):
+    def _set_complete(self) -> None:
         self.__completed = True
 
     def update(self, additional_headers: dict[str, Any] | None = None) -> bool:

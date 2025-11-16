@@ -922,12 +922,12 @@ class Organization(CompletableGithubObject):
         self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
 
         return github.OrganizationSecret.OrganizationSecret(
-            requester=self._requester,
+            self._requester,
+            url=url,
             attributes={
                 "name": secret_name,
                 "visibility": visibility,
                 "selected_repositories_url": f"{url}/repositories",
-                "url": url,
             },
             completed=False,
         )
