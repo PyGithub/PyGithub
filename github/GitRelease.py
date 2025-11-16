@@ -112,6 +112,7 @@ class GitRelease(CompletableGithubObject):
         self._tag_name: Attribute[str] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._target_commitish: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._upload_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
@@ -244,6 +245,11 @@ class GitRelease(CompletableGithubObject):
     def title(self) -> str:
         # alias for name
         return self.name
+
+    @property
+    def updated_at(self) -> datetime:
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def upload_url(self) -> str:
@@ -443,6 +449,8 @@ class GitRelease(CompletableGithubObject):
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "target_commitish" in attributes:
             self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "upload_url" in attributes:
             self._upload_url = self._makeStringAttribute(attributes["upload_url"])
         if "url" in attributes:
