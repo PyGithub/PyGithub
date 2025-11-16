@@ -522,8 +522,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
         """
         assert isinstance(name, str), name
-        headers, data = self._requester.requestJsonAndCheck("GET", f"/repos/{self.login}/{name}")
-        return github.Repository.Repository(self._requester, headers, data, completed=True)
+        url = f"/repos/{self.login}/{name}"
+        return github.Repository.Repository(self._requester, url=url)
 
     def get_repos(
         self,
@@ -593,7 +593,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(org, str) or isinstance(org, github.Organization.Organization), org
         if isinstance(org, github.Organization.Organization):
             org = org.login  # type: ignore
-        org = urllib.parse.quote(org)
+        org = urllib.parse.quote(org, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"/orgs/{org}/memberships/{self.login}")
         return github.Membership.Membership(self._requester, headers, data, completed=True)
 
@@ -640,6 +640,12 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            # url could also reference user id (int): /users/login
+            # or some derived class like /orgs/{org}/invitations/{invitation_id}
+            if id.isnumeric() and attributes["url"].endswith(f"/user/{id}"):
+                self._id = self._makeIntAttribute(int(id))
         if "invitation_teams_url" in attributes:  # pragma no branch
             self._invitation_teams_url = self._makeStringAttribute(attributes["invitation_teams_url"])
         if "inviter" in attributes:  # pragma no branch
@@ -650,6 +656,12 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        elif "url" in attributes and "/" in attributes["url"]:
+            login = attributes["url"].split("/")[-1]
+            # url could also reference user id (int): /user/id
+            # or some derived class like /orgs/{org}/invitations/{invitation_id}
+            if attributes["url"].endswith(f"/users/{login}"):
+                self._login = self._makeStringAttribute(login)
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch
@@ -704,6 +716,12 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        elif type(self) in (NamedUser, NamedUserSearchResult):
+            # construct url only for NamedUser and NamedUserSearchResult (no OrganizationInvitation)
+            if "login" in attributes and attributes["login"]:
+                self._url = self._makeStringAttribute(f"/users/{attributes['login']}")
+            elif "id" in attributes and attributes["id"]:
+                self._url = self._makeStringAttribute(f"/user/{attributes['id']}")
         if "user_view_type" in attributes:  # pragma no branch
             self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])
 

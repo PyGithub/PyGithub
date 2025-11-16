@@ -100,6 +100,12 @@ class IssueComment(Framework.TestCase):
             },
         )
 
+    def testLazyAttributes(self):
+        comment = self.g.withLazy(True).get_repo("lazy/repo").get_issue(42).get_comment(24)
+        self.assertEqual(str(comment), "IssueComment(user=None, id=24)")
+        self.assertEqual(comment.id, 24)
+        self.assertEqual(comment.url, "/repos/lazy/repo/issues/comments/24")
+
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")

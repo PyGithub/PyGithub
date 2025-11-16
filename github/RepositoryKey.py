@@ -146,6 +146,10 @@ class RepositoryKey(CompletableGithubObject):
             self._enabled = self._makeBoolAttribute(attributes["enabled"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "key" in attributes:  # pragma no branch
             self._key = self._makeStringAttribute(attributes["key"])
         if "last_used" in attributes:  # pragma no branch

@@ -74,6 +74,12 @@ class Environment(Framework.TestCase):
         self.assertTrue(self.environment.deployment_branch_policy.protected_branches)
         self.assertFalse(self.environment.deployment_branch_policy.custom_branch_policies)
 
+    def testLazyAttributes(self):
+        env = self.g.withLazy(True).get_repo("lazy/repo").get_environment("the env")
+        self.assertEqual(str(env), 'Environment(name="the env")')
+        self.assertEqual(env.name, "the env")
+        self.assertEqual(env.url, "/repos/lazy/repo/environments/the%20env")
+
     def testProtectionRules(self):
         protection_rules = self.environment.protection_rules
         self.assertEqual(len(protection_rules), 3)

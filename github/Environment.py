@@ -42,6 +42,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -172,14 +173,13 @@ class Environment(CompletableGithubObject):
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/secrets/{secret_name}", input=put_parameters)
+        quoted_secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/secrets/{quoted_secret_name}"
+        self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
         return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={
-                "name": secret_name,
-                "url": f"{self.url}/secrets/{secret_name}",
-            },
+            self._requester,
+            url=url,
+            attributes={"name": secret_name},
             completed=False,
         )
 
@@ -204,12 +204,8 @@ class Environment(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
-        return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/secrets/{secret_name}"},
-            completed=False,
-        )
+        secret_name = urllib.parse.quote(secret_name, safe="")
+        return github.Secret.Secret(self._requester, url=f"{self.url}/secrets/{secret_name}")
 
     def create_variable(self, variable_name: str, value: str) -> Variable:
         """
@@ -222,13 +218,15 @@ class Environment(CompletableGithubObject):
             "value": value,
         }
         self._requester.requestJsonAndCheck("POST", f"{self.url}/variables", input=post_parameters)
+
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/variables/{quoted_variable_name}"
         return github.Variable.Variable(
             self._requester,
-            headers={},
+            url=url,
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": f"{self.url}/variables/{variable_name}",
             },
             completed=False,
         )
@@ -253,12 +251,9 @@ class Environment(CompletableGithubObject):
         :rtype: Variable
         """
         assert isinstance(variable_name, str), variable_name
-        return github.Variable.Variable(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/variables/{variable_name}"},
-            completed=False,
-        )
+        variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/variables/{variable_name}"
+        return github.Variable.Variable(self._requester, url=url)
 
     def delete_secret(self, secret_name: str) -> bool:
         """
@@ -296,6 +291,10 @@ class Environment(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "protection_rules" in attributes:  # pragma no branch

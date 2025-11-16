@@ -45,6 +45,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -257,15 +258,17 @@ class Gist(CompletableGithubObject):
         if is_defined(files):
             post_parameters["files"] = {key: None if value is None else value._identity for key, value in files.items()}
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
+
         self._useAttributes(data)
+        self._set_complete()
 
     def get_comment(self, id: int) -> GistComment:
         """
         :calls: `GET /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/comments/{id}")
-        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
+        url = f"{self.url}/comments/{id}"
+        return github.GistComment.GistComment(self._requester, url=url)
 
     def get_comments(self) -> PaginatedList[GistComment]:
         """
@@ -330,6 +333,10 @@ class Gist(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_id = attributes["url"].split("/")[-1]
+            id = urllib.parse.unquote(quoted_id)
+            self._id = self._makeStringAttribute(id)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch

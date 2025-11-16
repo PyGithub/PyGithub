@@ -80,6 +80,12 @@ class RepositoryKey(Framework.TestCase):
             datetime(2024, 4, 13, 10, 0, 21, tzinfo=timezone.utc),
         )
 
+    def testLazyAttributes(self):
+        issue = self.g.withLazy(True).get_repo("lazy/repo").get_key(42)
+        self.assertEqual(str(issue), "RepositoryKey(title=None, id=42)")
+        self.assertEqual(issue.id, 42)
+        self.assertEqual(issue.url, "/repos/lazy/repo/keys/42")
+
     def testYetUnusedKey(self):
         self.assertEqual(self.yet_unused_key.id, 98051552)
         self.assertEqual(

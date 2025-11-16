@@ -141,6 +141,7 @@ class Label(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview},
         )
         self._useAttributes(data)
+        self._set_complete()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "color" in attributes:  # pragma no branch
@@ -153,6 +154,10 @@ class Label(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "url" in attributes:  # pragma no branch

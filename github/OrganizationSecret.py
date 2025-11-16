@@ -27,6 +27,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import Any
 
@@ -140,6 +141,10 @@ class OrganizationSecret(Secret):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
         if "selected_repositories_url" in attributes:
             self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
         if "updated_at" in attributes:

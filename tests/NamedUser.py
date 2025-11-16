@@ -42,6 +42,11 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from unittest import mock
+
+import github.NamedUser
+import github.Requester
+from github.GithubObject import is_undefined
 
 from . import Framework
 
@@ -108,6 +113,45 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(repr(self.user), 'NamedUser(login="jacquev6")')
         self.assertEqual(repr(self.user.plan), "None")
         self.assertEqual(self.user.user_view_type, "public")
+
+    def testLazyAttributes(self):
+        user = self.g.withLazy(True).get_user("lazyUser", lazy=True)
+        self.assertEqual(str(user), 'NamedUser(login="lazyUser")')
+        self.assertEqual(user._identity, "lazyUser")
+        self.assertEqual(user.login, "lazyUser")
+        self.assertEqual(user.url, "/users/lazyUser")
+
+    def testCreatFromUrl(self):
+        requester = mock.Mock(github.Requester.Requester, base_url="https://test.ing/api/", is_not_lazy=False)
+
+        for base_url in [requester.base_url[:-1], ""]:
+            user = github.NamedUser.NamedUser(requester, url=f"{base_url}/user/12345")
+            self.assertEqual(user.url, f"{base_url}/user/12345", msg=f"base url: '{base_url}'")
+            self.assertEqual(user.id, 12345)
+            self.assertTrue(is_undefined(user._login))
+
+            user = github.NamedUser.NamedUser(requester, url=f"{base_url}/users/login")
+            self.assertEqual(user.url, f"{base_url}/users/login", msg=f"base url: '{base_url}'")
+            self.assertTrue(is_undefined(user._id))
+            self.assertEqual(user.login, "login")
+
+            user = github.NamedUser.NamedUser(requester, url=f"{base_url}/users/12345")
+            self.assertEqual(user.url, f"{base_url}/users/12345", msg=f"base url: '{base_url}'")
+            self.assertTrue(is_undefined(user._id))
+            self.assertEqual(user.login, "12345")
+
+    def testCreatFromAttributes(self):
+        requester = mock.Mock(github.Requester.Requester, base_url="https://test.ing/api/", is_not_lazy=False)
+
+        user = github.NamedUser.NamedUser(requester, attributes={"id": 12345})
+        self.assertEqual(user.url, "/user/12345")
+        self.assertEqual(user.id, 12345)
+        self.assertTrue(is_undefined(user._name))
+
+        user = github.NamedUser.NamedUser(requester, attributes={"login": "login"})
+        self.assertEqual(user.url, "/users/login")
+        self.assertTrue(is_undefined(user._id))
+        self.assertEqual(user.login, "login")
 
     def testAttributesOfOtherUser(self):
         self.user = self.g.get_user("nvie")

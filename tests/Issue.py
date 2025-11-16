@@ -137,6 +137,13 @@ class Issue(Framework.TestCase):
             },
         )
 
+    def testLazyAttributes(self):
+        issue = self.g.withLazy(True).get_repo("lazy/repo").get_issue(42)
+        self.assertEqual(str(issue), "Issue(title=None, number=42)")
+        self.assertEqual(issue._identity, 42)
+        self.assertEqual(issue.number, 42)
+        self.assertEqual(issue.url, "/repos/lazy/repo/issues/42")
+
     def testEditWithoutParameters(self):
         self.issue.edit()
 
