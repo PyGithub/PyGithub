@@ -1345,6 +1345,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         return node
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        if self.class_name != self.current_class_name:
+            return updated_node
+
         def create_statement(prop: Property, self_attribute: bool) -> cst.SimpleStatementLine:
             # turn a list of GithubClasses into the first element of the list
             if (
