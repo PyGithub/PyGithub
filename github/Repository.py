@@ -461,9 +461,9 @@ class Repository(CompletableGithubObject):
         self._web_commit_signoff_required: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
-        if is_undefined(self._full_name) and is_defined(self._id):
-            return self.get__repr__({"id": self._id.value})
-        return self.get__repr__({"full_name": self._full_name.value})
+        if is_defined(self._full_name) or is_undefined(self._id):
+            return self.get__repr__({"full_name": self._full_name.value})
+        return self.get__repr__({"id": self._id.value})
 
     @property
     def _identity(self) -> str:
