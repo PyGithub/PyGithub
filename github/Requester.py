@@ -107,7 +107,7 @@ from urllib3 import Retry
 import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
-from github.GithubObject import as_rest_api_attributes
+from github.GithubObject import Opt, as_rest_api_attributes, is_undefined
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -580,15 +580,18 @@ class Requester:
     def is_not_lazy(self) -> bool:
         return not self.__lazy
 
-    def withLazy(self, lazy: bool) -> Requester:
+    def withLazy(self, lazy: Opt[bool]) -> Requester:
         """
         Create a new requester instance with identical configuration but the given lazy setting.
 
-        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
-            from those, and so on
-        :return: new Requester instance
+        :param lazy: if True, completable objects created from this instance are lazy, as well as completable objects
+            created from those, and so on.
+        :return: new Requester instance if is_defined(lazy) and lazy != self.is_lazy, this instance otherwise
 
         """
+        if is_undefined(lazy) or self.is_lazy == lazy:
+            return self
+
         kwargs = self.kwargs
         kwargs.update(lazy=lazy)
         return Requester(**kwargs)

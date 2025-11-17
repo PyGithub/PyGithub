@@ -123,7 +123,7 @@ import github.NamedUser
 import github.Topic
 from github import Consts
 from github.GithubIntegration import GithubIntegration
-from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined
+from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined, is_undefined
 from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.HookDescription import HookDescription
@@ -395,22 +395,27 @@ class Github:
 
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
-    def get_user(self, login: Opt[str] = NotSet) -> NamedUser | AuthenticatedUser:
+    # v3: remove lazy argument, laziness is fully controlled via requester
+    def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
         """
         :calls: `GET /users/{username} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
-        if login is NotSet:
+        requester = self.__requester.withLazy(lazy)
+        if is_undefined(login):
             url = "/user"
-            # always return a lazy completable AuthenticatedUser
+            # default is to return a lazy completable AuthenticatedUser
             # v3: given github.Github(lazy=True) is now default, remove completed=False here
-            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+            return github.AuthenticatedUser.AuthenticatedUser(
+                requester, url=url, completed=False if is_undefined(lazy) else None
+            )
         else:
             assert isinstance(login, str), login
             login = urllib.parse.quote(login)
             url = f"/users/{login}"
             # always return a completed NamedUser
             # v3: remove complete() here and make this as lazy as github.Github is
-            return github.NamedUser.NamedUser(self.__requester, url=url).complete()
+            user = github.NamedUser.NamedUser(requester, url=url)
+            return user.complete() if is_undefined(lazy) else user
 
     def get_user_by_id(self, user_id: int) -> NamedUser:
         """
@@ -419,8 +424,8 @@ class Github:
         :rtype: :class:`github.NamedUser.NamedUser`
         """
         assert isinstance(user_id, int), user_id
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/user/{user_id}")
-        return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
+        url = f"/user/{user_id}"
+        return github.NamedUser.NamedUser(self.__requester, url=url)
 
     def get_users(self, since: Opt[int] = NotSet) -> PaginatedList[NamedUser]:
         """
@@ -437,9 +442,9 @@ class Github:
         :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
         assert isinstance(org, str), org
-        org = urllib.parse.quote(org)
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{org}")
-        return github.Organization.Organization(self.__requester, headers, data, completed=True)
+        org = urllib.parse.quote(org, safe="")
+        url = f"/orgs/{org}"
+        return github.Organization.Organization(self.__requester, url=url)
 
     def get_organizations(self, since: Opt[int] = NotSet) -> PaginatedList[Organization]:
         """
@@ -467,17 +472,21 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
-    def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
+    # v3: remove lazy option
+    def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{repository_id} <https://docs.github.com/en/rest/reference/repos>`_
         """
+        if is_defined(lazy):
+            warnings.warn(
+                "Argument lazy is deprecated, please use Github(..., lazy=...).get_repo(...) instead",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
-        if lazy:
-            return github.Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
-        headers, data = self.__requester.requestJsonAndCheck("GET", url)
-        return github.Repository.Repository(self.__requester, headers, data, completed=True)
+        return github.Repository.Repository(self.__requester.withLazy(lazy), url=url)
 
     def get_repos(
         self,
@@ -512,12 +521,8 @@ class Github:
         """
         :calls: `GET /projects/{project_id} <https://docs.github.com/en/rest/reference/projects#get-a-project>`_
         """
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            f"/projects/{id:d}",
-            headers={"Accept": Consts.mediaTypeProjectsPreview},
-        )
-        return github.Project.Project(self.__requester, headers, data, completed=True)
+        url = f"/projects/{id:d}"
+        return github.Project.Project(self.__requester, url=url, accept=Consts.mediaTypeProjectsPreview)
 
     def get_project_column(self, id: int) -> ProjectColumn:
         """
@@ -535,8 +540,8 @@ class Github:
         :calls: `GET /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert isinstance(id, str), id
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/gists/{id}")
-        return github.Gist.Gist(self.__requester, headers, data, completed=True)
+        url = f"/gists/{id}"
+        return github.Gist.Gist(self.__requester, url=url)
 
     def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
         """
@@ -916,7 +921,7 @@ class Github:
         :calls: `GET /hooks/{name} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         assert isinstance(name, str), name
-        name = urllib.parse.quote(name)
+        name = urllib.parse.quote(name, safe="")
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
         return HookDescription(self.__requester, headers, attributes)
 
@@ -1043,5 +1048,5 @@ class Github:
         else:
             assert isinstance(slug, str), slug
             # with a slug given, we can lazily load the GithubApp
-            slug = urllib.parse.quote(slug)
+            slug = urllib.parse.quote(slug, safe="")
             return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)

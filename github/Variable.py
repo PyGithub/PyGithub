@@ -27,6 +27,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import Any
 
@@ -139,6 +140,10 @@ class Variable(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:

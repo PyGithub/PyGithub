@@ -69,10 +69,10 @@ class PullRequest(Framework.TestCase):
         self.pull = self.repo.get_pull(31)
 
         marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
-        self.pullIssue256Closed = marco_repo.get_pull(1)
-        self.pullIssue256Merged = marco_repo.get_pull(2)
-        self.pullIssue256Conflict = marco_repo.get_pull(3)
-        self.pullIssue256Uncached = marco_repo.get_pull(4)
+        self.pullIssue256Closed = marco_repo.get_pull(1).complete()
+        self.pullIssue256Merged = marco_repo.get_pull(2).complete()
+        self.pullIssue256Conflict = marco_repo.get_pull(3).complete()
+        self.pullIssue256Uncached = marco_repo.get_pull(4).complete()
 
         flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
         self.pullMaintainerCanModify = flo_repo.get_pull(2)
@@ -217,6 +217,12 @@ class PullRequest(Framework.TestCase):
             'PullRequestPart(sha="ed866fc43833802ab553e5ff8581c81bb00dd433")',
         )
         self.assertTrue(self.pullIssue256Conflict.rebaseable)
+
+    def testLazyAttributes(self):
+        pull = self.g.withLazy(True).get_repo("lazy/repo").get_pull(42)
+        self.assertEqual(str(pull), "PullRequest(title=None, number=42)")
+        self.assertEqual(pull.number, 42)
+        self.assertEqual(pull.url, "/repos/lazy/repo/pulls/42")
 
     def testCreateComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")

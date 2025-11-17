@@ -73,5 +73,11 @@ class Download(Framework.TestCase):
         )
         self.assertEqual(repr(self.download), "Download(id=242550)")
 
+    def testLazyAttributes(self):
+        download = self.g.withLazy(True).get_repo("lazy/repo").get_download(42)
+        self.assertEqual(str(download), "Download(id=42)")
+        self.assertEqual(download.id, 42)
+        self.assertEqual(download.url, "/repos/lazy/repo/downloads/42")
+
     def testDelete(self):
         self.download.delete()

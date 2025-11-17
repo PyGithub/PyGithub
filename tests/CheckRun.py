@@ -72,6 +72,12 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(self.check_run.url, "https://api.github.com/repos/PyGithub/PyGithub/check-runs/34942661139")
         self.assertEqual(repr(self.check_run), 'CheckRun(id=34942661139, conclusion="success")')
 
+    def testLazyAttributes(self):
+        run = self.g.withLazy(True).get_repo("lazy/repo").get_check_run(42)
+        self.assertEqual(str(run), "CheckRun(id=42, conclusion=None)")
+        self.assertEqual(run.id, 42)
+        self.assertEqual(run.url, "/repos/lazy/repo/check-runs/42")
+
     def testCheckRunOutputAttributes(self):
         check_run_output = self.repo.get_check_run(1039891917).output
         self.assertEqual(check_run_output.title, "test (Python 3.6)")

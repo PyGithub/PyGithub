@@ -98,6 +98,13 @@ class Commit(Framework.TestCase):
         self.assertEqual(self.commit.commit.tree.sha, "4c6bd50994f0f9823f898b1c6c964ad7d4fa11ab")
         self.assertEqual(repr(self.commit), 'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")')
 
+    def testLazyAttributes(self):
+        commit = self.g.withLazy(True).get_repo("lazy/repo").get_commit("sha")
+        self.assertEqual(str(commit), 'Commit(sha="sha")')
+        self.assertEqual(commit._identity, "sha")
+        self.assertEqual(commit.sha, "sha")
+        self.assertEqual(commit.url, "/repos/lazy/repo/commits/sha")
+
     def testGetBranchesWhereHead(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
         commit = repo.get_commit("0791cc7b1a706ab5d7c607ddff35de4d486ba3e9")

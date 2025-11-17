@@ -117,7 +117,7 @@ class PublicKey(CompletableGithubObject):
         return self._url.value
 
     def encrypt(self, unencrypted_value: str) -> str:
-        return encrypt(self._key.value, unencrypted_value)
+        return encrypt(self.key, unencrypted_value)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch

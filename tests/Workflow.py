@@ -82,6 +82,18 @@ class Workflow(Framework.TestCase):
             "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg",
         )
 
+    def testLazyAttributes(self):
+        workflow = self.g.withLazy(True).get_repo("PyGithub/PyGithub").get_workflow("check.yml")
+        self.assertEqual(
+            str(workflow), 'Workflow(url="/repos/PyGithub/PyGithub/actions/workflows/check.yml", name=None)'
+        )
+        self.assertEqual(workflow.url, "/repos/PyGithub/PyGithub/actions/workflows/check.yml")
+
+        workflow = self.g.withLazy(True).get_repo("PyGithub/PyGithub").get_workflow(42)
+        self.assertEqual(str(workflow), 'Workflow(url="/repos/PyGithub/PyGithub/actions/workflows/42", name=None)')
+        self.assertEqual(workflow.id, 42)
+        self.assertEqual(workflow.url, "/repos/PyGithub/PyGithub/actions/workflows/42")
+
     def testGetRunsWithNoArguments(self):
         self.assertListKeyEqual(
             self.workflow.get_runs(),

@@ -146,12 +146,10 @@ class Notification(CompletableGithubObject):
         )
 
     def get_pull_request(self) -> github.PullRequest.PullRequest:
-        headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+        return github.PullRequest.PullRequest(self._requester, url=self.subject.url)
 
     def get_issue(self) -> github.Issue.Issue:
-        headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        return github.Issue.Issue(self._requester, url=self.subject.url)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch

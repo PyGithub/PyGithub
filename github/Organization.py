@@ -918,18 +918,17 @@ class Organization(CompletableGithubObject):
             if secret_type == "dependabot":
                 put_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]
 
-        self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
-        )
+        quoted_secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/{secret_type}/secrets/{quoted_secret_name}"
+        self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
 
         return github.OrganizationSecret.OrganizationSecret(
-            requester=self._requester,
-            headers={},
+            self._requester,
+            url=url,
             attributes={
                 "name": secret_name,
                 "visibility": visibility,
-                "selected_repositories_url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}/repositories",
-                "url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}",
+                "selected_repositories_url": f"{url}/repositories",
             },
             completed=False,
         )
@@ -962,12 +961,9 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(secret_name, str), secret_name
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
-        return github.OrganizationSecret.OrganizationSecret(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}"},
-            completed=False,
-        )
+        secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/{secret_type}/secrets/{secret_name}"
+        return github.OrganizationSecret.OrganizationSecret(self._requester, url=url)
 
     def create_team(
         self,
@@ -1084,12 +1080,9 @@ class Organization(CompletableGithubObject):
         :rtype: github.OrganizationVariable.OrganizationVariable
         """
         assert isinstance(variable_name, str), variable_name
-        return github.OrganizationVariable.OrganizationVariable(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}"},
-            completed=False,
-        )
+        variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/actions/variables/{variable_name}"
+        return github.OrganizationVariable.OrganizationVariable(self._requester, url=url)
 
     def delete_hook(self, id: int) -> None:
         """
@@ -1134,6 +1127,7 @@ class Organization(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def edit_hook(
         self,
@@ -1170,8 +1164,8 @@ class Organization(CompletableGithubObject):
         :calls: `GET /orgs/{org}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/hooks/{id}")
-        return github.Hook.Hook(self._requester, headers, data, completed=True)
+        url = f"{self.url}/hooks/{id}"
+        return github.Hook.Hook(self._requester, url=url)
 
     def get_hooks(self) -> PaginatedList[Hook]:
         """
@@ -1348,13 +1342,9 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
-        name = urllib.parse.quote(name)
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            f"/repos/{self.login}/{name}",
-            headers={"Accept": Consts.repoVisibilityPreview},
-        )
-        return github.Repository.Repository(self._requester, headers, data, completed=True)
+        name = urllib.parse.quote(name, safe="")
+        url = f"/repos/{self.login}/{name}"
+        return github.Repository.Repository(self._requester, url=url, accept=Consts.repoVisibilityPreview)
 
     def get_repos(
         self,
@@ -1387,17 +1377,17 @@ class Organization(CompletableGithubObject):
         :calls: `GET /teams/{team_id} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"/teams/{id}")
-        return github.Team.Team(self._requester, headers, data, completed=True)
+        url = f"/teams/{id}"
+        return github.Team.Team(self._requester, url=url)
 
     def get_team_by_slug(self, slug: str) -> Team:
         """
         :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
         """
         assert isinstance(slug, str), slug
-        slug = urllib.parse.quote(slug)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/teams/{slug}")
-        return github.Team.Team(self._requester, headers, data, completed=True)
+        slug = urllib.parse.quote(slug, safe="")
+        url = f"{self.url}/teams/{slug}"
+        return github.Team.Team(self._requester, url=url)
 
     def get_teams(self) -> PaginatedList[Team]:
         """
@@ -2157,6 +2147,8 @@ class Organization(CompletableGithubObject):
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        elif "url" in attributes:
+            self._login = self._makeStringAttribute(attributes["url"].split("/")[-1])
         if "members_allowed_repository_creation_type" in attributes:  # pragma no branch
             self._members_allowed_repository_creation_type = self._makeStringAttribute(
                 attributes["members_allowed_repository_creation_type"]

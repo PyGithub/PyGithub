@@ -451,8 +451,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number} <https://docs.github.com/en/rest/reference/issues>`_
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        return github.Issue.Issue(self._requester, url=self.issue_url)
 
     def create_comment(self, body: str, commit: github.Commit.Commit, path: str, position: int) -> PullRequestComment:
         """
@@ -632,6 +631,7 @@ class PullRequest(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_comment(self, id: int) -> PullRequestComment:
         """
@@ -644,8 +644,8 @@ class PullRequest(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.url)}/comments/{id}")
-        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
+        url = f"{self._parentUrl(self.url)}/comments/{id}"
+        return github.PullRequestComment.PullRequestComment(self._requester, url=url)
 
     def get_comments(
         self,
@@ -721,8 +721,8 @@ class PullRequest(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.issue_url)}/comments/{id}")
-        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+        url = f"{self._parentUrl(self.issue_url)}/comments/{id}"
+        return github.IssueComment.IssueComment(self._requester, url=url)
 
     def get_issue_comments(self) -> PaginatedList[IssueComment]:
         """
@@ -1133,6 +1133,10 @@ class PullRequest(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        elif "url" in attributes:
+            number = attributes["url"].split("/")[-1]
+            if number.isnumeric():
+                self._number = self._makeIntAttribute(int(number))
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "rebaseable" in attributes:  # pragma no branch

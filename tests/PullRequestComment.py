@@ -101,6 +101,12 @@ class PullRequestComment(Framework.TestCase):
         self.assertEqual(self.comment.html_url, "https://github.com/PyGithub/PyGithub/pull/31#discussion_r1580134")
         self.assertEqual(repr(self.comment), 'PullRequestComment(user=NamedUser(login="jacquev6"), id=1580134)')
 
+    def testLazyAttributes(self):
+        issue = self.g.withLazy(True).get_repo("lazy/repo").get_pull(42).get_comment(24)
+        self.assertEqual(str(issue), "PullRequestComment(user=None, id=24)")
+        self.assertEqual(issue.id, 24)
+        self.assertEqual(issue.url, "/repos/lazy/repo/pulls/comments/24")
+
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")

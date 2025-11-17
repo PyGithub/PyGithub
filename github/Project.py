@@ -212,6 +212,7 @@ class Project(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         self._useAttributes(data)
+        self._set_complete()
 
     def get_columns(self) -> PaginatedList[github.ProjectColumn.ProjectColumn]:
         """
@@ -257,6 +258,10 @@ class Project(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch

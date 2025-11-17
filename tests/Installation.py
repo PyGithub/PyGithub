@@ -116,8 +116,8 @@ class Installation(Framework.BasicTestCase):
             # assert kwargs consists of ALL requester constructor arguments
             self.assertEqual(kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys())
 
-            self.integration = github.GithubIntegration(**kwargs)
-            installations = list(self.integration.get_installations())
+            integration = github.GithubIntegration(**kwargs)
+            installations = list(integration.get_installations())
             installation = installations[0]
 
             g = installation.get_github_for_installation()
@@ -130,6 +130,7 @@ class Installation(Framework.BasicTestCase):
             self.assertDictEqual(kwargs, actual)
 
             repo = g.get_repo("PyGithub/PyGithub")
+            self.assertEqual(repo.id, 3544490)
             self.assertEqual(repo.full_name, "PyGithub/PyGithub")
 
     def testRequester(self):
