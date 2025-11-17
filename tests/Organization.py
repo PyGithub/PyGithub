@@ -881,3 +881,24 @@ class Organization(Framework.TestCase):
         self.assertEqual(status.status, "enforced")
         self.assertIsNotNone(status.repository)
         self.assertEqual(status.repository.full_name, "BeaverSoftware/truth")
+
+    def testGetCredentialAuthorizations(self):
+        authorizations = self.org.get_credential_authorizations()
+        auth_list = list(authorizations)
+        self.assertEqual(len(auth_list), 1)
+        self.assertEqual(auth_list[0].credential_type, "personal access token")
+        self.assertEqual(auth_list[0].login, "octocat")
+        self.assertEqual(auth_list[0].credential_id, 12345)
+        self.assertEqual(auth_list[0].credential_authorized_at, datetime(2025, 9, 1, 9, 0, 0, tzinfo=timezone.utc))
+        self.assertEqual(auth_list[0].credential_accessed_at, datetime(2025, 10, 7, 6, 0, 0, tzinfo=timezone.utc))
+        self.assertEqual(auth_list[0].authorized_credential_id, 12341234)
+        self.assertEqual(auth_list[0].authorized_credential_note, "test")
+        self.assertEqual(
+            auth_list[0].authorized_credential_expires_at, datetime(2026, 9, 1, 22, 0, 0, tzinfo=timezone.utc)
+        )
+        self.assertEqual(auth_list[0].token_last_eight, "aa11bb22")
+        self.assertEqual(auth_list[0].scopes, ["repo:org"])
+
+    def testRemoveCredentialAuthorization(self):
+        result = self.org.remove_credential_authorization(12345)
+        self.assertTrue(result)

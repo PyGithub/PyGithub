@@ -92,6 +92,7 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.AuthorizationOrganization
 import github.CodeSecurityConfig
 import github.CodeSecurityConfigRepository
 import github.Copilot
@@ -126,6 +127,7 @@ from github.GithubObject import (
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.AuthorizationOrganization import AuthorizationOrganization
     from github.CodeSecurityConfig import CodeSecurityConfig
     from github.CodeSecurityConfigRepository import CodeSecurityConfigRepository
     from github.Copilot import Copilot
@@ -672,6 +674,35 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/public_members/{public_member._identity}"
         )
+
+    def get_credential_authorizations(self) -> PaginatedList[AuthorizationOrganization]:
+        """
+        :calls: `GET /orgs/{org}/credential-authorizations <https://docs.github.com/en/enterprise-cloud@latest/rest/orgs/orgs#list-saml-sso-authorizations-for-an-organization>`_
+        :rtype: :class:`PaginatedList` of :class:`github.AuthorizationOrganization.AuthorizationOrganization`
+
+        List SAML SSO authorizations for an organization.
+        """
+        return PaginatedList(
+            github.AuthorizationOrganization.AuthorizationOrganization,
+            self._requester,
+            f"{self.url}/credential-authorizations",
+            None,
+            headers={"Accept": Consts.mediaType},
+        )
+
+    def remove_credential_authorization(self, credential_id: int) -> bool:
+        """
+        :calls: `DELETE /orgs/{org}/credential-authorizations/{credential_id} <https://docs.github.com/en/enterprise-cloud@latest/rest/orgs/orgs#remove-a-saml-sso-authorization-for-an-organization>`_
+        :param credential_id: int
+        :rtype: bool
+
+        Delete a SAML SSO authorization for an organization.
+        """
+        assert isinstance(credential_id, int), credential_id
+        status, headers, data = self._requester.requestJson(
+            "DELETE", f"{self.url}/credential-authorizations/{credential_id}"
+        )
+        return status == 204
 
     def create_fork(
         self,
