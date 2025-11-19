@@ -412,7 +412,7 @@ class Requester:
         if base_url == Consts.DEFAULT_BASE_URL:
             self.__domains = ["github.com", "githubusercontent.com"]
         else:
-            self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})
+            self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
