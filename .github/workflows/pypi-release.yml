@@ -1,4 +1,6 @@
 name: Publish to PyPI
+permissions:
+  contents: read
 on:
   push:
     tags: ["*"]  # this will run full workflow including publish to PyPI
