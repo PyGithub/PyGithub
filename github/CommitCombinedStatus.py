@@ -46,6 +46,7 @@ from typing import Any
 import github.CommitStatus
 import github.Repository
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.PaginatedList import PaginatedList
 
 
 class CommitCombinedStatus(NonCompletableGithubObject):
@@ -89,9 +90,21 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     def state(self) -> str:
         return self._state.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def statuses(self) -> list[github.CommitStatus.CommitStatus]:
-        return self._statuses.value
+    def statuses(self) -> PaginatedList[github.CommitStatus.CommitStatus]:
+        return PaginatedList(
+            github.CommitStatus.CommitStatus,
+            self._requester,
+            self.url,
+            {},
+            headers=None,
+            list_item="statuses",
+            total_count_item="total_count",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
+        )
 
     @property
     def total_count(self) -> int:
