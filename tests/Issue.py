@@ -60,6 +60,7 @@ class Issue(Framework.TestCase):
 
     def testAttributes(self):
         self.assertIsNone(self.issue.active_lock_reason)
+        self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(self.issue.author_association, "MEMBER")
         self.assertEqual(self.issue.body, "Body edited by PyGithub\n")
