@@ -409,6 +409,10 @@ class Requester:
         self.__graphql_prefix = self.get_graphql_prefix(o.path)
         self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
+        if base_url == Consts.DEFAULT_BASE_URL:
+            self.__domains = ["github.com", "githubusercontent.com"]
+        else:
+            self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
@@ -848,7 +852,7 @@ class Requester:
         return responseHeaders, data
 
     @classmethod
-    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | tuple[str, ...]) -> bool:
+    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | list[str]) -> bool:
         if isinstance(domain_or_domains, str):
             if hostname == domain_or_domains:
                 return True
@@ -864,10 +868,7 @@ class Requester:
             assert o.path.startswith(tuple(prefixes)), o.path
             assert o.port == self.__port, o.port
         else:
-            if self.__base_url == Consts.DEFAULT_BASE_URL:
-                assert self.__hostnameHasDomain(o.hostname, ("github.com", "githubusercontent.com")), o.hostname
-            else:
-                assert self.__hostnameHasDomain(o.hostname, self.__hostname), o.hostname
+            assert self.__hostnameHasDomain(o.hostname, self.__domains), o.hostname
 
     def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:
         cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None
