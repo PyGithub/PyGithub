@@ -45,7 +45,7 @@ from typing import Any
 
 import github.CommitStatus
 import github.Repository
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 
@@ -104,6 +104,24 @@ class CommitCombinedStatus(NonCompletableGithubObject):
             total_count_item="total_count",
             firstData=self.raw_data,
             firstHeaders=self.raw_headers,
+        )
+
+    def get_statuses(self, per_page: Opt[int] = NotSet) -> PaginatedList[github.CommitStatus.CommitStatus]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <https://docs.github.com/en/rest/reference/repos#statuses>`_
+        :param per_page: int
+        :rtype: :class:`PaginatedList` of :class:`github.CommitStatus.CommitStatus`
+        """
+        assert is_optional(per_page, int), per_page
+        url_parameters = NotSet.remove_unset_items({"per_page": per_page})
+        return PaginatedList(
+            github.CommitStatus.CommitStatus,
+            self._requester,
+            self.url,
+            url_parameters,
+            headers=None,
+            list_item="statuses",
+            total_count_item="total_count",
         )
 
     @property

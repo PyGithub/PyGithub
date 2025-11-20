@@ -98,3 +98,12 @@ class CommitCombinedStatus(Framework.TestCase):
         # Test that we can access by index
         self.assertEqual(statuses_list[0].context, "jenkins/js")
         self.assertEqual(statuses_list[1].context, "jenkins/a11y")
+
+    def testGetStatuses(self):
+        # Test that get_statuses() returns a PaginatedList
+        statuses = self.combined_status.get_statuses()
+        # Test that we can iterate through statuses
+        statuses_list = list(statuses)
+        self.assertEqual(len(statuses_list), 6)
+        # Test that we can access by index
+        self.assertEqual(statuses_list[0].context, "jenkins/js")
