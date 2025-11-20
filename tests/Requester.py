@@ -271,18 +271,19 @@ class Requester(Framework.TestCase):
         assert self.g.requester.__hostnameHasDomain("ghe.local", "ghe.local")
         assert self.g.requester.__hostnameHasDomain("api.ghe.local", "ghe.local")
         assert self.g.requester.__hostnameHasDomain("api.prod.ghe.local", "prod.ghe.local")
-        assert self.g.requester.__hostnameHasDomain("github.com", ("github.com", "githubusercontent.com"))
-        assert self.g.requester.__hostnameHasDomain("api.github.com", ("github.com", "githubusercontent.com"))
-        assert self.g.requester.__hostnameHasDomain("githubusercontent.com", ("github.com", "githubusercontent.com"))
+        assert self.g.requester.__hostnameHasDomain("github.com", ["github.com", "githubusercontent.com"])
+        assert self.g.requester.__hostnameHasDomain("api.github.com", ["github.com", "githubusercontent.com"])
+        assert self.g.requester.__hostnameHasDomain("githubusercontent.com", ["github.com", "githubusercontent.com"])
         assert self.g.requester.__hostnameHasDomain(
-            "objects.githubusercontent.com", ("github.com", "githubusercontent.com")
+            "objects.githubusercontent.com", ["github.com", "githubusercontent.com"]
         )
         assert self.g.requester.__hostnameHasDomain("maliciousgithub.com", "github.com") is False
-        assert self.g.requester.__hostnameHasDomain("abc.def", ("github.com", "githubusercontent.com")) is False
+        assert self.g.requester.__hostnameHasDomain("abc.def", ["github.com", "githubusercontent.com"]) is False
 
     def testAssertUrlAllowed(self):
         # default github.com requester
         requester = self.g.requester
+        self.assertEqual(set(requester.__domains), {"github.com", "githubusercontent.com"})
 
         for allowed in [
             "https://api.github.com/request",
@@ -308,6 +309,7 @@ class Requester(Framework.TestCase):
 
         # custom (Enterprise) requester with prefix
         requester = github.Github(base_url="https://prod.ghe.local/github-api/").requester
+        self.assertEqual(set(requester.__domains), {"prod.ghe.local"})
 
         for allowed in [
             "https://prod.ghe.local/github-api/request",
@@ -337,6 +339,7 @@ class Requester(Framework.TestCase):
 
         # custom (Enterprise) requester with api subdomain and prefix
         requester = github.Github(base_url="https://api.prod.ghe.local/github-api/").requester
+        self.assertEqual(set(requester.__domains), {"api.prod.ghe.local", "prod.ghe.local"})
 
         for allowed in [
             "https://api.prod.ghe.local/github-api/request",
