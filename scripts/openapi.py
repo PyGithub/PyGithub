@@ -136,6 +136,7 @@ def as_python_type(
                 schema_path,
                 schema_to_class,
                 classes,
+                spec,
                 paginated=paginated,
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
@@ -291,7 +292,9 @@ def responses_as_python_type(
                 schema_path + [str(status), "content", '"application/json"', "schema"],
             )
         ]
-        for data_type in [as_python_type(schema, inner_schema_path, schema_to_class, classes, paginated=paginated)]
+        for data_type in [
+            as_python_type(schema, inner_schema_path, schema_to_class, classes, spec, paginated=paginated)
+        ]
     ]
     schemas = sorted(schemas, key=lambda e: e[0])
     if len(schemas) == 0:
@@ -471,6 +474,7 @@ class Parameter:
         schema_path: list[str],
         required: bool,
         index: dict[str, Any],
+        spec: dict[str, Any],
         param_type: str | None = None,
     ) -> Parameter:
         classes = index.get("classes", {})
@@ -483,6 +487,7 @@ class Parameter:
             schema_path + ["schema"],
             schema_to_class,
             classes,
+            spec,
         )
         if schema.get("nullable") is True and data_type is not None:
             data_type = data_type.as_nullable()
@@ -525,7 +530,7 @@ class Method:
         docs_url = schema.get("externalDocs", {}).get("url")
         url_parameters_schema_path = schema_path + ["parameters"]
         url_parameters = [
-            Parameter.from_schema(n, s, url_parameters_schema_path, r if r is not None else False, index)
+            Parameter.from_schema(n, s, url_parameters_schema_path, r if r is not None else False, index, spec)
             for s in schema.get("parameters", [])
             for s in [resolve_schema(s, spec)]
             for n, r in [(s.get("name"), s.get("required"))]
@@ -539,7 +544,9 @@ class Method:
             "properties",
         ]
         body_parameters = [
-            Parameter.from_schema(n, p, body_parameters_schema_path + [n], n in required, index, param_type="body")
+            Parameter.from_schema(
+                n, p, body_parameters_schema_path + [n], n in required, index, spec, param_type="body"
+            )
             for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
             for s in [resolve_schema(s, spec)]
             for required in [s.get("required", [])]
