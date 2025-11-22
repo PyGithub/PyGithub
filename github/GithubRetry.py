@@ -49,6 +49,8 @@ from github.GithubException import GithubException
 from github.Requester import Requester
 
 DEFAULT_SECONDARY_RATE_WAIT: int = 60
+DEFAULT_STATUS_FORCELIST = list(range(500, 600))
+DEFAULT_ALLOWED_METHODS = Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"})
 
 
 class GithubRetry(Retry):
@@ -81,8 +83,8 @@ class GithubRetry(Retry):
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
-        kwargs["status_forcelist"] = kwargs.get("status_forcelist", list(range(500, 600))) + [403]
-        kwargs["allowed_methods"] = kwargs.get("allowed_methods", Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"}))
+        kwargs["status_forcelist"] = kwargs.get("status_forcelist", DEFAULT_STATUS_FORCELIST) + [403]
+        kwargs["allowed_methods"] = kwargs.get("allowed_methods", DEFAULT_ALLOWED_METHODS)
         super().__init__(**kwargs)
 
     def new(self, **kw: Any) -> Self:
