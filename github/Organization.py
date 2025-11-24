@@ -92,6 +92,8 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import deprecated
+
 import github.CodeSecurityConfig
 import github.CodeSecurityConfigRepository
 import github.Copilot
@@ -1129,6 +1131,7 @@ class Organization(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
+    @deprecated("Use Organization.get_hook(id).edit(…) instead")
     def edit_hook(
         self,
         id: int,
