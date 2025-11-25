@@ -141,8 +141,12 @@ def is_optional(v: Any, type: type | tuple[type, ...]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
+def is_list(v: Any, type: type | tuple[type, ...]) -> bool:
+    return isinstance(v, list) and all(isinstance(element, type) for element in v)
+
+
 def is_optional_list(v: Any, type: type | tuple[type, ...]) -> bool:
-    return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
+    return is_undefined(v) or is_list(v, type)
 
 
 camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
@@ -686,4 +690,3 @@ def openapi_parameter(
         return fn
 
     return openapi_property_decorator
-

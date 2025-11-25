@@ -2161,6 +2161,9 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                             )
                             continue
 
+                    # turn *T into list[T]
+                    existing_data_type = PythonType("list", inner_types=[existing_data_type])
+
                     # check inner type is a subset of existing data-type
                     if parameter.data_type != existing_data_type:
                         print(f"  - Replacing {parameter.data_type} with {existing_data_type}")
@@ -2168,15 +2171,29 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             amended_parameters.append(parameter)
         return amended_parameters
 
+    def _get_parameters(self, node: cst.FunctionDef, method: Method) -> tuple[list[Parameter], list[cst.Param]]:
+        params = node.params.params
+        star_param = node.params.star_arg if isinstance(node.params.star_arg, cst.Param) else None
+        kw_params = node.params.kwonly_params
+
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
+        parameters = self.amend_parameters(parameters, params, star_param, kw_params)
+        params = list(params)
+        if star_param:
+            params.append(star_param)
+        params.extend(kw_params)
+        return parameters, params
+
     def update_func_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
         # update params: create missing, update type annotation of existing params
         if sum([1 for param in method.parameters if param.position == ParameterOrder.STAR]) > 1:
             print("Cannot update function parameter list as there are multiple star parameters")
             return node
 
-        params = node.params.params
-        star_param = node.params.star_arg if isinstance(node.params.star_arg, cst.Param) else None
-        kw_params = node.params.kwonly_params
+        parameters, params = self._get_parameters(node, method)
 
         if len(params) == 0:
             return node
@@ -2192,11 +2209,6 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         updated_star_param = node.params.star_arg
         updated_kw_params = []
 
-        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
-            method.parameters, ["input", "query", "body"]
-        )
-        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
-        parameters = self.amend_parameters(parameters, params, star_param, kw_params)
         parameters_names = {arg.python_name: arg for arg in parameters}
         parameters_sorted = self.required_first(parameters)
         existing_parameters = set()
@@ -2209,9 +2221,9 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                     parameter, params[-1] if params else updated_params[-1], not optional_exists
                 )
                 # propagate the last but one param's comma to the last param (before adding the new param)
-                if len(params) > 1:
-                    updated_params[-1] = updated_params[-1].with_changes(comma=params[-2].comma)
                 if parameter.position == ParameterOrder.POSITIONAL:
+                    if len(params) > 1:
+                        updated_params[-1] = updated_params[-1].with_changes(comma=params[-2].comma)
                     updated_params.append(param)
                 elif parameter.position == ParameterOrder.STAR:
                     updated_star_param = param.with_changes(star="*")
@@ -2219,12 +2231,18 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                     updated_kw_params.append(param)
         else:
             # update existing params
-            # TODO: consider node.params.star_arg and node.params.kw_params
+            is_kw_param = False
             for idx, param in enumerate(params):
                 parameter = parameters_names.get(param.name.value)
                 if parameter is None:
                     print(f"Unknown method argument: {param.name.value}")
-                    updated_params.append(param)
+                    if isinstance(param.star, str) and param.star:
+                        updated_star_param = param.with_changes(star="*")
+                        is_kw_param = True
+                    elif is_kw_param:
+                        updated_kw_params.append(param)
+                    else:
+                        updated_params.append(param)
                     continue
                 existing_parameters.add(parameter.python_name)
                 if not parameter.required and param.default is None:
@@ -2237,7 +2255,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                         annotation=self.create_annotation(parameter), default=self.create_default(parameter)
                     )
                 optional_exists = optional_exists or not parameter.required
-                updated_params.append(param)
+
+                if parameter.position == ParameterOrder.POSITIONAL:
+                    updated_params.append(param)
+                elif parameter.position == ParameterOrder.STAR:
+                    updated_star_param = param.with_changes(star="*")
+                elif parameter.position == ParameterOrder.NAMED:
+                    updated_kw_params.append(param)
 
             # add missing params
             for parameter in parameters_sorted:
@@ -2379,10 +2403,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         return node.with_changes(body=node.body.with_changes(body=stmts))
 
     def update_assertions(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
-        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
-            method.parameters, ["input", "query", "body"]
-        )
-        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
+        parameters, _ = self._get_parameters(node, method)
 
         # remove all existing parameter assertions
         stmts = []
@@ -2402,9 +2423,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                 body=[
                     cst.Assert(
                         test=cst.Call(
-                            func=cst.Name("isinstance")
+                            func=(cst.Name("is_list") if is_list else cst.Name("isinstance"))
                             if parameter.required
-                            else (cst.Name("is_optional_list") if is_list else cst.Name("is_optional")),
+                            else (
+                                (cst.Name("is_list") if is_star else cst.Name("is_optional_list"))
+                                if is_list
+                                else cst.Name("is_optional")
+                            ),
                             args=[
                                 cst.Arg(cst.Name(parameter.python_name)),
                                 cst.Arg(
@@ -2421,6 +2446,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             )
             for parameter in parameters_sorted
             for is_list in [isinstance(parameter.data_type, PythonType) and parameter.data_type.type == "list"]
+            for is_star in [parameter.position == ParameterOrder.STAR]
         ]
 
         assertions_start_idx = (
@@ -2569,7 +2595,14 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
 
     @classmethod
     def create_annotation(cls, argument: Parameter) -> cst.Annotation:
-        data_type = cls.create_type(argument.data_type, short_class_name=True)
+        if (
+            argument.position == ParameterOrder.STAR
+            and isinstance(argument.data_type, PythonType)
+            and argument.data_type.type == "list"
+        ):
+            data_type = cls.create_type(argument.data_type.inner_types[0], short_class_name=True)
+        else:
+            data_type = cls.create_type(argument.data_type, short_class_name=True)
         if argument.required:
             return cst.Annotation(data_type)
         else:
