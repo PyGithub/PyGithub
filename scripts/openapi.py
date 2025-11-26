@@ -241,7 +241,7 @@ def string_as_python_type(type: str, classes: dict[str, dict]) -> PythonType | G
         return string_as_python_type(type.split(".")[-1], classes)
     if type in classes:
         return GithubClass(**classes[type])
-    if type in {"int", "float", "str"}:
+    if type in {"int", "float", "str", "Any"}:
         return PythonType(type)
 
     print(f"Unknown type: {type}")
@@ -2080,6 +2080,70 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         )
         return param
 
+    @classmethod
+    def amend_type(
+        cls, existing_type: PythonType | GithubClass, spec_type: PythonType | GithubClass
+    ) -> PythonType | GithubClass | None:
+        types = []
+        outer_type: str | None = None
+
+        if (
+            isinstance(existing_type, PythonType)
+            and existing_type.type == "list"
+            or isinstance(spec_type, PythonType)
+            and spec_type.type == "list"
+        ):
+            if (
+                isinstance(existing_type, PythonType)
+                and isinstance(spec_type, PythonType)
+                and existing_type.type == "list"
+                and spec_type.type == "list"
+            ):
+                # both types are lists
+                outer_type = "list"
+
+                # flatten list element union types
+                for a_type in [existing_type, spec_type]:
+                    types.extend(
+                        [
+                            flattened
+                            for inner in a_type.inner_types
+                            for flattened in (
+                                inner.inner_types
+                                if isinstance(inner, PythonType) and inner.type == "union"
+                                else [inner]
+                            )
+                            if flattened not in types
+                        ]
+                    )
+            else:
+                print(f"Existing type {existing_type} is incompatible with spec type {spec_type}")
+                return existing_type
+        else:
+            for a_type in [existing_type, spec_type]:
+                if isinstance(a_type, PythonType) and a_type.type == "union":
+                    types.extend([inner for inner in a_type.inner_types if inner not in types])
+                elif a_type not in types:
+                    types.append(a_type)
+
+        # move None to the end of types
+        none = PythonType("None")
+        if none in types:
+            types = [t for t in types if t != none] + [none]
+
+        # return types optionally wrapped by outer type
+        if len(types) > 1:
+            inner = PythonType("union", types)
+        elif len(types) == 1:
+            inner = types[0]
+        else:
+            inner = None
+
+        if outer_type is not None:
+            return PythonType(outer_type, [inner])
+        else:
+            return inner
+
     def amend_parameters(
         self,
         parameters: list[Parameter],
@@ -2161,8 +2225,12 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
                             )
                             continue
 
-                    # turn *T into list[T]
-                    existing_data_type = PythonType("list", inner_types=[existing_data_type])
+                        # turn *T into list[T]
+                        existing_data_type = PythonType("list", inner_types=[existing_data_type])
+                    else:
+                        existing_data_type = self.amend_type(existing_data_type, parameter.data_type)
+                        if existing_data_type is None:
+                            continue
 
                     # check inner type is a subset of existing data-type
                     if parameter.data_type != existing_data_type:
