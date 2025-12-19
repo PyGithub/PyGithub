@@ -166,7 +166,7 @@ class Workflow(CompletableGithubObject):
         status, _, _ = self._requester.requestJson(
             "POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs}
         )
-        return status == 204
+        return status == 200
 
     def get_runs(
         self,
