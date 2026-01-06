@@ -342,9 +342,11 @@ class PaginatedList(Framework.TestCase):
         # totalCount doesn't reflect the actual number of results when
         # incomplete_results is True
         self.assertEqual(incomplete_prs.totalCount, 0)
-        self.assertFalse(incomplete_prs.incomplete_results)
+        self.assertTrue(incomplete_prs.incomplete_results)
         list(incomplete_prs)
         self.assertTrue(incomplete_prs.incomplete_results)
+        # incomplete_results is None by default for non-search PLs
+        self.assertIsNone(self.list.incomplete_results)
 
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)

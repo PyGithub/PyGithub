@@ -262,6 +262,9 @@ class PaginatedList(PaginatedListBase[T]):
                     self.__totalCount = len(data)
                 else:
                     self.__totalCount = 0
+                # also set incomplete_results if present to avoid another request
+                if data and "incomplete_results" in data:
+                    self._incomplete_results = data.get("incomplete_results")
             else:
                 variables = self.__graphql_variables.copy()
                 if not self._reversed:
