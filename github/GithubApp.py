@@ -227,6 +227,8 @@ class GithubApp(CompletableGithubObject):
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
+            # we give precedence to the slug attribute
+            if "slug" not in attributes:
+                self._url = self._makeStringAttribute(attributes["url"])
         if "webhook_secret" in attributes:  # pragma no branch
             self._webhook_secret = self._makeStringAttribute(attributes["webhook_secret"])

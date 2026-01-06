@@ -618,16 +618,20 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(
-            *self.requestJson(
-                verb,
-                url,
-                parameters,
-                headers,
-                input,
-                self.__customConnection(url),
-                follow_302_redirect=follow_302_redirect,
-            )
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(
+                *self.requestJson(
+                    verb,
+                    url,
+                    parameters,
+                    headers,
+                    input,
+                    self.__customConnection(url),
+                    follow_302_redirect=follow_302_redirect,
+                )
+            ),
         )
 
     def requestMultipartAndCheck(
@@ -647,7 +651,11 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url))),
+        )
 
     def requestBlobAndCheck(
         self,
@@ -667,7 +675,11 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url))),
+        )
 
     @classmethod
     def paths_of_dict(cls, d: dict) -> dict:
@@ -849,6 +861,22 @@ class Requester:
         data = self.__structuredFromJson(output)
         if status >= 400:
             raise self.createException(status, responseHeaders, data)
+        return responseHeaders, data
+
+    def __postProcess(
+        self, verb: str, url: str, responseHeaders: dict[str, Any], data: Any
+    ) -> tuple[dict[str, Any], Any]:
+        if verb == "GET" and isinstance(data, dict) and "url" not in data:
+            if "_links" in data and "self" in data["_links"] and data["_links"]["self"]:
+                self_link = data["_links"]["self"]
+                if isinstance(self_link, str):
+                    data["url"] = self_link
+                elif isinstance(self_link, dict):
+                    href = self_link.get("href")
+                    if href:
+                        data["url"] = href
+            else:
+                data["url"] = url
         return responseHeaders, data
 
     @classmethod
@@ -1143,7 +1171,7 @@ class Requester:
 
         status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode)
         if isinstance(output, str):
-            return self.__check(status, responseHeaders, output)
+            return self.__postProcess(verb, url, *self.__check(status, responseHeaders, output))
         raise ValueError("requestMemoryBlobAndCheck() Expected a str, should never happen")
 
     def __requestEncode(
