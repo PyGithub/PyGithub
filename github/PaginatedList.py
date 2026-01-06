@@ -203,7 +203,7 @@ class PaginatedList(PaginatedListBase[T]):
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
-        self._incomplete_results = False
+        self._incomplete_results = None
         self.__totalCount: int | None = None
         self._attributesTransformer = attributesTransformer
 
@@ -224,7 +224,7 @@ class PaginatedList(PaginatedListBase[T]):
         return self.__is_rest
 
     @property
-    def incomplete_results(self) -> bool:
+    def incomplete_results(self) -> bool | None:
         """
         Reflects incomplete search results
         <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>
