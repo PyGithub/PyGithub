@@ -308,6 +308,10 @@ class Repository(Framework.TestCase):
             merge_commit_title="PR_TITLE",
             merge_commit_message="PR_BODY",
             web_commit_signoff_required=True,
+            security_and_analysis={
+                "secret_scanning": {"status": "enabled"},
+                "dependabot_security_updates": {"status": "disabled"},
+            },
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
@@ -330,6 +334,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
+        self.assertEqual(self.repo.security_and_analysis.secret_scanning.status, "enabled")
+        self.assertEqual(self.repo.security_and_analysis.dependabot_security_updates.status, "disabled")
+        self.repo.edit("PyGithub", security_and_analysis={"dependabot_security_updates": {"status": "enabled"}})
+        self.assertEqual(self.repo.security_and_analysis.dependabot_security_updates.status, "enabled")
 
     def testEditWithDefaultBranch(self):
         self.assertEqual(self.repo.master_branch, None)
@@ -671,7 +679,7 @@ class Repository(Framework.TestCase):
             ],
         )
         codescan_alert = codescan_alerts[0]
-        self.assertEqual(repr(codescan_alert), "CodeScanAlert(number=6)")
+        self.assertEqual(repr(codescan_alert), 'CodeScanAlert(number=6, id="py/rule-id")')
         self.assertEqual(codescan_alert.state, "open")
         self.assertEqual(
             codescan_alert.url,
