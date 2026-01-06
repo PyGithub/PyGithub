@@ -1331,7 +1331,10 @@ class Repository(Framework.TestCase):
         )
 
     def testGetLanguages(self):
-        self.assertEqual(self.repo.get_languages(), {"Python": 127266, "Shell": 673})
+        self.assertEqual(
+            self.repo.get_languages(),
+            {"Python": 127266, "Shell": 673, "url": "https://api.github.com/repos/PyGithub/PyGithub/languages"},
+        )
 
     def testGetMilestones(self):
         self.assertListKeyEqual(self.repo.get_milestones(), lambda m: m.id, [93547])
@@ -2288,7 +2291,11 @@ class Repository(Framework.TestCase):
     def testGetAutomatedSecurityFixes(self):
         self.assertDictEqual(
             self.repo.get_automated_security_fixes(),
-            {"enabled": True, "paused": False},
+            {
+                "enabled": True,
+                "paused": False,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/automated-security-fixes",
+            },
         )
 
 

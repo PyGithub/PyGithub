@@ -52,6 +52,7 @@ class RateLimitOverview(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._rate: Attribute[Rate] = NotSet
         self._resources: Attribute[RateLimit] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"rate": self._rate.value})
@@ -64,8 +65,14 @@ class RateLimitOverview(NonCompletableGithubObject):
     def resources(self) -> RateLimit:
         return self._resources.value
 
+    @property
+    def url(self) -> str:
+        return self._url.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "rate" in attributes:  # pragma no branch
             self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])
         if "resources" in attributes:  # pragma no branch
             self._resources = self._makeClassAttribute(github.RateLimit.RateLimit, attributes["resources"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
