@@ -679,7 +679,7 @@ class Repository(Framework.TestCase):
             ],
         )
         codescan_alert = codescan_alerts[0]
-        self.assertEqual(repr(codescan_alert), "CodeScanAlert(number=6)")
+        self.assertEqual(repr(codescan_alert), 'CodeScanAlert(number=6, id="py/rule-id")')
         self.assertEqual(codescan_alert.state, "open")
         self.assertEqual(
             codescan_alert.url,
