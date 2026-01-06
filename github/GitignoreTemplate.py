@@ -60,6 +60,7 @@ class GitignoreTemplate(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._name: Attribute[str] = NotSet
         self._source: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -72,8 +73,14 @@ class GitignoreTemplate(NonCompletableGithubObject):
     def source(self) -> str:
         return self._source.value
 
+    @property
+    def url(self) -> str:
+        return self._url.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "source" in attributes:  # pragma no branch
             self._source = self._makeStringAttribute(attributes["source"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
