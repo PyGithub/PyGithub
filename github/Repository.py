@@ -2208,7 +2208,7 @@ class Repository(CompletableGithubObject):
         archived: Opt[bool] = NotSet,
         allow_forking: Opt[bool] = NotSet,
         web_commit_signoff_required: Opt[bool] = NotSet,
-        security_and_analysis: Opt[dict[Any]] = NotSet,
+        security_and_analysis: Opt[dict[str, Any]] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
