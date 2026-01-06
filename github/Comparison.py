@@ -37,23 +37,32 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.Commit
 import github.File
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
 
+if TYPE_CHECKING:
+    from github.Commit import Commit
+
 
 class Comparison(CompletableGithubObject):
     """
     This class represents Comparisons.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/commit-comparison
+
     """
 
     def _initAttributes(self) -> None:
         self._ahead_by: Attribute[int] = NotSet
         self._base_commit: Attribute[github.Commit.Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
+        self._commits: Attribute[list[Commit]] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._files: Attribute[list[github.File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -150,6 +159,8 @@ class Comparison(CompletableGithubObject):
             self._base_commit = self._makeClassAttribute(github.Commit.Commit, attributes["base_commit"])
         if "behind_by" in attributes:  # pragma no branch
             self._behind_by = self._makeIntAttribute(attributes["behind_by"])
+        if "commits" in attributes:  # pragma no branch
+            self._commits = self._makeListOfClassesAttribute(github.Commit.Commit, attributes["commits"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "files" in attributes:  # pragma no branch

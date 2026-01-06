@@ -92,7 +92,7 @@ class Milestone(CompletableGithubObject):
 
     @property
     def _identity(self) -> int:
-        return self.number
+        return self._number.value
 
     @property
     def closed_at(self) -> datetime:
@@ -176,7 +176,7 @@ class Milestone(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `DELETE /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -184,7 +184,7 @@ class Milestone(CompletableGithubObject):
         self, title: str, state: Opt[str] = NotSet, description: Opt[str] = NotSet, due_on: Opt[date] = NotSet
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `PATCH /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         """
         assert isinstance(title, str), title
         assert state is NotSet or isinstance(state, str), state
@@ -206,7 +206,7 @@ class Milestone(CompletableGithubObject):
 
     def get_labels(self) -> PaginatedList[github.Label.Label]:
         """
-        :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         return PaginatedList(github.Label.Label, self._requester, f"{self.url}/labels", None)
 
@@ -233,6 +233,10 @@ class Milestone(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        elif "url" in attributes and attributes["url"]:
+            number = attributes["url"].split("/")[-1]
+            if number.isnumeric():
+                self._number = self._makeIntAttribute(int(number))
         if "open_issues" in attributes:  # pragma no branch
             self._open_issues = self._makeIntAttribute(attributes["open_issues"])
         if "state" in attributes:  # pragma no branch

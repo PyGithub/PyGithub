@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "${{ matrix.python-version }}"
       - name: Install tox
@@ -44,12 +44,12 @@ jobs:
         run: tox
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Test Results (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
           path: pytest.xml
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
 
   test_success:
     # this aggregates success state of all jobs listed in `needs`
@@ -82,7 +82,7 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Set up dependencies
@@ -132,7 +132,7 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Set up dependencies
@@ -194,7 +194,7 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Set up dependencies
@@ -291,7 +291,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Event File
           path: ${{ github.event_path }}

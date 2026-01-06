@@ -93,6 +93,8 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import deprecated
+
 import github.CodeSecurityConfig
 import github.CodeSecurityConfigRepository
 import github.Copilot
@@ -660,7 +662,7 @@ class Organization(CompletableGithubObject):
 
     def add_to_members(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
         """
-        :calls: `PUT /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user>`_
+        :calls: `PUT /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user>`_
         """
         assert is_optional(role, str), role
         assert isinstance(member, github.NamedUser.NamedUser), member
@@ -671,7 +673,7 @@ class Organization(CompletableGithubObject):
 
     def add_to_public_members(self, public_member: NamedUser) -> None:
         """
-        :calls: `PUT /orgs/{org}/public_members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `PUT /orgs/{org}/public_members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         """
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
@@ -736,7 +738,7 @@ class Organization(CompletableGithubObject):
         active: Opt[bool] = NotSet,
     ) -> Hook:
         """
-        :calls: `POST /orgs/{owner}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
+        :calls: `POST /orgs/{org}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :param name: string
         :param config: dict
         :param events: list of string
@@ -891,7 +893,8 @@ class Organization(CompletableGithubObject):
         :param selected_repositories: list of repositrories that the secret will be available in
         :param secret_type: string options actions or dependabot
 
-        :calls: `PUT /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -922,18 +925,17 @@ class Organization(CompletableGithubObject):
             if secret_type == "dependabot":
                 put_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]
 
-        self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}", input=put_parameters
-        )
+        quoted_secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/{secret_type}/secrets/{quoted_secret_name}"
+        self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
 
         return github.OrganizationSecret.OrganizationSecret(
-            requester=self._requester,
-            headers={},
+            self._requester,
+            url=url,
             attributes={
                 "name": secret_name,
                 "visibility": visibility,
-                "selected_repositories_url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}/repositories",
-                "url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}",
+                "selected_repositories_url": f"{url}/repositories",
             },
             completed=False,
         )
@@ -942,7 +944,9 @@ class Organization(CompletableGithubObject):
         """
         Gets all organization secrets :param secret_type: string options actions or dependabot :rtype:
 
-        :class:`PaginatedList` of :class:`github.OrganizationSecret.OrganizationSecret`
+        :calls: `GET /orgs/{org}/actions/secrets <https://docs.github.com/rest/actions/secrets#list-organization-
+        secrets>`_ :calls: `GET /orgs/{org}/dependabot/secrets
+        <https://docs.github.com/rest/dependabot/secrets#list-organization-secrets>`_
 
         """
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
@@ -956,19 +960,17 @@ class Organization(CompletableGithubObject):
 
     def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
         """
-        :calls: `GET /orgs/{org}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
         :param secret_name: string
         :param secret_type: string options actions or dependabot
         :rtype: github.OrganizationSecret.OrganizationSecret
         """
         assert isinstance(secret_name, str), secret_name
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
-        return github.OrganizationSecret.OrganizationSecret(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/{secret_type}/secrets/{urllib.parse.quote(secret_name)}"},
-            completed=False,
-        )
+        secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/{secret_type}/secrets/{secret_name}"
+        return github.OrganizationSecret.OrganizationSecret(self._requester, url=url)
 
     def create_team(
         self,
@@ -1025,7 +1027,7 @@ class Organization(CompletableGithubObject):
         selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = NotSet,
     ) -> github.OrganizationVariable.OrganizationVariable:
         """
-        :calls: `POST /orgs/{org}/actions/variables/ <https://docs.github.com/en/rest/actions/variables#create-an-organization-variable>`_
+        :calls: `POST /orgs/{org}/actions/variables <https://docs.github.com/en/rest/actions/variables#create-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
@@ -1080,21 +1082,18 @@ class Organization(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> OrganizationVariable:
         """
-        :calls: `GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :calls: `GET /orgs/{org}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
         :rtype: github.OrganizationVariable.OrganizationVariable
         """
         assert isinstance(variable_name, str), variable_name
-        return github.OrganizationVariable.OrganizationVariable(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}"},
-            completed=False,
-        )
+        variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/actions/variables/{variable_name}"
+        return github.OrganizationVariable.OrganizationVariable(self._requester, url=url)
 
     def delete_hook(self, id: int) -> None:
         """
-        :calls: `DELETE /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
+        :calls: `DELETE /orgs/{org}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :param id: integer
         :rtype: None`
         """
@@ -1135,7 +1134,9 @@ class Organization(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
+    @deprecated("Use Organization.get_hook(id).edit(…) instead")
     def edit_hook(
         self,
         id: int,
@@ -1145,7 +1146,7 @@ class Organization(CompletableGithubObject):
         active: Opt[bool] = NotSet,
     ) -> Hook:
         """
-        :calls: `PATCH /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
+        :calls: `PATCH /orgs/{org}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
         assert isinstance(id, int), id
         assert isinstance(name, str), name
@@ -1168,21 +1169,21 @@ class Organization(CompletableGithubObject):
 
     def get_hook(self, id: int) -> github.Hook.Hook:
         """
-        :calls: `GET /orgs/{owner}/hooks/{id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
+        :calls: `GET /orgs/{org}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/hooks/{id}")
-        return github.Hook.Hook(self._requester, headers, data, completed=True)
+        url = f"{self.url}/hooks/{id}"
+        return github.Hook.Hook(self._requester, url=url)
 
     def get_hooks(self) -> PaginatedList[Hook]:
         """
-        :calls: `GET /orgs/{owner}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
+        :calls: `GET /orgs/{org}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
         return PaginatedList(github.Hook.Hook, self._requester, f"{self.url}/hooks", None)
 
     def get_hook_delivery(self, hook_id: int, delivery_id: int) -> github.HookDelivery.HookDelivery:
         """
-        :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/orgs#get-a-webhook-delivery-for-an-organization-webhook>`_
+        :calls: `GET /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/orgs#get-a-webhook-delivery-for-an-organization-webhook>`_
         :param hook_id: integer
         :param delivery_id: integer
         :rtype: :class:`github.HookDelivery.HookDelivery`
@@ -1196,7 +1197,7 @@ class Organization(CompletableGithubObject):
 
     def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
         """
-        :calls: `GET /orgs/{owner}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/orgs#list-deliveries-for-an-organization-webhook>`_
+        :calls: `GET /orgs/{org}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/orgs#list-deliveries-for-an-organization-webhook>`_
         :param hook_id: integer
         :rtype: :class:`PaginatedList` of :class:`github.HookDelivery.HookDeliverySummary`
         """
@@ -1328,7 +1329,8 @@ class Organization(CompletableGithubObject):
 
     def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
-        :calls: `GET /orgs/{org}/{secret_type}/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-an-organization-public-key>`_
+        :calls: `GET /orgs/{org}/actions/secrets/public-key <http://docs.github.com/rest/actions/secrets#get-an-organization-public-key>`_
+        :calls: `GET /orgs/{org}/dependabot/secrets/public-key <http://docs.github.com/rest/dependabot/secrets#get-an-organization-public-key>`_
         :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
@@ -1348,13 +1350,9 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, str), name
-        name = urllib.parse.quote(name)
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            f"/repos/{self.login}/{name}",
-            headers={"Accept": Consts.repoVisibilityPreview},
-        )
-        return github.Repository.Repository(self._requester, headers, data, completed=True)
+        name = urllib.parse.quote(name, safe="")
+        url = f"/repos/{self.login}/{name}"
+        return github.Repository.Repository(self._requester, url=url, accept=Consts.repoVisibilityPreview)
 
     def get_repos(
         self,
@@ -1384,20 +1382,20 @@ class Organization(CompletableGithubObject):
 
     def get_team(self, id: int) -> Team:
         """
-        :calls: `GET /teams/{id} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /teams/{team_id} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"/teams/{id}")
-        return github.Team.Team(self._requester, headers, data, completed=True)
+        url = f"/teams/{id}"
+        return github.Team.Team(self._requester, url=url)
 
     def get_team_by_slug(self, slug: str) -> Team:
         """
         :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
         """
         assert isinstance(slug, str), slug
-        slug = urllib.parse.quote(slug)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/teams/{slug}")
-        return github.Team.Team(self._requester, headers, data, completed=True)
+        slug = urllib.parse.quote(slug, safe="")
+        url = f"{self.url}/teams/{slug}"
+        return github.Team.Team(self._requester, url=url)
 
     def get_teams(self) -> PaginatedList[Team]:
         """
@@ -1465,7 +1463,7 @@ class Organization(CompletableGithubObject):
 
     def has_in_members(self, member: NamedUser) -> bool:
         """
-        :calls: `GET /orgs/{org}/members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `GET /orgs/{org}/members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -1477,7 +1475,7 @@ class Organization(CompletableGithubObject):
 
     def has_in_public_members(self, public_member: NamedUser) -> bool:
         """
-        :calls: `GET /orgs/{org}/public_members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `GET /orgs/{org}/public_members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -1489,7 +1487,7 @@ class Organization(CompletableGithubObject):
 
     def remove_from_membership(self, member: NamedUser) -> None:
         """
-        :calls: `DELETE /orgs/{org}/memberships/{user} <https://docs.github.com/en/rest/reference/orgs#remove-an-organization-member>`_
+        :calls: `DELETE /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#remove-an-organization-member>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -1498,7 +1496,7 @@ class Organization(CompletableGithubObject):
 
     def remove_from_members(self, member: NamedUser) -> None:
         """
-        :calls: `DELETE /orgs/{org}/members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `DELETE /orgs/{org}/members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -1507,7 +1505,7 @@ class Organization(CompletableGithubObject):
 
     def remove_from_public_members(self, public_member: NamedUser) -> None:
         """
-        :calls: `DELETE /orgs/{org}/public_members/{user} <https://docs.github.com/en/rest/reference/orgs#members>`_
+        :calls: `DELETE /orgs/{org}/public_members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -1770,7 +1768,7 @@ class Organization(CompletableGithubObject):
 
     def get_custom_property(self, property_name: str) -> OrganizationCustomProperty:
         """
-        :calls: `GET /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#get-a-custom-property-for-an-organization>`_
+        :calls: `GET /orgs/{org}/properties/schema/{custom_property_name} <https://docs.github.com/en/rest/orgs/custom-properties#get-a-custom-property-for-an-organization>`_
         :param property_name: string
         :rtype: :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
         """
@@ -1807,7 +1805,7 @@ class Organization(CompletableGithubObject):
     def create_custom_property(self, property: CustomProperty) -> OrganizationCustomProperty:
         """
         Create or update a custom property for an organization
-        :calls: `PUT /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization>`_
+        :calls: `PUT /orgs/{org}/properties/schema/{custom_property_name} <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization>`_
         :param property: :class:`github.OrganizationCustomProperty.CustomProperty`
         :rtype: :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
         """
@@ -1825,7 +1823,7 @@ class Organization(CompletableGithubObject):
 
     def remove_custom_property(self, property_name: str) -> None:
         """
-        :calls: `DELETE /orgs/{org}/properties/schema/{property_name} <https://docs.github.com/en/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization>`_
+        :calls: `DELETE /orgs/{org}/properties/schema/{custom_property_name} <https://docs.github.com/en/rest/orgs/custom-properties#remove-a-custom-property-for-an-organization>`_
         :param property_name: string
         :rtype: None
         """
@@ -1836,7 +1834,7 @@ class Organization(CompletableGithubObject):
         self, repository_query: Opt[str] = NotSet
     ) -> PaginatedList[RepositoryCustomPropertyValues]:
         """
-        :calls: `GET /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-an-organization>`_
+        :calls: `GET /orgs/{org}/properties/values <https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-an-organization>`_
         :rtype: :class:`PaginatedList` of dict
         """
         return PaginatedList(
@@ -1851,7 +1849,7 @@ class Organization(CompletableGithubObject):
     ) -> None:
         """
         Create or update custom property values for organization repositories
-        :calls: `PATCH /orgs/{org}/properties <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories>`_
+        :calls: `PATCH /orgs/{org}/properties/values <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-property-values-for-organization-repositories>`_
         :param repository_names: list of strings
         :param properties: dict of string to string, list or None
         :rtype: None
@@ -2285,6 +2283,8 @@ class Organization(CompletableGithubObject):
             self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
+        elif "url" in attributes:
+            self._login = self._makeStringAttribute(attributes["url"].split("/")[-1])
         if "members_allowed_repository_creation_type" in attributes:  # pragma no branch
             self._members_allowed_repository_creation_type = self._makeStringAttribute(
                 attributes["members_allowed_repository_creation_type"]

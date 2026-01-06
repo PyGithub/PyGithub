@@ -49,6 +49,8 @@ from datetime import datetime, timezone
 
 from . import Framework
 
+gho = Framework.github.GithubObject
+
 
 class Issue(Framework.TestCase):
     def setUp(self):
@@ -85,6 +87,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.milestone.title, "Version 1.4")
         self.assertEqual(self.issue.node_id, "MDU6SXNzdWU0NjUzNzU3")
         self.assertEqual(self.issue.number, 28)
+        self.assertIsNone(self.issue.parent_issue_url)
         self.assertIsNone(self.issue.performed_via_github_app)
         self.assertIsNone(self.issue.pull_request)
         self.assertEqual(
@@ -136,6 +139,13 @@ class Issue(Framework.TestCase):
             },
         )
 
+    def testLazyAttributes(self):
+        issue = self.g.withLazy(True).get_repo("lazy/repo").get_issue(42)
+        self.assertEqual(str(issue), "Issue(title=None, number=42)")
+        self.assertEqual(issue._identity, 42)
+        self.assertEqual(issue.number, 42)
+        self.assertEqual(issue.url, "/repos/lazy/repo/issues/42")
+
     def testEditWithoutParameters(self):
         self.issue.edit()
 
@@ -145,16 +155,17 @@ class Issue(Framework.TestCase):
         self.issue.edit(
             "Title edited by PyGithub",
             "Body edited by PyGithub",
-            user,
-            "open",
+            gho.NotSet,
+            "closed",
             milestone,
             ["Bug"],
-            ["jacquev6"],
+            [user],
+            "completed",
         )
-        self.assertEqual(self.issue.assignee.login, "jacquev6")
         self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
-        self.assertEqual(self.issue.state, "open")
+        self.assertEqual(self.issue.state, "closed")
+        self.assertEqual(self.issue.state_reason, "completed")
         self.assertEqual(self.issue.title, "Title edited by PyGithub")
         self.assertListKeyEqual(self.issue.labels, lambda lb: lb.name, ["Bug"])
 
@@ -163,10 +174,10 @@ class Issue(Framework.TestCase):
         self.issue.edit(milestone=None)
         self.assertEqual(self.issue.milestone, None)
 
-    def testEditResetAssignee(self):
-        self.assertEqual(self.issue.assignee.login, "jacquev6")
-        self.issue.edit(assignee=None)
-        self.assertEqual(self.issue.assignee, None)
+    def testEditResetAssignees(self):
+        self.assertEqual(len(self.issue.assignees), 1)
+        self.issue.edit(assignees=[])
+        self.assertEqual(len(self.issue.assignees), 0)
 
     def testEditWithStateReasonNotPlanned(self):
         self.issue.edit(state="closed", state_reason="not_planned")

@@ -1,4 +1,6 @@
 name: Publish to PyPI
+permissions:
+  contents: read
 on:
   push:
     tags: ["*"]  # this will run full workflow including publish to PyPI
@@ -14,7 +16,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           name: package
           path: dist

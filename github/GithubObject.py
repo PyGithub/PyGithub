@@ -60,7 +60,7 @@ from decimal import Decimal
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Callable, Union, overload
 
-from typing_extensions import Protocol, Self, TypeGuard
+from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -551,7 +551,7 @@ class CompletableGithubObject(GithubObject, ABC):
         :param accept: use this accept header when completing this instance
 
         """
-        response_given = headers is not None or attributes is not None
+        response_given = headers is not None
 
         if headers is None:
             headers = {}
@@ -564,12 +564,17 @@ class CompletableGithubObject(GithubObject, ABC):
         self.__completeHeaders = {"Accept": accept} if accept else None
 
         # complete this completable object when requester indicates non-laziness and
-        # neither of complete, headers and attributes are given
+        # neither of complete and headers are given
         if requester.is_not_lazy and completed is None and not response_given:
             self.complete()
 
     def __eq__(self, other: Any) -> bool:
-        return other.__class__ is self.__class__ and other._url.value == self._url.value
+        return (
+            other.__class__ is self.__class__
+            and other.requester.base_url == self.requester.base_url
+            and other._url.value.removeprefix(other.requester.base_url)
+            == self._url.value.removeprefix(self.requester.base_url)
+        )
 
     def __hash__(self) -> int:
         return hash(self._url.value)
@@ -614,6 +619,9 @@ class CompletableGithubObject(GithubObject, ABC):
             raise IncompletableObject(400, message="Cannot complete object as it contains no URL")
         headers, data = self._requester.requestJsonAndCheck("GET", self._url.value, headers=self.__completeHeaders)
         self._storeAndUseAttributes(headers, data)
+        self._set_complete()
+
+    def _set_complete(self) -> None:
         self.__completed = True
 
     def update(self, additional_headers: dict[str, Any] | None = None) -> bool:
@@ -639,3 +647,17 @@ class CompletableGithubObject(GithubObject, ABC):
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True
+
+
+Param = ParamSpec("Param")
+RetType = TypeVar("RetType")
+
+
+# decorator to annotate methods with OpenAPI metadata
+def method_returns(
+    *, schema_property: str | None = None
+) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
+    def openapi_method_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+        return fn
+
+    return openapi_method_decorator

@@ -53,6 +53,7 @@ from typing import Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 import github.Reaction
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
@@ -69,6 +70,7 @@ class PullRequestComment(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/pull-request-review-comment
+    - /components/schemas/review-comment
 
     """
 
@@ -253,14 +255,14 @@ class PullRequestComment(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param body: string
         :rtype: None
         """
@@ -270,10 +272,11 @@ class PullRequestComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_reactions(self) -> PaginatedList[github.Reaction.Reaction]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number}/reactions
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-pull-request-review-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
@@ -287,7 +290,7 @@ class PullRequestComment(CompletableGithubObject):
 
     def create_reaction(self, reaction_type: str) -> github.Reaction.Reaction:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls/comments/{number}/reactions
+        :calls: `POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-pull-request-review-comment>`_
         :param reaction_type: string
         :rtype: :class:`github.Reaction.Reaction`
@@ -302,7 +305,7 @@ class PullRequestComment(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+        return github.Reaction.Reaction(self._requester, headers, data)
 
     def delete_reaction(self, reaction_id: int) -> bool:
         """
@@ -340,6 +343,10 @@ class PullRequestComment(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "in_reply_to_id" in attributes:  # pragma no branch
             self._in_reply_to_id = self._makeIntAttribute(attributes["in_reply_to_id"])
         if "line" in attributes:  # pragma no branch

@@ -53,12 +53,18 @@ class CodeScanRule(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/code-scanning.
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/code-scanning-alert-rule
+    - /components/schemas/code-scanning-alert-rule-summary
+
     """
 
     def _initAttributes(self) -> None:
         self._description: Attribute[str] = NotSet
         self._full_description: Attribute[str] = NotSet
         self._help: Attribute[str] = NotSet
+        self._help_uri: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._name: Attribute[str] = NotSet
         self._security_severity_level: Attribute[str] = NotSet
@@ -79,6 +85,10 @@ class CodeScanRule(NonCompletableGithubObject):
     @property
     def help(self) -> str:
         return self._help.value
+
+    @property
+    def help_uri(self) -> str:
+        return self._help_uri.value
 
     @property
     def id(self) -> str:
@@ -107,6 +117,8 @@ class CodeScanRule(NonCompletableGithubObject):
             self._full_description = self._makeStringAttribute(attributes["full_description"])
         if "help" in attributes:  # pragma no branch
             self._help = self._makeStringAttribute(attributes["help"])
+        if "help_uri" in attributes:  # pragma no branch
+            self._help_uri = self._makeStringAttribute(attributes["help_uri"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch

@@ -160,6 +160,10 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/orgs/custom-properties#list-custom-property-values-for-organization-repositories
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/org-repo-custom-property-values
+
     """
 
     def _initAttributes(self) -> None:
@@ -185,8 +189,12 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
         return self._repository_name.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        self._repository_id = self._makeIntAttribute(attributes["repository_id"])
-        self._repository_name = self._makeStringAttribute(attributes["repository_name"])
-        self._repository_full_name = self._makeStringAttribute(attributes["repository_full_name"])
-        properties = {p["property_name"]: p["value"] for p in attributes["properties"]}
-        self._properties = self._makeDictAttribute(properties)
+        if "properties" in attributes:  # pragma no branch
+            properties = {p["property_name"]: p["value"] for p in attributes["properties"]}
+            self._properties = self._makeDictAttribute(properties)
+        if "repository_full_name" in attributes:  # pragma no branch
+            self._repository_full_name = self._makeStringAttribute(attributes["repository_full_name"])
+        if "repository_id" in attributes:  # pragma no branch
+            self._repository_id = self._makeIntAttribute(attributes["repository_id"])
+        if "repository_name" in attributes:  # pragma no branch
+            self._repository_name = self._makeStringAttribute(attributes["repository_name"])

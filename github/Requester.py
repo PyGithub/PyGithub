@@ -107,7 +107,7 @@ from urllib3 import Retry
 import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
-from github.GithubObject import as_rest_api_attributes
+from github.GithubObject import Opt, as_rest_api_attributes, is_undefined
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -409,6 +409,10 @@ class Requester:
         self.__graphql_prefix = self.get_graphql_prefix(o.path)
         self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
+        if base_url == Consts.DEFAULT_BASE_URL:
+            self.__domains = ["github.com", "githubusercontent.com"]
+        else:
+            self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
@@ -580,15 +584,18 @@ class Requester:
     def is_not_lazy(self) -> bool:
         return not self.__lazy
 
-    def withLazy(self, lazy: bool) -> Requester:
+    def withLazy(self, lazy: Opt[bool]) -> Requester:
         """
         Create a new requester instance with identical configuration but the given lazy setting.
 
-        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
-            from those, and so on
-        :return: new Requester instance
+        :param lazy: if True, completable objects created from this instance are lazy, as well as completable objects
+            created from those, and so on.
+        :return: new Requester instance if is_defined(lazy) and lazy != self.is_lazy, this instance otherwise
 
         """
+        if is_undefined(lazy) or self.is_lazy == lazy:
+            return self
+
         kwargs = self.kwargs
         kwargs.update(lazy=lazy)
         return Requester(**kwargs)
@@ -845,7 +852,7 @@ class Requester:
         return responseHeaders, data
 
     @classmethod
-    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | tuple[str, ...]) -> bool:
+    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | list[str]) -> bool:
         if isinstance(domain_or_domains, str):
             if hostname == domain_or_domains:
                 return True
@@ -861,10 +868,7 @@ class Requester:
             assert o.path.startswith(tuple(prefixes)), o.path
             assert o.port == self.__port, o.port
         else:
-            if self.__base_url == Consts.DEFAULT_BASE_URL:
-                assert self.__hostnameHasDomain(o.hostname, ("github.com", "githubusercontent.com")), o.hostname
-            else:
-                assert self.__hostnameHasDomain(o.hostname, self.__hostname), o.hostname
+            assert self.__hostnameHasDomain(o.hostname, self.__domains), o.hostname
 
     def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:
         cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None

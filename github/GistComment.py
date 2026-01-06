@@ -118,13 +118,13 @@ class GistComment(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `DELETE /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `PATCH /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -132,6 +132,7 @@ class GistComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author_association" in attributes:  # pragma no branch
@@ -142,6 +143,10 @@ class GistComment(CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "updated_at" in attributes:  # pragma no branch

@@ -60,6 +60,7 @@ class Hook(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/hook
+    - /components/schemas/org-hook
 
     """
 
@@ -148,7 +149,7 @@ class Hook(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `DELETE /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -162,7 +163,7 @@ class Hook(CompletableGithubObject):
         active: Opt[bool] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
@@ -183,16 +184,17 @@ class Hook(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def test(self) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/tests <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `POST /repos/{owner}/{repo}/hooks/{hook_id}/tests <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/tests")
 
     def ping(self) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/pings <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `POST /repos/{owner}/{repo}/hooks/{hook_id}/pings <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
 
@@ -209,6 +211,10 @@ class Hook(CompletableGithubObject):
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "last_response" in attributes:  # pragma no branch
             self._last_response = self._makeClassAttribute(
                 github.HookResponse.HookResponse, attributes["last_response"]
