@@ -162,6 +162,12 @@ class PaginatedList(PaginatedListBase[T]):
 
         some_repos = repos.get_page(0)
         some_other_repos = repos.get_page(3)
+
+    You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+        results = gh.search_code("query")
+        if results.incomplete_results:
+            print(f"Not sure if {results.totalCount} results are actually all results")
     """
 
     # v3: move * before firstUrl and fix call sites
@@ -204,6 +210,7 @@ class PaginatedList(PaginatedListBase[T]):
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
         self.__totalCount: int | None = None
+        self.__incomplete_results = None
         self._attributesTransformer = attributesTransformer
 
         self.__graphql_query = graphql_query
@@ -231,41 +238,63 @@ class PaginatedList(PaginatedListBase[T]):
             return element
         return self._attributesTransformer(element)
 
+    def _fetchFirstElement(self) -> None:
+        # fetches the first element only, updates __totalCount and __incomplete_results
+        if self.is_rest:
+            params = self.__nextParams.copy()
+            # set per_page = 1 so the totalCount is just the number of pages
+            params.update({"per_page": 1})
+            headers, data = self.__requester.requestJsonAndCheck(
+                "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
+            )
+            links = self.__parseLinkHeader(headers)
+            lastUrl = links.get("last")
+
+            # update totalCount
+            if lastUrl:
+                self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+            elif data and "total_count" in data:
+                self.__totalCount = data["total_count"]
+            elif data:
+                if isinstance(data, dict):
+                    data = data[self.__list_item]
+                self.__totalCount = len(data)
+            else:
+                self.__totalCount = 0
+
+            # update incomplete_results
+            if data and "incomplete_results" in data:
+                self.__incomplete_results = data.get("incomplete_results")
+        else:
+            variables = self.__graphql_variables.copy()
+            if not self._reversed:
+                variables["first"] = 1
+                variables["after"] = None
+            else:
+                variables["last"] = 1
+                variables["before"] = None
+
+            _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+            pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
+            self.__totalCount = pagination.get("totalCount")
+
     @property
     def totalCount(self) -> int:
         if self.__totalCount is None:
-            if self.is_rest:
-                params = self.__nextParams.copy()
-                # set per_page = 1 so the totalCount is just the number of pages
-                params.update({"per_page": 1})
-                headers, data = self.__requester.requestJsonAndCheck(
-                    "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
-                )
-                links = self.__parseLinkHeader(headers)
-                lastUrl = links.get("last")
-                if lastUrl:
-                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
-                elif data and "total_count" in data:
-                    self.__totalCount = data["total_count"]
-                elif data:
-                    if isinstance(data, dict):
-                        data = data[self.__list_item]
-                    self.__totalCount = len(data)
-                else:
-                    self.__totalCount = 0
-            else:
-                variables = self.__graphql_variables.copy()
-                if not self._reversed:
-                    variables["first"] = 1
-                    variables["after"] = None
-                else:
-                    variables["last"] = 1
-                    variables["before"] = None
-
-                _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
-                pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
-                self.__totalCount = pagination.get("totalCount")
+            self._fetchFirstElement()
         return self.__totalCount  # type: ignore
+
+    @property
+    def incomplete_results(self) -> bool | None:
+        """
+        Reflects `incomplete search results
+        <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_
+        """
+        # we deliberately check __totalCount here as well to check if any page has ever been fetched
+        # because __incomplete_results may not get updated by _fetchFirstElement()
+        if self.__incomplete_results is None and self.__totalCount is None:
+            self._fetchFirstElement()
+        return self.__incomplete_results
 
     def _getLastPageUrl(self) -> str | None:
         headers, data = self.__requester.requestJsonAndCheck(
@@ -365,6 +394,8 @@ class PaginatedList(PaginatedListBase[T]):
                 elif "next" in links:
                     self.__nextUrl = links["next"]
             self.__nextParams = {}
+            if "incomplete_results" in data:
+                self.__incomplete_results = data.get("incomplete_results")
             if self.__list_item in data:
                 self.__totalCount = data.get(self.__total_count_item)
                 data = data[self.__list_item]
@@ -428,6 +459,8 @@ class PaginatedList(PaginatedListBase[T]):
 
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")
+            if "incomplete_results" in data:
+                self.__incomplete_results = data.get("incomplete_results")
             data = data[self.__list_item]
         return [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
 
