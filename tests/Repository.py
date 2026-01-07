@@ -1416,11 +1416,6 @@ class Repository(Framework.TestCase):
             [110932306, 110932159, 110932072, 110286191, 110278769],
         )
 
-    def testGetWorkflowRunAttempt(self):
-        workflow_run = self.g.get_repo("PyGithub/PyGithub").get_workflow_run_attempt(18993936308, 1)
-        self.assertEqual(workflow_run.id, 18993936308)
-        self.assertEqual(workflow_run.run_attempt, 1)
-
     def testGetWorkflowJob(self):
         job = self.g.get_repo("PyGithub/PyGithub").get_workflow_job(54251022208)
         self.assertEqual(job.id, 54251022208)

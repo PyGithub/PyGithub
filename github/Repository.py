@@ -3808,20 +3808,6 @@ class Repository(CompletableGithubObject):
         url = f"{self.url}/actions/runs/{id_}"
         return github.WorkflowRun.WorkflowRun(self._requester, url=url)
 
-    def get_workflow_run_attempt(self, id_: int, attempt_number: int) -> WorkflowRun:
-        """
-        :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number} <https://docs.github.com/en/rest/actions/workflow-runs#get-a-workflow-run-attempt>`_
-        :param id_: int
-        :param attempt_number: int
-        :rtype: :class:`github.WorkflowRun.WorkflowRun`
-        """
-        assert isinstance(id_, int)
-        assert isinstance(attempt_number, int)
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/actions/runs/{id_}/attempts/{attempt_number}"
-        )
-        return github.WorkflowRun.WorkflowRun(self._requester, headers, data, completed=True)
-
     def get_workflow_job(self, id_: int) -> WorkflowJob:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/jobs/{job_id} <https://docs.github.com/en/rest/actions/workflow-jobs#get-a-job-for-a-workflow-run>`_
@@ -3829,8 +3815,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.WorkflowJob.WorkflowJob`
         """
         assert isinstance(id_, int)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/jobs/{id_}")
-        return github.WorkflowJob.WorkflowJob(self._requester, headers, data, completed=True)
+        url = f"{self.url}/actions/jobs/{id_}"
+        return github.WorkflowJob.WorkflowJob(self._requester, url=url)
 
     def has_in_assignees(self, assignee: str | NamedUser) -> bool:
         """
