@@ -1,9 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
-# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
-# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
-# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -25,54 +22,35 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-import github.Rate
-import github.RateLimit
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from github.Rate import Rate
-    from github.RateLimit import RateLimit
+from github.CodeScanAlert import CodeScanAlert
+from github.GithubObject import Attribute, NotSet
+from github.Repository import Repository
 
 
-class RateLimitOverview(NonCompletableGithubObject):
+class OrganizationCodeScanAlert(CodeScanAlert):
     """
-    This class represents RateLimitOverview.
+    This class represents a Code Scan Alerts for an organization.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/rate-limit
+    https://docs.github.com/en/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization
 
     The OpenAPI schema can be found at
 
-    - /components/schemas/rate-limit-overview
+    - /components/schemas/code-scanning-organization-alert-items
 
     """
 
     def _initAttributes(self) -> None:
-        self._rate: Attribute[Rate] = NotSet
-        self._resources: Attribute[RateLimit] = NotSet
-        self._url: Attribute[str] = NotSet
-
-    def __repr__(self) -> str:
-        return self.get__repr__({"rate": self._rate.value})
+        super()._initAttributes()
+        self._repository: Attribute[Repository] = NotSet
 
     @property
-    def rate(self) -> Rate:
-        return self._rate.value
-
-    @property
-    def resources(self) -> RateLimit:
-        return self._resources.value
-
-    @property
-    def url(self) -> str:
-        return self._url.value
+    def repository(self) -> Repository:
+        return self._repository.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "rate" in attributes:  # pragma no branch
-            self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])
-        if "resources" in attributes:  # pragma no branch
-            self._resources = self._makeClassAttribute(github.RateLimit.RateLimit, attributes["resources"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
+        super()._useAttributes(attributes)
+        if "repository" in attributes:
+            self._repository = self._makeClassAttribute(Repository, attributes["repository"])

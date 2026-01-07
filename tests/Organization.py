@@ -784,7 +784,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(custom_property.required, True)
         self.assertEqual(custom_property.default_value, "foo")
         self.assertEqual(custom_property.description, "description")
-        self.assertIsNone(custom_property.url)
+        self.assertEqual(custom_property.url, "https://api.github.com/orgs/BeaverSoftware/properties/schema/property_1")
         self.assertEqual(custom_property.values_editable_by, "org_actors")
 
     def testCreateCustomPropertyValues(self):

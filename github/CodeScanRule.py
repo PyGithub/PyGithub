@@ -55,6 +55,7 @@ class CodeScanRule(NonCompletableGithubObject):
 
     The OpenAPI schema can be found at
 
+    - /components/schemas/code-scanning-alert-rule
     - /components/schemas/code-scanning-alert-rule-summary
 
     """

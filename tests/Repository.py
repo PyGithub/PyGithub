@@ -311,6 +311,10 @@ class Repository(Framework.TestCase):
             merge_commit_title="PR_TITLE",
             merge_commit_message="PR_BODY",
             web_commit_signoff_required=True,
+            security_and_analysis={
+                "secret_scanning": {"status": "enabled"},
+                "dependabot_security_updates": {"status": "disabled"},
+            },
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
@@ -333,6 +337,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
+        self.assertEqual(self.repo.security_and_analysis.secret_scanning.status, "enabled")
+        self.assertEqual(self.repo.security_and_analysis.dependabot_security_updates.status, "disabled")
+        self.repo.edit("PyGithub", security_and_analysis={"dependabot_security_updates": {"status": "enabled"}})
+        self.assertEqual(self.repo.security_and_analysis.dependabot_security_updates.status, "enabled")
 
     def testEditWithDefaultBranch(self):
         self.assertEqual(self.repo.master_branch, None)
@@ -674,7 +682,7 @@ class Repository(Framework.TestCase):
             ],
         )
         codescan_alert = codescan_alerts[0]
-        self.assertEqual(repr(codescan_alert), "CodeScanAlert(number=6)")
+        self.assertEqual(repr(codescan_alert), 'CodeScanAlert(number=6, id="py/rule-id")')
         self.assertEqual(codescan_alert.state, "open")
         self.assertEqual(
             codescan_alert.url,
@@ -1334,7 +1342,10 @@ class Repository(Framework.TestCase):
         )
 
     def testGetLanguages(self):
-        self.assertEqual(self.repo.get_languages(), {"Python": 127266, "Shell": 673})
+        self.assertEqual(
+            self.repo.get_languages(),
+            {"Python": 127266, "Shell": 673, "url": "https://api.github.com/repos/PyGithub/PyGithub/languages"},
+        )
 
     def testGetMilestones(self):
         self.assertListKeyEqual(self.repo.get_milestones(), lambda m: m.id, [93547])
@@ -2472,7 +2483,11 @@ class Repository(Framework.TestCase):
     def testGetAutomatedSecurityFixes(self):
         self.assertDictEqual(
             self.repo.get_automated_security_fixes(),
-            {"enabled": True, "paused": False},
+            {
+                "enabled": True,
+                "paused": False,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/automated-security-fixes",
+            },
         )
 
 class LazyRepository(Framework.TestCase):
