@@ -162,6 +162,12 @@ class PaginatedList(PaginatedListBase[T]):
 
         some_repos = repos.get_page(0)
         some_other_repos = repos.get_page(3)
+
+    You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+        results = gh.search_code("query")
+        if results.incomplete_results:
+            print(f"Not sure if {results.totalCount} results are actually all results")
     """
 
     # v3: move * before firstUrl and fix call sites
