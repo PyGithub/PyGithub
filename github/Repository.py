@@ -4042,6 +4042,42 @@ class Repository(CompletableGithubObject):
         )
         return status == 204
 
+    def get_immutable_releases(self) -> dict[str, bool]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository>`_
+        :rtype: dict
+        """
+        _, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"{self.url}/immutable-releases",
+            headers={"Accept": Consts.mediaType},
+        )
+        return data
+
+    def enable_immutable_releases(self) -> bool:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#enable-immutable-releases>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "PUT",
+            f"{self.url}/immutable-releases",
+            headers={"Accept": Consts.mediaType},
+        )
+        return status == 204
+
+    def disable_immutable_releases(self) -> bool:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#disable-immutable-releases>`_
+        :rtype: bool
+        """
+        status, _, _ = self._requester.requestJson(
+            "DELETE",
+            f"{self.url}/immutable-releases",
+            headers={"Accept": Consts.mediaType},
+        )
+        return status == 204
+
     def remove_from_collaborators(self, collaborator: str | NamedUser) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
