@@ -653,7 +653,12 @@ class CompletableGithubObject(GithubObject, ABC):
 
     @property
     def url(self) -> str:
-        self._completeIfNotSet(self._url)
+        # strip off any query parameters to get a clean URL
+        return self.full_url.split("?", 1)[0]
+
+    @property
+    def full_url(self) -> str:
+        # this url may contain query parameters like pagination
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
@@ -701,7 +706,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
         # provides another url, which might reset initial pagination information
         # we recover those pagination information here
         if is_defined(self._url) and "url" in attributes:
-            parameters = self.requester.get_parameters_of_url(self.url)
+            parameters = self.requester.get_parameters_of_url(self.full_url)
             pagination_params = {"per_page", "page"}
             pagination = {
                 k: v[0] for k, v in parameters.items() if k in pagination_params and isinstance(v, list) and len(v) == 1

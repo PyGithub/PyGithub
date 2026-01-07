@@ -105,7 +105,7 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         return PaginatedList(
             github.Commit.Commit,
             self._requester,
-            self.url,
+            self.full_url,
             headers=None,
             list_item="commits",
             total_count_item="total_commits",
