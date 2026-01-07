@@ -58,6 +58,7 @@ import github.BranchProtection
 import github.Commit
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
+import github.Rule
 from github import Consts
 from github.GithubObject import (
     Attribute,
