@@ -2407,7 +2407,7 @@ class Repository(CompletableGithubObject):
         assert (
             commit_files_per_page is None or isinstance(commit_files_per_page, int) and commit_files_per_page > 0
         ), commit_files_per_page
-        sha = urllib.parse.quote(sha)
+        sha = urllib.parse.quote(sha, safe="")
         url = f"{self.url}/commits/{sha}"
         return github.Commit.Commit(self._requester, url=url, per_page=commit_files_per_page)
 
