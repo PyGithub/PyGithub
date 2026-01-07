@@ -2490,6 +2490,7 @@ class Repository(Framework.TestCase):
             },
         )
 
+
 class LazyRepository(Framework.TestCase):
     def setUp(self):
         super().setUp()
