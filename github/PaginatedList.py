@@ -287,8 +287,8 @@ class PaginatedList(PaginatedListBase[T]):
     @property
     def incomplete_results(self) -> bool | None:
         """
-        Reflects incomplete search results
-        <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>
+        Reflects `incomplete search results
+        <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_
         """
         # we deliberately check __totalCount here as well to check if any page has ever been fetched
         # because __incomplete_results may not get updated by _fetchFirstElement()
