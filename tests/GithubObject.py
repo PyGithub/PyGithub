@@ -243,6 +243,7 @@ class GithubObject(unittest.TestCase):
 
 
 class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
+    # TODO: have lazy and eger tests
     def testSetValuesIfNotSet(self):
         set_value = gho.CompletableGithubObjectWithPaginatedProperty.set_values_if_not_set
         self.assertIsNone(set_value(None, per_page=123))
@@ -269,27 +270,12 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             self.assertEqual(set_value(url, unless={"page"}, per_page=123), url)
 
     def testRepoCommitFilesDefault(self):
-        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
-        commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
-        files = list(commit.files)
-        self.assertListKeyEqual(
-            files,
-            lambda f: f.filename,
-            [
-                ".github/workflows/_build-pkg.yml",
-                ".github/workflows/ci.yml",
-                ".github/workflows/lint.yml",
-                ".github/workflows/openapi.yml",
-            ],
-        )
-
-    def testRepoCommitFiles(self):
         with self.captureRequests() as requests:
-            self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
             files = list(commit.files)
 
+        self.assertEqual(len(files), 4)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -306,6 +292,30 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             ["/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1"],
         )
 
+    def testRepoCommitFiles(self):
+        with self.captureRequests() as requests:
+            self.g.per_page = 2
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+            files = list(commit.files)
+
+        self.assertEqual(len(files), 4)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=2"],
+        )
+
     def testRepoCommitFilesWithPerPage(self):
         with self.captureRequests() as requests:
             self.g.per_page = 2
@@ -313,6 +323,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5", commit_files_per_page=3)
             files = list(commit.files)
 
+        self.assertEqual(len(files), 4)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -332,13 +343,13 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             ],
         )
 
-    def testRepoCommitGetFiles(self):
+    def testRepoCommitGetFilesDefault(self):
         with self.captureRequests() as requests:
-            self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
             files = list(commit.get_files())
 
+        self.assertEqual(len(files), 4)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -354,7 +365,32 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             lambda r: r.url,
             [
                 "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1",
-                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1",
+            ],
+        )
+
+    def testRepoCommitGetFiles(self):
+        with self.captureRequests() as requests:
+            self.g.per_page = 2
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
+            files = list(commit.get_files())
+
+        self.assertEqual(len(files), 4)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            [
+                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=2",
             ],
         )
 
@@ -365,6 +401,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5", commit_files_per_page=1)
             files = list(commit.get_files(commit_files_per_page=3))
 
+        self.assertEqual(len(files), 4)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -379,18 +416,20 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?per_page=1&page=1",
                 "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=3",
                 "/repositories/3544490/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=2&per_page=3",
             ],
         )
 
     def testRepoCommitsFiles(self):
-        self.g.per_page = 2
-        repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
-        commits = repo.get_commits(sha="dependabot/github_actions/actions/setup-python-6")
-        commit = commits[0]
-        files = list(commit.files)
+        with self.captureRequests() as requests:
+            self.g.per_page = 2
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            commits = repo.get_commits(sha="dependabot/github_actions/actions/setup-python-6")
+            commit = commits[0]
+            files = list(commit.files)
+
+        self.assertEqual(len(files), 4)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -399,6 +438,44 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 ".github/workflows/ci.yml",
                 ".github/workflows/lint.yml",
                 ".github/workflows/openapi.yml",
+            ],
+        )
+
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            [
+                "/repos/PyGithub/PyGithub/commits?sha=dependabot%2Fgithub_actions%2Factions%2Fsetup-python-6&per_page=2",
+                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=2",
+            ],
+        )
+
+    def testRepoComparisonCommitsFilesDefault(self):
+        # replay data modified after record with
+        # cat -n tests/ReplayData/CompletableGithubObjectWithPaginatedProperty.testRepoComparisonCommitsFilesDefault.txt | while read -r lineno line; do if [ $(( lineno % 11 )) -eq 10 ]; then jq . | sed -E -e 's/"patch":\s*".*[^\\]"/"patch":"…"/g' -e 's/"([^"]+_url)":\s*".*[^\\]"/"\1":"…"/g' | jq -c; else cat; fi <<< "$line"; done > tests/ReplayData/CompletableGithubObjectWithPaginatedProperty.testRepoComparisonCommitsFilesDefault.txt.bak
+        # mv tests/ReplayData/CompletableGithubObjectWithPaginatedProperty.testRepoComparisonCommitsFilesDefault.txt.bak tests/ReplayData/CompletableGithubObjectWithPaginatedProperty.testRepoComparisonCommitsFilesDefault.txt
+        with self.captureRequests() as requests:
+            # tests paginated property of Comparison.commits and Commit.files
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            comparison = repo.compare(
+                "6cfe46b712e2bf65560bd8189c4654cd6c56eeca", "cef98416f45a9cdaf84d7f53cea13ac074a2c05d"
+            )
+            # PaginatedList commits should use default per_page
+            commits = list(comparison.commits)
+            self.assertEqual(len(commits), 7)
+            commit = commits[4]
+            self.assertEqual(commit.sha, "cbfe8d0f623ca29d984ec09d2b566e9ab10ae024")
+            # PaginatedList files should use default per_page
+            files = list(commit.files)
+
+        self.assertEqual(len(files), 371)
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            [
+                "/repos/PyGithub/PyGithub/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?page=1",
+                "/repos/PyGithub/PyGithub/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=1",
+                "/repositories/3544490/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=2",
             ],
         )
 
@@ -411,23 +488,27 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             comparison = repo.compare(
-                "6cfe46b712e2bf65560bd8189c4654cd6c56eeca", "cef98416f45a9cdaf84d7f53cea13ac074a2c05d"
+                "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
+                "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
             )
-            # commits is a PaginatedList, which should respect per_page
+            # PaginatedList commits should respect configured per_page
             commits = list(comparison.commits)
-            commit = commits[4]
-            self.assertEqual(commit.sha, "cbfe8d0f623ca29d984ec09d2b566e9ab10ae024")
-            # files is a PaginatedList, which should respect per_page
+            self.assertEqual(len(commits), 4)
+            commit = commits[3]
+            self.assertEqual(commit.sha, "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86")
+            # PaginatedList files should respect configured per_page
             files = list(commit.files)
 
-        self.assertEqual(len(files), 371)
+        self.assertEqual(len(files), 6)
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?page=1",
-                "/repos/PyGithub/PyGithub/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=1",
-                "/repositories/3544490/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=2",
+                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
             ],
         )
 
@@ -440,27 +521,28 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             comparison = repo.compare(
-                "6cfe46b712e2bf65560bd8189c4654cd6c56eeca",
-                "cef98416f45a9cdaf84d7f53cea13ac074a2c05d",
+                "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
+                "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
                 comparison_commits_per_page=3,
             )
-            # commits is a PaginatedList, which should respect per_page
+            # PaginatedList commits should use given per_page
             commits = list(comparison.commits)
-            commit = commits[4]
-            self.assertEqual(commit.sha, "cbfe8d0f623ca29d984ec09d2b566e9ab10ae024")
-            # files is a PaginatedList, which should respect per_page
+            self.assertEqual(len(commits), 4)
+            commit = commits[3]
+            self.assertEqual(commit.sha, "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86")
+            # PaginatedList files should respect configured per_page
             files = list(commit.files)
 
-        self.assertEqual(len(files), 371)
+        self.assertEqual(len(files), 6)
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?per_page=3&page=1",
-                "/repositories/3544490/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?per_page=3&page=2",
-                "/repositories/3544490/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?per_page=3&page=3",
-                "/repos/PyGithub/PyGithub/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=1",
-                "/repositories/3544490/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=2",
+                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=1",
+                "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=2",
+                "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
             ],
         )
 
@@ -473,28 +555,29 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             comparison = repo.compare(
-                "6cfe46b712e2bf65560bd8189c4654cd6c56eeca",
-                "cef98416f45a9cdaf84d7f53cea13ac074a2c05d",
+                "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
+                "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
             )
-            # commits is a PaginatedList, which should respect per_page
+            # PaginatedList commits should respect configured per_page
             commits = list(reversed(comparison.commits))
-            self.assertEqual(len(commits), 7)
-            print(commits)
-            commit = commits[2]
-            self.assertEqual(commit.sha, "cbfe8d0f623ca29d984ec09d2b566e9ab10ae024")
-            # files is a PaginatedList, which should respect per_page
+            self.assertEqual(len(commits), 4)
+            commit = commits[0]
+            self.assertEqual(commit.sha, "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86")
+            # PaginatedList files should respect configured per_page
             files = list(reversed(commit.files))
 
-        self.assertEqual(len(files), 371)
+        self.assertEqual(len(files), 6)
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?page=1",
-                "/repos/PyGithub/PyGithub/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?page=1",
-                "/repos/PyGithub/PyGithub/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=1",
-                "/repositories/3544490/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=2",
-                "/repositories/3544490/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=1",
+                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
             ],
         )
 
@@ -507,31 +590,62 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             comparison = repo.compare(
-                "6cfe46b712e2bf65560bd8189c4654cd6c56eeca",
-                "cef98416f45a9cdaf84d7f53cea13ac074a2c05d",
+                "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
+                "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
                 comparison_commits_per_page=3,
             )
-            # commits is a PaginatedList, which should respect per_page
+            # PaginatedList commits should use given per_page
             commits = list(reversed(comparison.commits))
-            self.assertEqual(len(commits), 7)
-            print(commits)
-            commit = commits[2]
-            self.assertEqual(commit.sha, "cbfe8d0f623ca29d984ec09d2b566e9ab10ae024")
-            # files is a PaginatedList, which should respect per_page
+            self.assertEqual(len(commits), 4)
+            commit = commits[0]
+            self.assertEqual(commit.sha, "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86")
+            # PaginatedList files should respect configured per_page
             files = list(reversed(commit.files))
 
-        self.assertEqual(len(files), 371)
+        self.assertEqual(len(files), 6)
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?per_page=3&page=1",
-                "/repositories/3544490/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?per_page=3&page=3",
-                "/repositories/3544490/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?per_page=3&page=2",
-                "/repositories/3544490/compare/6cfe46b712e2bf65560bd8189c4654cd6c56eeca...cef98416f45a9cdaf84d7f53cea13ac074a2c05d?per_page=3&page=1",
-                "/repos/PyGithub/PyGithub/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=1",
-                "/repositories/3544490/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=2",
-                "/repositories/3544490/commits/cbfe8d0f623ca29d984ec09d2b566e9ab10ae024?page=1",
+                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=1",
+                "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=2",
+                "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=1",
+                "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+            ],
+        )
+
+    def testPullCommitsFilesDefault(self):
+        with self.captureRequests() as requests:
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            pull = repo.get_pull(3370)
+            # PaginatedList commits should use default per_page
+            commits = list(pull.get_commits())
+            self.assertEqual(len(commits), 1)
+            commit = commits[0]
+            # PaginatedList files should use default per_page
+            files = list(commit.files)
+
+        self.assertEqual(len(files), 4)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            [
+                "/repos/PyGithub/PyGithub/pulls/3370/commits",
+                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1",
             ],
         )
 
@@ -540,13 +654,14 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             pull = repo.get_pull(3370)
-            # commits is a PaginatedList, which should respect per_page
+            # PaginatedList commits should respect configured per_page
             commits = list(pull.get_commits())
             self.assertEqual(len(commits), 1)
             commit = commits[0]
-            # files uses default per_page
+            # PaginatedList files should respect configured per_page
             files = list(commit.files)
 
+        self.assertEqual(len(files), 4)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -562,9 +677,40 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/pulls/3370",
                 "/repos/PyGithub/PyGithub/pulls/3370/commits?per_page=2",
-                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1",
+                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=2",
+            ],
+        )
+
+    def testPullCommitsGetFilesDefault(self):
+        with self.captureRequests() as requests:
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            pull = repo.get_pull(3370)
+            # PaginatedList commits should respect configured per_page
+            commits = list(pull.get_commits())
+            self.assertEqual(len(commits), 1)
+            commit = commits[0]
+            # PaginatedList commits should use given per_page
+            files = list(commit.get_files(commit_files_per_page=100))
+
+        self.assertEqual(len(files), 4)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            [
+                "/repos/PyGithub/PyGithub/pulls/3370/commits",
+                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=100",
             ],
         )
 
@@ -573,13 +719,14 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             self.g.per_page = 2
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             pull = repo.get_pull(3370)
-            # commits is a PaginatedList, which should respect per_page
+            # PaginatedList commits should respect configured per_page
             commits = list(pull.get_commits())
             self.assertEqual(len(commits), 1)
             commit = commits[0]
-            # files uses default per_page
-            files = list(commit.get_files(commit_files_per_page=100))
+            # PaginatedList commits should respect configured per_page
+            files = list(commit.get_files())
 
+        self.assertEqual(len(files), 4)
         self.assertListKeyEqual(
             files,
             lambda f: f.filename,
@@ -595,7 +742,40 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/pulls/3370",
+                "/repos/PyGithub/PyGithub/pulls/3370/commits?per_page=2",
+                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=2",
+                "/repositories/3544490/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=2&per_page=2",
+            ],
+        )
+
+    def testPullCommitsGetFilesWithPerPage(self):
+        with self.captureRequests() as requests:
+            self.g.per_page = 2
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            pull = repo.get_pull(3370)
+            # PaginatedList commits should respect configured per_page
+            commits = list(pull.get_commits())
+            self.assertEqual(len(commits), 1)
+            commit = commits[0]
+            # PaginatedList commits should use given per_page
+            files = list(commit.get_files(commit_files_per_page=100))
+
+        self.assertEqual(len(files), 4)
+        self.assertListKeyEqual(
+            files,
+            lambda f: f.filename,
+            [
+                ".github/workflows/_build-pkg.yml",
+                ".github/workflows/ci.yml",
+                ".github/workflows/lint.yml",
+                ".github/workflows/openapi.yml",
+            ],
+        )
+
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            [
                 "/repos/PyGithub/PyGithub/pulls/3370/commits?per_page=2",
                 "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=100",
             ],
@@ -608,3 +788,6 @@ class TestingClass(gho.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: Any) -> None:
         pass
+
+
+# TODO check replay data respect per_page

@@ -105,7 +105,8 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         return PaginatedList(
             github.Commit.Commit,
             self._requester,
-            self.full_url,
+            self._full_url,
+            {"page": 1},
             headers=None,
             list_item="commits",
             total_count_item="total_commits",
@@ -173,10 +174,9 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
             or isinstance(comparison_commits_per_page, int)
             and comparison_commits_per_page > 0
         ), comparison_commits_per_page
-        url_parameters: dict[str, Any] = {}
+        url_parameters = {"page": 1}
         if comparison_commits_per_page is not None:
             url_parameters["per_page"] = comparison_commits_per_page
-            url_parameters["page"] = 1
         return PaginatedList(
             github.Commit.Commit,
             self._requester,

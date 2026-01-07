@@ -840,6 +840,10 @@ class Repository(Framework.TestCase):
             )
             self.assertEqual(
                 comparison.url,
+                "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7",
+            )
+            self.assertEqual(
+                comparison._full_url,
                 "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7?page=1",
             )
             self.assertEqual(
@@ -893,6 +897,10 @@ class Repository(Framework.TestCase):
             )
             self.assertEqual(
                 comparison.url,
+                "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7",
+            )
+            self.assertEqual(
+                comparison._full_url,
                 "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7?per_page=3&page=1",
             )
             self.assertEqual(

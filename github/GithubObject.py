@@ -654,10 +654,10 @@ class CompletableGithubObject(GithubObject, ABC):
     @property
     def url(self) -> str:
         # strip off any query parameters to get a clean URL
-        return self.full_url.split("?", 1)[0]
+        return self._full_url.split("?", 1)[0]
 
     @property
-    def full_url(self) -> str:
+    def _full_url(self) -> str:
         # this url may contain query parameters like pagination
         return self._url.value
 
@@ -692,7 +692,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     ):
         assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
 
-        # add per_page to URL if instance is incomplete
+        # add per_page to URL if the instance is incomplete
         # we only modify the URL if this instance is incomplete
         if not completed:
             if per_page is None:
@@ -710,7 +710,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
         # provides another url, which might reset initial pagination information
         # we recover those pagination information here
         if is_defined(self._url) and "url" in attributes:
-            parameters = self.requester.get_parameters_of_url(self.full_url)
+            parameters = self.requester.get_parameters_of_url(self._full_url)
             pagination_params = {"per_page", "page"}
             pagination = {
                 k: v[0] for k, v in parameters.items() if k in pagination_params and isinstance(v, list) and len(v) == 1
@@ -723,7 +723,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
         cls, attributes: dict[str, Any] | None, url: str | None, unless: set[str] | None = None, **kwargs: Any
     ) -> str | None:
         # add values to the URL in the attributes
-        if attributes is not None and "url" in attributes:
+        if url is not None and attributes is not None and "url" in attributes:
             attributes["url"] = cls.set_values_if_not_set(attributes["url"], unless, **kwargs)
         # add values to the request URL
         return cls.set_values_if_not_set(url, unless, **kwargs)

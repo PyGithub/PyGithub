@@ -398,6 +398,8 @@ class PaginatedList(Framework.TestCase):
         with self.captureRequests() as requests:
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
             files = commit.files
         self.assertListKeyEqual(
             requests,
@@ -443,8 +445,10 @@ class PaginatedList(Framework.TestCase):
         with self.captureRequests() as requests:
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             commit = repo.get_commit("f5f9756a1dd52a53820cc54927abb34725377987", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
             files = commit.files
-            # with a single page we by now know the total count without a firing a request
+            # with a single page we by now know the total count without firing a request
             self.assertEqual(files.totalCount, 3)
         self.assertListKeyEqual(
             requests,
@@ -460,10 +464,12 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(len(requests), 0)
 
     def testReversedWithFirstPage(self):
-        # fetching the commit also fetches the fist page of files
+        # this is all lazy, no requests fired
         with self.captureRequests() as requests:
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
             files = commit.files
         self.assertListKeyEqual(
             requests,
@@ -517,8 +523,10 @@ class PaginatedList(Framework.TestCase):
         with self.captureRequests() as requests:
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
             commit = repo.get_commit("f5f9756a1dd52a53820cc54927abb34725377987", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
             files = commit.files
-            # with a single page we by now know the total count without a firing a request
+            # with a single page we by now know the total count without firing a request
             self.assertEqual(files.totalCount, 3)
         self.assertListKeyEqual(
             requests,

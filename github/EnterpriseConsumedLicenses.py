@@ -93,7 +93,8 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         return PaginatedList(
             NamedEnterpriseUser,
             self._requester,
-            self.url,
+            self._full_url,
+            {"page": 1},
             headers=None,
             list_item="users",
             firstData=self.raw_data,
@@ -116,10 +117,9 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         assert (
             licence_users_per_page is None or isinstance(licence_users_per_page, int) and licence_users_per_page > 0
         ), licence_users_per_page
-        url_parameters: dict[str, Any] = {}
+        url_parameters = {"page": 1}
         if licence_users_per_page is not None:
             url_parameters["per_page"] = licence_users_per_page
-            url_parameters["page"] = 1
         return PaginatedList(
             NamedEnterpriseUser,
             self._requester,

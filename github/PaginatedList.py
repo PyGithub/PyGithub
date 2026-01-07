@@ -251,28 +251,36 @@ class PaginatedList(PaginatedListBase[T]):
             if not (isinstance(list_item, list) and all(isinstance(item, str) for item in list_item)):
                 raise ValueError("With graphql_query given, item_list must be a list of strings")
 
+        firstParams = firstParams or {}
+        # move parameters from firstUrl into firstParams, give precedence to existing params in firstParams
+        if firstUrl is not None:
+            # extract parameters from firstUrl
+            firstUrlParams = requester.get_parameters_of_url(firstUrl)
+            # remove parameters from firstUrl
+            firstUrl = firstUrl.split("?")[0]
+            # update firstParams with parameters from firstUrl, give precedence to firstParams
+            firstParams = {**firstUrlParams, **firstParams}
+
+        # we add the per_page parameter if that value is not the default
+        # but only if there is no per_page parameter in the firstParams
+        if "per_page" not in firstParams and requester.per_page != Consts.DEFAULT_PER_PAGE:
+            firstParams["per_page"] = requester.per_page
+
         self.__requester = requester
         self.__contentClass = contentClass
 
         self.__is_rest = firstUrl is not None or firstData is not None
         self.__firstUrl = firstUrl
-        self.__firstParams: dict[str, Any] = firstParams or {}
+        self.__firstParams: dict[str, Any] = firstParams
         self.__firstData = firstData
         self.__firstHeaders = firstHeaders
         self.__nextUrl = firstUrl
-        self.__nextParams: dict[str, Any] = firstParams or {}
+        self.__nextParams: dict[str, Any] = firstParams
         self.__lastUrl: str | None = None
         self.__headers = headers
         self.__list_item = list_item
         self.__total_count_item = total_count_item
-        # we add the per_page parameter if that value is not the default
-        # but only if there is no per_page or page parameter in the first url
-        has_pagination = False
-        if self.__firstUrl is not None and firstParams is not None:
-            params = self.__requester.get_parameters_of_url(self.__firstUrl)
-            has_pagination = any(param in params or param in firstParams for param in ["page", "per_page"])
-        if self.__requester.per_page != 30 and not has_pagination:
-            self.__nextParams["per_page"] = self.__requester.per_page
+
         self._reversed = False
         self.__totalCount: int | None = None
         self._attributesTransformer = attributesTransformer
