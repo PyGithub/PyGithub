@@ -234,7 +234,7 @@ class Milestone(CompletableGithubObject):
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         elif "url" in attributes and attributes["url"]:
-            number = attributes["url"].split("/")[-1]
+            number = self._url_path_elements(attributes["url"])[-1]
             if number.isnumeric():
                 self._number = self._makeIntAttribute(int(number))
         if "open_issues" in attributes:  # pragma no branch

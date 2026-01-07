@@ -2284,7 +2284,7 @@ class Organization(CompletableGithubObject):
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
         elif "url" in attributes:
-            self._login = self._makeStringAttribute(attributes["url"].split("/")[-1])
+            self._login = self._makeStringAttribute(self._url_path_elements(attributes["url"])[-1])
         if "members_allowed_repository_creation_type" in attributes:  # pragma no branch
             self._members_allowed_repository_creation_type = self._makeStringAttribute(
                 attributes["members_allowed_repository_creation_type"]

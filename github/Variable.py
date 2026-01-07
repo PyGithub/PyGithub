@@ -141,7 +141,7 @@ class Variable(CompletableGithubObject):
         if "name" in attributes:
             self._name = self._makeStringAttribute(attributes["name"])
         elif "url" in attributes and attributes["url"]:
-            quoted_name = attributes["url"].split("/")[-1]
+            quoted_name = self._url_path_elements(attributes["url"])[-1]
             name = urllib.parse.unquote(quoted_name)
             self._name = self._makeStringAttribute(name)
         if "updated_at" in attributes:

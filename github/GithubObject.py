@@ -665,6 +665,10 @@ class CompletableGithubObject(GithubObject, ABC):
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
 
+    @staticmethod
+    def _url_path_elements(path: str, element: int = -1) -> list[str]:
+        return path.split("?", 1)[0].split("/")
+
 
 class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     """

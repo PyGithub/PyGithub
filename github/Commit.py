@@ -386,7 +386,7 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         elif "url" in attributes and attributes["url"]:
-            quoted_sha = attributes["url"].split("/")[-1]
+            quoted_sha = self._url_path_elements(attributes["url"])[-1]
             sha = urllib.parse.unquote(quoted_sha)
             self._sha = self._makeStringAttribute(sha)
         if "stats" in attributes:  # pragma no branch

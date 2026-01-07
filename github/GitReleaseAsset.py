@@ -197,7 +197,7 @@ class GitReleaseAsset(CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         elif "url" in attributes and attributes["url"]:
-            id = attributes["url"].split("/")[-1]
+            id = self._url_path_elements(attributes["url"])[-1]
             if id.isnumeric():
                 self._id = self._makeIntAttribute(int(id))
         if "label" in attributes:  # pragma no branch

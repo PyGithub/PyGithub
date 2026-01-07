@@ -418,7 +418,7 @@ class GitRelease(CompletableGithubObject):
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
         elif "url" in attributes and attributes["url"]:
-            id = attributes["url"].split("/")[-1]
+            id = self._url_path_elements(attributes["url"])[-1]
             if id.isnumeric():
                 self._id = self._makeIntAttribute(int(id))
         if "immutable" in attributes:  # pragma no branch
@@ -442,7 +442,7 @@ class GitRelease(CompletableGithubObject):
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
         elif "url" in attributes and attributes["url"] and isinstance(attributes["url"], str):
-            quoted_tag_name = attributes["url"].split("/")[-1]
+            quoted_tag_name = self._url_path_elements(attributes["url"])[-1]
             tag_name = urllib.parse.unquote(quoted_tag_name)
             self._tag_name = self._makeStringAttribute(tag_name)
         if "tarball_url" in attributes:
