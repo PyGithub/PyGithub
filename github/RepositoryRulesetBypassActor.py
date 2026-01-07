@@ -38,6 +38,7 @@ class RepositoryRulesetBypassActor(NonCompletableGithubObject):
     https://docs.github.com/en/rest/repos/rules
 
     The OpenAPI schema can be found at
+
     - /components/schemas/repository-ruleset-bypass-actor
 
     """
