@@ -695,7 +695,14 @@ class Github:
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
-            query_chunks.append(f"{qualifier}:{value}")
+            if qualifier == "language":
+                if isinstance(value, list):
+                    for v in value:
+                        query_chunks.append(f"{qualifier}:{v}")
+                else:
+                    query_chunks.append(f"{qualifier}:{value}")
+            else:
+                query_chunks.append(f"{qualifier}:{value}")
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
