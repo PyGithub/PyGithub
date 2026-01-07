@@ -332,6 +332,8 @@ class PaginatedList(Framework.TestCase):
     def doTestSearchCompleteness(self, incomplete_results: bool):
         self.g.per_page = 5
 
+        # TODO: capture requests once #3377 is merged
+
         # starting iteration fetches the first page which contains totalCount and incomplete_results
         results = self.g.search_code('"profile = black" in:file language:toml')
         self.assertEqual(iter(results).__next__().score, 1.0)
