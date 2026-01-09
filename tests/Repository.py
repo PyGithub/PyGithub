@@ -843,10 +843,6 @@ class Repository(Framework.TestCase):
                 "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7",
             )
             self.assertEqual(
-                comparison._full_url,
-                "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7?page=1",
-            )
-            self.assertEqual(
                 comparison.patch_url,
                 "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.patch",
             )
@@ -900,10 +896,6 @@ class Repository(Framework.TestCase):
                 "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7",
             )
             self.assertEqual(
-                comparison._full_url,
-                "https://api.github.com/repos/PyGithub/PyGithub/compare/v0.6...v0.7?per_page=3&page=1",
-            )
-            self.assertEqual(
                 comparison.patch_url,
                 "https://github.com/PyGithub/PyGithub/compare/v0.6...v0.7.patch",
             )
@@ -927,7 +919,7 @@ class Repository(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/compare/v0.6...v0.7?per_page=3&page=1",
+                "/repos/PyGithub/PyGithub/compare/v0.6...v0.7?page=1&per_page=3",
                 "/repositories/3544490/compare/v0.6...v0.7?per_page=3&page=2",
             ],
         )

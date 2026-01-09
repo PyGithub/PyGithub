@@ -154,9 +154,8 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         return PaginatedList(
             github.File.File,
             self._requester,
-            self._full_url,
-            {"page": 1},
-            headers=None,
+            self.url,
+            self._pagination_parameters,
             list_item="files",
             total_count_item="total_files",
             firstData=self.raw_data if self.completed else None,

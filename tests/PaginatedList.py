@@ -404,7 +404,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repos/PyGithub/PyGithub/commits/e359b83a04e8f34bedab0f2180169012d238a135?per_page=3&page=1"],
+            ["/repos/PyGithub/PyGithub/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=1&per_page=3"],
         )
 
         # consuming the first page of files should not fire a request
@@ -453,7 +453,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repos/PyGithub/PyGithub/commits/f5f9756a1dd52a53820cc54927abb34725377987?per_page=3&page=1"],
+            ["/repos/PyGithub/PyGithub/commits/f5f9756a1dd52a53820cc54927abb34725377987?page=1&per_page=3"],
         )
 
         # consuming the first page of files should not fire a request
@@ -474,7 +474,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repos/PyGithub/PyGithub/commits/e359b83a04e8f34bedab0f2180169012d238a135?per_page=3&page=1"],
+            ["/repos/PyGithub/PyGithub/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=1&per_page=3"],
         )
 
         # reversing files does not fire a request because there is a last Link header in the first response
@@ -532,7 +532,7 @@ class PaginatedList(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/commits/f5f9756a1dd52a53820cc54927abb34725377987?per_page=3&page=1",
+                "/repos/PyGithub/PyGithub/commits/f5f9756a1dd52a53820cc54927abb34725377987?page=1&per_page=3",
             ],
         )
 

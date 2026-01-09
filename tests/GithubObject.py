@@ -244,31 +244,6 @@ class GithubObject(unittest.TestCase):
 
 class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
     # TODO: have lazy and eger tests
-    def testSetValuesIfNotSet(self):
-        set_value = gho.CompletableGithubObjectWithPaginatedProperty.set_values_if_not_set
-        self.assertIsNone(set_value(None, per_page=123))
-        self.assertEqual(set_value("/path/to/resource", per_page=123), "/path/to/resource?per_page=123")
-        self.assertEqual(
-            set_value("https://host/path/to/resource", per_page=123), "https://host/path/to/resource?per_page=123"
-        )
-        self.assertEqual(
-            set_value("https://host/path/to/resource?param=one&param=2", per_page=123),
-            "https://host/path/to/resource?param=one&param=2&per_page=123",
-        )
-
-        for url in [
-            "/path/to/resource",
-            "https://host/path/to/resource",
-            "https://host/path/to/resource?param=one&param=2",
-        ]:
-            # add per_page to url, which is ignored since parameter exists already
-            url = f"{url}{'&' if '?' in url else '?'}per_page=42"
-            self.assertEqual(set_value(url, per_page=123), url)
-
-            # add per_page to url, which is ignored since page exists already
-            url = f"{url}{'&' if '?' in url else '?'}page=1"
-            self.assertEqual(set_value(url, unless={"page"}, per_page=123), url)
-
     def testRepoCommitFilesDefault(self):
         with self.captureRequests() as requests:
             repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
@@ -338,7 +313,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?per_page=3&page=1",
+                "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=3",
                 "/repositories/3544490/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?per_page=3&page=2",
             ],
         )
@@ -538,7 +513,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=1",
+                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=3",
                 "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=2",
                 "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
                 "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
@@ -607,7 +582,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             requests,
             lambda r: r.url,
             [
-                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=1",
+                "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=3",
                 "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=2",
                 "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=1",
                 "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",

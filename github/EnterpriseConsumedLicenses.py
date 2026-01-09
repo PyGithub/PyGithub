@@ -93,8 +93,8 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         return PaginatedList(
             NamedEnterpriseUser,
             self._requester,
-            self._full_url,
-            {"page": 1},
+            self.url,
+            self._pagination_parameters,
             headers=None,
             list_item="users",
             firstData=self.raw_data,

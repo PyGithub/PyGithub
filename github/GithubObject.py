@@ -612,19 +612,23 @@ class CompletableGithubObject(GithubObject, ABC):
 
     def _completeIfNeeded(self) -> None:
         if not self.__completed:
-            self.__complete()
+            self._complete()
 
-    def __complete(self) -> None:
+    def _complete(self, parameters: dict[str, Any] | None = None) -> None:
         if self._url.value is None:
             raise IncompletableObject(400, message="Cannot complete object as it contains no URL")
-        headers, data = self._requester.requestJsonAndCheck("GET", self._url.value, headers=self.__completeHeaders)
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self._url.value, parameters=parameters, headers=self.__completeHeaders
+        )
         self._storeAndUseAttributes(headers, data)
         self._set_complete()
 
     def _set_complete(self) -> None:
         self.__completed = True
 
-    def update(self, additional_headers: dict[str, Any] | None = None) -> bool:
+    def update(
+        self, additional_headers: dict[str, Any] | None = None, parameters: dict[str, Any] | None = None
+    ) -> bool:
         """
         Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
         changed.
@@ -638,7 +642,7 @@ class CompletableGithubObject(GithubObject, ABC):
             conditionalRequestHeader.update(additional_headers)
 
         status, responseHeaders, output = self._requester.requestJson(
-            "GET", self._url.value, headers=conditionalRequestHeader
+            "GET", self._url.value, parameters=parameters, headers=conditionalRequestHeader
         )
         if status == 304:
             return False
@@ -653,12 +657,7 @@ class CompletableGithubObject(GithubObject, ABC):
 
     @property
     def url(self) -> str:
-        # strip off any query parameters to get a clean URL
-        return self._full_url.split("?", 1)[0]
-
-    @property
-    def _full_url(self) -> str:
-        # this url may contain query parameters like pagination
+        self._completeIfNotSet(self._url)
         return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
@@ -692,60 +691,40 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     ):
         assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
 
-        # add per_page to URL if the instance is incomplete
-        # we only modify the URL if this instance is incomplete
+        # add per_page only if the instance is incomplete
         if not completed:
-            if per_page is None:
-                # we use the default per_page (not Consts.DEFAULT_PER_PAGE as this URL might have a different default)
-                # we set page=1 to get pagination links, PaginatedList can work from there
-                url = self.set_if_not_set(attributes, url, page=1)
-            else:
+            # we set page=1 to get pagination links, PaginatedList can work from there
+            self.__pagination_parameters = {"page": 1}
+            if per_page is not None:
                 # we set the given per_page
-                url = self.set_if_not_set(attributes, url, per_page=per_page, page=1)
+                self.__pagination_parameters["per_page"] = per_page
+            else:
+                # we use the per_page explicitly configured with the Requester
+                if requester.per_page != Consts.DEFAULT_PER_PAGE:
+                    self.__pagination_parameters["per_page"] = requester.per_page
+                else:
+                    # we use the default (no) per_page (not Consts.DEFAULT_PER_PAGE, the URL might have a different default)
+                    pass
 
         super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
 
-    def _useAttributes(self, attributes: Any) -> None:
-        # this object might have been created with an url while completing the object
-        # provides another url, which might reset initial pagination information
-        # we recover those pagination information here
-        if is_defined(self._url) and "url" in attributes:
-            parameters = self.requester.get_parameters_of_url(self._full_url)
-            pagination_params = {"per_page", "page"}
-            pagination = {
-                k: v[0] for k, v in parameters.items() if k in pagination_params and isinstance(v, list) and len(v) == 1
-            }
-            attributes["url"] = self.set_values_if_not_set(attributes["url"], unless=pagination_params, **pagination)
-        super()._useAttributes(attributes)
+    @property
+    def _pagination_parameters(self) -> dict[str, Any]:
+        return self.__pagination_parameters
 
-    @classmethod
-    def set_if_not_set(
-        cls, attributes: dict[str, Any] | None, url: str | None, unless: set[str] | None = None, **kwargs: Any
-    ) -> str | None:
-        # add values to the URL in the attributes
-        if url is not None and attributes is not None and "url" in attributes:
-            attributes["url"] = cls.set_values_if_not_set(attributes["url"], unless, **kwargs)
-        # add values to the request URL
-        return cls.set_values_if_not_set(url, unless, **kwargs)
+    def _complete(self, parameters: dict[str, Any] | None = None) -> None:
+        # inject pagination parameters into the complete request
+        parameters = {**parameters} if parameters else {}
+        parameters.update(**self.__pagination_parameters)
+        super()._complete(parameters=parameters)
 
-    @staticmethod
-    def set_values_if_not_set(url: str | None, unless: set[str] | None = None, **kwargs: Any) -> str | None:
-        if url is None:
-            return url
-
-        if unless is None:
-            unless = set()
-
-        from .Requester import Requester
-
-        params = Requester.get_parameters_of_url(url)
-        if any(p in params for p in unless):
-            return url
-
-        for k, v in kwargs.items():
-            if k not in params:
-                params[k] = [str(v)]
-        return Requester.add_parameters_to_url(url, params)
+    def update(
+        self, additional_headers: dict[str, Any] | None = None, parameters: dict[str, Any] | None = None
+    ) -> bool:
+        # inject pagination parameters into the complete request
+        parameters = {**parameters} if parameters else {}
+        parameters.update(**self.__pagination_parameters)
+        super().update(parameters=parameters)
 
 
 Param = ParamSpec("Param")
