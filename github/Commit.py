@@ -276,17 +276,11 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         :param commit_files_per_page: int Number of files retrieved per page.
                Iterating over the files will fetch pages of this size. The default page size is 30, the maximum is 100.
         """
-        assert (
-            commit_files_per_page is None or isinstance(commit_files_per_page, int) and commit_files_per_page > 0
-        ), commit_files_per_page
-        url_parameters = {"page": 1}
-        if commit_files_per_page is not None:
-            url_parameters["per_page"] = commit_files_per_page
         return PaginatedList(
             github.File.File,
             self._requester,
             self.url,
-            url_parameters,
+            self._pagination_parameters_with(page=1, per_page=commit_files_per_page),
             headers=None,
             list_item="files",
         )

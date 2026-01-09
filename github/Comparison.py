@@ -168,19 +168,11 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         :param comparison_commits_per_page: int Number of commits retrieved per page.
                Iterating over the commits will fetch pages of this size. The default page size is 250, the maximum is 300.
         """
-        assert (
-            comparison_commits_per_page is None
-            or isinstance(comparison_commits_per_page, int)
-            and comparison_commits_per_page > 0
-        ), comparison_commits_per_page
-        url_parameters = {"page": 1}
-        if comparison_commits_per_page is not None:
-            url_parameters["per_page"] = comparison_commits_per_page
         return PaginatedList(
             github.Commit.Commit,
             self._requester,
             self.url,
-            url_parameters,
+            self._pagination_parameters_with(page=1, per_page=comparison_commits_per_page),
             headers=None,
             list_item="commits",
         )

@@ -113,18 +113,11 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         :param licence_users_per_page: int Number of users retrieved per page.
                Iterating over the users will fetch pages of this size. The default page size is 30, the maximum is 100.
         """
-
-        assert (
-            licence_users_per_page is None or isinstance(licence_users_per_page, int) and licence_users_per_page > 0
-        ), licence_users_per_page
-        url_parameters = {"page": 1}
-        if licence_users_per_page is not None:
-            url_parameters["per_page"] = licence_users_per_page
         return PaginatedList(
             NamedEnterpriseUser,
             self._requester,
             self.url,
-            url_parameters,
+            self._pagination_parameters_with(page=1, per_page=licence_users_per_page),
             headers=None,
             list_item="users",
         )

@@ -708,6 +708,15 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     def _pagination_parameters(self) -> dict[str, Any]:
         return self.__pagination_parameters
 
+    def _pagination_parameters_with(self, page: int, per_page: int | None) -> dict[str, Any]:
+        assert page > 0, page
+        assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
+        parameters = self._pagination_parameters.copy()
+        parameters["page"] = page
+        if per_page is not None:
+            parameters["per_page"] = per_page
+        return parameters
+
     def _complete(self, parameters: dict[str, Any] | None = None) -> None:
         # inject pagination parameters into the complete request
         parameters = {**parameters} if parameters else {}
