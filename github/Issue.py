@@ -768,7 +768,7 @@ class Issue(CompletableGithubObject):
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         elif "url" in attributes:
-            number = self._url_path_elements(attributes["url"])[-1]
+            number = attributes["url"].split("/")[-1]
             if number.isnumeric():
                 self._number = self._makeIntAttribute(int(number))
         if "parent_issue_url" in attributes:  # pragma no branch

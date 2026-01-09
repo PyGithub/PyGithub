@@ -292,7 +292,7 @@ class Environment(CompletableGithubObject):
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         elif "url" in attributes and attributes["url"]:
-            quoted_name = self._url_path_elements(attributes["url"])[-1]
+            quoted_name = attributes["url"].split("/")[-1]
             name = urllib.parse.unquote(quoted_name)
             self._name = self._makeStringAttribute(name)
         if "node_id" in attributes:  # pragma no branch

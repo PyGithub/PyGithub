@@ -4842,7 +4842,7 @@ class Repository(CompletableGithubObject):
                     base_url = base_url[:-1]
                 url = url.removeprefix(base_url)
             if url.startswith("/repos/") and url.count("/") == 3:
-                self._name = self._makeStringAttribute(self._url_path_elements(attributes["url"])[-1])
+                self._name = self._makeStringAttribute(attributes["url"].split("/")[-1])
         elif "full_name" in attributes and "/" in attributes["full_name"]:
             name = attributes["full_name"].split("/", 2)[1]
             self._name = self._makeStringAttribute(name)

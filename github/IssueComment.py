@@ -276,7 +276,7 @@ class IssueComment(CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         elif "url" in attributes and attributes["url"]:
-            id = self._url_path_elements(attributes["url"])[-1]
+            id = attributes["url"].split("/")[-1]
             if id.isnumeric():
                 self._id = self._makeIntAttribute(int(id))
         if "issue_url" in attributes:  # pragma no branch

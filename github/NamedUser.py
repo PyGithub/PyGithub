@@ -641,7 +641,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         elif "url" in attributes and attributes["url"]:
-            id = self._url_path_elements(attributes["url"])[-1]
+            id = attributes["url"].split("/")[-1]
             # url could also reference user id (int): /users/login
             # or some derived class like /orgs/{org}/invitations/{invitation_id}
             if id.isnumeric() and attributes["url"].endswith(f"/user/{id}"):
@@ -657,7 +657,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "login" in attributes:  # pragma no branch
             self._login = self._makeStringAttribute(attributes["login"])
         elif "url" in attributes and "/" in attributes["url"]:
-            login = self._url_path_elements(attributes["url"])[-1]
+            login = attributes["url"].split("/")[-1]
             # url could also reference user id (int): /user/id
             # or some derived class like /orgs/{org}/invitations/{invitation_id}
             if attributes["url"].endswith(f"/users/{login}"):

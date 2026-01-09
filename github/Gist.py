@@ -334,7 +334,7 @@ class Gist(CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         elif "url" in attributes and attributes["url"]:
-            quoted_id = self._url_path_elements(attributes["url"])[-1]
+            quoted_id = attributes["url"].split("/")[-1]
             id = urllib.parse.unquote(quoted_id)
             self._id = self._makeStringAttribute(id)
         if "node_id" in attributes:  # pragma no branch
