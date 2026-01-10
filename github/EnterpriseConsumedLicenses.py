@@ -54,6 +54,9 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
     The reference can be found here
     https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
 
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`EnterpriseConsumedLicenses.users` or :meth:`EnterpriseConsumedLicenses.get_users`.
+
     """
 
     def _initAttributes(self) -> None:
@@ -81,14 +84,13 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
     @property
     def users(self) -> PaginatedList[NamedEnterpriseUser]:
         """
-        Identical to calling :meth:`github.Commit.Commit.get_files` except that this uses the pagination given when
-        getting this EnterpriseConsumedLicenses object (see
-        :meth:`github.Enterprise.Enterprise.get_consumed_licenses`).
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
 
-        A first page of users is retrieved when calling :meth:`github.Enterprise.Enterprise.get_consumed_licenses`.
-        Subsequent pages of the same size are retrieved while iterating over this :class:`github.PaginatedList.PaginatedList`.
-        In contrast, :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.get_users` ignores that exiting first page of users.
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`github.Enterprise.Enterprise.get_consumed_licenses`,
+        :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.get_users`, or :meth:`github.Github`.
 
+        If no ``per_page`` is given, the default page size is 30. The maximum is 100.
         """
         return PaginatedList(
             NamedEnterpriseUser,
@@ -105,10 +107,9 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
 
-        Identical to calling :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users` except that this uses the given pagination.
-        Any existing users retrieved together with this EnterpriseConsumedLicenses object are ignored.
+        Identical to calling :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users`, except that this uses the given ``per_page`` value.
 
-        See :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users` for more details.
+        For more details, see :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users`.
 
         :param licence_users_per_page: int Number of users retrieved per page.
                Iterating over the users will fetch pages of this size. The default page size is 30, the maximum is 100.

@@ -176,54 +176,9 @@ class PaginatedList(PaginatedListBase[T]):
 
     The default page size is 30. The maximum page size is usually 100.
 
-    Some classes have one property that is a paginated list. The default and maximum page size
-    for those properties are specific to that class. Use the ``*_per_page`` argument when getting
-    such an object to set the page size for the property. If no value is given for the ``*_per_page``
-    argument, the class-specific default is used.
+    Paginated lists are returned by ``get_…`` methods. Additionally, some classes have one property
+    that is a paginated list, called `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
 
-    For example::
-
-        sha = "c4ec16a18bb4401e89967a8e395103c95cca5c2f"
-        repo_name = "PyGithub/PyGithub"
-
-        # page size for paginated lists returned by methods
-        g = github.Github(per_page=100)
-        repo = g.get_repo(repo_name)
-
-        # page size for the Commit.files property only
-        commit = repo.get_commit(sha, commit_files_per_page=300)
-
-        # files are fetched in pages of 300, not 100,
-        # where the first page has already been retrieved via repo.get_commit
-        for file in commit.files:
-            pass
-
-    Alternatively, a ``get_*`` method exists for such a property, which also allows to provide a
-    ``per_page`` argument. This method is usually useful if the object is retrieved indirectly.
-
-    For example::
-
-        sha1 = "18eeb269686aa5ee61ee7305ffbc3f0146c0bf5c"
-        sha2 = "c4ec16a18bb4401e89967a8e395103c95cca5c2f"
-        repo_name = "PyGithub/PyGithub"
-
-        # page size for paginated lists returned by methods
-        g = github.Github(per_page=100)
-        repo = g.get_repo(repo_name)
-
-        # page size for the Compare.commits property only
-        compare = repo.compare(sha1, sha2, comparison_commits_per_page=1)
-
-        # iterating over Compare.commits happens in pages of 1
-        commit = compare.commits[0]
-
-        # here, files are fetched in default-size pages
-        for file in commit.files:
-            pass
-
-        # here, files are fetched in pages of 300
-        for file in commit.get_files(per_page=300):
-            pass
     """
 
     # v3: move * before firstUrl and fix call sites

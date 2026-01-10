@@ -52,6 +52,12 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Comparisons.
 
+    The reference can be found here
+    https://docs.github.com/en/rest/commits/commits#compare-two-commits
+
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`Comparison.commits` or :meth:`Comparison.get_commits`.
+
     The OpenAPI schema can be found at
 
     - /components/schemas/commit-comparison
@@ -94,13 +100,15 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
     @property
     def commits(self) -> PaginatedList[Commit]:
         """
-        Identical to calling :meth:`github.Comparison.Comparison.get_commits` except that this uses the pagination
-        given when getting this comparison (see :meth:`github.Repository.Repository.compare`).
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
 
-        A first page of commits is retrieved when calling :meth:`github.Repository.Repository.compare`.
-        Subsequent pages of the same size are retrieved while iterating over this :class:`github.PaginatedList.PaginatedList`.
-        In contrast, :meth:`github.Comparison.Comparison.get_commits` ignores that exiting first page of commits.
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`github.Repository.Repository.compare`,
+        :meth:`github.Comparison.Comparison.get_commits`, or :meth:`github.Github`.
 
+        If no ``per_page`` is given, the default page size is 250. The maximum is 1000.
+
+        At most 10000 commits can be retrieved.
         """
         return PaginatedList(
             github.Commit.Commit,
@@ -120,6 +128,9 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
 
     @property
     def files(self) -> list[github.File.File]:
+        """
+        Only the first 300 changed files.
+        """
         self._completeIfNotSet(self._files)
         return self._files.value
 
@@ -157,16 +168,13 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
 
-        Identical to calling :meth:`github.Comparison.Comparison.commits` except that this uses the given pagination.
-        Commits retrieved when calling :meth:`github.Repository.Repository.compare` are ignored.
+        Identical to calling :meth:`github.Comparison.Comparison.commits`, except that this uses the given ``per_page`` value.
 
-        Identical to calling :meth:`github.Comparison.Comparison.commits` except that this uses the given pagination.
-        Any existing commits retrieved together with this comparison are ignored.
-
-        See :meth:`github.Comparison.Comparison.commits` for more details.
+        For more details, see :meth:`github.Comparison.Comparison.commits`.
 
         :param comparison_commits_per_page: int Number of commits retrieved per page.
-               Iterating over the commits will fetch pages of this size. The default page size is 250, the maximum is 300.
+               Iterating over the commits will fetch pages of this size. The default page size is 250, the maximum is 1000.
+               At most 10000 commits can be retrieved.
         """
         return PaginatedList(
             github.Commit.Commit,

@@ -536,12 +536,12 @@ class CompletableGithubObject(GithubObject, ABC):
         initialized will then trigger a request to complete all attributes.
 
         A partially initialized CompletableGithubObject (completed=False) can be completed
-        via complete(). This requires the url to be given via parameter `url` or `attributes`.
+        via ``complete()``. This requires the url to be given via parameter ``url`` or ``attributes``.
 
-        With a requester where `Requester.is_lazy == True`, this CompletableGithubObjects is
-        partially initialized. This requires the url to be given via parameter `url` or `attributes`.
+        With a requester where ``Requester.is_lazy == True``, this CompletableGithubObjects is
+        partially initialized. This requires the url to be given via parameter ``url`` or ``attributes``.
         Any CompletableGithubObject created from this lazy object will be lazy itself if created with
-        parameter `url` or `attributes`.
+        parameter ``url`` or ``attributes``.
 
         :param requester: requester
         :param headers: response headers
@@ -669,8 +669,8 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     """
     A CompletableGithubObject that has a property that is subject to pagination.
 
-    An instance created from a Requester with a non-default value for `per_page` must have the
-    `per_page` value in the URL in order for the paginated property to use the `per_page` value.
+    An instance created from a Requester with a non-default value for ``per_page`` must have the
+    ``per_page`` value in the URL in order for the paginated property to use the ``per_page`` value.
 
     """
 

@@ -1371,7 +1371,7 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/compare/{basehead} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
-        :param comparison_commits_per_page: int Number of commits retrieved with the comparison. Iterating over the commits property will fetch pages of this size. The default page size is 250, the maximum is 300.
+        :param comparison_commits_per_page: int Number of commits retrieved with the comparison. Iterating over the commits property will fetch pages of this size. The default page size is 250, the maximum is 1000. At most 10000 commits can be retrieved.
         :rtype: :class:`github.Comparison.Comparison`
         """
         assert isinstance(base, str), base
@@ -2396,7 +2396,7 @@ class Repository(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
-        :param commit_files_per_page: int Number of files retrieved with the commit. Iterating over the files property will fetch pages of this size. Default is 300. Maximum is 300.
+        :param commit_files_per_page: int Number of files retrieved with the commit. Iterating over the files property will fetch pages of this size. Default is 300. Maximum is 300. At most 3000 files can be retrieved.
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha

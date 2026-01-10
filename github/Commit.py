@@ -85,7 +85,10 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
     This class represents Commits.
 
     The reference can be found here
-    https://docs.github.com/en/rest/commits/commits#get-a-commit-object
+    https://docs.github.com/en/rest/commits/commits#get-a-commit
+
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`Commit.files` or :meth:`Commit.get_files`.
 
     The OpenAPI schema can be found at
 
@@ -143,13 +146,15 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
     @property
     def files(self) -> PaginatedList[File]:
         """
-        Identical to calling :meth:`github.Commit.Commit.get_files` except that this uses the pagination given when
-        getting this commit (see :meth:`github.Repository.Repository.get_commit`).
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
 
-        A first page of commits is retrieved when calling :meth:`github.Repository.Repository.get_commit`.
-        Subsequent pages of the same size are retrieved while iterating over this :class:`github.PaginatedList.PaginatedList`.
-        In contrast, :meth:`github.Comparison.Comparison.get_files` ignores that exiting first page of commits.
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`github.Repository.Repository.get_commit`,
+        :meth:`github.Commit.Commit.get_files`, or :meth:`github.Github`.
 
+        If no ``per_page`` is given, the default page size is 300. The maximum is 300.
+
+        At most 3000 files can be retrieved.
         """
         return PaginatedList(
             github.File.File,
@@ -268,13 +273,13 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{sha} <https://docs.github.com/en/rest/reference/repos#commits>`_
 
-        Identical to calling :meth:`github.Commit.Commit.files` except that this uses the given pagination.
-        Any existing files retrieved together with this commit are ignored.
+        Identical to calling :meth:`github.Commit.Commit.files`, except that this uses the given ``per_page`` value.
 
-        See :meth:`github.Commit.Commit.files` for more details.
+        For more details, see :meth:`github.Commit.Commit.files`.
 
         :param commit_files_per_page: int Number of files retrieved per page.
-               Iterating over the files will fetch pages of this size. The default page size is 30, the maximum is 100.
+               Iterating over the files will fetch pages of this size. The default page size is 300, the maximum is 300.
+               At most 3000 files can be retrieved.
         """
         return PaginatedList(
             github.File.File,
