@@ -111,6 +111,12 @@ class PaginatedListBase(Generic[T]):
         self.__elements += newElements
         return newElements
 
+    def _clear(self) -> None:
+        self.__elements.clear()
+
+    def _reverse(self) -> None:
+        self.__elements.reverse()
+
     class _Slice:
         def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
             self.__list = theList
@@ -162,6 +168,62 @@ class PaginatedList(PaginatedListBase[T]):
 
         some_repos = repos.get_page(0)
         some_other_repos = repos.get_page(3)
+
+    Individual items of this list are fetched in pages. The size of those pages
+    is configured via ``per_page`` when creating the :class:`github.MainClass.Github` instance::
+
+        g = github.Github(per_page=100)
+
+    The default page size is 30. The maximum page size is usually 100.
+
+    Some classes have one property that is a paginated list. The default and maximum page size
+    for those properties are specific to that class. Use the ``*_per_page`` argument when getting
+    such an object to set the page size for the property. If no value is given for the ``*_per_page``
+    argument, the class-specific default is used.
+
+    For example::
+
+        sha = "c4ec16a18bb4401e89967a8e395103c95cca5c2f"
+        repo_name = "PyGithub/PyGithub"
+
+        # page size for paginated lists returned by methods
+        g = github.Github(per_page=100)
+        repo = g.get_repo(repo_name)
+
+        # page size for the Commit.files property only
+        commit = repo.get_commit(sha, commit_files_per_page=300)
+
+        # files are fetched in pages of 300, not 100,
+        # where the first page has already been retrieved via repo.get_commit
+        for file in commit.files:
+            pass
+
+    Alternatively, a ``get_*`` method exists for such a property, which also allows to provide a
+    ``per_page`` argument. This method is usually useful if the object is retrieved indirectly.
+
+    For example::
+
+        sha1 = "18eeb269686aa5ee61ee7305ffbc3f0146c0bf5c"
+        sha2 = "c4ec16a18bb4401e89967a8e395103c95cca5c2f"
+        repo_name = "PyGithub/PyGithub"
+
+        # page size for paginated lists returned by methods
+        g = github.Github(per_page=100)
+        repo = g.get_repo(repo_name)
+
+        # page size for the Compare.commits property only
+        compare = repo.compare(sha1, sha2, comparison_commits_per_page=1)
+
+        # iterating over Compare.commits happens in pages of 1
+        commit = compare.commits[0]
+
+        # here, files are fetched in default-size pages
+        for file in commit.files:
+            pass
+
+        # here, files are fetched in pages of 300
+        for file in commit.get_files(per_page=300):
+            pass
     """
 
     # v3: move * before firstUrl and fix call sites
@@ -189,19 +251,28 @@ class PaginatedList(PaginatedListBase[T]):
             if not (isinstance(list_item, list) and all(isinstance(item, str) for item in list_item)):
                 raise ValueError("With graphql_query given, item_list must be a list of strings")
 
+        firstParams = firstParams or {}
+
+        # we add the per_page parameter if that value is not the default
+        # but only if there is no per_page parameter in the firstParams
+        if "per_page" not in firstParams and requester.per_page != Consts.DEFAULT_PER_PAGE:
+            firstParams["per_page"] = requester.per_page
+
         self.__requester = requester
         self.__contentClass = contentClass
 
         self.__is_rest = firstUrl is not None or firstData is not None
         self.__firstUrl = firstUrl
-        self.__firstParams: dict[str, Any] = firstParams or {}
+        self.__firstParams: dict[str, Any] = firstParams
+        self.__firstData = firstData
+        self.__firstHeaders = firstHeaders
         self.__nextUrl = firstUrl
-        self.__nextParams: dict[str, Any] = firstParams or {}
+        self.__nextParams: dict[str, Any] = firstParams
+        self.__lastUrl: str | None = None
         self.__headers = headers
         self.__list_item = list_item
         self.__total_count_item = total_count_item
-        if self.__requester.per_page != 30:
-            self.__nextParams["per_page"] = self.__requester.per_page
+
         self._reversed = False
         self.__totalCount: int | None = None
         self._attributesTransformer = attributesTransformer
@@ -283,6 +354,9 @@ class PaginatedList(PaginatedListBase[T]):
             self.__firstParams,
             headers=self.__headers,
             list_item=self.__list_item,
+            total_count_item=self.__total_count_item,
+            firstData=self.__firstData,
+            firstHeaders=self.__firstHeaders,
             attributesTransformer=self._attributesTransformer,
             graphql_query=self.__graphql_query,
             graphql_variables=self.__graphql_variables,
@@ -293,16 +367,20 @@ class PaginatedList(PaginatedListBase[T]):
     def __reverse(self) -> None:
         self._reversed = True
         if self.is_rest:
-            lastUrl = self._getLastPageUrl()
-            if lastUrl:
-                self.__nextUrl = lastUrl
-                if self.__nextParams:
-                    # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
-                    self.__nextParams = {
-                        k: v
-                        for k, v in self.__nextParams.items()
-                        if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
-                    }
+            if self.__lastUrl is None:
+                self.__lastUrl = self._getLastPageUrl()
+            if self.__lastUrl:
+                if self.__lastUrl != self.__firstUrl:
+                    super()._clear()
+                    self.__nextUrl = self.__lastUrl
+                    if self.__nextParams:
+                        # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
+                        self.__nextParams = {
+                            k: v
+                            for k, v in self.__nextParams.items()
+                            if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
+                        }
+            super()._reverse()
 
     # To support Python's built-in `reversed()` method
     def __reversed__(self) -> PaginatedList[T]:
@@ -364,6 +442,8 @@ class PaginatedList(PaginatedListBase[T]):
                         self.__nextUrl = links["prev"]
                 elif "next" in links:
                     self.__nextUrl = links["next"]
+                if "last" in links:
+                    self.__lastUrl = links["last"]
             self.__nextParams = {}
             if self.__list_item in data:
                 self.__totalCount = data.get(self.__total_count_item)
