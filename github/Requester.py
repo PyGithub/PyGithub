@@ -434,7 +434,7 @@ class Requester:
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
-        assert isinstance(per_page, int), per_page
+        assert isinstance(per_page, int) and per_page > 0, per_page
         self.per_page = per_page
 
         self.oauth_scopes = None
@@ -506,6 +506,7 @@ class Requester:
         if len(parameter_list) == 0:
             return url
         else:
+            # we need deterministic URLs for stable test assertions
             return f"{url}?{urllib.parse.urlencode(sorted(parameter_list))}"
 
     def close(self) -> None:

@@ -252,14 +252,6 @@ class PaginatedList(PaginatedListBase[T]):
                 raise ValueError("With graphql_query given, item_list must be a list of strings")
 
         firstParams = firstParams or {}
-        # move parameters from firstUrl into firstParams, give precedence to existing params in firstParams
-        if firstUrl is not None:
-            # extract parameters from firstUrl
-            firstUrlParams = requester.get_parameters_of_url(firstUrl)
-            # remove parameters from firstUrl
-            firstUrl = firstUrl.split("?")[0]
-            # update firstParams with parameters from firstUrl, give precedence to firstParams
-            firstParams = {**firstUrlParams, **firstParams}
 
         # we add the per_page parameter if that value is not the default
         # but only if there is no per_page parameter in the firstParams
