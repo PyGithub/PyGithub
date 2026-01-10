@@ -168,15 +168,15 @@ class Requester(Framework.TestCase):
             gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10, "page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10", {"page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10&page=1", {"page": 2}),
         )
         self.assertEqual(

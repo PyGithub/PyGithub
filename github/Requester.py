@@ -497,7 +497,7 @@ class Requester:
     ) -> str:
         scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
         url_params = urllib.parse.parse_qs(query)
-        # union parameters in url with given parameters, the latter have precedence
+        # union parameters in url with given parameters, the latter has precedence
         url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
         parameter_list = [(key, value) for key, values in url_params.items() for value in values]
         # remove query from url
@@ -506,7 +506,7 @@ class Requester:
         if len(parameter_list) == 0:
             return url
         else:
-            return f"{url}?{urllib.parse.urlencode(parameter_list)}"
+            return f"{url}?{urllib.parse.urlencode(sorted(parameter_list))}"
 
     def close(self) -> None:
         """

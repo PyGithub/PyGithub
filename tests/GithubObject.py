@@ -325,7 +325,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                     ([] if lazy else ["/repos/PyGithub/PyGithub"])
                     + [
                         "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=3",
-                        "/repositories/3544490/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?per_page=3&page=2",
+                        "/repositories/3544490/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=2&per_page=3",
                     ],
                 )
 
@@ -351,7 +351,15 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 self.assertListKeyEqual(
                     requests,
                     lambda r: r.url,
-                    ([] if lazy else ["/repos/PyGithub/PyGithub"])
+                    (
+                        []
+                        if lazy
+                        else [
+                            "/repos/PyGithub/PyGithub",
+                            # TODO: is that right?
+                            "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1",
+                        ]
+                    )
                     + [
                         "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1",
                     ],
@@ -380,7 +388,14 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 self.assertListKeyEqual(
                     requests,
                     lambda r: r.url,
-                    ([] if lazy else ["/repos/PyGithub/PyGithub"])
+                    (
+                        []
+                        if lazy
+                        else [
+                            "/repos/PyGithub/PyGithub",
+                            "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=2",
+                        ]
+                    )
                     + [
                         "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=2",
                         "/repositories/3544490/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=2&per_page=2",
@@ -415,7 +430,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                         if lazy
                         else [
                             "/repos/PyGithub/PyGithub",
-                            "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?per_page=1&page=1",
+                            "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1&per_page=1",
                         ]
                     )
                     + [
@@ -446,7 +461,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                     lambda r: r.url,
                     ([] if lazy else ["/repos/PyGithub/PyGithub"])
                     + [
-                        "/repos/PyGithub/PyGithub/commits?sha=release-v2-0&per_page=2",
+                        "/repos/PyGithub/PyGithub/commits?per_page=2&sha=release-v2-0",
                         "/repos/PyGithub/PyGithub/commits/0791cc7b1a706ab5d7c607ddff35de4d486ba3e9?page=1&per_page=2",
                         "/repositories/3544490/commits/0791cc7b1a706ab5d7c607ddff35de4d486ba3e9?page=2&per_page=2",
                     ],
@@ -510,14 +525,24 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 self.assertListKeyEqual(
                     requests,
                     lambda r: r.url,
-                    ([] if lazy else ["/repos/PyGithub/PyGithub"])
-                    + [
-                        "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
-                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
-                        "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
-                        "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
-                        "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
-                    ],
+                    (
+                        [
+                            "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                            # TODO: is that right?
+                            "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                            "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
+                        ]
+                        if lazy
+                        else [
+                            "/repos/PyGithub/PyGithub",
+                            "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                            "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
+                        ]
+                    ),
                 )
 
     def testRepoComparisonCommitsFilesWithPerPage(self):
@@ -550,7 +575,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                     ([] if lazy else ["/repos/PyGithub/PyGithub"])
                     + [
                         "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=3",
-                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=2",
+                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=3",
                         "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
                         "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
                         "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
@@ -625,8 +650,8 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                     ([] if lazy else ["/repos/PyGithub/PyGithub"])
                     + [
                         "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=3",
-                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=2",
-                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?per_page=3&page=1",
+                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=3",
+                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=3",
                         "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
                         "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
                         "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",

@@ -920,7 +920,7 @@ class Repository(Framework.TestCase):
             lambda r: r.url,
             [
                 "/repos/PyGithub/PyGithub/compare/v0.6...v0.7?page=1&per_page=3",
-                "/repositories/3544490/compare/v0.6...v0.7?per_page=3&page=2",
+                "/repositories/3544490/compare/v0.6...v0.7?page=2&per_page=3",
             ],
         )
 

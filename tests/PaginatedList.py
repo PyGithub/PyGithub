@@ -420,7 +420,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?per_page=3&page=2"],
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=2&per_page=3"],
         )
 
         # consuming further items of the second page does not fire a request
@@ -437,7 +437,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?per_page=3&page=3"],
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=3&per_page=3"],
         )
 
     def testWithFirstSinglePage(self):
@@ -488,7 +488,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?per_page=3&page=3"],
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=3&per_page=3"],
         )
 
         # consuming items of the second page fetches the second page
@@ -497,7 +497,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?per_page=3&page=2"],
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=2&per_page=3"],
         )
         # consuming further items of the second page does not fire a request
         with self.captureRequests() as requests:
@@ -515,7 +515,7 @@ class PaginatedList(Framework.TestCase):
         self.assertListKeyEqual(
             requests,
             lambda r: r.url,
-            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?per_page=3&page=1"],
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=1&per_page=3"],
         )
 
     def testReversedWithFirstSinglePage(self):
