@@ -1376,11 +1376,7 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
-        assert (
-            comparison_commits_per_page is None
-            or isinstance(comparison_commits_per_page, int)
-            and comparison_commits_per_page > 0
-        ), comparison_commits_per_page
+        # comparison_commits_per_page asserted in Commit(CompletableGithubObjectWithPaginatedProperty)
         base = urllib.parse.quote(base)
         head = urllib.parse.quote(head)
         return github.Comparison.Comparison(
@@ -2404,9 +2400,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
-        assert (
-            commit_files_per_page is None or isinstance(commit_files_per_page, int) and commit_files_per_page > 0
-        ), commit_files_per_page
+        # commit_files_per_page asserted in Commit(CompletableGithubObjectWithPaginatedProperty)
         sha = urllib.parse.quote(sha, safe="")
         url = f"{self.url}/commits/{sha}"
         return github.Commit.Commit(self._requester, url=url, per_page=commit_files_per_page)
