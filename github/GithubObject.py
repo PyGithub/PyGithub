@@ -729,7 +729,7 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
         # inject pagination parameters into the complete request
         parameters = {**parameters} if parameters else {}
         parameters.update(**self.__pagination_parameters)
-        super().update(parameters=parameters)
+        return super().update(parameters=parameters)
 
 
 Param = ParamSpec("Param")
