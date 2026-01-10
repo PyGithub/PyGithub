@@ -568,6 +568,9 @@ class CompletableGithubObject(GithubObject, ABC):
         if requester.is_not_lazy and completed is None and not response_given:
             self.complete()
 
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
+
     def __eq__(self, other: Any) -> bool:
         return (
             other.__class__ is self.__class__
@@ -601,6 +604,11 @@ class CompletableGithubObject(GithubObject, ABC):
         """
         self._completeIfNeeded()
         return super().raw_headers
+
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
 
     def complete(self) -> Self:
         self._completeIfNeeded()
@@ -651,14 +659,6 @@ class CompletableGithubObject(GithubObject, ABC):
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True
-
-    def _initAttributes(self) -> None:
-        self._url: Attribute[str] = NotSet
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "url" in attributes:  # pragma no branch
