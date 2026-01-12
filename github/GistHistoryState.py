@@ -231,3 +231,4 @@ class GistHistoryState(CompletableGithubObject):
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
         if "version" in attributes:  # pragma no branch
             self._version = self._makeStringAttribute(attributes["version"])
+

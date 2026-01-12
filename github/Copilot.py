@@ -94,3 +94,4 @@ class Copilot(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "org_name" in attributes:  # pragma no branch
             self._org_name = self._makeStringAttribute(attributes["org_name"])
+

@@ -140,3 +140,4 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
                 attributes["secret_scanning_push_protection"],
             )
+

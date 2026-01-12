@@ -555,3 +555,4 @@ class TestCase(BasicTestCase):
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
+

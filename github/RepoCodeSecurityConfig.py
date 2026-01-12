@@ -89,3 +89,4 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
             )
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
+

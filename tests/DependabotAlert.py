@@ -192,3 +192,4 @@ class DependabotAlert(Framework.TestCase):
         self.assertEqual(alert.state, "dismissed")
         self.assertEqual(alert.dismissed_reason, "tolerable_risk")
         self.assertEqual(alert.dismissed_comment, "Example comment")
+

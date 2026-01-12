@@ -1224,3 +1224,4 @@ class AuthenticatedUser(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "user_view_type" in attributes:  # pragma no branch
             self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])
+

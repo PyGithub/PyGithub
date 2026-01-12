@@ -372,3 +372,4 @@ class RepositoryAdvisory(Framework.TestCase):
                 (("npm", "b-package"), "4.0.10", ["function-name-c"], "<=4.0.9"),
             ],
         )
+

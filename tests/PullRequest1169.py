@@ -47,3 +47,4 @@ class PullRequest1169(Framework.TestCase):
         r = self.pull.create_review(event="APPROVE")
         self.assertEqual(r.id, 261942907)
         self.assertEqual(r.user.login, "Ferada")
+

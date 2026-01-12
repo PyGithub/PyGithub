@@ -341,3 +341,4 @@ class GithubIntegration:
 
         headers, data = self.__requester.requestJsonAndCheck("GET", "/app", headers=self._get_headers())
         return GithubApp(requester=self.__requester, headers=headers, attributes=data, completed=True)
+

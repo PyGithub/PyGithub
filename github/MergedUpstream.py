@@ -68,3 +68,4 @@ class MergedUpstream(NonCompletableGithubObject):
             self._merge_type = self._makeStringAttribute(attributes["merge_type"])
         if "message" in attributes:  # pragma no branch
             self._message = self._makeStringAttribute(attributes["message"])
+

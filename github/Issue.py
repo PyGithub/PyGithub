@@ -884,3 +884,4 @@ class SubIssue(Issue):
             self._parent_issue = self._makeClassAttribute(Issue, attributes["parent_issue"])
         if "priority_position" in attributes:
             self._priority_position = self._makeIntAttribute(attributes["priority_position"])
+

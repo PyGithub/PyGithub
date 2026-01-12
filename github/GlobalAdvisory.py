@@ -138,3 +138,4 @@ class GlobalAdvisory(AdvisoryBase):
                 attributes["vulnerabilities"],
             )
         super()._useAttributes(attributes)
+

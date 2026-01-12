@@ -251,3 +251,4 @@ class Download(CompletableGithubObject):
             self._size = self._makeIntAttribute(attributes["size"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

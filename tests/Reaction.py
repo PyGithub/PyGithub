@@ -63,3 +63,4 @@ class Reaction(Framework.TestCase):
 
     def testDelete(self):
         self.reactions[0].delete()
+

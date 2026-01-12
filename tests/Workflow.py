@@ -178,3 +178,4 @@ class Workflow(Framework.TestCase):
     def testEnableWhenAlreadyEnabled(self):
         workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
         self.assertTrue(workflow.enable())
+

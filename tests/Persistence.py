@@ -62,3 +62,4 @@ class Persistence(Framework.TestCase):
     def testLoadAndUpdate(self):
         loadedRepo = self.g.load(self.dumpedRepo)
         self.assertTrue(loadedRepo.update())
+

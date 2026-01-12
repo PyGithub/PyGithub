@@ -34,3 +34,4 @@ class Organization(Framework.TestCase):
         project = self.org.get_projects()[0].name
 
         self.assertEqual("ultratendency", project)
+

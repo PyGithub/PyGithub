@@ -53,3 +53,4 @@ class GitCommitVerification(Framework.TestCase):
         self.assertEqual(verification.reason, "valid")
         self.assertRegex(verification.signature, ".*PGP.*")
         self.assertRegex(verification.payload, ".*tree.*")
+

@@ -552,3 +552,4 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
         self._login, self._password = auth
 
         return self
+

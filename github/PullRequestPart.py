@@ -107,3 +107,4 @@ class PullRequestPart(NonCompletableGithubObject):
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+

@@ -2405,3 +2405,4 @@ class Organization(CompletableGithubObject):
             self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])
         if "web_commit_signoff_required" in attributes:  # pragma no branch
             self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
+

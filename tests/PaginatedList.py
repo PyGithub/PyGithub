@@ -415,3 +415,4 @@ class PaginatedList(Framework.TestCase):
 
         # accessing totalCount before iterating the PaginatedList triggers another request
         self.assertEqual(repo.get_discussions("id number").totalCount, 65)
+

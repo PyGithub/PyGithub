@@ -86,3 +86,4 @@ class DefaultCodeSecurityConfig(NonCompletableGithubObject):
             )
         if "default_for_new_repos" in attributes:  # pragma no branch
             self._default_for_new_repos = self._makeStringAttribute(attributes["default_for_new_repos"])
+

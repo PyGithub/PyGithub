@@ -129,3 +129,4 @@ class CodeScanRule(NonCompletableGithubObject):
             self._severity = self._makeStringAttribute(attributes["severity"])
         if "tags" in attributes:  # pragma no branch
             self._tags = self._makeListOfStringsAttribute(attributes["tags"])
+

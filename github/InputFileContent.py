@@ -60,3 +60,4 @@ class InputFileContent:
         if is_defined(self.__newName):
             identity["filename"] = self.__newName
         return identity
+

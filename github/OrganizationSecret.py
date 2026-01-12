@@ -153,3 +153,4 @@ class OrganizationSecret(Secret):
             self._url = self._makeStringAttribute(attributes["url"])
         if "visibility" in attributes:
             self._visibility = self._makeStringAttribute(attributes["visibility"])
+

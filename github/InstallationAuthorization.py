@@ -135,3 +135,4 @@ class InstallationAuthorization(NonCompletableGithubObject):
             self._single_file_paths = self._makeListOfStringsAttribute(attributes["single_file_paths"])
         if "token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["token"])
+

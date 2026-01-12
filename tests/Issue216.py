@@ -42,3 +42,4 @@ class Issue216(Framework.TestCase):
 
     def testIteration(self):
         self.assertEqual(len(list(self.list)), 333)
+

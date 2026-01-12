@@ -40,3 +40,4 @@ class Issue133(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull
 
     def testGetPageWithoutInitialArguments(self):
         self.assertEqual(len(self.user.get_followers().get_page(0)), 22)
+

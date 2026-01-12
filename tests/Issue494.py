@@ -47,3 +47,4 @@ class Issue494(Framework.TestCase):
             'PullRequest(title="Change SetHostnameCustomizer to check if /etc/sysconfig/network exist…", number=465)'
         )
         self.assertEqual(self.pull.__repr__(), expected)
+

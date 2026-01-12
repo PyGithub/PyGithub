@@ -57,3 +57,4 @@ class Membership(Framework.TestCase):
         self.assertEqual(self.membership.state, "pending")
         self.assertEqual(self.membership.url, "https://api.github.com/orgs/invitocat/memberships/defunkt")
         self.assertEqual(self.membership.user.login, "octocat")
+

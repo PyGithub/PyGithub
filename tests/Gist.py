@@ -172,3 +172,4 @@ class Gist(Framework.TestCase):
     def testDelete(self):
         gist = self.g.get_gist("2729810")
         gist.delete()
+

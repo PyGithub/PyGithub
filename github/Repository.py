@@ -4972,3 +4972,4 @@ class RepositorySearchResult(Repository):
             self._score = self._makeFloatAttribute(attributes["score"])
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
+

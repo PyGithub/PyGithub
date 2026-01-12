@@ -214,3 +214,4 @@ class RepositoryDiscussion(Framework.TestCase):
         self.assertEqual(reply_by_id_str.delete().id, "DC_kwDOADYVqs4AovYm")
         self.assertEqual(reply.delete().id, "DC_kwDOADYVqs4AovYl")
         self.assertEqual(comment.delete().id, "DC_kwDOADYVqs4AovYk")
+

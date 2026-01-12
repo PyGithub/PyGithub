@@ -127,3 +127,4 @@ class ProjectCard(Framework.TestCase):
         card = self.edit_col.create_card(note="Project Card")
         card.edit(archived=True)
         self.assertEqual(card.archived, True)
+

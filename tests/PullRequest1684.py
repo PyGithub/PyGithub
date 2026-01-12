@@ -82,3 +82,4 @@ class PullRequest1684(Framework.TestCase):
 
         ids = [runner.id for runner in self.repo.get_self_hosted_runners()]
         self.assertNotIn(id_to_delete, ids)
+

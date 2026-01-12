@@ -289,3 +289,4 @@ class Installation(NonCompletableGithubObject):
             self._target_type = self._makeStringAttribute(attributes["target_type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+

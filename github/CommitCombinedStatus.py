@@ -116,3 +116,4 @@ class CommitCombinedStatus(NonCompletableGithubObject):
             self._total_count = self._makeIntAttribute(attributes["total_count"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

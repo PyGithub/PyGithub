@@ -91,3 +91,4 @@ class CodeScanTool(NonCompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "version" in attributes:  # pragma no branch
             self._version = self._makeStringAttribute(attributes["version"])
+

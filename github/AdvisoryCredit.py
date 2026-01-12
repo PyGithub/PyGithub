@@ -125,3 +125,4 @@ class AdvisoryCredit(NonCompletableGithubObject):
             self._login = self._makeStringAttribute(attributes["login"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
+

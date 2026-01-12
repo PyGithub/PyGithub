@@ -43,3 +43,4 @@ class Issue174(Framework.TestCase):
     def testGetDirContentsWithHttpRedirect(self):
         contents = self.repo.get_contents("js/")
         self.assertEqual(len(contents), 5)
+

@@ -103,3 +103,4 @@ class GistFile(NonCompletableGithubObject):
             self._size = self._makeIntAttribute(attributes["size"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
+

@@ -54,3 +54,4 @@ class Issue823(Framework.TestCase):
         self.assertEqual(role, "direct_member")
         team_count = self.pending_invitations[0].team_count
         self.assertEqual(team_count, 1)
+

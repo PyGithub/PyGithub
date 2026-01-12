@@ -174,3 +174,4 @@ class Enterprise(NonCompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "website_url" in attributes:  # pragma no branch
             self._website_url = self._makeStringAttribute(attributes["website_url"])
+

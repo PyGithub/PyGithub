@@ -71,3 +71,4 @@ class Issue945(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issu
             self.list_with_headers._PaginatedList__list_item,
             r2._PaginatedList__list_item,
         )
+

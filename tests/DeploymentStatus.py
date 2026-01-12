@@ -114,3 +114,4 @@ class DeploymentStatus(Framework.TestCase):
             lambda s: s.id,
             [388454671, 388433743, 388432880],
         )
+

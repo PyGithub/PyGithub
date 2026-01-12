@@ -65,3 +65,4 @@ class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
             len(self.repo.get_contents("js", "8c7f9c66a7d12f47f50618ef420868fe836d0c33")),
             15,
         )
+

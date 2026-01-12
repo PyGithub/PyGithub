@@ -162,3 +162,4 @@ class Label(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

@@ -168,3 +168,4 @@ class Invitation(CompletableGithubObject):
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

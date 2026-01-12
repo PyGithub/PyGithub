@@ -72,3 +72,4 @@ class CWE(CompletableGithubObject):
             self._cwe_id = self._makeStringAttribute(attributes["cwe_id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+

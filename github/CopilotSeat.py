@@ -124,3 +124,4 @@ class CopilotSeat(NonCompletableGithubObject):
             self._plan_type = self._makeStringAttribute(attributes["plan_type"])
         if "updated_at" in attributes:
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+

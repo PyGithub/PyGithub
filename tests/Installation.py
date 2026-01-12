@@ -137,3 +137,4 @@ class Installation(Framework.BasicTestCase):
         self.assertEqual(len(self.installations), 1)
         installation = self.installations[0]
         assert installation.requester is installation._requester
+

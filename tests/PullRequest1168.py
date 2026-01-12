@@ -53,3 +53,4 @@ class PullRequest1168(Framework.TestCase):
         self.assertEqual(i.id, 297582636)
         self.assertEqual(i.number, 1171)
         self.assertEqual(i.title, "Fix small issues for Python 3 compatibility.")
+

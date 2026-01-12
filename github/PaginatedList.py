@@ -454,3 +454,4 @@ class PaginatedList(PaginatedListBase[T]):
     @classmethod
     def paths_of_dict(cls, d: dict) -> dict:
         return {key: cls.paths_of_dict(val) if isinstance(val, dict) else None for key, val in d.items()}
+

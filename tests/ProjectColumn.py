@@ -139,3 +139,4 @@ class ProjectColumn(Framework.TestCase):
 
     def testMoveAfter(self):
         self.assertTrue(self.move_project_column.move(position="after:8700460"))
+

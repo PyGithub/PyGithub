@@ -457,3 +457,4 @@ class GitRelease(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "zipball_url" in attributes:
             self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])
+

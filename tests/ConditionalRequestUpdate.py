@@ -55,3 +55,4 @@ class ConditionalRequestUpdate(Framework.TestCase):
     def testUpdateObjectWithoutEtag(self):
         r = self.g.get_repo("jacquev6/PyGithub")
         self.assertTrue(r.update())
+

@@ -114,3 +114,4 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
             self._type = self._makeStringAttribute(attributes["type"])
         if "wait_timer" in attributes:  # pragma no branch
             self._wait_timer = self._makeIntAttribute(attributes["wait_timer"])
+

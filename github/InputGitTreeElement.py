@@ -76,3 +76,4 @@ class InputGitTreeElement:
         if is_defined(self.__content):
             identity["content"] = self.__content
         return identity
+

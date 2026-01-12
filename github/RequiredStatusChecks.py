@@ -150,3 +150,4 @@ class RequiredStatusChecks(CompletableGithubObject):
             self._strict = self._makeBoolAttribute(attributes["strict"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

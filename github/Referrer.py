@@ -91,3 +91,4 @@ class Referrer(NonCompletableGithubObject):
             self._referrer = self._makeStringAttribute(attributes["referrer"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
+

@@ -67,3 +67,4 @@ class SubIssueSummary(NonCompletableGithubObject):
             self._percent_completed = self._makeIntAttribute(attributes["percent_completed"])
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])
+

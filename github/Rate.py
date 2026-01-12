@@ -100,3 +100,4 @@ class Rate(NonCompletableGithubObject):
             self._reset = self._makeTimestampAttribute(attributes["reset"])
         if "used" in attributes:  # pragma no branch
             self._used = self._makeIntAttribute(attributes["used"])
+

@@ -103,3 +103,4 @@ class Milestone(Framework.TestCase):
 
     def testDelete(self):
         self.milestone.delete()
+

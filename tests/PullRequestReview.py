@@ -106,3 +106,4 @@ class PullRequestReview(Framework.TestCase):
             repr(self.pullreview),
             'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)',
         )
+

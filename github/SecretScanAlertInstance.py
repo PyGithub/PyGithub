@@ -116,3 +116,4 @@ class SecretScanAlertInstance(NonCompletableGithubObject):
             self._start_column = self._makeIntAttribute(attributes["start_column"])
         if "start_line" in attributes:
             self._start_line = self._makeIntAttribute(attributes["start_line"])
+

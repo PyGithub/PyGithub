@@ -161,3 +161,4 @@ class CodeScanAlert(Framework.TestCase):
         self.assertEqual(
             len(list(alerts)), 10
         )  # Update this when more alerts are added to the PyGithub repo and marked as fixed
+

@@ -92,3 +92,4 @@ class Traffic(NonCompletableGithubObject):
             self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
+

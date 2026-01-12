@@ -86,3 +86,4 @@ class ContentFile(Framework.TestCase):
         self.assertIsNone(self.file.license)
         self.assertEqual(repr(self.file), 'ContentFile(path="README.md")')
         self.assertEqual(self.file.url, "https://api.github.com/repos/PyGithub/PyGithub/contents/README.md?ref=main")
+

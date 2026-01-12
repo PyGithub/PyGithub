@@ -56,3 +56,4 @@ class AppAuthentication(AppInstallationAuth):
             installation_id=installation_id,
             token_permissions=token_permissions,
         )
+

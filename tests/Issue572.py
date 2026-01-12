@@ -53,3 +53,4 @@ class Issue572(Framework.TestCase):
         issue = pull.as_issue()
         self.assertEqual(pull.html_url, issue.html_url)
         self.assertTrue(isinstance(issue, github.Issue.Issue))
+

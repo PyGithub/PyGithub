@@ -370,3 +370,4 @@ class CustomAuth(Auth):
 
     def mask_authentication(self, headers):
         headers["Custom key"] = "Masked custom header"
+

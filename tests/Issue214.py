@@ -73,3 +73,4 @@ class Issue214(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
 
         for issue in issues:
             self.assertEqual(issue.assignees[0].login, "farrd")
+

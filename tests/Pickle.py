@@ -90,3 +90,4 @@ class Pickle(Framework.TestCase):
             with self.subTest(auth=type(auth).__name__):
                 auth2 = pickle.loads(pickle.dumps(auth))
                 self.assertIsInstance(auth2, type(auth))
+

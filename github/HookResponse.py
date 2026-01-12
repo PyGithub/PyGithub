@@ -80,3 +80,4 @@ class HookResponse(NonCompletableGithubObject):
             self._message = self._makeStringAttribute(attributes["message"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
+

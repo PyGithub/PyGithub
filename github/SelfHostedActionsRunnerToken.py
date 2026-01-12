@@ -115,3 +115,4 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
             self._single_file = self._makeStringAttribute(attributes["single_file"])
         if "token" in attributes:
             self._token = self._makeStringAttribute(attributes["token"])
+

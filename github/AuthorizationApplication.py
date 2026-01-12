@@ -70,3 +70,4 @@ class AuthorizationApplication(CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

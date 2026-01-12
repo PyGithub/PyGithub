@@ -94,3 +94,4 @@ class IssuePullRequest(NonCompletableGithubObject):
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

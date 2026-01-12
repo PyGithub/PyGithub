@@ -424,3 +424,4 @@ class RepositoryAdvisory(AdvisoryBase):
                 attributes["vulnerabilities"],
             )
         super()._useAttributes(attributes)
+

@@ -178,3 +178,4 @@ class Artifact(NonCompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "workflow_run" in attributes:  # pragma no branch
             self._workflow_run = self._makeClassAttribute(github.WorkflowRun.WorkflowRun, attributes["workflow_run"])
+

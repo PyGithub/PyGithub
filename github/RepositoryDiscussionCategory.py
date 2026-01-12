@@ -140,3 +140,4 @@ class RepositoryDiscussionCategory(GraphQlObject, NonCompletableGithubObject):
             self._slug = self._makeStringAttribute(attributes["slug"])
         if "updatedAt" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updatedAt"])
+

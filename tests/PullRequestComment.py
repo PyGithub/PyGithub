@@ -126,3 +126,4 @@ class PullRequestComment(Framework.TestCase):
 
     def testDeleteReaction(self):
         self.assertTrue(self.comment.delete_reaction(85750463))
+

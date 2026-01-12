@@ -302,3 +302,4 @@ class GitRelease(Framework.TestCase):
         self.assertTrue(asset_list is not None)
         self.assertEqual(len(asset_list), 1)
         self.tearDownNewRelease()
+

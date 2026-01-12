@@ -147,3 +147,4 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
         if "replies" in attributes:  # pragma no branch
             # replies are GraphQL API objects
             self._replies_page = attributes["replies"]["nodes"]
+

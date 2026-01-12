@@ -68,3 +68,4 @@ class InputGitAuthor:
         if is_defined(self.__date):
             identity["date"] = self.__date
         return identity
+

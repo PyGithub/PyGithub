@@ -54,3 +54,4 @@ class OrganizationSecretScanAlert(SecretScanAlert):
         super()._useAttributes(attributes)
         if "repository" in attributes:
             self._repository = self._makeClassAttribute(Repository, attributes["repository"])
+

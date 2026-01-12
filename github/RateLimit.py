@@ -181,3 +181,4 @@ class RateLimit(NonCompletableGithubObject):
             self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
         if "source_import" in attributes:  # pragma no branch
             self._source_import = self._makeClassAttribute(github.Rate.Rate, attributes["source_import"])
+

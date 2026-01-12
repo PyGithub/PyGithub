@@ -46,3 +46,4 @@ class IssueType(Framework.TestCase):
         self.assertEqual(self.type.name, "Bug")
         self.assertEqual(self.type.node_id, "IT_kwDOAKxBpM4AFSaz")
         self.assertEqual(self.type.updated_at, datetime(2024, 7, 26, 10, 24, 51, tzinfo=timezone.utc))
+

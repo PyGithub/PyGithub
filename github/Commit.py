@@ -396,3 +396,4 @@ class CommitSearchResult(Commit):
         super()._useAttributes(attributes)
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
+

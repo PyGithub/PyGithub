@@ -342,3 +342,4 @@ class Branch(Framework.TestCase):
 
     def testAddRequiredSignatures(self):
         self.protected_branch.add_required_signatures()
+

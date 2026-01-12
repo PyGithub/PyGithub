@@ -1418,3 +1418,4 @@ class WithRequester(Generic[T]):
         assert isinstance(requester, Requester), requester
         self.__requester = requester
         return self
+

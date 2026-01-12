@@ -132,3 +132,4 @@ class TeamDiscussion(DiscussionBase):
             self._private = self._makeBoolAttribute(attributes["private"])
         if "team_url" in attributes:  # pragma no branch
             self._team_url = self._makeStringAttribute(attributes["team_url"])
+

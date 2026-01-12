@@ -881,3 +881,4 @@ class Organization(Framework.TestCase):
         self.assertEqual(status.status, "enforced")
         self.assertIsNotNone(status.repository)
         self.assertEqual(status.repository.full_name, "BeaverSoftware/truth")
+

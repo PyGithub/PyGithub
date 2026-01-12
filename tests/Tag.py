@@ -57,3 +57,4 @@ class Tag(Framework.TestCase):
             repr(self.tag),
             'Tag(name="v2.5.0", commit=Commit(sha="19ddb9f4fd996e99a5010d271b3c2e76dd280fb5"))',
         )
+

@@ -46,3 +46,4 @@ class Organization1437(Framework.TestCase):
     def testCreateProject(self):
         project = self.org.create_project("Project title", "This is the body")
         self.assertEqual(project.id, 4115694)
+

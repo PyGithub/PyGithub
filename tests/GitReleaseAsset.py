@@ -109,3 +109,4 @@ class GitReleaseAsset(Framework.TestCase):
         content = b"".join([chunk for chunk in chunks if chunk])
         self.assertEqual(len(content), 1199)
         self.assertEqual(content[:19], b"\x1f\x8b\x08\x08\xf5\x9aag\x00\x03README.md")
+

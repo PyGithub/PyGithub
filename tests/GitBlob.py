@@ -69,3 +69,4 @@ class GitBlob(Framework.TestCase):
             repr(self.blob),
             'GitBlob(sha="53bce9fa919b4544e67275089b3ec5b44be20667")',
         )
+

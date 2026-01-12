@@ -115,3 +115,4 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.events, ["push"])
         self.hook.edit("web", {"url": "http://foobar.com"}, active=True)
         self.assertTrue(self.hook.active)
+

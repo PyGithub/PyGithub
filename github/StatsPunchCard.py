@@ -73,3 +73,4 @@ class StatsPunchCard(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes: Any) -> None:
         for day, hour, commits in attributes:
             self._dict[(day, hour)] = commits
+

@@ -76,3 +76,4 @@ class RateLimitOverview(NonCompletableGithubObject):
             self._resources = self._makeClassAttribute(github.RateLimit.RateLimit, attributes["resources"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

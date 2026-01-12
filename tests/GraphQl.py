@@ -358,3 +358,4 @@ class GraphQl(Framework.TestCase):
         # it calls the REST API
         self.assertEqual(issues_pages.totalCount, 341)
         self.assertEqual(issue.number, 3045)
+

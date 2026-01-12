@@ -58,3 +58,4 @@ class Project1434(Framework.TestCase):
         self.assertEqual(project.name, "New Name")
         self.assertEqual(project.body, "New Body")
         self.assertEqual(project.state, "open")
+

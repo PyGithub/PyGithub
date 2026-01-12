@@ -665,3 +665,4 @@ class Branch(NonCompletableGithubObject):
             )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+

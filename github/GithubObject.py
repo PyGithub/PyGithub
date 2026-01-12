@@ -661,3 +661,4 @@ def method_returns(
         return fn
 
     return openapi_method_decorator
+

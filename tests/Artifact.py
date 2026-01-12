@@ -90,3 +90,4 @@ class Artifact(Framework.TestCase):
         self.assertTrue(artifact.delete())
         with self.assertRaises(github.GithubException):
             repo.get_artifact(artifact_id)
+

@@ -234,3 +234,4 @@ class Logging(Framework.BasicTestCase):
             None,
         )
         self.assertEqual({"Custom key": "Masked custom header"}, self.logger.requestHeaders)
+

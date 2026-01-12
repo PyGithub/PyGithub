@@ -51,3 +51,4 @@ class PullRequest2408(Framework.TestCase):
 
         runs = self.repo.get_workflow_runs(exclude_pull_requests=True)
         self.assertEqual(3519037359, runs[0].id)
+

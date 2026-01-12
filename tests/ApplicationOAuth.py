@@ -238,3 +238,4 @@ class ApplicationOAuth(Framework.TestCase):
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
         self.assertEqual(exc.exception.data["error"], "other")
+

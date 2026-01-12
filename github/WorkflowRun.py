@@ -464,3 +464,4 @@ class WorkflowRun(CompletableGithubObject):
             self._workflow_id = self._makeIntAttribute(attributes["workflow_id"])
         if "workflow_url" in attributes:  # pragma no branch
             self._workflow_url = self._makeStringAttribute(attributes["workflow_url"])
+

@@ -33,3 +33,4 @@ class PullRequestReview1856(Framework.TestCase):
         pullreview.delete()
         reviews = pumpkin_pull.get_reviews()
         self.assertEqual(list(reviews), [])
+

@@ -43,3 +43,4 @@ class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
         self.assertEqual(self.user.name, "Ian Ozsvald")
         self.assertTrue(self.user._CompletableGithubObject__completed)
         self.assertEqual(self.user.plan, None)
+

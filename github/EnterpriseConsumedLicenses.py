@@ -109,3 +109,4 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
             self._total_seats_purchased = self._makeIntAttribute(attributes["total_seats_purchased"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

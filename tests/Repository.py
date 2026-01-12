@@ -2438,3 +2438,4 @@ class LazyRepository(Framework.TestCase):
     def testRequester(self):
         lazy_repo = self.getLazyRepository()
         assert lazy_repo.requester is lazy_repo._requester
+

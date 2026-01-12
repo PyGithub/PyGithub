@@ -49,3 +49,4 @@ class Notification(Framework.TestCase):
 
     def testMarkAsDone(self):
         self.notification.mark_as_done()
+

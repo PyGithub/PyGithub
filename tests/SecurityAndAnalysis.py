@@ -68,3 +68,4 @@ class SecurityAndAnalysis(Framework.TestCase):
             'dependabot_security_updates="SecurityAndAnalysisFeature(status="enabled")", '
             'advanced_security="None")',
         )
+

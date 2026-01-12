@@ -110,3 +110,4 @@ class WorkflowStep(CompletableGithubObject):
             self._started_at = self._makeDatetimeAttribute(attributes["started_at"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
+

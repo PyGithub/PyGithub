@@ -105,3 +105,4 @@ class Topic(Framework.TestCase):
             "python-project",
         ]
         self.assertListKeyEqual(self.topics, attrgetter("name"), expected_names)
+

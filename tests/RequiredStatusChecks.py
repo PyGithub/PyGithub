@@ -66,3 +66,4 @@ class RequiredStatusChecks(Framework.TestCase):
             self.required_status_checks.__repr__(),
             'RequiredStatusChecks(url="https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks", strict=True)',
         )
+

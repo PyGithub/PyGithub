@@ -75,3 +75,4 @@ class StatsParticipation(NonCompletableGithubObject):
             self._all = self._makeListOfIntsAttribute(attributes["all"])
         if "owner" in attributes:  # pragma no branch
             self._owner = self._makeListOfIntsAttribute(attributes["owner"])
+

@@ -113,3 +113,4 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
     replaying_connection = replaying_connection_class(host=host, port=None)
     replaying_connection.request(verb, url, None, headers)
     replaying_connection.getresponse()
+

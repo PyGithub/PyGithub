@@ -52,3 +52,4 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '395'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"46245273100a0cfb1e8339a2cfb122da"'), ('date', 'Sun, 13 May 2018 15:15:25 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"name":"master","commit":{"sha":"d60943db8c9ae6ca1f9400d378a757e6f281dbde","url":"https://api.github.com/repos/PyGithub/PyGithub/commits/d60943db8c9ae6ca1f9400d378a757e6f281dbde"},"protected":true,"protection":{"enabled":true},"protection_url":"https://api.github.com/repos/PyGithub/PyGithub/branches/master/protection"}
+

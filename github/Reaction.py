@@ -118,3 +118,4 @@ class Reaction(NonCompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+

@@ -89,3 +89,4 @@ class SelfHostedActionsRunnerApplication(NonCompletableGithubObject):
             self._sha256_checksum = self._makeStringAttribute(attributes["sha256_checksum"])
         if "temp_download_token" in attributes:  # pragma no branch
             self._temp_download_token = self._makeStringAttribute(attributes["temp_download_token"])
+

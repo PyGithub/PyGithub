@@ -816,3 +816,4 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertListKeyEqual(
             membership_data, lambda e: e.role, ["member", "member", "admin", "member", "member", "admin"]
         )
+

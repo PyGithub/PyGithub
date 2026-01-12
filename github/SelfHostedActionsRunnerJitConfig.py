@@ -67,3 +67,4 @@ class SelfHostedActionsRunnerJitConfig(NonCompletableGithubObject):
             self._runner = self._makeClassAttribute(
                 github.SelfHostedActionsRunner.SelfHostedActionsRunner, attributes["runner"]
             )
+

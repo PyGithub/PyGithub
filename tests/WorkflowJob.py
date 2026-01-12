@@ -91,3 +91,4 @@ class WorkflowJob(Framework.TestCase):
         self.assertEqual(self.job.labels, ["ubuntu-latest"])
         self.assertEqual(self.job.run_attempt, 1)
         self.assertEqual(self.job.workflow_name, "CI")
+

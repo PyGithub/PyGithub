@@ -103,3 +103,4 @@ class Deployment(Framework.TestCase):
         self.assertEqual(str(deploy), 'Deployment(url="/repos/lazy/repo/deployments/42", id=42)')
         self.assertEqual(deploy.id, 42)
         self.assertEqual(deploy.url, "/repos/lazy/repo/deployments/42")
+

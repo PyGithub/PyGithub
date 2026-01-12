@@ -74,3 +74,4 @@ class IssueDependenciesSummary(NonCompletableGithubObject):
             self._total_blocked_by = self._makeIntAttribute(attributes["total_blocked_by"])
         if "total_blocking" in attributes:  # pragma no branch
             self._total_blocking = self._makeIntAttribute(attributes["total_blocking"])
+

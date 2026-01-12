@@ -81,3 +81,4 @@ class GistComment(Framework.TestCase):
 
     def testDelete(self):
         self.comment.delete()
+

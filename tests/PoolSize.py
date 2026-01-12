@@ -48,3 +48,4 @@ class PoolSize(Framework.TestCase):
         repository = g.get_repo(REPO_NAME)
         self.assertIsInstance(repository, github.Repository.Repository)
         self.assertEqual(repository.full_name, REPO_NAME)
+

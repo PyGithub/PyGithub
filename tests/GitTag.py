@@ -66,3 +66,4 @@ class GitTag(Framework.TestCase):
         )
         self.assertEqual(repr(self.tag), 'GitTag(tag="v0.6", sha="f5f37322407b02a80de4526ad88d5f188977bc3c")')
         self.assertEqual(self.tag.verification.reason, "unsigned")
+

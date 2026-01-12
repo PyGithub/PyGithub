@@ -131,3 +131,4 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+

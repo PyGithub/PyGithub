@@ -30,3 +30,4 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4960'), ('content-length', '290'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"6d8a8b9509b1686543a96ec3c58b0293"'), ('date', 'Tue, 22 May 2012 19:03:36 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"content_type":"text/plain","download_count":0,"url":"https://api.github.com/repos/jacquev6/PyGithub/downloads/242550","size":1024,"name":"Foobar.txt","created_at":"2012-05-22T18:58:32Z","description":null,"html_url":"https://github.com/downloads/jacquev6/PyGithub/Foobar.txt","id":242550}
+

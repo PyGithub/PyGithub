@@ -98,3 +98,4 @@ class Traffic(Framework.TestCase):
             repr(clone),
             "Traffic(uniques=4, timestamp=2018-11-27 00:00:00+00:00, count=4)",
         )
+

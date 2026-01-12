@@ -105,3 +105,4 @@ class CheckRunOutput(NonCompletableGithubObject):
             self._text = self._makeStringAttribute(attributes["text"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
+

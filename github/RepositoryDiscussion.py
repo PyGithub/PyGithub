@@ -211,3 +211,4 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
             self._repository = self._makeClassAttribute(
                 github.Repository.Repository, as_rest_api_attributes(attributes["repository"])
             )
+

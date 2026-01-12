@@ -406,3 +406,4 @@ class GithubRetry(unittest.TestCase):
             )
 
         log.assert_called_once_with(logging.INFO, "Request TEST URL failed with 403: NOT GOOD")
+

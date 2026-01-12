@@ -91,3 +91,4 @@ class GitAuthor(NonCompletableGithubObject):
             self._email = self._makeStringAttribute(attributes["email"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+

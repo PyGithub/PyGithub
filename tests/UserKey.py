@@ -64,3 +64,4 @@ class UserKey(Framework.TestCase):
 
     def testDelete(self):
         self.key.delete()
+

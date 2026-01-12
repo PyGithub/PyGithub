@@ -301,3 +301,4 @@ class IssueComment(CompletableGithubObject):
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
             )
+

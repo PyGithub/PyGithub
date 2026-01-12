@@ -365,3 +365,4 @@ class Issue(Framework.TestCase):
                 else:
                     self.assertIsNone(event.source)
                     self.assertIsNotNone(event.actor)
+

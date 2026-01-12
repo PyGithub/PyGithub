@@ -93,3 +93,4 @@ class SourceImport(Framework.TestCase):
         update_ret = self.source_import.update()
         self.assertTrue(update_ret)
         self.assertEqual(self.source_import.status, "complete")
+

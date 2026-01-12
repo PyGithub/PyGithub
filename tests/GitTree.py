@@ -79,3 +79,4 @@ class GitTree(Framework.TestCase):
             repr(self.tree.tree[0]),
             'GitTreeElement(sha="8a9af1462c3f4e3358315c2d2e6ef1e7334c59dd", path=".gitignore")',
         )
+

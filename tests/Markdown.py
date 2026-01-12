@@ -50,3 +50,4 @@ class Markdown(Framework.TestCase):
             self.g.render_markdown(self.text, self.repo),
             '<h1>MyTitle</h1><p>Issue <a href="https://github.com/jacquev6/PyGithub/issues/1" class="issue-link" title="Gitub -&gt; Github everywhere">#1</a></p>',
         )
+

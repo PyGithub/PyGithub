@@ -167,3 +167,4 @@ class SpecificExceptions(Framework.TestCase):
         github.UserKey.UserKey.setCheckAfterInitFlag(False)
         obj = github.UserKey.UserKey(mock.MagicMock(), {}, {}, False)
         self.assertRaises(github.IncompletableObject, obj._completeIfNeeded)
+

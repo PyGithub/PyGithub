@@ -75,3 +75,4 @@ class CommitStats(NonCompletableGithubObject):
             self._deletions = self._makeIntAttribute(attributes["deletions"])
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])
+

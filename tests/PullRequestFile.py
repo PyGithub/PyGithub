@@ -62,3 +62,4 @@ class PullRequestFile(Framework.TestCase):
             repr(self.file),
             'File(sha="8a4f306d4b223682dd19410d4a9150636ebe4206", filename="codegen/templates/GithubObject.py")',
         )
+

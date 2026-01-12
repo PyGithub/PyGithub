@@ -44,3 +44,4 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     if config.getoption("record"):
         Framework.activateRecordMode()
+

@@ -56,3 +56,4 @@ class Issue80(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/
         self.assertListKeyEqual(
             org.get_repos(), lambda r: r.name, ["FatherBeaver", "TestPyGithub"]
         )  # But still http in second request based on org.url
+

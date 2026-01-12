@@ -167,3 +167,4 @@ class ExposeAllAttributes(Framework.TestCase):
                 allMissingAttributes[className].update(attributesMissingInClass)
 
         return allMissingAttributes
+

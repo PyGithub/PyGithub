@@ -550,3 +550,4 @@ class OrganizationInvitation(Framework.TestCase):
         self.assertTrue(self.org.cancel_invitation(invitation))
         # copy replay data of self.org.cancel_invitation(invitation) call, fix HTTP path
         self.assertTrue(invitation.cancel())
+

@@ -39,3 +39,4 @@ class SubIssueSummary(Framework.TestCase):
         self.assertEqual(self.sis.completed, 1)
         self.assertEqual(self.sis.percent_completed, 100)
         self.assertEqual(self.sis.total, 1)
+

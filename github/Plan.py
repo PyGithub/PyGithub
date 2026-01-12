@@ -105,3 +105,4 @@ class Plan(NonCompletableGithubObject):
             self._seats = self._makeIntAttribute(attributes["seats"])
         if "space" in attributes:  # pragma no branch
             self._space = self._makeIntAttribute(attributes["space"])
+

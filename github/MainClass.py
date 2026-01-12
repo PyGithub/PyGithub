@@ -1050,3 +1050,4 @@ class Github:
             # with a slug given, we can lazily load the GithubApp
             slug = urllib.parse.quote(slug, safe="")
             return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)
+

@@ -78,3 +78,4 @@ class TimelineEventSource(NonCompletableGithubObject):
             self._issue = self._makeClassAttribute(github.Issue.Issue, attributes["issue"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
+

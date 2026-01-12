@@ -169,3 +169,4 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.slug, "pygithubtest")
         self.assertEqual(app.updated_at, datetime(2020, 8, 1, 17, 44, 31, tzinfo=timezone.utc))
         self.assertEqual(app.url, "/apps/pygithubtest")
+

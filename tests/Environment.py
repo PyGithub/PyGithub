@@ -258,3 +258,4 @@ class Environment(Framework.TestCase):
         for matched_environment_secret in matched_environment_secrets:
             matched_environment_secret.delete()
         repo.delete_environment("test")
+

@@ -131,3 +131,4 @@ class CheckRunAnnotation(NonCompletableGithubObject):
             self._start_line = self._makeIntAttribute(attributes["start_line"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
+

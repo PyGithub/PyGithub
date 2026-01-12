@@ -56,3 +56,4 @@ class Equality(Framework.TestCase):
         b1 = r.get_branch("develop")
         b2 = r.get_branch("develop")
         self.assertNotEqual(b1._rawData, b2._rawData)
+

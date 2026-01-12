@@ -655,3 +655,4 @@ class RequesterThrottled(RequesterThrottleTestCase):
                 mock.call(1),
             ],
         )
+

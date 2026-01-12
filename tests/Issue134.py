@@ -61,3 +61,4 @@ class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub
         self.assertEqual(g.oauth_scopes, None)
         g.get_user().name
         self.assertEqual(g.oauth_scopes, ["repo", "user", "gist"])
+

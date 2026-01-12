@@ -110,3 +110,4 @@ class Permissions(NonCompletableGithubObject):
             self._push = self._makeBoolAttribute(attributes["push"])
         if "triage" in attributes:  # pragma no branch
             self._triage = self._makeBoolAttribute(attributes["triage"])
+

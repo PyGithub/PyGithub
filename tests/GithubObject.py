@@ -248,3 +248,4 @@ class TestingClass(gho.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: Any) -> None:
         pass
+

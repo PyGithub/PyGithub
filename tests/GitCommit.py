@@ -112,3 +112,4 @@ class GitCommit(Framework.TestCase):
         )
         self.assertEqual(self.commit.verification.verified, True)
         self.assertEqual(self.commit.verification.verified_at, datetime(2024, 12, 18, 10, 45, 21, tzinfo=timezone.utc))
+

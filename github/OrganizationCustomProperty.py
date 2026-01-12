@@ -198,3 +198,4 @@ class RepositoryCustomPropertyValues(NonCompletableGithubObject):
             self._repository_id = self._makeIntAttribute(attributes["repository_id"])
         if "repository_name" in attributes:  # pragma no branch
             self._repository_name = self._makeStringAttribute(attributes["repository_name"])
+

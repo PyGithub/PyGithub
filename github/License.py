@@ -166,3 +166,4 @@ class License(CompletableGithubObject):
             self._spdx_id = self._makeStringAttribute(attributes["spdx_id"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

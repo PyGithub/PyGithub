@@ -177,3 +177,4 @@ class Event(Framework.TestCase):
         self.assertEqual(self.event.repo.name, "jacquev6/PyGithub")
         self.assertEqual(self.event.type, "PushEvent")
         self.assertEqual(repr(self.event), 'Event(type="PushEvent", id="1556114751")')
+

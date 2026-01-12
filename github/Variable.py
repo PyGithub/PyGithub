@@ -152,3 +152,4 @@ class Variable(CompletableGithubObject):
             self._value = self._makeStringAttribute(attributes["value"])
         if "variables_url" in attributes:
             self._variables_url = self._makeStringAttribute(attributes["variables_url"])
+

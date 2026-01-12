@@ -100,3 +100,4 @@ class GitCommitVerification(NonCompletableGithubObject):
             self._verified = self._makeBoolAttribute(attributes["verified"])
         if "verified_at" in attributes:  # pragma no branch
             self._verified_at = self._makeDatetimeAttribute(attributes["verified_at"])
+

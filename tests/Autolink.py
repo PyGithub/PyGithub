@@ -55,3 +55,4 @@ class Autolink(Framework.TestCase):
         self.assertIsNone(self.link.updated_at)
         self.assertEqual(self.link.url_template, "https://github.com/PyGithub/PyGithub/issues/<num>")
         self.assertEqual(self.link.is_alphanumeric, True)
+

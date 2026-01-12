@@ -120,3 +120,4 @@ class IssueType(NonCompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+

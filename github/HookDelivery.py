@@ -240,3 +240,4 @@ class HookDelivery(HookDeliverySummary):
         if "response" in attributes:  # pragma no branch
             self._response = self._makeClassAttribute(HookDeliveryResponse, attributes["response"])
             # self._response = self._makeDictAttribute(attributes["response"])
+

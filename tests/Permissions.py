@@ -58,3 +58,4 @@ class Permissions(Framework.TestCase):
             repr(self.userRepo.permissions),
             "Permissions(triage=None, push=False, pull=True, maintain=None, admin=False)",
         )
+

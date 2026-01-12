@@ -29,3 +29,4 @@ None
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4955'), ('x-github-media-type', 'github.v3; format=json'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'D07D:2C93:7811EA:988FEE:588022F4'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-xss-protection', '1; mode=block'), ('x-served-by', 'd0b3c2c33a23690498aa8e70a435a259'), ('date', 'Thu, 19 Jan 2017 02:22:44 GMT'), ('x-frame-options', 'deny'), ('x-oauth-scopes', 'read:org'), ('x-accepted-oauth-scopes', 'read:org, repo, user'), ('x-ratelimit-reset', '1484795009')]
+

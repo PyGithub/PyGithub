@@ -81,3 +81,4 @@ class Download(Framework.TestCase):
 
     def testDelete(self):
         self.download.delete()
+

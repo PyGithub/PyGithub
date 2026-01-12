@@ -44,3 +44,4 @@ class OrganizationHasInMembers(Framework.TestCase):
 
     def testHasInMembers(self):
         self.assertTrue(self.has_in_members)
+

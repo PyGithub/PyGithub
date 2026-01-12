@@ -119,3 +119,4 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
             self._runner_group_id = self._makeIntAttribute(attributes["runner_group_id"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
+

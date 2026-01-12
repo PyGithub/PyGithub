@@ -101,3 +101,4 @@ class Autolink(NonCompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url_template" in attributes:  # pragma no branch
             self._url_template = self._makeStringAttribute(attributes["url_template"])
+

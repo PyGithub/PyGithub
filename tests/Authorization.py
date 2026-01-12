@@ -84,3 +84,4 @@ class Authorization(Framework.TestCase):
 
     def testDelete(self):
         self.authorization.delete()
+

@@ -125,3 +125,4 @@ class Event(NonCompletableGithubObject):
             self._repo = self._makeClassAttribute(github.Repository.Repository, attributes["repo"])
         if "type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["type"])
+

@@ -69,3 +69,4 @@ class PullRequest1682(Framework.TestCase):
 
         runs = self.repo.get_workflow_runs(status="failure")
         self.assertEqual(292080359, runs[0].id)
+

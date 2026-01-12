@@ -312,3 +312,4 @@ class CheckRun(CompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

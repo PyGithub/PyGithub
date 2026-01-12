@@ -254,3 +254,4 @@ class SecretScanAlert(NonCompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "validity" in attributes:
             self._validity = self._makeStringAttribute(attributes["validity"])
+

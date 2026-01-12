@@ -105,3 +105,4 @@ class CommitComment(Framework.TestCase):
 
     def testDeleteReaction(self):
         self.assertTrue(self.comment.delete_reaction(85737646))
+

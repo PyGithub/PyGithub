@@ -136,3 +136,4 @@ class SecretScanAlert(Framework.TestCase):
 
         test_alert = alert_list[-1]
         self.assertIsNone(test_alert.secret)  # Because hide_secret is True
+

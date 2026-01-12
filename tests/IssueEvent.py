@@ -1015,3 +1015,4 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event_converted_note_to_issue.dismissed_review, None)
         self.assertEqual(self.event_converted_note_to_issue.lock_reason, None)
         self.assertEqual(repr(self.event_converted_note_to_issue), "IssueEvent(id=1791769149)")
+

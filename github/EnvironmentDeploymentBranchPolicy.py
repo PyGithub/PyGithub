@@ -84,3 +84,4 @@ class EnvironmentDeploymentBranchPolicyParams:
             "protected_branches": self.protected_branches,
             "custom_branch_policies": self.custom_branch_policies,
         }
+

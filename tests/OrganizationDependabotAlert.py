@@ -108,3 +108,4 @@ class OrganizationDependabotAlert(Framework.TestCase):
     def testGetAlertsWithAllArguments(self):
         alerts = self.org.get_dependabot_alerts("open", "medium", "pip", "ansible", "runtime", "created", "asc")
         self.assertEqual(len(list(alerts)), 1)  # Update this when more alerts are added
+

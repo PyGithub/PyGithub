@@ -49,3 +49,4 @@ class NamedUser1430(Framework.TestCase):
             lambda e: e.id,
             [4083095],
         )
+

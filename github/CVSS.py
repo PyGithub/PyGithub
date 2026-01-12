@@ -80,3 +80,4 @@ class CVSS(NonCompletableGithubObject):
         if "vector_string" in attributes and attributes["vector_string"] is not None:  # pragma no branch
             self._vector_string = self._makeStringAttribute(attributes["vector_string"])
             self._version = self._makeDecimalAttribute(Decimal(self.vector_string.split(":")[1].split("/")[0]))
+

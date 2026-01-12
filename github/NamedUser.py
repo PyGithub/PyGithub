@@ -811,3 +811,4 @@ class OrganizationInvitation(NamedUser):
         if "invitation_teams_url" in attributes and is_undefined(self._url):  # pragma no branch
             url = "/".join(attributes["invitation_teams_url"].split("/")[:-1])
             self._url = self._makeStringAttribute(url)
+

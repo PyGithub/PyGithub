@@ -305,3 +305,4 @@ class BadAttributes(Framework.TestCase):
         )
         self.assertEqual(raisedexp.exception.expected_type, [str])
         self.assertEqual(raisedexp.exception.transformation_exception, None)
+

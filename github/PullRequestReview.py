@@ -191,3 +191,4 @@ class PullRequestReview(NonCompletableGithubObject):
             self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+

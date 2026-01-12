@@ -94,3 +94,4 @@ class Clones(NonCompletableGithubObject):
             self._count = self._makeIntAttribute(attributes["count"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
+

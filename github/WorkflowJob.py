@@ -241,3 +241,4 @@ class WorkflowJob(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "workflow_name" in attributes:  # pragma no branch
             self._workflow_name = self._makeStringAttribute(attributes["workflow_name"])
+

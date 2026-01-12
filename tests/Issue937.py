@@ -45,3 +45,4 @@ class Issue937(Framework.TestCase):
         self.assertListKeyEqual(collaborators, lambda u: u.login, ["hegde5"])
         with self.assertRaises(AssertionError):
             self.repo.get_collaborators(affiliation="invalid_option")
+

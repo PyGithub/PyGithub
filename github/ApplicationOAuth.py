@@ -196,3 +196,4 @@ class ApplicationOAuth(NonCompletableGithubObject):
             self._client_id = self._makeStringAttribute(attributes["client_id"])
         if "client_secret" in attributes:  # pragma no branch
             self._client_secret = self._makeStringAttribute(attributes["client_secret"])
+

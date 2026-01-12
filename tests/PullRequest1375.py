@@ -56,3 +56,4 @@ class PullRequest1375(Framework.TestCase):
 
         self.assertEqual(first_reply.body, first_reply_body)
         self.assertEqual(second_reply.body, second_reply_body)
+

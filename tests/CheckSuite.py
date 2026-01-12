@@ -180,3 +180,4 @@ class CheckSuite(Framework.TestCase):
             if app["app_id"] == data[0]["app_id"]:
                 setting = app["setting"]
         self.assertTrue(setting)
+

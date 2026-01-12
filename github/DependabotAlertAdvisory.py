@@ -72,3 +72,4 @@ class DependabotAlertAdvisory(AdvisoryBase):
                 attributes["vulnerabilities"],
             )
         super()._useAttributes(attributes)
+

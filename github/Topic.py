@@ -174,3 +174,4 @@ class Topic(NonCompletableGithubObject):
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+

@@ -75,3 +75,4 @@ class Label(Framework.TestCase):
 
     def testDelete(self):
         self.label.delete()
+

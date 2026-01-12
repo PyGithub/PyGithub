@@ -76,3 +76,4 @@ class SubIssue(Framework.TestCase):
 
         updated_sub_issues = list(self.issue.get_sub_issues())
         self.assertListKeyEqual(updated_sub_issues, lambda s: s.number, [34, 38, 35])
+

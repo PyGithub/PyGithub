@@ -136,3 +136,4 @@ class IssueComment(Framework.TestCase):
     # this should be the last test as this deletes the comment used above.
     def testDelete(self):
         self.comment.delete()
+

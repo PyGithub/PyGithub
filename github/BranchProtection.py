@@ -218,3 +218,4 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

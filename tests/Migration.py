@@ -104,3 +104,4 @@ class Migration(Framework.TestCase):
 
     def testUnlockRepo(self):
         self.assertEqual(self.migration.unlock_repo("sample-repo"), None)
+

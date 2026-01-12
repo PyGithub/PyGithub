@@ -108,3 +108,4 @@ class GitTree(CompletableGithubObject):
             self._truncated = self._makeBoolAttribute(attributes["truncated"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

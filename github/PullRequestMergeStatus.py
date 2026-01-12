@@ -86,3 +86,4 @@ class PullRequestMergeStatus(NonCompletableGithubObject):
             self._message = self._makeStringAttribute(attributes["message"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
+

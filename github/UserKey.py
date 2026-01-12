@@ -138,3 +138,4 @@ class UserKey(CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
             self._verified = self._makeBoolAttribute(attributes["verified"])
+

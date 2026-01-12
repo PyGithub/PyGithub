@@ -54,3 +54,4 @@ class Issue87(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
     def testCreateIssueWithEscapedPercentInBody(self):
         issue = self.repo.create_issue("Issue created by PyGithub", "Escaped percent %25 in body")
         self.assertEqual(issue.number, 96)
+

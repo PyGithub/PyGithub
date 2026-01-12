@@ -350,3 +350,4 @@ class CheckRun(Framework.TestCase):
         annotation_list = check_run.get_annotations()
         self.assertEqual(annotation_list.totalCount, 2)
         self.assertListEqual([annotation.start_line for annotation in annotation_list], [2, 4])
+

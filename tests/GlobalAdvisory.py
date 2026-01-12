@@ -224,3 +224,4 @@ class GlobalAdvisory(Framework.TestCase):
             [(("npm", "critters"), None, [], ">= 0.0.17, <= 0.0.19")],
         )
         self.assertEqual(self.advisory.withdrawn_at, None)
+

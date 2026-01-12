@@ -66,3 +66,4 @@ class Issue33(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
         # done > tests/ReplayData/Issue33.testClosedIssues.txt.new
         # mv tests/ReplayData/Issue33.testClosedIssues.txt.new tests/ReplayData/Issue33.testClosedIssues.txt
         self.assertEqual(len(list(self.repo.get_issues(state="closed"))), 950)
+

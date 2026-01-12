@@ -55,3 +55,4 @@ class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull
                 break
         else:
             self.assertTrue(False)
+

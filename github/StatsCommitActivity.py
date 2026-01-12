@@ -83,3 +83,4 @@ class StatsCommitActivity(github.GithubObject.NonCompletableGithubObject):
             self._total = self._makeIntAttribute(attributes["total"])
         if "week" in attributes:  # pragma no branch
             self._week = self._makeTimestampAttribute(attributes["week"])
+

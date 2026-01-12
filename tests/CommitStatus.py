@@ -86,3 +86,4 @@ class CommitStatus(Framework.TestCase):
             'CommitStatus(state="success", id=277040, context="build")',
         )
         self.assertEqual(self.status.url, "https://api.github.com/repos/jacquev6/PyGithub/statuses/277040")
+

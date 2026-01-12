@@ -86,3 +86,4 @@ class DependabotAlertDependency(NonCompletableGithubObject):
             self._relationship = self._makeStringAttribute(attributes["relationship"])
         if "scope" in attributes:
             self._scope = self._makeStringAttribute(attributes["scope"])
+

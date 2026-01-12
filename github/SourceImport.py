@@ -254,3 +254,4 @@ class SourceImport(CompletableGithubObject):
             self._vcs = self._makeStringAttribute(attributes["vcs"])
         if "vcs_url" in attributes:  # pragma no branch
             self._vcs_url = self._makeStringAttribute(attributes["vcs_url"])
+

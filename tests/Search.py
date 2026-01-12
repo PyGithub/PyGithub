@@ -299,3 +299,4 @@ class Search(Framework.TestCase):
         # Example taken from #236
         issues = self.g.search_issues("repo:saltstack/salt-api type:Issues updated:>2014-03-04T18:28:11Z")
         self.assertEqual(issues[0].id, 29138794)
+

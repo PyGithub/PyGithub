@@ -119,3 +119,4 @@ class GitRef(CompletableGithubObject):
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

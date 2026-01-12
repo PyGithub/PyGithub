@@ -30,3 +30,4 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4952'), ('content-length', '293'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"36d23f2fb8cd26bc14f28b609f2aa3a3"'), ('date', 'Tue, 29 May 2012 19:04:14 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"updated_at":"2012-05-29T18:49:47Z","events":["push"],"url":"https://api.github.com/repos/jacquev6/PyGithub/hooks/257993","test_url":"https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests","ping_url":"https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings","config":{"url":"http://foobar.com"},"last_response":{"status":"ok","message":"OK","code":200},"active":true,"name":"web","created_at":"2012-05-19T06:01:45Z","id":257993}
+

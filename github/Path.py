@@ -99,3 +99,4 @@ class Path(NonCompletableGithubObject):
             self._title = self._makeStringAttribute(attributes["title"])
         if "uniques" in attributes:  # pragma no branch
             self._uniques = self._makeIntAttribute(attributes["uniques"])
+

@@ -636,3 +636,4 @@ class Github(Framework.TestCase):
 
     def testRequester(self):
         assert self.g.requester is self.g.__requester
+

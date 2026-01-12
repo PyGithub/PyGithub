@@ -78,3 +78,4 @@ class GitRef(Framework.TestCase):
 
     def testDelete(self):
         self.ref.delete()
+

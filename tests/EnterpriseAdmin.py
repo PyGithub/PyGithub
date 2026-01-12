@@ -68,3 +68,4 @@ class EnterpriseAdmin(Framework.TestCase):
         ]
         self.assertEqual(len(enterprise_users_list), 102)
         self.assertEqual(enterprise_users_list[42][0], "beaver-user043")
+

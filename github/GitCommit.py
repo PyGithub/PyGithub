@@ -205,3 +205,4 @@ class GitCommit(CompletableGithubObject):
             self._verification = self._makeClassAttribute(
                 github.GitCommitVerification.GitCommitVerification, attributes["verification"]
             )
+

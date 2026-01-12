@@ -415,3 +415,4 @@ None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4958'), ('content-length', '22487'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/openframeworks/openFrameworks/issues?page=1&state=closed>; rel="first", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=37&state=closed>; rel="prev"'), ('etag', '"98deeee1d4ab1f6a96a5336774ac0087"'), ('date', 'Tue, 29 May 2012 18:46:59 GMT'), ('content-type', 'application/json; charset=utf-8')]
 [{"id":72149},{"id":72148},{"id":72147},{"id":72146},{"id":72145},{"id":72144},{"id":72142},{"id":72141},{"id":72140},{"id":72139},{"id":72137},{"id":72136},{"id":72135},{"id":72134},{"id":72133},{"id":72132},{"id":72131},{"id":72130},{"id":72129},{"id":72128},{"id":72127},{"id":72126},{"id":72125},{"id":72124},{"id":72123}]
+

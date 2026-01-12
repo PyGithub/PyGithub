@@ -135,3 +135,4 @@ class PublicKey(CompletableGithubObject):
             self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

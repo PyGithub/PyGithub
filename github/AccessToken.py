@@ -156,3 +156,4 @@ class AccessToken(NonCompletableGithubObject):
             self._scope = self._makeStringAttribute(attributes["scope"])
         if "token_type" in attributes:  # pragma no branch
             self._type = self._makeStringAttribute(attributes["token_type"])
+

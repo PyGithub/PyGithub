@@ -106,3 +106,4 @@ class Issue50(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issue
         )
         self.assertListKeyEqual(issue.labels, lambda lb: lb.name, [self.labelName])
         self.assertEqual(issue.number, 52)
+

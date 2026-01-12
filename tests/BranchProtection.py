@@ -79,3 +79,4 @@ class BranchProtection(Framework.TestCase):
         self.assertFalse(self.branch_protection.required_conversation_resolution)
         self.assertFalse(self.branch_protection.lock_branch)
         self.assertFalse(self.branch_protection.allow_fork_syncing)
+

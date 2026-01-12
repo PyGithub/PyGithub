@@ -204,3 +204,4 @@ class NamedEnterpriseUser(CompletableGithubObject):
             self._visual_studio_subscription_user = self._makeBoolAttribute(
                 attributes["visual_studio_subscription_user"]
             )
+

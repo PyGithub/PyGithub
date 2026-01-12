@@ -64,3 +64,4 @@ class License(Framework.TestCase):
             """Create a text file (typically named LICENSE or LICENSE.txt) in the root of your source code and copy the text of the license into the file. Replace [year] with the current year and [fullname] with the name (or names) of the copyright holders.""",
         )
         self.assertEqual(repr(self.license), 'License(name="MIT License")')
+

@@ -135,3 +135,4 @@ class StatsContributor(NonCompletableGithubObject):
             self._total = self._makeIntAttribute(attributes["total"])
         if "weeks" in attributes:  # pragma no branch
             self._weeks = self._makeListOfClassesAttribute(self.Week, attributes["weeks"])
+

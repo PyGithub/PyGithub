@@ -71,3 +71,4 @@ class Copilot(Framework.TestCase):
     def testRemoveSeats(self):
         seats_cancelled = self.copilot.remove_seats(["pashafateev"])
         self.assertEqual(seats_cancelled, 1)
+

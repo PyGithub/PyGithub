@@ -78,3 +78,4 @@ class Project(Framework.TestCase):
         expectedProjects = ["TestProject", "TestProjectClosed"]
         projects = [proj.name for proj in self.repo.get_projects("all")]
         self.assertEqual(projects, expectedProjects)
+

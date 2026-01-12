@@ -232,3 +232,4 @@ class GithubRetry(Retry):
             self.__logger = logging.getLogger(__name__)
         if self.__logger.isEnabledFor(level):
             self.__logger.log(level, message, **kwargs)
+

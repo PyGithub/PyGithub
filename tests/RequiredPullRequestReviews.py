@@ -116,3 +116,4 @@ class RequiredPullRequestReviews(Framework.TestCase):
             lambda t: t.slug,
             ["pygithub-owners"],
         )
+

@@ -137,3 +137,4 @@ class PublicReleaseAsset(Framework.TestCase):
         digest = self.asset.digest.split(":")[1]
         self.assertEqual(hash.hexdigest(), digest)
         self.assertEqual(size, self.asset.size)
+

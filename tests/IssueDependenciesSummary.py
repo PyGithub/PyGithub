@@ -40,3 +40,4 @@ class IssueDependenciesSummary(Framework.TestCase):
         self.assertEqual(self.ids.blocking, 0)
         self.assertEqual(self.ids.total_blocked_by, 1)
         self.assertEqual(self.ids.total_blocking, 1)
+

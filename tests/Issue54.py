@@ -50,3 +50,4 @@ class Issue54(Framework.TestCase):
             commit.author.date,
             datetime(2012, 7, 13, 18, 47, 10, tzinfo=timezone.utc),
         )
+

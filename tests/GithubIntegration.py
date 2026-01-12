@@ -309,3 +309,4 @@ class GithubIntegration(Framework.BasicTestCase):
 
         assert github_integration.requester is github_integration.__requester
         assert app.requester is app._requester
+

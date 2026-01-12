@@ -88,3 +88,4 @@ class CommitCombinedStatus(Framework.TestCase):
             repr(self.combined_status),
             'CommitCombinedStatus(state="success", sha="74e70119a23fa3ffb3db19d4590eccfebd72b659")',
         )
+

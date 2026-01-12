@@ -65,3 +65,4 @@ class PublicKey(Framework.TestCase):
             repr(self.public_key),
             'PublicKey(key_id=568250167242549743, key="u5e1Z25+z8pmgVVt5Pd8k0z/sKpVL1MXYtRAecE4vm8=")',
         )
+

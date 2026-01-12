@@ -105,3 +105,4 @@ class Tag(NonCompletableGithubObject):
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "zipball_url" in attributes:  # pragma no branch
             self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])
+

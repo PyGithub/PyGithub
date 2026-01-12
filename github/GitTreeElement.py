@@ -101,3 +101,4 @@ class GitTreeElement(NonCompletableGithubObject):
             self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

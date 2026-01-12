@@ -232,3 +232,4 @@ class GithubApp(CompletableGithubObject):
                 self._url = self._makeStringAttribute(attributes["url"])
         if "webhook_secret" in attributes:  # pragma no branch
             self._webhook_secret = self._makeStringAttribute(attributes["webhook_secret"])
+

@@ -216,3 +216,4 @@ class GitReleaseAsset(CompletableGithubObject):
             self._uploader = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["uploader"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+

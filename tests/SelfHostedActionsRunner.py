@@ -67,3 +67,4 @@ class SelfHostedActionsRunner(Framework.TestCase):
         self.assertEqual(labels[0]["name"], "self-hosted")
         self.assertEqual(labels[1]["name"], "X64")
         self.assertEqual(labels[2]["name"], "Linux")
+

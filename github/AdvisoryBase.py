@@ -155,3 +155,4 @@ class AdvisoryBase(NonCompletableGithubObject):
                 "withdrawn_at"
             ]
             self._withdrawn_at = self._makeDatetimeAttribute(attributes["withdrawn_at"])
+

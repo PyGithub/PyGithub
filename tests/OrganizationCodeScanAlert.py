@@ -103,3 +103,4 @@ class OrganizationCodeScanAlert(Framework.TestCase):
         )
         # Note, this doesn't test "tool_guid" or "pr" arguments as they are not found in the test data
         self.assertEqual(len(list(alerts)), 2)  # Update this when more alerts are added
+

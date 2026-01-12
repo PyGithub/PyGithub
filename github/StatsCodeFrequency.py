@@ -78,3 +78,4 @@ class StatsCodeFrequency(NonCompletableGithubObject):
         self._week = self._makeTimestampAttribute(attributes[0])
         self._additions = self._makeIntAttribute(attributes[1])
         self._deletions = self._makeIntAttribute(attributes[2])
+

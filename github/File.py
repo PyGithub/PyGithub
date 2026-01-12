@@ -139,3 +139,4 @@ class File(NonCompletableGithubObject):
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
+

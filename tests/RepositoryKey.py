@@ -96,3 +96,4 @@ class RepositoryKey(Framework.TestCase):
 
     def testDelete(self):
         self.key.delete()
+

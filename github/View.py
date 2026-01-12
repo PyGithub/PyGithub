@@ -94,3 +94,4 @@ class View(NonCompletableGithubObject):
             self._uniques = self._makeIntAttribute(attributes["uniques"])
         if "views" in attributes:  # pragma no branch
             self._views = self._makeListOfClassesAttribute(github.Traffic.Traffic, attributes["views"])
+
