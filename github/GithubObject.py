@@ -687,20 +687,18 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     ):
         assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
 
-        # add per_page only if the instance is incomplete
-        if not completed:
-            # we set page=1 to get pagination links, PaginatedList can work from there
-            self.__pagination_parameters = {"page": 1}
-            if per_page is not None:
-                # we set the given per_page
-                self.__pagination_parameters["per_page"] = per_page
+        # we set page=1 to get pagination links, PaginatedList can work from there
+        self.__pagination_parameters = {"page": 1}
+        if per_page is not None:
+            # we set the given per_page
+            self.__pagination_parameters["per_page"] = per_page
+        else:
+            # we use the per_page explicitly configured with the Requester
+            if requester.per_page != Consts.DEFAULT_PER_PAGE:
+                self.__pagination_parameters["per_page"] = requester.per_page
             else:
-                # we use the per_page explicitly configured with the Requester
-                if requester.per_page != Consts.DEFAULT_PER_PAGE:
-                    self.__pagination_parameters["per_page"] = requester.per_page
-                else:
-                    # we use the default (no) per_page (not Consts.DEFAULT_PER_PAGE, the URL might have a different default)
-                    pass
+                # we use the default (no) per_page (not Consts.DEFAULT_PER_PAGE, the URL might have a different default)
+                pass
 
         super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
 
