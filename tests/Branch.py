@@ -50,7 +50,7 @@ from . import Framework
 class Branch(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_user().get_repo("PyGithub")
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.branch = self.repo.get_branch("topic/RewriteWithGeneratedCode")
         self.protected_branch = self.repo.get_branch("integrations")
         self.organization_branch = self.g.get_repo("PyGithub/PyGithub", lazy=True).get_branch("master")
@@ -59,19 +59,18 @@ class Branch(Framework.TestCase):
         self.assertEqual(
             self.branch._links,
             {
-                "self": "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode",
-                "html": "https://github.com/jacquev6/PyGithub/tree/topic/RewriteWithGeneratedCode",
+                "self": "https://api.github.com/repos/PyGithub/PyGithub/branches/topic/RewriteWithGeneratedCode",
+                "html": "https://github.com/PyGithub/PyGithub/tree/topic/RewriteWithGeneratedCode",
             },
         )
         self.assertEqual(self.branch.commit.sha, "f23da453917a36c8bd48ab8d99e5fa7221884342")
         self.assertEqual(self.branch.name, "topic/RewriteWithGeneratedCode")
-        self.assertEqual(self.branch.commit.sha, "f23da453917a36c8bd48ab8d99e5fa7221884342")
         self.assertIsNone(self.branch.pattern)
         self.assertEqual(self.branch.protected, False)
         self.assertIsNone(self.branch.protection.url)
         self.assertEqual(
             self.branch.protection_url,
-            "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode/protection",
+            "https://api.github.com/repos/PyGithub/PyGithub/branches/topic/RewriteWithGeneratedCode/protection",
         )
         self.assertFalse(self.branch.protected)
         self.assertEqual(repr(self.branch), 'Branch(name="topic/RewriteWithGeneratedCode")')
@@ -90,7 +89,7 @@ class Branch(Framework.TestCase):
         self.assertEqual(branch_protection.required_status_checks.contexts, [])
         self.assertEqual(
             branch_protection.required_status_checks.contexts_url,
-            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_status_checks/contexts",
+            "https://api.github.com/repos/PyGithub/PyGithub/branches/integrations/protection/required_status_checks/contexts",
         )
         self.assertTrue(branch_protection.enforce_admins)
         self.assertFalse(branch_protection.required_linear_history)
@@ -104,7 +103,7 @@ class Branch(Framework.TestCase):
         self.assertTrue(branch_protection.required_pull_request_reviews.require_last_push_approval)
         self.assertEqual(
             branch_protection.required_pull_request_reviews.url,
-            "https://api.github.com/repos/jacquev6/PyGithub/branches/integrations/protection/required_pull_request_reviews",
+            "https://api.github.com/repos/PyGithub/PyGithub/branches/integrations/protection/required_pull_request_reviews",
         )
 
     def testEditProtectionDismissalUsersWithUserOwnedBranch(self):

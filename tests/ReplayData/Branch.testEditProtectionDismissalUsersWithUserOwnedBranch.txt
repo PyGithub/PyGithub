@@ -2,7 +2,7 @@ https
 PUT
 api.github.com
 None
-/repos/jacquev6/PyGithub/branches/integrations/protection
+/repos/PyGithub/PyGithub/branches/integrations/protection
 {'Authorization': 'token private_token_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.luke-cage-preview+json'}
 {"restrictions": null, "required_pull_request_reviews": {"dismissal_restrictions": {"users": ["jacquev6"]}}, "required_status_checks": null, "enforce_admins": null, "allow_force_pushes": null, "allow_fork_syncing": null, "lock_branch": null, "required_conversation_resolution": null, "required_linear_history": null, "block_creations": null, "allow_deletions": null }
 422

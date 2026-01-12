@@ -2,7 +2,7 @@ https
 PATCH
 api.github.com
 None
-/repos/jacquev6/PyGithub/branches/integrations/protection/required_pull_request_reviews
+/repos/PyGithub/PyGithub/branches/integrations/protection/required_pull_request_reviews
 {'Authorization': 'token private_token_removed', 'Content-Type': 'application/json', 'User-Agent': 'PyGithub/Python', 'Accept': 'application/vnd.github.luke-cage-preview+json'}
 {"required_approving_review_count": 9}
 422

@@ -2,7 +2,7 @@ https
 DELETE
 api.github.com
 None
-/repos/jacquev6/PyGithub/branches/integrations/protection/required_signatures
+/repos/PyGithub/PyGithub/branches/integrations/protection/required_signatures
 {'Accept': 'application/vnd.github.zzzax-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
