@@ -356,7 +356,6 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                         if lazy
                         else [
                             "/repos/PyGithub/PyGithub",
-                            # TODO: is that right?
                             "/repos/PyGithub/PyGithub/commits/3253acaabd86de12b73d0a24c98eb9c13d1987b5?page=1",
                         ]
                     )
@@ -525,24 +524,14 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 self.assertListKeyEqual(
                     requests,
                     lambda r: r.url,
-                    (
-                        [
-                            "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
-                            # TODO: is that right?
-                            "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
-                            "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
-                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
-                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
-                        ]
-                        if lazy
-                        else [
-                            "/repos/PyGithub/PyGithub",
-                            "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
-                            "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
-                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
-                            "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
-                        ]
-                    ),
+                    ([] if lazy else ["/repos/PyGithub/PyGithub"])
+                    + [
+                        "/repos/PyGithub/PyGithub/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                        "/repositories/3544490/compare/19e1c5032397a95c58fe25760723ffc24cbe0ec8...4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                        "/repos/PyGithub/PyGithub/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=1&per_page=2",
+                        "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=2&per_page=2",
+                        "/repositories/3544490/commits/4bf07a2f5123f78fc6759bc2ade0c74154c1ba86?page=3&per_page=2",
+                    ],
                 )
 
     def testRepoComparisonCommitsFilesWithPerPage(self):
@@ -846,6 +835,3 @@ class TestingClass(gho.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes: Any) -> None:
         pass
-
-
-# TODO check replay data respect per_page
