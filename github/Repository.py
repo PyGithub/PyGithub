@@ -321,8 +321,8 @@ if TYPE_CHECKING:
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
-    from github.SecretScanAlert import SecretScanAlert
     from github.Ruleset import Ruleset
+    from github.SecretScanAlert import SecretScanAlert
     from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SourceImport import SourceImport
@@ -2816,9 +2816,7 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/security-advisories/{ghsa}")
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data)
 
-    def get_rulesets(
-        self, includes_parents: bool = True, targets: Opt[list[str]] = NotSet
-    ) -> PaginatedList[Ruleset]:
+    def get_rulesets(self, includes_parents: bool = True, targets: Opt[list[str]] = NotSet) -> PaginatedList[Ruleset]:
         """
         :calls: `GET /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#get-all-repository-rulesets>`_
         :param includes_parents: bool

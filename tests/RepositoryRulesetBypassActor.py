@@ -31,7 +31,6 @@ class RepositoryRulesetBypassActor(Framework.TestCase):
         ruleset = repo.get_ruleset(3474546)
         self.rrba = ruleset.bypass_actors[0]
 
-
     def testAttributes(self):
         rrba = self.rrba
         self.assertEqual(rrba.actor_id, 5)

@@ -677,4 +677,5 @@ class Branch(NonCompletableGithubObject):
             github.Rule.Rule,
             self._requester,
             f"{repo_url}/rules/branches/{self._name.value}",
-            None,)
+            None,
+        )
