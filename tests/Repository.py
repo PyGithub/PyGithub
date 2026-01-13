@@ -110,8 +110,8 @@ from unittest import mock
 
 import github
 import github.Repository
-import github.Requester
 import github.RepositoryRulesetBypassActor
+import github.Requester
 from github.GithubObject import is_undefined
 
 from . import Framework
@@ -2546,6 +2546,7 @@ class Repository(Framework.TestCase):
                 "url": "https://api.github.com/repos/PyGithub/PyGithub/automated-security-fixes",
             },
         )
+
 
 class LazyRepository(Framework.TestCase):
     def setUp(self):
