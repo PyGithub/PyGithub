@@ -258,6 +258,7 @@ class Ruleset(CompletableGithubObject):
         return status == 204
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "_links" in attributes:  # pragma no branch
             self.__links = self._makeDictAttribute(attributes["_links"])
         if "id" in attributes:  # pragma no branch
