@@ -288,9 +288,3 @@ class Ruleset(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "current_user_can_bypass" in attributes:  # pragma no branch
             self._current_user_can_bypass = self._makeStringAttribute(attributes["current_user_can_bypass"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
-        else:
-            href = attributes.get("_links", {}).get("self", {}).get("href")
-            if href:  # pragma no branch
-                self._url = self._makeStringAttribute(href)
