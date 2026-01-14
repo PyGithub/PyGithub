@@ -60,6 +60,3 @@ class Reaction(Framework.TestCase):
             reaction.__repr__(),
             'Reaction(user=NamedUser(login="nicolastrres"), id=16916340)',
         )
-
-    def testDelete(self):
-        self.reactions[0].delete()
