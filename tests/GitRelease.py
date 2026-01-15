@@ -156,6 +156,7 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(release.tag_name, tag)
         self.assertEqual(release.tarball_url, "https://api.github.com/repos/rickrickston123/RepoTest/tarball/v1.0")
         self.assertEqual(release.target_commitish, "master")
+        self.assertIsNone(release.updated_at)
         self.assertEqual(
             release.upload_url,
             f"https://uploads.github.com/repos/{user}/{repo_name}/releases/{release_id}/assets{{?name,label}}",
@@ -192,6 +193,17 @@ class GitRelease(Framework.TestCase):
             'GitReleaseAsset(url="https://api.github.com/repos/'
             f'{user}/{repo_name}/releases/assets/{release.raw_data["assets"][0]["id"]}")',
         )
+
+    def testLazyAttributes(self):
+        id_release = self.g.withLazy(True).get_repo("lazy/repo").get_release(42)
+        self.assertEqual(str(id_release), "GitRelease(name=None)")
+        self.assertEqual(id_release.id, 42)
+        self.assertEqual(id_release.url, "/repos/lazy/repo/releases/42")
+
+        id_release = self.g.withLazy(True).get_repo("lazy/repo").get_release("v42")
+        self.assertEqual(str(id_release), "GitRelease(name=None)")
+        self.assertEqual(id_release.tag_name, "v42")
+        self.assertEqual(id_release.url, "/repos/lazy/repo/releases/tags/v42")
 
     def testGetRelease(self):
         release_by_id = self.release

@@ -191,7 +191,7 @@ class Deployment(CompletableGithubObject):
 
     def get_statuses(self) -> PaginatedList[github.DeploymentStatus.DeploymentStatus]:
         """
-        :calls: `GET /repos/{owner}/deployments/{deployment_id}/statuses <https://docs.github.com/en/rest/reference/repos#list-deployments>`_
+        :calls: `GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses <https://docs.github.com/en/rest/reference/repos#list-deployments>`_
         """
         return PaginatedList(
             github.DeploymentStatus.DeploymentStatus,
@@ -203,7 +203,7 @@ class Deployment(CompletableGithubObject):
 
     def get_status(self, id_: int) -> github.DeploymentStatus.DeploymentStatus:
         """
-        :calls: `GET /repos/{owner}/deployments/{deployment_id}/statuses/{status_id}  <https://docs.github.com/en/rest/reference/repos#get-a-deployment>`_
+        :calls: `GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}  <https://docs.github.com/en/rest/reference/repos#get-a-deployment>`_
         """
         assert isinstance(id_, int), id_
         headers, data = self._requester.requestJsonAndCheck(
@@ -277,6 +277,10 @@ class Deployment(CompletableGithubObject):
             self._environment = self._makeStringAttribute(attributes["environment"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "original_environment" in attributes:  # pragma no branch

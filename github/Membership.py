@@ -65,6 +65,7 @@ class Membership(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/org-membership
+    - /components/schemas/team-membership
 
     """
 

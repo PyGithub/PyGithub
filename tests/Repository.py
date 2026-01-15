@@ -106,6 +106,8 @@ from unittest import mock
 
 import github
 import github.Repository
+import github.Requester
+from github.GithubObject import is_undefined
 
 from . import Framework
 
@@ -306,6 +308,10 @@ class Repository(Framework.TestCase):
             merge_commit_title="PR_TITLE",
             merge_commit_message="PR_BODY",
             web_commit_signoff_required=True,
+            security_and_analysis={
+                "secret_scanning": {"status": "enabled"},
+                "dependabot_security_updates": {"status": "disabled"},
+            },
         )
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
@@ -328,6 +334,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.merge_commit_title, "PR_TITLE")
         self.assertEqual(self.repo.merge_commit_message, "PR_BODY")
         self.assertTrue(self.repo.web_commit_signoff_required)
+        self.assertEqual(self.repo.security_and_analysis.secret_scanning.status, "enabled")
+        self.assertEqual(self.repo.security_and_analysis.dependabot_security_updates.status, "disabled")
+        self.repo.edit("PyGithub", security_and_analysis={"dependabot_security_updates": {"status": "enabled"}})
+        self.assertEqual(self.repo.security_and_analysis.dependabot_security_updates.status, "enabled")
 
     def testEditWithDefaultBranch(self):
         self.assertEqual(self.repo.master_branch, None)
@@ -660,6 +670,12 @@ class Repository(Framework.TestCase):
         for matched_repo_secret in matched_repo_secrets:
             matched_repo_secret.delete()
 
+    def testLazySecret(self):
+        secret = self.g.withLazy(True).get_repo("lazy/repo").get_secret("secret name")
+        self.assertEqual(str(secret), 'Secret(name="secret name")')
+        self.assertEqual(secret.name, "secret name")
+        self.assertEqual(secret.url, "/repos/lazy/repo/actions/secrets/secret%20name")
+
     def testCodeScanAlerts(self):
         codescan_alerts = self.repo.get_codescan_alerts()
         self.assertListKeyEqual(
@@ -670,7 +686,7 @@ class Repository(Framework.TestCase):
             ],
         )
         codescan_alert = codescan_alerts[0]
-        self.assertEqual(repr(codescan_alert), "CodeScanAlert(number=6)")
+        self.assertEqual(repr(codescan_alert), 'CodeScanAlert(number=6, id="py/rule-id")')
         self.assertEqual(codescan_alert.state, "open")
         self.assertEqual(
             codescan_alert.url,
@@ -1330,7 +1346,10 @@ class Repository(Framework.TestCase):
         )
 
     def testGetLanguages(self):
-        self.assertEqual(self.repo.get_languages(), {"Python": 127266, "Shell": 673})
+        self.assertEqual(
+            self.repo.get_languages(),
+            {"Python": 127266, "Shell": 673, "url": "https://api.github.com/repos/PyGithub/PyGithub/languages"},
+        )
 
     def testGetMilestones(self):
         self.assertListKeyEqual(self.repo.get_milestones(), lambda m: m.id, [93547])
@@ -2212,6 +2231,12 @@ class Repository(Framework.TestCase):
         self.assertTrue(variable.edit("variable-value123"))
         variable.delete()
 
+    def testGetLazyVariable(self):
+        var = self.g.withLazy(True).get_repo("lazy/repo").get_variable("var name")
+        self.assertEqual(str(var), 'Variable(name="var name")')
+        self.assertEqual(var.name, "var name")
+        self.assertEqual(var.url, "/repos/lazy/repo/actions/variables/var%20name")
+
     def testRepoVariables(self):
         # GitHub will always capitalize the variable name
         variables = (("VARIABLE_NAME_ONE", "variable-value-one"), ("VARIABLE_NAME_TWO", "variable-value-two"))
@@ -2281,7 +2306,11 @@ class Repository(Framework.TestCase):
     def testGetAutomatedSecurityFixes(self):
         self.assertDictEqual(
             self.repo.get_automated_security_fixes(),
-            {"enabled": True, "paused": False},
+            {
+                "enabled": True,
+                "paused": False,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/automated-security-fixes",
+            },
         )
 
 
@@ -2295,6 +2324,66 @@ class LazyRepository(Framework.TestCase):
 
     def getEagerRepository(self):
         return self.g.get_repo(self.repository_name, lazy=False)
+
+    def testLazyAttributes(self):
+        repo = self.g.withLazy(True).get_repo("lazy/repo")
+        self.assertEqual(str(repo), 'Repository(full_name="lazy/repo")')
+        self.assertEqual(repo._identity, "lazy/repo")
+        self.assertTrue(is_undefined(repo._id))
+        self.assertEqual(repo.name, "repo")
+        self.assertEqual(repo.full_name, "lazy/repo")
+        self.assertEqual(repo.url, "/repos/lazy/repo")
+
+        repo = self.g.withLazy(True).get_repo(42)
+        self.assertEqual(str(repo), "Repository(id=42)")
+        self.assertEqual(repo._identity, "42")
+        self.assertEqual(repo.id, 42)
+        self.assertTrue(is_undefined(repo._name))
+        self.assertTrue(is_undefined(repo._full_name))
+        self.assertEqual(repo.url, "/repositories/42")
+
+    def testCreatFromUrl(self):
+        requester = mock.Mock(github.Requester.Requester, base_url="https://test.ing/api/", is_not_lazy=False)
+
+        for base_url in [requester.base_url[:-1], ""]:
+            repo = github.Repository.Repository(requester, url=f"{base_url}/repositories/12345")
+            self.assertEqual(repo.url, f"{base_url}/repositories/12345", msg=f"base url: '{base_url}'")
+            self.assertEqual(repo.id, 12345)
+            self.assertTrue(is_undefined(repo._full_name))
+            self.assertTrue(is_undefined(repo._name))
+
+            repo = github.Repository.Repository(requester, url=f"{base_url}/repos/login/name")
+            self.assertEqual(repo.url, f"{base_url}/repos/login/name", msg=f"base url: '{base_url}'")
+            self.assertTrue(is_undefined(repo._id))
+            self.assertEqual(repo.full_name, "login/name")
+            self.assertEqual(repo.name, "name")
+
+            repo = github.Repository.Repository(requester, url=f"{base_url}/repos/login/12345")
+            self.assertEqual(repo.url, f"{base_url}/repos/login/12345", msg=f"base url: '{base_url}'")
+            self.assertTrue(is_undefined(repo._id))
+            self.assertEqual(repo.full_name, "login/12345")
+            self.assertEqual(repo.name, "12345")
+
+    def testCreatFromAttributes(self):
+        requester = mock.Mock(github.Requester.Requester, base_url="https://test.ing/api/", is_not_lazy=False)
+
+        repo = github.Repository.Repository(requester, attributes={"id": 12345})
+        self.assertEqual(repo.url, "/repositories/12345")
+        self.assertEqual(repo.id, 12345)
+        self.assertTrue(is_undefined(repo._full_name))
+        self.assertTrue(is_undefined(repo._name))
+
+        repo = github.Repository.Repository(requester, attributes={"owner": {"login": "login"}, "name": "name"})
+        self.assertEqual(repo.url, "/repos/login/name")
+        self.assertTrue(is_undefined(repo._id))
+        self.assertEqual(repo.full_name, "login/name")
+        self.assertEqual(repo.name, "name")
+
+        repo = github.Repository.Repository(requester, attributes={"full_name": "full/name"})
+        self.assertEqual(repo.url, "/repos/full/name")
+        self.assertTrue(is_undefined(repo._id))
+        self.assertEqual(repo.full_name, "full/name")
+        self.assertEqual(repo.name, "name")
 
     def testGetIssues(self):
         lazy_repo = self.getLazyRepository()

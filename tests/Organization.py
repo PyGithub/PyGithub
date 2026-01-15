@@ -172,6 +172,11 @@ class Organization(Framework.TestCase):
         self.assertIsNone(self.org.user_view_type)
         self.assertEqual(self.org.web_commit_signoff_required, False)
 
+    def testLazyAttributes(self):
+        org = self.g.withLazy(True).get_organization("org")
+        self.assertEqual(org.login, "org")
+        self.assertEqual(org.url, "/orgs/org")
+
     def testAddMembersDefaultRole(self):
         lyloa = self.g.get_user("lyloa")
         self.assertFalse(self.org.has_in_members(lyloa))
@@ -516,6 +521,12 @@ class Organization(Framework.TestCase):
         self.assertEqual(list(secret.selected_repositories), repos)
         self.assertEqual(secret.url, "https://api.github.com/orgs/BeaverSoftware/actions/secrets/secret-name")
 
+    def testLazySecret(self):
+        secret = self.g.withLazy(True).get_organization("org").get_secret("secret name")
+        self.assertEqual(str(secret), 'OrganizationSecret(name="secret name")')
+        self.assertEqual(secret.name, "secret name")
+        self.assertEqual(secret.url, "/orgs/org/actions/secrets/secret%20name")
+
     def testGetSecrets(self):
         secrets = self.org.get_secrets()
         self.assertEqual(len(list(secrets)), 1)
@@ -628,6 +639,12 @@ class Organization(Framework.TestCase):
         self.assertEqual(variable.visibility, "selected")
         self.assertEqual(list(variable.selected_repositories), repos)
         self.assertEqual(variable.url, "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name")
+
+    def testGetLazyVariable(self):
+        var = self.g.withLazy(True).get_organization("org").get_variable("var name")
+        self.assertEqual(str(var), 'OrganizationVariable(name="var name")')
+        self.assertEqual(var.name, "var name")
+        self.assertEqual(var.url, "/orgs/org/actions/variables/var%20name")
 
     def testGetVariables(self):
         variables = self.org.get_variables()
@@ -767,7 +784,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(custom_property.required, True)
         self.assertEqual(custom_property.default_value, "foo")
         self.assertEqual(custom_property.description, "description")
-        self.assertIsNone(custom_property.url)
+        self.assertEqual(custom_property.url, "https://api.github.com/orgs/BeaverSoftware/properties/schema/property_1")
         self.assertEqual(custom_property.values_editable_by, "org_actors")
 
     def testCreateCustomPropertyValues(self):

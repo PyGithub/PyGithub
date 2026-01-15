@@ -65,6 +65,12 @@ class GistComment(Framework.TestCase):
             'GistComment(user=NamedUser(login="jacquev6"), id=323629)',
         )
 
+    def testLazyAttributes(self):
+        comment = self.g.withLazy(True).get_gist("lazy").get_comment(42)
+        self.assertEqual(str(comment), "GistComment(user=None, id=42)")
+        self.assertEqual(comment.id, 42)
+        self.assertEqual(comment.url, "/gists/lazy/comments/42")
+
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")

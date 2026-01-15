@@ -45,9 +45,11 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.AuthenticatedUser
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState
@@ -230,20 +232,20 @@ class Gist(CompletableGithubObject):
 
     def create_fork(self) -> Gist:
         """
-        :calls: `POST /gists/{id}/forks <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `POST /gists/{gist_id}/forks <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/forks")
         return Gist(self._requester, headers, data, completed=True)
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `DELETE /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, description: Opt[str] = NotSet, files: Opt[dict[str, InputFileContent | None]] = NotSet) -> None:
         """
-        :calls: `PATCH /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `PATCH /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert is_optional(description, str), description
         # limitation of `TypeGuard`
@@ -256,15 +258,17 @@ class Gist(CompletableGithubObject):
         if is_defined(files):
             post_parameters["files"] = {key: None if value is None else value._identity for key, value in files.items()}
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
+
         self._useAttributes(data)
+        self._set_complete()
 
     def get_comment(self, id: int) -> GistComment:
         """
-        :calls: `GET /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `GET /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/comments/{id}")
-        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
+        url = f"{self.url}/comments/{id}"
+        return github.GistComment.GistComment(self._requester, url=url)
 
     def get_comments(self) -> PaginatedList[GistComment]:
         """
@@ -279,20 +283,20 @@ class Gist(CompletableGithubObject):
 
     def is_starred(self) -> bool:
         """
-        :calls: `GET /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /gists/{gist_id}/star <https://docs.github.com/en/rest/reference/gists>`_
         """
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/star")
         return status == 204
 
     def reset_starred(self) -> None:
         """
-        :calls: `DELETE /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `DELETE /gists/{gist_id}/star <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/star")
 
     def set_starred(self) -> None:
         """
-        :calls: `PUT /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `PUT /gists/{gist_id}/star <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/star")
 
@@ -329,6 +333,10 @@ class Gist(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_id = attributes["url"].split("/")[-1]
+            id = urllib.parse.unquote(quoted_id)
+            self._id = self._makeStringAttribute(id)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch

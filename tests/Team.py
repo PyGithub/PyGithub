@@ -70,6 +70,7 @@ class Team(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.team.created_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.description, "a team")
+        self.assertIsNone(self.team.enterprise_id)
         self.assertIsNone(self.team.group_id)
         self.assertIsNone(self.team.group_name)
         self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
@@ -83,6 +84,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.node_id, "AbCdEfG")
         self.assertEqual(self.team.notification_setting, "notifications_disabled")
         self.assertEqual(self.team.organization.login, "BeaverSoftware")
+        self.assertIsNone(self.team.organization_id)
         self.assertIsNone(self.team.organization_selection_type)
         self.assertIsNone(self.team.parent)
         self.assertEqual(self.team.permission, "pull")
@@ -92,6 +94,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.repositories_url, "https://api.github.com/organizations/1234567/team/12345678/repos")
         self.assertEqual(self.team.slug, "team-slug")
         self.assertIsNone(self.team.sync_to_organizations)
+        self.assertIsNone(self.team.type)
         self.assertEqual(self.team.updated_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.url, "https://api.github.com/organizations/1234567/team/12345678")
         self.assertEqual(self.team.organization, self.org)
@@ -99,6 +102,13 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.parent, None)
         self.assertEqual(repr(self.team), 'Team(name="Team", id=12345678)')
         self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
+
+    def testLazyAttributes(self):
+        team = self.g.withLazy(True).get_organization("org").get_team(42)
+        self.assertEqual(str(team), "Team(name=None, id=42)")
+        self.assertEqual(team._identity, 42)
+        self.assertEqual(team.id, 42)
+        self.assertEqual(team.url, "/teams/42")
 
     def testDiscussions(self):
         discussions = list(self.team.get_discussions())
@@ -133,10 +143,10 @@ class Team(Framework.TestCase):
         user = self.g.get_user("jacquev6")
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
-        self.team.add_to_members(user)
+        self.team.add_membership(user)
         self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, ["jacquev6"])
         self.assertTrue(self.team.has_in_members(user))
-        self.team.remove_from_members(user)
+        self.team.remove_membership(user)
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_membership(user, "maintainer")

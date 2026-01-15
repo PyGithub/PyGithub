@@ -57,6 +57,10 @@ class TeamDiscussion(DiscussionBase):
     The reference can be found here
     https://docs.github.com/en/rest/reference/teams#discussions
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/team-discussion
+
     """
 
     def _initAttributes(self) -> None:

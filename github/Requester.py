@@ -107,7 +107,7 @@ from urllib3 import Retry
 import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
-from github.GithubObject import as_rest_api_attributes
+from github.GithubObject import Opt, as_rest_api_attributes, is_undefined
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -409,6 +409,10 @@ class Requester:
         self.__graphql_prefix = self.get_graphql_prefix(o.path)
         self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
+        if base_url == Consts.DEFAULT_BASE_URL:
+            self.__domains = ["github.com", "githubusercontent.com"]
+        else:
+            self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})  # type: ignore
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
@@ -580,15 +584,18 @@ class Requester:
     def is_not_lazy(self) -> bool:
         return not self.__lazy
 
-    def withLazy(self, lazy: bool) -> Requester:
+    def withLazy(self, lazy: Opt[bool]) -> Requester:
         """
         Create a new requester instance with identical configuration but the given lazy setting.
 
-        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
-            from those, and so on
-        :return: new Requester instance
+        :param lazy: if True, completable objects created from this instance are lazy, as well as completable objects
+            created from those, and so on.
+        :return: new Requester instance if is_defined(lazy) and lazy != self.is_lazy, this instance otherwise
 
         """
+        if is_undefined(lazy) or self.is_lazy == lazy:
+            return self
+
         kwargs = self.kwargs
         kwargs.update(lazy=lazy)
         return Requester(**kwargs)
@@ -611,16 +618,20 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(
-            *self.requestJson(
-                verb,
-                url,
-                parameters,
-                headers,
-                input,
-                self.__customConnection(url),
-                follow_302_redirect=follow_302_redirect,
-            )
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(
+                *self.requestJson(
+                    verb,
+                    url,
+                    parameters,
+                    headers,
+                    input,
+                    self.__customConnection(url),
+                    follow_302_redirect=follow_302_redirect,
+                )
+            ),
         )
 
     def requestMultipartAndCheck(
@@ -640,7 +651,11 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url))),
+        )
 
     def requestBlobAndCheck(
         self,
@@ -660,7 +675,11 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url))),
+        )
 
     @classmethod
     def paths_of_dict(cls, d: dict) -> dict:
@@ -844,8 +863,24 @@ class Requester:
             raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
+    def __postProcess(
+        self, verb: str, url: str, responseHeaders: dict[str, Any], data: Any
+    ) -> tuple[dict[str, Any], Any]:
+        if verb == "GET" and isinstance(data, dict) and "url" not in data:
+            if "_links" in data and "self" in data["_links"] and data["_links"]["self"]:
+                self_link = data["_links"]["self"]
+                if isinstance(self_link, str):
+                    data["url"] = self_link
+                elif isinstance(self_link, dict):
+                    href = self_link.get("href")
+                    if href:
+                        data["url"] = href
+            else:
+                data["url"] = url
+        return responseHeaders, data
+
     @classmethod
-    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | tuple[str, ...]) -> bool:
+    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | list[str]) -> bool:
         if isinstance(domain_or_domains, str):
             if hostname == domain_or_domains:
                 return True
@@ -861,10 +896,7 @@ class Requester:
             assert o.path.startswith(tuple(prefixes)), o.path
             assert o.port == self.__port, o.port
         else:
-            if self.__base_url == Consts.DEFAULT_BASE_URL:
-                assert self.__hostnameHasDomain(o.hostname, ("github.com", "githubusercontent.com")), o.hostname
-            else:
-                assert self.__hostnameHasDomain(o.hostname, self.__hostname), o.hostname
+            assert self.__hostnameHasDomain(o.hostname, self.__domains), o.hostname
 
     def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:
         cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None
@@ -1139,7 +1171,7 @@ class Requester:
 
         status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode)
         if isinstance(output, str):
-            return self.__check(status, responseHeaders, output)
+            return self.__postProcess(verb, url, *self.__check(status, responseHeaders, output))
         raise ValueError("requestMemoryBlobAndCheck() Expected a str, should never happen")
 
     def __requestEncode(

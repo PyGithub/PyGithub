@@ -196,6 +196,10 @@ class GitReleaseAsset(CompletableGithubObject):
             self._download_count = self._makeIntAttribute(attributes["download_count"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "label" in attributes:  # pragma no branch
             self._label = self._makeStringAttribute(attributes["label"])
         if "name" in attributes:  # pragma no branch
