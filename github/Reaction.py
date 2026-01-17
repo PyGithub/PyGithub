@@ -44,8 +44,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.Consts
 import github.NamedUser
 import github.Organization
