@@ -255,7 +255,11 @@ class GithubIntegration:
         return self.auth.create_jwt(expiration)
 
     def get_access_token(
-        self, installation_id: int, permissions: dict[str, str] | None = None
+        self,
+        installation_id: int,
+        permissions: dict[str, str] | None = None,
+        repositories: list[str] | None = None,
+        repository_ids: list[int] | None = None,
     ) -> InstallationAuthorization:
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
@@ -266,7 +270,18 @@ class GithubIntegration:
         if not isinstance(permissions, dict):
             raise GithubException(status=400, data={"message": "Invalid permissions"}, headers=None)
 
-        body = {"permissions": permissions}
+        if not isinstance(repositories, (list, type(None))):
+            raise GithubException(status=400, data={"message": "Invalid repositories"}, headers=None)
+
+        if not isinstance(repository_ids, (list, type(None))):
+            raise GithubException(status=400, data={"message": "Invalid repository_ids"}, headers=None)
+
+        body: dict[str, Any] = {"permissions": permissions}
+        if repositories is not None:
+            body["repositories"] = repositories
+        if repository_ids is not None:
+            body["repository_ids"] = repository_ids
+
         headers, response = self.__requester.requestJsonAndCheck(
             "POST",
             f"/app/installations/{installation_id}/access_tokens",
