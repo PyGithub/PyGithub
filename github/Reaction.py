@@ -44,8 +44,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.Consts
 import github.NamedUser
 import github.Organization
@@ -97,20 +95,6 @@ class Reaction(NonCompletableGithubObject):
     @property
     def user(self) -> NamedUser:
         return self._user.value
-
-    @deprecated(
-        "Deprecated, use IssueComment.delete_reaction, PullRequestComment.delete_reaction, CommitComment.delete_reaction or Issue.delete_reaction"
-    )
-    def delete(self) -> None:
-        """
-        :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction-legacy>`_
-        :rtype: None
-        """
-        self._requester.requestJsonAndCheck(
-            "DELETE",
-            f"{self._parentUrl('')}/reactions/{self.id}",
-            headers={"Accept": github.Consts.mediaTypeReactionsPreview},
-        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
