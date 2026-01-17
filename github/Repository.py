@@ -196,12 +196,10 @@ import github.Deployment
 import github.Download
 import github.Environment
 import github.EnvironmentDeploymentBranchPolicy
-import github.EnvironmentProtectionRule
 import github.EnvironmentProtectionRuleReviewer
 import github.Event
 import github.GitBlob
 import github.GitCommit
-import github.GithubObject
 import github.GitRef
 import github.GitRelease
 import github.GitReleaseAsset
@@ -220,7 +218,6 @@ import github.Milestone
 import github.NamedUser
 import github.Notification
 import github.Organization
-import github.PaginatedList
 import github.Path
 import github.Permissions
 import github.Project
@@ -1589,9 +1586,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(tag_name, str), tag_name
         assert isinstance(previous_tag_name, str) or is_optional(previous_tag_name, str), previous_tag_name
         assert isinstance(target_commitish, str) or is_optional(target_commitish, str), target_commitish
-        assert isinstance(configuration_file_path, str) or is_optional(
-            configuration_file_path, str
-        ), configuration_file_path
+        assert isinstance(configuration_file_path, str) or is_optional(configuration_file_path, str), (
+            configuration_file_path
+        )
 
         post_parameters = NotSet.remove_unset_items(
             {
@@ -2350,7 +2347,6 @@ class Repository(CompletableGithubObject):
         :param permission: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-
         url_parameters = dict()
         allowed_affiliations = ["outside", "direct", "all"]
         allowed_permissions = ["pull", "triage", "push", "maintain", "admin"]
@@ -2711,7 +2707,6 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-
         url_parameters = dict()
         if is_defined(state):
             url_parameters["state"] = state
@@ -3341,7 +3336,6 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/license <https://docs.github.com/en/rest/reference/licenses>`_
         :rtype: :class:`github.ContentFile.ContentFile`
         """
-
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/license")
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
@@ -3892,7 +3886,6 @@ class Repository(CompletableGithubObject):
         :param before: datetime
         :rtype: :class:`PaginatedList` of :class:`github.Notification.Notification`
         """
-
         assert is_optional(all, bool), all
         assert is_optional(participating, bool), participating
         assert is_optional(since, datetime), since
@@ -4063,9 +4056,9 @@ class Repository(CompletableGithubObject):
         :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         :rtype: bool
         """
-        assert isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner) or isinstance(
-            runner, int
-        ), runner
+        assert isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner) or isinstance(runner, int), (
+            runner
+        )
 
         if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
             runner = runner.id
@@ -4083,7 +4076,8 @@ class Repository(CompletableGithubObject):
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(
-            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
+            "DELETE",
+            f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}",  # type: ignore
         )
         return status == 204
 
@@ -4247,7 +4241,6 @@ class Repository(CompletableGithubObject):
         :param name: str
         :rtype: :class:`PaginatedList` of :class:`github.Artifact.Artifact`
         """
-
         assert is_optional(name, str), name
 
         param = {key: value for key, value in {"name": name}.items() if is_defined(value)}
@@ -4299,9 +4292,9 @@ class Repository(CompletableGithubObject):
         allowed_severities = ["critical", "high", "medium", "low", "warning", "note", "error"]
         assert is_optional(tool_name, str), tool_name
         assert is_optional(tool_guid, str), tool_guid
-        assert (
-            tool_name is NotSet or tool_guid is NotSet
-        ), "You can specify the tool by using either tool_guid or tool_name, but not both."
+        assert tool_name is NotSet or tool_guid is NotSet, (
+            "You can specify the tool by using either tool_guid or tool_name, but not both."
+        )
         assert is_optional(ref, str), ref
         assert is_optional(pr, int), pr
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
@@ -4379,9 +4372,9 @@ class Repository(CompletableGithubObject):
         # assert secret_type in allowed_secret_types + [NotSet], \
         # "Secret_type can be one of the tokens listed on \
         # https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets"
-        assert resolution in allowed_resolutions + [
-            NotSet
-        ], f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        assert resolution in allowed_resolutions + [NotSet], (
+            f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        )
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
         assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
         assert validity in allowed_validities + [NotSet], f"Validity can be one of {', '.join(allowed_validities)}"
@@ -4597,7 +4590,9 @@ class Repository(CompletableGithubObject):
                 "no_bandwidth",
                 "not_used",
                 "tolerable_risk",
-            ], "Dismissed reason can be one of ['fix_started', 'inaccurate', 'no_bandwidth', 'not_used', 'tolerable_risk']"
+            ], (
+                "Dismissed reason can be one of ['fix_started', 'inaccurate', 'no_bandwidth', 'not_used', 'tolerable_risk']"
+            )
         assert is_optional(dismissed_comment, str), dismissed_comment
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",

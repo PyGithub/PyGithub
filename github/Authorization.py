@@ -145,12 +145,12 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(scopes, _NotSetType) or all(isinstance(element, str) for element in scopes), scopes
-        assert isinstance(add_scopes, _NotSetType) or all(
-            isinstance(element, str) for element in add_scopes
-        ), add_scopes
-        assert isinstance(remove_scopes, _NotSetType) or all(
-            isinstance(element, str) for element in remove_scopes
-        ), remove_scopes
+        assert isinstance(add_scopes, _NotSetType) or all(isinstance(element, str) for element in add_scopes), (
+            add_scopes
+        )
+        assert isinstance(remove_scopes, _NotSetType) or all(isinstance(element, str) for element in remove_scopes), (
+            remove_scopes
+        )
         assert isinstance(note, (_NotSetType, str)), note
         assert isinstance(note_url, (_NotSetType, str)), note_url
 

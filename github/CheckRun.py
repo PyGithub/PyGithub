@@ -43,7 +43,6 @@ import github.CheckRunOutput
 import github.CheckSuite
 import github.Deployment
 import github.GithubApp
-import github.GithubObject
 import github.PullRequest
 from github.GithubObject import (
     Attribute,

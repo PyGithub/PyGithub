@@ -49,10 +49,10 @@ integrations = []
 packages = ["github"]
 
 [tool.setuptools.package-data]
-github = ["py.typed", '*.pyi']
+github = ["py.typed", "*.pyi"]
 
 [tool.mypy]
-python_version = '3.9'
+python_version = "3.9"
 ignore_missing_imports = true
 namespace_packages = true
 
@@ -62,21 +62,8 @@ check_untyped_defs = true
 disallow_untyped_defs = true
 warn_no_return = false
 
-[tool.black]
-# https://github.com/psf/black
-line-length = 120
-
-[tool.docformatter]
-recursive = true
-# some docstring start with r"""
-wrap-summaries = 119
-wrap-descriptions = 120
-blank = true
-pre-summary-newline = true
-make-summary-multi-line = true
-
 [tool.codespell]
-skip = 'tests/*'
+skip = "tests/*"
 quiet-level = 3
 # comma separated list of words; waiting for:
 #  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
@@ -86,19 +73,26 @@ ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,
 
 [tool.ruff]
 line-length = 120
-# Enable Pyflakes `E` and `F` codes by default.
-select = [
-  "E",
-  # see: https://pypi.org/project/pycodestyle
-  "W",
-  # see: https://pypi.org/project/pyflakes
-  "F",
-  # see: isort
-  "I",
+
+[tool.ruff.lint]
+extend-select = [
+  "I",  # isort
+  "UP", # pyupgrade
+  "FA", # flake8-future-annotations
+  "D",  # pydocstyle
 ]
-ignore = ["E501", "E741"]
-ignore-init-module-imports = true
-unfixable = ["F401"]
+extend-ignore = [
+  "D1",   # undocumented-* (Should address gradually)
+  "D200", # unnecessary-multiline-docstring
+  "D203", # incorrect-blank-line-before-class (Mutually exclusive with D211)
+  "D205", # missing-blank-line-after-summary
+  "D212", # multi-line-summary-first-line (Mutually exclusive with D213)
+  "D400", # missing-trailing-period
+  "D401", # non-imperative-mood
+  "D404", # docstring-starts-with-this
+  "D415", # missing-terminal-punctuation
+]
+extend-safe-fixes = ["ALL"]
 
 [tool.pytest.ini_options]
 python_files = "tests/*.py"

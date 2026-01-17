@@ -87,7 +87,6 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
         """
-
         url_parameters: dict[str, Any] = {}
         return PaginatedList(
             NamedEnterpriseUser,

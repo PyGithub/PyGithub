@@ -704,7 +704,7 @@ class Organization(CompletableGithubObject):
         include_all_branches: Opt[bool] = NotSet,
         private: Opt[bool] = NotSet,
     ) -> Repository:
-        """self.name
+        """
         :calls: `POST /repos/{template_owner}/{template_repo}/generate <https://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
         """
         assert isinstance(name, str), name
@@ -1268,7 +1268,6 @@ class Organization(CompletableGithubObject):
         """
         :calls: `GET /orgs/{org}/projects <https://docs.github.com/en/rest/reference/projects#list-organization-projects>`_
         """
-
         url_parameters = NotSet.remove_unset_items({"state": state})
 
         return PaginatedList(
@@ -1565,7 +1564,6 @@ class Organization(CompletableGithubObject):
         :calls: `GET /orgs/{org}/installations <https://docs.github.com/en/rest/reference/orgs#list-app-installations-for-an-organization>`_
         :rtype: :class:`PaginatedList` of :class:`github.Installation.Installation`
         """
-
         return PaginatedList(
             github.Installation.Installation,
             self._requester,
@@ -1655,9 +1653,9 @@ class Organization(CompletableGithubObject):
         allowed_severities = ["critical", "high", "medium", "low", "warning", "note", "error"]
         assert is_optional(tool_name, str), tool_name
         assert is_optional(tool_guid, str), tool_guid
-        assert (
-            tool_name is NotSet or tool_guid is NotSet
-        ), "You can specify the tool by using either tool_guid or tool_name, but not both."
+        assert tool_name is NotSet or tool_guid is NotSet, (
+            "You can specify the tool by using either tool_guid or tool_name, but not both."
+        )
         assert is_optional(ref, str), ref
         assert is_optional(pr, int), pr
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
@@ -1725,9 +1723,9 @@ class Organization(CompletableGithubObject):
         # assert secret_type in allowed_secret_types + [NotSet], \
         # "Secret_type can be one of the tokens listed on \
         # https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets"
-        assert resolution in allowed_resolutions + [
-            NotSet
-        ], f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        assert resolution in allowed_resolutions + [NotSet], (
+            f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        )
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
         assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
         assert validity in allowed_validities + [NotSet], f"Validity can be one of {', '.join(allowed_validities)}"
@@ -2179,7 +2177,6 @@ class Organization(CompletableGithubObject):
         """
         :calls: `GET /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-an-organization>`_
         """
-
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"{self.url}/actions/runners/{runner_id}",
@@ -2190,7 +2187,6 @@ class Organization(CompletableGithubObject):
         """
         :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-an-organization>`_
         """
-
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self.url}/actions/runners/{runner_id}",

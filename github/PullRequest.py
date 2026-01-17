@@ -90,8 +90,6 @@ import github.IssueEvent
 import github.Label
 import github.Milestone
 import github.NamedUser
-import github.Organization
-import github.PaginatedList
 import github.PullRequestComment
 import github.PullRequestMergeStatus
 import github.PullRequestPart

@@ -50,7 +50,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import github.GithubObject
 import github.NamedUser
 import github.Organization
 import github.ProjectColumn
@@ -218,7 +217,6 @@ class Project(CompletableGithubObject):
         """
         :calls: `GET /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects#list-project-columns>`_
         """
-
         return PaginatedList(
             github.ProjectColumn.ProjectColumn,
             self._requester,

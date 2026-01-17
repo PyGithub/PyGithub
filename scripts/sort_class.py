@@ -145,9 +145,11 @@ class SortMethodsTransformer(cst.CSTTransformer):
                 stmts = updated_node.body.body
                 attrs = sorted(
                     stmts[start_attr:end_attr],
-                    key=lambda stmt: stmt.body[0].target.attr.value
-                    if isinstance(stmt.body[0], cst.AnnAssign)
-                    else stmt.body[0].targets[0].target.attr.value,
+                    key=lambda stmt: (
+                        stmt.body[0].target.attr.value
+                        if isinstance(stmt.body[0], cst.AnnAssign)
+                        else stmt.body[0].targets[0].target.attr.value
+                    ),
                 )
                 updated_node = updated_node.with_changes(
                     body=updated_node.body.with_changes(
@@ -161,9 +163,11 @@ class SortMethodsTransformer(cst.CSTTransformer):
                 stmts = updated_node.body.body
                 ifs = sorted(
                     stmts[start_if:end_if],
-                    key=lambda stmt: stmt.test.left.value
-                    if isinstance(stmt.test, cst.Comparison)
-                    else stmt.test.children[0].left.value,
+                    key=lambda stmt: (
+                        stmt.test.left.value
+                        if isinstance(stmt.test, cst.Comparison)
+                        else stmt.test.children[0].left.value
+                    ),
                 )
                 updated_node = updated_node.with_changes(
                     body=updated_node.body.with_changes(
@@ -230,7 +234,7 @@ def main(index_filename: str, class_names: list[str], dry_run: bool):
             cls = index.get("classes", {}).get(class_name)
             if not cls:
                 raise ValueError(f"Class {class_name} does not exist in index")
-            full_class_name = f'{cls.get("package")}.{cls.get("module")}.{cls.get("name")}'
+            full_class_name = f"{cls.get('package')}.{cls.get('module')}.{cls.get('name')}"
         package, module, class_name = full_class_name.split(".", maxsplit=2)
         filename = f"{package}/{module}.py"
         filenames[class_name] = filename

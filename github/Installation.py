@@ -48,17 +48,9 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.Authorization
-import github.Event
-import github.Gist
-import github.GithubObject
-import github.Issue
 import github.NamedUser
-import github.Notification
 import github.Organization
-import github.PaginatedList
-import github.Plan
 import github.Repository
-import github.UserKey
 from github import Consts
 from github.Auth import AppAuth
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet

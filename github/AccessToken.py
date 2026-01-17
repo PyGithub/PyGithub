@@ -68,7 +68,7 @@ class AccessToken(NonCompletableGithubObject):
                 "scope": self.scope,
                 "type": self.type,
                 "expires_in": self.expires_in,
-                "refresh_token": (f"{self.refresh_token[:5]}..." if self.refresh_token else None),
+                "refresh_token": f"{self.refresh_token[:5]}..." if self.refresh_token else None,
                 "refresh_token_expires_in": self.refresh_expires_in,
             }
         )
