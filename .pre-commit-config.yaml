@@ -13,35 +13,16 @@ repos:
         args:
           - "--fix=lf"
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
-    hooks:
-      - id: pyupgrade
-        args: ["--py39-plus"]
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.7
+    rev: v0.14.13
     hooks:
-      - id: ruff
-        args:
-          - "--fix"
-          - "--fixable=ALL"
-          - "--exit-non-zero-on-fix"
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+        args: [--exit-non-zero-on-format]
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
     hooks:
       - id: codespell
         additional_dependencies: [tomli]
-
-  - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.7
-    hooks:
-      - id: docformatter
-        additional_dependencies: [tomli]
-        args: ["--in-place"]
-
-  - repo: https://github.com/psf/black
-    rev: 23.12.0
-    hooks:
-      - id: black

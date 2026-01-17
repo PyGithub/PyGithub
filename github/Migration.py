@@ -50,10 +50,8 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import github.GithubObject
 import github.NamedUser
 import github.Organization
-import github.PaginatedList
 import github.Repository
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet

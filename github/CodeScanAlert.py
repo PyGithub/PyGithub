@@ -36,7 +36,6 @@ from typing import TYPE_CHECKING, Any
 import github.CodeScanAlertInstance
 import github.CodeScanRule
 import github.CodeScanTool
-import github.GithubObject
 import github.NamedUser
 import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet

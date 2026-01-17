@@ -36,7 +36,6 @@ import pytest  # type: ignore
 
 import github
 import github.EnvironmentDeploymentBranchPolicy
-import github.EnvironmentProtectionRule
 import github.EnvironmentProtectionRuleReviewer
 import github.NamedUser
 import github.Team

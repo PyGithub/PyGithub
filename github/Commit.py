@@ -60,7 +60,6 @@ import github.CommitStatus
 import github.File
 import github.GitCommit
 import github.NamedUser
-import github.PaginatedList
 import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList

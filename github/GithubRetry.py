@@ -110,7 +110,7 @@ class GithubRetry(Retry):
                     # Sleeping 'Retry-After' seconds is implemented in urllib3.Retry.sleep() and called by urllib3
                     self.__log(
                         logging.INFO,
-                        f'Retrying after {response.headers.get("Retry-After")} seconds',
+                        f"Retrying after {response.headers.get('Retry-After')} seconds",
                     )
                 else:
                     content = response.reason

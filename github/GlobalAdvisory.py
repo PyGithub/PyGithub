@@ -30,7 +30,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import github.AdvisoryBase
 import github.AdvisoryCreditDetailed
 import github.AdvisoryVulnerability
 from github.AdvisoryBase import AdvisoryBase
@@ -115,14 +114,14 @@ class GlobalAdvisory(AdvisoryBase):
         if "epss" in attributes:  # pragma no branch
             self._epss = self._makeDictAttribute(attributes["epss"])
         if "github_reviewed_at" in attributes:  # pragma no branch
-            assert attributes["github_reviewed_at"] is None or isinstance(
-                attributes["github_reviewed_at"], str
-            ), attributes["github_reviewed_at"]
+            assert attributes["github_reviewed_at"] is None or isinstance(attributes["github_reviewed_at"], str), (
+                attributes["github_reviewed_at"]
+            )
             self._github_reviewed_at = self._makeDatetimeAttribute(attributes["github_reviewed_at"])
         if "nvd_published_at" in attributes:  # pragma no branch
-            assert attributes["nvd_published_at"] is None or isinstance(
-                attributes["nvd_published_at"], str
-            ), attributes["nvd_published_at"]
+            assert attributes["nvd_published_at"] is None or isinstance(attributes["nvd_published_at"], str), (
+                attributes["nvd_published_at"]
+            )
             self._nvd_published_at = self._makeDatetimeAttribute(attributes["nvd_published_at"])
         if "references" in attributes:  # pragma no branch
             self._references = self._makeListOfStringsAttribute(attributes["references"])

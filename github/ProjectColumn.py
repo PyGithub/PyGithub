@@ -52,8 +52,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-import github.GithubObject
-import github.Project
 import github.ProjectCard
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList

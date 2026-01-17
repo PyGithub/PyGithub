@@ -44,9 +44,7 @@ from typing import TYPE_CHECKING, Any
 
 import github.GitAuthor
 import github.GitCommitVerification
-import github.GithubObject
 import github.GitObject
-import github.GitTreeElement
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 if TYPE_CHECKING:

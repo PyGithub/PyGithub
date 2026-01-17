@@ -48,7 +48,6 @@ from typing_extensions import deprecated
 
 import github.Consts
 import github.NamedUser
-import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:

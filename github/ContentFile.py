@@ -49,7 +49,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.GitCommit
-import github.GithubObject
 import github.License
 import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, _ValuedAttribute

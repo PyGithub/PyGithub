@@ -60,9 +60,9 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._advanced_security: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
-        self._dependabot_security_updates: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
+        self._dependabot_security_updates: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = (
+            NotSet
+        )
         self._secret_scanning: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
         self._secret_scanning_ai_detection: Attribute[str] = NotSet
         self._secret_scanning_non_provider_patterns: Attribute[

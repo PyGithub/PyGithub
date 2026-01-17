@@ -51,7 +51,6 @@ from typing import Any
 
 import github.Issue
 import github.NamedUser
-import github.Organization
 import github.ProjectColumn
 import github.PullRequest
 from github import Consts

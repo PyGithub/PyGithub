@@ -46,7 +46,6 @@ from typing import TYPE_CHECKING, Any
 from typing_extensions import deprecated
 
 import github.EnterpriseConsumedLicenses
-import github.Requester
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined, is_undefined
 
 if TYPE_CHECKING:

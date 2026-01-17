@@ -20,10 +20,11 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import argparse
 import difflib
 import sys
-from typing import Union
 
 import libcst as cst
 from libcst import SimpleWhitespace
@@ -52,7 +53,7 @@ class SingleLineStatementTransformer(cst.CSTTransformer):
 
     def leave_Arg(
         self, original_node: cst.Arg, updated_node: cst.Arg
-    ) -> Union[cst.Arg, cst.FlattenSentinel[cst.Arg], cst.RemovalSentinel]:
+    ) -> cst.Arg | cst.FlattenSentinel[cst.Arg] | cst.RemovalSentinel:
         if self.in_function:
             return updated_node.with_changes(
                 whitespace_after_star=SimpleWhitespace(""), whitespace_after_arg=SimpleWhitespace("")
@@ -97,7 +98,7 @@ class SingleLineStatementTransformer(cst.CSTTransformer):
             return updated_node.with_changes(whitespace_before=SimpleWhitespace(""))
         return updated_node
 
-    def leave_Comma(self, original_node: cst.Comma, updated_node: cst.Comma) -> Union[cst.Comma, cst.MaybeSentinel]:
+    def leave_Comma(self, original_node: cst.Comma, updated_node: cst.Comma) -> cst.Comma | cst.MaybeSentinel:
         if self.in_function:
             return updated_node.with_changes(
                 whitespace_before=SimpleWhitespace(""), whitespace_after=SimpleWhitespace(" ")
