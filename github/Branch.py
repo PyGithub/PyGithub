@@ -58,6 +58,7 @@ import github.BranchProtection
 import github.Commit
 import github.RequiredPullRequestReviews
 import github.RequiredStatusChecks
+import github.Rule
 from github import Consts
 from github.GithubObject import (
     Attribute,
@@ -665,3 +666,16 @@ class Branch(NonCompletableGithubObject):
             )
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+
+    def get_rules(self) -> PaginatedList[github.Rule.Rule]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/rules/branches/{branch} <https://docs.github.com/en/rest/repos/rules#get-rules-for-a-branch>`_
+        :rtype: :class:`PaginatedList` of :class:`github.Rule.Rule`
+        """
+        repo_url = "TBD"
+        return PaginatedList(
+            github.Rule.Rule,
+            self._requester,
+            f"{repo_url}/rules/branches/{self._name.value}",
+            None,
+        )
