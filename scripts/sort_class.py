@@ -163,7 +163,11 @@ class SortMethodsTransformer(cst.CSTTransformer):
                     stmts[start_if:end_if],
                     key=lambda stmt: stmt.test.left.value
                     if isinstance(stmt.test, cst.Comparison)
-                    else stmt.test.children[0].left.value,
+                    else (
+                        stmt.test.children[0].func.value
+                        if isinstance(stmt.test.children[0], cst.Call)
+                        else stmt.test.children[0].left.value
+                    ),
                 )
                 updated_node = updated_node.with_changes(
                     body=updated_node.body.with_changes(

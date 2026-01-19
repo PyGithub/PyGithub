@@ -866,17 +866,9 @@ class Requester:
     def __postProcess(
         self, verb: str, url: str, responseHeaders: dict[str, Any], data: Any
     ) -> tuple[dict[str, Any], Any]:
+        # make GET url available as "url" attribute
         if verb == "GET" and isinstance(data, dict) and "url" not in data:
-            if "_links" in data and "self" in data["_links"] and data["_links"]["self"]:
-                self_link = data["_links"]["self"]
-                if isinstance(self_link, str):
-                    data["url"] = self_link
-                elif isinstance(self_link, dict):
-                    href = self_link.get("href")
-                    if href:
-                        data["url"] = href
-            else:
-                data["url"] = url
+            data["url"] = url
         return responseHeaders, data
 
     @classmethod
