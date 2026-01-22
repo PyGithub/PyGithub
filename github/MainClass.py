@@ -677,14 +677,14 @@ class Github:
         """
         :calls: `GET /search/repositories <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
-        :param sort: string ('stars', 'forks', 'updated')
+        :param sort: string ('stars', 'forks', 'updated', 'name')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         """
         assert isinstance(query, str), query
         url_parameters = dict()
         if sort is not NotSet:  # pragma no branch (Should be covered)
-            assert sort in ("stars", "forks", "updated"), sort
+            assert sort in ("stars", "forks", "updated", "name"), sort
             url_parameters["sort"] = sort
         if order is not NotSet:  # pragma no branch (Should be covered)
             assert order in ("asc", "desc"), order
