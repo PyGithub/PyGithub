@@ -186,6 +186,7 @@ import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.Clones
+import github.CodeownerError
 import github.CodeScanAlert
 import github.Commit
 import github.CommitComment
@@ -2935,6 +2936,21 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
         """
         return self.get_contents(path, ref=ref)  # type: ignore
+
+    def get_codeowner_errors(self):
+        """
+        :calls: `GET /repos/{owner}/{repo}/topics <https://docs.github.com/en/rest/repos/repos#list-codeowners-errors>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeownerError.CodeownerError`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"{self.url}/codeowners/errors",
+        )
+        return [
+            github.CodeownerError.CodeownerError(self._requester, headers, element, completed=False)
+            for element in data["errors"]
+            if element is not None and "errors" in data.keys()
+        ]
 
     def get_contributors(self, anon: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
         """
