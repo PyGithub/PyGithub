@@ -329,6 +329,61 @@ class PaginatedList(Framework.TestCase):
         # Should return the actual count from JSON, not 0
         self.assertEqual(issues.totalCount, 1)
 
+    def doTestSearchCompleteness(self, incomplete_results: bool):
+        self.g.per_page = 5
+
+        # TODO: capture requests once #3377 is merged
+
+        # starting iteration fetches the first page which contains totalCount and incomplete_results
+        results = self.g.search_code('"profile = black" in:file language:toml')
+        self.assertEqual(iter(results).__next__().score, 1.0)
+        self.assertEqual(results.totalCount, 7)
+        self.assertEqual(results.incomplete_results, incomplete_results)
+        # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+        self.assertEqual(len(list(results)), 7)
+        self.assertEqual(results.totalCount, 7)
+        self.assertEqual(results.incomplete_results, incomplete_results)
+
+        # fetching a specific page provides totalCount and incomplete_results
+        results = self.g.search_code('"profile = black" in:file language:toml')
+        results.get_page(0)
+        self.assertEqual(results.totalCount, 7)
+        self.assertEqual(results.incomplete_results, incomplete_results)
+
+        # accessing totalCount first fetches totalCount and incomplete_results in a different code path
+        results = self.g.search_code('"profile = black" in:file language:toml')
+        # accessing the totalCount fetches incomplete_results as well
+        self.assertEqual(results.totalCount, 7)
+        self.assertEqual(results.incomplete_results, incomplete_results)
+        # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+        self.assertEqual(len(list(results)), 7)
+        self.assertEqual(results.totalCount, 7)
+        self.assertEqual(results.incomplete_results, incomplete_results)
+
+        # accessing incomplete_results first fetches totalCount and incomplete_results in a different code path
+        results = self.g.search_code('"profile = black" in:file language:toml')
+        # accessing the incomplete_results fetches totalCount as well
+        self.assertEqual(results.incomplete_results, incomplete_results)
+        self.assertEqual(results.totalCount, 7)
+        # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+        self.assertEqual(len(list(results)), 7)
+        self.assertEqual(results.totalCount, 7)
+        self.assertEqual(results.incomplete_results, incomplete_results)
+
+        if not incomplete_results:
+            # non-search result paginated lists have None incomplete_results
+            labels = self.repo.get_labels()
+            self.assertEqual(labels.totalCount, 57)
+            self.assertIsNone(labels.incomplete_results)
+
+    def testSearchWithCompleteResults(self):
+        self.doTestSearchCompleteness(incomplete_results=False)
+
+    def testSearchWithIncompleteResults(self):
+        # test data for this test are copied from testSearchWithCompleteResults and manually modified:
+        # sed -e 's/"incomplete_results":false/"incomplete_results":true/' tests/ReplayData/PaginatedList.testSearchWithCompleteResults.txt | head -n -11 > tests/ReplayData/PaginatedList.testSearchWithIncompleteResults.txt
+        self.doTestSearchCompleteness(incomplete_results=True)
+
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100
