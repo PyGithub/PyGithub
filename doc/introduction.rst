@@ -8,7 +8,7 @@ Should you have any question, any remark, or if you find a bug,
 or if there is something you can do with the API but not with PyGithub,
 please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 
-(Very short) tutorial
+(Very short) Tutorial
 ---------------------
 
 First create a Github instance::
