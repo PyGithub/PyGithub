@@ -37,6 +37,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from github.GithubObject import NotSet, Opt, is_defined, is_optional
@@ -47,14 +48,19 @@ class InputGitAuthor:
     This class represents InputGitAuthors.
     """
 
-    def __init__(self, name: str, email: str, date: Opt[str] = NotSet):
+    def __init__(self, name: str, email: str, date: Opt[str | datetime] = NotSet):
         assert isinstance(name, str), name
         assert isinstance(email, str), email
-        assert is_optional(date, str), date  # @todo Datetime?
+        assert is_optional(date, (str, datetime)), date
+
+        if isinstance(date, datetime):
+            formatted_date: Opt[str] = date.isoformat(timespec="seconds")
+        else:
+            formatted_date = date
 
         self.__name: str = name
         self.__email: str = email
-        self.__date: Opt[str] = date
+        self.__date: Opt[str] = formatted_date
 
     def __repr__(self) -> str:
         return f'InputGitAuthor(name="{self.__name}")'
