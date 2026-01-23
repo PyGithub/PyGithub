@@ -1604,6 +1604,14 @@ class Repository(Framework.TestCase):
     def testGetPulls(self):
         self.assertListKeyEqual(self.repo.get_pulls(), lambda p: p.id, [1436310])
 
+    def testGetPullsByCommit(self):
+        # Using a specific commit SHA for testing
+        pulls = self.repo.get_commit_pulls(sha="97d18723009d20e953aa5e9a1fd49b3b7d45b198")
+        # Checking if the returned object is a PaginatedList of PullRequest instances
+        self.assertIsInstance(pulls, github.PaginatedList.PaginatedList)
+        # Verify that all items in the paginated list are instances of github.PullRequest.PullRequest
+        self.assertTrue(all(isinstance(pull, github.PullRequest.PullRequest) for pull in pulls))
+
     def testGetPullsWithArguments(self):
         self.assertListKeyEqual(self.repo.get_pulls("closed"), lambda p: p.id, [1448168, 1436310, 1436215])
 
