@@ -187,6 +187,7 @@ class Github:
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
+        api_version: str | None = Consts.DEFAULT_API_VERSION,
         auth: github.Auth.Auth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
@@ -207,6 +208,8 @@ class Github:
         :param pool_size: int
         :param seconds_between_requests: float
         :param seconds_between_writes: float
+        :param api_version: string, GitHub API version to use (sent as X-GitHub-Api-Version header),
+                            defaults to "2022-11-28", set to None to not send the header
         :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
@@ -224,6 +227,7 @@ class Github:
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert seconds_between_requests is None or seconds_between_requests >= 0
         assert seconds_between_writes is None or seconds_between_writes >= 0
+        assert api_version is None or isinstance(api_version, str), api_version
         assert auth is None or isinstance(auth, github.Auth.Auth), auth
         assert isinstance(lazy, bool), lazy
 
@@ -271,6 +275,7 @@ class Github:
             seconds_between_requests,
             seconds_between_writes,
             lazy,
+            api_version,
         )
 
     def withLazy(self, lazy: bool) -> Github:

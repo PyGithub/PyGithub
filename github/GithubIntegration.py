@@ -85,6 +85,7 @@ class GithubIntegration:
         jwt_expiry: int = Consts.DEFAULT_JWT_EXPIRY,
         jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
+        api_version: str | None = Consts.DEFAULT_API_VERSION,
         auth: AppAuth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
@@ -101,6 +102,8 @@ class GithubIntegration:
         :param pool_size: int
         :param seconds_between_requests: float
         :param seconds_between_writes: float
+        :param api_version: string, GitHub API version to use (sent as X-GitHub-Api-Version header),
+                            defaults to "2022-11-28", set to None to not send the header
         :param jwt_expiry: int deprecated, use auth=github.Auth.AppAuth(...) instead
         :param jwt_issued_at: int deprecated, use auth=github.Auth.AppAuth(...) instead
         :param jwt_algorithm: string deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -175,6 +178,7 @@ class GithubIntegration:
             seconds_between_requests=seconds_between_requests,
             seconds_between_writes=seconds_between_writes,
             lazy=lazy,
+            api_version=api_version,
         )
 
     def withLazy(self, lazy: bool) -> GithubIntegration:
