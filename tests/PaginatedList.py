@@ -323,6 +323,13 @@ class PaginatedList(Framework.TestCase):
         self.assertEqual(review_requests[0].totalCount, 0)
         self.assertEqual(review_requests[1].totalCount, 0)
 
+    def testTotalCountWithNoPageParam(self):
+        # When the "last" link uses since-based pagination instead of page-based,
+        # totalCount should fall back to counting via data instead of raising KeyError.
+        # See https://github.com/PyGithub/PyGithub/issues/1006
+        repos = self.g.get_repos()
+        self.assertEqual(repos.totalCount, 1)
+
     def testTotalCountWithDeprecationLink(self):
         # Test the original reported scenario: search_issues with commit SHA
         issues = self.g.search_issues("commit:example_sha")

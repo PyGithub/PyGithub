@@ -56,7 +56,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from typing import Any, Generic, TypeVar, overload
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, urlparse
 
 from github import Consts
 from github.GithubObject import GithubObject
@@ -244,15 +244,19 @@ class PaginatedList(PaginatedListBase[T]):
                 links = self.__parseLinkHeader(headers)
                 lastUrl = links.get("last")
                 if lastUrl:
-                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
-                elif data and "total_count" in data:
-                    self.__totalCount = data["total_count"]
-                elif data:
-                    if isinstance(data, dict):
-                        data = data[self.__list_item]
-                    self.__totalCount = len(data)
-                else:
-                    self.__totalCount = 0
+                    last_params = parse_qs(urlparse(lastUrl).query)
+                    if "page" in last_params:
+                        self.__totalCount = int(last_params["page"][0])
+
+                if self.__totalCount is None:
+                    if data and "total_count" in data:
+                        self.__totalCount = data["total_count"]
+                    elif data:
+                        if isinstance(data, dict):
+                            data = data[self.__list_item]
+                        self.__totalCount = len(data)
+                    else:
+                        self.__totalCount = 0
             else:
                 variables = self.__graphql_variables.copy()
                 if not self._reversed:
