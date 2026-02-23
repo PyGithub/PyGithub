@@ -43,8 +43,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.EnterpriseConsumedLicenses
 import github.Requester
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined, is_undefined
@@ -94,12 +92,6 @@ class Enterprise(NonCompletableGithubObject):
     @property
     def description(self) -> str:
         return self._description.value
-
-    @property
-    @deprecated("Use slug instead")
-    def enterprise(self) -> str:
-        # alias for slug
-        return self._slug.value
 
     @property
     def html_url(self) -> str:
