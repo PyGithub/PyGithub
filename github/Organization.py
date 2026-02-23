@@ -1434,7 +1434,7 @@ class Organization(CompletableGithubObject):
         assert is_optional(email, str), email
         assert is_defined(email) != is_defined(user), "specify only one of email or user"
 
-        assert is_undefined(role) or role in ["admin", "direct_member", "billing_manager"], role
+        assert is_undefined(role) or role in ["admin", "direct_member", "billing_manager", "reinstate"], role
         assert is_optional_list(teams, github.Team.Team), teams
 
         parameters: dict[str, Any] = NotSet.remove_unset_items({"email": email, "role": role})
