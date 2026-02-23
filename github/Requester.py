@@ -399,6 +399,7 @@ class Requester:
         seconds_between_requests: float | None = None,
         seconds_between_writes: float | None = None,
         lazy: bool = False,
+        api_version: str | None = None,
     ):
         self._initializeDebugFeature()
 
@@ -445,6 +446,7 @@ class Requester:
         self.__userAgent = user_agent
         self.__verify = verify
         self.__lazy = lazy
+        self.__apiVersion = api_version
 
         self.__installation_authorization = None
 
@@ -536,6 +538,7 @@ class Requester:
             seconds_between_requests=self.__seconds_between_requests,
             seconds_between_writes=self.__seconds_between_writes,
             lazy=self.__lazy,
+            api_version=self.__apiVersion,
         )
 
     @property
@@ -1195,6 +1198,8 @@ class Requester:
         if self.__auth is not None:
             self.__auth.authentication(requestHeaders)
         requestHeaders["User-Agent"] = self.__userAgent
+        if self.__apiVersion is not None:
+            requestHeaders["X-GitHub-Api-Version"] = self.__apiVersion
 
         url = self.__makeAbsoluteUrl(url)
         url = Requester.add_parameters_to_url(url, parameters)
