@@ -141,8 +141,12 @@ def is_optional(v: Any, type: type | tuple[type, ...]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
+def is_list(v: Any, type: type | tuple[type, ...]) -> bool:
+    return isinstance(v, list) and all(isinstance(element, type) for element in v)
+
+
 def is_optional_list(v: Any, type: type | tuple[type, ...]) -> bool:
-    return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
+    return is_undefined(v) or is_list(v, type)
 
 
 camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
@@ -653,6 +657,16 @@ Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
 
 
+# decorator to annotate methods with method metadata
+def method_parameter(
+    name: str, *, required: bool = False, merge: list[str] | None = None, docstring_prepend: str | None = None
+):
+    def openapi_property_decorator(fn):
+        return fn
+
+    return openapi_property_decorator
+
+
 # decorator to annotate methods with OpenAPI metadata
 def method_returns(
     *, schema_property: str | None = None
@@ -661,3 +675,18 @@ def method_returns(
         return fn
 
     return openapi_method_decorator
+
+
+# decorator to annotate methods with OpenAPI mapping information
+def openapi_parameter(
+    name: str,
+    *,
+    matches: str | None = None,
+    type: str | None = None,
+    input: bool | None = None,
+    docstring_prepend: str | None = None,
+):
+    def openapi_property_decorator(fn):
+        return fn
+
+    return openapi_property_decorator

@@ -42,7 +42,7 @@ from typing import Any
 
 import libcst as cst
 import requests
-from libcst import Expr, IndentedBlock, Module, SimpleStatementLine, SimpleString
+from libcst import IndentedBlock, Module, SimpleStatementLine, SimpleString
 
 equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
 
@@ -76,9 +76,10 @@ def as_python_type(
     schema_type: dict[str, Any],
     schema_path: list[str],
     schema_to_class: dict[str, str],
-    classes,
+    classes: dict[str, Any],
     spec: dict[str, Any],
     *,
+    paginated: bool = False,
     verbose: bool = False,
     collect_new_schemas: list[str] | None = None,
 ) -> PythonType | GithubClass | None:
@@ -104,6 +105,7 @@ def as_python_type(
                 schema_to_class,
                 classes,
                 spec,
+                paginated=paginated,
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
             )
@@ -122,11 +124,25 @@ def as_python_type(
             schema_to_class,
             classes,
             spec,
+            paginated=paginated,
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
         )
     if data_type == "object":
-        schema = "/".join([""] + schema_path)
+        if paginated and is_pagination_object(schema_type):
+            schema_type, schema_path = get_paginated_property(schema_type, schema_path)
+            return as_python_type(
+                schema_type,
+                schema_path,
+                schema_to_class,
+                classes,
+                spec,
+                paginated=paginated,
+                verbose=verbose,
+                collect_new_schemas=collect_new_schemas,
+            )
+        else:
+            schema = "/".join([""] + schema_path)
     if schema is not None:
         # these schemas are explicitly ignored
         if schema in {"/components/schemas/empty-object"}:
@@ -165,7 +181,7 @@ def as_python_type(
 
     if data_type == "array":
         return PythonType(
-            type="list",
+            type="PaginatedList" if paginated else "list",
             inner_types=[
                 as_python_type(
                     schema_type.get("items"),
@@ -173,6 +189,7 @@ def as_python_type(
                     schema_to_class,
                     classes,
                     spec,
+                    paginated=False,
                     verbose=verbose,
                     collect_new_schemas=collect_new_schemas,
                 )
@@ -200,10 +217,125 @@ def as_python_type(
     return PythonType(type=formats.get(format) or formats.get(None))
 
 
+def string_as_python_type(type: str, classes: dict[str, dict]) -> PythonType | GithubClass | None:
+    type = type.strip()
+    if type == "None":
+        return PythonType("None")
+    if type.startswith("Opt[") and type.endswith("]"):
+        inner_type = string_as_python_type(type[4:-1], classes)
+        return PythonType("Opt", [inner_type])
+    if type.startswith("Optional[") and type.endswith("]"):
+        inner_type = string_as_python_type(type[9:-1], classes)
+        return PythonType("union", [inner_type, PythonType("None")])
+    if type.startswith("list[") and type.endswith("]"):
+        inner_type = string_as_python_type(type[5:-1], classes)
+        return PythonType("list", [inner_type])
+    if type.startswith("dict[") and "," in type and type.endswith("]"):
+        inner_types = [string_as_python_type(t, classes) for t in type[5:-1].split(",")]
+        return PythonType("dict", inner_types)
+    if "|" in type:
+        inner_types = [string_as_python_type(t, classes) for t in type.split("|")]
+        return PythonType("union", inner_types)
+    # return the pure class name, no outer class, module or package names
+    if "." in type:
+        return string_as_python_type(type.split(".")[-1], classes)
+    if type in classes:
+        return GithubClass(**classes[type])
+    if type in {"int", "float", "str", "Any"}:
+        return PythonType(type)
+
+    print(f"Unknown type: {type}")
+    return None
+
+
+def is_pagination_object(schema: dict[str, Any]) -> bool:
+    # {
+    #   "type": "object",
+    #   "properties": {
+    #     "total_…": {"type": "integer"},
+    #     "…": {"type": "array", "items": …},
+    # }
+    return (
+        schema.get("type") == "object"
+        and "properties" in schema
+        and len(
+            [n for n, p in schema.get("properties").items() if n.startswith("total_") and p.get("type") == "integer"]
+        )
+        == 1
+        and len([p for p in schema.get("properties").values() if p.get("type") == "array" and "items" in p]) == 1
+    )
+
+
+def get_paginated_property(schema: dict[str, Any], schema_path: list[str]) -> (dict[str, Any], list[str]):
+    # assumes is_pagination_object returns True for this schema
+    props = schema.get("properties")
+    list_item = next(((n, p) for n, p in props.items() if p.get("type") == "array" and "items" in p))
+    return list_item[1], schema_path + ["properties", list_item[0]]
+
+
+def responses_as_python_type(
+    responses: dict[str, Any],
+    schema_path: list[str],
+    schema_to_class: dict[str, str],
+    classes: dict[str, Any],
+    spec: dict[str, Any],
+    paginated: bool,
+) -> PythonType | GithubClass | None:
+    # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
+    schemas = [
+        (int(status), data_type)
+        for status, response in responses.items()
+        if status.isnumeric() and int(status) < 400 and "content" in response
+        for schema, inner_schema_path in [
+            (
+                resolve_schema(response, spec).get("content").get("application/json", {}).get("schema", {}),
+                schema_path + [str(status), "content", '"application/json"', "schema"],
+            )
+        ]
+        for data_type in [
+            as_python_type(schema, inner_schema_path, schema_to_class, classes, spec, paginated=paginated)
+        ]
+    ]
+    schemas = sorted(schemas, key=lambda e: e[0])
+    if len(schemas) == 0:
+        return None
+    elif len(schemas) > 1:
+        schema_names = {str(schema) for status, schema in schemas}
+        if len(schema_names) > 1:
+            print(f"Found multiple python types for responses: {', '.join(schema_names)}")
+    schema = schemas[0][1]
+
+    return schema
+
+
 @dataclasses.dataclass(frozen=True)
 class PythonType:
     type: str
     inner_types: list[PythonType | GithubClass] | None = None
+
+    @staticmethod
+    def union(*types: PythonType | GithubClass | None) -> PythonType | None:
+        # remove None (unknown) types
+        types = [type for type in types if type is not None]
+
+        # flatten union types
+        types = [
+            inner
+            for type in types
+            for inner in (type.inner_types if isinstance(type, PythonType) and type.type == "union" else [type])
+        ]
+
+        # make types distinct, preserve order
+        distinct_types = []
+        for type in types:
+            if type not in distinct_types:
+                distinct_types.append(type)
+
+        if len(distinct_types) == 0:
+            return None
+        if len(distinct_types) == 1:
+            return distinct_types[0]
+        return PythonType("union", inner_types=distinct_types)
 
     def __hash__(self):
         return hash(self.__repr__())
@@ -215,6 +347,9 @@ class PythonType:
 
     def __lt__(self, other) -> bool:
         return self.__repr__() < other.__repr__()
+
+    def as_nullable(self) -> PythonType:
+        return self.union(self, None)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -241,6 +376,9 @@ class GithubClass:
 
     def __lt__(self, other) -> bool:
         return self.__repr__() < other.__repr__()
+
+    def as_nullable(self) -> PythonType:
+        return PythonType.union(self, None)
 
     @property
     def short_class_name(self) -> str:
@@ -301,6 +439,132 @@ class Property:
     data_type: PythonType | GithubClass | None
     deprecated: bool
 
+    @staticmethod
+    def from_tuples(properties: dict[str, (PythonType | GithubClass | None, bool)]) -> list[Property]:
+        return [Property(name=n, data_type=t, deprecated=d) for n, (t, d) in properties.items()]
+
+
+class ParameterOrder(Enum):
+    POSITIONAL = 1
+    STAR = 2
+    NAMED = 3
+
+    def __lt__(self, other) -> bool:
+        return isinstance(other, ParameterOrder) and other.value < self.value
+
+
+@dataclasses.dataclass(frozen=True)
+class Parameter:
+    name: str
+    python_name: str
+    description: str | None
+    data_type: PythonType | GithubClass | None
+    param_type: str
+    required: bool
+    position: ParameterOrder
+    deprecated: bool | None
+
+    def supports_pagination(self) -> bool:
+        return self.param_type == "query" and self.name in {"page", "per_page"}
+
+    @staticmethod
+    def from_schema(
+        name: str,
+        schema: dict[str, Any],
+        schema_path: list[str],
+        required: bool,
+        index: dict[str, Any],
+        spec: dict[str, Any],
+        param_type: str | None = None,
+    ) -> Parameter:
+        classes = index.get("classes", {})
+        schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
+        schema_to_class["default"] = ["GithubObject"]
+
+        description = schema.get("description")
+        data_type = as_python_type(
+            schema.get("schema", {}) if "schema" in schema else schema,
+            schema_path + ["schema"],
+            schema_to_class,
+            classes,
+            spec,
+        )
+        if schema.get("nullable") is True and data_type is not None:
+            data_type = data_type.as_nullable()
+        param_type = schema.get("in") if param_type is None else param_type
+        deprecated = schema.get("deprecated")
+        if deprecated is None and description and description.startswith("**Closing down notice**"):
+            deprecated = True
+        return Parameter(
+            name, name, description, data_type, param_type, required, ParameterOrder.POSITIONAL, deprecated
+        )
+
+
+@dataclasses.dataclass(frozen=True)
+class Method:
+    name: str
+    summary: str | None
+    description: str | None
+    path: str
+    verb: str
+    docs_url: str | None
+    parameters: list[Parameter]
+    return_type: PythonType | GithubClass | None
+    deprecated: bool
+
+    @staticmethod
+    def from_schema(
+        name: str,
+        schema: dict[str, Any],
+        path: str,
+        verb: str,
+        spec: dict[str, Any],
+        index: dict[str, Any],
+    ) -> Method:
+        schema_path = ["paths", f'"{path}"', verb]
+        classes = index.get("classes", {})
+        schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
+        schema_to_class["default"] = ["GithubObject"]
+        summary = schema.get("summary")
+        description = schema.get("description")
+        docs_url = schema.get("externalDocs", {}).get("url")
+        url_parameters_schema_path = schema_path + ["parameters"]
+        url_parameters = [
+            Parameter.from_schema(n, s, url_parameters_schema_path, r if r is not None else False, index, spec)
+            for s in schema.get("parameters", [])
+            for s in [resolve_schema(s, spec)]
+            for n, r in [(s.get("name"), s.get("required"))]
+            if n
+        ]
+        body_parameters_schema_path = schema_path + [
+            "requestBody",
+            "content",
+            '"application/json"',
+            "schema",
+            "properties",
+        ]
+        body_parameters = [
+            Parameter.from_schema(
+                n, p, body_parameters_schema_path + [n], n in required, index, spec, param_type="body"
+            )
+            for s in [schema.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})]
+            for s in [resolve_schema(s, spec)]
+            for required in [s.get("required", [])]
+            for n, p in s.get("properties", {}).items()
+        ]
+        parameters = url_parameters + body_parameters
+        return_type_schema_path = schema_path + ["responses"]
+        return_type = responses_as_python_type(
+            schema.get("responses", {}),
+            return_type_schema_path,
+            schema_to_class,
+            classes,
+            spec,
+            any(p.supports_pagination() for p in url_parameters),
+        )
+        deprecated = schema.get("deprecated")
+        return Method(name, summary, description, path, verb, docs_url, parameters, return_type, deprecated)
+
 
 class SimpleStringCollector(cst.CSTVisitor):
     def __init__(self):
@@ -331,14 +595,77 @@ class FunctionCallCollector(cst.CSTVisitor):
         self._calls.append((func_name, args))
 
 
+def is_comment(stmt: cst.BaseStatement) -> bool:
+    return (
+        isinstance(stmt, SimpleStatementLine)
+        and len(stmt.body) > 0
+        and isinstance(stmt.body[0], cst.Expr)
+        and isinstance(stmt.body[0].value, SimpleString)
+    )
+
+
+def is_parameter_assertion(stmt: cst.BaseStatement, parameters: set[str]) -> bool:
+    if not (isinstance(stmt, SimpleStatementLine) and len(stmt.body) == 1):
+        return False
+    stmt = stmt.body[0]
+
+    if not (isinstance(stmt, cst.Assert) and isinstance(stmt.test, cst.Call)):
+        return False
+    call = stmt.test
+
+    if not (isinstance(call.func, cst.Name) and call.func.value in ["isinstance", "is_optional", "is_optional_list"]):
+        return False
+
+    if not (len(call.args) == 2 and isinstance(call.args[0], cst.Arg)):
+        return False
+    arg = call.args[0]
+
+    if not isinstance(arg.value, cst.Name):
+        return False
+    name = arg.value
+
+    return name.value in parameters
+
+
+def get_request_parameters(stmt: cst.BaseStatement, var_name: str) -> cst.Dict | None:
+    if not (isinstance(stmt, cst.SimpleStatementLine) and len(stmt.body) == 1):
+        return None
+    stmt = stmt.body[0]
+
+    if isinstance(stmt, cst.Assign) and len(stmt.targets) == 1:
+        target = stmt.targets[0]
+        if not isinstance(target, cst.AssignTarget):
+            return None
+        target = target.target
+    elif isinstance(stmt, cst.AnnAssign):
+        target = stmt.target
+    else:
+        return None
+    if not (isinstance(target, cst.Name) and target.value == var_name):
+        return None
+    value = stmt.value
+
+    if (
+        isinstance(value, cst.Call)
+        and isinstance(value.func, cst.Attribute)
+        and isinstance(value.func.value, cst.Name)
+        and isinstance(value.func.attr, cst.Name)
+        and value.func.value.value == "NotSet"
+        and value.func.attr.value == "remove_unset_items"
+        and len(value.args) == 1
+        and isinstance(value.args[0].value, cst.Dict)
+    ):
+        value = value.args[0].value
+
+    if isinstance(value, cst.Dict):
+        return value
+
+    return None
+
+
 def get_class_docstring(node: cst.ClassDef) -> str | None:
     try:
-        if (
-            isinstance(node.body, IndentedBlock)
-            and isinstance(node.body.body[0], SimpleStatementLine)
-            and isinstance(node.body.body[0].body[0], Expr)
-            and isinstance(node.body.body[0].body[0].value, SimpleString)
-        ):
+        if isinstance(node.body, IndentedBlock) and len(node.body.body) > 0 and is_comment(node.body.body[0]):
             return node.body.body[0].body[0].value.value
     except Exception as e:
         print(f"Extracting docstring of class {node.name.value} failed", e)
@@ -399,7 +726,7 @@ class CstMethods(abc.ABC):
         return sub
 
     @classmethod
-    def create_attribute(cls, names: list[str]) -> cst.BaseExpression:
+    def create_attribute(cls, names: list[str]) -> cst.Name | cst.Attribute:
         names = [cls.create_subscript(name) if "[" in name and name.endswith("]") else cst.Name(name) for name in names]
         if len(names) == 1:
             return names[0]
@@ -410,7 +737,7 @@ class CstMethods(abc.ABC):
 
     @classmethod
     def create_type(
-        cls, data_type: PythonType | GithubClass | None, short_class_name: bool = False
+        cls, data_type: PythonType | GithubClass | None, short_class_name: bool = False, union_as_tuple: bool = False
     ) -> cst.BaseExpression:
         if data_type is None:
             return cst.Name("None")
@@ -423,13 +750,25 @@ class CstMethods(abc.ABC):
                 return cst.Name("None")
             if len(data_type.inner_types) == 1:
                 return cls.create_type(data_type.inner_types[0], short_class_name)
-            result = cst.BinaryOperation(
-                cls.create_type(data_type.inner_types[0], short_class_name),
-                cst.BitOr(),
-                cls.create_type(data_type.inner_types[1], short_class_name),
-            )
-            for dt in data_type.inner_types[2:]:
-                result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt, short_class_name))
+            if union_as_tuple:
+                result = cst.Tuple(
+                    elements=[
+                        cst.Element(
+                            value=cls.create_type(
+                                inner, short_class_name=short_class_name, union_as_tuple=union_as_tuple
+                            )
+                        )
+                        for inner in data_type.inner_types
+                    ]
+                )
+            else:
+                result = cst.BinaryOperation(
+                    cls.create_type(data_type.inner_types[0], short_class_name),
+                    cst.BitOr(),
+                    cls.create_type(data_type.inner_types[1], short_class_name),
+                )
+                for dt in data_type.inner_types[2:]:
+                    result = cst.BinaryOperation(result, cst.BitOr(), cls.create_type(dt, short_class_name))
             return result
         if data_type.inner_types:
             elems = [
@@ -818,13 +1157,12 @@ class ApplySchemaBaseTransformer(CstTransformerBase, abc.ABC):
         self,
         module_name: str,
         class_name: str,
-        properties: dict[str, (PythonType | GithubClass | None, bool)],
+        properties: list[Property],
         deprecate: bool,
     ):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
-        properties = [Property(name=n, data_type=t, deprecated=d) for n, (t, d) in properties.items()]
         self.properties = sorted(properties, key=lambda p: p.name)
         self.all_properties = self.properties.copy()
         self.deprecate = deprecate
@@ -841,7 +1179,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         self,
         module_name: str,
         class_name: str,
-        properties: dict[str, (PythonType | GithubClass | None, bool)],
+        properties: list[Property],
         completable: bool,
         deprecate: bool,
     ):
@@ -1264,7 +1602,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         ids: dict[str, list[str]],
         module_name: str,
         class_name: str,
-        properties: dict[str, (str | dict | list | None, bool)],
+        properties: list[Property],
         deprecate: bool,
     ):
         super().__init__(module_name, class_name, properties, deprecate)
@@ -1565,6 +1903,789 @@ class AddSchemasTransformer(CstTransformerBase):
         return super().leave_ClassDef(original_node, updated_node)
 
 
+class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
+    def __init__(
+        self,
+        module_name: str,
+        class_name: str,
+        methods: list[Method],
+        index: dict[str, Any],
+        rewrite: bool,
+    ):
+        super().__init__()
+        self.module_name = module_name
+        self.class_name = class_name
+        self.methods = {method.name: method for method in methods}
+        self.index = index
+        self.rewrite = rewrite
+        self.classes = index.get("classes", {})
+
+    @staticmethod
+    def get_decorators(decorators: Sequence[cst.Decorator], decorator_name: str) -> list[dict[str, Any]]:
+        return [
+            {
+                k: v
+                for k, v in [
+                    ("name", cst_to_python(name)),
+                ]
+                + [
+                    (arg.keyword.value, cst_to_python(arg.value))
+                    for arg in args[1:]
+                    if isinstance(arg, cst.Arg) and isinstance(arg.keyword, cst.Name)
+                ]
+            }
+            for decorator in decorators
+            for decorator in [decorator.decorator]
+            if isinstance(decorator, cst.Call)
+            and isinstance(decorator.func, cst.Name)
+            and decorator.func.value == decorator_name
+            for args in [decorator.args]
+            if len(args) > 0
+            for name in [args[0].value]
+            if isinstance(name, SimpleString)
+        ]
+
+    def apply_decorators(self, method: Method, function: cst.FunctionDef) -> Method:
+        # get openapi decorator args of method
+        openapi_decorators = {
+            decorator["name"]: decorator for decorator in self.get_decorators(function.decorators, "openapi_parameter")
+        }
+        if openapi_decorators:
+            # clone method and its parameter list so we do not mutate the input argument
+            method = dataclasses.replace(method, parameters=[p for p in method.parameters])
+            for idx, parameter in enumerate(method.parameters):
+                if parameter.name in openapi_decorators:
+                    decorator = openapi_decorators.get(parameter.name)
+                    parameter = self.apply_openapi_decorator(parameter, decorator)
+                    method.parameters[idx] = parameter
+
+        method_decorators = self.get_decorators(function.decorators, "method_parameter")
+        if method_decorators:
+            for decorator in method_decorators:
+                method = self.apply_method_decorator(method, decorator)
+
+        return method
+
+    def apply_openapi_decorator(self, parameter: Parameter, decorator: dict[str, Any]) -> Parameter:
+        if "matches" in decorator:
+            parameter = dataclasses.replace(parameter, python_name=decorator["matches"])
+        if "type" in decorator:
+            type = decorator["type"]
+            type = string_as_python_type(type, self.classes)
+            parameter = dataclasses.replace(parameter, data_type=type)
+        if "input" in decorator:
+            parameter = dataclasses.replace(parameter, param_type="input")
+        if "docstring_prepend" in decorator:
+            docstring = decorator["docstring_prepend"]
+            docstring = docstring if parameter.description is None else "".join([docstring, parameter.description])
+            parameter = dataclasses.replace(parameter, description=docstring)
+        return parameter
+
+    def apply_method_decorator(self, method: Method, decorator: dict[str, Any]) -> Method:
+        # clone method to not mutate input
+        method: Method = dataclasses.replace(method)
+
+        name = decorator["name"]
+        parameters = {parameter.name: (idx, parameter) for idx, parameter in enumerate(method.parameters)}
+        parameter_and_idx = parameters.get(name)
+        if parameter_and_idx is not None:
+            parameter_idx, parameter = parameter_and_idx
+        else:
+            parameter = Parameter(name, name, None, None, "input", False, None)
+            parameter_idx = len(method.parameters)
+            parameters[name] = (parameter_idx, parameter)
+            method.parameters.append(parameter)
+
+        if "required" in decorator:
+            required = decorator["required"]
+            parameter = dataclasses.replace(parameter, required=required)
+        if "docstring_prepend" in decorator:
+            docstring = decorator["docstring_prepend"]
+            docstring = docstring if parameter.description is None else "".join([docstring, parameter.description])
+            parameter = dataclasses.replace(parameter, description=docstring)
+
+        # subsequent operations require method and parameters to be up-to-date
+        parameters[name] = (parameter_idx, parameter)
+        method.parameters[parameter_idx] = parameter
+
+        if "merge" in decorator:
+            merge = decorator["merge"]
+            for merge_parameter in merge:
+                if merge_parameter not in parameters:
+                    print(f"Cannot find parameter to merge: {merge_parameter}")
+                    continue
+                idx, merged_parameter = parameters.pop(merge_parameter)
+                description = (
+                    merged_parameter.description
+                    if parameter.description is None
+                    else (
+                        parameter.description
+                        if merged_parameter.description is None
+                        else "\n".join([parameter.description, merged_parameter.description])
+                    )
+                )
+                data_type = PythonType.union(parameter.data_type, merged_parameter.data_type)
+                parameter: Parameter = dataclasses.replace(parameter, description=description, data_type=data_type)
+            parameters[name] = (parameter_idx, parameter)
+            method.parameters[parameter_idx] = parameter
+            # remove merged parameters from method
+            method_parameters = [parameter for parameter in method.parameters if parameter.name not in merge]
+            method = dataclasses.replace(method, parameters=method_parameters)
+
+        return method
+
+    def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        method = self.methods.get(updated_node.name.value)
+        if method is None:
+            return updated_node
+
+        self.check_parameters(method)
+        method = self.apply_decorators(method, updated_node)
+
+        print(f"- Updating method {updated_node.name.value}")
+        updated_node = self.update_func_parameters(updated_node, method)
+        updated_node = self.update_func_return(updated_node, method)
+        updated_node = self.update_docstring(updated_node, method)
+        updated_node = self.update_assertions(updated_node, method)
+        updated_node = self.update_deprecations(updated_node, method)
+        updated_node = self.update_url_request_parameters(updated_node, method)
+        updated_node = self.update_verb_request_parameters(updated_node, method, method.verb)
+
+        return updated_node
+
+    def check_parameters(self, method: Method) -> None:
+        paths, queries, bodies, unknowns = self.split_parameters_by_type(method.parameters, ["path", "query", "body"])
+        if unknowns:
+            print("Parameters with unsupported types:")
+            for unknown in unknowns:
+                print(f"- {unknown}")
+        for path in paths:
+            if f"{{{path.name}}}" not in method.path:
+                print(f"Path parameter {{{path.name}}} not found in path: {method.path}")
+
+    @classmethod
+    def create_parameter(cls, parameter: Parameter, template: cst.Param, allow_required: bool) -> cst.Param | None:
+        if parameter.required and not allow_required:
+            print(
+                f"Cannot add parameter {parameter.python_name} without a breaking change "
+                f"as this is required and other optional parameters already exist"
+            )
+            return
+        param = template.deep_clone()
+        param = param.with_changes(
+            name=cst.Name(parameter.python_name),
+            annotation=cls.create_annotation(parameter),
+            equal=cst.MaybeSentinel.DEFAULT if parameter.required else cst.AssignEqual(),
+            default=cls.create_default(parameter),
+        )
+        return param
+
+    @classmethod
+    def amend_type(
+        cls, existing_type: PythonType | GithubClass, spec_type: PythonType | GithubClass
+    ) -> PythonType | GithubClass | None:
+        types = []
+        outer_type: str | None = None
+
+        if (
+            isinstance(existing_type, PythonType)
+            and existing_type.type == "list"
+            or isinstance(spec_type, PythonType)
+            and spec_type.type == "list"
+        ):
+            if (
+                isinstance(existing_type, PythonType)
+                and isinstance(spec_type, PythonType)
+                and existing_type.type == "list"
+                and spec_type.type == "list"
+            ):
+                # both types are lists
+                outer_type = "list"
+
+                # flatten list element union types
+                for a_type in [existing_type, spec_type]:
+                    types.extend(
+                        [
+                            flattened
+                            for inner in a_type.inner_types
+                            for flattened in (
+                                inner.inner_types
+                                if isinstance(inner, PythonType) and inner.type == "union"
+                                else [inner]
+                            )
+                            if flattened not in types
+                        ]
+                    )
+            else:
+                print(f"Existing type {existing_type} is incompatible with spec type {spec_type}")
+                return existing_type
+        else:
+            for a_type in [existing_type, spec_type]:
+                if isinstance(a_type, PythonType) and a_type.type == "union":
+                    types.extend([inner for inner in a_type.inner_types if inner not in types])
+                elif a_type not in types:
+                    types.append(a_type)
+
+        # move None to the end of types
+        none = PythonType("None")
+        if none in types:
+            types = [t for t in types if t != none] + [none]
+
+        # return types optionally wrapped by outer type
+        if len(types) > 1:
+            inner = PythonType("union", types)
+        elif len(types) == 1:
+            inner = types[0]
+        else:
+            inner = None
+
+        if outer_type is not None:
+            return PythonType(outer_type, [inner])
+        else:
+            return inner
+
+    def amend_parameters(
+        self,
+        parameters: list[Parameter],
+        pos_params: Sequence[cst.Param],
+        star_param: cst.Param | None,
+        kw_params: Sequence[cst.Param],
+    ) -> list[Parameter]:
+        amended_parameters = []
+        pos_params_map = {param.name.value: param for param in pos_params}
+        star_name = star_param.name.value if star_param is not None else None
+        kw_params_map = {param.name.value: param for param in kw_params}
+        params = {**pos_params_map, **kw_params_map}
+        if star_name:
+            params[star_name] = star_param
+        for parameter in parameters:
+            if parameter.name in params:
+                param = params[parameter.name]
+                if parameter.name == star_name:
+                    parameter = dataclasses.replace(parameter, position=ParameterOrder.STAR)
+                elif parameter.name in kw_params:
+                    parameter = dataclasses.replace(parameter, position=ParameterOrder.NAMED)
+                else:
+                    parameter = dataclasses.replace(parameter, position=ParameterOrder.POSITIONAL)
+                if param.annotation is not None:
+                    # get data type from code
+                    code = cst.Module("").code_for_node(param.annotation.annotation)
+                    existing_data_type = string_as_python_type(code, self.classes)
+
+                    if (
+                        param.default is not None
+                        and not parameter.required
+                        and isinstance(existing_data_type, PythonType)
+                        and existing_data_type.type == "Opt"
+                        and len(existing_data_type.inner_types) == 1
+                    ):
+                        existing_data_type = existing_data_type.inner_types[0]
+
+                    # check existing data-type is compatible
+                    if parameter.position == ParameterOrder.STAR:
+                        parameter = dataclasses.replace(parameter, required=True)
+                        # check parameter type (list[T]) is compatible with existing type (*T)
+                        if isinstance(parameter.data_type, PythonType) and parameter.data_type.type == "list":
+                            parameter_inner_data_types = parameter.data_type.inner_types
+                            if (
+                                len(parameter_inner_data_types) == 1
+                                and isinstance(parameter_inner_data_types[0], PythonType)
+                                and parameter_inner_data_types[0].type == "union"
+                            ):
+                                parameter_inner_data_types = parameter_inner_data_types[0].inner_types
+                            if isinstance(existing_data_type, PythonType) and existing_data_type.type == "union":
+                                if not all(
+                                    data_type in existing_data_type.inner_types
+                                    for data_type in parameter_inner_data_types
+                                ):
+                                    print(
+                                        f"parameter type {parameter.data_type} is not compatible with existing "
+                                        f"data type *{existing_data_type.type}, ignoring existing data type."
+                                    )
+                                    continue
+                            elif (
+                                len(parameter_inner_data_types) == 1
+                                and parameter_inner_data_types[0] != existing_data_type
+                            ):
+                                print(
+                                    f"parameter type {parameter.data_type} is not compatible with existing "
+                                    f"data type *{existing_data_type.type}, ignoring existing data type."
+                                )
+                                continue
+                            elif len(parameter_inner_data_types) > 1:
+                                print(
+                                    f"parameter type {parameter.data_type} is not compatible with existing "
+                                    f"data type *{existing_data_type.type}, ignoring existing data type."
+                                )
+                                continue
+                        else:
+                            print(
+                                f"Parameter type {parameter.data_type} cannot be used for an existing "
+                                f"star parameter, ignoring existing parameter."
+                            )
+                            continue
+
+                        # turn *T into list[T]
+                        existing_data_type = PythonType("list", inner_types=[existing_data_type])
+                    else:
+                        existing_data_type = self.amend_type(existing_data_type, parameter.data_type)
+                        if existing_data_type is None:
+                            continue
+
+                    # check inner type is a subset of existing data-type
+                    if parameter.data_type != existing_data_type:
+                        print(f"  - Replacing {parameter.data_type} with {existing_data_type}")
+                        parameter = dataclasses.replace(parameter, data_type=existing_data_type)
+            amended_parameters.append(parameter)
+        return amended_parameters
+
+    def _get_parameters(self, node: cst.FunctionDef, method: Method) -> tuple[list[Parameter], list[cst.Param]]:
+        params = node.params.params
+        star_param = node.params.star_arg if isinstance(node.params.star_arg, cst.Param) else None
+        kw_params = node.params.kwonly_params
+
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
+        parameters = self.amend_parameters(parameters, params, star_param, kw_params)
+        params = list(params)
+        if star_param:
+            params.append(star_param)
+        params.extend(kw_params)
+        return parameters, params
+
+    def update_func_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        # update params: create missing, update type annotation of existing params
+        if sum([1 for param in method.parameters if param.position == ParameterOrder.STAR]) > 1:
+            print("Cannot update function parameter list as there are multiple star parameters")
+            return node
+
+        parameters, params = self._get_parameters(node, method)
+
+        if len(params) == 0:
+            return node
+        if params[0].name.value != "self":
+            print("Cannot update function parameter list as it does not have the 'self' parameter")
+            return node
+
+        last_param_has_comma = params[-1].comma is not cst.MaybeSentinel.DEFAULT
+
+        # move 'self' parameter to updated_params
+        updated_params = [params[0]]
+        params = params[1:]
+        updated_star_param = node.params.star_arg
+        updated_kw_params = []
+
+        parameters_names = {arg.python_name: arg for arg in parameters}
+        parameters_sorted = self.required_first(parameters)
+        existing_parameters = set()
+        optional_exists = False
+
+        if self.rewrite:
+            # rewrite params list
+            for parameter in parameters_sorted:
+                param = self.create_parameter(
+                    parameter, params[-1] if params else updated_params[-1], not optional_exists
+                )
+                # propagate the last but one param's comma to the last param (before adding the new param)
+                if parameter.position == ParameterOrder.POSITIONAL:
+                    if len(params) > 1:
+                        updated_params[-1] = updated_params[-1].with_changes(comma=params[-2].comma)
+                    updated_params.append(param)
+                elif parameter.position == ParameterOrder.STAR:
+                    updated_star_param = param.with_changes(star="*")
+                elif parameter.position == ParameterOrder.NAMED:
+                    updated_kw_params.append(param)
+        else:
+            # update existing params
+            is_kw_param = False
+            for idx, param in enumerate(params):
+                parameter = parameters_names.get(param.name.value)
+                if parameter is None:
+                    print(f"Unknown method argument: {param.name.value}")
+                    if isinstance(param.star, str) and param.star:
+                        updated_star_param = param.with_changes(star="*")
+                        is_kw_param = True
+                    elif is_kw_param:
+                        updated_kw_params.append(param)
+                    else:
+                        updated_params.append(param)
+                    continue
+                existing_parameters.add(parameter.python_name)
+                if not parameter.required and param.default is None:
+                    print(f"Cannot update optional parameter '{parameter.python_name}' as it is required")
+                elif parameter.required and param.default is not None:
+                    print(f"Cannot update required parameter '{parameter.python_name}' as it is optional")
+                    optional_exists = True
+                else:
+                    param = param.with_changes(
+                        annotation=self.create_annotation(parameter), default=self.create_default(parameter)
+                    )
+                optional_exists = optional_exists or not parameter.required
+
+                if parameter.position == ParameterOrder.POSITIONAL:
+                    updated_params.append(param)
+                elif parameter.position == ParameterOrder.STAR:
+                    updated_star_param = param.with_changes(star="*")
+                elif parameter.position == ParameterOrder.NAMED:
+                    updated_kw_params.append(param)
+
+            # add missing params
+            for parameter in parameters_sorted:
+                if parameter.python_name in existing_parameters:
+                    continue
+
+                print(f"  - Adding parameter {parameter.python_name}")
+                param = self.create_parameter(parameter, updated_params[-1], not optional_exists)
+                if param:
+                    # propagate the last but one param's comma to the last param (before adding the new param)
+                    if last_param_has_comma and len(updated_params) > 1:
+                        updated_params[-1] = updated_params[-1].with_changes(comma=updated_params[-2].comma)
+                    updated_params.append(param)
+
+        return node.with_changes(
+            params=node.params.with_changes(
+                params=updated_params, star_arg=updated_star_param, kwonly_params=updated_kw_params
+            )
+        )
+
+    def update_func_return(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        if self.rewrite or node.returns is None:
+            node = node.with_changes(
+                returns=cst.Annotation(annotation=self.create_type(method.return_type, short_class_name=True))
+            )
+        return node
+
+    @staticmethod
+    def split_parameters_by_type(parameters: list[Parameter], param_types: list[str]) -> tuple[list[Parameter], ...]:
+        params_by_type = defaultdict(list)
+        for parameter in parameters:
+            params_by_type[parameter.param_type].append(parameter)
+        other_param_types = []
+        for param_type, params in params_by_type.items():
+            if param_type not in param_types:
+                other_param_types.extend(params)
+        return tuple([params_by_type.get(param_type, list()) for param_type in param_types] + [other_param_types])
+
+    @staticmethod
+    def remove_pagination_parameters(parameters: list[Parameter]) -> list[Parameter]:
+        return [
+            parameter
+            for parameter in parameters
+            if not (parameter.param_type == "query" and parameter.name in {"page", "per_page"})
+        ]
+
+    @staticmethod
+    def indent_lines(string: str, indentation: str, indent_first: bool = True) -> list[str]:
+        lines = UpdateMethodsTransformer.split_and_strip_lines(string)
+        if indent_first:
+            lines = [indentation + line for line in lines]
+        else:
+            lines = [lines[0]] + [indentation + line for line in lines[1:]]
+        return lines
+
+    @staticmethod
+    def split_and_strip_lines(string: str) -> list[str]:
+        return [line.strip() for line in string.split("\n")]
+
+    @classmethod
+    def create_param_docstring(cls, parameter: Parameter) -> list[str]:
+        deprecation = "deprecated, " if parameter.deprecated else ""
+        description = parameter.description if parameter.description else ""
+        description_lines = cls.indent_lines(description, "    ", indent_first=False)
+        docstrings = []
+        if deprecation or "".join(description_lines):
+            docstrings.append(f":param {parameter.python_name}: {deprecation}{description_lines[0]}")
+            docstrings.extend(description_lines[1:])
+        else:
+            docstrings.append(f":param {parameter.python_name}:")
+        return docstrings
+
+    def update_docstring(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
+
+        docstring_stmt = node.body.body[0] if len(node.body.body) > 0 and is_comment(node.body.body[0]) else None
+        stmts = node.body.body[1:] if docstring_stmt is not None else node.body.body
+
+        docstrings = []
+        if self.rewrite:
+            docstrings.append('"""')
+            if method.summary:
+                docstrings.extend(self.split_and_strip_lines(method.summary))
+                docstrings.append("")
+            if method.description:
+                docstrings.extend(self.split_and_strip_lines(method.description))
+                docstrings.append("")
+            if method.docs_url:
+                docstrings.append(f":calls: `{method.verb.upper()} {method.path} <{method.docs_url}>`_")
+            else:
+                docstrings.append(f":calls: {method.verb.upper()} {method.path}")
+            for parameter in parameters:
+                docstrings.extend(self.create_param_docstring(parameter))
+            docstrings.append('"""')
+        else:
+            docstrings = docstring_stmt.body[0].value.value.split("\n")
+            docstrings = [line.strip() for line in docstrings]
+
+            # add description if none exists
+            if (
+                len(docstrings) > 1
+                and docstrings[0].strip() == '"""'
+                and all(line.strip().startswith(":") or line.strip().startswith('"""') for line in docstrings)
+            ):
+                # inserted description before summary, as the latter will move the former further down
+                if method.description:
+                    docstrings = (
+                        [docstrings[0]] + self.split_and_strip_lines(method.description) + [""] + docstrings[1:]
+                    )
+                if method.summary:
+                    docstrings = [docstrings[0]] + self.split_and_strip_lines(method.summary) + [""] + docstrings[1:]
+
+            # extend params
+            last_param_idx = None
+            existing_params = set()
+            for idx, line in enumerate(docstrings):
+                if line.startswith(":param "):
+                    existing_params.add(line.split(":")[1].split(" ", 1)[1].strip())
+                    last_param_idx = idx
+            if last_param_idx is None:
+                # point to last but one line
+                last_param_idx = len(docstrings) - 2
+            for parameter in parameters:
+                if parameter.python_name not in existing_params:
+                    for line in self.create_param_docstring(parameter):
+                        last_param_idx = last_param_idx + 1
+                        docstrings.insert(last_param_idx, line)
+
+        # add docstrings as first statement
+        docstring = "\n".join(
+            [("        " + line) if idx > 0 and line else line for idx, line in enumerate(docstrings)]
+        )
+        if docstring:
+            docstring_stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
+            stmts = [docstring_stmt] + list(stmts)
+        return node.with_changes(body=node.body.with_changes(body=stmts))
+
+    def update_assertions(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        parameters, _ = self._get_parameters(node, method)
+
+        # remove all existing parameter assertions
+        stmts = []
+        assertions_start_idx = None
+        parameters_names = {parameter.python_name for parameter in parameters}
+        for idx, stmt in enumerate(node.body.body):
+            if is_parameter_assertion(stmt, parameters_names):
+                if assertions_start_idx is None:
+                    assertions_start_idx = idx
+            else:
+                stmts.append(stmt)
+
+        # generate parameter assertions
+        parameters_sorted = self.required_first(parameters)
+        assertion_stmts = [
+            cst.SimpleStatementLine(
+                body=[
+                    cst.Assert(
+                        test=cst.Call(
+                            func=(cst.Name("is_list") if is_list else cst.Name("isinstance"))
+                            if parameter.required
+                            else (
+                                (cst.Name("is_list") if is_star else cst.Name("is_optional_list"))
+                                if is_list
+                                else cst.Name("is_optional")
+                            ),
+                            args=[
+                                cst.Arg(cst.Name(parameter.python_name)),
+                                cst.Arg(
+                                    self.create_type(
+                                        parameter.data_type.inner_types[0] if is_list else parameter.data_type,
+                                        union_as_tuple=True,
+                                    )
+                                ),
+                            ],
+                        ),
+                        msg=cst.Name(parameter.python_name),
+                    )
+                ]
+            )
+            for parameter in parameters_sorted
+            for is_list in [isinstance(parameter.data_type, PythonType) and parameter.data_type.type == "list"]
+            for is_star in [parameter.position == ParameterOrder.STAR]
+        ]
+
+        assertions_start_idx = (
+            1
+            if assertions_start_idx is None and len(node.body.body) > 0 and is_comment(node.body.body[0])
+            else assertions_start_idx
+        )
+        stmts = stmts[:assertions_start_idx] + assertion_stmts + stmts[assertions_start_idx:]
+        return node.with_changes(body=node.body.with_changes(body=stmts))
+
+    def update_deprecations(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        input_parameters, query_parameters, body_parameters, _ = self.split_parameters_by_type(
+            method.parameters, ["input", "query", "body"]
+        )
+        parameters = input_parameters + self.remove_pagination_parameters(query_parameters) + body_parameters
+
+        parameters_sorted = self.required_first(parameters)
+        deprecated_parameters = [parameter.python_name for parameter in parameters_sorted if parameter.deprecated]
+
+        # TODO: find all existing deprecation lines, extract deprecated parameters and index of last line,
+        # use last assertion line index+1 as default
+        for deprecated_parameter in deprecated_parameters:
+            # TODO:
+            # if no deprecation line exists for deprecated_parameter:
+            # - create such a line
+            # - add at last deprecation line index
+            pass
+        return node
+
+    def update_url_request_parameters(self, node: cst.FunctionDef, method: Method) -> cst.FunctionDef:
+        parameters, _ = self.split_parameters_by_type(method.parameters, ["query"])
+        parameters = self.remove_pagination_parameters(parameters)
+        return self.update_request_parameters(node, "url_parameters", parameters)
+
+    def update_verb_request_parameters(self, node: cst.FunctionDef, method: Method, verb: str) -> cst.FunctionDef:
+        parameters, _ = self.split_parameters_by_type(method.parameters, ["body"])
+        return self.update_request_parameters(node, f"{verb.lower()}_parameters", parameters)
+
+    def update_request_parameters(
+        self, node: cst.FunctionDef, var_name: str, parameters: list[Parameter]
+    ) -> cst.FunctionDef:
+        if len(parameters) == 0:
+            return node
+
+        stmts = [stmt for stmt in node.body.body]
+
+        # find request parameters line
+        request_parameters_idx = None
+        assertions_end_idx = None
+        parameters_names = [parameter.python_name for parameter in parameters]
+        parameters_set = set(parameters_names)
+        for idx, stmt in enumerate(stmts):
+            if is_parameter_assertion(stmt, parameters_set):
+                assertions_end_idx = idx
+            if get_request_parameters(stmt, var_name):
+                request_parameters_idx = idx
+                break
+
+        if request_parameters_idx is None and assertions_end_idx is None:
+            # put this at the end
+            assertions_end_idx = len(stmts)
+
+        indented = cst.ParenthesizedWhitespace(indent=True)
+        onetab = indented.with_changes(last_line=cst.SimpleWhitespace(value="    "))
+        twotabs = indented.with_changes(last_line=cst.SimpleWhitespace(value="        "))
+        if self.rewrite:
+            # create new request parameters line
+            request_parameters_stmt = cst.SimpleStatementLine(
+                body=[
+                    cst.Assign(
+                        targets=[cst.AssignTarget(target=self.create_attribute([var_name]))],
+                        value=cst.Call(
+                            func=self.create_attribute(["NotSet", "remove_unset_items"]),
+                            args=[
+                                cst.Arg(
+                                    value=cst.Dict(
+                                        elements=[
+                                            cst.DictElement(
+                                                key=cst.SimpleString(value=f'"{parameter.name}"'),
+                                                value=cst.Name(value=parameter.python_name),
+                                                comma=cst.Comma(whitespace_after=twotabs)
+                                                if idx + 1 < len(parameters_set)
+                                                else cst.Comma(),
+                                            )
+                                            for idx, parameter in enumerate(parameters)
+                                        ],
+                                        lbrace=cst.LeftCurlyBrace(whitespace_after=twotabs),
+                                        rbrace=cst.RightCurlyBrace(whitespace_before=onetab),
+                                    ),
+                                    whitespace_after_arg=indented,
+                                )
+                            ],
+                            whitespace_before_args=onetab,
+                        ),
+                    )
+                ]
+            )
+        else:
+            if request_parameters_idx is None:
+                print(f"Cannot update {var_name} is statement cannot be found.")
+                return node
+
+            request_parameters_stmt = stmts[request_parameters_idx]
+            dict_node = get_request_parameters(request_parameters_stmt, var_name)
+            if len(dict_node.elements) == 0:
+                print(f"Cannot update {var_name} is is an empty dict indicating.")
+                return node
+
+            last_existing_element = dict_node.elements[-1]
+            existing_keys = {e.key.value.strip('"') for e in dict_node.elements}
+            new_parameters = [parameter for parameter in parameters if parameter.name not in existing_keys]
+            new_elements = [
+                cst.DictElement(
+                    key=cst.SimpleString(value=f'"{parameter.name}"'),
+                    value=cst.Name(value=parameter.python_name),
+                    comma=cst.Comma(whitespace_after=twotabs)
+                    if idx + 1 < len(new_parameters)
+                    else (
+                        cst.MaybeSentinel.DEFAULT
+                        if last_existing_element.comma is cst.MaybeSentinel.DEFAULT
+                        else cst.Comma()
+                    ),
+                )
+                for idx, parameter in enumerate(new_parameters)
+            ]
+            if new_parameters:
+                last_existing_element = last_existing_element.with_changes(
+                    comma=cst.MaybeSentinel.DEFAULT
+                    if last_existing_element.comma is cst.MaybeSentinel.DEFAULT
+                    else cst.Comma(whitespace_after=onetab)
+                )
+            elements = [e for e in dict_node.elements[:-1]] + [last_existing_element] + new_elements
+            request_parameters_stmt = request_parameters_stmt.with_deep_changes(dict_node, elements=elements)
+
+        # insert / replace request parameters line
+        if request_parameters_idx is None:
+            stmts = stmts[: assertions_end_idx + 1] + [request_parameters_stmt] + stmts[assertions_end_idx + 1 :]
+        else:
+            stmts = stmts[:request_parameters_idx] + [request_parameters_stmt] + stmts[request_parameters_idx + 1 :]
+        return node.with_changes(body=node.body.with_changes(body=stmts))
+
+    @staticmethod
+    def required_first(parameters: list[Parameter]) -> list[Parameter]:
+        # stable sorting parameters by Argument.required, True first
+        return [a for _, a in sorted(enumerate(parameters), key=lambda a: (not a[1].required, a[0]))]
+
+    @classmethod
+    def create_annotation(cls, argument: Parameter) -> cst.Annotation:
+        if (
+            argument.position == ParameterOrder.STAR
+            and isinstance(argument.data_type, PythonType)
+            and argument.data_type.type == "list"
+        ):
+            data_type = cls.create_type(argument.data_type.inner_types[0], short_class_name=True)
+        else:
+            data_type = cls.create_type(argument.data_type, short_class_name=True)
+        if argument.required:
+            return cst.Annotation(data_type)
+        else:
+            return cst.Annotation(
+                annotation=cst.Subscript(
+                    value=cst.Name(value="Opt"), slice=[cst.SubscriptElement(slice=cst.Index(value=data_type))]
+                )
+            )
+
+    @staticmethod
+    def create_default(argument: Parameter) -> cst.BaseExpression:
+        if not argument.required:
+            return cst.Name(value="NotSet")
+
+
 class CreateClassMethodTransformer(CstTransformerBase):
     def __init__(
         self,
@@ -1698,6 +2819,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         if url_params:
             raise ValueError(f"URL parameter not implemented: {', '.join(url_params)}")
 
+        # TODO: use Method.from_schema
         request_schema = (
             self.api.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", None)
         )
@@ -1729,6 +2851,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
 
         stmts = []
 
+        # TODO: combine this with UpdateMethodsTransformer.update_docstring
         docstrings = []
         docstrings.append('"""')
         if self.api_docs:
@@ -1915,13 +3038,15 @@ class IndexFileWorker:
             raise RuntimeError(f"Failed to parse {filename}", e)
 
 
-class HandleNewSchemas(Enum):
+class StringEnum(Enum):
+    def __str__(self):
+        return self.value
+
+
+class HandleNewSchemas(StringEnum):
     ignore = "ignore"
     create_class = "create-class"
     as_dict = "as-dict"
-
-    def __str__(self):
-        return self.value
 
 
 class OpenApi:
@@ -2094,7 +3219,7 @@ class OpenApi:
                     w.write(updated_code)
             return True
 
-    def apply(
+    def apply_properties(
         self,
         github_path: str,
         spec_file: str,
@@ -2204,22 +3329,31 @@ class OpenApi:
                 with open(clazz.filename) as r:
                     code = "".join(r.readlines())
 
-                transformer = ApplySchemaTransformer(
-                    clazz.module, class_name, genuine_properties.copy(), completable=completable, deprecate=False
+                apply_transformer = ApplySchemaTransformer(
+                    clazz.module,
+                    class_name,
+                    Property.from_tuples(genuine_properties),
+                    completable=completable,
+                    deprecate=False,
                 )
+
                 tree = cst.parse_module(code)
-                tree_updated = tree.visit(transformer)
+                tree_updated = tree.visit(apply_transformer)
                 class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
 
                 if tests and os.path.exists(clazz.test_filename):
                     with open(clazz.test_filename) as r:
                         code = "".join(r.readlines())
 
-                    transformer = ApplySchemaTestTransformer(
-                        cls.get("ids", []), clazz.module, class_name, all_properties.copy(), deprecate=False
+                    apply_transformer = ApplySchemaTestTransformer(
+                        cls.get("ids", []),
+                        clazz.module,
+                        class_name,
+                        Property.from_tuples(all_properties),
+                        deprecate=False,
                     )
                     tree = cst.parse_module(code)
-                    tree_updated = tree.visit(transformer)
+                    tree_updated = tree.visit(apply_transformer)
                     test_change = self.write_code(code, tree_updated.code, clazz.test_filename, dry_run) or test_change
 
             any_change = any_change or class_change or test_change
@@ -2227,6 +3361,108 @@ class OpenApi:
                 print(f"Class {class_name} changed")
                 if test_change:
                     print(f"Test {clazz.test_filename} changed")
+
+        return any_change
+
+    def apply_methods(
+        self,
+        spec_file: str,
+        index_filename: str,
+        class_or_class_method_names: list[str] | None,
+        dry_run: bool,
+        rewrite: bool,
+    ) -> bool:
+        print(f"Using spec {spec_file}")
+        with open(spec_file) as r:
+            spec = json.load(r)
+        with open(index_filename) as r:
+            index = json.load(r)
+        paths = spec.get("paths", {})
+        classes = index.get("classes", {})
+
+        if class_or_class_method_names:
+            # parse given classes and optional methods into class_methods dict
+            class_methods: dict[str, list[str] | None] = defaultdict(list)
+            for class_or_class_method_name in class_or_class_method_names:
+                fields = class_or_class_method_name.split(".")
+                if len(fields) == 1:
+                    class_name = fields[0]
+                    method_name = None  # all methods
+                elif len(fields) == 2:
+                    class_name = fields[0]
+                    method_name = fields[1]
+                elif len(fields) == 4:
+                    class_name = ".".join(fields[0:2])
+                    method_name = fields[3]
+                else:
+                    print(f"Could not parse as class name or class method name: {class_or_class_method_name}")
+                    sys.exit(1)
+                if method_name is None:
+                    class_methods[class_name] = None
+                # "all methods2 have precedence over stated methods
+                elif class_methods[class_name] is not None:
+                    class_methods[class_name].append(method_name)
+        else:
+            # take all known classes as keys for class_methods dict and None values (meaning all methods)
+            class_methods = {}
+            for class_name in classes:
+                class_methods[class_name] = None
+
+        if len(class_methods) == 1:
+            print(f"Applying API schemas to PyGithub class {next(iter(class_methods))}")
+        else:
+            print(f"Applying API schemas to {len(class_methods)} PyGithub classes")
+
+        def get_methods(cls_methods, method_names):
+            methods = []
+            for n, m in cls_methods.items():
+                if method_names and n not in method_names:
+                    continue
+
+                call = m.get("call")
+                if call is None:
+                    continue
+
+                path = call.get("path")
+                if not path:
+                    continue
+
+                verb = call.get("verb")
+                if not verb:
+                    print(f"Method {n} calls {path} but has no verb")
+                    continue
+
+                schema = paths.get(path, {}).get(verb.lower())
+                if schema is None:
+                    print(f"Method {n} calls {path} but no schema found")
+                    continue
+
+                methods.append(Method.from_schema(n, schema, path, verb, spec, index))
+            return methods
+
+        any_change = False
+        for class_name, method_names in class_methods.items():
+            clazz = GithubClass.from_class_name(class_name, index)
+
+            print(f"Applying spec {spec_file} to {clazz.full_class_name} ({clazz.filename})")
+            cls = classes.get(clazz.short_class_name, {})
+            cls_methods = cls.get("methods", [])
+            class_change = False
+
+            # update methods
+            methods = get_methods(cls_methods, method_names)
+            if methods:
+                with open(clazz.filename) as r:
+                    code = "".join(r.readlines())
+
+                method_transformer = UpdateMethodsTransformer(clazz.module, class_name, methods, index, rewrite)
+                tree = cst.parse_module(code)
+                tree_updated = tree.visit(method_transformer)
+                class_change = self.write_code(code, tree_updated.code, clazz.filename, dry_run) or class_change
+
+            any_change = any_change or class_change
+            if class_change:
+                print(f"Class {class_name} changed")
 
         return any_change
 
@@ -2962,7 +4198,7 @@ class OpenApi:
                     f.close()
                     print(f"Updating temporary index {f.name}")
                     self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
-                    self.apply(
+                    self.apply_properties(
                         github_path,
                         spec_file,
                         f.name,
@@ -2974,7 +4210,7 @@ class OpenApi:
             else:
                 print("Updating index")
                 self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
-                self.apply(
+                self.apply_properties(
                     github_path,
                     spec_file,
                     index_filename,
@@ -3160,17 +4396,33 @@ class OpenApi:
         suggest_schemas_parser.add_argument("class_name", help="Name of the class to get suggestions for", nargs="*")
 
         apply_parser = subparsers.add_parser("apply", description="Apply schema to source code")
-        apply_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
-        apply_parser.add_argument(
+        apply_area_parsers = apply_parser.add_subparsers(dest="area", required=True)
+        apply_properties_parser = apply_area_parsers.add_parser("properties", help="Apply schema to class properties")
+        apply_properties_parser.add_argument("--tests", help="Also apply spec to test files", action="store_true")
+        apply_properties_parser.add_argument(
             "--new-schemas",
             type=HandleNewSchemas,
             help="How to handle attributes that return schemas that are not implemented by any PyGithub: 'ignore', 'create-class' crates class implementation drafts, 'as-dict' return dict[str, Any]). Option 'create-class' does not support --dry-run.",
             choices=list(HandleNewSchemas),
         )
-        apply_parser.add_argument("github_path", help="Path to PyGithub Python files")
-        apply_parser.add_argument("spec", help="Github API OpenAPI spec file")
-        apply_parser.add_argument("index_filename", help="Path of index file")
-        apply_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
+        apply_properties_parser.add_argument("github_path", help="Path to PyGithub Python files")
+        apply_properties_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        apply_properties_parser.add_argument("index_filename", help="Path of index file")
+        apply_properties_parser.add_argument("class_name", help="PyGithub GithubObject class name", nargs="*")
+
+        apply_methods_parser = apply_area_parsers.add_parser("methods", help="Apply schema to class method")
+        apply_methods_parser.add_argument(
+            "--rewrite",
+            help="Applying schema to methods is free to rewrite existing code. No care is taken to preserve existing documentation or avoid breaking changes.",
+            action="store_true",
+        )
+        apply_methods_parser.add_argument("spec", help="Github API OpenAPI spec file")
+        apply_methods_parser.add_argument("index_filename", help="Path of index file")
+        apply_methods_parser.add_argument(
+            "class_or_class_method_name",
+            help="PyGithub GithubObject class name (like 'Commit') or class method name (like 'Commit.edit')",
+            nargs="*",
+        )
 
         create_parser = subparsers.add_parser("create", description="Create PyGithub classes and methods")
         create_component_parsers = create_parser.add_subparsers(dest="component", required=True)
@@ -3258,15 +4510,24 @@ class OpenApi:
                     self.args.spec, self.args.index_filename, self.args.class_name, self.args.add, self.args.dry_run
                 )
         elif self.args.subcommand == "apply":
-            changes = self.apply(
-                self.args.github_path,
-                self.args.spec,
-                self.args.index_filename,
-                self.args.class_name,
-                self.args.dry_run,
-                self.args.tests,
-                self.args.new_schemas,
-            )
+            if self.args.area == "properties":
+                changes = self.apply_properties(
+                    self.args.github_path,
+                    self.args.spec,
+                    self.args.index_filename,
+                    self.args.class_name,
+                    self.args.dry_run,
+                    self.args.tests,
+                    self.args.new_schemas,
+                )
+            if self.args.area == "methods":
+                changes = self.apply_methods(
+                    self.args.spec,
+                    self.args.index_filename,
+                    self.args.class_or_class_method_name,
+                    self.args.dry_run,
+                    self.args.rewrite,
+                )
         elif self.args.subcommand == "create":
             if self.args.component == "class":
                 changes = self.create_class(
