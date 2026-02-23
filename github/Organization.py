@@ -62,9 +62,11 @@
 # Copyright 2024 Pasha Fateev <pasha@autokitteh.com>                           #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2024 Henkhogan <henkhogan@gmail.com>                               #
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
 # Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Harrison Boyd <8950185+hboyd2003@users.noreply.github.com>    #
 # Copyright 2025 Pavel Abramov <31950564+uncleDecart@users.noreply.github.com> #
 # Copyright 2025 Zachary <6599715+interifter@users.noreply.github.com>         #
 # Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
@@ -117,7 +119,9 @@ import github.SelfHostedActionsRunnerApplication
 import github.SelfHostedActionsRunnerJitConfig
 import github.SelfHostedActionsRunnerToken
 import github.Team
+import github.Package
 from github import Consts
+
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -126,8 +130,10 @@ from github.GithubObject import (
     is_defined,
     is_optional,
     is_optional_list,
-    is_undefined,
+    is_undefined, GithubObject,
 )
+from github.Package import Package
+from github.PackageVersion import PackageVersion
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -1343,6 +1349,39 @@ class Organization(CompletableGithubObject):
         """
         return github.Copilot.Copilot(self._requester, self.login)
 
+    def get_packages(self,
+                     package_type: github.Package.PackageType,
+                     visibility: Opt[github.Package.PackageVisibility] = NotSet
+    ) -> PaginatedList[Package]:
+        """
+        :calls: `GET /orgs/{org}/packages <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#list-packages-for-an-organization>`_
+        """
+        assert isinstance(package_type, github.Package.PackageType), package_type
+        assert is_optional(visibility, github.Package.PackageVisibility), visibility
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "package_type": package_type.value,
+                "visibility": visibility,
+            }
+        )
+        return PaginatedList(github.Package.Package, self._requester, f"{self.url}/packages", url_parameters)
+
+    def get_package(self, package_type: github.Package.PackageType, package_name: str) -> Package:
+        """
+        :calls: `GET /orgs/{org}/packages/{package_type}/{package_name} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#get-a-package-for-an-organization>`_
+        """
+        assert isinstance(package_type , github.Package.PackageType), package_type
+        assert isinstance(package_name, str), package_name
+        url = f"{self.url}/packages/{package_type.value}/{package_name}"
+        return github.Package.Package(self._requester, {}, {"url": url}, completed=False)
+
+    def list_package_versions(self, package_type: str, package_name: str) -> PaginatedList[PackageVersion]:
+        """
+        :calls: `GET /orgs/{org}/packages/{package_type}/{package_name}/versions <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#list-package-versions-for-a-package-owned-by-an-organization`_
+        """
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        return PaginatedList(PackageVersion, self._requester, f"{self.url}/packages/{package_type}/{package_name}/versions", None)
     def get_repo(self, name: str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_

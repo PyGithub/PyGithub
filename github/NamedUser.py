@@ -33,7 +33,9 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Henkhogan <henkhogan@gmail.com>                               #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Harrison Boyd <8950185+hboyd2003@users.noreply.github.com>    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -57,18 +59,20 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, overload
 
 import github.Event
 import github.Gist
 import github.GithubObject
 import github.Organization
+import github.Package
 import github.PaginatedList
 import github.Permissions
 import github.Plan
 import github.Repository
 from github import Consts
-from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined, is_optional
+from github.PackageVersion import PackageVersion
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -76,6 +80,7 @@ if TYPE_CHECKING:
     from github.Gist import Gist
     from github.Membership import Membership
     from github.Organization import Organization
+    from github.Package import Package
     from github.Permissions import Permissions
     from github.Plan import Plan
     from github.Project import Project
@@ -134,6 +139,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._notification_email: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
+        self._packages: Attribute[Permissions] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._plan: Attribute[Plan] = NotSet
         self._private_gists: Attribute[int] = NotSet
@@ -475,6 +481,40 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Organization.Organization, self._requester, f"{self.url}/orgs", None
         )
+
+    def get_packages(self,
+                     package_type: github.Package.PackageType,
+                     visibility: Opt[github.Package.PackageVisibility] = NotSet
+    ) -> PaginatedList[Package]:
+        """
+        :calls: `GET /user/{username}/packages <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#list-packages-for-the-a-user>`_
+        """
+        assert isinstance(package_type, github.Package.PackageType), package_type
+        assert is_optional(visibility, github.Package.PackageVisibility), visibility
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "package_type": package_type.value,
+                "visibility": visibility,
+            }
+        )
+        return PaginatedList(github.Package.Package, self._requester, f"{self.url}/packages", url_parameters)
+
+    def get_package(self, package_type: github.Package.PackageType, package_name: str) -> Package:
+        """
+        :calls: `GET /user/{username}/packages/{package_type}/{package_type} <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#get-a-package-for-the-a-user>`_
+        """
+        assert isinstance(package_type , github.Package.PackageType), package_type
+        assert isinstance(package_name, str), package_name
+        url = f"{self.url}/packages/{package_type.value}/{package_name}"
+        return github.Package.Package(self._requester, {}, {"url": url}, completed=False)
+
+    def list_package_versions(self, package_type: str, package_name: str) -> PaginatedList[PackageVersion]:
+        """
+        :calls: `GET /user/{username}/packages/{package_type}/{package_name}/versions <https://docs.github.com/en/rest/packages/packages?apiVersion=latest#list-package-versions-for-a-package-owned-by-a-user`_
+        """
+        assert isinstance(package_type, str), package_type
+        assert isinstance(package_name, str), package_name
+        return PaginatedList(PackageVersion, self._requester, f"{self.url}/packages/{package_type}/{package_name}/versions", None)
 
     def get_projects(self, state: str = "open") -> PaginatedList[Project]:
         """
