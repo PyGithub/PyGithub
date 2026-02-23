@@ -45,7 +45,8 @@ from typing import Any
 
 import github.CommitStatus
 import github.Repository
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt, is_optional
+from github.PaginatedList import PaginatedList
 
 
 class CommitCombinedStatus(NonCompletableGithubObject):
@@ -89,9 +90,39 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     def state(self) -> str:
         return self._state.value
 
+    # This should be a method, but this used to be a property and cannot be changed without breaking user code
+    # TODO: remove @property on version 3
     @property
-    def statuses(self) -> list[github.CommitStatus.CommitStatus]:
-        return self._statuses.value
+    def statuses(self) -> PaginatedList[github.CommitStatus.CommitStatus]:
+        return PaginatedList(
+            github.CommitStatus.CommitStatus,
+            self._requester,
+            self.url,
+            {},
+            headers=None,
+            list_item="statuses",
+            total_count_item="total_count",
+            firstData=self.raw_data,
+            firstHeaders=self.raw_headers,
+        )
+
+    def get_statuses(self, per_page: Opt[int] = NotSet) -> PaginatedList[github.CommitStatus.CommitStatus]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <https://docs.github.com/en/rest/reference/repos#statuses>`_
+        :param per_page: int
+        :rtype: :class:`PaginatedList` of :class:`github.CommitStatus.CommitStatus`
+        """
+        assert is_optional(per_page, int), per_page
+        url_parameters = NotSet.remove_unset_items({"per_page": per_page})
+        return PaginatedList(
+            github.CommitStatus.CommitStatus,
+            self._requester,
+            self.url,
+            url_parameters,
+            headers=None,
+            list_item="statuses",
+            total_count_item="total_count",
+        )
 
     @property
     def total_count(self) -> int:
