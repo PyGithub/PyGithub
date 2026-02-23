@@ -2404,6 +2404,22 @@ class Repository(CompletableGithubObject):
         url = f"{self.url}/commits/{sha}"
         return github.Commit.Commit(self._requester, url=url)
 
+    def get_commit_pulls(self, sha: str) -> PaginatedList[PullRequest]:
+        """
+        Fetch pull requests associated with a commit SHA.
+
+        :param sha: The commit SHA.
+        :return: A PaginatedList of PullRequest objects.
+
+        """
+        assert isinstance(sha, str), sha
+        return PaginatedList(
+            github.PullRequest.PullRequest,
+            self._requester,
+            f"{self.url}/commits/{sha}/pulls",
+            {"Accept": "application/vnd.github.v3+json"},
+        )
+
     def get_commits(
         self,
         sha: Opt[str] = NotSet,
