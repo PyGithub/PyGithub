@@ -62,7 +62,7 @@ import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
 import github.Repository
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -80,12 +80,15 @@ if TYPE_CHECKING:
     from github.Repository import Repository
 
 
-class Commit(CompletableGithubObject):
+class Commit(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Commits.
 
     The reference can be found here
-    https://docs.github.com/en/rest/commits/commits#get-a-commit-object
+    https://docs.github.com/en/rest/commits/commits#get-a-commit
+
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`Commit.files` or :meth:`Commit.get_files`.
 
     The OpenAPI schema can be found at
 
@@ -99,6 +102,7 @@ class Commit(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._author: Attribute[NamedUser] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
@@ -111,7 +115,6 @@ class Commit(CompletableGithubObject):
         self._sha: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -140,20 +143,28 @@ class Commit(CompletableGithubObject):
         self._completeIfNotSet(self._committer)
         return self._committer.value
 
-    # This should be a method, but this used to be a property and cannot be changed without breaking user code
-    # TODO: remove @property on version 3
     @property
     def files(self) -> PaginatedList[File]:
+        """
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`github.Repository.Repository.get_commit`,
+        :meth:`github.Commit.Commit.get_files`, or :meth:`github.Github`.
+
+        If no ``per_page`` is given, the default page size is 300. The maximum is 300.
+
+        At most 3000 files can be retrieved.
+        """
         return PaginatedList(
             github.File.File,
             self._requester,
             self.url,
-            {},
-            headers=None,
+            self._pagination_parameters,
             list_item="files",
             total_count_item="total_files",
-            firstData=self.raw_data,
-            firstHeaders=self.raw_headers,
+            firstData=self.raw_data if self.completed else None,
+            firstHeaders=self.raw_headers if self.completed else None,
         )
 
     @property
@@ -190,11 +201,6 @@ class Commit(CompletableGithubObject):
     def text_matches(self) -> dict[str, Any]:
         self._completeIfNotSet(self._text_matches)
         return self._text_matches.value
-
-    @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
 
     def create_comment(
         self,
@@ -261,6 +267,27 @@ class Commit(CompletableGithubObject):
             self._requester,
             f"{self.url}/comments",
             None,
+        )
+
+    def get_files(self, *, commit_files_per_page: int | None = None) -> PaginatedList[File]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha} <https://docs.github.com/en/rest/reference/repos#commits>`_
+
+        Identical to calling :meth:`github.Commit.Commit.files`, except that this uses the given ``per_page`` value.
+
+        For more details, see :meth:`github.Commit.Commit.files`.
+
+        :param commit_files_per_page: int Number of files retrieved per page.
+               Iterating over the files will fetch pages of this size. The default page size is 300, the maximum is 300.
+               At most 3000 files can be retrieved.
+        """
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            self._pagination_parameters_with(page=1, per_page=commit_files_per_page),
+            headers=None,
+            list_item="files",
         )
 
     def get_statuses(self) -> PaginatedList[CommitStatus]:
@@ -335,6 +362,7 @@ class Commit(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "comments_url" in attributes:  # pragma no branch
@@ -363,8 +391,6 @@ class Commit(CompletableGithubObject):
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
 
 
 class CommitSearchResult(Commit):

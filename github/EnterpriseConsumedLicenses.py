@@ -42,25 +42,28 @@ from __future__ import annotations
 
 from typing import Any
 
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
 from github.NamedEnterpriseUser import NamedEnterpriseUser
 from github.PaginatedList import PaginatedList
 
 
-class EnterpriseConsumedLicenses(CompletableGithubObject):
+class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents license consumed by enterprises.
 
     The reference can be found here
     https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
 
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`EnterpriseConsumedLicenses.users` or :meth:`EnterpriseConsumedLicenses.get_users`.
+
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._enterprise: Attribute[str] = NotSet
         self._total_seats_consumed: Attribute[int] = NotSet
         self._total_seats_purchased: Attribute[int] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"enterprise": self._enterprise.value})
@@ -79,33 +82,52 @@ class EnterpriseConsumedLicenses(CompletableGithubObject):
         return self._total_seats_purchased.value
 
     @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
-
-    def get_users(self) -> PaginatedList[NamedEnterpriseUser]:
+    def users(self) -> PaginatedList[NamedEnterpriseUser]:
         """
-        :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
-        """
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
 
-        url_parameters: dict[str, Any] = {}
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`github.Enterprise.Enterprise.get_consumed_licenses`,
+        :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.get_users`, or :meth:`github.Github`.
+
+        If no ``per_page`` is given, the default page size is 30. The maximum is 100.
+        """
         return PaginatedList(
             NamedEnterpriseUser,
             self._requester,
             self.url,
-            url_parameters,
+            self._pagination_parameters,
             headers=None,
             list_item="users",
             firstData=self.raw_data,
             firstHeaders=self.raw_headers,
         )
 
+    def get_users(self, licence_users_per_page: int | None = None) -> PaginatedList[NamedEnterpriseUser]:
+        """
+        :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+
+        Identical to calling :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users`, except that this uses the given ``per_page`` value.
+
+        For more details, see :meth:`github.EnterpriseConsumedLicenses.EnterpriseConsumedLicenses.users`.
+
+        :param licence_users_per_page: int Number of users retrieved per page.
+               Iterating over the users will fetch pages of this size. The default page size is 30, the maximum is 100.
+        """
+        return PaginatedList(
+            NamedEnterpriseUser,
+            self._requester,
+            self.url,
+            self._pagination_parameters_with(page=1, per_page=licence_users_per_page),
+            headers=None,
+            list_item="users",
+        )
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "enterprise" in attributes:  # pragma no branch
             self._enterprise = self._makeStringAttribute(attributes["enterprise"])
         if "total_seats_consumed" in attributes:  # pragma no branch
             self._total_seats_consumed = self._makeIntAttribute(attributes["total_seats_consumed"])
         if "total_seats_purchased" in attributes:  # pragma no branch
             self._total_seats_purchased = self._makeIntAttribute(attributes["total_seats_purchased"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])

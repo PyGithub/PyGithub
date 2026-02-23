@@ -57,7 +57,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a
+/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a?page=1
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
@@ -299,7 +299,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/compare/master...develop?page=1&per_page=250
+/repos/jacquev6/PyGithub/compare/master...develop?page=1
 {'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
@@ -354,7 +354,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a
+/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a?page=1
 {'If-None-Match': '"91582e2dc24ad5461e61062c01b32969"', 'User-Agent': 'PyGithub/Python', 'Authorization': 'token private_token_removed', 'If-Modified-Since': 'Wed, 09 May 2012 16:22:33 GMT'}
 None
 304
@@ -376,7 +376,7 @@ https
 GET
 api.github.com
 None
-/repos/jacquev6/PyGithub/compare/master...develop
+/repos/jacquev6/PyGithub/compare/master...develop?page=1
 {'If-None-Match': '"ff2ab76c56b865233dfb98f5804276b6"', 'User-Agent': 'PyGithub/Python', 'Authorization': 'token private_token_removed', 'If-Modified-Since': 'Fri, 06 Sep 2013 09:04:41 GMT'}
 None
 304

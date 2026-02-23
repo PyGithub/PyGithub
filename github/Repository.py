@@ -1366,23 +1366,22 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/invitations/{invite_id}")
 
-    def compare(self, base: str, head: str) -> Comparison:
+    def compare(self, base: str, head: str, *, comparison_commits_per_page: int | None = None) -> Comparison:
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{basehead} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
+        :param comparison_commits_per_page: int Number of commits retrieved with the comparison. Iterating over the commits property will fetch pages of this size. The default page size is 250, the maximum is 1000. At most 10000 commits can be retrieved.
         :rtype: :class:`github.Comparison.Comparison`
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
+        # comparison_commits_per_page asserted in Commit(CompletableGithubObjectWithPaginatedProperty)
         base = urllib.parse.quote(base)
         head = urllib.parse.quote(head)
-        # the compare API has a per_page default of 250, which is different to Consts.DEFAULT_PER_PAGE
-        per_page = self._requester.per_page if self._requester.per_page != Consts.DEFAULT_PER_PAGE else 250
-        # only with page=1 we get the pagination headers for the commits element
-        params = {"page": 1, "per_page": per_page}
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}", params)
-        return github.Comparison.Comparison(self._requester, headers, data, completed=True)
+        return github.Comparison.Comparison(
+            self._requester, url=f"{self.url}/compare/{base}...{head}", per_page=comparison_commits_per_page
+        )
 
     def create_autolink(
         self, key_prefix: str, url_template: str, is_alphanumeric: Opt[bool] = NotSet
@@ -2393,16 +2392,18 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def get_commit(self, sha: str) -> Commit:
+    def get_commit(self, sha: str, *, commit_files_per_page: int | None = None) -> Commit:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
+        :param commit_files_per_page: int Number of files retrieved with the commit. Iterating over the files property will fetch pages of this size. Default is 300. Maximum is 300. At most 3000 files can be retrieved.
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
+        # commit_files_per_page asserted in Commit(CompletableGithubObjectWithPaginatedProperty)
         sha = urllib.parse.quote(sha, safe="")
         url = f"{self.url}/commits/{sha}"
-        return github.Commit.Commit(self._requester, url=url)
+        return github.Commit.Commit(self._requester, url=url, per_page=commit_files_per_page)
 
     def get_commits(
         self,
