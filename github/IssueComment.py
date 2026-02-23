@@ -51,7 +51,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.GithubApp
-import github.GithubObject
 import github.NamedUser
 import github.Organization
 from github import Consts

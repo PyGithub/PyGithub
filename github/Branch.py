@@ -257,17 +257,17 @@ class Branch(NonCompletableGithubObject):
             if is_defined(dismiss_stale_reviews):
                 post_parameters["required_pull_request_reviews"]["dismiss_stale_reviews"] = dismiss_stale_reviews
             if is_defined(require_code_owner_reviews):
-                post_parameters["required_pull_request_reviews"][
-                    "require_code_owner_reviews"
-                ] = require_code_owner_reviews
+                post_parameters["required_pull_request_reviews"]["require_code_owner_reviews"] = (
+                    require_code_owner_reviews
+                )
             if is_defined(required_approving_review_count):
-                post_parameters["required_pull_request_reviews"][
-                    "required_approving_review_count"
-                ] = required_approving_review_count
+                post_parameters["required_pull_request_reviews"]["required_approving_review_count"] = (
+                    required_approving_review_count
+                )
             if is_defined(require_last_push_approval):
-                post_parameters["required_pull_request_reviews"][
-                    "require_last_push_approval"
-                ] = require_last_push_approval
+                post_parameters["required_pull_request_reviews"]["require_last_push_approval"] = (
+                    require_last_push_approval
+                )
 
             dismissal_restrictions = {}
             if is_defined(dismissal_users):
@@ -289,9 +289,9 @@ class Branch(NonCompletableGithubObject):
                 bypass_pull_request_allowances["apps"] = apps_bypass_pull_request_allowances
 
             if bypass_pull_request_allowances:
-                post_parameters["required_pull_request_reviews"][
-                    "bypass_pull_request_allowances"
-                ] = bypass_pull_request_allowances
+                post_parameters["required_pull_request_reviews"]["bypass_pull_request_allowances"] = (
+                    bypass_pull_request_allowances
+                )
         else:
             post_parameters["required_pull_request_reviews"] = None
         if (

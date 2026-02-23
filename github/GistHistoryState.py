@@ -43,9 +43,7 @@ from typing import Any
 
 import github.CommitStats
 import github.Gist
-import github.GithubObject
 import github.NamedUser
-import github.Organization
 from github.GistFile import GistFile
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 

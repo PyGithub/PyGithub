@@ -113,8 +113,6 @@ import github.Enterprise
 import github.Event
 import github.Gist
 import github.GithubApp
-import github.GithubIntegration
-import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
 import github.Issue
@@ -211,7 +209,6 @@ class Github:
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
         """
-
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
         assert password is None or isinstance(password, str), password
         assert jwt is None or isinstance(jwt, str), jwt
@@ -229,15 +226,14 @@ class Github:
 
         if password is not None:
             warnings.warn(
-                "Arguments login_or_token and password are deprecated, please use "
-                "auth=github.Auth.Login(...) instead",
+                "Arguments login_or_token and password are deprecated, please use auth=github.Auth.Login(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
             auth = github.Auth.Login(login_or_token, password)  # type: ignore
         elif login_or_token is not None:
             warnings.warn(
-                "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
+                "Argument login_or_token is deprecated, please use auth=github.Auth.Token(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -253,7 +249,7 @@ class Github:
             auth = github.Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
-                "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
+                "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -287,8 +283,10 @@ class Github:
         return Github(**kwargs)
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the Github
-        object as a context manager:
+        """
+        Close connections to the server.
+
+        Alternatively, use the Github object as a context manager:
 
         .. code-block:: python
 
@@ -373,7 +371,6 @@ class Github:
         """
         :calls: `GET /license/{license} <https://docs.github.com/en/rest/reference/licenses#get-a-license>`_
         """
-
         assert isinstance(key, str), key
         key = urllib.parse.quote(key)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/licenses/{key}")
@@ -383,7 +380,6 @@ class Github:
         """
         :calls: `GET /licenses <https://docs.github.com/en/rest/reference/licenses#get-all-commonly-used-licenses>`_
         """
-
         url_parameters: dict[str, Any] = {}
 
         return PaginatedList(github.License.License, self.__requester, "/licenses", url_parameters)
@@ -392,7 +388,6 @@ class Github:
         """
         :calls: `GET /events <https://docs.github.com/en/rest/reference/activity#list-public-events>`_
         """
-
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
     # v3: remove lazy argument, laziness is fully controlled via requester
@@ -530,7 +525,7 @@ class Github:
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/projects/columns/%d" % id,
+            f"/projects/columns/{id}",
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         return github.ProjectColumn.ProjectColumn(self.__requester, headers, data)
@@ -1034,7 +1029,6 @@ class Github:
         """
         :calls: `GET /apps/{app_slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
-
         if slug is NotSet:
             # with no slug given, calling /app returns the authenticated app,
             # including the actual /apps/{slug}

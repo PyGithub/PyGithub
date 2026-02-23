@@ -69,7 +69,7 @@ class GithubRetry(unittest.TestCase):
         ):
             # fmt: off
             self.assertTrue(
-                expected_total is not None and expected_backoff is not None and not expect_retry_error or  # noqa: W504
+                expected_total is not None and expected_backoff is not None and not expect_retry_error or
                 expected_total is None and expected_backoff is None and expect_retry_error
             )
             # fmt: on

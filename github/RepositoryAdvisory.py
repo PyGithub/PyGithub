@@ -274,9 +274,9 @@ class RepositoryAdvisory(AdvisoryBase):
         """
         assert summary is NotSet or isinstance(summary, str), summary
         assert description is NotSet or isinstance(description, str), description
-        assert severity_or_cvss_vector_string is NotSet or isinstance(
-            severity_or_cvss_vector_string, str
-        ), severity_or_cvss_vector_string
+        assert severity_or_cvss_vector_string is NotSet or isinstance(severity_or_cvss_vector_string, str), (
+            severity_or_cvss_vector_string
+        )
         assert cve_id is NotSet or isinstance(cve_id, str), cve_id
         assert vulnerabilities is NotSet or isinstance(vulnerabilities, Iterable), vulnerabilities
         if isinstance(vulnerabilities, Iterable):

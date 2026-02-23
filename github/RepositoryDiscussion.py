@@ -24,7 +24,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import github
 import github.Label
 import github.NamedUser
 import github.Reaction
