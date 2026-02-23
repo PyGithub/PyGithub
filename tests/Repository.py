@@ -399,6 +399,13 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(issue.number, 30)
 
+    def testCreateIssueWithType(self):
+        issue = self.repo.create_issue(
+            "Issue created by PyGithub with type",
+            issue_type="bug",
+        )
+        self.assertEqual(issue.type.name, "bug")
+
     def testCreateLabel(self):
         label = self.repo.create_label(
             "Label with silly name % * + created by PyGithub",
@@ -1303,20 +1310,20 @@ class Repository(Framework.TestCase):
 
     def testGetIssuesWithTypeArgument(self):
         self.assertListKeyEqual(
-            self.repo.get_issues(type="bug"),
+            self.repo.get_issues(issue_type="bug"),
             lambda i: i.id,
             [3425963739, 3399666591, 3398817538],
         )
-        self.assertListKeyEqual(self.repo.get_issues(type="feature", state="closed"), lambda i: i.id, [3326107606])
+        self.assertListKeyEqual(self.repo.get_issues(issue_type="feature", state="closed"), lambda i: i.id, [3326107606])
 
     def testGetIssuesWithTypeWildcard(self):
         self.assertListKeyEqual(
-            self.repo.get_issues(type="*"),
+            self.repo.get_issues(issue_type="*"),
             lambda i: i.id,
             [3425963739, 3399666591, 3398817538],
         )
         self.assertListKeyEqual(
-            self.repo.get_issues(type="*", state="closed"),
+            self.repo.get_issues(issue_type="*", state="closed"),
             lambda i: i.id,
             [3375750938, 3326109475, 3326109065, 3326107606, 4653757],
         )
