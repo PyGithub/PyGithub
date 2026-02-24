@@ -68,6 +68,7 @@ from typing import TYPE_CHECKING, Any
 
 from typing_extensions import deprecated
 
+import github.File
 import github.GithubApp
 import github.GithubObject
 import github.IssueComment
@@ -98,6 +99,7 @@ from github.GithubObject import (
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.File import File
     from github.GithubApp import GithubApp
     from github.IssueComment import IssueComment
     from github.IssueDependenciesSummary import IssueDependenciesSummary
@@ -384,6 +386,16 @@ class Issue(CompletableGithubObject):
         """
         url = "/pulls/".join(self.url.rsplit("/issues/", 1))
         return github.PullRequest.PullRequest(self._requester, url=url)
+
+    def get_files(self) -> PaginatedList[File]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/files <https://docs.github.com/en/rest/pulls/pulls#list-pull-requests-files>`_
+        :raises ValueError: If this issue is not a pull request (i.e. ``pull_request`` attribute is ``None``).
+        """
+        if self.pull_request is None:
+            raise ValueError("This issue is not a pull request")
+        url = "/pulls/".join(self.url.rsplit("/issues/", 1)) + "/files"
+        return PaginatedList(github.File.File, self._requester, url, None)
 
     def add_to_assignees(self, *assignees: NamedUser | str) -> None:
         """
