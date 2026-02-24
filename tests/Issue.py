@@ -365,3 +365,7 @@ class Issue(Framework.TestCase):
                 else:
                     self.assertIsNone(event.source)
                     self.assertIsNotNone(event.actor)
+
+    def testGetFilesRaisesForNonPR(self):
+        with self.assertRaises(ValueError):
+            self.issue.get_files()
