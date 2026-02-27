@@ -851,8 +851,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
         """
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
-        return status == 204
+        return self._requester.requestJsonAndBoolCheck("GET", f"{self.url}/merge")
 
     def restore_branch(self) -> GitRef:
         """

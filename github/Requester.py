@@ -863,6 +863,40 @@ class Requester:
             raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
+    def requestJsonAndBoolCheck(
+        self,
+        verb: str,
+        url: str,
+        parameters: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        input: Any | None = None,
+        expected_status: int = 204,
+        absent_status: int = 404,
+    ) -> bool:
+        """Check a boolean API endpoint that returns 204/404.
+
+        Returns ``True`` when the response status matches *expected_status*
+        (typically 204) and ``False`` when it matches *absent_status*
+        (typically 404). All other status codes are treated as errors and
+        raise the appropriate :class:`GithubException` subclass, preventing
+        silent false negatives caused by authentication failures (401) or
+        permission errors (403).
+        """
+        status, responseHeaders, output = self.requestJson(
+            verb,
+            url,
+            parameters,
+            headers,
+            input,
+            self.__customConnection(url),
+        )
+        if status == expected_status:
+            return True
+        if status == absent_status:
+            return False
+        data = self.__structuredFromJson(output)
+        raise self.createException(status, responseHeaders, data)
+
     def __postProcess(
         self, verb: str, url: str, responseHeaders: dict[str, Any], data: Any
     ) -> tuple[dict[str, Any], Any]:
