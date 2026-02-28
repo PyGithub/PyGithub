@@ -38,7 +38,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, NamedTuple
+from typing import TYPE_CHECKING, Any, Literal, NamedTuple, cast
 
 import github.GitCommit
 import github.NamedUser
@@ -72,6 +72,25 @@ class TimingData(NamedTuple):
 
     billable: dict[str, dict[str, int]]
     run_duration_ms: int | None
+
+
+# In sync with https://docs.github.com/en/rest/actions/workflow-runs.
+WorkflowRunStatus = Literal[
+    "completed",
+    "action_required",
+    "cancelled",
+    "failure",
+    "neutral",
+    "skipped",
+    "stale",
+    "success",
+    "timed_out",
+    "in_progress",
+    "queued",
+    "requested",
+    "waiting",
+    "pending",
+]
 
 
 class WorkflowRun(CompletableGithubObject):
@@ -286,9 +305,9 @@ class WorkflowRun(CompletableGithubObject):
         return self._run_started_at.value
 
     @property
-    def status(self) -> str:
+    def status(self) -> WorkflowRunStatus:
         self._completeIfNotSet(self._status)
-        return self._status.value
+        return cast(WorkflowRunStatus, self._status.value)
 
     @property
     def triggering_actor(self) -> github.NamedUser.NamedUser:
