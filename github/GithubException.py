@@ -110,6 +110,66 @@ class GithubException(Exception):
 class BadCredentialsException(GithubException):
     """
     Exception raised in case of bad credentials (when Github API replies with a 401 or 403 HTML status)
+
+    ### Possible Causes
+
+    This exception is raised possibly because of:
+    1. Insufficient scope of token
+    2. An expired token. In an application with **cache** mechanism, the cached PyGithub-like objects might
+    contain an expired token unexpectedly. ATTENTION: The PyGithub-like objects can not update the token
+    automatically.
+    3. A leaked token. Committing a token into your repo and pushing to github automatically invalidates the token.
+
+    ### Expose the token in the logs
+
+    Attention: This is for debugging purposes only, as this leaks the token into log files, which is a security risk.
+
+    The best way to investigate the root cause is to show the actual token used to authenticate in the logs.
+    Usually, the token is obfuscated for security reasons. Here we deliberately write the plain token to the logs,
+    so that we can compare it with the expected token.
+    
+    1. Identify the location of the github source code installed via pip or virtual env:
+    
+    ```bash
+    python -c "from github import Requester; print(Requester.__file__)"
+    ```
+
+    2. Edit this `github/Requester.py` file and replace in `def __log`:
+    
+    ```python
+        elif requestHeaders["Authorization"].startswith("token"):
+        headersForRequest["Authorization"] = "token (oauth token removed)"
+    ```
+    
+    with
+    
+    ```python
+        elif requestHeaders["Authorization"].startswith("token"):
+            import hashlib
+            token = requestHeaders["Authorization"][5:]
+            token = hashlib.md5(token.encode('utf-8')).hexdigest()
+            headersForRequest["Authorization"] = f"token ({token})"
+    ```
+
+    2. Insert `github.enable_console_debug_logging()` at the start of your program. You will see the token
+    used for each call of the GitHub REST API. The output format as follows: 
+    
+    ```
+    GET https://api.github.com/repos/totycro/stacs/branches/main {'Authorization': 'token (xxxx)', 'User-Agent': ...
+    ```
+
+    **CHECK whether the output token is expected**.
+
+    ### Ways to fix
+
+    If you find the token is unexpected, you can choose to
+    1) Recreate the Github instance with a new token: `g = Github(auth=Auth.Token("access_token"))`
+        and fetch the PyGithub objects again. (recommended)
+    2) Renew the token in PyGithub objects by replacing the token with the newer one.
+        For `Issue` and `Repository` got through github token,
+        use `o._requester.auth._token = <new token str>` to renew objects.  (not recommended)
+
+    See https://github.com/PyGithub/PyGithub/issues/1753 for more details.
     """
 
 
