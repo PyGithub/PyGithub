@@ -105,6 +105,7 @@ import github.HookDelivery
 import github.NamedUser
 import github.OrganizationCodeScanAlert
 import github.OrganizationCustomProperty
+import github.AuditLog
 import github.OrganizationDependabotAlert
 import github.OrganizationSecret
 import github.OrganizationSecretScanAlert
@@ -1159,6 +1160,48 @@ class Organization(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", f"{self.url}/hooks/{id}", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
+
+    def get_audit_log(
+        self,
+        phrase: Opt[str] = NotSet,
+        include: Opt[str] = NotSet,
+        order: Opt[str] = NotSet,
+        per_page: Opt[int] = NotSet,
+    ) -> PaginatedList[github.AuditLog.AuditLog]:
+        """
+        :calls: `GET /orgs/{org}/audit-log <https://docs.github.com/en/rest/orgs/orgs#get-the-audit-log-for-an-organization>`_
+        :param phrase: Optional string -- a search phrase to filter events. Supports qualifiers
+            like ``actor:``, ``action:``, ``created:>ISO8601``, ``created:<ISO8601``.
+        :param include: Optional string -- event types to include: ``web``, ``git``, or ``all``.
+            Defaults to ``web``.
+        :param order: Optional string -- sort order for results by ``created`` timestamp: ``asc`` or ``desc``.
+            Defaults to ``desc``.
+        :param per_page: Optional int -- number of results per page (max 100).
+        :rtype: :class:`PaginatedList` of :class:`github.AuditLog.AuditLog`
+
+        Requires the authenticated GitHub App or OAuth token to have
+        ``organization_administration:read`` (for GitHub Apps) or ``read:org`` (for OAuth) scope,
+        and the caller must be an organization owner or admin.
+        """
+        allowed_includes = ["web", "git", "all"]
+        allowed_orders = ["asc", "desc"]
+        assert include in allowed_includes + [NotSet], f"include must be one of {', '.join(allowed_includes)}"
+        assert order in allowed_orders + [NotSet], f"order must be one of {', '.join(allowed_orders)}"
+        assert is_optional(per_page, int), per_page
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "phrase": phrase,
+                "include": include,
+                "order": order,
+                "per_page": per_page,
+            }
+        )
+        return PaginatedList(
+            github.AuditLog.AuditLog,
+            self._requester,
+            f"{self.url}/audit-log",
+            url_parameters,
+        )
 
     def get_events(self) -> PaginatedList[Event]:
         """

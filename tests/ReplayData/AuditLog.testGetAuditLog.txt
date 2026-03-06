@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/audit-log
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Content-Type', 'application/json; charset=utf-8')]
+[{"@timestamp":1700000001000,"action":"repo.create","actor":"octocat","actor_id":1,"actor_ip":"1.2.3.4","actor_location":{"country_name":"United States"},"_document_id":"abc123","org":"BeaverSoftware","org_id":21341965,"repo":"BeaverSoftware/new-repo","user":"octocat"},{"@timestamp":1700000002000,"action":"org.add_member","actor":"admin-user","actor_id":2,"actor_ip":"5.6.7.8","_document_id":"def456","org":"BeaverSoftware","org_id":21341965,"user":"new-member"}]
