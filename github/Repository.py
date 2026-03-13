@@ -1693,7 +1693,7 @@ class Repository(CompletableGithubObject):
         :param assignee: string or :class:`github.NamedUser.NamedUser`
         :param assignees: list of string or :class:`github.NamedUser.NamedUser`
         :param milestone: :class:`github.Milestone.Milestone`
-        :param labels: list of :class:`github.Label.Label`
+        :param labels: list of string or :class:`github.Label.Label`
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(title, str), title
