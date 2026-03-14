@@ -1996,8 +1996,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(event_type, str), event_type
         assert is_optional(client_payload, dict), client_payload
         post_parameters = NotSet.remove_unset_items({"event_type": event_type, "client_payload": client_payload})
-        status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
-        return status == 204
+        return self._requester.requestJsonAndCheck204("POST", f"{self.url}/dispatches", input=post_parameters)
 
     def create_secret(
         self,

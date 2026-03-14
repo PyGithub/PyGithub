@@ -634,6 +634,40 @@ class Requester:
             ),
         )
 
+    def requestJsonAndCheck204(
+        self,
+        verb: str,
+        url: str,
+        parameters: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        input: Any | None = None,
+    ) -> bool:
+        """
+        Send a request expecting a 204 (No Content) success response.
+
+        :param input: request body, serialized to JSON if specified
+
+        :return: True if status is 204, False if status is 404
+        :raises: :class:`GithubException` for other error status codes (401, 403, 500, etc.)
+
+        """
+        status, responseHeaders, output = self.requestJson(
+            verb,
+            url,
+            parameters,
+            headers,
+            input,
+            self.__customConnection(url),
+        )
+        if status == 204:
+            return True
+        if status == 404:
+            return False
+        if status >= 400:
+            data = self.__structuredFromJson(output)
+            raise self.createException(status, responseHeaders, data)
+        return False
+
     def requestMultipartAndCheck(
         self,
         verb: str,

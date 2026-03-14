@@ -583,8 +583,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :calls: `GET /users/{username}/following/{target_user} <https://docs.github.com/en/rest/reference/users#check-if-a-user-follows-another-user>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/following/{following._identity}")
-        return status == 204
+        return self._requester.requestJsonAndCheck204("GET", f"{self.url}/following/{following._identity}")
 
     def get_organization_membership(self, org: str | Organization) -> Membership:
         """
