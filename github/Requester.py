@@ -100,9 +100,8 @@ from datetime import datetime, timezone
 from io import IOBase
 from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
 
-import requests
-import requests.adapters
-from urllib3 import Retry
+import niquests
+import niquests.adapters
 
 import github.Consts as Consts
 import github.GithubException
@@ -124,7 +123,7 @@ ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
 
 class RequestsResponse:
     # mimic the httplib response object
-    def __init__(self, r: requests.Response):
+    def __init__(self, r: niquests.Response):
         self.status = r.status_code
         self.headers = r.headers
         self.response = r
@@ -143,7 +142,7 @@ class RequestsResponse:
 
 
 class HTTPSRequestsConnectionClass:
-    retry: int | Retry
+    retry: int | niquests.RetryConfiguration
 
     # mimic the httplib connection object
     def __init__(
@@ -152,7 +151,7 @@ class HTTPSRequestsConnectionClass:
         port: int | None = None,
         strict: bool = False,
         timeout: int | None = None,
-        retry: int | Retry | None = None,
+        retry: int | niquests.RetryConfiguration | None = None,
         pool_size: int | None = None,
         **kwargs: Any,
     ) -> None:
@@ -161,28 +160,24 @@ class HTTPSRequestsConnectionClass:
         self.protocol = "https"
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
-        self.session = requests.Session()
-        # having Session.auth set something other than None disables falling back to .netrc file
-        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
-        # see https://github.com/PyGithub/PyGithub/pull/2703
-        self.session.auth = Requester.noopAuth
 
         if retry is None:
-            self.retry = requests.adapters.DEFAULT_RETRIES
+            self.retry = niquests.adapters.DEFAULT_RETRIES
         else:
             self.retry = retry
 
         if pool_size is None:
-            self.pool_size = requests.adapters.DEFAULT_POOLSIZE
+            self.pool_size = niquests.adapters.DEFAULT_POOLSIZE
         else:
             self.pool_size = pool_size
 
-        self.adapter = requests.adapters.HTTPAdapter(
-            max_retries=self.retry,
-            pool_connections=self.pool_size,
-            pool_maxsize=self.pool_size,
+        self.session = niquests.Session(
+            retries=self.retry, pool_connections=self.pool_size, pool_maxsize=self.pool_size
         )
-        self.session.mount("https://", self.adapter)
+        # having Session.auth set something other than None disables falling back to .netrc file
+        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
+        # see https://github.com/PyGithub/PyGithub/pull/2703
+        self.session.auth = Requester.noopAuth
 
     def request(
         self,
@@ -223,7 +218,7 @@ class HTTPRequestsConnectionClass:
         port: int | None = None,
         strict: bool = False,
         timeout: int | None = None,
-        retry: int | Retry | None = None,
+        retry: int | niquests.RetryConfiguration | None = None,
         pool_size: int | None = None,
         **kwargs: Any,
     ):
@@ -232,28 +227,24 @@ class HTTPRequestsConnectionClass:
         self.protocol = "http"
         self.timeout = timeout
         self.verify = kwargs.get("verify", True)
-        self.session = requests.Session()
-        # having Session.auth set something other than None disables falling back to .netrc file
-        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
-        # see https://github.com/PyGithub/PyGithub/pull/2703
-        self.session.auth = Requester.noopAuth
 
         if retry is None:
-            self.retry = requests.adapters.DEFAULT_RETRIES
+            self.retry = niquests.adapters.DEFAULT_RETRIES
         else:
             self.retry = retry  # type: ignore
 
         if pool_size is None:
-            self.pool_size = requests.adapters.DEFAULT_POOLSIZE
+            self.pool_size = niquests.adapters.DEFAULT_POOLSIZE
         else:
             self.pool_size = pool_size
 
-        self.adapter = requests.adapters.HTTPAdapter(
-            max_retries=self.retry,
-            pool_connections=self.pool_size,
-            pool_maxsize=self.pool_size,
+        self.session = niquests.Session(
+            retries=self.retry, pool_connections=self.pool_size, pool_maxsize=self.pool_size
         )
-        self.session.mount("http://", self.adapter)
+        # having Session.auth set something other than None disables falling back to .netrc file
+        # https://github.com/psf/requests/blob/d63e94f552ebf77ccf45d97e5863ac46500fa2c7/src/requests/sessions.py#L480-L481
+        # see https://github.com/PyGithub/PyGithub/pull/2703
+        self.session.auth = Requester.noopAuth
 
     def request(self, verb: str, url: str, input: None, headers: dict[str, str], stream: bool = False) -> None:
         self.verb = verb
@@ -291,7 +282,7 @@ class Requester:
     _frameBuffer: list[Any]
 
     @staticmethod
-    def noopAuth(request: requests.models.PreparedRequest) -> requests.models.PreparedRequest:
+    def noopAuth(request: niquests.models.PreparedRequest) -> niquests.models.PreparedRequest:
         return request
 
     @classmethod
@@ -394,7 +385,7 @@ class Requester:
         user_agent: str,
         per_page: int,
         verify: bool | str,
-        retry: int | Retry | None,
+        retry: int | niquests.RetryConfiguration | None,
         pool_size: int | None,
         seconds_between_requests: float | None = None,
         seconds_between_writes: float | None = None,

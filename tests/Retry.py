@@ -31,9 +31,9 @@
 #                                                                              #
 ################################################################################
 
+import niquests
 import requests
 import responses
-import urllib3
 
 import github
 
@@ -46,7 +46,7 @@ class Retry(Framework.TestCase):
     def setUp(self):
         # status codes returned on random github server errors
         status_forcelist = (500, 502, 504)
-        retry = urllib3.Retry(total=3, read=3, connect=3, status_forcelist=status_forcelist)
+        retry = niquests.RetryConfiguration(total=3, read=3, connect=3, status_forcelist=status_forcelist)
         self.setRetry(retry)
         super().setUp()
 

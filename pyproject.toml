@@ -29,10 +29,9 @@ dynamic = ["version"]
 
 dependencies = [
   "pynacl>=1.4.0",
-  "requests>=2.14.0",
+  "niquests>=3,<4",
   "pyjwt[crypto]>=2.4.0",
   "typing-extensions>=4.5.0",
-  "urllib3>=1.26.0",
 ]
 
 [project.urls]
