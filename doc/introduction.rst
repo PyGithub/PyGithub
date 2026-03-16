@@ -9,35 +9,80 @@ or if there is something you can do with the API but not with PyGithub,
 please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 
 (Very short) tutorial
----------------------
+---------------
 
-First create a Github instance::
+.. tabs::
 
-    from github import Github
+    .. tab:: Sync
 
-    # Authentication is defined via github.Auth
-    from github import Auth
+        First create a Github instance:
 
-    # using an access token
-    auth = Auth.Token("access_token")
+        .. code-block:: python
 
-    # Public Web Github
-    g = Github(auth=auth)
+            from github import Github, Auth
 
-    # Github Enterprise with custom hostname
-    g = Github(auth=auth, base_url="https://{hostname}/api/v3")
+            auth = Auth.Token("access_token")
 
-Then play with your Github objects::
+            # Public Web Github
+            g = Github(auth=auth)
 
-    for repo in g.get_user().get_repos():
-        print(repo.name)
-        repo.edit(has_wiki=False)
-        # to see all the available attributes and methods
-        print(dir(repo))
+            # Github Enterprise with custom hostname
+            g = Github(auth=auth, base_url="https://{hostname}/api/v3")
 
-To close connections after use::
+        Then play with your Github objects:
 
-    g.close()
+        .. code-block:: python
+
+            for repo in g.get_user().get_repos():
+                print(repo.name)
+                repo.edit(has_wiki=False)
+                # to see all the available attributes and methods
+                print(dir(repo))
+
+        To close connections after use:
+
+        .. code-block:: python
+
+            g.close()
+
+    .. tab:: Async
+
+        First create a Github instance:
+
+        .. code-block:: python
+
+            import asyncio
+            from github.asynchronous import Github
+            from github import Auth
+
+            auth = Auth.Token("access_token")
+
+            async def main():
+                # Public Web Github
+                g = Github(auth=auth)
+
+                # Github Enterprise with custom hostname
+                g = Github(auth=auth, base_url="https://{hostname}/api/v3")
+
+        Then play with your Github objects -- methods that hit the API and properties
+        that trigger lazy-loading must be ``await``-ed:
+
+        .. code-block:: python
+
+                async for repo in (await g.get_user()).get_repos():
+                    print(await repo.name)
+                    await repo.edit(has_wiki=False)
+                    print(dir(repo))
+
+        To close connections after use:
+
+        .. code-block:: python
+
+                await g.close()
+
+            asyncio.run(main())
+
+        See :doc:`async` for a full explanation of what becomes awaitable.
 
 Download and install
 --------------------

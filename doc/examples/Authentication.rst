@@ -6,35 +6,75 @@ being called, only a subset of methods is available.
 
 All authentication methods require this import:
 
-.. code-block:: python
+.. tabs::
 
-    >>> from github import Auth
-    >>> from github import Github
-    >>> from github import GithubIntegration
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> from github import Auth
+            >>> from github import Github
+            >>> from github import GithubIntegration
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> from github import Auth
+            >>> from github.asynchronous import Github
+            >>> from github import GithubIntegration
 
 Login authentication
 --------------------
 
 Users can authenticate by a login and password:
 
-.. code-block:: python
+.. tabs::
 
-    >>> auth = Auth.Login("user_login", "password")
-    >>> g = Github(auth=auth)
-    >>> g.get_user().login
-    'user_login'
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> auth = Auth.Login("user_login", "password")
+            >>> g = Github(auth=auth)
+            >>> g.get_user().login
+            'user_login'
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> auth = Auth.Login("user_login", "password")
+            >>> g = Github(auth=auth)
+            >>> user = await g.get_user()
+            >>> await user.login
+            'user_login'
 
 OAuth token authentication
 --------------------------
 
 Users can authenticate by a token:
 
-.. code-block:: python
+.. tabs::
 
-    >>> auth = Auth.Token("access_token")
-    >>> g = Github(auth=auth)
-    >>> g.get_user().login
-    'login'
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> auth = Auth.Token("access_token")
+            >>> g = Github(auth=auth)
+            >>> g.get_user().login
+            'login'
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> auth = Auth.Token("access_token")
+            >>> g = Github(auth=auth)
+            >>> user = await g.get_user()
+            >>> await user.login
+            'login'
 
 Netrc authentication
 --------------------
@@ -51,12 +91,26 @@ You might need to create the environment variable ``NETRC`` with the path to thi
 
 Then, use a ``github.Auth.NetrcAuth`` instance to access these information:
 
-.. code-block:: python
+.. tabs::
 
-    >>> auth = Auth.NetrcAuth()
-    >>> g = Github(auth=auth)
-    >>> g.get_user().login
-    'login'
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> auth = Auth.NetrcAuth()
+            >>> g = Github(auth=auth)
+            >>> g.get_user().login
+            'login'
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> auth = Auth.NetrcAuth()
+            >>> g = Github(auth=auth)
+            >>> user = await g.get_user()
+            >>> await user.login
+            'login'
 
 App authentication
 ------------------
@@ -77,12 +131,26 @@ when authenticated as a Github App:
 
 Get a ``github.Github`` instance authenticated as an App installation:
 
-.. code-block:: python
+.. tabs::
 
-    >>> installation = gi.get_installations()[0]
-    >>> g = installation.get_github_for_installation()
-    >>> g.get_repo("user/repo").name
-    'repo'
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> installation = gi.get_installations()[0]
+            >>> g = installation.get_github_for_installation()
+            >>> g.get_repo("user/repo").name
+            'repo'
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> installation = await gi.get_installations().getitem(0)
+            >>> g = installation.get_github_for_installation()
+            >>> repo = await g.get_repo("user/repo")
+            >>> await repo.name
+            'repo'
 
 App installation authentication
 -------------------------------
@@ -92,22 +160,51 @@ It authenticates by the Github App authentication (see above) and the installati
 The ``AppInstallationAuth`` fetches an access token for the installation and handles its
 expiration timeout. The access token is refreshed automatically.
 
-.. code-block:: python
+.. tabs::
 
-    >>> auth = Auth.AppAuth(123456, private_key).get_installation_auth(installation_id, token_permissions)
-    >>> g = Github(auth=auth)
-    >>> g.get_repo("user/repo").name
-    'repo'
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> auth = Auth.AppAuth(123456, private_key).get_installation_auth(installation_id, token_permissions)
+            >>> g = Github(auth=auth)
+            >>> g.get_repo("user/repo").name
+            'repo'
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> auth = Auth.AppAuth(123456, private_key).get_installation_auth(installation_id, token_permissions)
+            >>> g = Github(auth=auth)
+            >>> repo = await g.get_repo("user/repo")
+            >>> await repo.name
+            'repo'
 
 Alternatively, the `github.Github` instance can be retrieved via `github.GithubIntegration`:
 
-.. code-block:: python
+.. tabs::
 
-    >>> auth = Auth.AppAuth(123456, private_key)
-    >>> gi = GithubIntegration(auth=auth)
-    >>> g = gi.get_github_for_installation(installation_id, token_permissions)
-    >>> g.get_repo("user/repo").name
-    'repo'
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> auth = Auth.AppAuth(123456, private_key)
+            >>> gi = GithubIntegration(auth=auth)
+            >>> g = gi.get_github_for_installation(installation_id, token_permissions)
+            >>> g.get_repo("user/repo").name
+            'repo'
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> auth = Auth.AppAuth(123456, private_key)
+            >>> gi = GithubIntegration(auth=auth)
+            >>> g = gi.get_github_for_installation(installation_id, token_permissions)
+            >>> repo = await g.get_repo("user/repo")
+            >>> await repo.name
+            'repo'
 
 App user authentication
 -----------------------
@@ -116,11 +213,23 @@ A Github App can authenticate on behalf of a user. For this, the user has to `ge
 This process completes with a one-time ``code``. Together with the ``client_id`` and ``client_secret`` of the app,
 a Github App user token can be generated once:
 
-.. code-block:: python
+.. tabs::
 
-    >>> g = Github()
-    >>> app = g.get_oauth_application(client_id, client_secret)
-    >>> token = app.get_access_token(code)
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> g = Github()
+            >>> app = g.get_oauth_application(client_id, client_secret)
+            >>> token = app.get_access_token(code)
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> g = Github()
+            >>> app = g.get_oauth_application(client_id, client_secret)
+            >>> token = await app.get_access_token(code)
 
 Memorize the ``token.refresh_token``, as only this can be used to create new tokens for this user.
 The ``token.token`` expires 8 hours, and the ``token.refresh_token`` expires 6 months after creation.
@@ -128,19 +237,45 @@ The ``token.token`` expires 8 hours, and the ``token.refresh_token`` expires 6 m
 A token can be refreshed as follows. This invalidates the old token and old refresh token, and creates
 a new set of token and refresh tokens:
 
-.. code-block:: python
+.. tabs::
 
-    >>> g = Github()
-    >>> app = g.get_oauth_application(client_id, client_secret)
-    >>> token = app.refresh_access_token(refresh_token)
+    .. tab:: Sync
+
+        .. code-block:: python
+
+            >>> g = Github()
+            >>> app = g.get_oauth_application(client_id, client_secret)
+            >>> token = app.refresh_access_token(refresh_token)
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            >>> g = Github()
+            >>> app = g.get_oauth_application(client_id, client_secret)
+            >>> token = await app.refresh_access_token(refresh_token)
 
 You can authenticate with Github using this token:
 
-.. code-block:: python
+.. tabs::
 
-   >>> auth = app.get_app_user_auth(token)
-   >>> g = Github(auth=auth)
-   >>> g.get_user().login
-   'user_login'
+    .. tab:: Sync
+
+        .. code-block:: python
+
+           >>> auth = app.get_app_user_auth(token)
+           >>> g = Github(auth=auth)
+           >>> g.get_user().login
+           'user_login'
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+           >>> auth = app.get_app_user_auth(token)
+           >>> g = Github(auth=auth)
+           >>> user = await g.get_user()
+           >>> await user.login
+           'user_login'
 
 The ``auth`` instance will refresh the token automatically when ``auth.token`` is accessed.

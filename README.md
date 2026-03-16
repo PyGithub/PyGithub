@@ -23,6 +23,8 @@ pip install PyGithub
 
 ## Simple Demo
 
+### Sync
+
 ```python
 from github import Github
 
@@ -47,6 +49,31 @@ for repo in g.get_user().get_repos():
 # To close connections after use
 g.close()
 ```
+
+### Async
+
+```python
+import asyncio
+from github.asynchronous import Github
+from github import Auth
+
+async def main():
+    auth = Auth.Token("access_token")
+
+    g = Github(auth=auth)
+
+    async for repo in (await g.get_user()).get_repos():
+        print(await repo.name)
+
+    await g.close()
+
+asyncio.run(main())
+```
+
+> **Note:** In async mode, methods that perform HTTP requests return coroutines and must be
+> ``await``-ed. Properties that trigger lazy loading (e.g. ``repo.name``) also become
+> awaitable. See the [async documentation](https://pygithub.readthedocs.io/en/stable/async.html)
+> for details.
 
 ## Documentation
 
