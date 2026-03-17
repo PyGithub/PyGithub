@@ -80,6 +80,7 @@
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 # Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
+# Copyright 2026 LuK1337 <priv.luk@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -169,6 +170,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.deployments_url, "https://api.github.com/repos/PyGithub/PyGithub/deployments")
         self.assertFalse(self.repo.has_pages)
         self.assertEqual(self.repo.has_projects, True)
+        self.assertEqual(self.repo.has_pull_requests, True)
         self.assertEqual(self.repo.has_wiki, False)
         self.assertEqual(self.repo.homepage, "https://pygithub.readthedocs.io/")
         self.assertEqual(self.repo.hooks_url, "https://api.github.com/repos/PyGithub/PyGithub/hooks")
@@ -292,6 +294,7 @@ class Repository(Framework.TestCase):
             private=True,
             has_issues=True,
             has_projects=False,
+            has_pull_requests=False,
             has_wiki=False,
             has_discussions=False,
             allow_auto_merge=True,
@@ -320,6 +323,7 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.allow_update_branch)
         self.assertTrue(self.repo.has_issues)
         self.assertFalse(self.repo.has_projects)
+        self.assertFalse(self.repo.has_pull_requests)
         self.assertFalse(self.repo.has_wiki)
         self.assertFalse(self.repo.has_discussions)
         self.assertTrue(self.repo.allow_auto_merge)
