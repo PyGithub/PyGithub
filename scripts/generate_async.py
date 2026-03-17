@@ -20,18 +20,16 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
 """
 Analysis-driven async code generator for PyGithub.
 
-Introspects the PyGithub package to discover which classes and methods perform I/O
-(directly or transitively), then copies source files into `github/asynchronous/` with
-async/await transformations applied.  Also generates async test files in
-`tests/asynchronous/`.
+Introspects the PyGithub package to discover which classes and methods perform I/O (directly or transitively), then
+copies source files into `github/asynchronous/` with async/await transformations applied.  Also generates async test
+files in `tests/asynchronous/`.
 
-Adapted from the PRAW async-generator that I (Ahmed Tahri) made.
-Previously also made a sync to async generator for grafana-client but wasn't based
-on AST parsing.
+Adapted from the PRAW async-generator that I (Ahmed Tahri) made. Previously also made a sync to async generator for
+grafana-client but wasn't based on AST parsing.
+
 """
 
 from __future__ import annotations
@@ -42,6 +40,7 @@ import logging
 import re
 import shutil
 import subprocess
+import sys
 import textwrap
 from pathlib import Path
 
@@ -104,250 +103,11 @@ NEVER_ASYNC_METHODS = {
     "__getitem__",
 }
 
-# Methods that must be forced async because they call async methods on other objects
-# (not detectable by transitive self.method() analysis alone).
-# Format: {class_name: {method_name, ...}}
-FORCE_ASYNC_METHODS = {
-    "PullRequest": {"delete_branch"},
-    "Repository": {
-        "attach_security_config",
-        "detach_security_config",
-        "create_git_commit",
-        "create_git_tree",
-        "create_issue",
-        "as_url_param",
-    },
-    "PaginatedList": {"reversed"},  # calls r.__reverse() on a local variable, not self
-    # These methods access cross-object promoted properties (e.g., label.name)
-    # and must be async so that `await` can be used on those accesses.
-    "AuthenticatedUser": {"get_issues", "get_user_issues", "create_fork"},
-    "Organization": {"invite_user", "get_issues", "create_fork"},
-    "Issue": {"add_sub_issue", "remove_sub_issue", "prioritize_sub_issue"},
-    "Github": {"dump"},  # dump() accesses obj.raw_data/raw_headers which are async properties
-    "AdvisoryCredit": {"_to_github_dict"},  # accesses login.login where NamedUser.login is async
-}
-
-# Direct string replacements for cross-object async calls in FORCE_ASYNC_METHODS.
-# These are (old_string, new_string) pairs applied to specific file stems.
-# Used for cases where _safe_add_await cannot correctly handle chained calls.
-CROSS_OBJECT_REPLACEMENTS = {
-    "PullRequest": [
-        # remaining_pulls.totalCount is an async property that needs await
-        ("if remaining_pulls.totalCount > 0:", "if await remaining_pulls.totalCount > 0:"),
-        # Chained .delete() call: get_git_ref(...).delete()
-        # By step 13, self.head is already promoted to (await self.head).
-        # We need to: (a) await get_git_ref, (b) complete the ref, (c) await delete.
-        (
-            'return (await self.head).repo.get_git_ref(f"heads/{(await self.head).ref}").delete()',
-            '_ref = await (await self.head).repo.get_git_ref(f"heads/{(await self.head).ref}")\n'
-            "        await _ref.complete()\n"
-            "        return await _ref.delete()",
-        ),
-        # get_pulls: needs await on the cross-object method call
-        # Also owner.login is a chained async property.
-        (
-            "(await self.head).repo.owner.login}:{(await self.head).ref}",
-            "await (await (await self.head).repo.owner).login}:{(await self.head).ref}",
-        ),
-        (
-            "remaining_pulls = (await self.head).repo.get_pulls(",
-            "remaining_pulls = await (await self.head).repo.get_pulls(",
-        ),
-        # restore_branch: (await self.head).repo.create_git_ref(...) is a cross-object async
-        # method call on Repository that needs await.
-        (
-            "return (await self.head).repo.create_git_ref(",
-            "return await (await self.head).repo.create_git_ref(",
-        ),
-    ],
-    "Repository": [
-        # attach/detach_security_config call methods on self.organization (cross-object),
-        # which are async methods on Organization. _add_awaits only handles self.method().
-        (
-            "(await self.organization).attach_security_config_to_repositories(",
-            "await (await self.organization).attach_security_config_to_repositories(",
-        ),
-        (
-            "(await self.organization).detach_security_config_from_repositories(",
-            "await (await self.organization).detach_security_config_from_repositories(",
-        ),
-        # tree._identity is on GitTree (async), NOT InputGitTreeElement.
-        # base_tree._identity is also GitTree.
-        (
-            '"tree": tree._identity,',
-            '"tree": await tree._identity,',
-        ),
-        (
-            'post_parameters["base_tree"] = base_tree._identity',
-            'post_parameters["base_tree"] = await base_tree._identity',
-        ),
-        # milestone._identity is async (Milestone is a CompletableGithubObject)
-        (
-            '"milestone": milestone._identity',
-            '"milestone": await milestone._identity',
-        ),
-        # create_git_commit: parent elements are GitCommit (async _identity)
-        (
-            '"parents": [element._identity for element in parents]',
-            '"parents": [await element._identity for element in parents]',
-        ),
-        # GraphQL methods: (await self.owner).login needs double-await
-        # get_discussion method
-        (
-            '"owner": (await self.owner).login,',
-            '"owner": await (await self.owner).login,',
-        ),
-        # as_url_param: repo._identity is async
-        (
-            "return repo._identity",
-            "return await repo._identity",
-        ),
-        # collaborator._identity is on NamedUser (async)
-        (
-            "collaborator = collaborator._identity",
-            "collaborator = await collaborator._identity",
-        ),
-        # (await self.owner).login is a chained async property: owner is async (returns NamedUser),
-        # and login on NamedUser is also async. Needs double-await in f-strings.
-        (
-            "{(await self.owner).login}",
-            "{await (await self.owner).login}",
-        ),
-        # element._identity in assignees list comprehension: element is NamedUser (async _identity)
-        (
-            "element._identity if isinstance(element, NamedUser.NamedUser) else element",
-            "(await element._identity) if isinstance(element, NamedUser.NamedUser) else element",
-        ),
-        # AdvisoryCredit._to_github_dict is async (NamedUser.login path)
-        (
-            "AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits",
-            "await AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits",
-        ),
-    ],
-    "Organization": [
-        # Chained property access: repo.owner.login and repo.name are both async properties.
-        # repo.owner returns a coroutine (NamedUser), then .login on that NamedUser is also async.
-        # NOTE: by step 13, repo.name has already been promoted to (await repo.name) by step 3.
-        (
-            'f"/repos/{repo.owner.login}/{(await repo.name)}/generate"',
-            'f"/repos/{await (await repo.owner).login}/{await repo.name}/generate"',
-        ),
-        # invite_user: user.id is async (NamedUser), t.id is async (Team)
-        (
-            'parameters["invitee_id"] = user.id',
-            'parameters["invitee_id"] = await user.id',
-        ),
-        (
-            'parameters["team_ids"] = [t.id for t in teams]',
-            'parameters["team_ids"] = [await t.id for t in teams]',
-        ),
-        # cancel_invitation: invitee.id is async (NamedUser/OrganizationInvitation)
-        (
-            "{invitee.id}",
-            "{await invitee.id}",
-        ),
-        # public_member._identity in f-strings
-        (
-            'f"{await self.url}/public_members/{public_member._identity}"',
-            'f"{await self.url}/public_members/{await public_member._identity}"',
-        ),
-        (
-            'f"{await self.url}/members/{public_member._identity}"',
-            'f"{await self.url}/members/{await public_member._identity}"',
-        ),
-        # create_or_update_secret: element.id is Repository.id (async property)
-        # Actions endpoint
-        (
-            '"selected_repository_ids"] = [element.id for element in selected_repositories]',
-            '"selected_repository_ids"] = [await element.id for element in selected_repositories]',
-        ),
-        # Dependabot endpoint
-        (
-            '"selected_repository_ids"] = [str(element.id) for element in selected_repositories]',
-            '"selected_repository_ids"] = [str(await element.id) for element in selected_repositories]',
-        ),
-        # create_team: repo_names element._identity is Repository._identity (async)
-        (
-            '"repo_names"] = [element._identity for element in repo_names]',
-            '"repo_names"] = [await element._identity for element in repo_names]',
-        ),
-    ],
-    "Issue": [
-        # sub_issue.id is async (Issue)
-        (
-            "sub_issue_id = sub_issue.id",
-            "sub_issue_id = await sub_issue.id",
-        ),
-        (
-            "after_sub_issue_id = after_sub_issue.id",
-            "after_sub_issue_id = await after_sub_issue.id",
-        ),
-        # element._identity in assignees list comprehension: element is NamedUser (async _identity)
-        (
-            "element._identity if isinstance(element, NamedUser.NamedUser) else element",
-            "(await element._identity) if isinstance(element, NamedUser.NamedUser) else element",
-        ),
-    ],
-    "Team": [
-        # Repository.as_url_param(repo) returns a coroutine when repo is a Repository
-        # because repo._identity is async. We need to await the result.
-        # Also (await self.organization).url needs double-await.
-        (
-            "Repository.Repository.as_url_param(repo)",
-            "(await Repository.Repository.as_url_param(repo))",
-        ),
-        (
-            "(await self.organization).url",
-            "await (await self.organization).url",
-        ),
-    ],
-    "ContentFile": [
-        # self.encoding in assert is async property, needs await
-        (
-            "assert self.encoding ==",
-            "assert (await self.encoding) ==",
-        ),
-    ],
-    "MainClass": [
-        # render_markdown: context._identity is Repository._identity (async)
-        (
-            'post_parameters["context"] = context._identity',
-            'post_parameters["context"] = await context._identity',
-        ),
-        # dump: obj.raw_data and obj.raw_headers are async properties
-        (
-            "pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)",
-            "_raw_data = await obj.raw_data\n"
-            "        _raw_headers = await obj.raw_headers\n"
-            "        pickle.dump((obj.__class__, _raw_data, _raw_headers), file, protocol)",
-        ),
-    ],
-    "AdvisoryCredit": [
-        # login.login where login is a NamedUser: NamedUser.login is async property
-        (
-            "login = login.login",
-            "login = await login.login",
-        ),
-    ],
-    "RepositoryAdvisory": [
-        # AdvisoryCredit._to_github_dict is async (NamedUser.login path)
-        # NOTE: in the source, this list comprehension is split across two lines
-        (
-            "AdvisoryCredit.AdvisoryCredit._to_github_dict(credit)\n"
-            "                for credit in (self.credits + list(credited))",
-            "await AdvisoryCredit.AdvisoryCredit._to_github_dict(credit)\n"
-            "                for credit in (self.credits + list(credited))",
-        ),
-        (
-            "AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits",
-            "await AdvisoryCredit.AdvisoryCredit._to_github_dict(credit) for credit in credits",
-        ),
-    ],
-}
-
 
 def discover_modules() -> list[str]:
-    """Return sorted list of module basenames (without .py) in the github package."""
+    """
+    Return sorted list of module basenames (without .py) in the github package.
+    """
     modules = []
     for p in sorted(SRC_PKG.glob("*.py")):
         name = p.stem
@@ -358,7 +118,9 @@ def discover_modules() -> list[str]:
 
 
 class IOAnalyzer:
-    """Statically analyses the github package to find classes/methods that do I/O."""
+    """
+    Statically analyses the github package to find classes/methods that do I/O.
+    """
 
     def __init__(self):
         # class_name -> set of method names that need to be async
@@ -380,9 +142,20 @@ class IOAnalyzer:
         # class_name -> set of property names that were PROMOTED to async def
         # (were @property but now async because they call _completeIfNotSet etc.)
         self.promoted_properties: dict[str, set[str]] = {}
+        # --- Type registry (populated by build_type_registry) ---
+        # Classes that inherit from CompletableGithubObject
+        self.completable_classes: set[str] = set()
+        # class_name -> {prop_or_method_name -> set of class names from return type}
+        self.return_types: dict[str, dict[str, set[str]]] = {}
+        # class_name -> {method_name -> {param_name -> set of class names from type annotation}}
+        self.param_types: dict[str, dict[str, dict[str, set[str]]]] = {}
+        # class_name -> set of method names that are @staticmethod or @classmethod
+        self.static_methods: dict[str, set[str]] = {}
 
     def parse_all(self):
-        """Parse all .py files under github/."""
+        """
+        Parse all .py files under github/.
+        """
         for p in sorted(SRC_PKG.glob("*.py")):
             stem = p.stem
             if stem.startswith("__"):
@@ -400,6 +173,15 @@ class IOAnalyzer:
                 if isinstance(node, ast.ClassDef):
                     self.class_to_file[node.name] = stem
                     self.class_bases[node.name] = [self._base_name(b) for b in node.bases]
+                    # Track @staticmethod and @classmethod methods
+                    statics: set[str] = set()
+                    for item in node.body:
+                        if isinstance(item, ast.FunctionDef):
+                            for dec in item.decorator_list:
+                                if isinstance(dec, ast.Name) and dec.id in ("staticmethod", "classmethod"):
+                                    statics.add(item.name)
+                    if statics:
+                        self.static_methods[node.name] = statics
                     logger.debug(
                         "parse_all: registered class '%s' in '%s' bases=%s",
                         node.name,
@@ -424,11 +206,794 @@ class IOAnalyzer:
                 return node
         return None
 
-    # ------------------------------------------------------------------
-    # Seed: mark classes that directly hold niquests.Session
-    # ------------------------------------------------------------------
+    @staticmethod
+    def _extract_class_names(node: ast.expr | None) -> set[str]:
+        """
+        Extract class names from a type annotation AST node.
+
+        Returns the set of class names referenced by the annotation,
+        filtering out builtins (str, int, bool, float, bytes, None, Any, Self)
+        and structural types (dict, tuple, Callable, Iterable).
+
+        Handles these AST patterns:
+          - Name(id='ClassName')
+          - Attribute(value=Attribute(value=Name('github'), attr='Mod'), attr='Cls')
+              → extracts 'Cls' (the innermost class name)
+          - BinOp(left=..., op=BitOr(), right=...)  → PEP 604 union X | Y
+          - Subscript(value=Name('list'), slice=X)  → element type X
+          - Subscript(value=Name('PaginatedList'), slice=X)  → element type X
+          - Subscript(value=Name('Opt'), slice=X)  → inner type X (Opt = Union[T, _NotSetType])
+          - Subscript(value=Name('Attribute'), slice=X) → inner type X
+          - Subscript(value=Name('dict'), slice=Tuple(...)) → value types
+          - Subscript(value=Name('NotRequired'), slice=X) → inner type X
+          - Constant(value=None) → ignored
+
+        """
+        if node is None:
+            return set()
+
+        # Builtins and non-domain types that should never appear in the result
+        _SKIP_NAMES = frozenset(
+            {
+                "str",
+                "int",
+                "bool",
+                "float",
+                "bytes",
+                "None",
+                "NoneType",
+                "Any",
+                "Self",
+                "object",
+                "type",
+                "datetime",
+                "date",
+                "timedelta",
+                "Decimal",
+                "Path",
+            }
+        )
+        # Generic wrappers whose type parameter we should recurse into
+        _WRAPPER_NAMES = frozenset(
+            {
+                "list",
+                "set",
+                "frozenset",
+                "tuple",
+                "Iterable",
+                "Iterator",
+                "Sequence",
+                "Collection",
+                "Mapping",
+                "MutableMapping",
+                "Opt",
+                "Attribute",
+                "NotRequired",
+                "ClassVar",
+                "Final",
+            }
+        )
+        # Generic wrappers that ALSO contribute their own class name to the result
+        # (because the variable may hold the container itself, not just elements)
+        _WRAPPER_ALSO_SELF = frozenset(
+            {
+                "PaginatedList",
+            }
+        )
+        # Structural types whose inner types we skip (not domain objects)
+        _STRUCTURAL_NAMES = frozenset(
+            {
+                "dict",
+                "Callable",
+                "Generator",
+                "AsyncGenerator",
+                "Coroutine",
+                "Awaitable",
+            }
+        )
+
+        result: set[str] = set()
+
+        def _visit(n: ast.expr) -> None:
+            if isinstance(n, ast.Constant):
+                # e.g. None literal in X | None
+                return
+            if isinstance(n, ast.Name):
+                name = n.id
+                if name in _SKIP_NAMES:
+                    return
+                if name.startswith("_"):
+                    # e.g. _NotSetType — internal sentinel, skip
+                    return
+                if name in _WRAPPER_NAMES or name in _STRUCTURAL_NAMES or name in _WRAPPER_ALSO_SELF:
+                    # Bare 'list', 'dict' etc without subscript — no useful type info
+                    return
+                result.add(name)
+                return
+            if isinstance(n, ast.Attribute):
+                # Dotted name like github.NamedUser.NamedUser
+                # Extract the final attribute as the class name
+                name = n.attr
+                if name in _SKIP_NAMES or name.startswith("_"):
+                    return
+                if name in _WRAPPER_NAMES or name in _STRUCTURAL_NAMES or name in _WRAPPER_ALSO_SELF:
+                    return
+                result.add(name)
+                return
+            if isinstance(n, ast.BinOp) and isinstance(n.op, ast.BitOr):
+                # PEP 604 union: X | Y
+                _visit(n.left)
+                _visit(n.right)
+                return
+            if isinstance(n, ast.Subscript):
+                # Generic type: Container[T]
+                wrapper = n.value
+                wrapper_name = ""
+                if isinstance(wrapper, ast.Name):
+                    wrapper_name = wrapper.id
+                elif isinstance(wrapper, ast.Attribute):
+                    wrapper_name = wrapper.attr
+
+                if wrapper_name in _STRUCTURAL_NAMES:
+                    # For dict[K, V], recurse into V (second element of Tuple)
+                    # to catch dict[str, ContentFile | Commit] patterns
+                    if wrapper_name == "dict" and isinstance(n.slice, ast.Tuple) and len(n.slice.elts) >= 2:
+                        _visit(n.slice.elts[-1])
+                    return
+                if wrapper_name in _WRAPPER_NAMES:
+                    # Recurse into the type parameter
+                    _visit(n.slice)
+                    return
+                if wrapper_name in _WRAPPER_ALSO_SELF:
+                    # Include both the container class AND the element type
+                    # so that e.g. PaginatedList[PullRequest] → {PaginatedList, PullRequest}
+                    result.add(wrapper_name)
+                    _visit(n.slice)
+                    return
+                # Unknown generic — recurse into the wrapper itself
+                # (could be a domain class used as generic)
+                _visit(wrapper)
+                _visit(n.slice)
+                return
+            if isinstance(n, ast.Tuple):
+                # e.g. inside Subscript slices: tuple[str, int]
+                for elt in n.elts:
+                    _visit(elt)
+                return
+
+        _visit(node)
+        return result
+
+    def build_type_registry(self) -> None:
+        """
+        Build type registry from AST annotations of all parsed classes.
+
+        Populates:
+          - self.completable_classes: set of classes inheriting from CompletableGithubObject
+          - self.return_types: class_name -> {attr_name -> set of class names from return type}
+          - self.param_types: class_name -> {method_name -> {param_name -> set of class names}}
+
+        """
+        logger.info("build_type_registry: scanning %d parsed files", len(self.trees))
+
+        # Phase 1: Identify completable classes via transitive inheritance
+        # Start with the root
+        completable_roots = {"CompletableGithubObject"}
+        changed = True
+        while changed:
+            changed = False
+            for cls_name, bases in self.class_bases.items():
+                if cls_name in self.completable_classes:
+                    continue
+                for base in bases:
+                    if base in completable_roots or base in self.completable_classes:
+                        self.completable_classes.add(cls_name)
+                        changed = True
+                        break
+
+        logger.info(
+            "build_type_registry: found %d completable classes",
+            len(self.completable_classes),
+        )
+        logger.debug(
+            "build_type_registry: completable classes: %s",
+            sorted(self.completable_classes),
+        )
+
+        # Phase 2: Extract return types and parameter types from all class methods
+        for cls_name in list(self.class_to_file.keys()):
+            cls_node = self._get_class_node(cls_name)
+            if cls_node is None:
+                continue
+
+            cls_returns: dict[str, set[str]] = {}
+            cls_params: dict[str, dict[str, set[str]]] = {}
+
+            for item in ast.iter_child_nodes(cls_node):
+                if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    continue
+                method_name = item.name
+
+                # Extract return type annotation
+                if item.returns is not None:
+                    ret_classes = self._extract_class_names(item.returns)
+                    if ret_classes:
+                        cls_returns[method_name] = ret_classes
+
+                # Extract parameter type annotations
+                param_types: dict[str, set[str]] = {}
+                all_args = item.args.args + item.args.posonlyargs + item.args.kwonlyargs
+                for arg in all_args:
+                    if arg.arg == "self" or arg.arg == "cls":
+                        continue
+                    if arg.annotation is not None:
+                        arg_classes = self._extract_class_names(arg.annotation)
+                        if arg_classes:
+                            param_types[arg.arg] = arg_classes
+                # Also check *args and **kwargs
+                if item.args.vararg and item.args.vararg.annotation:
+                    arg_classes = self._extract_class_names(item.args.vararg.annotation)
+                    if arg_classes:
+                        param_types[item.args.vararg.arg] = arg_classes
+                if item.args.kwarg and item.args.kwarg.annotation:
+                    arg_classes = self._extract_class_names(item.args.kwarg.annotation)
+                    if arg_classes:
+                        param_types[item.args.kwarg.arg] = arg_classes
+
+                if param_types:
+                    cls_params[method_name] = param_types
+
+            if cls_returns:
+                self.return_types[cls_name] = cls_returns
+            if cls_params:
+                self.param_types[cls_name] = cls_params
+
+        logger.info(
+            "build_type_registry: extracted return types for %d classes, param types for %d classes",
+            len(self.return_types),
+            len(self.param_types),
+        )
+
+    def _get_all_methods_and_properties(self, class_name: str) -> tuple[dict[str, set[str]], set[str]]:
+        """
+        Get return_types and promoted_properties for a class including all ancestors.
+
+        Returns:
+            (merged_return_types, merged_promoted_properties)
+
+        """
+        merged_returns: dict[str, set[str]] = {}
+        merged_promoted: set[str] = set()
+
+        visited: set[str] = set()
+        queue = [class_name]
+        while queue:
+            cn = queue.pop(0)
+            if cn in visited:
+                continue
+            visited.add(cn)
+            # Merge return types
+            for attr, types in self.return_types.get(cn, {}).items():
+                if attr not in merged_returns:
+                    merged_returns[attr] = set()
+                merged_returns[attr] |= types
+            # Merge promoted properties
+            merged_promoted |= self.promoted_properties.get(cn, set())
+            # Walk up the MRO
+            queue.extend(self.class_bases.get(cn, []))
+
+        return merged_returns, merged_promoted
+
+    def resolve_type(self, class_name: str, attr_name: str) -> set[str]:
+        """
+        Given a class and an attribute access, return the set of class names in the attribute's return type annotation.
+
+        Walks the inheritance chain (class + all ancestors) to find the attribute.
+
+        """
+        visited: set[str] = set()
+        queue = [class_name]
+        while queue:
+            cn = queue.pop(0)
+            if cn in visited:
+                continue
+            visited.add(cn)
+            cls_returns = self.return_types.get(cn, {})
+            if attr_name in cls_returns:
+                return cls_returns[attr_name]
+            queue.extend(self.class_bases.get(cn, []))
+        return set()
+
+    def is_any_completable(self, type_names: set[str]) -> bool:
+        """
+        Check if any of the given class names is a CompletableGithubObject.
+        """
+        return bool(type_names & self.completable_classes)
+
+    def is_attr_async_on_type(self, type_names: set[str], attr_name: str) -> bool:
+        """
+        Check if attr_name would be an async method or promoted property on ANY of the given types.
+
+        Returns True if at least one type in type_names has attr_name in its
+        async_methods or promoted_properties (including inherited via ancestors).
+
+        Also handles the polymorphic base-type case: if the declared type is a
+        base class (e.g. ``GithubObject``) and the attribute is promoted on a
+        subclass (e.g. ``CompletableGithubObject.raw_data``), we conservatively
+        return True because the runtime object may be any subclass.
+
+        """
+        for type_name in type_names:
+            # 1) Check ancestors (walk UP the MRO)
+            visited: set[str] = set()
+            queue = [type_name]
+            while queue:
+                cn = queue.pop(0)
+                if cn in visited:
+                    continue
+                visited.add(cn)
+                if attr_name in self.async_methods.get(cn, set()):
+                    return True
+                if attr_name in self.promoted_properties.get(cn, set()):
+                    return True
+                queue.extend(self.class_bases.get(cn, []))
+
+            # 2) Check descendants (walk DOWN the inheritance tree)
+            # If the declared type is a base class, any concrete subclass
+            # could be the runtime type. Build a reverse-inheritance map once.
+            if not hasattr(self, "_subclass_map"):
+                self._subclass_map: dict[str, set[str]] = {}
+                for cn, bases in self.class_bases.items():
+                    for base in bases:
+                        if base not in self._subclass_map:
+                            self._subclass_map[base] = set()
+                        self._subclass_map[base].add(cn)
+
+            # BFS down from type_name through all descendants
+            desc_visited: set[str] = set()
+            desc_queue = [type_name]
+            while desc_queue:
+                cn = desc_queue.pop(0)
+                if cn in desc_visited:
+                    continue
+                desc_visited.add(cn)
+                if attr_name in self.async_methods.get(cn, set()):
+                    logger.debug(
+                        "is_attr_async_on_type: %s.%s found via descendant %s (async_method)",
+                        type_name,
+                        attr_name,
+                        cn,
+                    )
+                    return True
+                if attr_name in self.promoted_properties.get(cn, set()):
+                    logger.debug(
+                        "is_attr_async_on_type: %s.%s found via descendant %s (promoted_property)",
+                        type_name,
+                        attr_name,
+                        cn,
+                    )
+                    return True
+                desc_queue.extend(self._subclass_map.get(cn, set()))
+        return False
+
+    def get_all_method_var_types(self, class_name: str) -> dict[str, dict[str, set[str]]]:
+        """
+        Compute variable types for all methods in a class.
+
+        Returns: method_name → {var_name → {type_names}}
+
+        """
+        class_node = self._get_class_node(class_name)
+        if class_node is None:
+            return {}
+        result: dict[str, dict[str, set[str]]] = {}
+        for item in class_node.body:
+            if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                var_types = self._resolve_variable_types_in_method(class_name, item)
+                if var_types:
+                    result[item.name] = var_types
+        return result
+
+    def _resolve_variable_types_in_method(
+        self, cls_name: str, method_node: ast.FunctionDef | ast.AsyncFunctionDef
+    ) -> dict[str, set[str]]:
+        """
+        Resolve types of local variables and parameters in a method body.
+
+        Returns a dict: variable_name -> set of class names.
+        Sources of type info:
+          1. Parameter annotations (from self.param_types)
+          2. Local assignments where RHS is a call/attribute on a typed expression
+          3. For-loop targets (``for x in iterable`` propagates iterable's element types)
+          4. Comprehension targets (generator/list/set/dict comprehensions)
+          5. isinstance narrowing (``isinstance(x, SomeClass)`` narrows x to SomeClass)
+          6. Constructor calls (``var = ClassName(...)`` infers var as ClassName)
+
+        """
+        var_types: dict[str, set[str]] = {}
+
+        # 1. Parameter types from annotations
+        method_name = method_node.name
+        cls_params = self.param_types.get(cls_name, {})
+        if method_name in cls_params:
+            for param_name, param_classes in cls_params[method_name].items():
+                var_types[param_name] = set(param_classes)
+
+        # 2-6. Walk the method body to find assignments, for-loops, comprehensions, isinstance
+        for stmt in ast.walk(method_node):
+            if isinstance(stmt, ast.Assign):
+                # Simple case: var = self.method(...) or var = self.property
+                for target in stmt.targets:
+                    if isinstance(target, ast.Name):
+                        inferred = self._infer_expr_type(cls_name, stmt.value, var_types)
+                        if inferred:
+                            var_types[target.id] = inferred
+            elif isinstance(stmt, ast.AnnAssign) and stmt.target and isinstance(stmt.target, ast.Name):
+                # Annotated assignment: var: Type = expr
+                if stmt.annotation:
+                    ann_types = self._extract_class_names(stmt.annotation)
+                    if ann_types:
+                        var_types[stmt.target.id] = ann_types
+
+            # 3. For-loop targets: ``for var in iterable``
+            # The element types of the iterable are the types of ``var``.
+            # Since _extract_class_names already unwraps list[X], PaginatedList[X], etc.,
+            # the param_types for the iterable already contain the element class names.
+            elif isinstance(stmt, ast.For):
+                if isinstance(stmt.target, ast.Name):
+                    iter_types = self._infer_expr_type(cls_name, stmt.iter, var_types)
+                    if not iter_types:
+                        # Fall back: if the iterable is a known variable, use its types
+                        if isinstance(stmt.iter, ast.Name):
+                            iter_types = var_types.get(stmt.iter.id, set())
+                    if iter_types:
+                        var_types[stmt.target.id] = iter_types
+
+            # 5. isinstance narrowing: ``isinstance(var, ClassName)``
+            # In an if-branch guarded by isinstance, narrow the var type.
+            # We ALSO add the narrowed types to the variable's overall type set,
+            # so that cross-object detection can find accesses on the narrowed type
+            # anywhere in the method (conservative: the var COULD be that type).
+            elif isinstance(stmt, ast.If):
+                isinstance_types = self._extract_isinstance_narrowing(stmt.test)
+                for var_name, narrowed_types in isinstance_types.items():
+                    # Only add domain types that we know about
+                    domain_types = {t for t in narrowed_types if t in self.class_to_file}
+                    if domain_types:
+                        # Add to the variable's type set (union)
+                        if var_name in var_types:
+                            var_types[var_name] = var_types[var_name] | domain_types
+                        else:
+                            var_types[var_name] = domain_types
+                        # Walk the if-body to find assignments that use the narrowed type
+                        for body_stmt in ast.walk(stmt):
+                            if isinstance(body_stmt, ast.Assign):
+                                for target in body_stmt.targets:
+                                    if isinstance(target, ast.Name):
+                                        inferred = self._infer_expr_type(
+                                            cls_name, body_stmt.value, {**var_types, var_name: domain_types}
+                                        )
+                                        if inferred:
+                                            var_types[target.id] = inferred
+
+        # Handle comprehension targets (generator, list, set, dict comprehensions)
+        # These appear as ast.comprehension nodes inside ListComp, SetComp, GeneratorExp, DictComp
+        for node in ast.walk(method_node):
+            if isinstance(node, ast.comprehension):
+                if isinstance(node.target, ast.Name):
+                    iter_types = self._infer_expr_type(cls_name, node.iter, var_types)
+                    if not iter_types:
+                        if isinstance(node.iter, ast.Name):
+                            iter_types = var_types.get(node.iter.id, set())
+                    if iter_types:
+                        var_types[node.target.id] = iter_types
+
+        # Also add 'self' -> cls_name
+        var_types["self"] = {cls_name}
+
+        return var_types
+
+    @staticmethod
+    def _extract_isinstance_narrowing(test_node: ast.expr) -> dict[str, set[str]]:
+        """
+        Extract isinstance narrowing from a conditional test.
+
+        For ``isinstance(var, ClassName)`` returns {var: {ClassName}}.
+        For ``isinstance(var, (A, B))`` returns {var: {A, B}}.
+        For ``isinstance(var, module.ClassName)`` extracts the class name.
+        Returns empty dict if not an isinstance call.
+
+        """
+        result: dict[str, set[str]] = {}
+        if not isinstance(test_node, ast.Call):
+            return result
+        if not isinstance(test_node.func, ast.Name) or test_node.func.id != "isinstance":
+            return result
+        if len(test_node.args) < 2:
+            return result
+        var_node = test_node.args[0]
+        type_node = test_node.args[1]
+
+        if not isinstance(var_node, ast.Name):
+            return result
+
+        var_name = var_node.id
+        type_names: set[str] = set()
+
+        def _extract_type_name(n: ast.expr) -> str | None:
+            if isinstance(n, ast.Name):
+                return n.id
+            if isinstance(n, ast.Attribute):
+                # module.ClassName -> ClassName
+                return n.attr
+            return None
+
+        if isinstance(type_node, ast.Tuple):
+            for elt in type_node.elts:
+                name = _extract_type_name(elt)
+                if name:
+                    type_names.add(name)
+        else:
+            name = _extract_type_name(type_node)
+            if name:
+                type_names.add(name)
+
+        if type_names:
+            result[var_name] = type_names
+        return result
+
+    def _infer_expr_type(self, cls_name: str, expr: ast.expr, known_vars: dict[str, set[str]]) -> set[str]:
+        """
+        Infer the set of class names an expression evaluates to.
+
+        Handles:
+          - self.method(...) → return type of method on cls_name
+          - self.property → return type of property on cls_name
+          - var.method(...) → return type if var's type is known
+          - var.property → return type if var's type is known
+          - ClassName(...) → constructor call, infers ClassName
+          - module.ClassName(...) → constructor call, infers ClassName
+
+        """
+        if isinstance(expr, ast.Call):
+            # Check if it's a constructor call: ClassName(...) or module.ClassName(...)
+            func = expr.func
+            if isinstance(func, ast.Name):
+                # ClassName(...) — if ClassName is a known class, the type is ClassName
+                if func.id in self.class_to_file:
+                    return {func.id}
+            elif isinstance(func, ast.Attribute):
+                # module.ClassName(...) — if ClassName is a known class
+                if func.attr in self.class_to_file:
+                    return {func.attr}
+            # Otherwise, func(...) → resolve func's return type
+            return self._infer_expr_type(cls_name, expr.func, known_vars)
+
+        if isinstance(expr, ast.Attribute):
+            # obj.attr → resolve obj type, then look up attr's return type
+            obj_types = self._infer_expr_type(cls_name, expr.value, known_vars)
+            if not obj_types:
+                return set()
+            # Look up attr's return type on any of the resolved types
+            result: set[str] = set()
+            for ot in obj_types:
+                result |= self.resolve_type(ot, expr.attr)
+            return result
+
+        if isinstance(expr, ast.Name):
+            if expr.id == "self":
+                return {cls_name}
+            return known_vars.get(expr.id, set())
+
+        return set()
+
+    def _method_has_cross_object_async(
+        self, cls_name: str, method_node: ast.FunctionDef | ast.AsyncFunctionDef
+    ) -> str | None:
+        """
+        Check if a method body contains cross-object async accesses.
+
+        Returns a reason string if cross-object async is detected, None otherwise.
+
+        """
+        var_types = self._resolve_variable_types_in_method(cls_name, method_node)
+
+        for node in ast.walk(method_node):
+            # Check attribute access: expr.attr
+            if isinstance(node, ast.Attribute):
+                # Skip self.attr — handled by existing passes
+                if isinstance(node.value, ast.Name) and node.value.id == "self":
+                    continue
+
+                # Resolve the type of the object being accessed
+                obj_types = self._infer_obj_types(node.value, cls_name, var_types)
+                if not obj_types:
+                    continue
+
+                attr_name = node.attr
+                # Check if this attribute is async on any of the resolved types
+                if self.is_attr_async_on_type(obj_types, attr_name):
+                    # Build a readable reason
+                    if isinstance(node.value, ast.Name):
+                        return "cross-object: {}.{} (type {})".format(
+                            node.value.id,
+                            attr_name,
+                            obj_types,
+                        )
+                    else:
+                        return f"cross-object: *.{attr_name} (type {obj_types})"
+
+        return None
+
+    def _infer_obj_types(self, expr: ast.expr, cls_name: str, var_types: dict[str, set[str]]) -> set[str]:
+        """
+        Infer the set of class names for an expression (for cross-object detection).
+
+        Handles:
+          - Name('var') → look up in var_types
+          - Attribute(Name('self'), 'prop') → return type of self.prop
+          - Attribute(expr, 'attr') → resolve expr type, look up attr's return type
+          - Call(func, ...) → resolve func's return type
+
+        """
+        if isinstance(expr, ast.Name):
+            if expr.id == "self":
+                return {cls_name}
+            return var_types.get(expr.id, set())
+
+        if isinstance(expr, ast.Attribute):
+            # Recursively resolve the object type, then look up the attribute
+            obj_types = self._infer_obj_types(expr.value, cls_name, var_types)
+            if not obj_types:
+                return set()
+            result: set[str] = set()
+            for ot in obj_types:
+                result |= self.resolve_type(ot, expr.attr)
+            return result
+
+        if isinstance(expr, ast.Call):
+            # func(...) → the return type of the function
+            return self._infer_obj_types(expr.func, cls_name, var_types)
+
+        return set()
+
+    def compute_cross_object_rules(self, cls_name: str) -> tuple[dict[str, set[str]], dict[str, set[str]]]:
+        """
+        Compute type-registry-based cross-object await rules for a class.
+
+        Returns two dicts:
+          - prop_rules: {prop_name: {var_names...}} — variable names whose types
+            have prop_name as an async property.
+          - method_rules: {method_name: {var_names...}} — variable names whose types
+            have method_name as an async method.
+
+        For both dicts, variable names appear ONLY when the type inference says
+        that the variable's type has the attribute as async.  This replaces all
+        formerly hardcoded cross-object rules and exclusion lists.
+
+        """
+        prop_rules: dict[str, set[str]] = {}
+        method_rules: dict[str, set[str]] = {}
+
+        cls_node = self._get_class_node(cls_name)
+        if cls_node is None:
+            return prop_rules, method_rules
+
+        for item in ast.iter_child_nodes(cls_node):
+            if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            # Only process methods that are async (otherwise no await needed)
+            if item.name not in self.async_methods.get(cls_name, set()):
+                continue
+
+            var_types = self._resolve_variable_types_in_method(cls_name, item)
+
+            for node in ast.walk(item):
+                if not isinstance(node, ast.Attribute):
+                    continue
+                # Skip self.attr — handled by existing passes
+                if isinstance(node.value, ast.Name) and node.value.id == "self":
+                    continue
+                # Only process simple variable access: var.attr
+                if not isinstance(node.value, ast.Name):
+                    continue
+                var_name = node.value.id
+                attr_name = node.attr
+
+                obj_types = var_types.get(var_name, set())
+                if not obj_types:
+                    continue
+
+                if self.is_attr_async_on_type(obj_types, attr_name):
+                    # Determine if this is a method call or property access
+                    # by checking the AST context
+                    is_call = False
+                    # Walk up to see if this Attribute is the func of a Call
+                    for parent_node in ast.walk(item):
+                        if isinstance(parent_node, ast.Call) and parent_node.func is node:
+                            is_call = True
+                            break
+
+                    if is_call:
+                        if attr_name not in method_rules:
+                            method_rules[attr_name] = set()
+                        method_rules[attr_name].add(var_name)
+                    else:
+                        if attr_name not in prop_rules:
+                            prop_rules[attr_name] = set()
+                        prop_rules[attr_name].add(var_name)
+
+        return prop_rules, method_rules
+
+    def compute_cross_object_rules_per_method(
+        self, cls_name: str
+    ) -> dict[str, tuple[dict[str, set[str]], dict[str, set[str]]]]:
+        """
+        Compute per-method type-registry-based cross-object await rules.
+
+        Returns a dict mapping method_name to (prop_rules, method_rules). This avoids variable-name collisions across
+        methods (e.g. 'element' being a CompletableGithubObject in one method but a plain class in another).
+
+        """
+        result: dict[str, tuple[dict[str, set[str]], dict[str, set[str]]]] = {}
+
+        cls_node = self._get_class_node(cls_name)
+        if cls_node is None:
+            return result
+
+        for item in ast.iter_child_nodes(cls_node):
+            if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            # Only process methods that are async (otherwise no await needed)
+            if item.name not in self.async_methods.get(cls_name, set()):
+                continue
+
+            prop_rules: dict[str, set[str]] = {}
+            method_rules: dict[str, set[str]] = {}
+
+            var_types = self._resolve_variable_types_in_method(cls_name, item)
+
+            for node in ast.walk(item):
+                if not isinstance(node, ast.Attribute):
+                    continue
+                # Skip self.attr — handled by existing passes
+                if isinstance(node.value, ast.Name) and node.value.id == "self":
+                    continue
+                # Only process simple variable access: var.attr
+                if not isinstance(node.value, ast.Name):
+                    continue
+                var_name = node.value.id
+                attr_name = node.attr
+
+                obj_types = var_types.get(var_name, set())
+                if not obj_types:
+                    continue
+
+                if self.is_attr_async_on_type(obj_types, attr_name):
+                    is_call = False
+                    for parent_node in ast.walk(item):
+                        if isinstance(parent_node, ast.Call) and parent_node.func is node:
+                            is_call = True
+                            break
+
+                    if is_call:
+                        if attr_name not in method_rules:
+                            method_rules[attr_name] = set()
+                        method_rules[attr_name].add(var_name)
+                    else:
+                        if attr_name not in prop_rules:
+                            prop_rules[attr_name] = set()
+                        prop_rules[attr_name].add(var_name)
+
+            if prop_rules or method_rules:
+                result[item.name] = (prop_rules, method_rules)
+
+        return result
+
     def seed_io_classes(self):
-        """Find classes that create niquests.Session or use threading.Lock, time.sleep."""
+        """
+        Find classes that create niquests.Session or use threading.Lock, time.sleep.
+        """
         # Requester and the connection classes are the I/O roots
         io_root_classes = {
             "Requester",
@@ -445,11 +1010,10 @@ class IOAnalyzer:
             else:
                 logger.debug("seed_io_classes: I/O root '%s' not in parsed sources, skipping", cls_name)
 
-    # ------------------------------------------------------------------
-    # Propagate: classes that reference Requester (directly or via base)
-    # ------------------------------------------------------------------
     def propagate_async_classes(self):
-        """Iteratively find classes that need async (hold Requester or inherit from async class)."""
+        """
+        Iteratively find classes that need async (hold Requester or inherit from async class).
+        """
         # First, mark any class whose source references self._requester or self.__requester.
         # This must run BEFORE inheritance propagation so that e.g. CompletableGithubObject
         # is already marked, allowing subclasses like SourceImport to be detected.
@@ -479,11 +1043,10 @@ class IOAnalyzer:
                         changed = True
                         break
 
-    # ------------------------------------------------------------------
-    # Method analysis: find methods that do I/O (directly or transitively)
-    # ------------------------------------------------------------------
     def analyze_methods(self):
-        """Find all methods in async classes that need to become async."""
+        """
+        Find all methods in async classes that need to become async.
+        """
         # First pass: methods that directly call requester methods or time.sleep
         io_method_patterns = {
             "requestJsonAndCheck",
@@ -632,270 +1195,328 @@ class IOAnalyzer:
             if methods_needing_async:
                 logger.debug("analyze[pass1] %s: direct I/O methods %s", cls_name, sorted(methods_needing_async))
 
-        # Force-add methods that call async methods on external objects
-        for cls_name, forced_methods in FORCE_ASYNC_METHODS.items():
-            current = self.async_methods.get(cls_name, set())
-            current |= forced_methods
-            self.async_methods[cls_name] = current
-            logger.debug("analyze: force-added async methods for '%s': %s", cls_name, sorted(forced_methods))
+        # Outer loop: passes 2-4 + cross-object detection iterate until stable.
+        # Cross-object detection needs promoted_properties (populated in pass 3),
+        # so it runs after pass 4.  If it adds new methods, passes 2-4 re-run.
+        outer_changed = True
+        outer_iter = 0
+        while outer_changed:
+            outer_changed = False
+            outer_iter += 1
+            logger.debug("analyze: outer iteration #%d", outer_iter)
 
-        # Second pass: transitive - methods calling other async methods
-        changed = True
-        pass2_num = 0
-        while changed:
-            changed = False
-            pass2_num += 1
-            logger.debug("analyze[pass2]: transitive closure pass #%d", pass2_num)
-            for cls_name in self.async_classes:
+            # Second pass: transitive - methods calling other async methods
+            changed = True
+            pass2_num = 0
+            while changed:
+                changed = False
+                pass2_num += 1
+                logger.debug("analyze[pass2]: transitive closure pass #%d", pass2_num)
+                for cls_name in self.async_classes:
+                    cls_node = self._get_class_node(cls_name)
+                    if cls_node is None:
+                        continue
+                    stem = self.class_to_file[cls_name]
+                    src = self.sources[stem]
+                    current = self.async_methods.get(cls_name, set())
+                    cls_properties = self.property_methods.get(cls_name, set())
+
+                    for item in ast.walk(cls_node):
+                        if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                            continue
+                        if item.name in current:
+                            continue
+                        # NEVER make __init__ and other special methods async
+                        if item.name in NEVER_ASYNC_METHODS:
+                            continue
+                        # NEVER make @property methods async
+                        if item.name in cls_properties:
+                            continue
+                        method_src = ast.get_source_segment(src, item) or ""
+                        for async_method in list(current):
+                            # Check for self.method( or self.__method( or self._method(
+                            if re.search(rf"self\.(?:_\w+)?{re.escape(async_method)}\s*\(", method_src):
+                                current.add(item.name)
+                                logger.debug(
+                                    "analyze[pass2] %s.%s: calls async method '%s'", cls_name, item.name, async_method
+                                )
+                                changed = True
+                                break
+
+                    self.async_methods[cls_name] = current
+
+            # Remove any NEVER_ASYNC_METHODS that somehow got added
+            for cls_name in self.async_methods:
+                self.async_methods[cls_name] -= NEVER_ASYNC_METHODS
+
+            # _completeIfNotSet and _completeIfNeeded STAY in async_methods.
+            # They are genuinely async (they await __complete which does HTTP I/O).
+            # Properties that call them will be promoted to async in the third pass,
+            # which is correct: callers must `await obj.name` to access attributes.
+
+            # Third pass: property re-check.
+            # Now that we know ALL async methods (after transitive closure),
+            # re-examine each @property.  If its body calls an async method
+            # or a direct I/O pattern, it MUST be async too (not a simple
+            # cached-value property).  Promote it to async_methods and remove
+            # from property_methods so it gets the `async def` treatment.
+            # We loop until no more promotions happen (transitive closure for property-calls-property).
+            io_method_patterns_re = "|".join(re.escape(p) for p in io_method_patterns)
+            prop_changed = True
+            pass3_num = 0
+            while prop_changed:
+                prop_changed = False
+                pass3_num += 1
+                logger.debug("analyze[pass3]: property promotion pass #%d", pass3_num)
+                for cls_name in list(self.async_methods):
+                    cls_node = self._get_class_node(cls_name)
+                    if cls_node is None:
+                        continue
+                    stem = self.class_to_file[cls_name]
+                    src = self.sources[stem]
+                    current_async = set(self.async_methods[cls_name])
+                    # Include inherited async methods from ALL ancestor classes (full MRO)
+                    visited = set()
+                    queue = list(self.class_bases.get(cls_name, []))
+                    while queue:
+                        base = queue.pop(0)
+                        if base in visited:
+                            continue
+                        visited.add(base)
+                        current_async |= self.async_methods.get(base, set())
+                        queue.extend(self.class_bases.get(base, []))
+
+                    # Also gather promoted properties (async properties accessed without parens)
+                    current_promoted = set(self.promoted_properties.get(cls_name, set()))
+                    visited3 = set()
+                    queue3 = list(self.class_bases.get(cls_name, []))
+                    while queue3:
+                        base = queue3.pop(0)
+                        if base in visited3:
+                            continue
+                        visited3.add(base)
+                        current_promoted |= self.promoted_properties.get(base, set())
+                        queue3.extend(self.class_bases.get(base, []))
+
+                    props = self.property_methods.get(cls_name, set())
+                    promote = set()
+                    for item in ast.walk(cls_node):
+                        if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                            continue
+                        if item.name not in props:
+                            continue
+                        method_src = ast.get_source_segment(src, item) or ""
+                        # Check 1: does this property call any known async method?
+                        for am in current_async:
+                            if re.search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
+                                promote.add(item.name)
+                                logger.debug(
+                                    "analyze[pass3] %s.%s: promoting @property (calls async method '%s')",
+                                    cls_name,
+                                    item.name,
+                                    am,
+                                )
+                                break
+                        if item.name in promote:
+                            continue
+                        # Check 2: does this property call a direct I/O pattern?
+                        if re.search(rf"\.(?:{io_method_patterns_re})\s*\(", method_src):
+                            promote.add(item.name)
+                            logger.debug(
+                                "analyze[pass3] %s.%s: promoting @property (direct I/O pattern)", cls_name, item.name
+                            )
+                            continue
+                        # Check 3: does this property ACCESS another promoted async property
+                        # (without parentheses)? e.g. `return self.login` where `login` is async
+                        for pp in current_promoted:
+                            # Match self.prop NOT followed by ( — it's a property access
+                            if re.search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
+                                promote.add(item.name)
+                                logger.debug(
+                                    "analyze[pass3] %s.%s: promoting @property (accesses promoted property '%s')",
+                                    cls_name,
+                                    item.name,
+                                    pp,
+                                )
+                                break
+                    if promote:
+                        self.async_methods[cls_name] |= promote
+                        self.property_methods[cls_name] -= promote
+                        if cls_name not in self.promoted_properties:
+                            self.promoted_properties[cls_name] = set()
+                        self.promoted_properties[cls_name] |= promote
+                        prop_changed = True
+
+            # Fourth pass: promote regular methods that ACCESS promoted properties
+            # OR that call newly-async methods. Unified transitive closure.
+            # e.g. get_repo() has `self.login` in a string — login is an async
+            # property, so get_repo must be async too to await it.
+            # Also handles: method B calls method A which was just promoted — B must be async too.
+            fourth_changed = True
+            pass4_num = 0
+            while fourth_changed:
+                fourth_changed = False
+                pass4_num += 1
+                logger.debug("analyze[pass4]: transitive method promotion pass #%d", pass4_num)
+                for cls_name in list(self.async_methods):
+                    cls_node = self._get_class_node(cls_name)
+                    if cls_node is None:
+                        continue
+                    stem = self.class_to_file[cls_name]
+                    src = self.sources[stem]
+
+                    # Gather async methods from this class + all ancestors (full MRO)
+                    current_async = set(self.async_methods.get(cls_name, set()))
+                    visited4m = set()
+                    queue4m = list(self.class_bases.get(cls_name, []))
+                    while queue4m:
+                        base = queue4m.pop(0)
+                        if base in visited4m:
+                            continue
+                        visited4m.add(base)
+                        current_async |= self.async_methods.get(base, set())
+                        queue4m.extend(self.class_bases.get(base, []))
+
+                    cls_properties = self.property_methods.get(cls_name, set())
+
+                    # Gather promoted properties from this class + all ancestors (full MRO)
+                    all_promoted = set(self.promoted_properties.get(cls_name, set()))
+                    visited4 = set()
+                    queue4 = list(self.class_bases.get(cls_name, []))
+                    while queue4:
+                        base = queue4.pop(0)
+                        if base in visited4:
+                            continue
+                        visited4.add(base)
+                        all_promoted |= self.promoted_properties.get(base, set())
+                        queue4.extend(self.class_bases.get(base, []))
+
+                    promote_methods = set()
+                    for item in ast.walk(cls_node):
+                        if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                            continue
+                        if item.name in current_async:
+                            continue
+                        if item.name in cls_properties:
+                            continue
+                        if item.name in NEVER_ASYNC_METHODS:
+                            continue
+                        method_src = ast.get_source_segment(src, item) or ""
+                        found = False
+                        found_reason = ""
+                        # Check A: accesses a promoted async property
+                        for pp in all_promoted:
+                            if re.search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
+                                found = True
+                                found_reason = "accesses promoted property '%s'" % pp
+                                break
+                        # Check B: calls an async method
+                        if not found:
+                            for am in current_async:
+                                if re.search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
+                                    found = True
+                                    found_reason = "calls async method '%s'" % am
+                                    break
+                        if found:
+                            promote_methods.add(item.name)
+                            logger.debug(
+                                "analyze[pass4] %s.%s: promoting method (%s)",
+                                cls_name,
+                                item.name,
+                                found_reason,
+                            )
+
+                    if promote_methods:
+                        self.async_methods[cls_name] |= promote_methods
+                        fourth_changed = True
+
+            # Cross-object detection (pass 5): find methods that access async
+            # methods / promoted properties on OTHER objects (not self).
+            # This runs AFTER passes 2-4 so that promoted_properties is populated.
+            # We also check properties for cross-object access (e.g. PaginatedList.reversed).
+            cross_object_count = 0
+            for cls_name in list(self.async_classes):
                 cls_node = self._get_class_node(cls_name)
                 if cls_node is None:
                     continue
-                stem = self.class_to_file[cls_name]
-                src = self.sources[stem]
                 current = self.async_methods.get(cls_name, set())
                 cls_properties = self.property_methods.get(cls_name, set())
-
-                for item in ast.walk(cls_node):
+                for item in ast.iter_child_nodes(cls_node):
                     if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
                         continue
                     if item.name in current:
                         continue
-                    # NEVER make __init__ and other special methods async
                     if item.name in NEVER_ASYNC_METHODS:
                         continue
-                    # NEVER make @property methods async
-                    if item.name in cls_properties:
-                        continue
-                    method_src = ast.get_source_segment(src, item) or ""
-                    for async_method in list(current):
-                        # Check for self.method( or self.__method( or self._method(
-                        if re.search(rf"self\.(?:_\w+)?{re.escape(async_method)}\s*\(", method_src):
-                            current.add(item.name)
-                            logger.debug(
-                                "analyze[pass2] %s.%s: calls async method '%s'", cls_name, item.name, async_method
-                            )
-                            changed = True
-                            break
-
-                self.async_methods[cls_name] = current
-
-        # Remove any NEVER_ASYNC_METHODS that somehow got added
-        for cls_name in self.async_methods:
-            self.async_methods[cls_name] -= NEVER_ASYNC_METHODS
-
-        # _completeIfNotSet and _completeIfNeeded STAY in async_methods.
-        # They are genuinely async (they await __complete which does HTTP I/O).
-        # Properties that call them will be promoted to async in the third pass,
-        # which is correct: callers must `await obj.name` to access attributes.
-
-        # Third pass: property re-check.
-        # Now that we know ALL async methods (after transitive closure),
-        # re-examine each @property.  If its body calls an async method
-        # or a direct I/O pattern, it MUST be async too (not a simple
-        # cached-value property).  Promote it to async_methods and remove
-        # from property_methods so it gets the `async def` treatment.
-        # We loop until no more promotions happen (transitive closure for property-calls-property).
-        io_method_patterns_re = "|".join(re.escape(p) for p in io_method_patterns)
-        prop_changed = True
-        pass3_num = 0
-        while prop_changed:
-            prop_changed = False
-            pass3_num += 1
-            logger.debug("analyze[pass3]: property promotion pass #%d", pass3_num)
-            for cls_name in list(self.async_methods):
-                cls_node = self._get_class_node(cls_name)
-                if cls_node is None:
-                    continue
-                stem = self.class_to_file[cls_name]
-                src = self.sources[stem]
-                current_async = set(self.async_methods[cls_name])
-                # Include inherited async methods from ALL ancestor classes (full MRO)
-                visited = set()
-                queue = list(self.class_bases.get(cls_name, []))
-                while queue:
-                    base = queue.pop(0)
-                    if base in visited:
-                        continue
-                    visited.add(base)
-                    current_async |= self.async_methods.get(base, set())
-                    queue.extend(self.class_bases.get(base, []))
-
-                # Also gather promoted properties (async properties accessed without parens)
-                current_promoted = set(self.promoted_properties.get(cls_name, set()))
-                visited3 = set()
-                queue3 = list(self.class_bases.get(cls_name, []))
-                while queue3:
-                    base = queue3.pop(0)
-                    if base in visited3:
-                        continue
-                    visited3.add(base)
-                    current_promoted |= self.promoted_properties.get(base, set())
-                    queue3.extend(self.class_bases.get(base, []))
-
-                props = self.property_methods.get(cls_name, set())
-                promote = set()
-                for item in ast.walk(cls_node):
-                    if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        continue
-                    if item.name not in props:
-                        continue
-                    method_src = ast.get_source_segment(src, item) or ""
-                    # Check 1: does this property call any known async method?
-                    for am in current_async:
-                        if re.search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
-                            promote.add(item.name)
-                            logger.debug(
-                                "analyze[pass3] %s.%s: promoting @property (calls async method '%s')",
-                                cls_name,
-                                item.name,
-                                am,
-                            )
-                            break
-                    if item.name in promote:
-                        continue
-                    # Check 2: does this property call a direct I/O pattern?
-                    if re.search(rf"\.(?:{io_method_patterns_re})\s*\(", method_src):
-                        promote.add(item.name)
+                    reason = self._method_has_cross_object_async(cls_name, item)
+                    if reason:
+                        current.add(item.name)
+                        cross_object_count += 1
                         logger.debug(
-                            "analyze[pass3] %s.%s: promoting @property (direct I/O pattern)", cls_name, item.name
-                        )
-                        continue
-                    # Check 3: does this property ACCESS another promoted async property
-                    # (without parentheses)? e.g. `return self.login` where `login` is async
-                    for pp in current_promoted:
-                        # Match self.prop NOT followed by ( — it's a property access
-                        if re.search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
-                            promote.add(item.name)
-                            logger.debug(
-                                "analyze[pass3] %s.%s: promoting @property (accesses promoted property '%s')",
-                                cls_name,
-                                item.name,
-                                pp,
-                            )
-                            break
-                if promote:
-                    self.async_methods[cls_name] |= promote
-                    self.property_methods[cls_name] -= promote
-                    if cls_name not in self.promoted_properties:
-                        self.promoted_properties[cls_name] = set()
-                    self.promoted_properties[cls_name] |= promote
-                    prop_changed = True
-
-        # Fourth pass: promote regular methods that ACCESS promoted properties
-        # OR that call newly-async methods. Unified transitive closure.
-        # e.g. get_repo() has `self.login` in a string — login is an async
-        # property, so get_repo must be async too to await it.
-        # Also handles: method B calls method A which was just promoted — B must be async too.
-        fourth_changed = True
-        pass4_num = 0
-        while fourth_changed:
-            fourth_changed = False
-            pass4_num += 1
-            logger.debug("analyze[pass4]: transitive method promotion pass #%d", pass4_num)
-            for cls_name in list(self.async_methods):
-                cls_node = self._get_class_node(cls_name)
-                if cls_node is None:
-                    continue
-                stem = self.class_to_file[cls_name]
-                src = self.sources[stem]
-
-                # Gather async methods from this class + all ancestors (full MRO)
-                current_async = set(self.async_methods.get(cls_name, set()))
-                visited4m = set()
-                queue4m = list(self.class_bases.get(cls_name, []))
-                while queue4m:
-                    base = queue4m.pop(0)
-                    if base in visited4m:
-                        continue
-                    visited4m.add(base)
-                    current_async |= self.async_methods.get(base, set())
-                    queue4m.extend(self.class_bases.get(base, []))
-
-                cls_properties = self.property_methods.get(cls_name, set())
-
-                # Gather promoted properties from this class + all ancestors (full MRO)
-                all_promoted = set(self.promoted_properties.get(cls_name, set()))
-                visited4 = set()
-                queue4 = list(self.class_bases.get(cls_name, []))
-                while queue4:
-                    base = queue4.pop(0)
-                    if base in visited4:
-                        continue
-                    visited4.add(base)
-                    all_promoted |= self.promoted_properties.get(base, set())
-                    queue4.extend(self.class_bases.get(base, []))
-
-                promote_methods = set()
-                for item in ast.walk(cls_node):
-                    if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        continue
-                    if item.name in current_async:
-                        continue
-                    if item.name in cls_properties:
-                        continue
-                    if item.name in NEVER_ASYNC_METHODS:
-                        continue
-                    method_src = ast.get_source_segment(src, item) or ""
-                    found = False
-                    found_reason = ""
-                    # Check A: accesses a promoted async property
-                    for pp in all_promoted:
-                        if re.search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
-                            found = True
-                            found_reason = "accesses promoted property '%s'" % pp
-                            break
-                    # Check B: calls an async method
-                    if not found:
-                        for am in current_async:
-                            if re.search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
-                                found = True
-                                found_reason = "calls async method '%s'" % am
-                                break
-                    if found:
-                        promote_methods.add(item.name)
-                        logger.debug(
-                            "analyze[pass4] %s.%s: promoting method (%s)",
+                            "analyze[cross-object] %s.%s: %s",
                             cls_name,
                             item.name,
-                            found_reason,
+                            reason,
                         )
+                        # If this was a @property, promote it
+                        if item.name in cls_properties:
+                            cls_properties.discard(item.name)
+                            self.property_methods[cls_name].discard(item.name)
+                            if cls_name not in self.promoted_properties:
+                                self.promoted_properties[cls_name] = set()
+                            self.promoted_properties[cls_name].add(item.name)
+                            logger.debug(
+                                "analyze[cross-object] %s.%s: promoted @property",
+                                cls_name,
+                                item.name,
+                            )
+                self.async_methods[cls_name] = current
+            if cross_object_count:
+                logger.info(
+                    "analyze[cross-object]: found %d methods, re-running passes 2-4",
+                    cross_object_count,
+                )
+                outer_changed = True
+            else:
+                logger.debug("analyze[cross-object]: no new methods found")
 
-                if promote_methods:
-                    self.async_methods[cls_name] |= promote_methods
-                    fourth_changed = True
-
-        # Ensure any method in FORCE_ASYNC_METHODS that is also in property_methods
+        # Ensure any async method that is also in property_methods
         # gets removed from property_methods (it needs async def, not @property def).
-        for cls_name, forced in FORCE_ASYNC_METHODS.items():
+        for cls_name in list(self.async_methods):
             props = self.property_methods.get(cls_name, set())
-            overlap = props & forced
+            overlap = props & self.async_methods.get(cls_name, set())
             if overlap:
                 logger.debug(
-                    "analyze: FORCE_ASYNC cleanup %s: removing %s from property_methods",
+                    "analyze: async/property cleanup %s: removing %s from property_methods",
                     cls_name,
                     sorted(overlap),
                 )
                 self.property_methods[cls_name] -= overlap
-                # Also track forced async methods that were properties
+                # Also track these as promoted properties
                 if cls_name not in self.promoted_properties:
                     self.promoted_properties[cls_name] = set()
                 self.promoted_properties[cls_name] |= overlap
 
     def run(self):
         self.parse_all()
+        self.build_type_registry()
         self.seed_io_classes()
         self.propagate_async_classes()
         self.analyze_methods()
 
 
 class AsyncTransformer:
-    """Transforms sync source files into async counterparts."""
+    """
+    Transforms sync source files into async counterparts.
+    """
 
     def __init__(self, analyzer: IOAnalyzer):
         self.analyzer = analyzer
 
     def transform_file(self, stem: str, src: str) -> str:
-        """Apply async transformations to a source file."""
+        """
+        Apply async transformations to a source file.
+        """
         logger.debug("transform[%s]: begin 19-step pipeline", stem)
         lines = src
 
@@ -919,18 +1540,42 @@ class AsyncTransformer:
         # The sync code works because Requester.py is loaded during __init__.py execution
         # (before the shadowing line runs). The async code is loaded after __init__.py
         # completes, so the alias gets the class. Fix: use sys.modules to get the module.
-        lines = re.sub(
-            r"^import github\.GithubException as GithubException\s*$",
-            "import sys as _sys  # noqa: E402\n"
-            "GithubException = _sys.modules['github.GithubException']  # Get MODULE, not class",
-            lines,
-            flags=re.MULTILINE,
-        )
+        #
+        # To avoid E402 (module-level import not at top of file), we:
+        # 1. Replace the aliased import with just `import sys as _sys` (stays in import block)
+        # 2. Place the _sys.modules assignment after ALL imports
+        if re.search(r"^import github\.GithubException as GithubException\s*$", lines, re.MULTILINE):
+            # Remove the aliased import line, add sys import in its place
+            lines = re.sub(
+                r"^import github\.GithubException as GithubException\s*$",
+                "import sys as _sys",
+                lines,
+                flags=re.MULTILINE,
+            )
+            # Find the insertion point: just before `if TYPE_CHECKING:` or the first
+            # class/function definition (whichever comes first)
+            sysmod_line = 'GithubException = _sys.modules["github.GithubException"]  # Get MODULE, not class\n'
+            m_tc = re.search(r"^if TYPE_CHECKING:", lines, re.MULTILINE)
+            m_class = re.search(r"^class \w+", lines, re.MULTILINE)
+            # Pick the earliest anchor
+            insert_pos = None
+            for anchor in [m_tc, m_class]:
+                if anchor and (insert_pos is None or anchor.start() < insert_pos):
+                    insert_pos = anchor.start()
+            if insert_pos is not None:
+                lines = lines[:insert_pos] + sysmod_line + "\n" + lines[insert_pos:]
+            else:
+                # Fallback: append before first blank-line-then-non-import
+                lines += "\n" + sysmod_line
         logger.debug("transform[%s]: step 2a — fixed GithubException module/class alias", stem)
 
         # 2b) Move class-body from-imports to TYPE_CHECKING
         lines = self._move_class_body_imports(lines)
         logger.debug("transform[%s]: step 2b — moved class-body imports to TYPE_CHECKING", stem)
+
+        # 2c) Deduplicate runtime imports that bind the same name twice (F811)
+        lines = self._dedup_runtime_imports(lines)
+        logger.debug("transform[%s]: step 2c — deduplicated runtime imports (F811 fix)", stem)
 
         # 3) For classes in this file, apply method-level transformations
         for node in ast.walk(self.analyzer.trees.get(stem, ast.Module(body=[], type_ignores=[]))):
@@ -984,10 +1629,8 @@ class AsyncTransformer:
         # Properties that call them are promoted to async in the third pass,
         # so they correctly use `await`.
 
-        # 13) Add awaits for cross-object calls in FORCE_ASYNC_METHODS
-        if stem in CROSS_OBJECT_REPLACEMENTS:
-            lines = self._add_cross_object_awaits(lines, stem)
-            logger.debug("transform[%s]: step 13 — added cross-object awaits", stem)
+        # 13) (Removed) Cross-object awaits are now handled by type-registry
+        # in _add_awaits Phase C/D and _add_chained_awaits (Phase G).
 
         # 14) Fix isinstance checks against async-only classes to also accept sync classes.
         # When tests create sync objects (e.g. github.X.Y(...)) and pass them to async code,
@@ -1037,14 +1680,15 @@ class AsyncTransformer:
         return lines
 
     def _fix_sync_dunder_methods(self, src: str, stem: str) -> str:
-        """Fix sync dunder methods that access async properties.
+        """
+        Fix sync dunder methods that access async properties.
 
-        In async classes, properties like self.name, self.url become async def,
-        so sync dunder methods (__repr__, __eq__, __hash__, etc.) can't call them.
-        Instead, access the underlying _Attribute storage directly:
+        In async classes, properties like self.name, self.url become async def, so sync dunder methods (__repr__,
+        __eq__, __hash__, etc.) can't call them. Instead, access the underlying _Attribute storage directly:
         self._name.value, self._url.value.
 
         Also handles other.PROP patterns in __eq__ (e.g., other.login, other.id).
+
         """
         # Collect ALL promoted properties across all classes
         all_promoted = set()
@@ -1109,7 +1753,8 @@ class AsyncTransformer:
 
     @staticmethod
     def _fix_async_generator_in_join(src: str) -> str:
-        """Fix async generators passed to str.join().
+        """
+        Fix async generators passed to str.join().
 
         Converts patterns like: `".join((await x.prop) for x in items)`
         to: `".join([(await x.prop) for x in items])`
@@ -1117,6 +1762,7 @@ class AsyncTransformer:
         In Python, `(await x for x in items)` inside .join() creates an async
         generator that str.join() cannot consume. Wrapping in [...] makes it a
         list comprehension.
+
         """
         # Match .join( ... await ... for ... in ... ) where the join contains
         # an async generator expression (no square brackets).
@@ -1131,7 +1777,9 @@ class AsyncTransformer:
 
     @staticmethod
     def _ensure_import_github(result: str) -> str:
-        """Add `import github` if the body references github.X and it's not already imported."""
+        """
+        Add `import github` if the body references github.X and it's not already imported.
+        """
         body_has_github_ref = False
         for line in result.split("\n"):
             s = line.lstrip()
@@ -1184,11 +1832,13 @@ class AsyncTransformer:
 
     @staticmethod
     def _replace_is_notset_with_helpers(src: str) -> str:
-        """Replace `X is NotSet` with `is_undefined(X)` and `X is not NotSet` with `is_defined(X)`.
+        """
+        Replace `X is NotSet` with `is_undefined(X)` and `X is not NotSet` with `is_defined(X)`.
 
-        This ensures correct behavior when sync objects (whose attributes are sync _NotSetType)
-        are checked against the async NotSet singleton. The is_undefined/is_defined functions
-        in async GithubObject check both sync and async _NotSetType.
+        This ensures correct behavior when sync objects (whose attributes are sync _NotSetType) are checked against the
+        async NotSet singleton. The is_undefined/is_defined functions in async GithubObject check both sync and async
+        _NotSetType.
+
         """
         had_is_not = bool(re.search(r"\bis\s+not\s+NotSet\b", src))
         had_is = bool(re.search(r"\bis\s+NotSet\b", src))
@@ -1248,15 +1898,16 @@ class AsyncTransformer:
         return src
 
     def _move_class_body_imports(self, src: str) -> str:
-        """Move from-imports inside class bodies to TYPE_CHECKING blocks.
+        """
+        Move from-imports inside class bodies to TYPE_CHECKING blocks.
 
-        The sync code has `from github.X import Y` inside class bodies for type
-        annotations. With `from __future__ import annotations`, these are strings
-        at runtime, so we can safely move them to TYPE_CHECKING. This prevents
+        The sync code has `from github.X import Y` inside class bodies for type annotations. With `from __future__
+        import annotations`, these are strings at runtime, so we can safely move them to TYPE_CHECKING. This prevents
         circular imports that occur when the imported module is still being loaded.
 
-        Imports inside method/function bodies (def) are kept as-is since they
-        execute at call time when all modules are loaded.
+        Imports inside method/function bodies (def) are kept as-is since they execute at call time when all modules are
+        loaded.
+
         """
         lines = src.split("\n")
         result_lines = []
@@ -1388,8 +2039,415 @@ class AsyncTransformer:
 
         return new_src
 
+    @staticmethod
+    def _dedup_runtime_imports(src: str) -> str:
+        """
+        Remove duplicate name bindings that cause F811 (redefinition of unused import).
+
+        After _fix_imports and _move_class_body_imports, two F811 patterns exist:
+
+        Pattern A — Runtime module + runtime class (same name bound twice at runtime):
+            from . import PaginatedList               # module
+            from .PaginatedList import PaginatedList   # class → F811
+          Fix: remove the name from the module import (class import is needed at runtime).
+
+        Pattern B — Runtime module + TYPE_CHECKING class (shadowing):
+            from . import Commit                      # module (runtime)
+            if TYPE_CHECKING:
+                from .Commit import Commit            # class → F811
+          Fix: remove the TYPE_CHECKING import (module is already available, and all
+          annotations are strings due to `from __future__ import annotations`).
+
+        Also handles absolute variants and _sys.modules reassignments:
+            from github import Consts, GithubRetry
+            from github.GithubRetry import GithubRetry   → F811
+
+            from github import GithubException
+            GithubException = _sys.modules[...]           → F811
+
+        """
+        lines = src.split("\n")
+
+        # --- Pass 1: Collect runtime module imports and runtime class imports ---
+        in_type_checking = False
+        tc_indent = 0
+        in_multiline_from_dot_import = False
+
+        # Names imported as modules at runtime: `from . import X` or individual entries
+        runtime_module_names: set[str] = set()
+        # Names imported as classes at runtime: `from .X import X` where mod == name
+        runtime_class_imports: set[str] = set()
+        # Names reassigned via `X = _sys.modules[...]`
+        sysmodules_assignments: set[str] = set()
+
+        for line in lines:
+            stripped = line.strip()
+
+            # Track TYPE_CHECKING blocks
+            if stripped.startswith("if TYPE_CHECKING"):
+                in_type_checking = True
+                tc_indent = len(line) - len(line.lstrip())
+                continue
+            if in_type_checking:
+                if stripped and not stripped.startswith("#"):
+                    line_indent = len(line) - len(line.lstrip())
+                    if line_indent <= tc_indent:
+                        in_type_checking = False
+
+            if in_type_checking:
+                continue
+
+            # Handle continuation of multi-line `from . import (` block
+            if in_multiline_from_dot_import:
+                if ")" in stripped:
+                    in_multiline_from_dot_import = False
+                # Extract names from continuation lines
+                for n in stripped.replace("(", "").replace(")", "").split(","):
+                    n = n.strip().rstrip(",").strip()
+                    if n and n.isidentifier():
+                        runtime_module_names.add(n)
+                continue
+
+            # Collect `from . import X, Y, Z` names (runtime module imports)
+            m = re.match(r"^from \. import (.+)$", stripped)
+            if m:
+                names_part = m.group(1)
+                if "(" in names_part and ")" not in names_part:
+                    # Start of multi-line import
+                    in_multiline_from_dot_import = True
+                    names_part = names_part.replace("(", "")
+                else:
+                    names_part = names_part.replace("(", "").replace(")", "")
+                for n in names_part.split(","):
+                    n = n.strip().rstrip(",").strip()
+                    if n and n.isidentifier():
+                        runtime_module_names.add(n)
+                continue
+
+            # Collect `from .X import X` (runtime class imports where mod == name)
+            m = re.match(r"^from \.(\w+) import (.+)$", stripped)
+            if m:
+                mod_name = m.group(1)
+                names_part = m.group(2).replace("(", "").replace(")", "")
+                names = [n.strip().rstrip(",") for n in names_part.split(",") if n.strip().rstrip(",")]
+                if mod_name in names:
+                    runtime_class_imports.add(mod_name)
+
+            # Collect `from github import X, Y` names (absolute module imports that bind names)
+            m = re.match(r"^from github import (.+)$", stripped)
+            if m:
+                names_part = m.group(1).replace("(", "").replace(")", "")
+                for n in names_part.split(","):
+                    n = n.strip().rstrip(",").strip()
+                    if n and n.isidentifier():
+                        runtime_module_names.add(n)
+
+            # Collect `from github.X import X` (absolute runtime class imports)
+            m = re.match(r"^from github\.(\w+) import (.+)$", stripped)
+            if m:
+                mod_name = m.group(1)
+                names_part = m.group(2).replace("(", "").replace(")", "")
+                names = [n.strip().rstrip(",") for n in names_part.split(",") if n.strip().rstrip(",")]
+                if mod_name in names:
+                    runtime_class_imports.add(mod_name)
+
+            # Collect `X = _sys.modules[...]`
+            m = re.match(r"^(\w+)\s*=\s*_sys\.modules\[", stripped)
+            if m:
+                sysmodules_assignments.add(m.group(1))
+
+        # Also collect module names from multi-line `from . import (` blocks
+        # (already handled above since we strip parens)
+
+        # Pattern A: names to remove from `from . import (...)` because a runtime
+        # class import or _sys.modules assignment provides the same name
+        names_to_remove_from_module_import = (runtime_class_imports | sysmodules_assignments) & runtime_module_names
+
+        # Pattern B: names to remove from TYPE_CHECKING blocks because the runtime
+        # module import already provides the name (and annotations are strings).
+        # Only names that will STILL remain in the runtime module imports after Pattern A.
+        names_to_remove_from_tc = runtime_module_names - names_to_remove_from_module_import
+
+        if not names_to_remove_from_module_import and not names_to_remove_from_tc:
+            return src
+
+        logger.debug(
+            "dedup_runtime_imports: removing from module imports: %s; removing from TYPE_CHECKING: %s",
+            sorted(names_to_remove_from_module_import),
+            sorted(names_to_remove_from_tc),
+        )
+
+        # --- Pass 2: Remove conflicting names ---
+        result_lines: list[str] = []
+        i = 0
+        in_type_checking = False
+        tc_indent = 0
+
+        while i < len(lines):
+            line = lines[i]
+            stripped = line.strip()
+
+            # Track TYPE_CHECKING blocks
+            if stripped.startswith("if TYPE_CHECKING"):
+                in_type_checking = True
+                tc_indent = len(line) - len(line.lstrip())
+                result_lines.append(line)
+                i += 1
+                continue
+            if in_type_checking:
+                if stripped and not stripped.startswith("#"):
+                    line_indent = len(line) - len(line.lstrip())
+                    if line_indent <= tc_indent:
+                        in_type_checking = False
+
+            # --- Inside TYPE_CHECKING: remove duplicate names from imports ---
+            # Handles both relative (`from .X import ...`) and absolute (`from github.X import ...`)
+            # in both single-line and multi-line (parenthesized) forms.
+            if in_type_checking and names_to_remove_from_tc:
+                # Match single-line: `from .X import Y, Z` or `from github.X import Y, Z`
+                m = re.match(r"^(\s*)from (?:\.|\bgithub\.)(\w+) import (.+)$", line)
+                if m and "(" not in m.group(3):
+                    mod_name = m.group(2)
+                    indent = m.group(1)
+                    names_str = m.group(3)
+                    names = [n.strip() for n in names_str.split(",") if n.strip()]
+                    # Remove names that duplicate a runtime module import
+                    filtered = [n for n in names if n not in names_to_remove_from_tc]
+                    # Determine import prefix (relative or absolute)
+                    prefix = "." if line.lstrip().startswith("from .") else "github."
+                    if not filtered:
+                        # All names removed — drop the line
+                        i += 1
+                        continue
+                    elif len(filtered) < len(names):
+                        result_lines.append(f"{indent}from {prefix}{mod_name} import {', '.join(filtered)}")
+                        i += 1
+                        continue
+                    # else: no change, fall through
+
+                # Match multi-line: `from .X import (` or `from github.X import (`
+                m_ml = re.match(r"^(\s*)from (?:\.|\bgithub\.)(\w+) import \($", line)
+                if m_ml:
+                    indent = m_ml.group(1)
+                    mod_name = m_ml.group(2)
+                    prefix = "." if line.lstrip().startswith("from .") else "github."
+                    # Collect all lines of the multi-line import block
+                    block_lines = [line]
+                    i += 1
+                    while i < len(lines) and ")" not in lines[i]:
+                        block_lines.append(lines[i])
+                        i += 1
+                    if i < len(lines):
+                        block_lines.append(lines[i])  # closing ")"
+                        i += 1
+                    # Extract names from the block body (skip first and last lines)
+                    all_names: list[str] = []
+                    for bl in block_lines[1:-1]:
+                        name = bl.strip().rstrip(",").strip()
+                        if name and name.isidentifier():
+                            all_names.append(name)
+                    filtered = [n for n in all_names if n not in names_to_remove_from_tc]
+                    if not filtered:
+                        # All names removed — drop entire block
+                        continue
+                    elif len(filtered) < len(all_names):
+                        # Some names removed — rebuild block
+                        if len(filtered) == 1:
+                            result_lines.append(f"{indent}from {prefix}{mod_name} import {filtered[0]}")
+                        else:
+                            result_lines.append(f"{indent}from {prefix}{mod_name} import (")
+                            for fn in filtered:
+                                result_lines.append(f"{indent}    {fn},")
+                            result_lines.append(f"{indent})")
+                        continue
+                    else:
+                        # No change — re-add all block lines
+                        result_lines.extend(block_lines)
+                        continue
+
+            # --- Outside TYPE_CHECKING: handle runtime dedup ---
+            if not in_type_checking and names_to_remove_from_module_import:
+                # Handle `from . import (` multi-line block
+                if re.match(r"^from \. import \($", stripped):
+                    block_lines = [line]
+                    i += 1
+                    while i < len(lines) and ")" not in lines[i]:
+                        block_lines.append(lines[i])
+                        i += 1
+                    if i < len(lines):
+                        block_lines.append(lines[i])  # closing ")"
+                        i += 1
+
+                    kept_names: list[str] = []
+                    for bl in block_lines[1:-1]:
+                        name = bl.strip().rstrip(",").strip()
+                        if name and name not in names_to_remove_from_module_import:
+                            kept_names.append(name)
+
+                    if kept_names:
+                        block_indent = line[: len(line) - len(line.lstrip())]
+                        result_lines.append(f"{block_indent}from . import (")
+                        for kn in kept_names:
+                            result_lines.append(f"{block_indent}    {kn},")
+                        result_lines.append(f"{block_indent})")
+                    continue
+
+                # Handle single-line `from . import X, Y, Z`
+                m = re.match(r"^(\s*)from \. import (.+)$", line)
+                if m and "(" not in m.group(2):
+                    indent = m.group(1)
+                    names_str = m.group(2)
+                    names = [n.strip() for n in names_str.split(",") if n.strip()]
+                    filtered = [n for n in names if n not in names_to_remove_from_module_import]
+                    if filtered:
+                        result_lines.append(f"{indent}from . import {', '.join(filtered)}")
+                    i += 1
+                    continue
+
+                # Handle `from github import X, Y` — remove conflicting names
+                m = re.match(r"^(\s*)from github import (.+)$", line)
+                if m and "(" not in m.group(2):
+                    indent = m.group(1)
+                    names_str = m.group(2)
+                    names = [n.strip() for n in names_str.split(",") if n.strip()]
+                    filtered = [n for n in names if n not in names_to_remove_from_module_import]
+                    if filtered:
+                        result_lines.append(f"{indent}from github import {', '.join(filtered)}")
+                    i += 1
+                    continue
+
+            result_lines.append(line)
+            i += 1
+
+        # --- Pass 3: Clean up empty TYPE_CHECKING blocks and unused imports ---
+        result = "\n".join(result_lines)
+
+        # 3a) Remove empty TYPE_CHECKING blocks.
+        # An empty block is `if TYPE_CHECKING:` followed by blank lines or non-indented code.
+        result = re.sub(
+            r"^if TYPE_CHECKING:\n(?=\s*\n|\s*(?:class |def |[A-Z]))",
+            "",
+            result,
+            flags=re.MULTILINE,
+        )
+
+        # 3b) If TYPE_CHECKING is no longer referenced anywhere in the file (no
+        # `if TYPE_CHECKING:` block remains), remove it from the typing import.
+        if "if TYPE_CHECKING" not in result and "TYPE_CHECKING" in result:
+            # Remove TYPE_CHECKING from `from typing import TYPE_CHECKING, ...`
+            result = re.sub(
+                r"^(from typing import )TYPE_CHECKING,\s*",
+                r"\1",
+                result,
+                flags=re.MULTILINE,
+            )
+            # Also handle `from typing import ..., TYPE_CHECKING, ...`
+            result = re.sub(
+                r"^(from typing import .+),\s*TYPE_CHECKING\b",
+                r"\1",
+                result,
+                flags=re.MULTILINE,
+            )
+            # Handle `from typing import TYPE_CHECKING` alone on a line
+            result = re.sub(
+                r"^from typing import TYPE_CHECKING\s*\n",
+                "",
+                result,
+                flags=re.MULTILINE,
+            )
+
+        # 3c) Remove `from . import X` lines where X is no longer referenced in the
+        # file body. Only remove module imports that we know became orphaned (i.e.,
+        # names we removed from TYPE_CHECKING that were also runtime module imports
+        # and have no other references).
+        if names_to_remove_from_tc:
+            result_lines_2 = result.split("\n")
+            # Build body text EXCLUDING import lines for reference checking
+            body_for_check = []
+            for rl in result_lines_2:
+                rs = rl.strip()
+                if not rs.startswith(("from ", "import ")):
+                    body_for_check.append(rl)
+            body_text = "\n".join(body_for_check)
+
+            final_lines: list[str] = []
+            j = 0
+            while j < len(result_lines_2):
+                rl = result_lines_2[j]
+                stripped_rl = rl.strip()
+
+                # Check single-line `from . import X, Y, Z` — remove names not in body
+                m = re.match(r"^(\s*)from \. import (.+)$", rl)
+                if m and "(" not in m.group(2):
+                    indent = m.group(1)
+                    names = [n.strip() for n in m.group(2).split(",") if n.strip()]
+                    # Keep names that are referenced in the body (type hints, code, etc.)
+                    # or that were NOT in our TC removal set (i.e., pre-existing imports)
+                    kept = []
+                    for n in names:
+                        if n not in names_to_remove_from_tc:
+                            # Not a name we touched — keep it
+                            kept.append(n)
+                        elif re.search(rf"\b{re.escape(n)}\b", body_text):
+                            # Still referenced in the body — keep it
+                            kept.append(n)
+                        else:
+                            logger.debug(
+                                "dedup_runtime_imports: removing orphaned module import: %s",
+                                n,
+                            )
+                    if kept:
+                        final_lines.append(f"{indent}from . import {', '.join(kept)}")
+                    j += 1
+                    continue
+
+                # Check multi-line `from . import (` block
+                if re.match(r"^from \. import \($", stripped_rl):
+                    block = [rl]
+                    j += 1
+                    while j < len(result_lines_2) and ")" not in result_lines_2[j]:
+                        block.append(result_lines_2[j])
+                        j += 1
+                    if j < len(result_lines_2):
+                        block.append(result_lines_2[j])
+                        j += 1
+
+                    kept_block: list[str] = []
+                    for bl in block[1:-1]:
+                        n = bl.strip().rstrip(",").strip()
+                        if not n:
+                            continue
+                        if n not in names_to_remove_from_tc:
+                            kept_block.append(n)
+                        elif re.search(rf"\b{re.escape(n)}\b", body_text):
+                            kept_block.append(n)
+                        else:
+                            logger.debug(
+                                "dedup_runtime_imports: removing orphaned module import: %s",
+                                n,
+                            )
+
+                    if kept_block:
+                        block_indent = rl[: len(rl) - len(rl.lstrip())]
+                        if len(kept_block) == 1:
+                            final_lines.append(f"{block_indent}from . import {kept_block[0]}")
+                        else:
+                            final_lines.append(f"{block_indent}from . import (")
+                            for kn in kept_block:
+                                final_lines.append(f"{block_indent}    {kn},")
+                            final_lines.append(f"{block_indent})")
+                    continue
+
+                final_lines.append(rl)
+                j += 1
+
+            result = "\n".join(final_lines)
+
+        return result
+
     def _fix_imports(self, src: str, stem: str) -> str:
-        """Fix import statements to use relative imports within github.asynchronous.
+        """
+        Fix import statements to use relative imports within github.asynchronous.
 
         Transforms:
           import github.X            → from . import X   (for async modules)
@@ -1397,6 +2455,7 @@ class AsyncTransformer:
           from github.X import Y     → from .X import Y   (for async modules)
           from .X import Y           → from .X import Y   (already relative — keep)
           from github.X import Y     → from github.X import Y  (for non-async SKIP_FILES)
+
         """
         logger.debug("fix_imports[%s]: begin", stem)
         result = src
@@ -1580,7 +2639,8 @@ class AsyncTransformer:
 
     @staticmethod
     def _fix_double_dereference(src: str) -> str:
-        """Fix double-dereference patterns caused by class imports shadowing module imports.
+        """
+        Fix double-dereference patterns caused by class imports shadowing module imports.
 
         When `from .X import X` imports a CLASS and code uses `X.X(...)`,
         it fails because CLASS has no attribute CLASS.  Two strategies:
@@ -1594,6 +2654,7 @@ class AsyncTransformer:
             For GithubObject.NotSet, GithubObject.Attribute, etc. where
             the names are already imported from .GithubObject, replace
             `GithubObject.NotSet` → `NotSet` in the body.
+
         """
         lines_list = src.split("\n")
 
@@ -1720,7 +2781,9 @@ class AsyncTransformer:
         return src
 
     def _transform_class(self, src: str, class_name: str, stem: str) -> str:
-        """Transform methods in a class to be async."""
+        """
+        Transform methods in a class to be async.
+        """
         methods = self.analyzer.async_methods.get(class_name, set())
         logger.debug("transform_class: %s — %d methods to make async: %s", class_name, len(methods), sorted(methods))
 
@@ -1733,12 +2796,27 @@ class AsyncTransformer:
             src = self._make_method_async(src, class_name, method_name)
 
         # For methods that call other async methods, add await
-        src = self._add_awaits(src, class_name)
+        src = self._add_awaits(src, class_name, stem)
+
+        # Phase G: Chained awaits — handle (await EXPR).ATTR chains
+        # After _add_awaits creates (await self.prop).something, resolve whether
+        # .something is also async on the resolved type, and add outer await.
+        # Run multiple passes since chains can be deep (e.g. (await self.head).repo.owner.login).
+        src = self._add_chained_awaits(src, class_name)
+
+        # Phase I: Break async method chains — handle cases where an async method call
+        # has further .attr/.method() chained after its call parens.
+        # E.g. "await repo.get_git_ref(args).delete()" is wrong because get_git_ref()
+        # returns a coroutine and .delete() is called on the coroutine.
+        # Fix: split into temp variable "(_tmp = await repo.get_git_ref(args))" + "_tmp.delete()".
+        src = self._break_async_method_chains(src, class_name)
 
         return src
 
     def _make_method_async(self, src: str, class_name: str, method_name: str) -> str:
-        """Convert 'def method_name(' to 'async def method_name(' within a class."""
+        """
+        Convert 'def method_name(' to 'async def method_name(' within a class.
+        """
         # Never make __init__ async
         if method_name in NEVER_ASYNC_METHODS:
             return src
@@ -1768,8 +2846,10 @@ class AsyncTransformer:
 
         return src
 
-    def _add_awaits(self, src: str, class_name: str) -> str:
-        """Add await before calls to async methods."""
+    def _add_awaits(self, src: str, class_name: str, stem: str = "") -> str:
+        """
+        Add await before calls to async methods.
+        """
         methods = set(self.analyzer.async_methods.get(class_name, set()))
         # Include inherited async methods from ALL ancestor classes (full MRO)
         visited = set()
@@ -1836,119 +2916,15 @@ class AsyncTransformer:
             src = self._safe_add_await_property(src, prop)
 
         # For cross-object property access: var.prop where var is NOT self.
-        # This requires careful handling because not all classes have the same
-        # property promoted. Only apply for safe combinations.
-        global_promoted = set()
-        for pp_set in self.analyzer.promoted_properties.values():
-            global_promoted |= pp_set
+        # Use per-method type-registry-based rules computed from annotations.
+        # Per-method rules avoid variable name collisions across methods (e.g.
+        # 'element' being a CompletableGithubObject in one method but a plain
+        # class in another).
+        per_method_rules = self.analyzer.compute_cross_object_rules_per_method(class_name)
 
-        #
-        # Safe _-prefixed props: only for variables whose types always have them promoted.
-        # key_id: only on PublicKey (always promoted)
-        # key: only on PublicKey (always promoted) — but also on dict, so restrict to var 'public_key'
-        # encrypt: method on PublicKey (always async)
-        #
-        # For _identity: most classes have it promoted EXCEPT Input* classes (InputFileContent,
-        # InputGitAuthor, InputGitTreeElement) and Milestone. So restrict variable names.
-        CROSS_OBJECT_PROPERTY_RULES = {
-            # prop: set of allowed variable name patterns (None = unrestricted lowercase)
-            "key_id": {"public_key"},
-            "key": {"public_key"},
-            "encoding": None,  # only ContentFile and SomeOtherClass, both promoted
-            "full_name": None,  # only Repository, always promoted
-            # id: promoted on Repository, Issue, Invitation, etc. (CompletableGithubObjects).
-            # NOT promoted on NonCompletableGithubObjects (Autolink, CodeScanRule, etc.).
-            # Restrict to known safe variable names.
-            "id": {
-                "invitation",
-                "repo",
-            },
-            # login: promoted on NamedUser, Organization, AuthenticatedUser
-            "login": {
-                "assignee",
-                "user",
-                "member",
-                "reviewer",
-                "author",
-                "committer",
-                "actor",
-                "collaborator",
-                "organization",
-                "org",
-                "login_or_user",
-                "invited_user",
-                "invitee",
-                "following",
-            },
-            # name: promoted on Label, Repository, Team, Variable, Secret, etc.
-            # NOT on Branch (sync). Restrict to known label/repo/team variables.
-            "name": {
-                "label",
-                "element",
-                "repo",
-                "repository",
-                "team",
-                "variable",
-                "secret",
-            },
-            # sha: promoted on Commit, GitCommit. NOT on GitRef etc.
-            "sha": {
-                "commit",
-                "ref",
-                "target_commitish",
-                "base_commit",
-                "head_commit",
-            },
-        }
-        # _identity: restrict to variables that are NOT Input*/Milestone types
-        # NOTE: "element" is EXCLUDED because it can be InputGitTreeElement
-        # (sync, returns dict) in create_git_tree. The create_git_commit case
-        # is handled by CROSS_OBJECT_REPLACEMENTS.
-        IDENTITY_SAFE_VARS = {
-            "assignee",
-            "user",
-            "member",
-            "reviewer",
-            "team",
-            "actor",
-            # NOTE: "committer" and "author" are EXCLUDED because they can be InputGitAuthor
-            # (sync, returns dict) rather than NamedUser/AuthenticatedUser.
-            "org",
-            "organization",
-            "parent",
-            "commit",
-            "label",
-            "issue",
-            "pull",
-            "ref",
-            "collaborator",
-            "invitation",
-            "creator",
-            # Parameters whose types always have _identity promoted (Repository, NamedUser, etc.)
-            "following",
-            "starred",
-            "subscription",
-            "watched",
-            "mentioned",
-        }
-
-        for prop, allowed_vars in CROSS_OBJECT_PROPERTY_RULES.items():
-            if prop in global_promoted:
-                logger.debug(
-                    "add_awaits[%s]: cross-object property '%s' (vars=%s)",
-                    class_name,
-                    prop,
-                    sorted(allowed_vars) if allowed_vars else "any",
-                )
-                src = self._safe_add_await_cross_object_property(src, prop, restrict_vars=allowed_vars)
-        # _identity with restricted vars
-        if "_identity" in global_promoted:
-            logger.debug("add_awaits[%s]: cross-object property '_identity' (restricted vars)", class_name)
-            src = self._safe_add_await_cross_object_property(src, "_identity", restrict_vars=IDENTITY_SAFE_VARS)
-
-        # For cross-object method calls on domain objects: var.async_method(
-        # Match specific patterns like: public_key.encrypt(
-        src = self._safe_add_await_cross_object_methods(src, class_name)
+        if per_method_rules:
+            # Apply cross-object rules to each method's source separately.
+            src = self._apply_per_method_cross_object_rules(src, class_name, per_method_rules)
 
         # For requester method calls
         requester_async_methods = [
@@ -2005,11 +2981,686 @@ class AsyncTransformer:
         # These are CompletableGithubObject.complete() which is async.
         src = self._safe_add_await(src, r"(?<!\w)(?<!self\.)\b\w+\.complete\s*\(")
 
+        # Phase H: Static/classmethod calls via Module.ClassName.method()
+        # When code uses e.g. Repository.Repository.as_url_param(repo) and
+        # as_url_param is an async static method on Repository, add await.
+        # Pattern: Module.ClassName.method( where ClassName has method in async_methods.
+        # Only check methods that are @staticmethod/@classmethod (small set).
+        for cls_name, statics in self.analyzer.static_methods.items():
+            cls_async = self.analyzer.async_methods.get(cls_name, set())
+            async_statics = statics & cls_async
+            for meth in async_statics:
+                if meth in NEVER_ASYNC_METHODS:
+                    continue
+                # Match Module.ClassName.method( or just ClassName.method(
+                # Module is typically the same as ClassName (import aliasing).
+                # Use \w+ for module prefix to be generic.
+                src = self._safe_add_await(
+                    src,
+                    rf"(?<!\w)\w+\.{re.escape(cls_name)}\.{re.escape(meth)}\s*\(",
+                )
+                # Also match bare ClassName.method( (without module prefix)
+                src = self._safe_add_await(
+                    src,
+                    rf"(?<!\w)(?<!\.){re.escape(cls_name)}\.{re.escape(meth)}\s*\(",
+                )
+
         return src
+
+    def _apply_per_method_cross_object_rules(
+        self,
+        src: str,
+        class_name: str,
+        per_method_rules: dict[str, tuple[dict[str, set[str]], dict[str, set[str]]]],
+    ) -> str:
+        """
+        Apply cross-object property/method await rules per-method.
+
+        Splits the source into method sections, applies each method's specific rules (from per_method_rules) only to
+        that method's body, then reassembles. This prevents variable-name collisions across methods.
+
+        """
+        lines = src.split("\n")
+        # Identify method boundaries: [(method_name, start_line, end_line), ...]
+        # where line indices are 0-based
+        method_spans: list[tuple[str, int, int]] = []
+        i = 0
+        while i < len(lines):
+            stripped = lines[i].lstrip()
+            if stripped.startswith("async def ") or stripped.startswith("def "):
+                # Extract method name
+                if stripped.startswith("async def "):
+                    name_part = stripped[len("async def ") :]
+                else:
+                    name_part = stripped[len("def ") :]
+                meth_name = name_part.split("(")[0].strip()
+                indent = len(lines[i]) - len(stripped)
+                start = i
+                i += 1
+                # Skip past multi-line signature: find the line ending with ':'
+                # that closes the signature (after all parameters).
+                sig_complete = ":" in stripped.split(")", 1)[-1] if ")" in stripped else False
+                while i < len(lines) and not sig_complete:
+                    s = lines[i].lstrip()
+                    if ")" in s:
+                        after_paren = s.split(")", 1)[-1]
+                        if ":" in after_paren:
+                            sig_complete = True
+                    i += 1
+                if not sig_complete:
+                    # Signature never completed — treat the rest as body
+                    method_spans.append((meth_name, start, len(lines)))
+                    break
+                i += 1  # move past the signature-closing line
+                # Now find end of method body: next line at same or lower indent
+                # that is not blank/comment and starts something new
+                while i < len(lines):
+                    s = lines[i].lstrip()
+                    cur_indent = len(lines[i]) - len(s)
+                    if s and cur_indent <= indent and not s.startswith("#"):
+                        break
+                    i += 1
+                method_spans.append((meth_name, start, i))
+            else:
+                i += 1
+
+        # For each method that has rules, extract its source, apply rules, replace
+        # We process in reverse order to maintain line indices
+        for meth_name, start, end in reversed(method_spans):
+            if meth_name not in per_method_rules:
+                continue
+            prop_rules, method_rules = per_method_rules[meth_name]
+
+            # Extract method source
+            method_src = "\n".join(lines[start:end])
+
+            for prop, allowed_vars in sorted(prop_rules.items()):
+                logger.debug(
+                    "add_awaits[%s.%s]: cross-object property '%s' (vars=%s)",
+                    class_name,
+                    meth_name,
+                    prop,
+                    sorted(allowed_vars),
+                )
+                method_src = self._safe_add_await_cross_object_property(method_src, prop, restrict_vars=allowed_vars)
+
+            for meth, allowed_vars in sorted(method_rules.items()):
+                logger.debug(
+                    "add_awaits[%s.%s]: cross-object method '%s' (vars=%s)",
+                    class_name,
+                    meth_name,
+                    meth,
+                    sorted(allowed_vars),
+                )
+                method_src = self._safe_add_await_cross_object_method(method_src, meth, restrict_vars=allowed_vars)
+
+            # Replace method lines
+            new_method_lines = method_src.split("\n")
+            lines[start:end] = new_method_lines
+
+        return "\n".join(lines)
+
+    def _add_chained_awaits(self, src: str, class_name: str) -> str:
+        """Phase G: Add await to chained attribute accesses after (await ...).
+
+        After earlier phases create patterns like ``(await self.owner).login``,
+        this pass checks whether ``.login`` is async on the resolved type of
+        ``owner``, and if so wraps with ``await``.
+
+        Handles:
+        - ``(await self.PROP).ATTR`` → ``await (await self.PROP).ATTR`` (property)
+        - ``(await self.PROP).METHOD(`` → ``await (await self.PROP).METHOD(`` (method)
+        - ``(await VAR.PROP).ATTR`` → ``await (await VAR.PROP).ATTR`` (cross-object)
+        - Multi-segment chains: ``(await self.PROP).X.Y`` where X is sync → resolves
+          through X's type to check if Y is async.
+
+        Runs multiple passes until no more changes (chains can be multi-level).
+        """
+        # Build per-method variable type map for cross-object resolution
+        all_method_var_types = self.analyzer.get_all_method_var_types(class_name)
+
+        max_passes = 5
+        for pass_num in range(max_passes):
+            new_src = self._chained_await_pass(src, class_name, all_method_var_types)
+            if new_src == src:
+                break
+            logger.debug(
+                "chained_awaits[%s]: pass %d made changes",
+                class_name,
+                pass_num + 1,
+            )
+            src = new_src
+        return src
+
+    def _break_async_method_chains(self, src: str, class_name: str) -> str:
+        """Phase I: Break chains where an async method call has further accesses.
+
+        Detects patterns like ``await EXPR.async_method(ARGS).next(...)`` where
+        ``.async_method()`` returns a coroutine in async mode and ``.next()``
+        would be called on the coroutine object (a bug).
+
+        Rewrites as::
+
+            _chain_tmp = await EXPR.async_method(ARGS)
+            await _chain_tmp.complete()  # if return type is CompletableGithubObject
+            ... _chain_tmp.next(...) ...
+
+        Only triggers when the chained method is known to be async.
+        """
+        # Collect all async methods across all classes for quick lookup
+        all_async: dict[str, set[str]] = self.analyzer.async_methods
+        # Build a flat set of all method names that are async on any class
+        any_async_method: set[str] = set()
+        for methods in all_async.values():
+            any_async_method |= methods
+
+        # Build set of method names that return CompletableGithubObject on any class
+        completable_return_methods: set[str] = set()
+        for cls_name, attrs in self.analyzer.return_types.items():
+            for attr_name, return_types in attrs.items():
+                if return_types & self.analyzer.completable_classes:
+                    completable_return_methods.add(attr_name)
+
+        lines = src.split("\n")
+        result_lines: list[str] = []
+        temp_counter = 0
+
+        for line in lines:
+            # Look for patterns: await STUFF.METHOD(
+            # where METHOD is an async method name and there's .something after the call
+            new_line = self._break_chain_in_line(line, any_async_method, completable_return_methods, class_name)
+            if new_line is not None:
+                result_lines.extend(new_line)
+                temp_counter += 1
+            else:
+                result_lines.append(line)
+
+        if temp_counter > 0:
+            logger.debug(
+                "break_async_method_chains[%s]: split %d chains",
+                class_name,
+                temp_counter,
+            )
+
+        return "\n".join(result_lines)
+
+    def _break_chain_in_line(
+        self, line: str, any_async_method: set[str], completable_return_methods: set[str], class_name: str
+    ) -> list[str] | None:
+        """
+        Try to break an async method chain in a single line.
+
+        Returns a list of replacement lines, or None if no change needed.
+
+        Detects: ``await PREFIX.async_method(ARGS).SUFFIX``
+        Rewrites as:
+            ``_chain_tmp = await PREFIX.async_method(ARGS)``
+            ``await _chain_tmp.complete()``  # if method returns CompletableGithubObject
+            ``[original line with chain replaced by _chain_tmp.SUFFIX]``
+
+        """
+        stripped = line.lstrip()
+        indent = line[: len(line) - len(stripped)]
+
+        # Find "await " followed by an expression containing .method(args).something
+        # We need to find: .METHOD( where METHOD is async, balance parens, then check for .SUFFIX
+        # Strategy: find all .IDENT( patterns, check if IDENT is async, balance, check suffix
+        for m in re.finditer(r"\.(\w+)\s*\(", line):
+            method_name = m.group(1)
+            if method_name not in any_async_method:
+                continue
+
+            # Check that this method call is preceded by "await " somewhere
+            # (could be at start of expression, or after return/=)
+            before_dot = line[: m.start()]
+            if "await " not in before_dot:
+                continue
+
+            # Find the opening paren
+            paren_open = m.end() - 1  # position of '('
+            # Balance parens to find closing
+            depth = 1
+            pos = paren_open + 1
+            while pos < len(line) and depth > 0:
+                ch = line[pos]
+                if ch == "(":
+                    depth += 1
+                elif ch == ")":
+                    depth -= 1
+                elif ch in ('"', "'"):
+                    # Skip strings (simplified — handles basic f-strings)
+                    quote = ch
+                    pos += 1
+                    while pos < len(line) and line[pos] != quote:
+                        if line[pos] == "\\":
+                            pos += 1  # skip escaped char
+                        pos += 1
+                    # pos is now on closing quote
+                pos += 1
+
+            if depth != 0:
+                continue  # unbalanced — spans multiple lines, skip
+
+            paren_close = pos  # position after ')'
+
+            # Check if there's .SOMETHING after the closing paren
+            rest = line[paren_close:]
+            chain_match = re.match(r"\.(\w+)", rest)
+            if not chain_match:
+                continue  # no chain after call — fine, no problem
+
+            # We found a chain: .method(args).next_thing
+            # Find the "await" that covers this expression
+            await_match = re.search(r"\bawait\s+", before_dot)
+            if not await_match:
+                continue
+
+            # The await starts at await_match.start()
+            await_start = await_match.start()
+            # The chain call ends at paren_close
+            # Everything from await through the call args is the expression to extract
+            call_expr = line[await_start:paren_close]  # "await ...method(args)"
+            suffix = line[paren_close:]  # ".delete()" etc.
+
+            # Generate temp variable name
+            tmp_var = f"_chain_{method_name}"
+
+            # Build the result lines
+            result = []
+
+            # 1. Assignment: _chain_METHOD = await PREFIX.METHOD(ARGS)
+            assign_line = f"{indent}{tmp_var} = {call_expr}"
+            result.append(assign_line)
+
+            # 2. If the method returns a CompletableGithubObject, add complete() call.
+            # In async mode, __init__ can't auto-complete (no await in __init__),
+            # so we need an explicit complete() to match sync behavior.
+            if method_name in completable_return_methods:
+                result.append(f"{indent}await {tmp_var}.complete()")
+
+            # 3. Build the replacement expression: replace the entire
+            # "await ...method(args).suffix" with tmp_var.suffix handling
+            prefix_before_await = line[:await_start]
+            replacement_expr = f"{tmp_var}{suffix}"
+
+            # Check if suffix contains an async method call that needs await
+            suffix_method_match = re.match(r"\.(\w+)\s*\(", suffix)
+            if suffix_method_match and suffix_method_match.group(1) in any_async_method:
+                replacement_expr = f"await {replacement_expr}"
+
+            result_line = f"{prefix_before_await}{replacement_expr}"
+            result.append(result_line)
+
+            logger.debug(
+                "break_chain[%s]: split '%s' into temp var '%s'%s",
+                class_name,
+                line.strip()[:80],
+                tmp_var,
+                " (with complete())" if method_name in completable_return_methods else "",
+            )
+
+            return result
+
+        return None
+
+    def _chained_await_pass(
+        self, src: str, class_name: str, all_method_var_types: dict[str, dict[str, set[str]]] | None = None
+    ) -> str:
+        """
+        Single pass of chained-await resolution.
+
+        Finds ``(await EXPR).chain`` patterns and wraps with ``await`` where
+        the chain accesses async attributes/methods.
+
+        Also finds ``EXPR.chain`` patterns (without initial await) where EXPR
+        resolves to a type with async attributes in the chain — e.g.
+        ``(await self.head).repo.owner.login`` where ``.repo`` is sync but
+        ``.owner`` is async.
+
+        Strategy: find ``(await EXPR)`` blocks, parse the chain after them,
+        walk the chain type-by-type, and when an async access is found,
+        wrap from the start up to (and including) that async attribute in
+        ``(await ...)`` or prepend ``await``.
+
+        """
+        # Pre-compute method boundaries for variable type lookup.
+        # We scan for 'def method(' and 'async def method(' patterns and record
+        # (char_position, method_name) so we can determine which method any
+        # position in the source belongs to.
+        method_positions: list[tuple[int, str]] = []
+        if all_method_var_types:
+            for m in re.finditer(r"(?:async\s+)?def\s+(\w+)\s*\(", src):
+                method_positions.append((m.start(), m.group(1)))
+            method_positions.sort()
+
+        def _get_method_var_types(pos: int) -> dict[str, set[str]]:
+            """
+            Get variable types for the method containing ``pos``.
+            """
+            if not method_positions or not all_method_var_types:
+                return {}
+            # Binary search for the latest method start before pos
+            method_name = None
+            for mpos, mname in method_positions:
+                if mpos <= pos:
+                    method_name = mname
+                else:
+                    break
+            if method_name and method_name in all_method_var_types:
+                return all_method_var_types[method_name]
+            return {}
+
+        result = []
+        i = 0
+        changed = False
+
+        while i < len(src):
+            if src[i : i + 7] == "(await ":
+                # Check if already preceded by "await "
+                lookback = src[max(0, i - 20) : i]
+                already_awaited = bool(re.search(r"await\s+$", lookback))
+
+                # Find the matching closing paren
+                paren_start = i
+                depth = 1
+                j = i + 1
+                while j < len(src) and depth > 0:
+                    if src[j] == "(":
+                        depth += 1
+                    elif src[j] == ")":
+                        depth -= 1
+                    j += 1
+
+                if depth != 0:
+                    result.append(src[i])
+                    i += 1
+                    continue
+
+                paren_end = j  # index past ')'
+                inner = src[paren_start + 1 : paren_end - 1]  # "await ..."
+
+                # Check what follows the closing paren
+                after = src[paren_end:]
+                if not after.startswith("."):
+                    result.append(src[i:paren_end])
+                    i = paren_end
+                    continue
+
+                # Parse the full chain after (await EXPR)
+                chain_parts = self._parse_chain(src, paren_end)
+                if not chain_parts:
+                    result.append(src[i:paren_end])
+                    i = paren_end
+                    continue
+
+                # Resolve the type of the (await EXPR) result
+                method_vt = _get_method_var_types(paren_start)
+                base_types = self._resolve_await_expr_type(inner, class_name, method_vt)
+                if not base_types:
+                    result.append(src[i:paren_end])
+                    i = paren_end
+                    continue
+
+                # Walk the chain to find the FIRST async access point
+                async_at, chain_char_lens = self._find_first_async_in_chain(base_types, chain_parts)
+
+                if async_at is None:
+                    # No async access in chain — emit as-is
+                    result.append(src[i:paren_end])
+                    i = paren_end
+                    continue
+
+                if already_awaited:
+                    # Already have "await (await self.X).Y..." — the outer await
+                    # covers the entire chain, regardless of which segment is async.
+                    # Skip to avoid runaway await multiplication.
+                    result.append(src[i:paren_end])
+                    i = paren_end
+                    continue
+
+                # Calculate the end position of the async attribute in source
+                chars_consumed = sum(chain_char_lens[: async_at + 1])
+                full_end = paren_end + chars_consumed
+
+                if async_at == 0 and not already_awaited:
+                    # The first chain segment is async — prepend "await "
+                    # Check if it's a method call at the end
+                    name, is_call = chain_parts[async_at]
+                    if is_call:
+                        # Method call: await (await self.X).method(
+                        result.append("await ")
+                        result.append(src[paren_start:full_end])
+                    else:
+                        # Property: await (await self.X).prop → becomes
+                        # (await (await self.X).prop) if there are more chain segments,
+                        # or await (await self.X).prop if terminal
+                        remaining_chain = src[full_end:]
+                        if remaining_chain.startswith("."):
+                            result.append("(await ")
+                            result.append(src[paren_start:full_end])
+                            result.append(")")
+                        else:
+                            result.append("await ")
+                            result.append(src[paren_start:full_end])
+                    i = full_end
+                    changed = True
+                    logger.debug(
+                        "chained_awaits[%s]: added await (async_at=0) to '%s'",
+                        class_name,
+                        src[paren_start:full_end][:80],
+                    )
+                elif async_at > 0:
+                    # An intermediate segment is async — we need to wrap
+                    # (await self.X).sync1.sync2.asyncProp into
+                    # (await (await self.X).sync1.sync2.asyncProp)
+                    # The next pass will then handle further chain.
+                    name, is_call = chain_parts[async_at]
+                    remaining_chain = src[full_end:]
+                    if is_call:
+                        result.append("await ")
+                        result.append(src[paren_start:full_end])
+                    elif remaining_chain.startswith("."):
+                        result.append("(await ")
+                        result.append(src[paren_start:full_end])
+                        result.append(")")
+                    else:
+                        result.append("await ")
+                        result.append(src[paren_start:full_end])
+                    i = full_end
+                    changed = True
+                    logger.debug(
+                        "chained_awaits[%s]: added await (async_at=%d) to '%s'",
+                        class_name,
+                        async_at,
+                        src[paren_start:full_end][:80],
+                    )
+                else:
+                    result.append(src[i:paren_end])
+                    i = paren_end
+            else:
+                result.append(src[i])
+                i += 1
+
+        if not changed:
+            return src
+        return "".join(result)
+
+    @staticmethod
+    def _parse_chain(src: str, start: int) -> list[tuple[str, bool]]:
+        """
+        Parse a chain of .attr or .method( starting at position ``start``.
+
+        Returns a list of (name, is_call) tuples. ``is_call`` is True if
+        the segment is a method call (followed by ``(``).
+
+        Also returns the length of the chain consumed.
+
+        """
+        parts: list[tuple[str, bool]] = []
+        pos = start
+        while pos < len(src) and src[pos] == ".":
+            pos += 1  # skip '.'
+            # Read identifier
+            ident_start = pos
+            while pos < len(src) and (src[pos].isalnum() or src[pos] == "_"):
+                pos += 1
+            if pos == ident_start:
+                break  # no identifier after '.'
+            ident = src[ident_start:pos]
+            # Check if followed by '(' (method call) — skip whitespace
+            save_pos = pos
+            while pos < len(src) and src[pos] in " \t":
+                pos += 1
+            if pos < len(src) and src[pos] == "(":
+                parts.append((ident, True))
+                # Don't consume past '(' — we just note it's a call
+                pos = save_pos  # restore to just after ident (before whitespace/paren)
+                break  # stop chain after method call
+            else:
+                parts.append((ident, False))
+                pos = save_pos  # restore to just after ident
+                # Continue — there might be more .attr segments
+        return parts
+
+    def _resolve_await_expr_type(
+        self, await_expr: str, class_name: str, method_var_types: dict[str, set[str]] | None = None
+    ) -> set[str]:
+        """
+        Resolve the type that an ``await EXPR`` evaluates to.
+
+        Given the inner content of ``(await EXPR)`` — i.e. ``await self.prop``
+        or ``await var.prop`` — determine the return type.
+
+        Handles:
+          - ``await self.prop`` → resolve_type(class_name, prop)
+          - ``await (await INNER).chain.of.attrs`` → recursive resolution
+          - ``await var.prop`` → uses method_var_types if available
+
+        """
+        # Strip the leading "await " prefix
+        expr = await_expr.strip()
+        if expr.startswith("await "):
+            expr = expr[6:].strip()
+
+        # Handle nested (await EXPR).chain: e.g. "(await self.head).repo.owner"
+        if expr.startswith("(await "):
+            # Find the matching close paren for the inner (await ...)
+            depth = 1
+            j = 7  # skip past "(await "
+            while j < len(expr) and depth > 0:
+                if expr[j] == "(":
+                    depth += 1
+                elif expr[j] == ")":
+                    depth -= 1
+                j += 1
+            if depth == 0:
+                inner_paren_end = j  # position after ')'
+                inner_content = expr[1 : inner_paren_end - 1]  # "await ..."
+                # Recursively resolve the inner type
+                inner_types = self._resolve_await_expr_type(inner_content, class_name, method_var_types)
+                if inner_types:
+                    # Walk the chain after the inner (await ...) block
+                    remaining = expr[inner_paren_end:]  # e.g. ".repo.owner"
+                    if remaining.startswith("."):
+                        current_types = inner_types
+                        # Parse the chain segments
+                        parts = remaining.split(".")
+                        for part in parts:
+                            part = part.strip()
+                            if not part:
+                                continue
+                            # Strip any trailing call parens or brackets
+                            ident = re.match(r"^([a-zA-Z_]\w*)", part)
+                            if not ident:
+                                break
+                            attr_name = ident.group(1)
+                            next_types: set[str] = set()
+                            for t in current_types:
+                                next_types |= self.analyzer.resolve_type(t, attr_name)
+                            if not next_types:
+                                return current_types  # Can't resolve further, return last known
+                            current_types = next_types
+                        return current_types
+                    else:
+                        return inner_types
+
+        # Handle simple: self.PROP
+        if expr.startswith("self."):
+            prop = expr[5:]
+            # prop might be a simple name or a chain itself
+            # For simple case: self.prop
+            if re.match(r"^[a-zA-Z_]\w*$", prop):
+                return self.analyzer.resolve_type(class_name, prop)
+
+        # Handle cross-object: var.prop — use method_var_types if available
+        if method_var_types:
+            m = re.match(r"^([a-zA-Z_]\w*)\.(.+)$", expr)
+            if m:
+                var_name = m.group(1)
+                chain_str = m.group(2)
+                if var_name in method_var_types:
+                    current_types = method_var_types[var_name]
+                    # Walk the chain
+                    for attr_name in chain_str.split("."):
+                        attr_name = attr_name.strip()
+                        ident = re.match(r"^([a-zA-Z_]\w*)", attr_name)
+                        if not ident:
+                            break
+                        next_types: set[str] = set()
+                        for t in current_types:
+                            next_types |= self.analyzer.resolve_type(t, ident.group(1))
+                        if not next_types:
+                            return current_types
+                        current_types = next_types
+                    return current_types
+
+        return set()
+
+    def _find_first_async_in_chain(
+        self,
+        base_types: set[str],
+        chain: list[tuple[str, bool]],
+    ) -> tuple[int | None, list[int]]:
+        """
+        Walk a chain and find the index of the first async access.
+
+        Starting from ``base_types``, walk each segment. For each:
+        - If async → return its index.
+        - If sync → resolve next type and continue.
+
+        Returns:
+            (async_index_or_None, list_of_char_lengths_per_segment)
+            char_lengths[i] = 1 + len(name) for segment i (the dot + identifier)
+
+        """
+        current_types = base_types
+        char_lens: list[int] = []
+
+        for idx, (name, is_call) in enumerate(chain):
+            segment_len = 1 + len(name)  # dot + identifier
+            char_lens.append(segment_len)
+
+            if self.analyzer.is_attr_async_on_type(current_types, name):
+                return idx, char_lens
+
+            if is_call:
+                # Sync method call — can't continue chain
+                return None, char_lens
+
+            # Sync property/attribute — resolve type for next segment
+            next_types: set[str] = set()
+            for t in current_types:
+                next_types |= self.analyzer.resolve_type(t, name)
+            if not next_types:
+                return None, char_lens
+            current_types = next_types
+
+        return None, char_lens
 
     @staticmethod
     def _safe_add_await_property(src: str, prop: str) -> str:
-        """Add 'await' before self.PROP accesses where PROP is an async property.
+        """
+        Add 'await' before self.PROP accesses where PROP is an async property.
 
         Only adds await inside `async def` functions (not in sync defs like __repr__).
 
@@ -2021,6 +3672,7 @@ class AsyncTransformer:
 
         When self.PROP is followed by '.' (chained access like self.owner.login),
         it wraps with parentheses: (await self.owner).login
+
         """
         lines = src.split("\n")
         result_lines = []
@@ -2075,9 +3727,10 @@ class AsyncTransformer:
                 result_lines.append(line)
                 continue
 
-            # Pattern: self.prop NOT followed by ( or = (with optional spaces)
+            # Pattern: self.prop NOT followed by ( or assignment = (with optional spaces)
             # and NOT preceded by 'await ' and NOT preceded by word char or dot
-            pattern = rf"(?<!await )(?<!\w)self\.{re.escape(prop)}(?!\s*[\(=])(?!\w)"
+            # Note: =[^=] excludes assignment (=) but allows comparison (==)
+            pattern = rf"(?<!await )(?<!\w)self\.{re.escape(prop)}(?!\s*(?:\(|=[^=]))(?!\w)"
 
             def _replace_prop(m: re.Match) -> str:
                 # Check what follows the match
@@ -2085,8 +3738,16 @@ class AsyncTransformer:
                 if after.startswith("."):
                     # Chained access: self.prop.something → (await self.prop).something
                     return f"(await self.{prop})"
-                else:
-                    return f"await self.{prop}"
+                # Check if we need parens for operator precedence.
+                # `await` has very low precedence, so `await x == y` means `await (x == y)`.
+                # We need parens when followed by operators: ==, !=, <, >, +, -, *, /, %, etc.
+                # We DON'T need parens when followed by: ), ], }, comma, colon, end-of-line,
+                # or whitespace before those (the await is a complete sub-expression).
+                after_stripped = after.lstrip()
+                if after_stripped and after_stripped[0] not in (")", "]", "}", ",", ":", "\n", "#", ""):
+                    # Something follows — could be an operator. Use parens for safety.
+                    return f"(await self.{prop})"
+                return f"await self.{prop}"
 
             src_line = line  # closure reference
             new_line = re.sub(pattern, _replace_prop, line)
@@ -2095,23 +3756,137 @@ class AsyncTransformer:
         return "\n".join(result_lines)
 
     @staticmethod
-    def _safe_add_await_cross_object_property(src: str, prop: str, restrict_vars: set[str] | None = None) -> str:
-        """Add 'await' before VARNAME.PROP accesses where PROP is a globally-known
-        async property and VARNAME is NOT 'self'.
+    def _safe_add_await_cross_object_property(src: str, prop: str, restrict_vars: set[str]) -> str:
+        """
+        Add 'await' before VARNAME.PROP accesses where PROP is a globally-known async property and VARNAME is NOT
+        'self'.
 
         Only adds await inside `async def` functions.
         Only matches lowercase variable names (to avoid module.prop false positives).
         Handles chained access: var.prop.something -> (await var.prop).something
 
         Args:
-            restrict_vars: If provided, only match these specific variable names.
-                           If None, match any lowercase variable name (excluding known modules).
+            restrict_vars: Only match these specific variable names (determined by
+                           type-registry analysis).
 
         Excludes:
         - self.prop (handled by _safe_add_await_property)
         - assignments: var.prop =
         - definitions: def prop
         - already-awaited: await var.prop
+
+        """
+        lines = src.split("\n")
+        result_lines = []
+        in_async_func = False
+        func_indent = -1
+        in_signature = False
+        in_docstring = False  # Track triple-quoted string blocks
+
+        for line in lines:
+            stripped = line.lstrip()
+            indent = len(line) - len(stripped)
+
+            # Track triple-quoted strings (docstrings)
+            # Count triple-quote occurrences to toggle state
+            triple_dq = stripped.count('"""')
+            triple_sq = stripped.count("'''")
+            triple_count = triple_dq + triple_sq
+            if in_docstring:
+                # We're inside a docstring; check if it ends on this line
+                if triple_count % 2 == 1:
+                    in_docstring = False
+                result_lines.append(line)
+                continue
+            else:
+                # Check if a docstring starts and doesn't end on this line
+                if triple_count % 2 == 1:
+                    in_docstring = True
+                    result_lines.append(line)
+                    continue
+                # If triple_count is even (0, 2, ...), the line is self-contained
+                # (either no quotes or open+close on same line)
+
+            # Track function definitions
+            if stripped.startswith("async def ") or stripped.startswith("def "):
+                in_async_func = stripped.startswith("async def ")
+                func_indent = indent
+                in_signature = ":" not in stripped.split(")", 1)[-1] if ")" in stripped else True
+                result_lines.append(line)
+                continue
+
+            if in_signature:
+                if ")" in stripped:
+                    after_paren = stripped.split(")", 1)[-1]
+                    if ":" in after_paren:
+                        in_signature = False
+                result_lines.append(line)
+                continue
+
+            if stripped.startswith("@") or not stripped or stripped.startswith("#"):
+                result_lines.append(line)
+                continue
+
+            if func_indent >= 0 and indent <= func_indent:
+                in_async_func = False
+                func_indent = -1
+
+            if not in_async_func:
+                result_lines.append(line)
+                continue
+
+            # Pattern: word_char_var.prop where var is NOT self
+            # Match: lowercase-starting variable name followed by .prop
+            # NOT preceded by 'await ' or 'self.' or '.' (not part of chain)
+            # NOT followed by ( or assignment = (not a call or assignment)
+            # Note: =[^=] excludes assignment (=) but allows comparison (==)
+            # var must be at least 1 char, lowercase start (excluding self)
+            pattern = (
+                rf"(?<!await )(?<!self\.)"
+                rf"(?<!\w)(?<!\.)"
+                rf"(?!self\.)"
+                rf"([a-z_]\w*)\.{re.escape(prop)}"
+                rf"(?!\s*(?:\(|=[^=]))(?!\w)"
+            )
+
+            def _replace_cross(m: re.Match) -> str:
+                var = m.group(1)
+                if var not in restrict_vars:
+                    logger.debug(
+                        "cross_object_prop: skipping %s.%s (var not in restrict_vars)",
+                        var,
+                        prop,
+                    )
+                    return m.group(0)
+                logger.debug("cross_object_prop: adding await to %s.%s", var, prop)
+                after = src_line[m.end() :]
+                if after.startswith("."):
+                    # Chained: var.prop.something → (await var.prop).something
+                    return f"(await {var}.{prop})"
+                else:
+                    # Always use parentheses to avoid operator precedence issues
+                    # e.g. `await x.name if cond else y` → `(await x.name) if cond else y`
+                    return f"(await {var}.{prop})"
+
+            src_line = line  # closure reference
+            new_line = re.sub(pattern, _replace_cross, line)
+            result_lines.append(new_line)
+
+        return "\n".join(result_lines)
+
+    @staticmethod
+    def _safe_add_await_cross_object_method(src: str, method: str, restrict_vars: set[str]) -> str:
+        """
+        Add 'await' before VARNAME.METHOD( calls where METHOD is an async method and VARNAME is NOT 'self'.
+
+        Only adds await inside `async def` functions.
+        Only matches lowercase variable names (to avoid module.method false positives).
+
+        Args:
+            method: The method name to match.
+            restrict_vars: Only match these specific variable names (determined by
+                           type-registry analysis).
+
         """
         lines = src.split("\n")
         result_lines = []
@@ -2151,253 +3926,37 @@ class AsyncTransformer:
                 result_lines.append(line)
                 continue
 
-            # Pattern: word_char_var.prop where var is NOT self
-            # Match: lowercase-starting variable name followed by .prop
-            # NOT preceded by 'await ' or 'self.' or '.' (not part of chain)
-            # NOT followed by ( or = (not a call or assignment)
-            # var must be at least 1 char, lowercase start (excluding self)
+            # Pattern: var.method( where var is NOT self
+            # NOT preceded by 'await ' or 'self.' or '.' (not part of chain) or word char
             pattern = (
-                rf"(?<!await )(?<!self\.)"
-                rf"(?<!\w)(?<!\.)"
-                rf"(?!self\.)"
-                rf"([a-z_]\w*)\.{re.escape(prop)}"
-                rf"(?!\s*[\(=])(?!\w)"
+                rf"(?<!await )(?<!self\.)" rf"(?<!\w)(?<!\.)" rf"(?!self\.)" rf"([a-z_]\w*)\.{re.escape(method)}\s*\("
             )
 
-            def _replace_cross(m: re.Match) -> str:
+            def _replace_cross_method(m: re.Match) -> str:
                 var = m.group(1)
-                # If restrict_vars is set, only match those specific variable names
-                if restrict_vars is not None:
-                    if var not in restrict_vars:
-                        logger.debug(
-                            "cross_object_prop: skipping %s.%s (var not in restrict_vars)",
-                            var,
-                            prop,
-                        )
-                        return m.group(0)
-                else:
-                    # Skip known non-domain variables
-                    if var in (
-                        "os",
-                        "sys",
-                        "re",
-                        "io",
-                        "json",
-                        "time",
-                        "copy",
-                        "urllib",
-                        "logging",
-                        "collections",
-                        "typing",
-                        "asyncio",
-                        "niquests",
-                        "string",
-                        "base64",
-                        "datetime",
-                        "functools",
-                        "itertools",
-                        "hashlib",
-                        "struct",
-                        "textwrap",
-                        "warnings",
-                        "math",
-                        "importlib",
-                        "pathlib",
-                        "abc",
-                        "github",
-                        "tests",
-                        "pytest",
-                    ):
-                        logger.debug(
-                            "cross_object_prop: skipping %s.%s (non-domain variable)",
-                            var,
-                            prop,
-                        )
-                        return m.group(0)
-                logger.debug("cross_object_prop: adding await to %s.%s", var, prop)
-                after = src_line[m.end() :]
-                if after.startswith("."):
-                    # Chained: var.prop.something → (await var.prop).something
-                    return f"(await {var}.{prop})"
-                else:
-                    # Always use parentheses to avoid operator precedence issues
-                    # e.g. `await x.name if cond else y` → `(await x.name) if cond else y`
-                    return f"(await {var}.{prop})"
-
-            src_line = line  # closure reference
-            new_line = re.sub(pattern, _replace_cross, line)
-            result_lines.append(new_line)
-
-        return "\n".join(result_lines)
-
-    def _safe_add_await_cross_object_methods(self, src: str, class_name: str) -> str:
-        """Add 'await' before cross-object async method calls: var.async_method(
-
-        Uses precomputed globally_async_methods (methods async in ALL classes).
-        Matches var.method( where var is a lowercase variable name (not self).
-        Only applies inside `async def` functions.
-        """
-        # Compute globally async methods once (cached)
-        if not hasattr(self, "_globally_async_methods"):
-            method_classes: dict[str, set[str]] = {}
-            method_async: dict[str, set[str]] = {}
-            for cn in self.analyzer.async_classes:
-                for mname in self.analyzer.async_methods.get(cn, set()):
-                    if mname not in method_classes:
-                        method_classes[mname] = set()
-                        method_async[mname] = set()
-                    method_classes[mname].add(cn)
-                    method_async[mname].add(cn)
-                # Also check non-async methods for completeness
-                cls_node = self.analyzer._get_class_node(cn)
-                if cls_node is None:
-                    continue
-                for item in ast.iter_child_nodes(cls_node):
-                    if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        mname = item.name
-                        if mname not in method_classes:
-                            method_classes[mname] = set()
-                            method_async[mname] = set()
-                        method_classes[mname].add(cn)
-
-            self._globally_async_methods = set()
-            for mname, classes in method_classes.items():
-                if mname in NEVER_ASYNC_METHODS:
-                    continue
-                if classes and classes == method_async.get(mname, set()):
-                    self._globally_async_methods.add(mname)
-
-            logger.debug(
-                "cross_object_methods: computed %d globally async methods: %s",
-                len(self._globally_async_methods),
-                sorted(self._globally_async_methods),
-            )
-
-        globally_async = self._globally_async_methods
-
-        # Build a single combined regex for all globally async methods
-        if not globally_async:
-            return src
-
-        # Escape and join method names
-        method_alts = "|".join(re.escape(m) for m in sorted(globally_async))
-        pattern = re.compile(
-            rf"(?<!await )(?<!\w)(?<!\.)"
-            rf"(?!self\.)"
-            rf"([a-z_]\w*)\.({method_alts})\s*\("
-        )
-
-        lines = src.split("\n")
-        result_lines = []
-        in_async_func = False
-        func_indent = -1
-        in_signature = False
-
-        for line in lines:
-            stripped = line.lstrip()
-            indent = len(line) - len(stripped)
-
-            if stripped.startswith("async def ") or stripped.startswith("def "):
-                in_async_func = stripped.startswith("async def ")
-                func_indent = indent
-                in_signature = ":" not in stripped.split(")", 1)[-1] if ")" in stripped else True
-                result_lines.append(line)
-                continue
-            if in_signature:
-                if ")" in stripped:
-                    after_paren = stripped.split(")", 1)[-1]
-                    if ":" in after_paren:
-                        in_signature = False
-                result_lines.append(line)
-                continue
-            if stripped.startswith("@") or not stripped or stripped.startswith("#"):
-                result_lines.append(line)
-                continue
-            if func_indent >= 0 and indent <= func_indent:
-                in_async_func = False
-                func_indent = -1
-            if not in_async_func:
-                result_lines.append(line)
-                continue
-
-            def _replace_method_call(m: re.Match) -> str:
-                var = m.group(1)
-                meth = m.group(2)
-                # Exclude known non-domain-object variables whose methods are sync
-                if var in (
-                    "input",
-                    "output",
-                    "data",
-                    "result",
-                    "response",
-                    "headers",
-                    "params",
-                    "args",
-                    "kwargs",
-                    "options",
-                    "config",
-                    "path",
-                    "file",
-                    "stream",
-                    "buffer",
-                    "socket",
-                    "conn",
-                    "cursor",
-                    "logger",
-                    "handler",
-                    "parser",
-                    "encoder",
-                    "decoder",
-                    "adapter",
-                    "mock",
-                    "stub",
-                    "fixture",
-                    "cls",
-                    "klass",
-                    "typ",
-                    "base",
-                    "item",
-                    "key",
-                    "val",
-                    "value",
-                    "attr",
-                    "obj",
-                    "pickle",
-                    "string",
-                    "text",
-                    "msg",
-                    "err",
-                    "error",
-                    "exc",
-                    "exception",
-                    "url",
-                    "uri",
-                    "resp",
-                    "req",
-                    "request",
-                    "session",
-                ):
+                if var not in restrict_vars:
                     logger.debug(
-                        "cross_object_methods[%s]: skipping %s.%s (non-domain variable)",
-                        class_name,
+                        "cross_object_method: skipping %s.%s() (var not in restrict_vars)",
                         var,
-                        meth,
+                        method,
                     )
-                    return m.group(0)  # Don't add await
-                logger.debug("cross_object_methods[%s]: adding await to %s.%s()", class_name, var, meth)
-                return f"await {var}.{meth}("
+                    return m.group(0)
+                logger.debug("cross_object_method: adding await to %s.%s()", var, method)
+                return f"await {var}.{method}("
 
-            new_line = pattern.sub(_replace_method_call, line)
+            new_line = re.sub(pattern, _replace_cross_method, line)
             result_lines.append(new_line)
 
         return "\n".join(result_lines)
 
     @staticmethod
     def _safe_add_await(src: str, pattern: str) -> str:
-        """Add 'await' before pattern matches, avoiding double-insertion.
+        """
+        Add 'await' before pattern matches, avoiding double-insertion.
 
         Uses a negative lookbehind approach: scans backwards from the match
         to check if 'await' already precedes it (with optional whitespace).
+
         """
         result_parts = []
         last_end = 0
@@ -2424,7 +3983,9 @@ class AsyncTransformer:
 
     @staticmethod
     def _convert_context_managers(src: str) -> str:
-        """Convert __enter__/__exit__ to __aenter__/__aexit__."""
+        """
+        Convert __enter__/__exit__ to __aenter__/__aexit__.
+        """
         had_enter = "def __enter__(" in src
         had_exit = "def __exit__(" in src
         src = re.sub(r"def __enter__\(", "async def __aenter__(", src)
@@ -2438,7 +3999,9 @@ class AsyncTransformer:
 
     @staticmethod
     def _convert_with_to_async_with(src: str) -> str:
-        """Convert 'with self.__connection_lock:' to 'async with self.__connection_lock:'."""
+        """
+        Convert 'with self.__connection_lock:' to 'async with self.__connection_lock:'.
+        """
         # Convert any 'with' statement that uses a lock (asyncio.Lock needs async with)
         src = re.sub(
             r"^(\s+)with (self\.__connection_lock|self\._connection_lock)(.*:)\s*$",
@@ -2450,7 +4013,9 @@ class AsyncTransformer:
 
     @staticmethod
     def _convert_pagination_iteration(src: str) -> str:
-        """Convert PaginatedList's __iter__ to __aiter__/__anext__ pattern."""
+        """
+        Convert PaginatedList's __iter__ to __aiter__/__anext__ pattern.
+        """
         logger.debug("convert_pagination: converting __iter__ → __aiter__ for PaginatedList")
 
         # Replace PaginatedListBase.__iter__ with __aiter__
@@ -2554,8 +4119,7 @@ class AsyncTransformer:
             '        """\n'
         )
         src = re.sub(
-            r"(def __getitem__\(self, index: int \| slice\)[^\n]*\n)"
-            r"(\s+assert isinstance\(index,)",
+            r"(def __getitem__\(self, index: int \| slice\)[^\n]*\n)" r"(\s+assert isinstance\(index,)",
             r"\1" + __getitem_docstring + r"\2",
             src,
             count=1,
@@ -2630,7 +4194,8 @@ class AsyncTransformer:
 
     @staticmethod
     def _fix_github_object(src: str) -> str:
-        """Fix CompletableGithubObject patterns in GithubObject.py.
+        """
+        Fix CompletableGithubObject patterns in GithubObject.py.
 
         Key changes:
         1. Remove the auto-complete in ``__init__`` (can't await in ``__init__``),
@@ -2639,6 +4204,7 @@ class AsyncTransformer:
            genuinely ``async def`` — the normal transform already handles that.
            No nest_asyncio sync bridge is needed. Properties that call them are
            promoted to ``async def`` in the third-pass analysis.
+
         """
         logger.debug("fix_github_object: applying GithubObject-specific fixes")
         # --- 1) Replace auto-complete in __init__ with flag ----
@@ -2673,9 +4239,11 @@ class AsyncTransformer:
         # sync and async _NotSetType. Tests use gho.NotSet (sync) which is a different
         # class from the async _NotSetType. We import the sync _NotSetType and check both.
         # Also fix remove_unset_items to handle both types.
+        # Insert `import github.GithubObject as _sync_gho` in the import block (after
+        # the last `from github...` import) to avoid E402.
         src = re.sub(
-            r"(class _NotSetType\(Attribute\[Any\]\):)",
-            "import github.GithubObject as _sync_gho\n\n\\1",
+            r"(from github\.GithubException import [^\n]+\n)",
+            r"\1import github.GithubObject as _sync_gho\n",
             src,
             count=1,
         )
@@ -2715,7 +4283,9 @@ class AsyncTransformer:
 
     @staticmethod
     def _add_close_awaits(src: str, stem: str) -> str:
-        """Add await to close() calls on connection/session objects."""
+        """
+        Add await to close() calls on connection/session objects.
+        """
         if stem == "Requester":
             # self.__connection.close() -> await self.__connection.close()
             src = re.sub(
@@ -2744,20 +4314,9 @@ class AsyncTransformer:
             )
         return src
 
-    @staticmethod
-    def _add_cross_object_awaits(src: str, stem: str) -> str:
-        """Apply direct string replacements for cross-object async calls.
-
-        These handle cases where chained method calls need await in ways
-        that _safe_add_await cannot handle (e.g., obj.method().async_call()).
-        """
-        replacements = CROSS_OBJECT_REPLACEMENTS.get(stem, [])
-        for old, new in replacements:
-            src = src.replace(old, new)
-        return src
-
     def _fix_isinstance_dual_class(self, src: str) -> str:
-        """Fix isinstance checks to accept both async and sync class variants.
+        """
+        Fix isinstance checks to accept both async and sync class variants.
 
         After import rewriting, async code uses relative imports so classes
         appear as ``X.Y`` (e.g. ``Repository.Repository``).  Tests may pass
@@ -2768,6 +4327,7 @@ class AsyncTransformer:
             isinstance(x, X.Y)  → isinstance(x, (X.Y, github.X.Y))
 
         Only applies when ``X`` is a known async module name.
+
         """
         logger.debug("fix_isinstance_dual_class: begin")
         # Build set of async module names
@@ -2841,7 +4401,9 @@ class AsyncTransformer:
             # Only add sync variants for patterns that match async module references
             # and DON'T already have github.X.Y (sync) variant
             def _has_async_only(ta: str) -> bool:
-                """Check if type arg contains async module.class references."""
+                """
+                Check if type arg contains async module.class references.
+                """
                 for m in async_class_pat.finditer(ta):
                     # Check it's not already prefixed with github. (sync variant)
                     start = m.start()
@@ -2893,10 +4455,12 @@ class AsyncTransformer:
 
 
 def _generate_reexport_stub(module_name: str) -> str:
-    """Generate a stub module that re-exports everything from the sync counterpart.
+    """
+    Generate a stub module that re-exports everything from the sync counterpart.
 
     This ensures that e.g. ``github.asynchronous.Auth.Auth``
     IS ``github.Auth.Auth`` (same object), avoiding isinstance mismatches.
+
     """
     return (
         f"{AUTO_HEADER}"
@@ -2907,7 +4471,9 @@ def _generate_reexport_stub(module_name: str) -> str:
 
 
 def generate_async_init() -> str:
-    """Generate the __init__.py for github.asynchronous."""
+    """
+    Generate the __init__.py for github.asynchronous.
+    """
     lines = [AUTO_HEADER.rstrip()]
     lines.append('"""')
     lines.append("Async counterparts of the github package classes.")
@@ -2925,8 +4491,11 @@ def generate_async_init() -> str:
 
 
 def generate_async_test_framework() -> str:
-    """Generate the async test Framework.py with SyncProxy for transparent async-to-sync bridging."""
-    return textwrap.dedent('''\
+    """
+    Generate the async test Framework.py with SyncProxy for transparent async-to-sync bridging.
+    """
+    return textwrap.dedent(
+        '''\
         # FILE AUTO GENERATED DO NOT TOUCH
         """
         Async test framework - wraps the sync Framework for async tests.
@@ -3374,12 +4943,16 @@ def generate_async_test_framework() -> str:
                     seconds_between_writes=self.seconds_between_writes,
                 )
                 return SyncProxy(g)
-    ''')
+    '''
+    )
 
 
 def generate_async_test_conftest() -> str:
-    """Generate conftest.py for async tests."""
-    return textwrap.dedent('''\
+    """
+    Generate conftest.py for async tests.
+    """
+    return textwrap.dedent(
+        '''\
         # FILE AUTO GENERATED DO NOT TOUCH
         """
         Conftest for async tests.
@@ -3388,14 +4961,17 @@ def generate_async_test_conftest() -> str:
         sync and async support. Nothing additional needed here since test
         methods are synchronous (SyncProxy handles async bridging).
         """
-    ''')
+    '''
+    )
 
 
 def transform_test_file(src: str, test_stem: str) -> str:
-    """Transform a sync test file into an async version.
+    """
+    Transform a sync test file into an async version.
 
-    Since we use SyncProxy to bridge async-to-sync, test method bodies
-    remain identical. We only need to change imports/base class.
+    Since we use SyncProxy to bridge async-to-sync, test method bodies remain identical. We only need to change
+    imports/base class.
+
     """
     logger.debug("transform_test[%s]: begin", test_stem)
     result = AUTO_HEADER + src
@@ -3547,41 +5123,94 @@ def transform_test_file(src: str, test_stem: str) -> str:
 
 
 def write_file(path: Path, content: str):
-    """Write content to path, creating parent dirs as needed."""
+    """
+    Write content to path, creating parent dirs as needed.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
 
 
+def _find_tool(name: str) -> str | None:
+    """
+    Find a formatter binary.
+
+    Looks in the running interpreter's bin directory first (covers the pre-commit venv that installs tools via
+    additional_dependencies), then falls back to .venv/bin for manual / CI runs.
+
+    """
+    # 1. Same bin dir as the running python (pre-commit venv)
+    interpreter_bin = Path(sys.executable).resolve().parent
+    candidate = interpreter_bin / name
+    if candidate.exists():
+        return str(candidate)
+    # 2. Project .venv
+    candidate = REPO_ROOT / ".venv" / "bin" / name
+    if candidate.exists():
+        return str(candidate)
+    # 3. shutil.which as last resort
+    return shutil.which(name)
+
+
 def run_formatters(directory: Path):
-    """Run black and ruff on generated files."""
-    venv_bin = REPO_ROOT / ".venv" / "bin"
-    black = venv_bin / "black"
-    ruff = venv_bin / "ruff"
+    """
+    Run the same formatter chain as pre-commit (in the same order) so that the generated output is already stable and
+    won't cause cascading "files were modified" failures on the next pre-commit run.
 
-    if black.exists():
-        logger.info(f"  Running black on {directory}...")
+    Order: pyupgrade → ruff → docformatter → black
+
+    """
+    pyupgrade = _find_tool("pyupgrade")
+    ruff = _find_tool("ruff")
+    docformatter = _find_tool("docformatter")
+    black = _find_tool("black")
+
+    py_files = sorted(directory.rglob("*.py"))
+
+    # 1. pyupgrade --py39-plus  (per-file tool)
+    if pyupgrade:
+        logger.info("  Running pyupgrade on %s...", directory)
+        for f in py_files:
+            subprocess.run(
+                [pyupgrade, "--py39-plus", str(f)],
+                cwd=str(REPO_ROOT),
+                capture_output=True,
+            )
+    else:
+        logger.debug("run_formatters: pyupgrade not found")
+
+    # 2. ruff check --fix --fixable=ALL  (matches pre-commit args)
+    if ruff:
+        logger.info("  Running ruff check --fix on %s...", directory)
         subprocess.run(
-            [str(black), str(directory), "--quiet", "--line-length", "120"],
+            [ruff, "check", "--fix", "--fixable=ALL", str(directory), "--quiet"],
             cwd=str(REPO_ROOT),
             capture_output=True,
         )
     else:
-        logger.debug("run_formatters: black not found at %s", black)
+        logger.debug("run_formatters: ruff not found")
 
-    if ruff.exists():
-        logger.info(f"  Running ruff check --fix on {directory}...")
+    # 3. docformatter --in-place  (per-file tool, reads config from pyproject.toml)
+    if docformatter:
+        logger.info("  Running docformatter on %s...", directory)
+        for f in py_files:
+            subprocess.run(
+                [docformatter, "--in-place", str(f)],
+                cwd=str(REPO_ROOT),
+                capture_output=True,
+            )
+    else:
+        logger.debug("run_formatters: docformatter not found")
+
+    # 4. black  (directory-level tool, reads config from pyproject.toml)
+    if black:
+        logger.info("  Running black on %s...", directory)
         subprocess.run(
-            [str(ruff), "check", "--fix", str(directory), "--quiet"],
+            [black, str(directory), "--quiet"],
             cwd=str(REPO_ROOT),
             capture_output=True,
         )
     else:
-        logger.debug("run_formatters: ruff not found at %s", ruff)
-
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
+        logger.debug("run_formatters: black not found")
 
 
 def main():
@@ -3603,6 +5232,12 @@ def main():
     logger.info(f"Found {len(analyzer.class_to_file)} classes")
 
     logger.info("[2/6] Analyzing I/O dependencies...")
+    analyzer.build_type_registry()
+    logger.info(
+        "Type registry: %d return types, %d param types",
+        len(analyzer.return_types),
+        len(analyzer.param_types),
+    )
     analyzer.seed_io_classes()
     logger.info(f"I/O root classes: {sorted(analyzer.async_classes)}")
     analyzer.propagate_async_classes()
@@ -3623,7 +5258,6 @@ def main():
         if methods:
             logger.debug("%s: %s", cls, sorted(methods))
 
-    # ---- Generate async source files ----
     logger.info(f"[3/6] Generating async source files in {DST_PKG}...")
 
     # Clean output directory
