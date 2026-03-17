@@ -147,6 +147,7 @@
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 # Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
 # Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
+# Copyright 2026 LuK1337 <priv.luk@gmail.com>                                  #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -400,6 +401,7 @@ class Repository(CompletableGithubObject):
         self._has_issues: Attribute[bool] = NotSet
         self._has_pages: Attribute[bool] = NotSet
         self._has_projects: Attribute[bool] = NotSet
+        self._has_pull_requests: Attribute[bool] = NotSet
         self._has_wiki: Attribute[bool] = NotSet
         self._homepage: Attribute[str] = NotSet
         self._hooks_url: Attribute[str] = NotSet
@@ -810,6 +812,14 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._has_projects)
         return self._has_projects.value
+
+    @property
+    def has_pull_requests(self) -> bool:
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
 
     @property
     def has_wiki(self) -> bool:
@@ -2186,6 +2196,7 @@ class Repository(CompletableGithubObject):
         visibility: Opt[str] = NotSet,
         has_issues: Opt[bool] = NotSet,
         has_projects: Opt[bool] = NotSet,
+        has_pull_requests: Opt[bool] = NotSet,
         has_wiki: Opt[bool] = NotSet,
         has_discussions: Opt[bool] = NotSet,
         is_template: Opt[bool] = NotSet,
@@ -2218,6 +2229,7 @@ class Repository(CompletableGithubObject):
         assert visibility in ["public", "private", "internal", NotSet], visibility
         assert is_optional(has_issues, bool), has_issues
         assert is_optional(has_projects, bool), has_projects
+        assert is_optional(has_pull_requests, bool), has_pull_requests
         assert is_optional(has_wiki, bool), has_wiki
         assert is_optional(has_discussions, bool), has_discussions
         assert is_optional(is_template, bool), is_template
@@ -2252,6 +2264,7 @@ class Repository(CompletableGithubObject):
                 "visibility": visibility,
                 "has_issues": has_issues,
                 "has_projects": has_projects,
+                "has_pull_requests": has_pull_requests,
                 "has_wiki": has_wiki,
                 "has_discussions": has_discussions,
                 "is_template": is_template,
@@ -4774,6 +4787,8 @@ class Repository(CompletableGithubObject):
             self._has_pages = self._makeBoolAttribute(attributes["has_pages"])
         if "has_projects" in attributes:  # pragma no branch
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
