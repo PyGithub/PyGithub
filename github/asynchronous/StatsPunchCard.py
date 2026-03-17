@@ -43,8 +43,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import github.NamedUser  # TODO remove unused
-
 from . import GithubObject
 
 

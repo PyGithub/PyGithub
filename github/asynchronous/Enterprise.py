@@ -42,16 +42,12 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from typing_extensions import deprecated
 
 from . import EnterpriseConsumedLicenses, Requester
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined, is_undefined
-
-if TYPE_CHECKING:
-    from .EnterpriseConsumedLicenses import EnterpriseConsumedLicenses
-    from .Requester import Requester
 
 
 class Enterprise(NonCompletableGithubObject):

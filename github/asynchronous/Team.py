@@ -79,13 +79,7 @@ from . import Membership, NamedUser, Organization, PaginatedList, Permissions, R
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_undefined, method_returns
 
 if TYPE_CHECKING:
-    from .Membership import Membership
-    from .NamedUser import NamedUser, OrganizationInvitation
-    from .Organization import Organization
-    from .PaginatedList import PaginatedList
-    from .Permissions import Permissions
-    from .Repository import Repository
-    from .TeamDiscussion import TeamDiscussion
+    from .NamedUser import OrganizationInvitation
 
 
 class Team(CompletableGithubObject):
@@ -326,7 +320,7 @@ class Team(CompletableGithubObject):
         """
         assert isinstance(repo, (str, Repository.Repository, github.Repository.Repository)), repo
         headers, data = await self._requester.requestJsonAndCheck(
-            "PUT", f"{await self.url}/repos/{(await Repository.Repository.as_url_param(repo))}"
+            "PUT", f"{await self.url}/repos/{await Repository.Repository.as_url_param(repo)}"
         )
 
     @method_returns(schema_property="permissions")
@@ -338,16 +332,18 @@ class Team(CompletableGithubObject):
         try:
             headers, data = await self._requester.requestJsonAndCheck(
                 "GET",
-                f"{await self.url}/repos/{(await Repository.Repository.as_url_param(repo))}",
+                f"{await self.url}/repos/{await Repository.Repository.as_url_param(repo)}",
                 headers={"Accept": Consts.teamRepositoryPermissions},
             )
             return Permissions.Permissions(self._requester, headers, data["permissions"])
         except UnknownObjectException:
             return None
 
-    @deprecated("""
+    @deprecated(
+        """
         Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
-        """)
+        """
+    )
     async def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
         """
         :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
@@ -360,7 +356,7 @@ class Team(CompletableGithubObject):
             "permission": permission,
         }
         headers, data = await self._requester.requestJsonAndCheck(
-            "PUT", f"{await self.url}/repos/{(await Repository.Repository.as_url_param(repo))}", input=put_parameters
+            "PUT", f"{await self.url}/repos/{await Repository.Repository.as_url_param(repo)}", input=put_parameters
         )
 
     async def update_team_repository(self, repo: str | Repository, permission: str) -> bool:
@@ -374,7 +370,7 @@ class Team(CompletableGithubObject):
         }
         status, _, _ = await self._requester.requestJson(
             "PUT",
-            f"{await (await self.organization).url}/teams/{await self.slug}/repos/{(await Repository.Repository.as_url_param(repo))}",
+            f"{await (await self.organization).url}/teams/{await self.slug}/repos/{await Repository.Repository.as_url_param(repo)}",
             input=put_parameters,
         )
         return status == 204
@@ -491,7 +487,7 @@ class Team(CompletableGithubObject):
         """
         assert isinstance(repo, (str, Repository.Repository, github.Repository.Repository)), repo
         status, headers, data = await self._requester.requestJson(
-            "GET", f"{await self.url}/repos/{(await Repository.Repository.as_url_param(repo))}"
+            "GET", f"{await self.url}/repos/{await Repository.Repository.as_url_param(repo)}"
         )
         return status == 204
 
@@ -523,7 +519,7 @@ class Team(CompletableGithubObject):
         """
         assert isinstance(repo, (str, Repository.Repository, github.Repository.Repository)), repo
         headers, data = await self._requester.requestJsonAndCheck(
-            "DELETE", f"{await self.url}/repos/{(await Repository.Repository.as_url_param(repo))}"
+            "DELETE", f"{await self.url}/repos/{await Repository.Repository.as_url_param(repo)}"
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

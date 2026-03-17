@@ -90,8 +90,7 @@ import logging
 import mimetypes
 import os
 import re
-import sys as _sys  # noqa: E402
-import time
+import sys as _sys
 import urllib
 import urllib.parse
 from collections import deque
@@ -103,16 +102,13 @@ from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
 import niquests
 import niquests.adapters
 
+import github
 import github.Consts as Consts
-from github import GithubException
 
 # FILE AUTO GENERATED DO NOT TOUCH
-from .GithubObject import is_defined
+from .GithubObject import Opt, as_rest_api_attributes, is_undefined
 
 GithubException = _sys.modules["github.GithubException"]  # Get MODULE, not class
-import github
-
-from .GithubObject import Opt, as_rest_api_attributes, is_undefined
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication

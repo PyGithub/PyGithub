@@ -45,14 +45,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import NamedUser, Organization
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .NamedUser import NamedUser
-    from .Organization import Organization
 
 
 class Membership(CompletableGithubObject):

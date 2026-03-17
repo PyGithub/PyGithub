@@ -43,14 +43,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import NamedUser, PaginatedList, Repository
+from . import NamedUser, Repository
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .NamedUser import NamedUser
-    from .Repository import Repository
 
 
 class InstallationAuthorization(NonCompletableGithubObject):

@@ -42,7 +42,6 @@ from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
 from .Requester import Requester
 
 if TYPE_CHECKING:
-    from .AccessToken import AccessToken
     from .Auth import AppUserAuth
 
 

@@ -46,14 +46,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import GithubApp, NamedUser, Organization
+from . import GithubApp, NamedUser
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .GithubApp import GithubApp
-    from .NamedUser import NamedUser
 
 
 class DeploymentStatus(CompletableGithubObject):

@@ -46,15 +46,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import Enterprise, GithubObject, NamedUser, Organization
+from . import Enterprise, NamedUser, Organization
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .Enterprise import Enterprise
-    from .NamedUser import NamedUser
-    from .Organization import Organization
 
 
 class GithubApp(CompletableGithubObject):

@@ -23,7 +23,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import github
 
@@ -38,14 +38,6 @@ from .GithubObject import (
     is_undefined,
 )
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .Label import Label
-    from .NamedUser import NamedUser
-    from .Reaction import Reaction
-    from .Repository import Repository
-    from .RepositoryDiscussionCategory import RepositoryDiscussionCategory
-    from .RepositoryDiscussionComment import RepositoryDiscussionComment
 
 
 class RepositoryDiscussion(GraphQlObject, DiscussionBase):

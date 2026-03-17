@@ -44,19 +44,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import GithubApp, GithubObject, Issue, Label, Milestone, NamedUser, Organization, Team
+from . import GithubApp, Issue, Label, Milestone, NamedUser, Organization, Team
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .GithubApp import GithubApp
-    from .Issue import Issue
-    from .Label import Label
-    from .Milestone import Milestone
-    from .NamedUser import NamedUser
-    from .Organization import Organization
-    from .Team import Team
 
 
 class IssueEvent(CompletableGithubObject):

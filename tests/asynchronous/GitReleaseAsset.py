@@ -94,7 +94,7 @@ class GitReleaseAsset(Framework.TestCase):
         self.assertEqual(content[:19], b"\x1f\x8b\x08\x08\xf5\x9aag\x00\x03README.md")
 
     def testDownloadAssetStream(self):
-        _, _, chunks = self.asset.download_asset()
+        (_, _, chunks) = self.asset.download_asset()
         content = b"".join([chunk for chunk in chunks if chunk])
         self.assertEqual(len(content), 2524)
         self.assertEqual(
@@ -106,7 +106,7 @@ class GitReleaseAsset(Framework.TestCase):
         self.assertEqual(content[-50:], b"send an email to someone in the MAINTAINERS file.\n")
 
         source_asset = self.release.assets[1]
-        _, _, chunks = source_asset.download_asset()
+        (_, _, chunks) = source_asset.download_asset()
         content = b"".join([chunk for chunk in chunks if chunk])
         self.assertEqual(len(content), 1199)
         self.assertEqual(content[:19], b"\x1f\x8b\x08\x08\xf5\x9aag\x00\x03README.md")

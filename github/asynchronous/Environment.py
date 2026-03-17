@@ -44,18 +44,11 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import EnvironmentDeploymentBranchPolicy, EnvironmentProtectionRule, PublicKey, Secret, Variable
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, is_undefined
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicy
-    from .EnvironmentProtectionRule import EnvironmentProtectionRule
-    from .PublicKey import PublicKey
-    from .Secret import Secret
-    from .Variable import Variable
 
 
 class Environment(CompletableGithubObject):

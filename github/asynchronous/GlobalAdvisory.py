@@ -29,15 +29,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import AdvisoryBase, AdvisoryCreditDetailed, AdvisoryVulnerability
+from . import AdvisoryCreditDetailed, AdvisoryVulnerability
 from .AdvisoryBase import AdvisoryBase
 from .GithubObject import Attribute, NotSet
-
-if TYPE_CHECKING:
-    from .AdvisoryCreditDetailed import AdvisoryCreditDetailed
-    from .AdvisoryVulnerability import AdvisoryVulnerability
 
 
 class GlobalAdvisory(AdvisoryBase):

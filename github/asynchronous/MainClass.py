@@ -105,7 +105,7 @@ from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
 import niquests
 
 import github.GithubObject
-from github import Consts, GithubRetry
+from github import Consts
 from github.GithubRetry import GithubRetry
 
 from . import (
@@ -118,16 +118,12 @@ from . import (
     Event,
     Gist,
     GithubApp,
-    GithubIntegration,
-    GithubObject,
     GitignoreTemplate,
     GlobalAdvisory,
-    HookDescription,
     Issue,
     License,
     NamedUser,
     Organization,
-    PaginatedList,
     Project,
     ProjectColumn,
     Repository,
@@ -144,24 +140,11 @@ from .Requester import Requester
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
-    from .ApplicationOAuth import ApplicationOAuth
-    from .AuthenticatedUser import AuthenticatedUser
     from .Commit import CommitSearchResult
     from .ContentFile import ContentFileSearchResult
-    from .Event import Event
-    from .Gist import Gist
-    from .GithubApp import GithubApp
-    from .GitignoreTemplate import GitignoreTemplate
-    from .GlobalAdvisory import GlobalAdvisory
     from .Issue import IssueSearchResult
-    from .License import License
-    from .NamedUser import NamedUser, NamedUserSearchResult
-    from .Organization import Organization
-    from .Project import Project
-    from .ProjectColumn import ProjectColumn
-    from .Repository import Repository, RepositorySearchResult
-    from .RepositoryDiscussion import RepositoryDiscussion
-    from .Topic import Topic
+    from .NamedUser import NamedUserSearchResult
+    from .Repository import RepositorySearchResult
 
 TGithubObject = TypeVar("TGithubObject", bound=GithubObject)
 
@@ -1025,9 +1008,7 @@ class Github:
             stream-format>`_
 
         """
-        _raw_data = await obj.raw_data
-        _raw_headers = await obj.raw_headers
-        pickle.dump((obj.__class__, _raw_data, _raw_headers), file, protocol)
+        pickle.dump((obj.__class__, (await obj.raw_data), (await obj.raw_headers)), file, protocol)
 
     def load(self, f: BinaryIO) -> Any:
         """

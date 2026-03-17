@@ -32,18 +32,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import CodeScanAlertInstance, CodeScanRule, CodeScanTool, GithubObject, NamedUser, Organization
+from . import CodeScanAlertInstance, CodeScanRule, CodeScanTool, NamedUser, Organization
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .CodeScanAlertInstance import CodeScanAlertInstance
-    from .CodeScanRule import CodeScanRule
-    from .CodeScanTool import CodeScanTool
-    from .NamedUser import NamedUser
-    from .Organization import Organization
 
 
 class CodeScanAlert(NonCompletableGithubObject):

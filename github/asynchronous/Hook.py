@@ -46,7 +46,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import GithubObject, HookResponse
+from . import HookResponse
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional, is_optional_list
 
 

@@ -80,7 +80,7 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -91,14 +91,11 @@ from . import (
     Commit,
     File,
     GitRef,
-    Issue,
     IssueComment,
     IssueEvent,
     Label,
     Milestone,
     NamedUser,
-    Organization,
-    PaginatedList,
     PullRequestComment,
     PullRequestMergeStatus,
     PullRequestPart,
@@ -118,22 +115,6 @@ from .GithubObject import (
 )
 from .Issue import Issue
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .Commit import Commit
-    from .File import File
-    from .GitRef import GitRef
-    from .IssueComment import IssueComment
-    from .IssueEvent import IssueEvent
-    from .Label import Label
-    from .Milestone import Milestone
-    from .NamedUser import NamedUser
-    from .PullRequestComment import PullRequestComment
-    from .PullRequestMergeStatus import PullRequestMergeStatus
-    from .PullRequestPart import PullRequestPart
-    from .PullRequestReview import PullRequestReview
-    from .Team import Team
-    from .TimelineEvent import TimelineEvent
 
 
 class ReviewComment(TypedDict):
@@ -891,13 +872,13 @@ class PullRequest(CompletableGithubObject):
             remaining_pulls = await (await self.head).repo.get_pulls(
                 head=f"{await (await (await self.head).repo.owner).login}:{(await self.head).ref}"
             )
-            if await remaining_pulls.totalCount > 0:
+            if (await remaining_pulls.totalCount) > 0:
                 raise RuntimeError(
                     "This branch is referenced by open pull requests, set force=True to delete this branch."
                 )
-        _ref = await (await self.head).repo.get_git_ref(f"heads/{(await self.head).ref}")
-        await _ref.complete()
-        return await _ref.delete()
+        _chain_get_git_ref = await (await self.head).repo.get_git_ref(f"heads/{(await self.head).ref}")
+        await _chain_get_git_ref.complete()
+        return await _chain_get_git_ref.delete()
 
     async def enable_automerge(
         self,
@@ -997,11 +978,9 @@ class PullRequest(CompletableGithubObject):
         ), assignees
         post_parameters = {
             "assignees": [
-                (
-                    (await assignee.login)
-                    if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                    else assignee
-                )
+                (await assignee.login)
+                if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
+                else assignee
                 for assignee in assignees
             ]
         }
@@ -1020,11 +999,9 @@ class PullRequest(CompletableGithubObject):
         ), assignees
         post_parameters = {
             "assignees": [
-                (
-                    (await assignee.login)
-                    if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                    else assignee
-                )
+                (await assignee.login)
+                if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
+                else assignee
                 for assignee in assignees
             ]
         }

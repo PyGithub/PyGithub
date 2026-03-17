@@ -85,7 +85,6 @@ from . import (
     Authorization,
     Event,
     Gist,
-    GithubObject,
     Installation,
     Invitation,
     Issue,
@@ -115,24 +114,6 @@ from .PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.InputFileContent import InputFileContent
-
-    from .Authorization import Authorization
-    from .Event import Event
-    from .Gist import Gist
-    from .Installation import Installation
-    from .Invitation import Invitation
-    from .Issue import Issue
-    from .Label import Label
-    from .Membership import Membership
-    from .Migration import Migration
-    from .NamedUser import NamedUser
-    from .Notification import Notification
-    from .Organization import Organization
-    from .Plan import Plan
-    from .Project import Project
-    from .Repository import Repository
-    from .Team import Team
-    from .UserKey import UserKey
 
 
 class EmailData(NamedTuple):

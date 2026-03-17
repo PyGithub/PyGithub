@@ -54,7 +54,7 @@ from typing import Any
 
 from github import Consts
 
-from . import GithubObject, Project, ProjectCard
+from . import ProjectCard
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt, is_defined, is_undefined
 from .PaginatedList import PaginatedList
 

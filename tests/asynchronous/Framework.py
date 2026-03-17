@@ -6,14 +6,9 @@ Uses a SyncProxy approach: the async Github object and all objects returned
 from it are wrapped in a proxy that automatically runs coroutines synchronously.
 This allows test method bodies to remain identical to sync tests.
 """
-
 from __future__ import annotations
 
 import asyncio
-import inspect
-from collections.abc import AsyncIterator
-
-import responses
 
 import github.asynchronous.GithubObject
 import github.asynchronous.Requester
@@ -29,7 +24,9 @@ BasicTestCase = Framework.BasicTestCase
 
 
 def _is_completable(obj):
-    """Check if an object is a CompletableGithubObject that may need completion."""
+    """
+    Check if an object is a CompletableGithubObject that may need completion.
+    """
     try:
         return isinstance(obj, github.asynchronous.GithubObject.CompletableGithubObject)
     except Exception:
@@ -37,11 +34,12 @@ def _is_completable(obj):
 
 
 class AsyncReplayingConnection(Framework.ReplayingConnection):
-    """Async-aware replaying connection.
+    """
+    Async-aware replaying connection.
 
-    Inherits the replay file logic from ReplayingConnection.
-    Overrides getresponse() and close() to be async, since the
+    Inherits the replay file logic from ReplayingConnection. Overrides getresponse() and close() to be async, since the
     async Requester awaits these methods.
+
     """
 
     async def getresponse(self):
@@ -70,18 +68,19 @@ class AsyncReplayingHttpsConnection(AsyncReplayingConnection):
 
 
 class SyncProxy:
-    """Proxy that wraps an async object and makes its async methods callable synchronously.
+    """
+    Proxy that wraps an async object and makes its async methods callable synchronously.
 
-    When an async method is called, it is automatically run to completion in an event loop.
-    Objects returned from async calls are recursively wrapped in SyncProxy.
-    Supports sync iteration over objects that implement __aiter__/__anext__.
+    When an async method is called, it is automatically run to completion in an event loop. Objects returned from async
+    calls are recursively wrapped in SyncProxy. Supports sync iteration over objects that implement __aiter__/__anext__.
+
     """
 
     # Types that should NOT be wrapped (they are plain values)
     _PASSTHROUGH = (str, int, float, bool, bytes, type(None))
     # Cache: id(obj) -> SyncProxy, so the same underlying object always
     # returns the same wrapper (preserves `is` identity checks).
-    _cache: dict[int, "SyncProxy"] = {}
+    _cache: dict[int, SyncProxy] = {}
 
     def __init__(self, obj, loop=None):
         object.__setattr__(self, "_obj", obj)
@@ -91,14 +90,14 @@ class SyncProxy:
 
     @staticmethod
     def _deep_unwrap(obj):
-        """Recursively unwrap SyncProxy objects inside containers.
+        """
+        Recursively unwrap SyncProxy objects inside containers.
 
-        This is needed because async methods may iterate over list/tuple/dict
-        arguments and access async properties on the elements. If the elements
-        are still SyncProxy-wrapped, accessing an async property triggers
-        SyncProxy.__getattr__ -> run_until_complete, which fails with
-        'RuntimeError: This event loop is already running' since the outer
-        async call is already running on the same loop.
+        This is needed because async methods may iterate over list/tuple/dict arguments and access async properties on
+        the elements. If the elements are still SyncProxy-wrapped, accessing an async property triggers
+        SyncProxy.__getattr__ -> run_until_complete, which fails with 'RuntimeError: This event loop is already running'
+        since the outer async call is already running on the same loop.
+
         """
         if isinstance(obj, SyncProxy):
             return object.__getattribute__(obj, "_obj")
@@ -117,7 +116,9 @@ class SyncProxy:
 
     @classmethod
     def _wrap(cls, result, loop):
-        """Wrap a result if it's a complex object, pass through primitives."""
+        """
+        Wrap a result if it's a complex object, pass through primitives.
+        """
         if isinstance(result, cls._PASSTHROUGH):
             return result
         # Don't wrap _NotSetType instances (NotSet sentinel).
@@ -175,9 +176,12 @@ class SyncProxy:
         return cls(result, loop)
 
     def _ensure_completed(self):
-        """Lazily complete the underlying object if it's a CompletableGithubObject
-        that hasn't been completed yet. This mirrors the sync code's
-        _completeIfNotSet() which triggers completion on property access."""
+        """
+        Lazily complete the underlying object if it's a CompletableGithubObject that hasn't been completed yet.
+
+        This mirrors the sync code's _completeIfNotSet() which triggers completion on property access.
+
+        """
         obj = object.__getattribute__(self, "_obj")
         loop = object.__getattribute__(self, "_loop")
         if _is_completable(obj) and not obj.completed:
@@ -342,29 +346,36 @@ class SyncProxy:
         return obj.__exit__(*args)
 
     def __isinstance_check__(self):
-        """Return the wrapped object for isinstance checks."""
+        """
+        Return the wrapped object for isinstance checks.
+        """
         return object.__getattribute__(self, "_obj")
 
 
 class TestCase(Framework.BasicTestCase):
-    """Async version of Framework.TestCase.
+    """
+    Async version of Framework.TestCase.
 
-    Creates an async Github instance wrapped in SyncProxy,
-    so test methods can call async methods synchronously.
+    Creates an async Github instance wrapped in SyncProxy, so test methods can call async methods synchronously.
+
     """
 
     @staticmethod
     def _unwrap(obj):
-        """Unwrap a SyncProxy to get the underlying object."""
+        """
+        Unwrap a SyncProxy to get the underlying object.
+        """
         if isinstance(obj, SyncProxy):
             return object.__getattribute__(obj, "_obj")
         return obj
 
     @staticmethod
     def _resolve_async_class(cls):
-        """Try to find the async equivalent of a sync class.
+        """
+        Try to find the async equivalent of a sync class.
 
         For example, github.Repository.Repository -> github.asynchronous.Repository.Repository
+
         """
         mod = getattr(cls, "__module__", "") or ""
         if mod.startswith("github.") and not mod.startswith("github.asynchronous."):
@@ -379,7 +390,9 @@ class TestCase(Framework.BasicTestCase):
         return cls
 
     def assertIsInstance(self, obj, cls, msg=None):
-        """Override to unwrap SyncProxy and also check async class hierarchy."""
+        """
+        Override to unwrap SyncProxy and also check async class hierarchy.
+        """
         unwrapped = self._unwrap(obj)
         if isinstance(unwrapped, cls):
             return
@@ -391,7 +404,9 @@ class TestCase(Framework.BasicTestCase):
         super().assertIsInstance(unwrapped, cls, msg)
 
     def assertNotIsInstance(self, obj, cls, msg=None):
-        """Override to unwrap SyncProxy and also check async class hierarchy."""
+        """
+        Override to unwrap SyncProxy and also check async class hierarchy.
+        """
         unwrapped = self._unwrap(obj)
         async_cls = self._resolve_async_class(cls)
         # Must not be instance of EITHER sync or async class

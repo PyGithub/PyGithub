@@ -50,7 +50,7 @@ from typing import Any
 
 import github
 
-from . import Branch, Commit, GithubObject, NamedUser, Tag, WorkflowRun
+from . import Branch, Commit, NamedUser, Tag, WorkflowRun
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_undefined
 from .PaginatedList import PaginatedList
 

@@ -41,15 +41,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import GitAuthor, GitCommitVerification, GithubObject, GitObject, GitTreeElement
+from . import GitAuthor, GitCommitVerification, GitObject
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .GitAuthor import GitAuthor
-    from .GitCommitVerification import GitCommitVerification
-    from .GitObject import GitObject
 
 
 class GitTag(CompletableGithubObject):

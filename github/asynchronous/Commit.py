@@ -49,7 +49,7 @@
 from __future__ import annotations
 
 import urllib.parse
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import (
     Branch,
@@ -62,26 +62,11 @@ from . import (
     File,
     GitCommit,
     NamedUser,
-    PaginatedList,
     PullRequest,
     Repository,
 )
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .Branch import Branch
-    from .CheckRun import CheckRun
-    from .CheckSuite import CheckSuite
-    from .CommitCombinedStatus import CommitCombinedStatus
-    from .CommitComment import CommitComment
-    from .CommitStats import CommitStats
-    from .CommitStatus import CommitStatus
-    from .File import File
-    from .GitCommit import GitCommit
-    from .NamedUser import NamedUser
-    from .PullRequest import PullRequest
-    from .Repository import Repository
 
 
 class Commit(CompletableGithubObject):

@@ -42,14 +42,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import NamedUser, Team
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .NamedUser import NamedUser
-    from .Team import Team
 
 
 class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):

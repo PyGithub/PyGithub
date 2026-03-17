@@ -30,7 +30,6 @@ from .GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defi
 from .PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
-    from .CopilotSeat import CopilotSeat
     from .Requester import Requester
 
 

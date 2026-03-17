@@ -52,24 +52,12 @@ from typing import TYPE_CHECKING, Any
 
 import github
 
-from . import (
-    AuthenticatedUser,
-    GistComment,
-    GistFile,
-    GistHistoryState,
-    GithubObject,
-    NamedUser,
-    Organization,
-    PaginatedList,
-)
+from . import GistComment, GistFile, GistHistoryState, NamedUser
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, _NotSetType, is_defined, is_optional
 from .PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.InputFileContent import InputFileContent
-
-    from .GistComment import GistComment
-    from .GistHistoryState import GistHistoryState
 
 
 class Gist(CompletableGithubObject):

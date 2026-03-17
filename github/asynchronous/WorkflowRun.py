@@ -39,19 +39,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, NamedTuple
+from typing import Any, NamedTuple
 
 from . import Artifact, GitCommit, NamedUser, PullRequest, Repository, WorkflowJob
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .Artifact import Artifact
-    from .GitCommit import GitCommit
-    from .NamedUser import NamedUser
-    from .PullRequest import PullRequest
-    from .Repository import Repository
-    from .WorkflowJob import WorkflowJob
 
 
 class TimingData(NamedTuple):

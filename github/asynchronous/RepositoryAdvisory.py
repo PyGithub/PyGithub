@@ -41,12 +41,8 @@ from .AdvisoryBase import AdvisoryBase
 from .GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
 
 if TYPE_CHECKING:
-    from .AdvisoryCredit import AdvisoryCredit, Credit
-    from .AdvisoryCreditDetailed import AdvisoryCreditDetailed
-    from .AdvisoryVulnerability import AdvisoryVulnerability, AdvisoryVulnerabilityInput
-    from .NamedUser import NamedUser
-    from .Repository import Repository
-    from .Team import Team
+    from .AdvisoryCredit import Credit
+    from .AdvisoryVulnerability import AdvisoryVulnerabilityInput
 
 
 class RepositoryAdvisory(AdvisoryBase):

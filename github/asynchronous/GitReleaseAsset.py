@@ -49,7 +49,7 @@ from collections.abc import Iterator
 from datetime import datetime
 from typing import Any
 
-from . import NamedUser, Organization
+from . import NamedUser
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
 
 

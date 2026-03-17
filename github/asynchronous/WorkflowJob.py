@@ -34,7 +34,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import GithubObject, WorkflowStep
+from . import WorkflowStep
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
 
 

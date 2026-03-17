@@ -47,7 +47,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import GithubObject, NamedUser, TimelineEventSource
+from . import NamedUser, TimelineEventSource
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet, is_defined
 
 

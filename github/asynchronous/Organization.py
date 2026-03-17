@@ -100,14 +100,11 @@ import github
 from github import Consts
 
 from . import (
-    CodeScanAlert,
     CodeSecurityConfig,
     CodeSecurityConfigRepository,
     Copilot,
     DefaultCodeSecurityConfig,
-    DependabotAlert,
     Event,
-    GithubObject,
     Hook,
     HookDelivery,
     Installation,
@@ -125,7 +122,6 @@ from . import (
     Project,
     PublicKey,
     Repository,
-    SecretScanAlert,
     SelfHostedActionsRunner,
     SelfHostedActionsRunnerApplication,
     SelfHostedActionsRunnerJitConfig,
@@ -145,36 +141,11 @@ from .GithubObject import (
 from .PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
-    from .CodeSecurityConfig import CodeSecurityConfig
-    from .CodeSecurityConfigRepository import CodeSecurityConfigRepository
-    from .Copilot import Copilot
-    from .DefaultCodeSecurityConfig import DefaultCodeSecurityConfig
-    from .Event import Event
-    from .Hook import Hook
-    from .Installation import Installation
-    from .Issue import Issue
-    from .Label import Label
-    from .Migration import Migration
-    from .NamedUser import NamedUser, OrganizationInvitation
-    from .OrganizationCodeScanAlert import OrganizationCodeScanAlert
+    from .NamedUser import OrganizationInvitation
     from .OrganizationCustomProperty import (
         CustomProperty,
-        OrganizationCustomProperty,
         RepositoryCustomPropertyValues,
     )
-    from .OrganizationDependabotAlert import OrganizationDependabotAlert
-    from .OrganizationSecret import OrganizationSecret
-    from .OrganizationSecretScanAlert import OrganizationSecretScanAlert
-    from .OrganizationVariable import OrganizationVariable
-    from .Plan import Plan
-    from .Project import Project
-    from .PublicKey import PublicKey
-    from .Repository import Repository
-    from .SelfHostedActionsRunner import SelfHostedActionsRunner
-    from .SelfHostedActionsRunnerApplication import SelfHostedActionsRunnerApplication
-    from .SelfHostedActionsRunnerJitConfig import SelfHostedActionsRunnerJitConfig
-    from .SelfHostedActionsRunnerToken import SelfHostedActionsRunnerToken
-    from .Team import Team
 
 
 class Organization(CompletableGithubObject):
@@ -691,7 +662,7 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(public_member, (NamedUser.NamedUser, github.NamedUser.NamedUser)), public_member
         headers, data = await self._requester.requestJsonAndCheck(
-            "PUT", f"{await self.url}/public_members/{await public_member._identity}"
+            "PUT", f"{await self.url}/public_members/{(await public_member._identity)}"
         )
 
     async def create_fork(
@@ -738,7 +709,7 @@ class Organization(CompletableGithubObject):
 
         headers, data = await self._requester.requestJsonAndCheck(
             "POST",
-            f"/repos/{await (await repo.owner).login}/{await repo.name}/generate",
+            f"/repos/{await (await repo.owner).login}/{(await repo.name)}/generate",
             input=post_parameters,
             headers={"Accept": "application/vnd.github.v3+json"},
         )
@@ -938,7 +909,7 @@ class Organization(CompletableGithubObject):
             # https://docs.github.com/en/rest/dependabot/secrets?apiVersion=2022-11-28#create-or-update-an-organization-secret
             # https://docs.github.com/en/rest/actions/secrets?apiVersion=2022-11-28#create-or-update-an-organization-secret
             if secret_type == "actions":
-                put_parameters["selected_repository_ids"] = [await element.id for element in selected_repositories]
+                put_parameters["selected_repository_ids"] = [(await element.id) for element in selected_repositories]
             if secret_type == "dependabot":
                 put_parameters["selected_repository_ids"] = [str(await element.id) for element in selected_repositories]
 
@@ -1032,7 +1003,7 @@ class Organization(CompletableGithubObject):
             }
         )
         if is_defined(repo_names):
-            post_parameters["repo_names"] = [await element._identity for element in repo_names]
+            post_parameters["repo_names"] = [(await element._identity) for element in repo_names]
         headers, data = await self._requester.requestJsonAndCheck(
             "POST", f"{await self.url}/teams", input=post_parameters
         )
@@ -1070,7 +1041,7 @@ class Organization(CompletableGithubObject):
             "visibility": visibility,
         }
         if is_defined(selected_repositories):
-            post_parameters["selected_repository_ids"] = [await element.id for element in selected_repositories]
+            post_parameters["selected_repository_ids"] = [(await element.id) for element in selected_repositories]
 
         await self._requester.requestJsonAndCheck("POST", f"{await self.url}/actions/variables", input=post_parameters)
 
@@ -1466,7 +1437,7 @@ class Organization(CompletableGithubObject):
         if is_defined(user):
             parameters["invitee_id"] = await user.id
         if is_defined(teams):
-            parameters["team_ids"] = [await t.id for t in teams]
+            parameters["team_ids"] = [(await t.id) for t in teams]
 
         headers, data = await self._requester.requestJsonAndCheck(
             "POST",
@@ -1483,7 +1454,7 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(invitee, (NamedUser.NamedUser, github.NamedUser.NamedUser)), invitee
         status, headers, data = await self._requester.requestJson(
-            "DELETE", f"{await self.url}/invitations/{await invitee.id}"
+            "DELETE", f"{await self.url}/invitations/{(await invitee.id)}"
         )
         return status == 204
 
@@ -1509,7 +1480,7 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(public_member, (NamedUser.NamedUser, github.NamedUser.NamedUser)), public_member
         status, headers, data = await self._requester.requestJson(
-            "GET", f"{await self.url}/public_members/{await public_member._identity}"
+            "GET", f"{await self.url}/public_members/{(await public_member._identity)}"
         )
         return status == 204
 
@@ -1543,7 +1514,7 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(public_member, (NamedUser.NamedUser, github.NamedUser.NamedUser)), public_member
         headers, data = await self._requester.requestJsonAndCheck(
-            "DELETE", f"{await self.url}/public_members/{await public_member._identity}"
+            "DELETE", f"{await self.url}/public_members/{(await public_member._identity)}"
         )
 
     async def create_migration(

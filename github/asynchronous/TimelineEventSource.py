@@ -41,13 +41,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import Issue
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .Issue import Issue
 
 
 class TimelineEventSource(NonCompletableGithubObject):

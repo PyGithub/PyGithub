@@ -49,7 +49,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import GithubObject, NamedUser, Organization
+from . import NamedUser
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 

@@ -27,24 +27,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import (
-    AdvisoryVulnerabilityPackage,
-    DependabotAlertAdvisory,
-    DependabotAlertDependency,
-    DependabotAlertVulnerability,
-    NamedUser,
-    Organization,
-)
+from . import DependabotAlertAdvisory, DependabotAlertDependency, DependabotAlertVulnerability, NamedUser, Organization
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .DependabotAlertAdvisory import DependabotAlertAdvisory
-    from .DependabotAlertDependency import DependabotAlertDependency
-    from .DependabotAlertVulnerability import DependabotAlertVulnerability
-    from .NamedUser import NamedUser
-    from .Organization import Organization
 
 
 class DependabotAlert(NonCompletableGithubObject):

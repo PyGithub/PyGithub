@@ -24,14 +24,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import NamedUser, SecretScanAlertInstance
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .NamedUser import NamedUser
-    from .SecretScanAlertInstance import SecretScanAlertInstance
 
 
 class SecretScanAlert(NonCompletableGithubObject):

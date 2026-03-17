@@ -53,20 +53,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from github import Consts
 
-from . import (
-    BranchProtection,
-    Commit,
-    GithubObject,
-    NamedUser,
-    PaginatedList,
-    RequiredPullRequestReviews,
-    RequiredStatusChecks,
-    Team,
-)
+from . import BranchProtection, Commit, NamedUser, PaginatedList, RequiredPullRequestReviews, RequiredStatusChecks, Team
 from .GithubObject import (
     Attribute,
     NonCompletableGithubObject,
@@ -77,15 +68,6 @@ from .GithubObject import (
     is_optional_list,
     is_undefined,
 )
-
-if TYPE_CHECKING:
-    from .BranchProtection import BranchProtection
-    from .Commit import Commit
-    from .NamedUser import NamedUser
-    from .PaginatedList import PaginatedList
-    from .RequiredPullRequestReviews import RequiredPullRequestReviews
-    from .RequiredStatusChecks import RequiredStatusChecks
-    from .Team import Team
 
 
 class Branch(NonCompletableGithubObject):

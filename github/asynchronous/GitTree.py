@@ -41,13 +41,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import GitTreeElement
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .GitTreeElement import GitTreeElement
 
 
 class GitTree(CompletableGithubObject):

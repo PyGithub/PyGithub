@@ -63,6 +63,7 @@ from typing import TYPE_CHECKING, Any, Callable, Union, overload
 
 from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar
 
+import github.GithubObject as _sync_gho
 from github import Consts
 from github.GithubException import BadAttributeException, IncompletableObject
 
@@ -112,9 +113,6 @@ def _datetime_from_github_isoformat(value: str) -> datetime:
     return datetime.fromisoformat(value)
 
 
-import github.GithubObject as _sync_gho
-
-
 class _NotSetType(Attribute[Any]):
     def __repr__(self) -> str:
         return "NotSet"
@@ -159,11 +157,13 @@ camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
 
 
 @overload
-def as_rest_api_attributes(graphql_attributes: dict[str, Any]) -> dict[str, Any]: ...
+def as_rest_api_attributes(graphql_attributes: dict[str, Any]) -> dict[str, Any]:
+    ...
 
 
 @overload
-def as_rest_api_attributes(graphql_attributes: None) -> None: ...
+def as_rest_api_attributes(graphql_attributes: None) -> None:
+    ...
 
 
 def as_rest_api_attributes(graphql_attributes: dict[str, Any] | None) -> dict[str, Any] | None:
@@ -198,11 +198,9 @@ def as_rest_api_attributes(graphql_attributes: dict[str, Any] | None) -> dict[st
         return attr
 
     return {
-        translate(k): (
-            as_rest_api_attributes(v)
-            if isinstance(v, dict)
-            else (as_rest_api_attributes_list(v) if isinstance(v, list) else v)
-        )
+        translate(k): as_rest_api_attributes(v)
+        if isinstance(v, dict)
+        else (as_rest_api_attributes_list(v) if isinstance(v, list) else v)
         for k, v in graphql_attributes.items()
     }
 
@@ -493,7 +491,7 @@ class GithubObject(ABC):
         Converts the object to a nicely printable string.
         """
 
-        def format_params(params: dict[str, Any]) -> typing.Generator[str, None, None]:
+        def format_params(params: dict[str, Any]) -> typing.Generator[str]:
             items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 if isinstance(v, bytes):

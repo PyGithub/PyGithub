@@ -54,7 +54,7 @@ from typing import Any
 
 from github import Consts
 
-from . import GithubObject, NamedUser, Organization, PaginatedList, Reaction
+from . import NamedUser, Reaction
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
 from .PaginatedList import PaginatedList
 

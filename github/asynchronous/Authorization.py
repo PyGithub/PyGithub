@@ -41,13 +41,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import AuthorizationApplication, GithubObject
 from .GithubObject import Attribute, NotSet, Opt, _NotSetType
-
-if TYPE_CHECKING:
-    from .AuthorizationApplication import AuthorizationApplication
 
 
 class Authorization(GithubObject.CompletableGithubObject):

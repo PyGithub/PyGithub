@@ -52,7 +52,7 @@ from typing import Any
 import github
 from github import Consts
 
-from . import Issue, NamedUser, Organization, ProjectColumn, PullRequest
+from . import Issue, NamedUser, ProjectColumn, PullRequest
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt, is_undefined
 
 # NOTE: There is currently no way to get cards "in triage" for a project.
@@ -178,11 +178,9 @@ class ProjectCard(NonCompletableGithubObject):
         ), column
         post_parameters = {
             "position": position,
-            "column_id": (
-                column.id
-                if isinstance(column, (ProjectColumn.ProjectColumn, github.ProjectColumn.ProjectColumn))
-                else column
-            ),
+            "column_id": column.id
+            if isinstance(column, (ProjectColumn.ProjectColumn, github.ProjectColumn.ProjectColumn))
+            else column,
         }
         status, _, _ = await self._requester.requestJson(
             "POST",

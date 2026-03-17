@@ -55,8 +55,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
-from typing import Any, AsyncIterator, Generic, TypeVar, overload
+from collections.abc import Callable
+from typing import Any, Generic, TypeVar, overload
 from urllib.parse import parse_qs
 
 from github import Consts
@@ -80,18 +80,22 @@ class PaginatedListBase(Generic[T]):
         self.__elements = [] if elements is None else elements
 
     @overload
-    def __getitem__(self, index: int) -> T: ...
+    def __getitem__(self, index: int) -> T:
+        ...
 
     @overload
-    def __getitem__(self, index: slice) -> _Slice: ...
+    def __getitem__(self, index: slice) -> _Slice:
+        ...
 
     def __getitem__(self, index: int | slice) -> T | _Slice:
-        """Synchronous element access — only returns already-fetched elements.
+        """
+        Synchronous element access — only returns already-fetched elements.
 
         For async-aware fetching (which loads pages on demand), use
         ``await obj.getitem(index)`` instead.
 
         :raises IndexError: if *index* has not been fetched yet.
+
         """
         assert isinstance(index, (int, slice))
         if isinstance(index, int):
@@ -100,7 +104,8 @@ class PaginatedListBase(Generic[T]):
             return self._Slice(self, index)
 
     async def getitem(self, index: int | slice) -> T | _Slice:
-        """Async element access with on-demand page fetching.
+        """
+        Async element access with on-demand page fetching.
 
         This is the async replacement for ``__getitem__`` — Python cannot
         implicitly ``await`` dunder methods, so ``obj[i]`` would return a
@@ -110,6 +115,7 @@ class PaginatedListBase(Generic[T]):
 
             element = await paginated_list.getitem(0)
             sliced  = await paginated_list.getitem(slice(2, 5))
+
         """
         assert isinstance(index, (int, slice))
         if isinstance(index, int):

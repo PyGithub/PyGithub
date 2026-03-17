@@ -49,19 +49,13 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from github import Consts
 
-from . import GithubApp, GithubObject, NamedUser, Organization, Reaction
+from . import GithubApp, NamedUser, Organization, Reaction
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .GithubApp import GithubApp
-    from .NamedUser import NamedUser
-    from .Organization import Organization
-    from .Reaction import Reaction
 
 
 class IssueComment(CompletableGithubObject):

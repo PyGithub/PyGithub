@@ -33,18 +33,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import CheckRun, GitCommit, GithubApp, PullRequest, Repository
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_optional
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .CheckRun import CheckRun
-    from .GitCommit import GitCommit
-    from .GithubApp import GithubApp
-    from .PullRequest import PullRequest
-    from .Repository import Repository
 
 
 class CheckSuite(CompletableGithubObject):

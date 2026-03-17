@@ -35,11 +35,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from typing_extensions import deprecated
 
-from . import CheckRunAnnotation, CheckRunOutput, CheckSuite, Deployment, GithubApp, GithubObject, PullRequest
+from . import CheckRunAnnotation, CheckRunOutput, CheckSuite, Deployment, GithubApp, PullRequest
 from .GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -50,14 +50,6 @@ from .GithubObject import (
     is_optional_list,
 )
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .CheckRunAnnotation import CheckRunAnnotation
-    from .CheckRunOutput import CheckRunOutput
-    from .CheckSuite import CheckSuite
-    from .Deployment import Deployment
-    from .GithubApp import GithubApp
-    from .PullRequest import PullRequest
 
 
 class CheckRun(CompletableGithubObject):

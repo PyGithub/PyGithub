@@ -46,7 +46,6 @@ import github
 from github import Consts
 from github.GithubException import GithubException
 
-from . import Auth
 from .Auth import AppAuth
 from .GithubApp import GithubApp
 from .Installation import Installation

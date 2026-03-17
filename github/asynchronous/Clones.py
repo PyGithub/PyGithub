@@ -41,13 +41,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import Traffic
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .Traffic import Traffic
 
 
 class Clones(NonCompletableGithubObject):

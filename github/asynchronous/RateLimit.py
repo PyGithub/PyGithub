@@ -42,13 +42,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import Rate
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .Rate import Rate
 
 
 class RateLimit(NonCompletableGithubObject):

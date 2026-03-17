@@ -25,13 +25,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import NamedUser, Organization, Team
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet, _NotSetType
-
-if TYPE_CHECKING:
-    from .Organization import Organization
 
 
 class CopilotSeat(NonCompletableGithubObject):

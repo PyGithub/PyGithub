@@ -46,17 +46,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from typing_extensions import deprecated
 
 from . import GithubApp, NamedUser, Team
 from .GithubObject import Attribute, CompletableGithubObject, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .GithubApp import GithubApp
-    from .NamedUser import NamedUser
-    from .Team import Team
 
 
 class BypassPullRequestAllowances(NonCompletableGithubObject):
@@ -217,12 +212,12 @@ class RequiredPullRequestReviews(CompletableGithubObject):
     @property
     @deprecated("Use dismissal_restrictions.teams")
     async def dismissal_teams(self) -> list[Team]:
-        return (await self.dismissal_restrictions).teams if await self.dismissal_restrictions is not None else None
+        return (await self.dismissal_restrictions).teams if (await self.dismissal_restrictions) is not None else None
 
     @property
     @deprecated("Use dismissal_restrictions.users")
     async def dismissal_users(self) -> list[NamedUser]:
-        return (await self.dismissal_restrictions).users if await self.dismissal_restrictions is not None else None
+        return (await self.dismissal_restrictions).users if (await self.dismissal_restrictions) is not None else None
 
     @property
     async def require_code_owner_reviews(self) -> bool:

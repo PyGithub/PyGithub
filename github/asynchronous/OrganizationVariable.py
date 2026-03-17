@@ -31,7 +31,6 @@ import urllib.parse
 from datetime import datetime
 from typing import Any
 
-from . import Repository
 from .GithubObject import Attribute, NotSet
 from .PaginatedList import PaginatedList
 from .Repository import Repository
@@ -117,7 +116,7 @@ class OrganizationVariable(Variable):
         :param repo: Repository
         :rtype: bool
         """
-        if await self.visibility != "selected":
+        if (await self.visibility) != "selected":
             return False
         await self._requester.requestJsonAndCheck("PUT", f"{self._selected_repositories_url.value}/{(await repo.id)}")
         return True
@@ -128,7 +127,7 @@ class OrganizationVariable(Variable):
         :param repo: Repository
         :rtype: bool
         """
-        if await self.visibility != "selected":
+        if (await self.visibility) != "selected":
             return False
         await self._requester.requestJsonAndCheck(
             "DELETE", f"{self._selected_repositories_url.value}/{(await repo.id)}"

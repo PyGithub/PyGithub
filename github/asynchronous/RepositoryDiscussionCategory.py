@@ -43,13 +43,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import Reaction, Repository
+from . import Repository
 from .GithubObject import Attribute, GraphQlObject, NonCompletableGithubObject, NotSet, as_rest_api_attributes
-
-if TYPE_CHECKING:
-    from .Repository import Repository
 
 
 class RepositoryDiscussionCategory(GraphQlObject, NonCompletableGithubObject):

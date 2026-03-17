@@ -45,7 +45,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any
 
-from . import GithubObject, Label, NamedUser, Organization, PaginatedList
+from . import Label, NamedUser
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_undefined
 from .PaginatedList import PaginatedList
 

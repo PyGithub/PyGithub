@@ -34,17 +34,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import GithubObject, NamedUser, PaginatedList, RequiredPullRequestReviews, RequiredStatusChecks, Team
+from . import GithubObject, NamedUser, RequiredPullRequestReviews, RequiredStatusChecks, Team
 from .GithubObject import Attribute, NotSet, Opt, is_defined
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .NamedUser import NamedUser
-    from .RequiredPullRequestReviews import RequiredPullRequestReviews
-    from .RequiredStatusChecks import RequiredStatusChecks
-    from .Team import Team
 
 
 class BranchProtection(GithubObject.CompletableGithubObject):

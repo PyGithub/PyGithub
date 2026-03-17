@@ -581,10 +581,9 @@ class RequesterThrottleTestCase(Framework.TestCase):
 
     @contextlib.contextmanager
     def mock_sleep(self):
-        with (
-            mock.patch("github.asynchronous.Requester.asyncio.sleep", side_effect=self.sleep) as sleep_mock,
-            mock.patch("github.asynchronous.Requester.datetime") as datetime_mock,
-        ):
+        with mock.patch(
+            "github.asynchronous.Requester.asyncio.sleep", side_effect=self.sleep
+        ) as sleep_mock, mock.patch("github.asynchronous.Requester.datetime") as datetime_mock:
             datetime_mock.now = self.now
             yield sleep_mock
 

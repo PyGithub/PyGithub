@@ -51,20 +51,7 @@ from typing import TYPE_CHECKING, Any
 import github
 from github import Consts
 
-from . import (
-    Authorization,
-    Event,
-    Gist,
-    GithubObject,
-    Issue,
-    NamedUser,
-    Notification,
-    Organization,
-    PaginatedList,
-    Plan,
-    Repository,
-    UserKey,
-)
+from . import NamedUser, Organization, Repository
 from .Auth import AppAuth
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
 from .PaginatedList import PaginatedList
@@ -72,8 +59,6 @@ from .Requester import Requester
 
 if TYPE_CHECKING:
     from .MainClass import Github
-    from .NamedUser import NamedUser
-    from .Organization import Organization
 
 INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 

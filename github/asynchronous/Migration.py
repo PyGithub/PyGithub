@@ -49,17 +49,12 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from github import Consts
 
-from . import GithubObject, NamedUser, Organization, PaginatedList, Repository
+from . import NamedUser, Organization, Repository
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .NamedUser import NamedUser
-    from .Organization import Organization
-    from .Repository import Repository
 
 
 class Migration(CompletableGithubObject):

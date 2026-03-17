@@ -67,7 +67,7 @@ from typing_extensions import deprecated
 
 from github import Consts
 
-from . import GitReleaseAsset, NamedUser, PaginatedList
+from . import GitReleaseAsset, NamedUser
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_optional, is_undefined
 from .PaginatedList import PaginatedList
 

@@ -58,37 +58,14 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import github
 from github import Consts
 
-from . import (
-    Event,
-    Gist,
-    GithubObject,
-    Membership,
-    Organization,
-    PaginatedList,
-    Permissions,
-    Plan,
-    Project,
-    Repository,
-    UserKey,
-)
+from . import Event, Gist, GithubObject, Membership, Organization, Permissions, Plan, Project, Repository, UserKey
 from .GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .Event import Event
-    from .Gist import Gist
-    from .Membership import Membership
-    from .Organization import Organization
-    from .Permissions import Permissions
-    from .Plan import Plan
-    from .Project import Project
-    from .Repository import Repository
-    from .UserKey import UserKey
 
 
 class NamedUser(GithubObject.CompletableGithubObject):

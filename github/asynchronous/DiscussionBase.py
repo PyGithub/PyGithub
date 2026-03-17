@@ -44,7 +44,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import GithubObject, NamedUser
+from . import NamedUser
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
 
 

@@ -43,15 +43,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import GitAuthor, GitCommitVerification, GitTree
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, is_defined, is_undefined
-
-if TYPE_CHECKING:
-    from .GitAuthor import GitAuthor
-    from .GitCommitVerification import GitCommitVerification
-    from .GitTree import GitTree
 
 
 class GitCommit(CompletableGithubObject):

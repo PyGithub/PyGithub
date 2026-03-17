@@ -47,13 +47,10 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import WorkflowRun
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .WorkflowRun import WorkflowRun
 
 
 class Artifact(NonCompletableGithubObject):

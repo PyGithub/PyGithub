@@ -201,12 +201,10 @@ from . import (
     Download,
     Environment,
     EnvironmentDeploymentBranchPolicy,
-    EnvironmentProtectionRule,
     EnvironmentProtectionRuleReviewer,
     Event,
     GitBlob,
     GitCommit,
-    GithubObject,
     GitRef,
     GitRelease,
     GitReleaseAsset,
@@ -225,7 +223,6 @@ from . import (
     NamedUser,
     Notification,
     Organization,
-    PaginatedList,
     Path,
     Permissions,
     Project,
@@ -271,75 +268,10 @@ from .GithubObject import (
 from .PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
-    from github.InputGitAuthor import InputGitAuthor
-    from github.InputGitTreeElement import InputGitTreeElement
-
-    from .Artifact import Artifact
-    from .AuthenticatedUser import AuthenticatedUser
-    from .Autolink import Autolink
-    from .Branch import Branch
-    from .CheckRun import CheckRun
-    from .CheckSuite import CheckSuite
-    from .Clones import Clones
-    from .CodeScanAlert import CodeScanAlert
-    from .Commit import Commit
-    from .CommitComment import CommitComment
-    from .Comparison import Comparison
-    from .ContentFile import ContentFile
-    from .DependabotAlert import DependabotAlert
-    from .Deployment import Deployment
-    from .Download import Download
-    from .Environment import Environment
     from .EnvironmentDeploymentBranchPolicy import (
         EnvironmentDeploymentBranchPolicyParams,
     )
     from .EnvironmentProtectionRuleReviewer import ReviewerParams
-    from .Event import Event
-    from .GitBlob import GitBlob
-    from .GitCommit import GitCommit
-    from .GitRef import GitRef
-    from .GitRelease import GitRelease
-    from .GitReleaseAsset import GitReleaseAsset
-    from .GitTag import GitTag
-    from .GitTree import GitTree
-    from .Hook import Hook
-    from .Invitation import Invitation
-    from .Issue import Issue
-    from .IssueComment import IssueComment
-    from .IssueEvent import IssueEvent
-    from .Label import Label
-    from .License import License
-    from .MergedUpstream import MergedUpstream
-    from .Milestone import Milestone
-    from .NamedUser import NamedUser
-    from .Notification import Notification
-    from .Organization import Organization
-    from .Path import Path
-    from .Permissions import Permissions
-    from .Project import Project
-    from .PublicKey import PublicKey
-    from .PullRequest import PullRequest
-    from .PullRequestComment import PullRequestComment
-    from .Referrer import Referrer
-    from .RepoCodeSecurityConfig import RepoCodeSecurityConfig
-    from .RepositoryDiscussion import RepositoryDiscussion
-    from .RepositoryKey import RepositoryKey
-    from .RepositoryPreferences import RepositoryPreferences
-    from .SecretScanAlert import SecretScanAlert
-    from .SecurityAndAnalysis import SecurityAndAnalysis
-    from .SelfHostedActionsRunner import SelfHostedActionsRunner
-    from .SourceImport import SourceImport
-    from .Stargazer import Stargazer
-    from .StatsCodeFrequency import StatsCodeFrequency
-    from .StatsCommitActivity import StatsCommitActivity
-    from .StatsContributor import StatsContributor
-    from .StatsParticipation import StatsParticipation
-    from .StatsPunchCard import StatsPunchCard
-    from .Tag import Tag
-    from .Team import Team
-    from .View import View
-    from .Workflow import Workflow
-    from .WorkflowRun import WorkflowRun
 
 
 class Repository(CompletableGithubObject):
@@ -1464,8 +1396,8 @@ class Repository(CompletableGithubObject):
         assert is_optional(committer, github.InputGitAuthor), committer
         post_parameters: dict[str, Any] = {
             "message": message,
-            "tree": await tree._identity,
-            "parents": [await element._identity for element in parents],
+            "tree": (await tree._identity),
+            "parents": [(await element._identity) for element in parents],
         }
         if is_defined(author):
             post_parameters["author"] = author._identity
@@ -1747,11 +1679,9 @@ class Repository(CompletableGithubObject):
                 post_parameters["assignee"] = assignee
         if is_defined(assignees):
             post_parameters["assignees"] = [
-                (
-                    (await element._identity)
-                    if isinstance(element, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                    else element
-                )
+                (await element._identity)
+                if isinstance(element, (NamedUser.NamedUser, github.NamedUser.NamedUser))
+                else element
                 for element in assignees  # type: ignore
             ]
         if is_defined(milestone):
@@ -2813,8 +2743,7 @@ class Repository(CompletableGithubObject):
             will be used. You must specify both a name and email.
         :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
             passed, you must specify both a name and email.
-        :rtype: { 'content': :class:`ContentFile <ContentFile.ContentFile>`:, 'commit': :class:`Commit
-            <Commit.Commit>`}
+        :rtype: { 'content': :class:`ContentFile <ContentFile.ContentFile>`:, 'commit': :class:`Commit <Commit.Commit>`}
 
         """
         assert isinstance(path, str)
@@ -2896,8 +2825,7 @@ class Repository(CompletableGithubObject):
             will be used. You must specify both a name and email.
         :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If
             passed, you must specify both a name and email.
-        :rtype: { 'content': :class:`ContentFile <ContentFile.ContentFile>`:, 'commit': :class:`Commit
-            <Commit.Commit>`}
+        :rtype: { 'content': :class:`ContentFile <ContentFile.ContentFile>`:, 'commit': :class:`Commit <Commit.Commit>`}
 
         """
         assert isinstance(path, str)
@@ -2983,10 +2911,12 @@ class Repository(CompletableGithubObject):
             "content": NotSet,
         }
 
-    @deprecated("""
+    @deprecated(
+        """
         Repository.get_dir_contents() is deprecated, use
         Repository.get_contents() instead.
-        """)
+        """
+    )
     async def get_dir_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile]:
         """
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_

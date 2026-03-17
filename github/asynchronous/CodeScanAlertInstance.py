@@ -29,13 +29,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from . import CodeScanAlertInstanceLocation
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
-
-if TYPE_CHECKING:
-    from .CodeScanAlertInstanceLocation import CodeScanAlertInstanceLocation
 
 
 class CodeScanAlertInstance(NonCompletableGithubObject):

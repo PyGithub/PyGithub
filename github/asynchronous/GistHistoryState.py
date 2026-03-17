@@ -42,7 +42,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import CommitStats, Gist, GistFile, GithubObject, NamedUser, Organization
+from . import CommitStats, Gist, NamedUser
 from .GistFile import GistFile
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
 

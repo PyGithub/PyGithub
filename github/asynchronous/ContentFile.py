@@ -46,15 +46,10 @@ from __future__ import annotations
 
 import base64
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import GitCommit, GithubObject, License, Repository
+from . import GitCommit, License, Repository
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, _ValuedAttribute, is_undefined
-
-if TYPE_CHECKING:
-    from .GitCommit import GitCommit
-    from .License import License
-    from .Repository import Repository
 
 
 class ContentFile(CompletableGithubObject):

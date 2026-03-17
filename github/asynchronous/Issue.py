@@ -65,7 +65,7 @@ from __future__ import annotations
 import urllib.parse
 import warnings
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from typing_extensions import deprecated
 
@@ -83,8 +83,6 @@ from . import (
     Label,
     Milestone,
     NamedUser,
-    Organization,
-    PaginatedList,
     PullRequest,
     Reaction,
     Repository,
@@ -102,22 +100,6 @@ from .GithubObject import (
     is_undefined,
 )
 from .PaginatedList import PaginatedList
-
-if TYPE_CHECKING:
-    from .GithubApp import GithubApp
-    from .IssueComment import IssueComment
-    from .IssueDependenciesSummary import IssueDependenciesSummary
-    from .IssueEvent import IssueEvent
-    from .IssuePullRequest import IssuePullRequest
-    from .IssueType import IssueType
-    from .Label import Label
-    from .Milestone import Milestone
-    from .NamedUser import NamedUser
-    from .PullRequest import PullRequest
-    from .Reaction import Reaction
-    from .Repository import Repository
-    from .SubIssueSummary import SubIssueSummary
-    from .TimelineEvent import TimelineEvent
 
 
 class Issue(CompletableGithubObject):
@@ -400,11 +382,9 @@ class Issue(CompletableGithubObject):
         ), assignees
         post_parameters = {
             "assignees": [
-                (
-                    (await assignee.login)
-                    if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                    else assignee
-                )
+                (await assignee.login)
+                if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
+                else assignee
                 for assignee in assignees
             ]
         }
@@ -479,11 +459,9 @@ class Issue(CompletableGithubObject):
                 assignees = [assignee] if assignee is not None else []  # type: ignore
         if is_defined(assignees):
             assignees = [
-                (
-                    (await element._identity)
-                    if isinstance(element, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                    else element
-                )
+                (await element._identity)
+                if isinstance(element, (NamedUser.NamedUser, github.NamedUser.NamedUser))
+                else element
                 for element in assignees
             ]
 
@@ -495,11 +473,9 @@ class Issue(CompletableGithubObject):
                 "state_reason": state_reason,
                 "labels": labels,
                 "assignees": assignees,
-                "milestone": (
-                    milestone._identity
-                    if isinstance(milestone, (Milestone.Milestone, github.Milestone.Milestone))
-                    else (milestone or "")
-                ),
+                "milestone": milestone._identity
+                if isinstance(milestone, (Milestone.Milestone, github.Milestone.Milestone))
+                else (milestone or ""),
             }
         )
 
@@ -577,11 +553,9 @@ class Issue(CompletableGithubObject):
         ), assignees
         post_parameters = {
             "assignees": [
-                (
-                    (await assignee.login)
-                    if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                    else assignee
-                )
+                (await assignee.login)
+                if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser))
+                else assignee
                 for assignee in assignees
             ]
         }

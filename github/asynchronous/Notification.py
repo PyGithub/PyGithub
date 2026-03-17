@@ -48,7 +48,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from . import GithubObject, Issue, NotificationSubject, PullRequest, Repository
+from . import Issue, NotificationSubject, PullRequest, Repository
 from .GithubObject import Attribute, CompletableGithubObject, NotSet
 
 

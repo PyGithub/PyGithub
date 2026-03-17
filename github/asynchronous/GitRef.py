@@ -42,13 +42,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from . import GithubObject, GitObject
+from . import GitObject
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
-
-if TYPE_CHECKING:
-    from .GitObject import GitObject
 
 
 class GitRef(CompletableGithubObject):
