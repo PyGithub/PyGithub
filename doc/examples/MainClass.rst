@@ -62,7 +62,7 @@ Get repository by name
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> await repo.name
             u'PyGithub'
 
@@ -83,7 +83,7 @@ Get organization by name
 
         .. code-block:: python
 
-            >>> org = await g.get_organization("PyGithub")
+            >>> org = g.get_organization("PyGithub")
             >>> await org.login
             u'PyGithub'
 
@@ -96,8 +96,8 @@ Get enterprise consumed licenses by name
 
         .. code-block:: python
 
-            >>> enterprise = g.get_enterprise_consumed_licenses("PyGithub")
-            >>> enterprise_consumed_licenses = enterprise.get_enterprise_consumed_licenses()
+            >>> enterprise = g.get_enterprise("PyGithub")
+            >>> enterprise_consumed_licenses = enterprise.get_consumed_licenses()
             >>> enterprise_consumed_licenses.total_seats_consumed
             5000
 
@@ -105,8 +105,8 @@ Get enterprise consumed licenses by name
 
         .. code-block:: python
 
-            >>> enterprise = await g.get_enterprise_consumed_licenses("PyGithub")
-            >>> enterprise_consumed_licenses = await enterprise.get_enterprise_consumed_licenses()
+            >>> enterprise = g.get_enterprise("PyGithub")
+            >>> enterprise_consumed_licenses = await enterprise.get_consumed_licenses()
             >>> enterprise_consumed_licenses.total_seats_consumed
             5000
 

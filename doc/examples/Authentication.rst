@@ -148,7 +148,7 @@ Get a ``github.Github`` instance authenticated as an App installation:
 
             >>> installation = await gi.get_installations().getitem(0)
             >>> g = installation.get_github_for_installation()
-            >>> repo = await g.get_repo("user/repo")
+            >>> repo = g.get_repo("user/repo")
             >>> await repo.name
             'repo'
 
@@ -177,7 +177,7 @@ expiration timeout. The access token is refreshed automatically.
 
             >>> auth = Auth.AppAuth(123456, private_key).get_installation_auth(installation_id, token_permissions)
             >>> g = Github(auth=auth)
-            >>> repo = await g.get_repo("user/repo")
+            >>> repo = g.get_repo("user/repo")
             >>> await repo.name
             'repo'
 
@@ -202,7 +202,7 @@ Alternatively, the `github.Github` instance can be retrieved via `github.GithubI
             >>> auth = Auth.AppAuth(123456, private_key)
             >>> gi = GithubIntegration(auth=auth)
             >>> g = gi.get_github_for_installation(installation_id, token_permissions)
-            >>> repo = await g.get_repo("user/repo")
+            >>> repo = g.get_repo("user/repo")
             >>> await repo.name
             'repo'
 

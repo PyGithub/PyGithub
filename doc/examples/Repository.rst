@@ -18,7 +18,7 @@ Get repository topics
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> await repo.get_topics()
             [u'pygithub', u'python', u'github', u'github-api']
 
@@ -39,7 +39,7 @@ Get count of stars
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> await repo.stargazers_count
             2086
 
@@ -67,7 +67,7 @@ Get list of open issues
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> open_issues = await repo.get_issues(state='open')
             >>> async for issue in open_issues:
             ...     print(issue)
@@ -111,7 +111,7 @@ Get list of code scanning alerts
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> codescan_alerts = await repo.get_codescan_alerts()
             >>> async for alert in codescan_alerts:
             ...     print(alert.number, alert.created_at, alert.dismissed_at)
@@ -154,7 +154,7 @@ Get all the labels of the repository
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> labels = await repo.get_labels()
             >>> async for label in labels:
             ...     print(label)
@@ -197,7 +197,7 @@ Get all of the contents of the root directory of the repository
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_contents("")
             >>> for content_file in contents:
             ...     print(content_file)
@@ -246,7 +246,7 @@ Get all of the contents of the repository recursively
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_contents("")
             >>> while contents:
             ...     file_content = contents.pop(0)
@@ -281,7 +281,7 @@ Get a specific content file
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_contents("README.md")
             >>> print(contents)
             ...
@@ -304,7 +304,7 @@ Create a new file in the repository
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> await repo.create_file("test.txt", "test", "test", branch="test")
             {'content': ContentFile(path="test.txt"), 'commit': Commit(sha="5b584cf6d32d960bb7bee8ce94f161d939aec377")}
 
@@ -326,7 +326,7 @@ Update a file in the repository
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_contents("test.txt", ref="test")
             >>> await repo.update_file(await contents.path, "more tests", "more tests", await contents.sha, branch="test")
             {'commit': Commit(sha="b06e05400afd6baee13fff74e38553d135dca7dc"), 'content': ContentFile(path="test.txt")}
@@ -349,7 +349,7 @@ Delete a file in the repository
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_contents("test.txt", ref="test")
             >>> await repo.delete_file(await contents.path, "remove test", await contents.sha, branch="test")
             {'commit': Commit(sha="0f40b0b4f31f62454f1758d7e6b384795e48fd96"), 'content': NotSet}
@@ -377,7 +377,7 @@ Get the top 10 referrers over the last 14 days
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_top_referrers()
             >>> print(contents)
             [
@@ -416,7 +416,7 @@ Get the top 10 popular contents over the last 14 days
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_top_paths()
             >>> print(contents)
             [
@@ -471,7 +471,7 @@ Get number of clones and breakdown for the last 14 days
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_clones_traffic()
             >>> contents = await repo.get_clones_traffic(per="week")
             >>> print(contents)
@@ -536,7 +536,7 @@ Get number of views and breakdown for the last 14 days
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> contents = await repo.get_views_traffic()
             >>> contents = await repo.get_views_traffic(per="week")
             >>> print(contents)
@@ -578,5 +578,5 @@ Mark the notifications of the repository as read
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> await repo.mark_notifications_as_read()

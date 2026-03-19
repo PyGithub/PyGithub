@@ -111,7 +111,7 @@ Instead of manually configuring a webhook via GitHub's UI, you can create it pro
                 }
 
                 g = Github(USERNAME, PASSWORD)
-                repo = await g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
+                repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
                 await repo.create_hook("web", config, EVENTS, active=True)
 
 Running the Webhook Server

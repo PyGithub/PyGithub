@@ -97,7 +97,7 @@ In the async API, these properties return a coroutine and must be ``await``-ed:
 
 .. code-block:: python
 
-    repo = await g.get_repo("PyGithub/PyGithub")
+    repo = g.get_repo("PyGithub/PyGithub")
     print(await repo.description)
 
 This applies to any property on a ``CompletableGithubObject`` subclass that calls

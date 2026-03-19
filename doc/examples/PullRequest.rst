@@ -27,7 +27,7 @@ Create a new Pull Request
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> body = '''
             >>> SUMMARY
             >>> Change HTTP library used to send requests
@@ -58,7 +58,7 @@ Get Pull Request by Number
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> pr = await repo.get_pull(664)
             >>> pr
             PullRequest(title="Use 'requests' instead of 'httplib'", number=664)
@@ -86,7 +86,7 @@ Get Pull Requests by Query
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> pulls = await repo.get_pulls(state='open', sort='created', base='master')
             >>> async for pr in pulls:
             ...    print(await pr.number)
@@ -121,7 +121,7 @@ Add and modify Pull Request comment
 
         .. code-block:: python
 
-            >>> repo = await g.get_repo("PyGithub/PyGithub")
+            >>> repo = g.get_repo("PyGithub/PyGithub")
             >>> pr = await repo.get_pull(2390)
             >>> commits = await pr.get_commits()
             >>> last_commit = await commits.getitem(await pr.commits - 1)
