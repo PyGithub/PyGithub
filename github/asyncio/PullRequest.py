@@ -484,7 +484,7 @@ class PullRequest(CompletableGithubObject):
         ], subject_type
         assert isinstance(as_suggestion, bool), as_suggestion
 
-        commit_id = (await commit._identity) if isinstance(commit, (Commit.Commit, github.Commit.Commit)) else commit
+        commit_id = (await commit._identity) if isinstance(commit, Commit.Commit) else commit
 
         if as_suggestion:
             body = f"```suggestion\n{body}\n```"
@@ -833,7 +833,7 @@ class PullRequest(CompletableGithubObject):
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         assert isinstance(label, (Label.Label, github.Label.Label, str)), label
-        if isinstance(label, (Label.Label, github.Label.Label)):
+        if isinstance(label, Label.Label):
             label = await label._identity
         else:
             label = urllib.parse.quote(label)

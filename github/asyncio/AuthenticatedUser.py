@@ -1069,7 +1069,7 @@ class AuthenticatedUser(CompletableGithubObject):
             invitation, int
         )
 
-        if isinstance(invitation, (Invitation.Invitation, github.Invitation.Invitation)):
+        if isinstance(invitation, Invitation.Invitation):
             invitation = await invitation.id
 
         headers, data = await self._requester.requestJsonAndCheck(

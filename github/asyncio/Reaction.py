@@ -47,7 +47,7 @@ from typing import Any
 
 from typing_extensions import deprecated
 
-from github import Consts
+import github.Consts
 
 from . import NamedUser
 from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -107,7 +107,7 @@ class Reaction(NonCompletableGithubObject):
         await self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self._parentUrl('')}/reactions/{self.id}",
-            headers={"Accept": Consts.mediaTypeReactionsPreview},
+            headers={"Accept": github.Consts.mediaTypeReactionsPreview},
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

@@ -240,7 +240,7 @@ class SyncProxy:
             value = object.__getattribute__(value, "_obj")
         setattr(object.__getattribute__(self, "_obj"), name, value)
 
-    @property
+    @property  # type: ignore[misc]
     def __class__(self):
         return type(object.__getattribute__(self, "_obj"))
 

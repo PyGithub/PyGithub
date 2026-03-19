@@ -48,7 +48,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-import github
 from github import Consts
 
 from . import NamedUser, Organization, Repository
@@ -212,7 +211,7 @@ class Installation(NonCompletableGithubObject):
         return self._updated_at.value
 
     def get_github_for_installation(self) -> Github:
-        return github.Github(**self._requester.kwargs)
+        return Github(**self._requester.kwargs)
 
     def get_repos(self) -> PaginatedList[Repository.Repository]:
         """

@@ -78,9 +78,9 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
         return self._id.value
 
     @property
-    def node_id(self) -> str:
+    async def node_id(self) -> str:
         if is_defined(self._node_id):
-            return super().node_id
+            return await super().node_id
         return self.id
 
     def get_reactions(self) -> PaginatedList[Reaction.Reaction]:

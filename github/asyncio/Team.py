@@ -307,7 +307,7 @@ class Team(CompletableGithubObject):
         :calls: `GET /orgs/{org}/teams/{team_slug}/memberships/{username} <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
         """
         assert isinstance(member, str) or isinstance(member, (NamedUser.NamedUser, github.NamedUser.NamedUser)), member
-        if isinstance(member, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(member, NamedUser.NamedUser):
             member = await member._identity
         else:
             member = urllib.parse.quote(member, safe="")

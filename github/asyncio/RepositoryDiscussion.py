@@ -25,8 +25,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import github
-
 from . import Label, NamedUser, Reaction, Repository, RepositoryDiscussionCategory, RepositoryDiscussionComment
 from .DiscussionBase import DiscussionBase
 from .GithubObject import (
@@ -157,15 +155,7 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         output_schema: str = "id",
     ) -> RepositoryDiscussionComment.RepositoryDiscussionComment:
         reply_to_id = (
-            reply_to.id
-            if isinstance(
-                reply_to,
-                (
-                    RepositoryDiscussionComment.RepositoryDiscussionComment,
-                    github.RepositoryDiscussionComment.RepositoryDiscussionComment,
-                ),
-            )
-            else reply_to
+            reply_to.id if isinstance(reply_to, RepositoryDiscussionComment.RepositoryDiscussionComment) else reply_to
         )
         if not output_schema.startswith("\n"):
             output_schema = f" {output_schema} "

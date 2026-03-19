@@ -228,15 +228,14 @@ class Github:
 
         if password is not None:
             warnings.warn(
-                "Arguments login_or_token and password are deprecated, please use "
-                "auth=github.Auth.Login(...) instead",
+                "Arguments login_or_token and password are deprecated, please use auth=github.Auth.Login(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
             auth = github.Auth.Login(login_or_token, password)  # type: ignore
         elif login_or_token is not None:
             warnings.warn(
-                "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
+                "Argument login_or_token is deprecated, please use auth=github.Auth.Token(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -252,7 +251,7 @@ class Github:
             auth = github.Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
-                "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
+                "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -570,7 +569,7 @@ class Github:
         cve_id: Opt[str] = NotSet,
         ecosystem: Opt[str] = NotSet,
         severity: Opt[str] = NotSet,
-        cwes: list[Opt[str]] | Opt[str] = NotSet,
+        cwes: list[str] | Opt[str] = NotSet,
         is_withdrawn: Opt[bool] = NotSet,
         affects: list[str] | Opt[str] = NotSet,
         published: Opt[str] = NotSet,

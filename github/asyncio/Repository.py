@@ -179,7 +179,7 @@ from typing import TYPE_CHECKING, Any
 from typing_extensions import deprecated
 
 import github
-from github import Consts, InputGitAuthor, InputGitTreeElement
+from github import Consts
 
 from . import (
     AdvisoryCredit,
@@ -268,6 +268,9 @@ from .GithubObject import (
 from .PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.InputGitAuthor import InputGitAuthor
+    from github.InputGitTreeElement import InputGitTreeElement
+
     from .EnvironmentDeploymentBranchPolicy import (
         EnvironmentDeploymentBranchPolicyParams,
     )
@@ -1234,7 +1237,7 @@ class Repository(CompletableGithubObject):
         ), collaborator
         assert is_optional(permission, str), permission
 
-        if isinstance(collaborator, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(collaborator, NamedUser.NamedUser):
             collaborator = await collaborator._identity
         else:
             collaborator = urllib.parse.quote(collaborator, safe="")
@@ -1260,7 +1263,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(collaborator, (NamedUser.NamedUser, github.NamedUser.NamedUser)) or isinstance(
             collaborator, str
         ), collaborator
-        if isinstance(collaborator, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(collaborator, NamedUser.NamedUser):
             collaborator = await collaborator._identity
         else:
             collaborator = urllib.parse.quote(collaborator, safe="")
@@ -1277,7 +1280,7 @@ class Repository(CompletableGithubObject):
         :rtype: string
         """
         assert isinstance(collaborator, (NamedUser.NamedUser, github.NamedUser.NamedUser, str)), collaborator
-        if isinstance(collaborator, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(collaborator, NamedUser.NamedUser):
             collaborator = await collaborator._identity
         else:
             collaborator = urllib.parse.quote(collaborator)
@@ -1375,16 +1378,16 @@ class Repository(CompletableGithubObject):
         message: str,
         tree: GitTree.GitTree,
         parents: list[GitCommit.GitCommit],
-        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
-        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
     ) -> GitCommit.GitCommit:
         """
         :calls: `POST /repos/{owner}/{repo}/git/commits <https://docs.github.com/en/rest/reference/git#commits>`_
         :param message: string
         :param tree: :class:`GitTree.GitTree`
         :param parents: list of :class:`GitCommit.GitCommit`
-        :param author: :class:`InputGitAuthor.InputGitAuthor`
-        :param committer: :class:`InputGitAuthor.InputGitAuthor`
+        :param author: :class:`github.InputGitAuthor.InputGitAuthor`
+        :param committer: :class:`github.InputGitAuthor.InputGitAuthor`
         :rtype: :class:`GitCommit.GitCommit`
         """
         assert isinstance(message, str), message
@@ -1435,7 +1438,7 @@ class Repository(CompletableGithubObject):
         release_message: Opt[str],
         object: str,
         type: str,
-        tagger: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        tagger: Opt[InputGitAuthor] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
@@ -1450,7 +1453,7 @@ class Repository(CompletableGithubObject):
         :param release_message: string
         :param object: string
         :param type: string
-        :param tagger: :class:InputGitAuthor.InputGitAuthor
+        :param tagger: :class:github.InputGitAuthor.InputGitAuthor
         :param draft: bool
         :param prerelease: bool
         :param generate_release_notes: bool
@@ -1516,11 +1519,9 @@ class Repository(CompletableGithubObject):
             post_parameters["body"] = message
         if isinstance(target_commitish, str):
             post_parameters["target_commitish"] = target_commitish
-        elif isinstance(target_commitish, (Branch.Branch, github.Branch.Branch)):
+        elif isinstance(target_commitish, Branch.Branch):
             post_parameters["target_commitish"] = target_commitish.name
-        elif isinstance(
-            target_commitish, (Commit.Commit, github.Commit.Commit, GitCommit.GitCommit, github.GitCommit.GitCommit)
-        ):
+        elif isinstance(target_commitish, (Commit.Commit, GitCommit.GitCommit)):
             post_parameters["target_commitish"] = await target_commitish.sha
         if is_defined(make_latest):
             post_parameters["make_latest"] = make_latest
@@ -1572,7 +1573,7 @@ class Repository(CompletableGithubObject):
         message: str,
         object: str,
         type: str,
-        tagger: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        tagger: Opt[InputGitAuthor] = NotSet,
     ) -> GitTag.GitTag:
         """
         :calls: `POST /repos/{owner}/{repo}/git/tags <https://docs.github.com/en/rest/reference/git#tags>`_
@@ -1596,11 +1597,11 @@ class Repository(CompletableGithubObject):
         return GitTag.GitTag(self._requester, headers, data, completed=True)
 
     async def create_git_tree(
-        self, tree: list[InputGitTreeElement.InputGitTreeElement], base_tree: Opt[GitTree.GitTree] = NotSet
+        self, tree: list[InputGitTreeElement], base_tree: Opt[GitTree.GitTree] = NotSet
     ) -> GitTree.GitTree:
         """
         :calls: `POST /repos/{owner}/{repo}/git/trees <https://docs.github.com/en/rest/reference/git#trees>`_
-        :param tree: list of :class:`InputGitTreeElement.InputGitTreeElement`
+        :param tree: list of :class:`github.InputGitTreeElement.InputGitTreeElement`
         :param base_tree: :class:`GitTree.GitTree`
         :rtype: :class:`GitTree.GitTree`
         """
@@ -1675,22 +1676,20 @@ class Repository(CompletableGithubObject):
         if is_defined(body):
             post_parameters["body"] = body
         if is_defined(assignee):
-            if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+            if isinstance(assignee, NamedUser.NamedUser):
                 post_parameters["assignee"] = await assignee._identity
             else:
                 post_parameters["assignee"] = assignee
         if is_defined(assignees):
             post_parameters["assignees"] = [
-                (await element._identity)
-                if isinstance(element, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                else element
+                (await element._identity) if isinstance(element, NamedUser.NamedUser) else element
                 for element in assignees  # type: ignore
             ]
         if is_defined(milestone):
             post_parameters["milestone"] = milestone._identity
         if is_defined(labels):
             post_parameters["labels"] = [
-                (await element.name) if isinstance(element, (Label.Label, github.Label.Label)) else element
+                (await element.name) if isinstance(element, Label.Label) else element
                 for element in labels  # type: ignore
             ]
         headers, data = await self._requester.requestJsonAndCheck(
@@ -2307,7 +2306,7 @@ class Repository(CompletableGithubObject):
         NOTE: This method does not return the branch since it may take some
         time to fully complete server-side.
         """
-        is_branch = isinstance(branch, (Branch.Branch, github.Branch.Branch))
+        is_branch = isinstance(branch, Branch.Branch)
         assert isinstance(new_name, str), new_name
         if is_branch:
             branch = branch.name  # type: ignore
@@ -2427,12 +2426,7 @@ class Repository(CompletableGithubObject):
         if is_defined(author):
             if isinstance(
                 author,
-                (
-                    NamedUser.NamedUser,
-                    github.NamedUser.NamedUser,
-                    AuthenticatedUser.AuthenticatedUser,
-                    github.AuthenticatedUser.AuthenticatedUser,
-                ),
+                (NamedUser.NamedUser, AuthenticatedUser.AuthenticatedUser),
             ):
                 url_parameters["author"] = await author.login
             else:
@@ -2730,8 +2724,8 @@ class Repository(CompletableGithubObject):
         message: str,
         content: str | bytes,
         branch: Opt[str] = NotSet,
-        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
-        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile.ContentFile | Commit.Commit]:
         """
         Create a file in this repository.
@@ -2812,8 +2806,8 @@ class Repository(CompletableGithubObject):
         content: bytes | str,
         sha: str,
         branch: Opt[str] = NotSet,
-        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
-        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, ContentFile.ContentFile | Commit.Commit]:
         """
         This method updates a file in a repository.
@@ -2870,8 +2864,8 @@ class Repository(CompletableGithubObject):
         message: str,
         sha: str,
         branch: Opt[str] = NotSet,
-        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
-        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        committer: Opt[InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor] = NotSet,
     ) -> dict[str, Commit.Commit | _NotSetType]:
         """
         This method deletes a file in a repository.
@@ -2989,7 +2983,7 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`Repository`
         """
         post_parameters: dict[str, Any] = {}
-        if isinstance(organization, (Organization.Organization, github.Organization.Organization)):
+        if isinstance(organization, Organization.Organization):
             post_parameters["organization"] = await organization.login
         elif isinstance(organization, str):
             post_parameters["organization"] = organization
@@ -3192,14 +3186,14 @@ class Repository(CompletableGithubObject):
         assert is_optional(creator, (str, NamedUser.NamedUser)), creator
         url_parameters: dict[str, Any] = {}
         if is_defined(milestone):
-            if isinstance(milestone, (Milestone.Milestone, github.Milestone.Milestone)):
+            if isinstance(milestone, Milestone.Milestone):
                 url_parameters["milestone"] = milestone._identity
             else:
                 url_parameters["milestone"] = milestone
         if is_defined(state):
             url_parameters["state"] = state
         if is_defined(assignee):
-            if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+            if isinstance(assignee, NamedUser.NamedUser):
                 url_parameters["assignee"] = await assignee._identity
             else:
                 url_parameters["assignee"] = assignee
@@ -3209,7 +3203,7 @@ class Repository(CompletableGithubObject):
             url_parameters["mentioned"] = await mentioned._identity
         if is_defined(labels):
             url_parameters["labels"] = ",".join(
-                [(await label.name) if isinstance(label, (Label.Label, github.Label.Label)) else label for label in labels]  # type: ignore
+                [(await label.name) if isinstance(label, Label.Label) else label for label in labels]  # type: ignore
             )
         if is_defined(sort):
             url_parameters["sort"] = sort
@@ -3759,12 +3753,12 @@ class Repository(CompletableGithubObject):
 
         url_parameters: dict[str, Any] = {}
         if is_defined(actor):
-            if isinstance(actor, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+            if isinstance(actor, NamedUser.NamedUser):
                 url_parameters["actor"] = await actor._identity
             else:
                 url_parameters["actor"] = actor
         if is_defined(branch):
-            if isinstance(branch, (Branch.Branch, github.Branch.Branch)):
+            if isinstance(branch, Branch.Branch):
                 url_parameters["branch"] = branch.name
             else:
                 url_parameters["branch"] = branch
@@ -3809,7 +3803,7 @@ class Repository(CompletableGithubObject):
             assignee, str
         ), assignee
 
-        if isinstance(assignee, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(assignee, NamedUser.NamedUser):
             assignee = await assignee._identity
         else:
             assignee = urllib.parse.quote(assignee, safe="")
@@ -3827,7 +3821,7 @@ class Repository(CompletableGithubObject):
             collaborator, str
         ), collaborator
 
-        if isinstance(collaborator, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(collaborator, NamedUser.NamedUser):
             collaborator = await collaborator._identity
         else:
             collaborator = urllib.parse.quote(collaborator, safe="")
@@ -4057,7 +4051,7 @@ class Repository(CompletableGithubObject):
             collaborator, str
         ), collaborator
 
-        if isinstance(collaborator, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(collaborator, NamedUser.NamedUser):
             collaborator = await collaborator._identity
         else:
             collaborator = urllib.parse.quote(collaborator, safe="")
@@ -4077,10 +4071,7 @@ class Repository(CompletableGithubObject):
             (SelfHostedActionsRunner.SelfHostedActionsRunner, github.SelfHostedActionsRunner.SelfHostedActionsRunner),
         ) or isinstance(runner, int), runner
 
-        if isinstance(
-            runner,
-            (SelfHostedActionsRunner.SelfHostedActionsRunner, github.SelfHostedActionsRunner.SelfHostedActionsRunner),
-        ):
+        if isinstance(runner, SelfHostedActionsRunner.SelfHostedActionsRunner):
             runner = runner.id
 
         status, _, _ = await self._requester.requestJson("DELETE", f"{await self.url}/actions/runners/{runner}")
@@ -4092,7 +4083,7 @@ class Repository(CompletableGithubObject):
         :param autolink: int or :class:`Autolink.Autolink`
         :rtype: None
         """
-        is_autolink = isinstance(autolink, (Autolink.Autolink, github.Autolink.Autolink))
+        is_autolink = isinstance(autolink, Autolink.Autolink)
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = await self._requester.requestJson(

@@ -572,7 +572,7 @@ class NamedUser(GithubObject.CompletableGithubObject):
         assert isinstance(org, str) or isinstance(
             org, (Organization.Organization, github.Organization.Organization)
         ), org
-        if isinstance(org, (Organization.Organization, github.Organization.Organization)):
+        if isinstance(org, Organization.Organization):
             org = await org.login  # type: ignore
         org = urllib.parse.quote(org, safe="")
         headers, data = await self._requester.requestJsonAndCheck("GET", f"/orgs/{org}/memberships/{await self.login}")

@@ -104,11 +104,13 @@ import niquests.adapters
 
 import github
 import github.Consts as Consts
+import github.GithubException as GithubException
 
 # FILE AUTO GENERATED DO NOT TOUCH
 from .GithubObject import Opt, as_rest_api_attributes, is_undefined
 
-GithubException = _sys.modules["github.GithubException"]  # Get MODULE, not class
+if not TYPE_CHECKING:
+    GithubException = _sys.modules["github.GithubException"]  # noqa: F811  # Get MODULE, not class
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -134,10 +136,10 @@ class RequestsResponse:
         return self.headers.items()
 
     def read(self) -> str:
-        return self.response.text
+        return self.response.text or ""
 
-    def iter_content(self, chunk_size: int | None = 1) -> Iterator:
-        return self.response.iter_content(chunk_size=chunk_size)
+    def iter_content(self, chunk_size: int | None = -1) -> Iterator:
+        return self.response.iter_content(chunk_size=chunk_size or -1)
 
     def raise_for_status(self) -> None:
         self.response.raise_for_status()
@@ -1298,7 +1300,7 @@ class Requester:
                 return await self.__requestRaw(
                     cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
                 )
-            return status, responseHeaders, output
+            return status or 0, responseHeaders, output
         finally:
             # we record the time of this request after it finished
             # to defer next request starting from this request's end, not start
@@ -1415,7 +1417,6 @@ class WithRequester(Generic[T]):
     def requester(self) -> Requester:
         return self.__requester
 
-    def withRequester(self, requester: Requester) -> WithRequester[T]:
-        assert isinstance(requester, Requester), requester
+    def withRequester(self, requester: Any) -> WithRequester[T]:
         self.__requester = requester
         return self

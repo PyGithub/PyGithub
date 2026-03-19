@@ -55,7 +55,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable
 from typing import Any, Generic, TypeVar, overload
 from urllib.parse import parse_qs
 
@@ -124,7 +124,7 @@ class PaginatedListBase(Generic[T]):
         else:
             return self._Slice(self, index)
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncIterator[T]:
         for element in self.__elements:
             yield element
         while self._couldGrow():
@@ -151,7 +151,7 @@ class PaginatedListBase(Generic[T]):
             self.__stop = theSlice.stop
             self.__step = theSlice.step or 1
 
-        async def __aiter__(self):
+        async def __aiter__(self) -> AsyncIterator[T]:
             index = self.__start
             while not self.__finished(index):
                 if self.__list._isBiggerThan(index):

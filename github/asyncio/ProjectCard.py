@@ -178,9 +178,7 @@ class ProjectCard(NonCompletableGithubObject):
         ), column
         post_parameters = {
             "position": position,
-            "column_id": column.id
-            if isinstance(column, (ProjectColumn.ProjectColumn, github.ProjectColumn.ProjectColumn))
-            else column,
+            "column_id": column.id if isinstance(column, ProjectColumn.ProjectColumn) else column,
         }
         status, _, _ = await self._requester.requestJson(
             "POST",

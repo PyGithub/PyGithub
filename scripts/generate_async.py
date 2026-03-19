@@ -64,6 +64,8 @@ SKIP_FILES = {
     "InputGitAuthor.py",
     "InputGitTreeElement.py",
 }
+# Stems (without .py) for membership tests against Path.stem or bare module names.
+SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
 
 # Test files to skip (not test modules, or infrastructure)
 SKIP_TEST_FILES = {
@@ -1221,6 +1223,18 @@ class IOAnalyzer:
                     current = self.async_methods.get(cls_name, set())
                     cls_properties = self.property_methods.get(cls_name, set())
 
+                    # Gather inherited async methods from parent classes for super() detection
+                    inherited_async: set[str] = set()
+                    visited2 = set()
+                    queue2 = list(self.class_bases.get(cls_name, []))
+                    while queue2:
+                        base = queue2.pop(0)
+                        if base in visited2:
+                            continue
+                        visited2.add(base)
+                        inherited_async |= self.async_methods.get(base, set())
+                        queue2.extend(self.class_bases.get(base, []))
+
                     for item in ast.walk(cls_node):
                         if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
                             continue
@@ -1241,6 +1255,46 @@ class IOAnalyzer:
                                     "analyze[pass2] %s.%s: calls async method '%s'", cls_name, item.name, async_method
                                 )
                                 changed = True
+                                break
+                        if item.name in current:
+                            continue
+                        # Also check for super().method( calls to inherited async methods
+                        for async_method in inherited_async:
+                            if re.search(rf"super\(\)\.{re.escape(async_method)}\s*\(", method_src):
+                                current.add(item.name)
+                                logger.debug(
+                                    "analyze[pass2] %s.%s: calls inherited async method via super().%s()",
+                                    cls_name,
+                                    item.name,
+                                    async_method,
+                                )
+                                changed = True
+                                break
+                        if item.name in current:
+                            continue
+                        # Check for inline construction patterns: ClassName(...).async_method(...)
+                        # E.g. GithubIntegration(**self.__requester.kwargs).get_app()
+                        # If ClassName has async_method, the caller must also be async.
+                        for other_cls in self.async_classes:
+                            other_async = self.async_methods.get(other_cls, set())
+                            for async_method in other_async:
+                                if async_method in NEVER_ASYNC_METHODS:
+                                    continue
+                                if re.search(
+                                    rf"\b{re.escape(other_cls)}\s*\([^)]*\)\.{re.escape(async_method)}\s*\(",
+                                    method_src,
+                                ):
+                                    current.add(item.name)
+                                    logger.debug(
+                                        "analyze[pass2] %s.%s: calls %s(...).%s() (inline construction)",
+                                        cls_name,
+                                        item.name,
+                                        other_cls,
+                                        async_method,
+                                    )
+                                    changed = True
+                                    break
+                            if item.name in current:
                                 break
 
                     self.async_methods[cls_name] = current
@@ -1319,6 +1373,19 @@ class IOAnalyzer:
                                 break
                         if item.name in promote:
                             continue
+                        # Check 1b: does this property call an inherited async method via super()?
+                        for am in current_async:
+                            if re.search(rf"super\(\)\.{re.escape(am)}\s*\(", method_src):
+                                promote.add(item.name)
+                                logger.debug(
+                                    "analyze[pass3] %s.%s: promoting @property (calls super().%s())",
+                                    cls_name,
+                                    item.name,
+                                    am,
+                                )
+                                break
+                        if item.name in promote:
+                            continue
                         # Check 2: does this property call a direct I/O pattern?
                         if re.search(rf"\.(?:{io_method_patterns_re})\s*\(", method_src):
                             promote.add(item.name)
@@ -1334,6 +1401,20 @@ class IOAnalyzer:
                                 promote.add(item.name)
                                 logger.debug(
                                     "analyze[pass3] %s.%s: promoting @property (accesses promoted property '%s')",
+                                    cls_name,
+                                    item.name,
+                                    pp,
+                                )
+                                break
+                        if item.name in promote:
+                            continue
+                        # Check 3b: does this property ACCESS a promoted property via super()?
+                        # e.g. `return super().node_id` where parent's node_id is async
+                        for pp in current_promoted:
+                            if re.search(rf"super\(\)\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
+                                promote.add(item.name)
+                                logger.debug(
+                                    "analyze[pass3] %s.%s: promoting @property (accesses super().%s)",
                                     cls_name,
                                     item.name,
                                     pp,
@@ -1404,18 +1485,32 @@ class IOAnalyzer:
                         method_src = ast.get_source_segment(src, item) or ""
                         found = False
                         found_reason = ""
-                        # Check A: accesses a promoted async property
+                        # Check A: accesses a promoted async property via self
                         for pp in all_promoted:
                             if re.search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
                                 found = True
                                 found_reason = "accesses promoted property '%s'" % pp
                                 break
-                        # Check B: calls an async method
+                        # Check A2: accesses a promoted async property via super()
+                        if not found:
+                            for pp in all_promoted:
+                                if re.search(rf"super\(\)\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
+                                    found = True
+                                    found_reason = "accesses promoted property via super().%s" % pp
+                                    break
+                        # Check B: calls an async method via self
                         if not found:
                             for am in current_async:
                                 if re.search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
                                     found = True
                                     found_reason = "calls async method '%s'" % am
+                                    break
+                        # Check B2: calls an async method via super()
+                        if not found:
+                            for am in current_async:
+                                if re.search(rf"super\(\)\.{re.escape(am)}\s*\(", method_src):
+                                    found = True
+                                    found_reason = "calls async method via super().%s()" % am
                                     break
                         if found:
                             promote_methods.add(item.name)
@@ -1544,17 +1639,46 @@ class AsyncTransformer:
         # To avoid E402 (module-level import not at top of file), we:
         # 1. Replace the aliased import with just `import sys as _sys` (stays in import block)
         # 2. Place the _sys.modules assignment after ALL imports
+        # 1. Keep `import github.GithubException as GithubException` (mypy sees the module)
+        # 2. Add `import sys as _sys`
+        # 3. Wrap `_sys.modules` assignment in `if not TYPE_CHECKING:` (runtime only)
+        # 4. Remove bare `import github.GithubException` (redundant with the aliased import)
         if re.search(r"^import github\.GithubException as GithubException\s*$", lines, re.MULTILINE):
-            # Remove the aliased import line, add sys import in its place
+            # Add `import sys as _sys` BEFORE the aliased import (stays in import block)
             lines = re.sub(
-                r"^import github\.GithubException as GithubException\s*$",
-                "import sys as _sys",
+                r"^(import github\.GithubException as GithubException)\s*$",
+                r"import sys as _sys\n\1",
                 lines,
                 flags=re.MULTILINE,
             )
-            # Find the insertion point: just before `if TYPE_CHECKING:` or the first
-            # class/function definition (whichever comes first)
-            sysmod_line = 'GithubException = _sys.modules["github.GithubException"]  # Get MODULE, not class\n'
+            # Remove the bare `import github.GithubException` (if present) since
+            # `import github.GithubException as GithubException` already handles it
+            lines = re.sub(
+                r"^import github\.GithubException\s*\n",
+                "",
+                lines,
+                flags=re.MULTILINE,
+            )
+            # Also remove `from github import GithubException` variants (if produced
+            # by _fix_imports or ruff transformations — these import the CLASS, not
+            # the MODULE, and would shadow our aliased import)
+            lines = re.sub(
+                r"^from github import GithubException\s*\n",
+                "",
+                lines,
+                flags=re.MULTILINE,
+            )
+            # Insert the runtime-only _sys.modules override.  At runtime,
+            # `import github.GithubException as GithubException` gets the CLASS
+            # (not the module) because github/__init__.py re-exports the class.
+            # The _sys.modules trick overrides it to get the MODULE.  Wrap in
+            # `if not TYPE_CHECKING:` so mypy uses the import (which it resolves
+            # correctly as the module).
+            sysmod_block = (
+                "if not TYPE_CHECKING:\n"
+                '    GithubException = _sys.modules["github.GithubException"]'
+                "  # noqa: F811  # Get MODULE, not class\n"
+            )
             m_tc = re.search(r"^if TYPE_CHECKING:", lines, re.MULTILINE)
             m_class = re.search(r"^class \w+", lines, re.MULTILINE)
             # Pick the earliest anchor
@@ -1563,10 +1687,9 @@ class AsyncTransformer:
                 if anchor and (insert_pos is None or anchor.start() < insert_pos):
                     insert_pos = anchor.start()
             if insert_pos is not None:
-                lines = lines[:insert_pos] + sysmod_line + "\n" + lines[insert_pos:]
+                lines = lines[:insert_pos] + sysmod_block + "\n" + lines[insert_pos:]
             else:
-                # Fallback: append before first blank-line-then-non-import
-                lines += "\n" + sysmod_line
+                lines += "\n" + sysmod_block
         logger.debug("transform[%s]: step 2a — fixed GithubException module/class alias", stem)
 
         # 2b) Move class-body from-imports to TYPE_CHECKING
@@ -2079,6 +2202,9 @@ class AsyncTransformer:
         runtime_class_imports: set[str] = set()
         # Names reassigned via `X = _sys.modules[...]`
         sysmodules_assignments: set[str] = set()
+        # SKIP_FILES stems: these are direct class re-exports from github/__init__.py
+        # (e.g. InputGitAuthor, InputGitTreeElement) — NOT module imports
+        skip_stems = {f.removesuffix(".py") for f in SKIP_FILES if f.endswith(".py")}
 
         for line in lines:
             stripped = line.strip()
@@ -2134,12 +2260,17 @@ class AsyncTransformer:
                     runtime_class_imports.add(mod_name)
 
             # Collect `from github import X, Y` names (absolute module imports that bind names)
+            # BUT: skip names whose module is in SKIP_FILES — those are direct class
+            # re-exports from github/__init__.py (e.g. InputGitAuthor, InputGitTreeElement,
+            # GithubException, Consts) and the bare name already refers to the class, not
+            # a module.  Adding them to runtime_module_names would cause Pass 2b to
+            # incorrectly rewrite `InputGitAuthor` → `InputGitAuthor.InputGitAuthor`.
             m = re.match(r"^from github import (.+)$", stripped)
             if m:
                 names_part = m.group(1).replace("(", "").replace(")", "")
                 for n in names_part.split(","):
                     n = n.strip().rstrip(",").strip()
-                    if n and n.isidentifier():
+                    if n and n.isidentifier() and n not in skip_stems:
                         runtime_module_names.add(n)
 
             # Collect `from github.X import X` (absolute runtime class imports)
@@ -2555,7 +2686,7 @@ class AsyncTransformer:
                 async_files.add(f)
         for p in SRC_PKG.glob("*.py"):
             s = p.stem
-            if s not in SKIP_FILES and not s.startswith("_"):
+            if s not in SKIP_STEMS and not s.startswith("_"):
                 async_files.add(s)
 
         # Step 1: Convert bare `import github.X` → `from . import X` (for async modules)
@@ -2681,6 +2812,84 @@ class AsyncTransformer:
         for mod in sorted(async_files, key=len, reverse=True):
             result = result.replace(f"from github.{mod} import ", f"from .{mod} import ")
         logger.debug("fix_imports[%s]: step 3 — converted from-imports for async modules", stem)
+
+        # Step 3b: Rewrite package-level class references: `github.ClassName`
+        # where ClassName is re-exported from github/__init__.py and the underlying
+        # module has an async version.  e.g. `github.Github(...)` → `Github(...)`
+        # (using async class from .MainClass).
+        # Build a map: ClassName → ModuleName for classes re-exported from __init__.py
+        _init_file = SRC_PKG / "__init__.py"
+        _init_reexports: dict[str, str] = {}  # class_name → module_name
+        if _init_file.exists():
+            for m in re.finditer(r"^from \.(\w+) import (\w+)", _init_file.read_text(), re.MULTILINE):
+                mod_name, cls_name = m.group(1), m.group(2)
+                if mod_name in async_files and cls_name != mod_name:
+                    # Class re-exported from a different-named module (e.g. Github from MainClass)
+                    _init_reexports[cls_name] = mod_name
+        for cls_name, mod_name in _init_reexports.items():
+            # Skip if we're processing the file that defines this class
+            # (e.g. don't add `from .MainClass import Github` when transforming MainClass.py)
+            if mod_name == stem:
+                # Still rewrite `github.ClassName` → `ClassName` (bare name, already in scope)
+                pattern = rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)"
+                if re.search(pattern, result):
+                    result = re.sub(pattern, cls_name, result)
+                    logger.debug(
+                        "fix_imports[%s]: step 3b — github.%s → %s (same file, no import needed)",
+                        stem,
+                        cls_name,
+                        cls_name,
+                    )
+                continue
+
+            # Check for circular import: if mod_name imports from the current file (stem),
+            # adding `from .mod_name import cls_name` would create a cycle.
+            # In that case, keep `github.ClassName` and rely on `import github` (added
+            # by _ensure_import_github in step 17) for lazy module-level access.
+            target_src_file = SRC_PKG / f"{mod_name}.py"
+            if target_src_file.exists():
+                target_src = target_src_file.read_text()
+                if re.search(rf"^import github\.{re.escape(stem)}\b", target_src, re.MULTILINE) or re.search(
+                    rf"^from github\.{re.escape(stem)} import ", target_src, re.MULTILINE
+                ):
+                    logger.debug(
+                        "fix_imports[%s]: step 3b — skipping github.%s → %s (circular import: %s imports %s)",
+                        stem,
+                        cls_name,
+                        cls_name,
+                        mod_name,
+                        stem,
+                    )
+                    continue
+
+            # Match github.ClassName that is NOT followed by '.' (which would be github.ClassName.attr,
+            # already handled by step 2 via the module pattern).
+            # Use word boundary to avoid partial matches.
+            pattern = rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)"
+            if re.search(pattern, result):
+                result = re.sub(pattern, cls_name, result)
+                # Ensure there's a runtime import of the class from the async module
+                import_line = f"from .{mod_name} import {cls_name}"
+                if import_line not in result:
+                    # Check if there's a TYPE_CHECKING-only import — need to add runtime one too
+                    # Find insertion point: after existing `from .` imports
+                    insert_pattern = re.search(r"^from \. import .+$", result, re.MULTILINE)
+                    if insert_pattern:
+                        result = result[: insert_pattern.end()] + "\n" + import_line + result[insert_pattern.end() :]
+                    else:
+                        # Add after last import
+                        insert_m = None
+                        for insert_m in re.finditer(r"^(?:from|import) .+$", result, re.MULTILINE):
+                            pass
+                        if insert_m:
+                            result = result[: insert_m.end()] + "\n" + import_line + result[insert_m.end() :]
+                logger.debug(
+                    "fix_imports[%s]: step 3b — github.%s → %s (from .%s)",
+                    stem,
+                    cls_name,
+                    cls_name,
+                    mod_name,
+                )
 
         # Step 4: Handle relative imports (from .X → from .X, already correct)
         # These are already relative within the package.
@@ -2972,6 +3181,9 @@ class AsyncTransformer:
                 mangled = f"_{class_name}{method}"
                 src = self._safe_add_await(src, rf"(?<!\w)self\.{re.escape(mangled)}\s*\(")
 
+            # super().method( -> await super().method(
+            src = self._safe_add_await(src, rf"super\(\)\.{re.escape(method)}\s*\(")
+
         # For async properties: self.prop (no parentheses) -> await self.prop
         # Gather promoted properties for this class + all ancestors
         promoted = set(self.analyzer.promoted_properties.get(class_name, set()))
@@ -3090,6 +3302,26 @@ class AsyncTransformer:
                 src = self._safe_add_await(
                     src,
                     rf"(?<!\w)(?<!\.){re.escape(cls_name)}\.{re.escape(meth)}\s*\(",
+                )
+
+        # Phase I: Inline construction → async method call:
+        # ClassName(...).async_method(...) needs await because async_method is async.
+        # E.g. GithubIntegration(**kwargs).get_app()
+        # We check ALL async classes: if ClassName has async_method, match
+        # ClassName(...).method( patterns and add await.
+        for cls_name in self.analyzer.async_classes:
+            cls_async = self.analyzer.async_methods.get(cls_name, set())
+            for meth in cls_async:
+                if meth in NEVER_ASYNC_METHODS:
+                    continue
+                # Match ClassName(<anything>).method( — the ClassName is followed by
+                # ( ... ) which we skip via a non-greedy match, then .method(
+                # We use a simpler approach: just match ClassName( ... ).method( on a
+                # single line.  The regex ClassName\([^)]*\)\.method\s*\( handles most cases.
+                # For multi-arg calls with nested parens we do a broader match.
+                src = self._safe_add_await(
+                    src,
+                    rf"(?<!\w){re.escape(cls_name)}\([^)]*\)\.{re.escape(meth)}\s*\(",
                 )
 
         return src
@@ -3838,6 +4070,22 @@ class AsyncTransformer:
 
             src_line = line  # closure reference
             new_line = re.sub(pattern, _replace_prop, line)
+
+            # Also handle super().prop → await super().prop
+            super_pattern = rf"(?<!await )super\(\)\.{re.escape(prop)}(?!\s*(?:\(|=[^=]))(?!\w)"
+
+            def _replace_super_prop(m: re.Match) -> str:
+                after = src_line_super[m.end() :]
+                if after.startswith("."):
+                    return f"(await super().{prop})"
+                after_stripped = after.lstrip()
+                if after_stripped and after_stripped[0] not in (")", "]", "}", ",", ":", "\n", "#", ""):
+                    return f"(await super().{prop})"
+                return f"await super().{prop}"
+
+            src_line_super = new_line  # closure reference for super() replacements
+            new_line = re.sub(super_pattern, _replace_super_prop, new_line)
+
             result_lines.append(new_line)
 
         return "\n".join(result_lines)
@@ -4125,7 +4373,7 @@ class AsyncTransformer:
         # First, replace the __iter__ definition with __aiter__
         src = re.sub(
             r"def __iter__\(self\)\s*->\s*Iterator\[T\]:",
-            "async def __aiter__(self):",
+            "async def __aiter__(self) -> AsyncIterator[T]:",
             src,
         )
 
@@ -4149,7 +4397,7 @@ class AsyncTransformer:
         # Also handle _Slice.__iter__ similarly
         src = re.sub(
             r"def __iter__\(self\)\s*->\s*Iterator\[T\]:\s*\n(\s+)index\s*=",
-            "async def __aiter__(self):\n\\1index =",
+            "async def __aiter__(self) -> AsyncIterator[T]:\n\\1index =",
             src,
         )
 
@@ -4273,9 +4521,23 @@ class AsyncTransformer:
             src,
         )
 
-        # Add async iteration type hints
-        if "from typing import" in src and "AsyncIterator" not in src:
-            src = src.replace("from typing import", "from typing import AsyncIterator,", 1)
+        # Add async iteration type hints (import AsyncIterator)
+        if "AsyncIterator" not in src or "import AsyncIterator" not in src.replace(
+            "import AsyncIterator,", "import AsyncIterator"
+        ):
+            # Check if AsyncIterator is actually imported (not just used in annotations)
+            has_import = bool(re.search(r"(?:from \S+ )?import .*\bAsyncIterator\b", src))
+            if not has_import:
+                # Prefer adding to collections.abc import (modern style)
+                if "from collections.abc import" in src:
+                    src = re.sub(
+                        r"from collections\.abc import (.*?)(\n)",
+                        r"from collections.abc import AsyncIterator, \1\2",
+                        src,
+                        count=1,
+                    )
+                elif "from typing import" in src:
+                    src = src.replace("from typing import", "from typing import AsyncIterator,", 1)
 
         return src
 
@@ -4334,16 +4596,26 @@ class AsyncTransformer:
             src,
             count=1,
         )
+        # Replace TypeGuard with TypeIs in the typing_extensions import line.
+        # TypeIs provides proper type narrowing in both branches of an if/else,
+        # whereas TypeGuard only narrows in the True branch.
+        src = src.replace(
+            "from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar",
+            "from typing_extensions import ParamSpec, Protocol, Self, TypeIs, TypeVar",
+        )
         # is_defined: not isinstance(v, _NotSetType) -> not isinstance(v, (_NotSetType, _sync_gho._NotSetType))
+        # Use TypeIs instead of TypeGuard for proper type narrowing in both branches.
+        # TypeGuard only narrows in the True branch; TypeIs narrows in both branches,
+        # which means `if is_defined(x):` properly narrows x to T (not T | _NotSetType).
         src = src.replace(
             "def is_defined(v: T | _NotSetType) -> TypeGuard[T]:\n    return not isinstance(v, _NotSetType)",
-            "def is_defined(v: T | _NotSetType) -> TypeGuard[T]:\n"
+            "def is_defined(v: T | _NotSetType) -> TypeIs[T]:\n"
             "    return not isinstance(v, (_NotSetType, _sync_gho._NotSetType))",
         )
         # is_undefined
         src = src.replace(
             "def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:\n    return isinstance(v, _NotSetType)",
-            "def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:\n"
+            "def is_undefined(v: T | _NotSetType) -> TypeIs[_NotSetType]:\n"
             "    return isinstance(v, (_NotSetType, _sync_gho._NotSetType))",
         )
         # is_optional
@@ -4425,7 +4697,7 @@ class AsyncTransformer:
                 async_files.add(f)
         for p in SRC_PKG.glob("*.py"):
             s = p.stem
-            if s not in SKIP_FILES and not s.startswith("_"):
+            if s not in SKIP_STEMS and not s.startswith("_"):
                 async_files.add(s)
 
         # Build a pattern that matches ModuleName.ClassName for known async modules
@@ -4444,6 +4716,24 @@ class AsyncTransformer:
                 break
 
             result.append(src[i:pos])
+
+            # Determine context: is this isinstance used for type validation (assert)
+            # or for type dispatch (if/elif/ternary)?
+            # Only add sync variants for assert isinstance checks.
+            # For type dispatch, the isinstance-narrowed variable may be used with
+            # `await` which doesn't work on Union[Coroutine, str] types.
+            line_start_pos = src.rfind("\n", 0, pos) + 1
+            prefix_on_line = src[line_start_pos:pos].lstrip()
+            is_assert_context = prefix_on_line.startswith("assert ")
+            # Also check for `all(isinstance(...)` and similar assertion patterns
+            is_assert_context = is_assert_context or prefix_on_line.startswith("assert all(")
+            # Check for `... for ... in ...` loop context where isinstance is in an assertion
+            # e.g. `assert all(isinstance(element, ...) for element in parents)`
+            if not is_assert_context:
+                # Look further back for assert ... comprehension patterns
+                further_back = src[max(0, pos - 200) : pos]
+                if re.search(r"assert\s+all\s*\(", further_back):
+                    is_assert_context = True
 
             # Find matching closing paren
             paren_start = pos + len(isinstance_literal) - 1
@@ -4500,6 +4790,15 @@ class AsyncTransformer:
                 return False
 
             if not _has_async_only(type_arg_stripped):
+                result.append(full_call)
+                i = j
+                continue
+
+            # Only add sync class variants for assert isinstance (type validation).
+            # For if/elif/ternary isinstance (type dispatch), the isinstance-narrowed
+            # variable may be accessed with `await` which doesn't work on Union types
+            # when the sync variant returns a plain value instead of a coroutine.
+            if not is_assert_context:
                 result.append(full_call)
                 i = j
                 continue
@@ -4810,7 +5109,7 @@ def generate_async_test_framework() -> str:
                     value = object.__getattribute__(value, '_obj')
                 setattr(object.__getattribute__(self, '_obj'), name, value)
 
-            @property
+            @property  # type: ignore[misc]
             def __class__(self):
                 return type(object.__getattribute__(self, '_obj'))
 
@@ -5363,7 +5662,7 @@ def main():
     reexport_count = 0
     for p in sorted(SRC_PKG.glob("*.py")):
         stem = p.stem
-        if stem in SKIP_FILES or stem.startswith("_"):
+        if stem in SKIP_STEMS or stem.startswith("_"):
             logger.debug("main: skipping %s (SKIP_FILES or private)", stem)
             continue
 

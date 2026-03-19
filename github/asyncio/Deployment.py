@@ -48,7 +48,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from github import Consts
+import github.Consts
 
 from . import DeploymentStatus, GithubApp, NamedUser, Organization
 from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_undefined
@@ -248,8 +248,8 @@ class Deployment(CompletableGithubObject):
     def _get_accept_header() -> str:
         return ", ".join(
             [
-                Consts.deploymentEnhancementsPreview,
-                Consts.deploymentStatusEnhancementsPreview,
+                github.Consts.deploymentEnhancementsPreview,
+                github.Consts.deploymentStatusEnhancementsPreview,
             ]
         )
 

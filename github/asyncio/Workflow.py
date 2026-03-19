@@ -151,17 +151,17 @@ class Workflow(CompletableGithubObject):
         Note: raises or return False without details on error, depending on the ``throw`` parameter.
         """
         assert (
-            isinstance(ref, (Branch.Branch, github.Branch.Branch))
-            or isinstance(ref, (Tag.Tag, github.Tag.Tag))
-            or isinstance(ref, (Commit.Commit, github.Commit.Commit))
+            isinstance(ref, Branch.Branch)
+            or isinstance(ref, Tag.Tag)
+            or isinstance(ref, Commit.Commit)
             or isinstance(ref, str)
         ), ref
         assert is_undefined(inputs) or isinstance(inputs, dict), inputs
-        if isinstance(ref, (Branch.Branch, github.Branch.Branch)):
+        if isinstance(ref, Branch.Branch):
             ref = ref.name
-        elif isinstance(ref, (Commit.Commit, github.Commit.Commit)):
+        elif isinstance(ref, Commit.Commit):
             ref = await ref.sha
-        elif isinstance(ref, (Tag.Tag, github.Tag.Tag)):
+        elif isinstance(ref, Tag.Tag):
             ref = ref.name
         if is_undefined(inputs):
             inputs = {}
@@ -205,15 +205,9 @@ class Workflow(CompletableGithubObject):
         assert is_undefined(head_sha) or isinstance(head_sha, str), head_sha
         url_parameters: dict[str, Any] = dict()
         if is_defined(actor):
-            url_parameters["actor"] = (
-                (await actor._identity)
-                if isinstance(actor, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                else actor
-            )
+            url_parameters["actor"] = (await actor._identity) if isinstance(actor, NamedUser.NamedUser) else actor
         if is_defined(branch):
-            url_parameters["branch"] = (
-                branch.name if isinstance(branch, (Branch.Branch, github.Branch.Branch)) else branch
-            )
+            url_parameters["branch"] = branch.name if isinstance(branch, Branch.Branch) else branch
         if is_defined(event):
             url_parameters["event"] = event
         if is_defined(status):

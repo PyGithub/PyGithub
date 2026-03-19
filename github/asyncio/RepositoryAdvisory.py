@@ -225,7 +225,7 @@ class RepositoryAdvisory(AdvisoryBase):
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """
         assert isinstance(login_or_user, (str, NamedUser.NamedUser, github.NamedUser.NamedUser)), login_or_user
-        if isinstance(login_or_user, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+        if isinstance(login_or_user, NamedUser.NamedUser):
             login_or_user = await login_or_user.login
         patch_parameters = {
             "credits": [

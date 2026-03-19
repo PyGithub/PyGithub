@@ -105,6 +105,7 @@ from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
 import niquests
 
 import github.GithubObject
+import github.GithubRetry
 from github import Consts
 from github.GithubRetry import GithubRetry
 
@@ -223,14 +224,14 @@ class Github:
 
         if password is not None:
             warnings.warn(
-                "Arguments login_or_token and password are deprecated, please use " "auth=Auth.Login(...) instead",
+                "Arguments login_or_token and password are deprecated, please use auth=Auth.Login(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
             auth = Auth.Login(login_or_token, password)  # type: ignore
         elif login_or_token is not None:
             warnings.warn(
-                "Argument login_or_token is deprecated, please use " "auth=Auth.Token(...) instead",
+                "Argument login_or_token is deprecated, please use auth=Auth.Token(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -246,7 +247,7 @@ class Github:
             auth = Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
-                "Argument app_auth is deprecated, please use " "auth=Auth.AppInstallationAuth(...) instead",
+                "Argument app_auth is deprecated, please use auth=Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -285,7 +286,7 @@ class Github:
 
         .. code-block:: python
 
-          with github.Github(...) as gh:
+          with Github(...) as gh:
             # do something
         """
         await self.__requester.close()
@@ -399,7 +400,7 @@ class Github:
         if is_undefined(login):
             url = "/user"
             # default is to return a lazy completable AuthenticatedUser
-            # v3: given github.Github(lazy=True) is now default, remove completed=False here
+            # v3: given Github(lazy=True) is now default, remove completed=False here
             return AuthenticatedUser.AuthenticatedUser(
                 requester, url=url, completed=False if is_undefined(lazy) else None
             )
@@ -408,7 +409,7 @@ class Github:
             login = urllib.parse.quote(login)
             url = f"/users/{login}"
             # always return a completed NamedUser
-            # v3: remove complete() here and make this as lazy as github.Github is
+            # v3: remove complete() here and make this as lazy as Github is
             user = NamedUser.NamedUser(requester, url=url)
             return await user.complete() if is_undefined(lazy) else user
 
@@ -568,7 +569,7 @@ class Github:
         cve_id: Opt[str] = NotSet,
         ecosystem: Opt[str] = NotSet,
         severity: Opt[str] = NotSet,
-        cwes: list[Opt[str]] | Opt[str] = NotSet,
+        cwes: list[str] | Opt[str] = NotSet,
         is_withdrawn: Opt[bool] = NotSet,
         affects: list[str] | Opt[str] = NotSet,
         published: Opt[str] = NotSet,
@@ -1031,7 +1032,7 @@ class Github:
             attributes={"client_id": client_id, "client_secret": client_secret},
         )
 
-    def get_app(self, slug: Opt[str] = NotSet) -> GithubApp.GithubApp:
+    async def get_app(self, slug: Opt[str] = NotSet) -> GithubApp.GithubApp:
         """
         :calls: `GET /apps/{app_slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
@@ -1045,7 +1046,7 @@ class Github:
                 category=DeprecationWarning,
                 stacklevel=2,
             )
-            return GithubIntegration(**self.__requester.kwargs).get_app()
+            return await GithubIntegration(**self.__requester.kwargs).get_app()
         else:
             assert isinstance(slug, str), slug
             # with a slug given, we can lazily load the GithubApp

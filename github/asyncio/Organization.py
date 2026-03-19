@@ -891,8 +891,7 @@ class Organization(CompletableGithubObject):
 
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
-                isinstance(element, (Repository.Repository, github.Repository.Repository))
-                for element in selected_repositories
+                isinstance(element, Repository.Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert is_undefined(selected_repositories)
@@ -1029,8 +1028,7 @@ class Organization(CompletableGithubObject):
         assert isinstance(visibility, str), visibility
         if visibility == "selected":
             assert isinstance(selected_repositories, list) and all(
-                isinstance(element, (Repository.Repository, github.Repository.Repository))
-                for element in selected_repositories
+                isinstance(element, Repository.Repository) for element in selected_repositories
             ), selected_repositories
         else:
             assert is_undefined(selected_repositories)

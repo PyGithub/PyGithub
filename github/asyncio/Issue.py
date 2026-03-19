@@ -459,9 +459,7 @@ class Issue(CompletableGithubObject):
                 assignees = [assignee] if assignee is not None else []  # type: ignore
         if is_defined(assignees):
             assignees = [
-                (await element._identity)
-                if isinstance(element, (NamedUser.NamedUser, github.NamedUser.NamedUser))
-                else element
+                (await element._identity) if isinstance(element, NamedUser.NamedUser) else element
                 for element in assignees
             ]
 
@@ -473,9 +471,7 @@ class Issue(CompletableGithubObject):
                 "state_reason": state_reason,
                 "labels": labels,
                 "assignees": assignees,
-                "milestone": milestone._identity
-                if isinstance(milestone, (Milestone.Milestone, github.Milestone.Milestone))
-                else (milestone or ""),
+                "milestone": milestone._identity if isinstance(milestone, Milestone.Milestone) else (milestone or ""),
             }
         )
 
@@ -570,7 +566,7 @@ class Issue(CompletableGithubObject):
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         assert isinstance(label, (Label.Label, github.Label.Label, str)), label
-        if isinstance(label, (Label.Label, github.Label.Label)):
+        if isinstance(label, Label.Label):
             label = await label._identity
         else:
             label = urllib.parse.quote(label)

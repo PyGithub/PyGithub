@@ -111,7 +111,7 @@ class AdvisoryCredit(NonCompletableGithubObject):
             assert "type" in credit, credit
             assert isinstance(credit["login"], (str, NamedUser.NamedUser, github.NamedUser.NamedUser)), credit["login"]
             login = credit["login"]
-            if isinstance(login, (NamedUser.NamedUser, github.NamedUser.NamedUser)):
+            if isinstance(login, NamedUser.NamedUser):
                 login = await login.login
             return {
                 "login": login,

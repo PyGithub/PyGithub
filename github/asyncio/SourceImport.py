@@ -205,9 +205,9 @@ class SourceImport(CompletableGithubObject):
         await self._completeIfNotSet(self._vcs_url)
         return self._vcs_url.value
 
-    def update(self, additional_headers: None | dict[str, Any] = None) -> bool:
+    async def update(self, additional_headers: None | dict[str, Any] = None) -> bool:
         import_header = {"Accept": Consts.mediaTypeImportPreview}
-        return super().update(additional_headers=import_header)
+        return await super().update(additional_headers=import_header)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "authors_count" in attributes:  # pragma no branch

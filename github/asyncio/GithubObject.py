@@ -61,7 +61,7 @@ from decimal import Decimal
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Callable, Union, overload
 
-from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar
+from typing_extensions import ParamSpec, Protocol, Self, TypeIs, TypeVar
 
 import github.GithubObject as _sync_gho
 from github import Consts
@@ -133,11 +133,11 @@ NotSet = _NotSetType()
 Opt = Union[T, _NotSetType]
 
 
-def is_defined(v: T | _NotSetType) -> TypeGuard[T]:
+def is_defined(v: T | _NotSetType) -> TypeIs[T]:
     return not isinstance(v, (_NotSetType, _sync_gho._NotSetType))
 
 
-def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:
+def is_undefined(v: T | _NotSetType) -> TypeIs[_NotSetType]:
     return isinstance(v, (_NotSetType, _sync_gho._NotSetType))
 
 

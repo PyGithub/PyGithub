@@ -211,12 +211,12 @@ class RequiredPullRequestReviews(CompletableGithubObject):
 
     @property
     @deprecated("Use dismissal_restrictions.teams")
-    async def dismissal_teams(self) -> list[Team.Team]:
+    async def dismissal_teams(self) -> list[Team.Team] | None:
         return (await self.dismissal_restrictions).teams if (await self.dismissal_restrictions) is not None else None
 
     @property
     @deprecated("Use dismissal_restrictions.users")
-    async def dismissal_users(self) -> list[NamedUser.NamedUser]:
+    async def dismissal_users(self) -> list[NamedUser.NamedUser] | None:
         return (await self.dismissal_restrictions).users if (await self.dismissal_restrictions) is not None else None
 
     @property
