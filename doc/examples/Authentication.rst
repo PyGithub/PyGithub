@@ -21,7 +21,7 @@ All authentication methods require this import:
         .. code-block:: python
 
             >>> from github import Auth
-            >>> from github.asynchronous import Github
+            >>> from github.asyncio import Github
             >>> from github import GithubIntegration
 
 Login authentication

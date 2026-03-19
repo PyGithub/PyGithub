@@ -52,7 +52,7 @@ please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
         .. code-block:: python
 
             import asyncio
-            from github.asynchronous import Github
+            from github.asyncio import Github
             from github import Auth
 
             auth = Auth.Token("access_token")

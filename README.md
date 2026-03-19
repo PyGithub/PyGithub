@@ -54,7 +54,7 @@ g.close()
 
 ```python
 import asyncio
-from github.asynchronous import Github
+from github.asyncio import Github
 from github import Auth
 
 async def main():

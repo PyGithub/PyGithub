@@ -24,8 +24,8 @@
 Analysis-driven async code generator for PyGithub.
 
 Introspects the PyGithub package to discover which classes and methods perform I/O (directly or transitively), then
-copies source files into `github/asynchronous/` with async/await transformations applied.  Also generates async test
-files in `tests/asynchronous/`.
+copies source files into `github/asyncio/` with async/await transformations applied.  Also generates async test files in
+`tests/asyncio/`.
 
 Adapted from the PRAW async-generator that I (Ahmed Tahri) made. Previously also made a sync to async generator for
 grafana-client but wasn't based on AST parsing.
@@ -48,9 +48,9 @@ logger = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SRC_PKG = REPO_ROOT / "github"
-DST_PKG = REPO_ROOT / "github" / "asynchronous"
+DST_PKG = REPO_ROOT / "github" / "asyncio"
 TEST_SRC = REPO_ROOT / "tests"
-TEST_DST = REPO_ROOT / "tests" / "asynchronous"
+TEST_DST = REPO_ROOT / "tests" / "asyncio"
 
 AUTO_HEADER = "# FILE AUTO GENERATED DO NOT TOUCH\n"
 
@@ -1524,7 +1524,7 @@ class AsyncTransformer:
         lines = AUTO_HEADER + lines
         logger.debug("transform[%s]: step 1 — added auto-generated header", stem)
 
-        # 2) Fix imports: github.X -> github.asynchronous.X for local modules
+        # 2) Fix imports: github.X -> github.asyncio.X for local modules
         lines = self._fix_imports(lines, stem)
         logger.debug("transform[%s]: step 2 — fixed imports", stem)
 
@@ -1634,7 +1634,7 @@ class AsyncTransformer:
 
         # 14) Fix isinstance checks against async-only classes to also accept sync classes.
         # When tests create sync objects (e.g. github.X.Y(...)) and pass them to async code,
-        # isinstance(obj, github.asynchronous.X.Y) fails. Accept both.
+        # isinstance(obj, github.asyncio.X.Y) fails. Accept both.
         lines = self._fix_isinstance_dual_class(lines)
         logger.debug("transform[%s]: step 14 — fixed isinstance dual class checks", stem)
 
@@ -1868,12 +1868,12 @@ class AsyncTransformer:
             if fn_name + "(" not in src:
                 continue
             # Check if already imported (either in a parenthesized block or standalone)
-            # Match both relative (.GithubObject) and absolute (github.asynchronous.GithubObject) forms
-            if re.search(rf"from (?:\.|\bgithub\.asynchronous\.)GithubObject import[^)]*\b{fn_name}\b", src, re.DOTALL):
+            # Match both relative (.GithubObject) and absolute (github.asyncio.GithubObject) forms
+            if re.search(rf"from (?:\.|\bgithub\.asyncio\.)GithubObject import[^)]*\b{fn_name}\b", src, re.DOTALL):
                 continue
             # Try to add to existing parenthesized import from .GithubObject:
             paren_import = re.search(
-                r"(from (?:\.|\bgithub\.asynchronous\.)GithubObject import \([^)]*)(\))",
+                r"(from (?:\.|\bgithub\.asyncio\.)GithubObject import \([^)]*)(\))",
                 src,
                 re.DOTALL,
             )
@@ -2447,7 +2447,7 @@ class AsyncTransformer:
 
     def _fix_imports(self, src: str, stem: str) -> str:
         """
-        Fix import statements to use relative imports within github.asynchronous.
+        Fix import statements to use relative imports within github.asyncio.
 
         Transforms:
           import github.X            → from . import X   (for async modules)
@@ -2497,8 +2497,8 @@ class AsyncTransformer:
         needed_imports: set[str] = set()
         for mod in sorted(async_files, key=len, reverse=True):
             # Check if this module is actually referenced in the body
-            pattern_bare = rf"(?<!asynchronous\.)github\.{re.escape(mod)}\."
-            pattern_async = rf"github\.asynchronous\.{re.escape(mod)}\."
+            pattern_bare = rf"(?<!asyncio\.)github\.{re.escape(mod)}\."
+            pattern_async = rf"github\.asyncio\.{re.escape(mod)}\."
             has_ref = bool(re.search(pattern_bare, result)) or bool(re.search(pattern_async, result))
 
             if has_ref and mod == stem:
@@ -2508,23 +2508,23 @@ class AsyncTransformer:
                 # Instead, find the actual class name and replace github.X.ClassName with just ClassName
                 # Since module and class have the same name, github.X.X(...) → X(...)
                 result = re.sub(
-                    rf"(?<!asynchronous\.)github\.{re.escape(mod)}\.{re.escape(mod)}\b",
+                    rf"(?<!asyncio\.)github\.{re.escape(mod)}\.{re.escape(mod)}\b",
                     mod,
                     result,
                 )
                 result = re.sub(
-                    rf"github\.asynchronous\.{re.escape(mod)}\.{re.escape(mod)}\b",
+                    rf"github\.asyncio\.{re.escape(mod)}\.{re.escape(mod)}\b",
                     mod,
                     result,
                 )
                 # Handle github.X.OtherName patterns (class != module name) — unlikely but safe
                 result = re.sub(
-                    rf"(?<!asynchronous\.)github\.{re.escape(mod)}\.",
+                    rf"(?<!asyncio\.)github\.{re.escape(mod)}\.",
                     f"{mod}.",
                     result,
                 )
                 result = re.sub(
-                    rf"github\.asynchronous\.{re.escape(mod)}\.",
+                    rf"github\.asyncio\.{re.escape(mod)}\.",
                     f"{mod}.",
                     result,
                 )
@@ -4458,7 +4458,7 @@ def _generate_reexport_stub(module_name: str) -> str:
     """
     Generate a stub module that re-exports everything from the sync counterpart.
 
-    This ensures that e.g. ``github.asynchronous.Auth.Auth``
+    This ensures that e.g. ``github.asyncio.Auth.Auth``
     IS ``github.Auth.Auth`` (same object), avoiding isinstance mismatches.
 
     """
@@ -4472,7 +4472,7 @@ def _generate_reexport_stub(module_name: str) -> str:
 
 def generate_async_init() -> str:
     """
-    Generate the __init__.py for github.asynchronous.
+    Generate the __init__.py for github.asyncio.
     """
     lines = [AUTO_HEADER.rstrip()]
     lines.append('"""')
@@ -4480,7 +4480,7 @@ def generate_async_init() -> str:
     lines.append('"""')
     lines.append("")
     lines.append("")
-    lines.append("from github.asynchronous.MainClass import Github")
+    lines.append("from github.asyncio.MainClass import Github")
     lines.append("")
     lines.append("")
     lines.append("__all__ = [")
@@ -4515,9 +4515,9 @@ def generate_async_test_framework() -> str:
         from github.GithubException import IncompletableObject
         import github.GithubObject
         import github.Requester
-        import github.asynchronous.GithubObject
-        import github.asynchronous.Requester
-        from github.asynchronous.MainClass import Github
+        import github.asyncio.GithubObject
+        import github.asyncio.Requester
+        from github.asyncio.MainClass import Github
         from tests import Framework
 
         # Re-export BasicTestCase so that async test files referencing
@@ -4528,7 +4528,7 @@ def generate_async_test_framework() -> str:
         def _is_completable(obj):
             """Check if an object is a CompletableGithubObject that may need completion."""
             try:
-                return isinstance(obj, github.asynchronous.GithubObject.CompletableGithubObject)
+                return isinstance(obj, github.asyncio.GithubObject.CompletableGithubObject)
             except Exception:
                 return False
 
@@ -4553,14 +4553,14 @@ def generate_async_test_framework() -> str:
 
 
         class AsyncReplayingHttpConnection(AsyncReplayingConnection):
-            _realConnection = github.asynchronous.Requester.HTTPRequestsConnectionClass
+            _realConnection = github.asyncio.Requester.HTTPRequestsConnectionClass
 
             def __init__(self, *args, **kwds):
                 super().__init__("http", *args, **kwds)
 
 
         class AsyncReplayingHttpsConnection(AsyncReplayingConnection):
-            _realConnection = github.asynchronous.Requester.HTTPSRequestsConnectionClass
+            _realConnection = github.asyncio.Requester.HTTPSRequestsConnectionClass
 
             def __init__(self, *args, **kwds):
                 super().__init__("https", *args, **kwds)
@@ -4622,16 +4622,16 @@ def generate_async_test_framework() -> str:
                 # not a SyncProxy wrapper.
                 if isinstance(result, (
                     github.GithubObject._NotSetType,
-                    github.asynchronous.GithubObject._NotSetType,
+                    github.asyncio.GithubObject._NotSetType,
                 )):
                     return result
                 # Also pass through _ValuedAttribute and _BadAttribute instances
                 # which are internal attribute wrappers, not user-facing objects.
                 if isinstance(result, (
                     github.GithubObject._ValuedAttribute,
-                    github.asynchronous.GithubObject._ValuedAttribute,
+                    github.asyncio.GithubObject._ValuedAttribute,
                     github.GithubObject._BadAttribute,
-                    github.asynchronous.GithubObject._BadAttribute,
+                    github.asyncio.GithubObject._BadAttribute,
                 )):
                     return result
                 if isinstance(result, dict):
@@ -4851,11 +4851,11 @@ def generate_async_test_framework() -> str:
             def _resolve_async_class(cls):
                 """Try to find the async equivalent of a sync class.
 
-                For example, github.Repository.Repository -> github.asynchronous.Repository.Repository
+                For example, github.Repository.Repository -> github.asyncio.Repository.Repository
                 """
                 mod = getattr(cls, '__module__', '') or ''
-                if mod.startswith('github.') and not mod.startswith('github.asynchronous.'):
-                    async_mod_name = mod.replace('github.', 'github.asynchronous.', 1)
+                if mod.startswith('github.') and not mod.startswith('github.asyncio.'):
+                    async_mod_name = mod.replace('github.', 'github.asyncio.', 1)
                     try:
                         import importlib
                         async_mod = importlib.import_module(async_mod_name)
@@ -4906,12 +4906,12 @@ def generate_async_test_framework() -> str:
                 github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
                 github.Requester.Requester.setDebugFlag(True)
                 github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
-                github.asynchronous.GithubObject.GithubObject.setCheckAfterInitFlag(True)
-                github.asynchronous.Requester.Requester.setDebugFlag(True)
-                github.asynchronous.Requester.Requester.setOnCheckMe(self.getFrameChecker())
+                github.asyncio.GithubObject.GithubObject.setCheckAfterInitFlag(True)
+                github.asyncio.Requester.Requester.setDebugFlag(True)
+                github.asyncio.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
                 # Inject async replaying connection classes into the async Requester
-                github.asynchronous.Requester.Requester.injectConnectionClasses(
+                github.asyncio.Requester.Requester.injectConnectionClasses(
                     AsyncReplayingHttpConnection,
                     AsyncReplayingHttpsConnection,
                 )
@@ -4920,7 +4920,7 @@ def generate_async_test_framework() -> str:
 
             def tearDown(self):
                 super().tearDown()
-                github.asynchronous.Requester.Requester.resetConnectionClasses()
+                github.asyncio.Requester.Requester.resetConnectionClasses()
 
             def get_github(self, authMode, retry=None, pool_size=None):
                 if authMode == "token":
@@ -4977,34 +4977,34 @@ def transform_test_file(src: str, test_stem: str) -> str:
     result = AUTO_HEADER + src
 
     # Change Framework import to use async Framework
-    result = result.replace("from . import Framework", "from tests.asynchronous import Framework")
-    result = re.sub(r"from tests import Framework", "from tests.asynchronous import Framework", result)
+    result = result.replace("from . import Framework", "from tests.asyncio import Framework")
+    result = re.sub(r"from tests import Framework", "from tests.asyncio import Framework", result)
     logger.debug("transform_test[%s]: changed Framework import to async", test_stem)
 
     # Replace references to github.MainClass.Github with async version
     # (some tests import Github directly)
     result = result.replace(
         "from github.MainClass import Github",
-        "from github.asynchronous.MainClass import Github",
+        "from github.asyncio.MainClass import Github",
     )
 
     # Replace github.GithubIntegration with async version where used
     result = result.replace(
         "from github.GithubIntegration import GithubIntegration",
-        "from github.asynchronous.GithubIntegration import GithubIntegration",
+        "from github.asyncio.GithubIntegration import GithubIntegration",
     )
 
     # Note: test methods are NOT made async. SyncProxy handles the bridging.
     # No @pytest.mark.asyncio needed either.
 
     # Fix mock paths: patch async Requester alongside sync Requester
-    # github.Requester.time.sleep -> github.asynchronous.Requester.asyncio.sleep
+    # github.Requester.time.sleep -> github.asyncio.Requester.asyncio.sleep
     # (The async Requester uses asyncio.sleep instead of time.sleep)
     if 'mock.patch("github.Requester.time.sleep"' in result:
         logger.debug("transform_test[%s]: fixing mock path for time.sleep → asyncio.sleep", test_stem)
     result = result.replace(
         'mock.patch("github.Requester.time.sleep"',
-        'mock.patch("github.asynchronous.Requester.asyncio.sleep"',
+        'mock.patch("github.asyncio.Requester.asyncio.sleep"',
     )
 
     # Fix logger injection: also inject into async Requester
@@ -5013,19 +5013,19 @@ def transform_test_file(src: str, test_stem: str) -> str:
     result = result.replace(
         "github.Requester.Requester.injectLogger(self.logger)",
         "github.Requester.Requester.injectLogger(self.logger)\n"
-        "        github.asynchronous.Requester.Requester.injectLogger(self.logger)",
+        "        github.asyncio.Requester.Requester.injectLogger(self.logger)",
     )
     result = result.replace(
         "github.Requester.Requester.resetLogger()",
-        "github.Requester.Requester.resetLogger()\n        github.asynchronous.Requester.Requester.resetLogger()",
+        "github.Requester.Requester.resetLogger()\n        github.asyncio.Requester.Requester.resetLogger()",
     )
 
     # Add async Requester import if we patched logger
-    if "github.asynchronous.Requester.Requester.injectLogger" in result:
-        if "import github.asynchronous.Requester" not in result:
+    if "github.asyncio.Requester.Requester.injectLogger" in result:
+        if "import github.asyncio.Requester" not in result:
             result = result.replace(
                 "import github\n",
-                "import github\nimport github.asynchronous.Requester\n",
+                "import github\nimport github.asyncio.Requester\n",
                 1,
             )
 
@@ -5034,14 +5034,14 @@ def transform_test_file(src: str, test_stem: str) -> str:
     # because black may format the call across multiple lines.
     result = result.replace(
         '"github.Requester.datetime"',
-        '"github.asynchronous.Requester.datetime"',
+        '"github.asyncio.Requester.datetime"',
     )
 
     # Fix mock paths for PublicKey.encrypt (secrets use nacl encryption which is non-deterministic)
-    # The async code imports from github.asynchronous.PublicKey, not github.PublicKey
+    # The async code imports from github.asyncio.PublicKey, not github.PublicKey
     result = result.replace(
         'mock.patch("github.PublicKey.encrypt")',
-        'mock.patch("github.asynchronous.PublicKey.encrypt")',
+        'mock.patch("github.asyncio.PublicKey.encrypt")',
     )
 
     # Fix mock paths for AccessToken.datetime (used for token expiry timestamps)
@@ -5051,7 +5051,7 @@ def transform_test_file(src: str, test_stem: str) -> str:
     if test_stem != "Authentication":
         result = result.replace(
             '"github.AccessToken.datetime"',
-            '"github.asynchronous.AccessToken.datetime"',
+            '"github.asyncio.AccessToken.datetime"',
         )
 
     # Fix GithubObject helper imports: is_undefined/is_defined from sync GithubObject only
@@ -5059,11 +5059,11 @@ def transform_test_file(src: str, test_stem: str) -> str:
     # which is needed when tests access attributes of async objects through SyncProxy.
     result = result.replace(
         "from github.GithubObject import is_undefined",
-        "from github.asynchronous.GithubObject import is_undefined",
+        "from github.asyncio.GithubObject import is_undefined",
     )
     result = result.replace(
         "from github.GithubObject import is_defined",
-        "from github.asynchronous.GithubObject import is_defined",
+        "from github.asyncio.GithubObject import is_defined",
     )
 
     # Fix Repository.as_url_param: the test calls the static method with a SyncProxy object.
@@ -5072,7 +5072,7 @@ def transform_test_file(src: str, test_stem: str) -> str:
     # Since as_url_param is async, wrap calls with run_until_complete and unwrap SyncProxy args.
     result = result.replace(
         "github.Repository.Repository.as_url_param",
-        "github.asynchronous.Repository.Repository.as_url_param",
+        "github.asyncio.Repository.Repository.as_url_param",
     )
 
     # Wrap direct calls to async static method as_url_param with run_until_complete.
@@ -5082,23 +5082,23 @@ def transform_test_file(src: str, test_stem: str) -> str:
         arg = m.group(1)
         return (
             f"object.__getattribute__(self.repo, '_loop').run_until_complete("
-            f"github.asynchronous.Repository.Repository.as_url_param("
+            f"github.asyncio.Repository.Repository.as_url_param("
             f"SyncProxy._deep_unwrap({arg})))"
         )
 
     result = re.sub(
-        r"github\.asynchronous\.Repository\.Repository\.as_url_param\(([^)]+)\)",
+        r"github\.asyncio\.Repository\.Repository\.as_url_param\(([^)]+)\)",
         _fix_as_url_param,
         result,
     )
     # Ensure SyncProxy is importable in the test
-    if "SyncProxy._deep_unwrap" in result and "from tests.asynchronous.Framework import SyncProxy" not in result:
+    if "SyncProxy._deep_unwrap" in result and "from tests.asyncio.Framework import SyncProxy" not in result:
         # SyncProxy is defined in Framework.py which is already imported
         # but may not be explicitly imported. Add import if needed.
         if "SyncProxy" not in result.split("class ")[0]:
             result = result.replace(
-                "from tests.asynchronous import Framework",
-                "from tests.asynchronous import Framework\nfrom tests.asynchronous.Framework import SyncProxy",
+                "from tests.asyncio import Framework",
+                "from tests.asyncio import Framework\nfrom tests.asyncio.Framework import SyncProxy",
             )
 
     # Convert assertTrue(isinstance(X, Y)) -> assertIsInstance(X, Y)
@@ -5295,7 +5295,7 @@ def main():
                 transformed = transformer.transform_file(stem, src)
             else:
                 # Non-async module: generate a re-export stub so that
-                # github.asynchronous.X.Y IS github.X.Y (same object).
+                # github.asyncio.X.Y IS github.X.Y (same object).
                 # This avoids isinstance mismatches between sync/async.
                 logger.debug("main: re-export stub for %s (no async classes)", stem)
                 transformed = _generate_reexport_stub(stem)

@@ -3,7 +3,7 @@ Async Support
 
 PyGithub ships with full async support built on top of `Niquests <https://niquests.readthedocs.io>`__'s
 native ``AsyncSession``. Every sync class and method has an automatically generated async counterpart
-in the ``github.asynchronous`` package.
+in the ``github.asyncio`` subpackage.
 
 Quick start
 -----------
@@ -29,7 +29,7 @@ Quick start
         .. code-block:: python
 
             import asyncio
-            from github.asynchronous import Github
+            from github.asyncio import Github
             from github import Auth
 
             async def main():
@@ -49,7 +49,7 @@ How it works
 The async layer is **auto-generated** from the sync source code by the
 ``scripts/generate_async.py`` script. Every ``.py`` file under ``github/`` that
 contains classes with I/O-dependent methods gets a mirror in
-``github/asynchronous/``. The generator:
+``github/asyncio/``. The generator:
 
 1. Discovers which methods touch the network (directly or transitively).
 2. Copies each source file and applies a series of AST + regex transformations:
@@ -164,11 +164,9 @@ The async package mirrors the sync package structure:
    * - Sync
      - Async
    * - ``from github import Github``
-     - ``from github.asynchronous import Github``
-   * - ``from github import Auth``
-     - ``from github import Auth`` (same)
+      - ``from github.asyncio import Github``
    * - ``github.Repository.Repository``
-     - ``github.asynchronous.Repository.Repository``
+      - ``github.asyncio.Repository.Repository``
 
 Threading vs asyncio
 --------------------
@@ -181,13 +179,13 @@ without proper isolation.
 Running tests
 -------------
 
-Async tests are generated alongside the source and live in ``tests/asynchronous/``.
+Async tests are generated alongside the source and live in ``tests/asyncio/``.
 They reuse the same ``ReplayData`` fixtures as the sync tests:
 
 .. code-block:: bash
 
     # run async tests
-    python -m pytest tests/asynchronous/ -q
+    python -m pytest tests/asyncio/ -q
 
     # run sync tests
-    python -m pytest tests/ --ignore=tests/asynchronous/ -q
+    python -m pytest tests/ --ignore=tests/asyncio/ -q

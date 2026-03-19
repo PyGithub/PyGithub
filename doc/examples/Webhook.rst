@@ -96,7 +96,7 @@ Instead of manually configuring a webhook via GitHub's UI, you can create it pro
                 """
                 Creates a webhook for a specified GitHub repository.
                 """
-                from github.asynchronous import Github
+                from github.asyncio import Github
 
                 USERNAME = ""
                 PASSWORD = ""
