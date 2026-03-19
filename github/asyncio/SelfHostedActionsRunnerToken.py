@@ -66,7 +66,7 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._expires_at: Attribute[datetime] = NotSet
         self._permissions: Attribute[dict[str, Any]] = NotSet
-        self._repositories: Attribute[list[Repository]] = NotSet
+        self._repositories: Attribute[list[Repository.Repository]] = NotSet
         self._repository_selection: Attribute[str] = NotSet
         self._single_file: Attribute[str] = NotSet
         self._token: Attribute[str] = NotSet
@@ -83,7 +83,7 @@ class SelfHostedActionsRunnerToken(NonCompletableGithubObject):
         return self._permissions.value
 
     @property
-    def repositories(self) -> list[Repository]:
+    def repositories(self) -> list[Repository.Repository]:
         return self._repositories.value
 
     @property

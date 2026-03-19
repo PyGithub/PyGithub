@@ -45,7 +45,7 @@ class SecretScanAlert(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._first_location_detected: Attribute[SecretScanAlertInstance] = NotSet
+        self._first_location_detected: Attribute[SecretScanAlertInstance.SecretScanAlertInstance] = NotSet
         self._has_more_locations: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._is_base64_encoded: Attribute[bool] = NotSet
@@ -55,15 +55,15 @@ class SecretScanAlert(NonCompletableGithubObject):
         self._publicly_leaked: Attribute[bool] = NotSet
         self._push_protection_bypass_request_comment: Attribute[str | None] = NotSet
         self._push_protection_bypass_request_html_url: Attribute[str | None] = NotSet
-        self._push_protection_bypass_request_reviewer: Attribute[NamedUser | None] = NotSet
+        self._push_protection_bypass_request_reviewer: Attribute[NamedUser.NamedUser | None] = NotSet
         self._push_protection_bypass_request_reviewer_comment: Attribute[str | None] = NotSet
         self._push_protection_bypassed: Attribute[bool] = NotSet
         self._push_protection_bypassed_at: Attribute[datetime | None] = NotSet
-        self._push_protection_bypassed_by: Attribute[NamedUser | None] = NotSet
+        self._push_protection_bypassed_by: Attribute[NamedUser.NamedUser | None] = NotSet
         self._resolution: Attribute[str | None] = NotSet
         self._resolution_comment: Attribute[str | None] = NotSet
         self._resolved_at: Attribute[datetime | None] = NotSet
-        self._resolved_by: Attribute[NamedUser | None] = NotSet
+        self._resolved_by: Attribute[NamedUser.NamedUser | None] = NotSet
         self._secret: Attribute[str] = NotSet
         self._secret_type: Attribute[str] = NotSet
         self._secret_type_display_name: Attribute[str] = NotSet
@@ -80,7 +80,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def first_location_detected(self) -> SecretScanAlertInstance:
+    def first_location_detected(self) -> SecretScanAlertInstance.SecretScanAlertInstance:
         return self._first_location_detected.value
 
     @property
@@ -120,7 +120,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._push_protection_bypass_request_html_url.value
 
     @property
-    def push_protection_bypass_request_reviewer(self) -> NamedUser | None:
+    def push_protection_bypass_request_reviewer(self) -> NamedUser.NamedUser | None:
         return self._push_protection_bypass_request_reviewer.value
 
     @property
@@ -136,7 +136,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._push_protection_bypassed_at.value
 
     @property
-    def push_protection_bypassed_by(self) -> NamedUser | None:
+    def push_protection_bypassed_by(self) -> NamedUser.NamedUser | None:
         return self._push_protection_bypassed_by.value
 
     @property
@@ -152,7 +152,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._resolved_at.value
 
     @property
-    def resolved_by(self) -> NamedUser | None:
+    def resolved_by(self) -> NamedUser.NamedUser | None:
         return self._resolved_by.value
 
     @property

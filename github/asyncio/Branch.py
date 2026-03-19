@@ -87,11 +87,11 @@ class Branch(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self.__links: Attribute[dict[str, Any]] = NotSet
-        self._commit: Attribute[Commit] = NotSet
+        self._commit: Attribute[Commit.Commit] = NotSet
         self._name: Attribute[str] = NotSet
         self._pattern: Attribute[str] = NotSet
         self._protected: Attribute[bool] = NotSet
-        self._protection: Attribute[BranchProtection] = NotSet
+        self._protection: Attribute[BranchProtection.BranchProtection] = NotSet
         self._protection_url: Attribute[str] = NotSet
         self._required_approving_review_count: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
@@ -104,7 +104,7 @@ class Branch(NonCompletableGithubObject):
         return self.__links.value
 
     @property
-    def commit(self) -> Commit:
+    def commit(self) -> Commit.Commit:
         return self._commit.value
 
     @property
@@ -120,7 +120,7 @@ class Branch(NonCompletableGithubObject):
         return self._protected.value
 
     @property
-    async def protection(self) -> BranchProtection:
+    async def protection(self) -> BranchProtection.BranchProtection:
         if is_undefined(self._protection):
             return await self.get_protection()
         return self._protection.value
@@ -137,7 +137,7 @@ class Branch(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    async def get_protection(self) -> BranchProtection:
+    async def get_protection(self) -> BranchProtection.BranchProtection:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -174,7 +174,7 @@ class Branch(NonCompletableGithubObject):
         require_last_push_approval: Opt[bool] = NotSet,
         allow_deletions: Opt[bool] = NotSet,
         checks: Opt[list[str | tuple[str, int]]] = NotSet,
-    ) -> BranchProtection:
+    ) -> BranchProtection.BranchProtection:
         """
         :calls: `PUT /repos/{owner}/{repo}/branches/{branch}/protection <https://docs.github.com/en/rest/reference/repos#get-branch-protection>`_
 
@@ -349,7 +349,7 @@ class Branch(NonCompletableGithubObject):
             self.protection_url,
         )
 
-    async def get_required_status_checks(self) -> RequiredStatusChecks:
+    async def get_required_status_checks(self) -> RequiredStatusChecks.RequiredStatusChecks:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         :rtype: :class:`RequiredStatusChecks.RequiredStatusChecks`
@@ -364,7 +364,7 @@ class Branch(NonCompletableGithubObject):
         strict: Opt[bool] = NotSet,
         contexts: Opt[list[str]] = NotSet,
         checks: Opt[list[str | tuple[str, int]]] = NotSet,
-    ) -> RequiredStatusChecks:
+    ) -> RequiredStatusChecks.RequiredStatusChecks:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -402,7 +402,7 @@ class Branch(NonCompletableGithubObject):
             f"{self.protection_url}/required_status_checks",
         )
 
-    async def get_required_pull_request_reviews(self) -> RequiredPullRequestReviews:
+    async def get_required_pull_request_reviews(self) -> RequiredPullRequestReviews.RequiredPullRequestReviews:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -422,7 +422,7 @@ class Branch(NonCompletableGithubObject):
         require_code_owner_reviews: Opt[bool] = NotSet,
         required_approving_review_count: Opt[int] = NotSet,
         require_last_push_approval: Opt[bool] = NotSet,
-    ) -> RequiredPullRequestReviews:
+    ) -> RequiredPullRequestReviews.RequiredPullRequestReviews:
         """
         :calls: `PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -486,7 +486,7 @@ class Branch(NonCompletableGithubObject):
         """
         headers, data = await self._requester.requestJsonAndCheck("DELETE", f"{self.protection_url}/enforce_admins")
 
-    def get_user_push_restrictions(self) -> PaginatedList[NamedUser]:
+    def get_user_push_restrictions(self) -> PaginatedList.PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users <https://docs.github.com/en/rest/reference/repos#branches>`_
         """
@@ -497,7 +497,7 @@ class Branch(NonCompletableGithubObject):
             None,
         )
 
-    def get_team_push_restrictions(self) -> PaginatedList[Team]:
+    def get_team_push_restrictions(self) -> PaginatedList.PaginatedList[Team.Team]:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams <https://docs.github.com/en/rest/reference/repos#branches>`_
         """

@@ -88,17 +88,17 @@ class Commit(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[NamedUser] = NotSet
+        self._author: Attribute[NamedUser.NamedUser] = NotSet
         self._comments_url: Attribute[str] = NotSet
-        self._commit: Attribute[GitCommit] = NotSet
-        self._committer: Attribute[NamedUser] = NotSet
-        self._files: Attribute[list[File]] = NotSet
+        self._commit: Attribute[GitCommit.GitCommit] = NotSet
+        self._committer: Attribute[NamedUser.NamedUser] = NotSet
+        self._files: Attribute[list[File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._sha: Attribute[str] = NotSet
-        self._stats: Attribute[CommitStats] = NotSet
+        self._stats: Attribute[CommitStats.CommitStats] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -110,7 +110,7 @@ class Commit(CompletableGithubObject):
         return await self.sha
 
     @property
-    async def author(self) -> NamedUser:
+    async def author(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._author)
         return self._author.value
 
@@ -120,19 +120,19 @@ class Commit(CompletableGithubObject):
         return self._comments_url.value
 
     @property
-    async def commit(self) -> GitCommit:
+    async def commit(self) -> GitCommit.GitCommit:
         await self._completeIfNotSet(self._commit)
         return self._commit.value
 
     @property
-    async def committer(self) -> NamedUser:
+    async def committer(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._committer)
         return self._committer.value
 
     # This should be a method, but this used to be a property and cannot be changed without breaking user code
     # TODO: remove @property on version 3
     @property
-    async def files(self) -> PaginatedList[File]:
+    async def files(self) -> PaginatedList[File.File]:
         return PaginatedList(
             File.File,
             self._requester,
@@ -161,7 +161,7 @@ class Commit(CompletableGithubObject):
         return self._parents.value
 
     @property
-    async def repository(self) -> Repository:
+    async def repository(self) -> Repository.Repository:
         await self._completeIfNotSet(self._repository)
         return self._repository.value
 
@@ -171,7 +171,7 @@ class Commit(CompletableGithubObject):
         return self._sha.value
 
     @property
-    async def stats(self) -> CommitStats:
+    async def stats(self) -> CommitStats.CommitStats:
         await self._completeIfNotSet(self._stats)
         return self._stats.value
 
@@ -191,7 +191,7 @@ class Commit(CompletableGithubObject):
         line: Opt[int] = NotSet,
         path: Opt[str] = NotSet,
         position: Opt[int] = NotSet,
-    ) -> CommitComment:
+    ) -> CommitComment.CommitComment:
         """
         :calls: `POST /repos/{owner}/{repo}/commits/{commit_sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
@@ -212,7 +212,7 @@ class Commit(CompletableGithubObject):
         target_url: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
         context: Opt[str] = NotSet,
-    ) -> CommitStatus:
+    ) -> CommitStatus.CommitStatus:
         """
         :calls: `POST /repos/{owner}/{repo}/statuses/{sha} <https://docs.github.com/en/rest/reference/repos#statuses>`_
         """
@@ -236,14 +236,14 @@ class Commit(CompletableGithubObject):
         )
         return CommitStatus.CommitStatus(self._requester, headers, data)
 
-    async def get_branches_where_head(self) -> list[Branch]:
+    async def get_branches_where_head(self) -> list[Branch.Branch]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head <https://docs.github.com/rest/commits/commits#list-branches-for-head-commit>`_
         """
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/branches-where-head")
         return [Branch.Branch(self._requester, headers, item) for item in data]
 
-    async def get_comments(self) -> PaginatedList[CommitComment]:
+    async def get_comments(self) -> PaginatedList[CommitComment.CommitComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
@@ -254,7 +254,7 @@ class Commit(CompletableGithubObject):
             None,
         )
 
-    async def get_statuses(self) -> PaginatedList[CommitStatus]:
+    async def get_statuses(self) -> PaginatedList[CommitStatus.CommitStatus]:
         """
         :calls: `GET /repos/{owner}/{repo}/statuses/{sha} <https://docs.github.com/en/rest/reference/repos#statuses>`_
         """
@@ -265,14 +265,14 @@ class Commit(CompletableGithubObject):
             None,
         )
 
-    async def get_combined_status(self) -> CommitCombinedStatus:
+    async def get_combined_status(self) -> CommitCombinedStatus.CommitCombinedStatus:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <http://docs.github.com/en/rest/reference/repos#statuses>`_
         """
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/status")
         return CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data)
 
-    async def get_pulls(self) -> PaginatedList[PullRequest]:
+    async def get_pulls(self) -> PaginatedList[PullRequest.PullRequest]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`_
         """
@@ -289,7 +289,7 @@ class Commit(CompletableGithubObject):
         check_name: Opt[str] = NotSet,
         status: Opt[str] = NotSet,
         filter: Opt[str] = NotSet,
-    ) -> PaginatedList[CheckRun]:
+    ) -> PaginatedList[CheckRun.CheckRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
         """
@@ -309,7 +309,7 @@ class Commit(CompletableGithubObject):
 
     async def get_check_suites(
         self, app_id: Opt[int] = NotSet, check_name: Opt[str] = NotSet
-    ) -> PaginatedList[CheckSuite]:
+    ) -> PaginatedList[CheckSuite.CheckSuite]:
         """
         :class: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
         """

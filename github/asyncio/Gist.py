@@ -89,7 +89,7 @@ class Gist(CompletableGithubObject):
         self._forks_url: Attribute[str] = NotSet
         self._git_pull_url: Attribute[str] = NotSet
         self._git_push_url: Attribute[str] = NotSet
-        self._history: Attribute[list[GistHistoryState]] = NotSet
+        self._history: Attribute[list[GistHistoryState.GistHistoryState]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
@@ -164,7 +164,7 @@ class Gist(CompletableGithubObject):
         return self._git_push_url.value
 
     @property
-    async def history(self) -> list[GistHistoryState]:
+    async def history(self) -> list[GistHistoryState.GistHistoryState]:
         await self._completeIfNotSet(self._history)
         return self._history.value
 
@@ -213,7 +213,7 @@ class Gist(CompletableGithubObject):
         await self._completeIfNotSet(self._user)
         return self._user.value
 
-    async def create_comment(self, body: str) -> GistComment:
+    async def create_comment(self, body: str) -> GistComment.GistComment:
         """
         :calls: `POST /gists/{gist_id}/comments <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
@@ -260,7 +260,7 @@ class Gist(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
-    async def get_comment(self, id: int) -> GistComment:
+    async def get_comment(self, id: int) -> GistComment.GistComment:
         """
         :calls: `GET /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
@@ -268,7 +268,7 @@ class Gist(CompletableGithubObject):
         url = f"{await self.url}/comments/{id}"
         return GistComment.GistComment(self._requester, url=url)
 
-    async def get_comments(self) -> PaginatedList[GistComment]:
+    async def get_comments(self) -> PaginatedList[GistComment.GistComment]:
         """
         :calls: `GET /gists/{gist_id}/comments <https://docs.github.com/en/rest/reference/gists#comments>`_
         """

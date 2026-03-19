@@ -57,7 +57,7 @@ class Authorization(GithubObject.CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._app: Attribute[AuthorizationApplication] = NotSet
+        self._app: Attribute[AuthorizationApplication.AuthorizationApplication] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._note: Attribute[str | None] = NotSet
@@ -71,7 +71,7 @@ class Authorization(GithubObject.CompletableGithubObject):
         return self.get__repr__({"scopes": self._scopes.value})
 
     @property
-    async def app(self) -> AuthorizationApplication:
+    async def app(self) -> AuthorizationApplication.AuthorizationApplication:
         await self._completeIfNotSet(self._app)
         return self._app.value
 

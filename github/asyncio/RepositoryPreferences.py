@@ -62,14 +62,14 @@ class RepositoryPreferences(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._preferences: Attribute[dict[str, list[dict[str, bool | int]]]] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
 
     @property
     def preferences(self) -> dict[str, list[dict[str, bool | int]]]:
         return self._preferences.value
 
     @property
-    def repository(self) -> Repository:
+    def repository(self) -> Repository.Repository:
         return self._repository.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

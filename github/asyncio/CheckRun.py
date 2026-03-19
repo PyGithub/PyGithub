@@ -74,12 +74,12 @@ class CheckRun(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._app: Attribute[GithubApp] = NotSet
-        self._check_suite: Attribute[CheckSuite] = NotSet
+        self._app: Attribute[GithubApp.GithubApp] = NotSet
+        self._check_suite: Attribute[CheckSuite.CheckSuite] = NotSet
         self._check_suite_id: Attribute[int] = NotSet
         self._completed_at: Attribute[datetime | None] = NotSet
         self._conclusion: Attribute[str] = NotSet
-        self._deployment: Attribute[Deployment] = NotSet
+        self._deployment: Attribute[Deployment.Deployment] = NotSet
         self._details_url: Attribute[str] = NotSet
         self._external_id: Attribute[str] = NotSet
         self._head_sha: Attribute[str] = NotSet
@@ -88,7 +88,7 @@ class CheckRun(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._output: Attribute[CheckRunOutput.CheckRunOutput] = NotSet
-        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._pull_requests: Attribute[list[PullRequest.PullRequest]] = NotSet
         self._started_at: Attribute[datetime] = NotSet
         self._status: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
@@ -97,12 +97,12 @@ class CheckRun(CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "conclusion": self._conclusion.value})
 
     @property
-    async def app(self) -> GithubApp:
+    async def app(self) -> GithubApp.GithubApp:
         await self._completeIfNotSet(self._app)
         return self._app.value
 
     @property
-    async def check_suite(self) -> CheckSuite:
+    async def check_suite(self) -> CheckSuite.CheckSuite:
         await self._completeIfNotSet(self._check_suite)
         return self._check_suite.value
 
@@ -123,7 +123,7 @@ class CheckRun(CompletableGithubObject):
         return self._conclusion.value
 
     @property
-    async def deployment(self) -> Deployment:
+    async def deployment(self) -> Deployment.Deployment:
         await self._completeIfNotSet(self._deployment)
         return self._deployment.value
 
@@ -163,12 +163,12 @@ class CheckRun(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def output(self) -> CheckRunOutput:
+    async def output(self) -> CheckRunOutput.CheckRunOutput:
         await self._completeIfNotSet(self._output)
         return self._output.value
 
     @property
-    async def pull_requests(self) -> list[PullRequest]:
+    async def pull_requests(self) -> list[PullRequest.PullRequest]:
         await self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
@@ -186,7 +186,7 @@ class CheckRun(CompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def get_annotations(self) -> PaginatedList[CheckRunAnnotation]:
+    def get_annotations(self) -> PaginatedList[CheckRunAnnotation.CheckRunAnnotation]:
         """
         :calls: `GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`_
         """

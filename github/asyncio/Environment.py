@@ -66,13 +66,15 @@ class Environment(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
+        self._deployment_branch_policy: Attribute[
+            EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy
+        ] = NotSet
         self._environments_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._protection_rules: Attribute[list[EnvironmentProtectionRule]] = NotSet
+        self._protection_rules: Attribute[list[EnvironmentProtectionRule.EnvironmentProtectionRule]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -87,7 +89,7 @@ class Environment(CompletableGithubObject):
     @property
     async def deployment_branch_policy(
         self,
-    ) -> EnvironmentDeploymentBranchPolicy:
+    ) -> EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy:
         await self._completeIfNotSet(self._deployment_branch_policy)
         return self._deployment_branch_policy.value
 
@@ -121,7 +123,7 @@ class Environment(CompletableGithubObject):
     @property
     async def protection_rules(
         self,
-    ) -> list[EnvironmentProtectionRule]:
+    ) -> list[EnvironmentProtectionRule.EnvironmentProtectionRule]:
         await self._completeIfNotSet(self._protection_rules)
         return self._protection_rules.value
 
@@ -140,7 +142,7 @@ class Environment(CompletableGithubObject):
             self._url = self._makeStringAttribute(self.environments_url + "/" + await self.name)
         return self._url.value
 
-    async def get_public_key(self) -> PublicKey:
+    async def get_public_key(self) -> PublicKey.PublicKey:
         """
         :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
         :rtype: :class:`PublicKey`
@@ -150,7 +152,7 @@ class Environment(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/secrets/public-key")
         return PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
-    async def create_secret(self, secret_name: str, unencrypted_value: str) -> Secret:
+    async def create_secret(self, secret_name: str, unencrypted_value: str) -> Secret.Secret:
         """
         :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
         """
@@ -172,7 +174,7 @@ class Environment(CompletableGithubObject):
             completed=False,
         )
 
-    async def get_secrets(self) -> PaginatedList[Secret]:
+    async def get_secrets(self) -> PaginatedList[Secret.Secret]:
         """
         Gets all repository secrets.
 
@@ -188,7 +190,7 @@ class Environment(CompletableGithubObject):
             list_item="secrets",
         )
 
-    async def get_secret(self, secret_name: str) -> Secret:
+    async def get_secret(self, secret_name: str) -> Secret.Secret:
         """
         :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
         """
@@ -196,7 +198,7 @@ class Environment(CompletableGithubObject):
         secret_name = urllib.parse.quote(secret_name, safe="")
         return Secret.Secret(self._requester, url=f"{await self.url}/secrets/{secret_name}")
 
-    async def create_variable(self, variable_name: str, value: str) -> Variable:
+    async def create_variable(self, variable_name: str, value: str) -> Variable.Variable:
         """
         :calls: `POST /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
         """
@@ -220,7 +222,7 @@ class Environment(CompletableGithubObject):
             completed=False,
         )
 
-    async def get_variables(self) -> PaginatedList[Variable]:
+    async def get_variables(self) -> PaginatedList[Variable.Variable]:
         """
         Gets all repository variables :rtype: :class:`PaginatedList` of :class:`Variable`
         """
@@ -233,7 +235,7 @@ class Environment(CompletableGithubObject):
             list_item="variables",
         )
 
-    async def get_variable(self, variable_name: str) -> Variable:
+    async def get_variable(self, variable_name: str) -> Variable.Variable:
         """
         :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/rest/actions/variables#get-an-environment-variable>`_
         :param variable_name: string

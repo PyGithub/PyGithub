@@ -351,7 +351,7 @@ class Repository(CompletableGithubObject):
         self._labels_url: Attribute[str] = NotSet
         self._language: Attribute[str] = NotSet
         self._languages_url: Attribute[str] = NotSet
-        self._license: Attribute[License] = NotSet
+        self._license: Attribute[License.License] = NotSet
         self._master_branch: Attribute[str] = NotSet
         self._merge_commit_message: Attribute[str] = NotSet
         self._merge_commit_title: Attribute[str] = NotSet
@@ -364,16 +364,16 @@ class Repository(CompletableGithubObject):
         self._notifications_url: Attribute[str] = NotSet
         self._open_issues: Attribute[int] = NotSet
         self._open_issues_count: Attribute[int] = NotSet
-        self._organization: Attribute[Organization] = NotSet
-        self._owner: Attribute[NamedUser] = NotSet
+        self._organization: Attribute[Organization.Organization] = NotSet
+        self._owner: Attribute[NamedUser.NamedUser] = NotSet
         self._parent: Attribute[Repository] = NotSet
-        self._permissions: Attribute[Permissions] = NotSet
+        self._permissions: Attribute[Permissions.Permissions] = NotSet
         self._private: Attribute[bool] = NotSet
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
         self._role_name: Attribute[str] = NotSet
-        self._security_and_analysis: Attribute[SecurityAndAnalysis] = NotSet
+        self._security_and_analysis: Attribute[SecurityAndAnalysis.SecurityAndAnalysis] = NotSet
         self._size: Attribute[int] = NotSet
         self._source: Attribute[Repository] = NotSet
         self._squash_merge_commit_message: Attribute[str] = NotSet
@@ -854,7 +854,7 @@ class Repository(CompletableGithubObject):
         return self._languages_url.value
 
     @property
-    async def license(self) -> License:
+    async def license(self) -> License.License:
         await self._completeIfNotSet(self._license)
         return self._license.value
 
@@ -949,7 +949,7 @@ class Repository(CompletableGithubObject):
         return self._open_issues_count.value
 
     @property
-    async def organization(self) -> Organization:
+    async def organization(self) -> Organization.Organization:
         """
         :type: :class:`Organization.Organization`
         """
@@ -957,7 +957,7 @@ class Repository(CompletableGithubObject):
         return self._organization.value
 
     @property
-    async def owner(self) -> NamedUser:
+    async def owner(self) -> NamedUser.NamedUser:
         """
         :type: :class:`NamedUser.NamedUser`
         """
@@ -973,7 +973,7 @@ class Repository(CompletableGithubObject):
         return self._parent.value
 
     @property
-    async def permissions(self) -> Permissions:
+    async def permissions(self) -> Permissions.Permissions:
         """
         :type: :class:`Permissions.Permissions`
         """
@@ -1018,7 +1018,7 @@ class Repository(CompletableGithubObject):
         return self._role_name.value
 
     @property
-    async def security_and_analysis(self) -> SecurityAndAnalysis:
+    async def security_and_analysis(self) -> SecurityAndAnalysis.SecurityAndAnalysis:
         """
         :type: :class:`SecurityAndAnalysis.SecurityAndAnalysis`
         """
@@ -1221,8 +1221,8 @@ class Repository(CompletableGithubObject):
             return urllib.parse.quote(repo, safe="/")
 
     async def add_to_collaborators(
-        self, collaborator: str | NamedUser, permission: Opt[str] = NotSet
-    ) -> Invitation | None:
+        self, collaborator: str | NamedUser.NamedUser, permission: Opt[str] = NotSet
+    ) -> Invitation.Invitation | None:
         """
         :calls: `PUT /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
         :param collaborator: string or :class:`NamedUser.NamedUser`
@@ -1251,7 +1251,7 @@ class Repository(CompletableGithubObject):
         # there's a pending invitation for the given user.
         return Invitation.Invitation(self._requester, headers, data, completed=True) if data is not None else None
 
-    async def get_collaborator_permission(self, collaborator: str | NamedUser) -> str:
+    async def get_collaborator_permission(self, collaborator: str | NamedUser.NamedUser) -> str:
         """
         :calls: `GET /repos/{owner}/{repo}/collaborators/{username}/permission <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`NamedUser.NamedUser`
@@ -1270,7 +1270,7 @@ class Repository(CompletableGithubObject):
         )
         return data["permission"]
 
-    async def get_collaborator_role_name(self, collaborator: str | NamedUser) -> str:
+    async def get_collaborator_role_name(self, collaborator: str | NamedUser.NamedUser) -> str:
         """
         :calls: `GET /repos/{owner}/{repo}/collaborators/{username}/permission <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`NamedUser.NamedUser`
@@ -1287,7 +1287,7 @@ class Repository(CompletableGithubObject):
         )
         return data["role_name"]
 
-    async def get_pending_invitations(self) -> PaginatedList[Invitation]:
+    async def get_pending_invitations(self) -> PaginatedList[Invitation.Invitation]:
         """
         :calls: `GET /repos/{owner}/{repo}/invitations <https://docs.github.com/en/rest/reference/repos#invitations>`_
         :rtype: :class:`PaginatedList` of :class:`Invitation.Invitation`
@@ -1308,7 +1308,7 @@ class Repository(CompletableGithubObject):
 
         headers, data = await self._requester.requestJsonAndCheck("DELETE", f"{await self.url}/invitations/{invite_id}")
 
-    async def compare(self, base: str, head: str) -> Comparison:
+    async def compare(self, base: str, head: str) -> Comparison.Comparison:
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{basehead} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
@@ -1352,7 +1352,7 @@ class Repository(CompletableGithubObject):
 
         return Autolink.Autolink(self._requester, headers, data)
 
-    async def create_git_blob(self, content: str, encoding: str) -> GitBlob:
+    async def create_git_blob(self, content: str, encoding: str) -> GitBlob.GitBlob:
         """
         :calls: `POST /repos/{owner}/{repo}/git/blobs <https://docs.github.com/en/rest/reference/git#blobs>`_
         :param content: string
@@ -1373,11 +1373,11 @@ class Repository(CompletableGithubObject):
     async def create_git_commit(
         self,
         message: str,
-        tree: GitTree,
-        parents: list[GitCommit],
-        author: Opt[InputGitAuthor] = NotSet,
-        committer: Opt[InputGitAuthor] = NotSet,
-    ) -> GitCommit:
+        tree: GitTree.GitTree,
+        parents: list[GitCommit.GitCommit],
+        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+    ) -> GitCommit.GitCommit:
         """
         :calls: `POST /repos/{owner}/{repo}/git/commits <https://docs.github.com/en/rest/reference/git#commits>`_
         :param message: string
@@ -1408,7 +1408,7 @@ class Repository(CompletableGithubObject):
         )
         return GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
-    async def create_git_ref(self, ref: str, sha: str) -> GitRef:
+    async def create_git_ref(self, ref: str, sha: str) -> GitRef.GitRef:
         """
         :calls: `POST /repos/{owner}/{repo}/git/refs <https://docs.github.com/en/rest/reference/git#references>`_
         :param ref: string
@@ -1435,12 +1435,12 @@ class Repository(CompletableGithubObject):
         release_message: Opt[str],
         object: str,
         type: str,
-        tagger: Opt[InputGitAuthor] = NotSet,
+        tagger: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
         draft: bool = False,
         prerelease: bool = False,
         generate_release_notes: bool = False,
         make_latest: str = "true",
-    ) -> GitRelease:
+    ) -> GitRelease.GitRelease:
         """
         Convenience function that calls :meth:`Repository.create_git_tag` and :meth:`Repository.create_git_release`.
 
@@ -1480,7 +1480,7 @@ class Repository(CompletableGithubObject):
         generate_release_notes: bool = False,
         target_commitish: Opt[str] = NotSet,
         make_latest: str = "true",
-    ) -> GitRelease:
+    ) -> GitRelease.GitRelease:
         """
         :calls: `POST /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/repos#releases>`_
         :param tag: string
@@ -1572,8 +1572,8 @@ class Repository(CompletableGithubObject):
         message: str,
         object: str,
         type: str,
-        tagger: Opt[InputGitAuthor] = NotSet,
-    ) -> GitTag:
+        tagger: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+    ) -> GitTag.GitTag:
         """
         :calls: `POST /repos/{owner}/{repo}/git/tags <https://docs.github.com/en/rest/reference/git#tags>`_
         """
@@ -1595,7 +1595,9 @@ class Repository(CompletableGithubObject):
         )
         return GitTag.GitTag(self._requester, headers, data, completed=True)
 
-    async def create_git_tree(self, tree: list[InputGitTreeElement], base_tree: Opt[GitTree] = NotSet) -> GitTree:
+    async def create_git_tree(
+        self, tree: list[InputGitTreeElement.InputGitTreeElement], base_tree: Opt[GitTree.GitTree] = NotSet
+    ) -> GitTree.GitTree:
         """
         :calls: `POST /repos/{owner}/{repo}/git/trees <https://docs.github.com/en/rest/reference/git#trees>`_
         :param tree: list of :class:`InputGitTreeElement.InputGitTreeElement`
@@ -1620,7 +1622,7 @@ class Repository(CompletableGithubObject):
         config: dict[str, str],
         events: Opt[list[str]] = NotSet,
         active: Opt[bool] = NotSet,
-    ) -> Hook:
+    ) -> Hook.Hook:
         """
         :calls: `POST /repos/{owner}/{repo}/hooks <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param name: string
@@ -1645,11 +1647,11 @@ class Repository(CompletableGithubObject):
         self,
         title: str,
         body: Opt[str] = NotSet,
-        assignee: NamedUser | Opt[str] = NotSet,
-        milestone: Opt[Milestone] = NotSet,
-        labels: list[Label] | Opt[list[str]] = NotSet,
-        assignees: Opt[list[str]] | list[NamedUser] = NotSet,
-    ) -> Issue:
+        assignee: NamedUser.NamedUser | Opt[str] = NotSet,
+        milestone: Opt[Milestone.Milestone] = NotSet,
+        labels: list[Label.Label] | Opt[list[str]] = NotSet,
+        assignees: Opt[list[str]] | list[NamedUser.NamedUser] = NotSet,
+    ) -> Issue.Issue:
         """
         :calls: `POST /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
         :param title: string
@@ -1696,7 +1698,7 @@ class Repository(CompletableGithubObject):
         )
         return Issue.Issue(self._requester, headers, data, completed=True)
 
-    async def create_key(self, title: str, key: str, read_only: bool = False) -> RepositoryKey:
+    async def create_key(self, title: str, key: str, read_only: bool = False) -> RepositoryKey.RepositoryKey:
         """
         :calls: `POST /repos/{owner}/{repo}/keys <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :param title: string
@@ -1717,7 +1719,7 @@ class Repository(CompletableGithubObject):
         )
         return RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True)
 
-    async def create_label(self, name: str, color: str, description: Opt[str] = NotSet) -> Label:
+    async def create_label(self, name: str, color: str, description: Opt[str] = NotSet) -> Label.Label:
         """
         :calls: `POST /repos/{owner}/{repo}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         :param name: string
@@ -1748,7 +1750,7 @@ class Repository(CompletableGithubObject):
         state: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
         due_on: Opt[date] = NotSet,
-    ) -> Milestone:
+    ) -> Milestone.Milestone:
         """
         :calls: `POST /repos/{owner}/{repo}/milestones <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :param title: string
@@ -1778,7 +1780,7 @@ class Repository(CompletableGithubObject):
         )
         return Milestone.Milestone(self._requester, headers, data, completed=True)
 
-    async def create_project(self, name: str, body: Opt[str] = NotSet) -> Project:
+    async def create_project(self, name: str, body: Opt[str] = NotSet) -> Project.Project:
         """
         :calls: `POST /repos/{owner}/{repo}/projects <https://docs.github.com/en/rest/reference/projects#create-a-repository-project>`_
         :param name: string
@@ -2123,7 +2125,7 @@ class Repository(CompletableGithubObject):
         vcs_url: str,
         vcs_username: Opt[str] = NotSet,
         vcs_password: Opt[str] = NotSet,
-    ) -> SourceImport:
+    ) -> SourceImport.SourceImport:
         """
         :calls: `PUT /repos/{owner}/{repo}/import <https://docs.github.com/en/rest/reference/migrations#start-an-import>`_
         :param vcs: string
@@ -2277,14 +2279,14 @@ class Repository(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", url)
         return headers["location"]
 
-    async def get_assignees(self) -> PaginatedList[NamedUser]:
+    async def get_assignees(self) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
         :rtype: :class:`PaginatedList` of :class:`NamedUser.NamedUser`
         """
         return PaginatedList(NamedUser.NamedUser, self._requester, f"{await self.url}/assignees", None)
 
-    async def get_branch(self, branch: str) -> Branch:
+    async def get_branch(self, branch: str) -> Branch.Branch:
         """
         :calls: `GET /repos/{owner}/{repo}/branches/{branch} <https://docs.github.com/en/rest/reference/repos#get-a-branch>`_
         :param branch: string
@@ -2295,7 +2297,7 @@ class Repository(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/branches/{branch}")
         return Branch.Branch(self._requester, headers, data)
 
-    async def rename_branch(self, branch: str | Branch, new_name: str) -> bool:
+    async def rename_branch(self, branch: str | Branch.Branch, new_name: str) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/branches/{branch}/rename <https://docs.github.com/en/rest/reference/repos#branches>`_
         :param branch: :class:`Branch.Branch` or string
@@ -2318,7 +2320,7 @@ class Repository(CompletableGithubObject):
         )
         return status == 201
 
-    async def get_branches(self) -> PaginatedList[Branch]:
+    async def get_branches(self) -> PaginatedList[Branch.Branch]:
         """
         :calls: `GET /repos/{owner}/{repo}/branches <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: :class:`PaginatedList` of :class:`Branch.Branch`
@@ -2327,7 +2329,7 @@ class Repository(CompletableGithubObject):
 
     async def get_collaborators(
         self, affiliation: Opt[str] = NotSet, permission: Opt[str] = NotSet
-    ) -> PaginatedList[NamedUser]:
+    ) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/collaborators <https://docs.github.com/en/rest/collaborators/collaborators>`_
         :param affiliation: string
@@ -2355,7 +2357,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_comment(self, id: int) -> CommitComment:
+    async def get_comment(self, id: int) -> CommitComment.CommitComment:
         """
         :calls: `GET /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :param id: integer
@@ -2365,7 +2367,7 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/comments/{id}"
         return CommitComment.CommitComment(self._requester, url=url)
 
-    async def get_comments(self) -> PaginatedList[CommitComment]:
+    async def get_comments(self) -> PaginatedList[CommitComment.CommitComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: :class:`PaginatedList` of :class:`CommitComment.CommitComment`
@@ -2377,7 +2379,7 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    async def get_commit(self, sha: str) -> Commit:
+    async def get_commit(self, sha: str) -> Commit.Commit:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
@@ -2394,8 +2396,8 @@ class Repository(CompletableGithubObject):
         path: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
         until: Opt[datetime] = NotSet,
-        author: Opt[AuthenticatedUser | NamedUser | str] = NotSet,
-    ) -> PaginatedList[Commit]:
+        author: Opt[AuthenticatedUser.AuthenticatedUser | NamedUser.NamedUser | str] = NotSet,
+    ) -> PaginatedList[Commit.Commit]:
         """
         :calls: `GET /repos/{owner}/{repo}/commits <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
@@ -2437,7 +2439,9 @@ class Repository(CompletableGithubObject):
                 url_parameters["author"] = author
         return PaginatedList(Commit.Commit, self._requester, f"{await self.url}/commits", url_parameters)
 
-    async def get_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile] | ContentFile:
+    async def get_contents(
+        self, path: str, ref: Opt[str] = NotSet
+    ) -> list[ContentFile.ContentFile] | ContentFile.ContentFile:
         """
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
         :param path: string
@@ -2474,7 +2478,7 @@ class Repository(CompletableGithubObject):
         ref: Opt[str] = NotSet,
         task: Opt[str] = NotSet,
         environment: Opt[str] = NotSet,
-    ) -> PaginatedList[Deployment]:
+    ) -> PaginatedList[Deployment.Deployment]:
         """
         :calls: `GET /repos/{owner}/{repo}/deployments <https://docs.github.com/en/rest/reference/repos#deployments>`_
         :param: sha: string
@@ -2504,7 +2508,7 @@ class Repository(CompletableGithubObject):
             headers={"Accept": Consts.deploymentEnhancementsPreview},
         )
 
-    async def get_deployment(self, id_: int) -> Deployment:
+    async def get_deployment(self, id_: int) -> Deployment.Deployment:
         """
         :calls: `GET /repos/{owner}/{repo}/deployments/{deployment_id} <https://docs.github.com/en/rest/reference/repos#deployments>`_
         :param: id: int
@@ -2525,7 +2529,7 @@ class Repository(CompletableGithubObject):
         description: Opt[str] = NotSet,
         transient_environment: Opt[bool] = NotSet,
         production_environment: Opt[bool] = NotSet,
-    ) -> Deployment:
+    ) -> Deployment.Deployment:
         """
         :calls: `POST /repos/{owner}/{repo}/deployments <https://docs.github.com/en/rest/reference/repos#deployments>`_
         :param: ref: string
@@ -2580,7 +2584,7 @@ class Repository(CompletableGithubObject):
         self,
         number: int,
         discussion_graphql_schema: str,
-    ) -> RepositoryDiscussion:
+    ) -> RepositoryDiscussion.RepositoryDiscussion:
         assert isinstance(number, int), number
         if not discussion_graphql_schema.startswith("\n"):
             discussion_graphql_schema = f" {discussion_graphql_schema} "
@@ -2611,7 +2615,7 @@ class Repository(CompletableGithubObject):
         answered: bool | None = None,
         category_id: str | None = None,
         states: list[str] | None = None,
-    ) -> PaginatedList[RepositoryDiscussion]:
+    ) -> PaginatedList[RepositoryDiscussion.RepositoryDiscussion]:
         if not discussion_graphql_schema.startswith("\n"):
             discussion_graphql_schema = f" {discussion_graphql_schema} "
         query = (
@@ -2649,7 +2653,7 @@ class Repository(CompletableGithubObject):
             list_item=["repository", "discussions"],
         )
 
-    async def get_top_referrers(self) -> None | list[Referrer]:
+    async def get_top_referrers(self) -> None | list[Referrer.Referrer]:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/popular/referrers <https://docs.github.com/en/rest/reference/repos#traffic>`_
         """
@@ -2657,7 +2661,7 @@ class Repository(CompletableGithubObject):
         if isinstance(data, list):
             return [Referrer.Referrer(self._requester, headers, item) for item in data]
 
-    async def get_top_paths(self) -> None | list[Path]:
+    async def get_top_paths(self) -> None | list[Path.Path]:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/popular/paths <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :rtype: :class:`list` of :class:`Path.Path`
@@ -2666,7 +2670,7 @@ class Repository(CompletableGithubObject):
         if isinstance(data, list):
             return [Path.Path(self._requester, headers, item) for item in data]
 
-    async def get_views_traffic(self, per: Opt[str] = NotSet) -> View | None:
+    async def get_views_traffic(self, per: Opt[str] = NotSet) -> View.View | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/views <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
@@ -2681,7 +2685,7 @@ class Repository(CompletableGithubObject):
         )
         return View.View(self._requester, headers, data)
 
-    async def get_clones_traffic(self, per: Opt[str] = NotSet) -> Clones | None:
+    async def get_clones_traffic(self, per: Opt[str] = NotSet) -> Clones.Clones | None:
         """
         :calls: `GET /repos/{owner}/{repo}/traffic/clones <https://docs.github.com/en/rest/reference/repos#traffic>`_
         :param per: string, must be one of day or week, day by default
@@ -2694,7 +2698,7 @@ class Repository(CompletableGithubObject):
         )
         return Clones.Clones(self._requester, headers, data)
 
-    async def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project]:
+    async def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project.Project]:
         """
         :calls: `GET /repos/{owner}/{repo}/projects <https://docs.github.com/en/rest/reference/projects#list-repository-projects>`_
         :rtype: :class:`PaginatedList` of :class:`Project.Project`
@@ -2713,7 +2717,7 @@ class Repository(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
-    async def get_autolinks(self) -> PaginatedList[Autolink]:
+    async def get_autolinks(self) -> PaginatedList[Autolink.Autolink]:
         """
         :calls: `GET /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
         :rtype: :class:`PaginatedList` of :class:`Autolink.Autolink`
@@ -2726,9 +2730,9 @@ class Repository(CompletableGithubObject):
         message: str,
         content: str | bytes,
         branch: Opt[str] = NotSet,
-        committer: Opt[InputGitAuthor] = NotSet,
-        author: Opt[InputGitAuthor] = NotSet,
-    ) -> dict[str, ContentFile | Commit]:
+        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+    ) -> dict[str, ContentFile.ContentFile | Commit.Commit]:
         """
         Create a file in this repository.
 
@@ -2808,9 +2812,9 @@ class Repository(CompletableGithubObject):
         content: bytes | str,
         sha: str,
         branch: Opt[str] = NotSet,
-        committer: Opt[InputGitAuthor] = NotSet,
-        author: Opt[InputGitAuthor] = NotSet,
-    ) -> dict[str, ContentFile | Commit]:
+        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+    ) -> dict[str, ContentFile.ContentFile | Commit.Commit]:
         """
         This method updates a file in a repository.
 
@@ -2866,9 +2870,9 @@ class Repository(CompletableGithubObject):
         message: str,
         sha: str,
         branch: Opt[str] = NotSet,
-        committer: Opt[InputGitAuthor] = NotSet,
-        author: Opt[InputGitAuthor] = NotSet,
-    ) -> dict[str, Commit | _NotSetType]:
+        committer: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+        author: Opt[InputGitAuthor.InputGitAuthor] = NotSet,
+    ) -> dict[str, Commit.Commit | _NotSetType]:
         """
         This method deletes a file in a repository.
 
@@ -2917,13 +2921,13 @@ class Repository(CompletableGithubObject):
         Repository.get_contents() instead.
         """
     )
-    async def get_dir_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile]:
+    async def get_dir_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile.ContentFile]:
         """
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
         """
         return await self.get_contents(path, ref=ref)  # type: ignore
 
-    async def get_contributors(self, anon: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
+    async def get_contributors(self, anon: Opt[str] = NotSet) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/contributors <https://docs.github.com/en/rest/reference/repos>`_
         :param anon: string
@@ -2940,7 +2944,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_download(self, id: int) -> Download:
+    async def get_download(self, id: int) -> Download.Download:
         """
         :calls: `GET /repos/{owner}/{repo}/downloads/{id} <https://docs.github.com/en/rest/reference/repos>`_
         :param id: integer
@@ -2950,14 +2954,14 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/downloads/{id}"
         return Download.Download(self._requester, url=url)
 
-    async def get_downloads(self) -> PaginatedList[Download]:
+    async def get_downloads(self) -> PaginatedList[Download.Download]:
         """
         :calls: `GET /repos/{owner}/{repo}/downloads <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: :class:`PaginatedList` of :class:`Download.Download`
         """
         return PaginatedList(Download.Download, self._requester, f"{await self.url}/downloads", None)
 
-    async def get_events(self) -> PaginatedList[Event]:
+    async def get_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /repos/{owner}/{repo}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`PaginatedList` of :class:`Event.Event`
@@ -2973,7 +2977,7 @@ class Repository(CompletableGithubObject):
 
     async def create_fork(
         self,
-        organization: Organization | Opt[str] = NotSet,
+        organization: Organization.Organization | Opt[str] = NotSet,
         name: Opt[str] = NotSet,
         default_branch_only: Opt[bool] = NotSet,
     ) -> Repository:
@@ -3004,7 +3008,7 @@ class Repository(CompletableGithubObject):
         )
         return Repository(self._requester, headers, data, completed=True)
 
-    async def get_git_blob(self, sha: str) -> GitBlob:
+    async def get_git_blob(self, sha: str) -> GitBlob.GitBlob:
         """
         :calls: `GET /repos/{owner}/{repo}/git/blobs/{file_sha} <https://docs.github.com/en/rest/reference/git#blobs>`_
         :param sha: string
@@ -3015,7 +3019,7 @@ class Repository(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/git/blobs/{sha}")
         return GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
-    async def get_git_commit(self, sha: str) -> GitCommit:
+    async def get_git_commit(self, sha: str) -> GitCommit.GitCommit:
         """
         :calls: `GET /repos/{owner}/{repo}/git/commits/{commit_sha} <https://docs.github.com/en/rest/reference/git#commits>`_
         :param sha: string
@@ -3026,7 +3030,7 @@ class Repository(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/git/commits/{sha}")
         return GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
-    async def get_git_ref(self, ref: str) -> GitRef:
+    async def get_git_ref(self, ref: str) -> GitRef.GitRef:
         """
         :calls: `GET /repos/{owner}/{repo}/git/ref/{ref} <https://docs.github.com/en/rest/git/refs#get-a-reference>`_
         :param ref: string
@@ -3040,14 +3044,14 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}{prefix}{quoted_ref}"
         return GitRef.GitRef(self._requester, url=url, attributes={"ref": ref})
 
-    async def get_git_refs(self) -> PaginatedList[GitRef]:
+    async def get_git_refs(self) -> PaginatedList[GitRef.GitRef]:
         """
         :calls: `GET /repos/{owner}/{repo}/git/refs <https://docs.github.com/en/rest/reference/git#references>`_
         :rtype: :class:`PaginatedList` of :class:`GitRef.GitRef`
         """
         return PaginatedList(GitRef.GitRef, self._requester, f"{await self.url}/git/refs", None)
 
-    async def get_git_matching_refs(self, ref: str) -> PaginatedList[GitRef]:
+    async def get_git_matching_refs(self, ref: str) -> PaginatedList[GitRef.GitRef]:
         """
         :calls: `GET /repos/{owner}/{repo}/git/matching-refs/{ref} <https://docs.github.com/en/rest/reference/git#list-matching-references>`_
         :rtype: :class:`PaginatedList` of :class:`GitRef.GitRef`
@@ -3061,7 +3065,7 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    async def get_git_tag(self, sha: str) -> GitTag:
+    async def get_git_tag(self, sha: str) -> GitTag.GitTag:
         """
         :calls: `GET /repos/{owner}/{repo}/git/tags/{tag_sha} <https://docs.github.com/en/rest/reference/git#tags>`_
         :param sha: string
@@ -3072,7 +3076,7 @@ class Repository(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/git/tags/{sha}")
         return GitTag.GitTag(self._requester, headers, data, completed=True)
 
-    async def get_git_tree(self, sha: str, recursive: Opt[bool] = NotSet) -> GitTree:
+    async def get_git_tree(self, sha: str, recursive: Opt[bool] = NotSet) -> GitTree.GitTree:
         """
         :calls: `GET /repos/{owner}/{repo}/git/trees/{tree_sha} <https://docs.github.com/en/rest/reference/git#trees>`_
         :param sha: string
@@ -3091,7 +3095,7 @@ class Repository(CompletableGithubObject):
         )
         return GitTree.GitTree(self._requester, headers, data, completed=True)
 
-    async def get_hook(self, id: int) -> Hook:
+    async def get_hook(self, id: int) -> Hook.Hook:
         """
         :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param id: integer
@@ -3101,7 +3105,7 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/hooks/{id}"
         return Hook.Hook(self._requester, url=url)
 
-    async def get_hooks(self) -> PaginatedList[Hook]:
+    async def get_hooks(self) -> PaginatedList[Hook.Hook]:
         """
         :calls: `GET /repos/{owner}/{repo}/hooks <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :rtype: :class:`PaginatedList` of :class:`Hook.Hook`
@@ -3137,7 +3141,7 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    async def get_issue(self, number: int) -> Issue:
+    async def get_issue(self, number: int) -> Issue.Issue:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number} <https://docs.github.com/en/rest/reference/issues>`_
         :param number: integer
@@ -3149,17 +3153,17 @@ class Repository(CompletableGithubObject):
 
     async def get_issues(
         self,
-        milestone: Milestone | Opt[str] = NotSet,
+        milestone: Milestone.Milestone | Opt[str] = NotSet,
         state: Opt[str] = NotSet,
-        assignee: NamedUser | Opt[str] = NotSet,
-        mentioned: Opt[NamedUser] = NotSet,
-        labels: Opt[list[str] | list[Label]] = NotSet,
+        assignee: NamedUser.NamedUser | Opt[str] = NotSet,
+        mentioned: Opt[NamedUser.NamedUser] = NotSet,
+        labels: Opt[list[str] | list[Label.Label]] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-        creator: Opt[NamedUser] = NotSet,
+        creator: Opt[NamedUser.NamedUser] = NotSet,
         type: Opt[str] = NotSet,
-    ) -> PaginatedList[Issue]:
+    ) -> PaginatedList[Issue.Issue]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
         :param milestone: :class:`Milestone.Milestone` or "none" or "*"
@@ -3225,7 +3229,7 @@ class Repository(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[IssueComment]:
+    ) -> PaginatedList[IssueComment.IssueComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         :param sort: string
@@ -3250,7 +3254,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_issues_event(self, id: int) -> IssueEvent:
+    async def get_issues_event(self, id: int) -> IssueEvent.IssueEvent:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/events/{event_id} <https://docs.github.com/en/rest/reference/issues#events>`_
         :param id: integer
@@ -3264,7 +3268,7 @@ class Repository(CompletableGithubObject):
         )
         return IssueEvent.IssueEvent(self._requester, headers, data, completed=True)
 
-    async def get_issues_events(self) -> PaginatedList[IssueEvent]:
+    async def get_issues_events(self) -> PaginatedList[IssueEvent.IssueEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/events <https://docs.github.com/en/rest/reference/issues#events>`_
         :rtype: :class:`PaginatedList` of :class:`IssueEvent.IssueEvent`
@@ -3277,7 +3281,7 @@ class Repository(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    async def get_key(self, id: int) -> RepositoryKey:
+    async def get_key(self, id: int) -> RepositoryKey.RepositoryKey:
         """
         :calls: `GET /repos/{owner}/{repo}/keys/{key_id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :param id: integer
@@ -3287,7 +3291,7 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/keys/{id}"
         return RepositoryKey.RepositoryKey(self._requester, url=url)
 
-    async def get_keys(self) -> PaginatedList[RepositoryKey]:
+    async def get_keys(self) -> PaginatedList[RepositoryKey.RepositoryKey]:
         """
         :calls: `GET /repos/{owner}/{repo}/keys <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :rtype: :class:`PaginatedList` of :class:`RepositoryKey.RepositoryKey`
@@ -3299,7 +3303,7 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    async def get_label(self, name: str) -> Label:
+    async def get_label(self, name: str) -> Label.Label:
         """
         :calls: `GET /repos/{owner}/{repo}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         :param name: string
@@ -3310,7 +3314,7 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/labels/{label_name}"
         return Label.Label(self._requester, url=url)
 
-    async def get_labels(self) -> PaginatedList[Label]:
+    async def get_labels(self) -> PaginatedList[Label.Label]:
         """
         :calls: `GET /repos/{owner}/{repo}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         :rtype: :class:`PaginatedList` of :class:`Label.Label`
@@ -3325,7 +3329,7 @@ class Repository(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/languages")
         return data
 
-    async def get_license(self) -> ContentFile:
+    async def get_license(self) -> ContentFile.ContentFile:
         """
         :calls: `GET /repos/{owner}/{repo}/license <https://docs.github.com/en/rest/reference/licenses>`_
         :rtype: :class:`ContentFile.ContentFile`
@@ -3334,7 +3338,7 @@ class Repository(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/license")
         return ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
-    async def get_milestone(self, number: int) -> Milestone:
+    async def get_milestone(self, number: int) -> Milestone.Milestone:
         """
         :calls: `GET /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :param number: integer
@@ -3349,7 +3353,7 @@ class Repository(CompletableGithubObject):
         state: Opt[str] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
-    ) -> PaginatedList[Milestone]:
+    ) -> PaginatedList[Milestone.Milestone]:
         """
         :calls: `GET /repos/{owner}/{repo}/milestones <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :param state: string
@@ -3374,7 +3378,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_network_events(self) -> PaginatedList[Event]:
+    async def get_network_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /networks/{owner}/{repo}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`PaginatedList` of :class:`Event.Event`
@@ -3386,7 +3390,7 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    async def get_public_key(self, secret_type: str = "actions") -> PublicKey:
+    async def get_public_key(self, secret_type: str = "actions") -> PublicKey.PublicKey:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/rest/actions/secrets#get-a-repository-public-key>`_
         :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/public-key <https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key>`_
@@ -3400,7 +3404,7 @@ class Repository(CompletableGithubObject):
         )
         return PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
-    async def get_pull(self, number: int) -> PullRequest:
+    async def get_pull(self, number: int) -> PullRequest.PullRequest:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls>`_
         :param number: integer
@@ -3417,7 +3421,7 @@ class Repository(CompletableGithubObject):
         direction: Opt[str] = NotSet,
         base: Opt[str] = NotSet,
         head: Opt[str] = NotSet,
-    ) -> PaginatedList[PullRequest]:
+    ) -> PaginatedList[PullRequest.PullRequest]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls <https://docs.github.com/en/rest/reference/pulls>`_
         :param state: string
@@ -3455,7 +3459,7 @@ class Repository(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[PullRequestComment]:
+    ) -> PaginatedList[PullRequestComment.PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`__
         :param sort: string
@@ -3470,7 +3474,7 @@ class Repository(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[PullRequestComment]:
+    ) -> PaginatedList[PullRequestComment.PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_:
         :param sort: string 'created', 'updated', 'created_at'
@@ -3495,7 +3499,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_readme(self, ref: Opt[str] = NotSet) -> ContentFile:
+    async def get_readme(self, ref: Opt[str] = NotSet) -> ContentFile.ContentFile:
         """
         :calls: `GET /repos/{owner}/{repo}/readme <https://docs.github.com/en/rest/reference/repos#contents>`_
         :param ref: string
@@ -3510,7 +3514,7 @@ class Repository(CompletableGithubObject):
         )
         return ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
-    async def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner:
+    async def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner.SelfHostedActionsRunner:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository>`_
         :param runner_id: int
@@ -3522,7 +3526,7 @@ class Repository(CompletableGithubObject):
         )
         return SelfHostedActionsRunner.SelfHostedActionsRunner(self._requester, headers, data)
 
-    async def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner]:
+    async def get_self_hosted_runners(self) -> PaginatedList[SelfHostedActionsRunner.SelfHostedActionsRunner]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runners <https://docs.github.com/en/rest/reference/actions#list-self-hosted-runners-for-a-repository>`_
         :rtype: :class:`PaginatedList` of :class:`SelfHostedActionsRunner.SelfHostedActionsRunner`
@@ -3535,7 +3539,7 @@ class Repository(CompletableGithubObject):
             list_item="runners",
         )
 
-    async def get_source_import(self) -> SourceImport | None:
+    async def get_source_import(self) -> SourceImport.SourceImport | None:
         """
         :calls: `GET /repos/{owner}/{repo}/import <https://docs.github.com/en/rest/reference/migrations#source-imports>`_
         """
@@ -3550,14 +3554,14 @@ class Repository(CompletableGithubObject):
         else:
             return SourceImport.SourceImport(self._requester, headers, data, completed=True)
 
-    async def get_stargazers(self) -> PaginatedList[NamedUser]:
+    async def get_stargazers(self) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/stargazers <https://docs.github.com/en/rest/reference/activity#starring>`_
         :rtype: :class:`PaginatedList` of :class:`NamedUser.NamedUser`
         """
         return PaginatedList(NamedUser.NamedUser, self._requester, f"{await self.url}/stargazers", None)
 
-    async def get_stargazers_with_dates(self) -> PaginatedList[Stargazer]:
+    async def get_stargazers_with_dates(self) -> PaginatedList[Stargazer.Stargazer]:
         """
         :calls: `GET /repos/{owner}/{repo}/stargazers <https://docs.github.com/en/rest/reference/activity#starring>`_
         :rtype: :class:`PaginatedList` of :class:`Stargazer.Stargazer`
@@ -3570,7 +3574,7 @@ class Repository(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeStarringPreview},
         )
 
-    async def get_stats_contributors(self) -> list[StatsContributor] | None:
+    async def get_stats_contributors(self) -> list[StatsContributor.StatsContributor] | None:
         """
         :calls: `GET /repos/{owner}/{repo}/stats/contributors <https://docs.github.com/en/rest/reference/repos#get-all-contributor-commit-activity>`_
         :rtype: None or list of :class:`StatsContributor.StatsContributor`
@@ -3581,7 +3585,7 @@ class Repository(CompletableGithubObject):
         else:
             return [StatsContributor.StatsContributor(self._requester, headers, attributes) for attributes in data]
 
-    async def get_stats_commit_activity(self) -> list[StatsCommitActivity] | None:
+    async def get_stats_commit_activity(self) -> list[StatsCommitActivity.StatsCommitActivity] | None:
         """
         :calls: `GET /repos/{owner}/{repo}/stats/commit_activity <https://docs.github.com/en/rest/reference/repos#get-the-last-year-of-commit-activity>`_
         :rtype: None or list of :class:`StatsCommitActivity.StatsCommitActivity`
@@ -3594,7 +3598,7 @@ class Repository(CompletableGithubObject):
                 StatsCommitActivity.StatsCommitActivity(self._requester, headers, attributes) for attributes in data
             ]
 
-    async def get_stats_code_frequency(self) -> list[StatsCodeFrequency] | None:
+    async def get_stats_code_frequency(self) -> list[StatsCodeFrequency.StatsCodeFrequency] | None:
         """
         :calls: `GET /repos/{owner}/{repo}/stats/code_frequency <https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-activity>`_
         :rtype: None or list of :class:`StatsCodeFrequency.StatsCodeFrequency`
@@ -3605,7 +3609,7 @@ class Repository(CompletableGithubObject):
         else:
             return [StatsCodeFrequency.StatsCodeFrequency(self._requester, headers, attributes) for attributes in data]
 
-    async def get_stats_participation(self) -> StatsParticipation | None:
+    async def get_stats_participation(self) -> StatsParticipation.StatsParticipation | None:
         """
         :calls: `GET /repos/{owner}/{repo}/stats/participation <https://docs.github.com/en/rest/reference/repos#get-the-weekly-commit-count>`_
         :rtype: None or :class:`StatsParticipation.StatsParticipation`
@@ -3616,7 +3620,7 @@ class Repository(CompletableGithubObject):
         else:
             return StatsParticipation.StatsParticipation(self._requester, headers, data)
 
-    async def get_stats_punch_card(self) -> StatsPunchCard | None:
+    async def get_stats_punch_card(self) -> StatsPunchCard.StatsPunchCard | None:
         """
         :calls: `GET /repos/{owner}/{repo}/stats/punch_card <https://docs.github.com/en/rest/reference/repos#get-the-hourly-commit-count-for-each-day>`_
         :rtype: None or :class:`StatsPunchCard.StatsPunchCard`
@@ -3627,28 +3631,28 @@ class Repository(CompletableGithubObject):
         else:
             return StatsPunchCard.StatsPunchCard(self._requester, headers, data)
 
-    async def get_subscribers(self) -> PaginatedList[NamedUser]:
+    async def get_subscribers(self) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/subscribers <https://docs.github.com/en/rest/reference/activity#watching>`_
         :rtype: :class:`PaginatedList` of :class:`NamedUser.NamedUser`
         """
         return PaginatedList(NamedUser.NamedUser, self._requester, f"{await self.url}/subscribers", None)
 
-    async def get_tags(self) -> PaginatedList[Tag]:
+    async def get_tags(self) -> PaginatedList[Tag.Tag]:
         """
         :calls: `GET /repos/{owner}/{repo}/tags <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: :class:`PaginatedList` of :class:`Tag.Tag`
         """
         return PaginatedList(Tag.Tag, self._requester, f"{await self.url}/tags", None)
 
-    async def get_releases(self) -> PaginatedList[GitRelease]:
+    async def get_releases(self) -> PaginatedList[GitRelease.GitRelease]:
         """
         :calls: `GET /repos/{owner}/{repo}/releases <https://docs.github.com/en/rest/reference/repos#list-releases>`_
         :rtype: :class:`PaginatedList` of :class:`GitRelease.GitRelease`
         """
         return PaginatedList(GitRelease.GitRelease, self._requester, f"{await self.url}/releases", None)
 
-    async def get_release(self, id: int | str) -> GitRelease:
+    async def get_release(self, id: int | str) -> GitRelease.GitRelease:
         """
         :calls: `GET /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#get-a-release>`_
         :param id: int (release id), str (tag name)
@@ -3662,7 +3666,7 @@ class Repository(CompletableGithubObject):
             url = f"{await self.url}/releases/tags/{tag}"
         return GitRelease.GitRelease(self._requester, url=url)
 
-    async def get_latest_release(self) -> GitRelease:
+    async def get_latest_release(self) -> GitRelease.GitRelease:
         """
         :calls: `GET /repos/{owner}/{repo}/releases/latest <https://docs.github.com/en/rest/reference/repos#get-the-latest-release>`_
         :rtype: :class:`GitRelease.GitRelease`
@@ -3670,7 +3674,7 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/releases/latest"
         return GitRelease.GitRelease(self._requester, url=url)
 
-    async def get_teams(self) -> PaginatedList[Team]:
+    async def get_teams(self) -> PaginatedList[Team.Team]:
         """
         :calls: `GET /repos/{owner}/{repo}/teams <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: :class:`PaginatedList` of :class:`Team.Team`
@@ -3689,14 +3693,14 @@ class Repository(CompletableGithubObject):
         )
         return data["names"]
 
-    async def get_watchers(self) -> PaginatedList[NamedUser]:
+    async def get_watchers(self) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /repos/{owner}/{repo}/watchers <https://docs.github.com/en/rest/reference/activity#starring>`_
         :rtype: :class:`PaginatedList` of :class:`NamedUser.NamedUser`
         """
         return PaginatedList(NamedUser.NamedUser, self._requester, f"{await self.url}/watchers", None)
 
-    async def get_workflows(self) -> PaginatedList[Workflow]:
+    async def get_workflows(self) -> PaginatedList[Workflow.Workflow]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows <https://docs.github.com/en/rest/reference/actions#workflows>`_
         :rtype: :class:`PaginatedList` of :class:`Workflow.Workflow`
@@ -3709,7 +3713,7 @@ class Repository(CompletableGithubObject):
             list_item="workflows",
         )
 
-    async def get_workflow(self, id_or_file_name: str | int) -> Workflow:
+    async def get_workflow(self, id_or_file_name: str | int) -> Workflow.Workflow:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id} <https://docs.github.com/en/rest/reference/actions#workflows>`_
         :param id_or_file_name: int or string. Can be either a workflow ID or a filename.
@@ -3722,15 +3726,15 @@ class Repository(CompletableGithubObject):
 
     async def get_workflow_runs(
         self,
-        actor: Opt[NamedUser] = NotSet,
-        branch: Opt[Branch] = NotSet,
+        actor: Opt[NamedUser.NamedUser] = NotSet,
+        branch: Opt[Branch.Branch] = NotSet,
         event: Opt[str] = NotSet,
         status: Opt[str] = NotSet,
         exclude_pull_requests: Opt[bool] = NotSet,
         head_sha: Opt[str] = NotSet,
         created: Opt[str] = NotSet,
         check_suite_id: Opt[int] = NotSet,
-    ) -> PaginatedList[WorkflowRun]:
+    ) -> PaginatedList[WorkflowRun.WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs <https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository>`_
         :param actor: :class:`NamedUser.NamedUser` or string
@@ -3785,7 +3789,7 @@ class Repository(CompletableGithubObject):
             list_item="workflow_runs",
         )
 
-    async def get_workflow_run(self, id_: int) -> WorkflowRun:
+    async def get_workflow_run(self, id_: int) -> WorkflowRun.WorkflowRun:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         :param id_: int
@@ -3795,7 +3799,7 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/actions/runs/{id_}"
         return WorkflowRun.WorkflowRun(self._requester, url=url)
 
-    async def has_in_assignees(self, assignee: str | NamedUser) -> bool:
+    async def has_in_assignees(self, assignee: str | NamedUser.NamedUser) -> bool:
         """
         :calls: `GET /repos/{owner}/{repo}/assignees/{assignee} <https://docs.github.com/en/rest/reference/issues#assignees>`_
         :param assignee: string or :class:`NamedUser.NamedUser`
@@ -3813,7 +3817,7 @@ class Repository(CompletableGithubObject):
         status, headers, data = await self._requester.requestJson("GET", f"{await self.url}/assignees/{assignee}")
         return status == 204
 
-    async def has_in_collaborators(self, collaborator: str | NamedUser) -> bool:
+    async def has_in_collaborators(self, collaborator: str | NamedUser.NamedUser) -> bool:
         """
         :calls: `GET /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`NamedUser.NamedUser`
@@ -3849,7 +3853,7 @@ class Repository(CompletableGithubObject):
                 convertedAttributes[attr] = attributes[attr]
         return convertedAttributes
 
-    async def legacy_search_issues(self, state: str, keyword: str) -> list[Issue]:
+    async def legacy_search_issues(self, state: str, keyword: str) -> list[Issue.Issue]:
         """
         :calls: `GET /legacy/issues/search/{owner}/{repository}/{state}/{keyword} <https://docs.github.com/en/rest/reference/search>`_
         :param state: "open" or "closed"
@@ -3878,7 +3882,7 @@ class Repository(CompletableGithubObject):
         participating: Opt[bool] = NotSet,
         since: Opt[datetime] = NotSet,
         before: Opt[datetime] = NotSet,
-    ) -> PaginatedList[Notification]:
+    ) -> PaginatedList[Notification.Notification]:
         """
         :calls: `GET /repos/{owner}/{repo}/notifications <https://docs.github.com/en/rest/reference/activity#notifications>`_
         :param all: bool
@@ -3918,7 +3922,7 @@ class Repository(CompletableGithubObject):
             "PUT", f"{await self.url}/notifications", input=put_parameters
         )
 
-    async def merge(self, base: str, head: str, commit_message: Opt[str] = NotSet) -> Commit | None:
+    async def merge(self, base: str, head: str, commit_message: Opt[str] = NotSet) -> Commit.Commit | None:
         """
         :calls: `POST /repos/{owner}/{repo}/merges <https://docs.github.com/en/rest/reference/repos#merging>`_
         :param base: string
@@ -3943,7 +3947,7 @@ class Repository(CompletableGithubObject):
         else:
             return Commit.Commit(self._requester, headers, data, completed=True)
 
-    async def merge_upstream(self, branch: str) -> MergedUpstream:
+    async def merge_upstream(self, branch: str) -> MergedUpstream.MergedUpstream:
         """
         :calls: `POST /repos/{owner}/{repo}/merge-upstream <https://docs.github.com/en/rest/branches/branches#sync-a-fork-branch-with-the-upstream-repository>`_
         :param branch: string
@@ -4043,7 +4047,7 @@ class Repository(CompletableGithubObject):
         )
         return status == 204
 
-    async def remove_from_collaborators(self, collaborator: str | NamedUser) -> None:
+    async def remove_from_collaborators(self, collaborator: str | NamedUser.NamedUser) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`NamedUser.NamedUser`
@@ -4062,7 +4066,7 @@ class Repository(CompletableGithubObject):
             "DELETE", f"{await self.url}/collaborators/{collaborator}"
         )
 
-    async def remove_self_hosted_runner(self, runner: SelfHostedActionsRunner | int) -> bool:
+    async def remove_self_hosted_runner(self, runner: SelfHostedActionsRunner.SelfHostedActionsRunner | int) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#delete-a-self-hosted-runner-from-a-repository>`_
         :param runner: int or :class:`SelfHostedActionsRunner.SelfHostedActionsRunner`
@@ -4082,7 +4086,7 @@ class Repository(CompletableGithubObject):
         status, _, _ = await self._requester.requestJson("DELETE", f"{await self.url}/actions/runners/{runner}")
         return status == 204
 
-    async def remove_autolink(self, autolink: Autolink | int) -> bool:
+    async def remove_autolink(self, autolink: Autolink.Autolink | int) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/autolinks/{autolink_id} <https://docs.github.com/en/rest/reference/repos>`_
         :param autolink: int or :class:`Autolink.Autolink`
@@ -4116,7 +4120,7 @@ class Repository(CompletableGithubObject):
         """
         return await self._hub("unsubscribe", event, callback, NotSet)
 
-    async def create_check_suite(self, head_sha: str) -> CheckSuite:
+    async def create_check_suite(self, head_sha: str) -> CheckSuite.CheckSuite:
         """
         :calls: `POST /repos/{owner}/{repo}/check-suites <https://docs.github.com/en/rest/reference/checks#create-a-check-suite>`_
         :param head_sha: string
@@ -4130,7 +4134,7 @@ class Repository(CompletableGithubObject):
         )
         return CheckSuite.CheckSuite(self._requester, headers, data, completed=True)
 
-    async def get_check_suite(self, check_suite_id: int) -> CheckSuite:
+    async def get_check_suite(self, check_suite_id: int) -> CheckSuite.CheckSuite:
         """
         :calls: `GET /repos/{owner}/{repo}/check-suites/{check_suite_id} <https://docs.github.com/en/rest/reference/checks#get-a-check-suite>`_
         :param check_suite_id: int
@@ -4142,7 +4146,7 @@ class Repository(CompletableGithubObject):
 
     async def update_check_suites_preferences(
         self, auto_trigger_checks: list[dict[str, bool | int]]
-    ) -> RepositoryPreferences:
+    ) -> RepositoryPreferences.RepositoryPreferences:
         """
         :calls: `PATCH /repos/{owner}/{repo}/check-suites/preferences <https://docs.github.com/en/rest/reference/checks#update-repository-preferences-for-check-suites>`_
         :param auto_trigger_checks: list of dict
@@ -4172,7 +4176,7 @@ class Repository(CompletableGithubObject):
 
         headers, output = await self._requester.requestMultipartAndCheck("POST", "/hub", input=post_parameters)
 
-    async def get_release_asset(self, id: int) -> GitReleaseAsset:
+    async def get_release_asset(self, id: int) -> GitReleaseAsset.GitReleaseAsset:
         assert isinstance(id, int), id
         url = f"{await self.url}/releases/assets/{id}"
         return GitReleaseAsset.GitReleaseAsset(self._requester, url=url)
@@ -4189,7 +4193,7 @@ class Repository(CompletableGithubObject):
         completed_at: Opt[datetime] = NotSet,
         output: Opt[dict[str, str | list[dict[str, str | int]]]] = NotSet,
         actions: Opt[list[dict[str, str]]] = NotSet,
-    ) -> CheckRun:
+    ) -> CheckRun.CheckRun:
         """
         :calls: `POST /repos/{owner}/{repo}/check-runs <https://docs.github.com/en/rest/reference/checks#create-a-check-run>`_
         :param name: string
@@ -4240,7 +4244,7 @@ class Repository(CompletableGithubObject):
         )
         return CheckRun.CheckRun(self._requester, headers, data, completed=True)
 
-    async def get_check_run(self, check_run_id: int) -> CheckRun:
+    async def get_check_run(self, check_run_id: int) -> CheckRun.CheckRun:
         """
         :calls: `GET /repos/{owner}/{repo}/check-runs/{check_run_id} <https://docs.github.com/en/rest/reference/checks#get-a-check-run>`_
         :param check_run_id: int
@@ -4250,7 +4254,7 @@ class Repository(CompletableGithubObject):
         url = f"{await self.url}/check-runs/{check_run_id}"
         return CheckRun.CheckRun(self._requester, url=url)
 
-    async def get_artifacts(self, name: Opt[str] = NotSet) -> PaginatedList[Artifact]:
+    async def get_artifacts(self, name: Opt[str] = NotSet) -> PaginatedList[Artifact.Artifact]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/artifacts <https://docs.github.com/en/rest/actions/artifacts#list-artifacts-for-a-repository>`_
         :param name: str
@@ -4269,7 +4273,7 @@ class Repository(CompletableGithubObject):
             list_item="artifacts",
         )
 
-    async def get_artifact(self, artifact_id: int) -> Artifact:
+    async def get_artifact(self, artifact_id: int) -> Artifact.Artifact:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id} <https://docs.github.com/en/rest/actions/artifacts#get-an-artifact>`_
         :param artifact_id: int
@@ -4291,7 +4295,7 @@ class Repository(CompletableGithubObject):
         direction: Opt[str] = NotSet,
         state: Opt[str] = NotSet,
         severity: Opt[str] = NotSet,
-    ) -> PaginatedList[CodeScanAlert]:
+    ) -> PaginatedList[CodeScanAlert.CodeScanAlert]:
         """
         :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
         :param tool_name: Optional string
@@ -4338,7 +4342,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_codescan_alert(self, number: int) -> CodeScanAlert:
+    async def get_codescan_alert(self, number: int) -> CodeScanAlert.CodeScanAlert:
         """
         :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number} <https://docs.github.com/en/rest/code-scanning/code-scanning#get-a-code-scanning-alert>`_
         :param number: int
@@ -4361,7 +4365,7 @@ class Repository(CompletableGithubObject):
         is_publicly_leaked: Opt[bool] = NotSet,
         is_multi_repo: Opt[bool] = NotSet,
         hide_secret: Opt[bool] = NotSet,
-    ) -> PaginatedList[SecretScanAlert]:
+    ) -> PaginatedList[SecretScanAlert.SecretScanAlert]:
         """
         :calls: `GET /repos/{owner}/{repo}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-a-repository>`_
         :param state: Optional string
@@ -4421,7 +4425,9 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_secret_scanning_alert(self, number: int, hide_secret: Opt[bool] = NotSet) -> SecretScanAlert:
+    async def get_secret_scanning_alert(
+        self, number: int, hide_secret: Opt[bool] = NotSet
+    ) -> SecretScanAlert.SecretScanAlert:
         """
         :calls: `GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number} <https://docs.github.com/en/rest/secret-scanning/secret-scanning#get-a-secret-scanning-alert>`_
         :param number: int
@@ -4440,7 +4446,7 @@ class Repository(CompletableGithubObject):
         )
         return SecretScanAlert.SecretScanAlert(self._requester, headers, data)
 
-    async def get_environments(self) -> PaginatedList[Environment]:
+    async def get_environments(self) -> PaginatedList[Environment.Environment]:
         """
         :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
         :rtype: :class:`PaginatedList` of :class:`Environment.Environment`
@@ -4456,7 +4462,7 @@ class Repository(CompletableGithubObject):
             list_item="environments",
         )
 
-    async def get_environment(self, environment_name: str) -> Environment:
+    async def get_environment(self, environment_name: str) -> Environment.Environment:
         """
         :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
         :rtype: :class:`Environment.Environment`
@@ -4473,7 +4479,7 @@ class Repository(CompletableGithubObject):
         reviewers: list[ReviewerParams] = [],
         prevent_self_review: bool = False,
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
-    ) -> Environment:
+    ) -> Environment.Environment:
         """
         :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
@@ -4548,7 +4554,7 @@ class Repository(CompletableGithubObject):
         scope: Opt[str] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
-    ) -> PaginatedList[DependabotAlert]:
+    ) -> PaginatedList[DependabotAlert.DependabotAlert]:
         """
         :calls: `GET /repos/{owner}/{repo}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository>`_
         :param state: Optional string
@@ -4592,7 +4598,7 @@ class Repository(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_dependabot_alert(self, number: int) -> DependabotAlert:
+    async def get_dependabot_alert(self, number: int) -> DependabotAlert.DependabotAlert:
         """
         :calls: `GET /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#get-a-dependabot-alert>`_
         :param number: int
@@ -4604,7 +4610,7 @@ class Repository(CompletableGithubObject):
 
     async def update_dependabot_alert(
         self, number: int, state: str, dismissed_reason: Opt[str] = NotSet, dismissed_comment: Opt[str] = NotSet
-    ) -> DependabotAlert:
+    ) -> DependabotAlert.DependabotAlert:
         """
         :calls: `PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number} <https://docs.github.com/en/rest/dependabot/alerts#update-a-dependabot-alert>`_
         :param number: int
@@ -4674,7 +4680,7 @@ class Repository(CompletableGithubObject):
             selected_repository_ids=[await self.id]
         )
 
-    async def get_security_config(self) -> RepoCodeSecurityConfig | None:
+    async def get_security_config(self) -> RepoCodeSecurityConfig.RepoCodeSecurityConfig | None:
         """
         :calls: `GET /repos/{owner}/{repo}/code-security-configuration <https://docs.github.com/en/rest/code-security/configurations?apiVersion=2022-11-28#get-the-code-security-configuration-associated-with-a-repository>`_
         :rtype: RepoCodeSecurityConfig | None

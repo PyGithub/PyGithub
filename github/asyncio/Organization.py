@@ -222,7 +222,7 @@ class Organization(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
-        self._plan: Attribute[Plan] = NotSet
+        self._plan: Attribute[Plan.Plan] = NotSet
         self._private_gists: Attribute[int] = NotSet
         self._public_gists: Attribute[int] = NotSet
         self._public_members_url: Attribute[str] = NotSet
@@ -526,7 +526,7 @@ class Organization(CompletableGithubObject):
         return self._owned_private_repos.value
 
     @property
-    async def plan(self) -> Plan:
+    async def plan(self) -> Plan.Plan:
         await self._completeIfNotSet(self._plan)
         return self._plan.value
 
@@ -645,7 +645,7 @@ class Organization(CompletableGithubObject):
         await self._completeIfNotSet(self._web_commit_signoff_required)
         return self._web_commit_signoff_required.value
 
-    async def add_to_members(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
+    async def add_to_members(self, member: NamedUser.NamedUser, role: Opt[str] = NotSet) -> None:
         """
         :calls: `PUT /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#update-an-organization-membership-for-the-authenticated-user>`_
         """
@@ -656,7 +656,7 @@ class Organization(CompletableGithubObject):
             "PUT", f"{await self.url}/memberships/{(await member._identity)}", input=put_parameters
         )
 
-    async def add_to_public_members(self, public_member: NamedUser) -> None:
+    async def add_to_public_members(self, public_member: NamedUser.NamedUser) -> None:
         """
         :calls: `PUT /orgs/{org}/public_members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         """
@@ -667,10 +667,10 @@ class Organization(CompletableGithubObject):
 
     async def create_fork(
         self,
-        repo: Repository,
+        repo: Repository.Repository,
         name: Opt[str] = NotSet,
         default_branch_only: Opt[bool] = NotSet,
-    ) -> Repository:
+    ) -> Repository.Repository:
         """
         :calls: `POST /repos/{owner}/{repo}/forks <https://docs.github.com/en/rest/reference/repos#forks>`_
         """
@@ -684,11 +684,11 @@ class Organization(CompletableGithubObject):
     async def create_repo_from_template(
         self,
         name: str,
-        repo: Repository,
+        repo: Repository.Repository,
         description: Opt[str] = NotSet,
         include_all_branches: Opt[bool] = NotSet,
         private: Opt[bool] = NotSet,
-    ) -> Repository:
+    ) -> Repository.Repository:
         """await self.name
         :calls: `POST /repos/{template_owner}/{template_repo}/generate <https://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template>`_
         """
@@ -721,7 +721,7 @@ class Organization(CompletableGithubObject):
         config: dict[str, str],
         events: Opt[list[str]] = NotSet,
         active: Opt[bool] = NotSet,
-    ) -> Hook:
+    ) -> Hook.Hook:
         """
         :calls: `POST /orgs/{org}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         :param name: string
@@ -928,7 +928,7 @@ class Organization(CompletableGithubObject):
             completed=False,
         )
 
-    async def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret]:
+    async def get_secrets(self, secret_type: str = "actions") -> PaginatedList[OrganizationSecret.OrganizationSecret]:
         """
         Gets all organization secrets :param secret_type: string options actions or dependabot :rtype:
 
@@ -946,7 +946,7 @@ class Organization(CompletableGithubObject):
             list_item="secrets",
         )
 
-    async def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret:
+    async def get_secret(self, secret_name: str, secret_type: str = "actions") -> OrganizationSecret.OrganizationSecret:
         """
         :calls: `GET /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
         :calls: `GET /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-an-organization-secret>`_
@@ -963,14 +963,14 @@ class Organization(CompletableGithubObject):
     async def create_team(
         self,
         name: str,
-        repo_names: Opt[list[Repository]] = NotSet,
+        repo_names: Opt[list[Repository.Repository]] = NotSet,
         permission: Opt[str] = NotSet,
         privacy: Opt[str] = NotSet,
         description: Opt[str] = NotSet,
         parent_team_id: Opt[int] = NotSet,
         maintainers: Opt[list[str]] = NotSet,
         notification_setting: Opt[str] = NotSet,
-    ) -> Team:
+    ) -> Team.Team:
         """
         :calls: `POST /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         :param name: string
@@ -1058,7 +1058,7 @@ class Organization(CompletableGithubObject):
             completed=False,
         )
 
-    async def get_variables(self) -> PaginatedList[OrganizationVariable]:
+    async def get_variables(self) -> PaginatedList[OrganizationVariable.OrganizationVariable]:
         """
         Gets all organization variables :rtype: :class:`PaginatedList` of
         :class:`OrganizationVariable.OrganizationVariable`
@@ -1071,7 +1071,7 @@ class Organization(CompletableGithubObject):
             list_item="variables",
         )
 
-    async def get_variable(self, variable_name: str) -> OrganizationVariable:
+    async def get_variable(self, variable_name: str) -> OrganizationVariable.OrganizationVariable:
         """
         :calls: `GET /orgs/{org}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
         :param variable_name: string
@@ -1135,7 +1135,7 @@ class Organization(CompletableGithubObject):
         config: dict[str, str],
         events: Opt[list[str]] = NotSet,
         active: Opt[bool] = NotSet,
-    ) -> Hook:
+    ) -> Hook.Hook:
         """
         :calls: `PATCH /orgs/{org}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
@@ -1153,7 +1153,7 @@ class Organization(CompletableGithubObject):
         )
         return Hook.Hook(self._requester, headers, data, completed=True)
 
-    async def get_events(self) -> PaginatedList[Event]:
+    async def get_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /orgs/{org}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         :rtype: :class:`PaginatedList` of :class:`Event.Event`
@@ -1168,7 +1168,7 @@ class Organization(CompletableGithubObject):
         url = f"{await self.url}/hooks/{id}"
         return Hook.Hook(self._requester, url=url)
 
-    async def get_hooks(self) -> PaginatedList[Hook]:
+    async def get_hooks(self) -> PaginatedList[Hook.Hook]:
         """
         :calls: `GET /orgs/{org}/hooks <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
@@ -1206,11 +1206,11 @@ class Organization(CompletableGithubObject):
         self,
         filter: Opt[str] = NotSet,
         state: Opt[str] = NotSet,
-        labels: Opt[list[Label]] = NotSet,
+        labels: Opt[list[Label.Label]] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[Issue]:
+    ) -> PaginatedList[Issue.Issue]:
         """
         :calls: `GET /orgs/{org}/issues <https://docs.github.com/en/rest/reference/issues>`_
         :rtype: :class:`PaginatedList` of :class:`Issue.Issue`
@@ -1241,7 +1241,7 @@ class Organization(CompletableGithubObject):
         self,
         filter_: Opt[str] = NotSet,
         role: Opt[str] = NotSet,
-    ) -> PaginatedList[NamedUser]:
+    ) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /orgs/{org}/members <https://docs.github.com/en/rest/reference/orgs#members>`_
         """
@@ -1257,7 +1257,7 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project]:
+    async def get_projects(self, state: Opt[str] = NotSet) -> PaginatedList[Project.Project]:
         """
         :calls: `GET /orgs/{org}/projects <https://docs.github.com/en/rest/reference/projects#list-organization-projects>`_
         """
@@ -1272,7 +1272,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
-    async def get_public_members(self) -> PaginatedList[NamedUser]:
+    async def get_public_members(self) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /orgs/{org}/public_members <https://docs.github.com/en/rest/reference/orgs#members>`_
         :rtype: :class:`PaginatedList` of :class:`NamedUser.NamedUser`
@@ -1284,7 +1284,7 @@ class Organization(CompletableGithubObject):
             None,
         )
 
-    async def get_outside_collaborators(self, filter_: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
+    async def get_outside_collaborators(self, filter_: Opt[str] = NotSet) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /orgs/{org}/outside_collaborators <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         """
@@ -1298,7 +1298,7 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
-    async def remove_outside_collaborator(self, collaborator: NamedUser) -> None:
+    async def remove_outside_collaborator(self, collaborator: NamedUser.NamedUser) -> None:
         """
         :calls: `DELETE /orgs/{org}/outside_collaborators/{username} <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         :param collaborator: :class:`NamedUser.NamedUser`
@@ -1309,7 +1309,7 @@ class Organization(CompletableGithubObject):
             "DELETE", f"{await self.url}/outside_collaborators/{(await collaborator._identity)}"
         )
 
-    async def convert_to_outside_collaborator(self, member: NamedUser) -> None:
+    async def convert_to_outside_collaborator(self, member: NamedUser.NamedUser) -> None:
         """
         :calls: `PUT /orgs/{org}/outside_collaborators/{username} <https://docs.github.com/en/rest/reference/orgs#outside-collaborators>`_
         :param member: :class:`NamedUser.NamedUser`
@@ -1320,7 +1320,7 @@ class Organization(CompletableGithubObject):
             "PUT", f"{await self.url}/outside_collaborators/{(await member._identity)}"
         )
 
-    async def get_public_key(self, secret_type: str = "actions") -> PublicKey:
+    async def get_public_key(self, secret_type: str = "actions") -> PublicKey.PublicKey:
         """
         :calls: `GET /orgs/{org}/actions/secrets/public-key <http://docs.github.com/rest/actions/secrets#get-an-organization-public-key>`_
         :calls: `GET /orgs/{org}/dependabot/secrets/public-key <http://docs.github.com/rest/dependabot/secrets#get-an-organization-public-key>`_
@@ -1332,13 +1332,13 @@ class Organization(CompletableGithubObject):
         )
         return PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
-    async def get_copilot(self) -> Copilot:
+    async def get_copilot(self) -> Copilot.Copilot:
         """
         :calls: Various Copilot-related endpoints for this organization :rtype: :class:`Copilot.Copilot`
         """
         return Copilot.Copilot(self._requester, await self.login)
 
-    async def get_repo(self, name: str) -> Repository:
+    async def get_repo(self, name: str) -> Repository.Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
         :param name: string
@@ -1354,7 +1354,7 @@ class Organization(CompletableGithubObject):
         type: Opt[str] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
-    ) -> PaginatedList[Repository]:
+    ) -> PaginatedList[Repository.Repository]:
         """
         :calls: `GET /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
         :param type: string ('all', 'public', 'private', 'forks', 'sources', 'member')
@@ -1375,7 +1375,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
-    def get_team(self, id: int) -> Team:
+    def get_team(self, id: int) -> Team.Team:
         """
         :calls: `GET /teams/{team_id} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -1383,7 +1383,7 @@ class Organization(CompletableGithubObject):
         url = f"/teams/{id}"
         return Team.Team(self._requester, url=url)
 
-    async def get_team_by_slug(self, slug: str) -> Team:
+    async def get_team_by_slug(self, slug: str) -> Team.Team:
         """
         :calls: `GET /orgs/{org}/teams/{team_slug} <https://docs.github.com/en/rest/reference/teams#get-a-team-by-name>`_
         """
@@ -1392,7 +1392,7 @@ class Organization(CompletableGithubObject):
         url = f"{await self.url}/teams/{slug}"
         return Team.Team(self._requester, url=url)
 
-    async def get_teams(self) -> PaginatedList[Team]:
+    async def get_teams(self) -> PaginatedList[Team.Team]:
         """
         :calls: `GET /orgs/{org}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         """
@@ -1412,10 +1412,10 @@ class Organization(CompletableGithubObject):
 
     async def invite_user(
         self,
-        user: Opt[NamedUser] = NotSet,
+        user: Opt[NamedUser.NamedUser] = NotSet,
         email: Opt[str] = NotSet,
         role: Opt[str] = NotSet,
-        teams: Opt[list[Team]] = NotSet,
+        teams: Opt[list[Team.Team]] = NotSet,
     ) -> None:
         """
         :calls: `POST /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
@@ -1446,7 +1446,7 @@ class Organization(CompletableGithubObject):
             input=parameters,
         )
 
-    async def cancel_invitation(self, invitee: NamedUser) -> bool:
+    async def cancel_invitation(self, invitee: NamedUser.NamedUser) -> bool:
         """
         :calls: `DELETE /orgs/{org}/invitations/{invitation_id} <https://docs.github.com/en/rest/reference/orgs#cancel-an-organization-invitation>`_
         :param invitee: :class:`NamedUser.NamedUser`
@@ -1458,7 +1458,7 @@ class Organization(CompletableGithubObject):
         )
         return status == 204
 
-    async def has_in_members(self, member: NamedUser) -> bool:
+    async def has_in_members(self, member: NamedUser.NamedUser) -> bool:
         """
         :calls: `GET /orgs/{org}/members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param member: :class:`NamedUser.NamedUser`
@@ -1472,7 +1472,7 @@ class Organization(CompletableGithubObject):
             status, headers, data = await self._requester.requestJson("GET", headers["location"])
         return status == 204
 
-    async def has_in_public_members(self, public_member: NamedUser) -> bool:
+    async def has_in_public_members(self, public_member: NamedUser.NamedUser) -> bool:
         """
         :calls: `GET /orgs/{org}/public_members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param public_member: :class:`NamedUser.NamedUser`
@@ -1484,7 +1484,7 @@ class Organization(CompletableGithubObject):
         )
         return status == 204
 
-    async def remove_from_membership(self, member: NamedUser) -> None:
+    async def remove_from_membership(self, member: NamedUser.NamedUser) -> None:
         """
         :calls: `DELETE /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#remove-an-organization-member>`_
         :param member: :class:`NamedUser.NamedUser`
@@ -1495,7 +1495,7 @@ class Organization(CompletableGithubObject):
             "DELETE", f"{await self.url}/memberships/{(await member._identity)}"
         )
 
-    async def remove_from_members(self, member: NamedUser) -> None:
+    async def remove_from_members(self, member: NamedUser.NamedUser) -> None:
         """
         :calls: `DELETE /orgs/{org}/members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param member: :class:`NamedUser.NamedUser`
@@ -1506,7 +1506,7 @@ class Organization(CompletableGithubObject):
             "DELETE", f"{await self.url}/members/{(await member._identity)}"
         )
 
-    async def remove_from_public_members(self, public_member: NamedUser) -> None:
+    async def remove_from_public_members(self, public_member: NamedUser.NamedUser) -> None:
         """
         :calls: `DELETE /orgs/{org}/public_members/{username} <https://docs.github.com/en/rest/reference/orgs#members>`_
         :param public_member: :class:`NamedUser.NamedUser`
@@ -1522,7 +1522,7 @@ class Organization(CompletableGithubObject):
         repos: list[str],
         lock_repositories: Opt[bool] = NotSet,
         exclude_attachments: Opt[bool] = NotSet,
-    ) -> Migration:
+    ) -> Migration.Migration:
         """
         :calls: `POST /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#list-organization-migrations>`_
         :param repos: list or tuple of str
@@ -1550,7 +1550,7 @@ class Organization(CompletableGithubObject):
         )
         return Migration.Migration(self._requester, headers, data, completed=True)
 
-    async def get_migrations(self) -> PaginatedList[Migration]:
+    async def get_migrations(self) -> PaginatedList[Migration.Migration]:
         """
         :calls: `GET /orgs/{org}/migrations <https://docs.github.com/en/rest/reference/migrations#list-organization-migrations>`_
         :rtype: :class:`PaginatedList` of :class:`Migration.Migration`
@@ -1563,7 +1563,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeMigrationPreview},
         )
 
-    async def get_installations(self) -> PaginatedList[Installation]:
+    async def get_installations(self) -> PaginatedList[Installation.Installation]:
         """
         :calls: `GET /orgs/{org}/installations <https://docs.github.com/en/rest/reference/orgs#list-app-installations-for-an-organization>`_
         :rtype: :class:`PaginatedList` of :class:`Installation.Installation`
@@ -1587,7 +1587,7 @@ class Organization(CompletableGithubObject):
         scope: Opt[str] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
-    ) -> PaginatedList[OrganizationDependabotAlert]:
+    ) -> PaginatedList[OrganizationDependabotAlert.OrganizationDependabotAlert]:
         """
         :calls: `GET /orgs/{org}/dependabot/alerts <https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization>`_
         :param state: Optional string
@@ -1639,7 +1639,7 @@ class Organization(CompletableGithubObject):
         direction: Opt[str] = NotSet,
         state: Opt[str] = NotSet,
         severity: Opt[str] = NotSet,
-    ) -> PaginatedList[OrganizationCodeScanAlert]:
+    ) -> PaginatedList[OrganizationCodeScanAlert.OrganizationCodeScanAlert]:
         """
         :calls: `GET /orgs/{org}/code-scanning/alerts <https://docs.github.com/en/rest/code-scanning/code-scanning#list-code-scanning-alerts-for-an-organization>`_
         :param tool_name: Optional string
@@ -1697,7 +1697,7 @@ class Organization(CompletableGithubObject):
         is_publicly_leaked: Opt[bool] = NotSet,
         is_multi_repo: Opt[bool] = NotSet,
         hide_secret: Opt[bool] = NotSet,
-    ) -> PaginatedList[OrganizationSecretScanAlert]:
+    ) -> PaginatedList[OrganizationSecretScanAlert.OrganizationSecretScanAlert]:
         """
         :calls: `GET /orgs/{org}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-an-organization>`_
         :param state: Optional string
@@ -1757,7 +1757,7 @@ class Organization(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_custom_properties(self) -> PaginatedList[OrganizationCustomProperty]:
+    async def get_custom_properties(self) -> PaginatedList[OrganizationCustomProperty.OrganizationCustomProperty]:
         """
         :calls: `GET /orgs/{org}/properties/schema <https://docs.github.com/en/rest/orgs/custom-properties#get-all-custom-properties-for-an-organization>`_
         :rtype: :class:`PaginatedList` of :class:`OrganizationCustomProperty.OrganizationCustomProperty`
@@ -1769,7 +1769,7 @@ class Organization(CompletableGithubObject):
             firstParams=None,
         )
 
-    async def get_custom_property(self, property_name: str) -> OrganizationCustomProperty:
+    async def get_custom_property(self, property_name: str) -> OrganizationCustomProperty.OrganizationCustomProperty:
         """
         :calls: `GET /orgs/{org}/properties/schema/{custom_property_name} <https://docs.github.com/en/rest/orgs/custom-properties#get-a-custom-property-for-an-organization>`_
         :param property_name: string
@@ -1785,7 +1785,9 @@ class Organization(CompletableGithubObject):
             attributes=data,
         )
 
-    async def create_custom_properties(self, properties: list[CustomProperty]) -> list[OrganizationCustomProperty]:
+    async def create_custom_properties(
+        self, properties: list[CustomProperty]
+    ) -> list[OrganizationCustomProperty.OrganizationCustomProperty]:
         """
         Create or update custom properties for an organization
         :calls: `PATCH /orgs/{org}/properties/schema <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization>`_
@@ -1808,7 +1810,9 @@ class Organization(CompletableGithubObject):
             for property in data
         ]
 
-    async def create_custom_property(self, property: CustomProperty) -> OrganizationCustomProperty:
+    async def create_custom_property(
+        self, property: CustomProperty
+    ) -> OrganizationCustomProperty.OrganizationCustomProperty:
         """
         Create or update a custom property for an organization
         :calls: `PUT /orgs/{org}/properties/schema/{custom_property_name} <https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-a-custom-property-for-an-organization>`_
@@ -1874,7 +1878,9 @@ class Organization(CompletableGithubObject):
             "PATCH", f"{await self.url}/properties/values", input=patch_parameters
         )
 
-    async def get_code_security_configs(self, target_type: Opt[str] = NotSet) -> PaginatedList[CodeSecurityConfig]:
+    async def get_code_security_configs(
+        self, target_type: Opt[str] = NotSet
+    ) -> PaginatedList[CodeSecurityConfig.CodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#get-code-security-configurations-for-an-organization>`_
         :rtype: :class:`CodeSecurityConfig`
@@ -1903,7 +1909,7 @@ class Organization(CompletableGithubObject):
         secret_scanning_non_provider_patterns: Opt[str] = NotSet,
         private_vulnerability_reporting: Opt[str] = NotSet,
         enforcement: Opt[str] = NotSet,
-    ) -> CodeSecurityConfig:
+    ) -> CodeSecurityConfig.CodeSecurityConfig:
         """
         :calls: `POST /orgs/{org}/code-security/configurations <https://docs.github.com/en/rest/code-security/configurations#create-a-code-security-configuration>`_
         :rtype: :class:`PaginatedList` of dict
@@ -1969,7 +1975,7 @@ class Organization(CompletableGithubObject):
         secret_scanning_non_provider_patterns: Opt[str] = NotSet,
         private_vulnerability_reporting: Opt[str] = NotSet,
         enforcement: Opt[str] = NotSet,
-    ) -> CodeSecurityConfig:
+    ) -> CodeSecurityConfig.CodeSecurityConfig:
         """
         :calls: `PATCH /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#update-a-code-security-configuration>`_
         """
@@ -2025,7 +2031,7 @@ class Organization(CompletableGithubObject):
             "DELETE", f"{await self.url}/code-security/configurations/{id}"
         )
 
-    async def get_code_security_config(self, id: int) -> CodeSecurityConfig:
+    async def get_code_security_config(self, id: int) -> CodeSecurityConfig.CodeSecurityConfig:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id} <https://docs.github.com/en/rest/code-security/configurations#get-a-code-security-configurationt>`_
         :param id: configuration_id
@@ -2049,7 +2055,9 @@ class Organization(CompletableGithubObject):
             "PUT", f"{await self.url}/code-security/configurations/{id}/defaults", input=put_parameters
         )
 
-    async def get_default_code_security_configs(self) -> PaginatedList[DefaultCodeSecurityConfig]:
+    async def get_default_code_security_configs(
+        self,
+    ) -> PaginatedList[DefaultCodeSecurityConfig.DefaultCodeSecurityConfig]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/defaults <https://docs.github.com/en/rest/code-security/configurations#get-default-code-security-configurations>`_
         :rtype: :class:`DefaultCodeSecurityConfig.DefaultCodeSecurityConfig`
@@ -2103,7 +2111,7 @@ class Organization(CompletableGithubObject):
 
     async def get_repos_for_code_security_config(
         self, id: int, status: Opt[str] = NotSet
-    ) -> PaginatedList[CodeSecurityConfigRepository]:
+    ) -> PaginatedList[CodeSecurityConfigRepository.CodeSecurityConfigRepository]:
         """
         :calls: `GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories <https://docs.github.com/en/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration>`_
         """
@@ -2120,7 +2128,9 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.repoVisibilityPreview},
         )
 
-    async def get_self_hosted_runners(self, name: Opt[str] = NotSet) -> PaginatedList[SelfHostedActionsRunner]:
+    async def get_self_hosted_runners(
+        self, name: Opt[str] = NotSet
+    ) -> PaginatedList[SelfHostedActionsRunner.SelfHostedActionsRunner]:
         """
         :calls: `GET /orgs/{org}/actions/runners <https://docs.github.com/en/rest/actions/self-hosted-runners#list-self-hosted-runners-for-an-organization>`_
         """
@@ -2137,7 +2147,9 @@ class Organization(CompletableGithubObject):
             list_item="runners",
         )
 
-    async def get_self_hosted_runner_applications(self) -> PaginatedList[SelfHostedActionsRunnerApplication]:
+    async def get_self_hosted_runner_applications(
+        self,
+    ) -> PaginatedList[SelfHostedActionsRunnerApplication.SelfHostedActionsRunnerApplication]:
         """
         :calls: `GET /orgs/{org}/actions/runners/downloads <https://docs.github.com/en/rest/actions/self-hosted-runners#list-runner-applications-for-an-organization>`_
         """
@@ -2149,7 +2161,7 @@ class Organization(CompletableGithubObject):
 
     async def create_self_hosted_runner_jitconfig(
         self, name: str, runner_group_id: int, labels: list[str], work_folder: Opt[str] = NotSet
-    ) -> SelfHostedActionsRunnerJitConfig:
+    ) -> SelfHostedActionsRunnerJitConfig.SelfHostedActionsRunnerJitConfig:
         """
         :calls: `POST /orgs/{org}/actions/runners/generate-jitconfig <https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization>`_
         """
@@ -2169,7 +2181,9 @@ class Organization(CompletableGithubObject):
         )
         return SelfHostedActionsRunnerJitConfig.SelfHostedActionsRunnerJitConfig(self._requester, headers, data)
 
-    async def create_self_hosted_runner_registration_token(self) -> SelfHostedActionsRunnerToken:
+    async def create_self_hosted_runner_registration_token(
+        self,
+    ) -> SelfHostedActionsRunnerToken.SelfHostedActionsRunnerToken:
         """
         :calls: `POST /orgs/{org}/actions/runners/registration-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization>`_
         """
@@ -2179,7 +2193,7 @@ class Organization(CompletableGithubObject):
         )
         return SelfHostedActionsRunnerToken.SelfHostedActionsRunnerToken(self._requester, headers, data)
 
-    async def create_self_hosted_runner_remove_token(self) -> SelfHostedActionsRunnerToken:
+    async def create_self_hosted_runner_remove_token(self) -> SelfHostedActionsRunnerToken.SelfHostedActionsRunnerToken:
         """
         :calls: `POST /orgs/{org}/actions/runners/remove-token <https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-remove-token-for-an-organization>`_
         """
@@ -2189,7 +2203,7 @@ class Organization(CompletableGithubObject):
         )
         return SelfHostedActionsRunnerToken.SelfHostedActionsRunnerToken(self._requester, headers, data)
 
-    async def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner:
+    async def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner.SelfHostedActionsRunner:
         """
         :calls: `GET /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-an-organization>`_
         """

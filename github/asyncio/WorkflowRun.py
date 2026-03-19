@@ -78,7 +78,7 @@ class WorkflowRun(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._actor: Attribute[NamedUser] = NotSet
+        self._actor: Attribute[NamedUser.NamedUser] = NotSet
         self._artifacts_url: Attribute[str] = NotSet
         self._cancel_url: Attribute[str] = NotSet
         self._check_suite_id: Attribute[int] = NotSet
@@ -89,8 +89,8 @@ class WorkflowRun(CompletableGithubObject):
         self._display_title: Attribute[str] = NotSet
         self._event: Attribute[str] = NotSet
         self._head_branch: Attribute[str] = NotSet
-        self._head_commit: Attribute[GitCommit] = NotSet
-        self._head_repository: Attribute[Repository] = NotSet
+        self._head_commit: Attribute[GitCommit.GitCommit] = NotSet
+        self._head_repository: Attribute[Repository.Repository] = NotSet
         self._head_repository_id: Attribute[int] = NotSet
         self._head_sha: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -101,16 +101,16 @@ class WorkflowRun(CompletableGithubObject):
         self._node_id: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._previous_attempt_url: Attribute[str] = NotSet
-        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._pull_requests: Attribute[list[PullRequest.PullRequest]] = NotSet
         self._referenced_workflows: Attribute[list[dict[str, Any]]] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._repository_id: Attribute[int] = NotSet
         self._rerun_url: Attribute[str] = NotSet
         self._run_attempt: Attribute[int] = NotSet
         self._run_number: Attribute[int] = NotSet
         self._run_started_at: Attribute[datetime] = NotSet
         self._status: Attribute[str] = NotSet
-        self._triggering_actor: Attribute[NamedUser] = NotSet
+        self._triggering_actor: Attribute[NamedUser.NamedUser] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._workflow_id: Attribute[int] = NotSet
@@ -120,7 +120,7 @@ class WorkflowRun(CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    async def actor(self) -> NamedUser:
+    async def actor(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._actor)
         return self._actor.value
 
@@ -175,12 +175,12 @@ class WorkflowRun(CompletableGithubObject):
         return self._head_branch.value
 
     @property
-    async def head_commit(self) -> GitCommit:
+    async def head_commit(self) -> GitCommit.GitCommit:
         await self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
     @property
-    async def head_repository(self) -> Repository:
+    async def head_repository(self) -> Repository.Repository:
         await self._completeIfNotSet(self._head_repository)
         return self._head_repository.value
 
@@ -235,7 +235,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._previous_attempt_url.value
 
     @property
-    async def pull_requests(self) -> list[PullRequest]:
+    async def pull_requests(self) -> list[PullRequest.PullRequest]:
         await self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
@@ -245,7 +245,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._referenced_workflows.value
 
     @property
-    async def repository(self) -> Repository:
+    async def repository(self) -> Repository.Repository:
         await self._completeIfNotSet(self._repository)
         return self._repository.value
 
@@ -304,7 +304,7 @@ class WorkflowRun(CompletableGithubObject):
         await self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
-    async def get_artifacts(self) -> PaginatedList[Artifact]:
+    async def get_artifacts(self) -> PaginatedList[Artifact.Artifact]:
         return PaginatedList(
             Artifact.Artifact,
             self._requester,
@@ -348,7 +348,7 @@ class WorkflowRun(CompletableGithubObject):
         status, _, _ = await self._requester.requestJson("DELETE", await self.url)
         return status == 204
 
-    async def jobs(self, _filter: Opt[str] = NotSet) -> PaginatedList[WorkflowJob]:
+    async def jobs(self, _filter: Opt[str] = NotSet) -> PaginatedList[WorkflowJob.WorkflowJob]:
         """
         :calls "`GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs <https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run>`_
         :param _filter: string `latest`, or `all`

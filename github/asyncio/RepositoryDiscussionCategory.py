@@ -66,7 +66,7 @@ class RepositoryDiscussionCategory(GraphQlObject, NonCompletableGithubObject):
         self._id: Attribute[str] = NotSet
         self._is_answerable: Attribute[bool] = NotSet
         self._name: Attribute[str] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._slug: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
 
@@ -103,7 +103,7 @@ class RepositoryDiscussionCategory(GraphQlObject, NonCompletableGithubObject):
         return self.id
 
     @property
-    def repository(self) -> Repository:
+    def repository(self) -> Repository.Repository:
         return self._repository.value
 
     @property

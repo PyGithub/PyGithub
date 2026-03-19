@@ -132,10 +132,10 @@ class Enterprise(NonCompletableGithubObject):
         return self._website_url.value
 
     @staticmethod
-    def from_slug(requester: Requester, slug: str) -> Enterprise:
+    def from_slug(requester: Requester.Requester, slug: str) -> Enterprise:
         return Enterprise(requester, {}, {"slug": slug})
 
-    async def get_consumed_licenses(self) -> EnterpriseConsumedLicenses:
+    async def get_consumed_licenses(self) -> EnterpriseConsumedLicenses.EnterpriseConsumedLicenses:
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
         """

@@ -49,14 +49,14 @@ class DependabotAlertAdvisory(AdvisoryBase):
     def _initAttributes(self) -> None:
         super()._initAttributes()
         self._references: Attribute[list[dict]] = NotSet
-        self._vulnerabilities: Attribute[list[DependabotAlertVulnerability]] = NotSet
+        self._vulnerabilities: Attribute[list[DependabotAlertVulnerability.DependabotAlertVulnerability]] = NotSet
 
     @property
     def references(self) -> list[dict]:
         return self._references.value
 
     @property
-    def vulnerabilities(self) -> list[DependabotAlertVulnerability]:
+    def vulnerabilities(self) -> list[DependabotAlertVulnerability.DependabotAlertVulnerability]:
         return self._vulnerabilities.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

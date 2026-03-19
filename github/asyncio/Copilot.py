@@ -47,7 +47,7 @@ class Copilot(NonCompletableGithubObject):
     def org_name(self) -> str:
         return self._org_name.value
 
-    def get_seats(self) -> PaginatedList[CopilotSeat]:
+    def get_seats(self) -> PaginatedList[CopilotSeat.CopilotSeat]:
         """
         :calls: `GET /orgs/{org}/copilot/billing/seats <https://docs.github.com/en/rest/copilot/copilot-business>`_
         """

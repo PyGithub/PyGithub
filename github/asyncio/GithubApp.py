@@ -78,7 +78,7 @@ class GithubApp(CompletableGithubObject):
         self._installations_count: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._owner: Attribute[NamedUser | Organization | Enterprise] = NotSet
+        self._owner: Attribute[NamedUser.NamedUser | Organization.Organization | Enterprise.Enterprise] = NotSet
         self._pem: Attribute[str] = NotSet
         self._permissions: Attribute[dict[str, str]] = NotSet
         self._slug: Attribute[str] = NotSet
@@ -145,7 +145,7 @@ class GithubApp(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def owner(self) -> NamedUser | Organization | Enterprise:
+    async def owner(self) -> NamedUser.NamedUser | Organization.Organization | Enterprise.Enterprise:
         await self._completeIfNotSet(self._owner)
         return self._owner.value
 

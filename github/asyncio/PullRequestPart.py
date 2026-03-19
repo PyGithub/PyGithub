@@ -64,9 +64,9 @@ class PullRequestPart(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._label: Attribute[str] = NotSet
         self._ref: Attribute[str] = NotSet
-        self._repo: Attribute[Repository] = NotSet
+        self._repo: Attribute[Repository.Repository] = NotSet
         self._sha: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -80,7 +80,7 @@ class PullRequestPart(NonCompletableGithubObject):
         return self._ref.value
 
     @property
-    def repo(self) -> Repository:
+    def repo(self) -> Repository.Repository:
         return self._repo.value
 
     @property
@@ -88,7 +88,7 @@ class PullRequestPart(NonCompletableGithubObject):
         return self._sha.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser.NamedUser:
         return self._user.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

@@ -113,7 +113,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
 
         return self.get_oauth_url(f"/authorize?{query}")
 
-    async def get_access_token(self, code: str, state: str | None = None) -> AccessToken:
+    async def get_access_token(self, code: str, state: str | None = None) -> AccessToken.AccessToken:
         """
         :calls: `POST /login/oauth/access_token <https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps>`_
         """
@@ -142,7 +142,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
             attributes=data,
         )
 
-    def get_app_user_auth(self, token: AccessToken) -> AppUserAuth:
+    def get_app_user_auth(self, token: AccessToken.AccessToken) -> AppUserAuth:
         return Auth.AppUserAuth(
             client_id=self.client_id,
             client_secret=self.client_secret,
@@ -154,7 +154,7 @@ class ApplicationOAuth(NonCompletableGithubObject):
             requester=self._requester,
         )
 
-    async def refresh_access_token(self, refresh_token: str) -> AccessToken:
+    async def refresh_access_token(self, refresh_token: str) -> AccessToken.AccessToken:
         """
         :calls: `POST /login/oauth/access_token <https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps>`_
         :param refresh_token: string

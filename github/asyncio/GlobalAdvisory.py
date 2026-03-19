@@ -50,7 +50,7 @@ class GlobalAdvisory(AdvisoryBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._credits: Attribute[list[AdvisoryCreditDetailed]] = NotSet
+        self._credits: Attribute[list[AdvisoryCreditDetailed.AdvisoryCreditDetailed]] = NotSet
         self._epss: Attribute[dict[str, Any]] = NotSet
         self._github_reviewed_at: Attribute[datetime] = NotSet
         self._nvd_published_at: Attribute[datetime] = NotSet
@@ -58,7 +58,7 @@ class GlobalAdvisory(AdvisoryBase):
         self._repository_advisory_url: Attribute[str] = NotSet
         self._source_code_location: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
-        self._vulnerabilities: Attribute[list[AdvisoryVulnerability]] = NotSet
+        self._vulnerabilities: Attribute[list[AdvisoryVulnerability.AdvisoryVulnerability]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"ghsa_id": self.ghsa_id, "summary": self.summary})
@@ -66,7 +66,7 @@ class GlobalAdvisory(AdvisoryBase):
     @property
     def credits(
         self,
-    ) -> list[AdvisoryCreditDetailed]:
+    ) -> list[AdvisoryCreditDetailed.AdvisoryCreditDetailed]:
         return self._credits.value
 
     @property
@@ -98,7 +98,7 @@ class GlobalAdvisory(AdvisoryBase):
         return self._type.value
 
     @property
-    def vulnerabilities(self) -> list[AdvisoryVulnerability]:
+    def vulnerabilities(self) -> list[AdvisoryVulnerability.AdvisoryVulnerability]:
         return self._vulnerabilities.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

@@ -84,8 +84,8 @@ class Migration(CompletableGithubObject):
         self._lock_repositories: Attribute[bool] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._org_metadata_only: Attribute[bool] = NotSet
-        self._owner: Attribute[NamedUser | Organization] = NotSet
-        self._repositories: Attribute[list[Repository]] = NotSet
+        self._owner: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
+        self._repositories: Attribute[list[Repository.Repository]] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -158,7 +158,7 @@ class Migration(CompletableGithubObject):
         return self._org_metadata_only.value
 
     @property
-    async def owner(self) -> NamedUser | Organization:
+    async def owner(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._owner)
         return self._owner.value
 

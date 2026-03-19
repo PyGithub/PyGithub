@@ -49,16 +49,16 @@ class DependabotAlert(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._auto_dismissed_at: Attribute[datetime] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._dependency: Attribute[DependabotAlertDependency] = NotSet
+        self._dependency: Attribute[DependabotAlertDependency.DependabotAlertDependency] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
-        self._dismissed_by: Attribute[NamedUser | Organization | None] = NotSet
+        self._dismissed_by: Attribute[NamedUser.NamedUser | Organization.Organization | None] = NotSet
         self._dismissed_comment: Attribute[str | None] = NotSet
         self._dismissed_reason: Attribute[str | None] = NotSet
         self._fixed_at: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
-        self._security_advisory: Attribute[DependabotAlertAdvisory] = NotSet
-        self._security_vulnerability: Attribute[DependabotAlertVulnerability] = NotSet
+        self._security_advisory: Attribute[DependabotAlertAdvisory.DependabotAlertAdvisory] = NotSet
+        self._security_vulnerability: Attribute[DependabotAlertVulnerability.DependabotAlertVulnerability] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -75,7 +75,7 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def dependency(self) -> DependabotAlertDependency:
+    def dependency(self) -> DependabotAlertDependency.DependabotAlertDependency:
         return self._dependency.value
 
     @property
@@ -83,7 +83,7 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._dismissed_at.value
 
     @property
-    def dismissed_by(self) -> NamedUser | Organization | None:
+    def dismissed_by(self) -> NamedUser.NamedUser | Organization.Organization | None:
         return self._dismissed_by.value
 
     @property
@@ -107,11 +107,11 @@ class DependabotAlert(NonCompletableGithubObject):
         return self._number.value
 
     @property
-    def security_advisory(self) -> DependabotAlertAdvisory:
+    def security_advisory(self) -> DependabotAlertAdvisory.DependabotAlertAdvisory:
         return self._security_advisory.value
 
     @property
-    def security_vulnerability(self) -> DependabotAlertVulnerability:
+    def security_vulnerability(self) -> DependabotAlertVulnerability.DependabotAlertVulnerability:
         return self._security_vulnerability.value
 
     @property

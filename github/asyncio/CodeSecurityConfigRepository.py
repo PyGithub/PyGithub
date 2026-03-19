@@ -46,14 +46,14 @@ class CodeSecurityConfigRepository(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self._repository.value.__repr__()
 
     @property
-    def repository(self) -> Repository:
+    def repository(self) -> Repository.Repository:
         return self._repository.value
 
     @property

@@ -65,7 +65,7 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def reviewer(self) -> NamedUser | Team:
+    def reviewer(self) -> NamedUser.NamedUser | Team.Team:
         return self._reviewer.value
 
     @property

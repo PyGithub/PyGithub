@@ -76,7 +76,7 @@ class Artifact(NonCompletableGithubObject):
         self._size_in_bytes: Attribute[int] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._workflow_run: Attribute[WorkflowRun] = NotSet
+        self._workflow_run: Attribute[WorkflowRun.WorkflowRun] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
@@ -130,7 +130,7 @@ class Artifact(NonCompletableGithubObject):
         return self._url.value
 
     @property
-    def workflow_run(self) -> WorkflowRun:
+    def workflow_run(self) -> WorkflowRun.WorkflowRun:
         return self._workflow_run.value
 
     async def delete(self) -> bool:

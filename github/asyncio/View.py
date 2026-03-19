@@ -63,7 +63,7 @@ class View(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
-        self._views: Attribute[list[Traffic]] = NotSet
+        self._views: Attribute[list[Traffic.Traffic]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -82,7 +82,7 @@ class View(NonCompletableGithubObject):
         return self._uniques.value
 
     @property
-    def views(self) -> list[Traffic]:
+    def views(self) -> list[Traffic.Traffic]:
         return self._views.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

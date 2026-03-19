@@ -81,11 +81,11 @@ class IssueComment(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp.GithubApp] = NotSet
         self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser | Organization] = NotSet
+        self._user: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -136,7 +136,7 @@ class IssueComment(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def performed_via_github_app(self) -> GithubApp:
+    async def performed_via_github_app(self) -> GithubApp.GithubApp:
         await self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
@@ -156,7 +156,7 @@ class IssueComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    async def user(self) -> NamedUser | Organization:
+    async def user(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -178,7 +178,7 @@ class IssueComment(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
-    async def get_reactions(self) -> PaginatedList[Reaction]:
+    async def get_reactions(self) -> PaginatedList[Reaction.Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-an-issue-comment>`_
@@ -191,7 +191,7 @@ class IssueComment(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    async def create_reaction(self, reaction_type: str) -> Reaction:
+    async def create_reaction(self, reaction_type: str) -> Reaction.Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-an-issue-comment>`_

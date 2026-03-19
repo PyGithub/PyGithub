@@ -2319,6 +2319,93 @@ class AsyncTransformer:
             result_lines.append(line)
             i += 1
 
+        # --- Pass 2b: Qualify bare class names that lost their TYPE_CHECKING import ---
+        # When Pattern B removes a TYPE_CHECKING import `from .X import X`, the bare
+        # name `X` in annotations (Attribute[X], -> X, param: X) now resolves to the
+        # *module* instead of the class.  Rewrite bare `X` → `X.X` in annotation
+        # contexts so the reference is module.class (correct).
+        if names_to_remove_from_tc:
+            # Regex to split a line into string-literal vs non-string segments.
+            # Capturing group means re.split returns both code and string parts.
+            _string_re = re.compile(
+                r"""(r?f?b?\"\"\".*?\"\"\"|r?f?b?\'\'\'.*?\'\'\'|r?f?b?\"[^\"\\]*(?:\\.[^\"\\]*)*\"|r?f?b?\'[^\'\\]*(?:\\.[^\'\\]*)*\')""",
+                re.DOTALL,
+            )
+            qualified_lines: list[str] = []
+            in_docstring = False
+            for line in result_lines:
+                stripped = line.strip()
+                # Skip import lines — don't rewrite imports themselves
+                if stripped.startswith(("from ", "import ")):
+                    qualified_lines.append(line)
+                    continue
+                # Skip comment lines
+                if stripped.startswith("#"):
+                    qualified_lines.append(line)
+                    continue
+                # Track docstrings (triple-quoted strings) — skip them
+                # Count triple-quote toggles on this line
+                tq_count = stripped.count('"""') + stripped.count("'''")
+                if in_docstring:
+                    if tq_count % 2 == 1:
+                        in_docstring = False
+                    qualified_lines.append(line)
+                    continue
+                if tq_count >= 1:
+                    if tq_count % 2 == 1:
+                        # Opening triple quote without close on same line
+                        in_docstring = True
+                        qualified_lines.append(line)
+                        continue
+                    # tq_count is even: opens and closes on same line, skip rewriting
+                    # (could be single-line docstring), but it's safe to process normally
+                    # since type names rarely appear in single-line docstrings.
+
+                # Split off inline comments — only rewrite the code part
+                code_part = line
+                comment_part = ""
+                if "#" in line:
+                    # Find the first # that's not inside a string
+                    # Simple heuristic: split at first # not inside quotes
+                    in_sq = False
+                    in_dq = False
+                    for ci, ch in enumerate(line):
+                        if ch == "'" and not in_dq:
+                            in_sq = not in_sq
+                        elif ch == '"' and not in_sq:
+                            in_dq = not in_dq
+                        elif ch == "#" and not in_sq and not in_dq:
+                            code_part = line[:ci]
+                            comment_part = line[ci:]
+                            break
+
+                # Split code_part into string-literal vs non-string segments.
+                # We only rewrite bare names in non-string segments to avoid
+                # corrupting string values like "Team" → "Team.Team".
+                segments = _string_re.split(code_part)
+                # segments alternates: [non-string, string, non-string, string, ...]
+                modified_segments: list[str] = []
+                for si, seg in enumerate(segments):
+                    if si % 2 == 1:
+                        # This is a string literal — leave it untouched
+                        modified_segments.append(seg)
+                    else:
+                        # This is code — apply the rewrites
+                        mod = seg
+                        for name in names_to_remove_from_tc:
+                            # Replace bare `X` with `X.X` where X is NOT preceded by `.`
+                            # and NOT already followed by `.` (meaning X is used as a module
+                            # dereference like X.something — already correct).
+                            mod = re.sub(
+                                rf"(?<!\.)\b{re.escape(name)}\b(?!\.)",
+                                f"{name}.{name}",
+                                mod,
+                            )
+                        modified_segments.append(mod)
+                modified = "".join(modified_segments)
+                qualified_lines.append(modified + comment_part)
+            result_lines = qualified_lines
+
         # --- Pass 3: Clean up empty TYPE_CHECKING blocks and unused imports ---
         result = "\n".join(result_lines)
 

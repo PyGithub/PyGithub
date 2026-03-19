@@ -63,7 +63,7 @@ class Stargazer(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._starred_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         # this is not a type error, just we didn't type `NamedUser` yet.
@@ -75,7 +75,7 @@ class Stargazer(NonCompletableGithubObject):
         return self._starred_at.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser.NamedUser:
         return self._user.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

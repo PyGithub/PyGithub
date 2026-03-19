@@ -362,7 +362,7 @@ class Github:
         """
         return self.__requester.oauth_scopes
 
-    async def get_license(self, key: Opt[str] = NotSet) -> License:
+    async def get_license(self, key: Opt[str] = NotSet) -> License.License:
         """
         :calls: `GET /license/{license} <https://docs.github.com/en/rest/reference/licenses#get-a-license>`_
         """
@@ -372,7 +372,7 @@ class Github:
         headers, data = await self.__requester.requestJsonAndCheck("GET", f"/licenses/{key}")
         return License.License(self.__requester, headers, data, completed=True)
 
-    def get_licenses(self) -> PaginatedList[License]:
+    def get_licenses(self) -> PaginatedList[License.License]:
         """
         :calls: `GET /licenses <https://docs.github.com/en/rest/reference/licenses#get-all-commonly-used-licenses>`_
         """
@@ -381,7 +381,7 @@ class Github:
 
         return PaginatedList(License.License, self.__requester, "/licenses", url_parameters)
 
-    def get_events(self) -> PaginatedList[Event]:
+    def get_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /events <https://docs.github.com/en/rest/reference/activity#list-public-events>`_
         """
@@ -389,7 +389,9 @@ class Github:
         return PaginatedList(Event.Event, self.__requester, "/events", None)
 
     # v3: remove lazy argument, laziness is fully controlled via requester
-    async def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
+    async def get_user(
+        self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet
+    ) -> NamedUser.NamedUser | AuthenticatedUser.AuthenticatedUser:
         """
         :calls: `GET /users/{username} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
@@ -410,7 +412,7 @@ class Github:
             user = NamedUser.NamedUser(requester, url=url)
             return await user.complete() if is_undefined(lazy) else user
 
-    def get_user_by_id(self, user_id: int) -> NamedUser:
+    def get_user_by_id(self, user_id: int) -> NamedUser.NamedUser:
         """
         :calls: `GET /user/{account_id} <https://docs.github.com/en/rest/reference/users>`_
         :param user_id: int
@@ -420,7 +422,7 @@ class Github:
         url = f"/user/{user_id}"
         return NamedUser.NamedUser(self.__requester, url=url)
 
-    def get_users(self, since: Opt[int] = NotSet) -> PaginatedList[NamedUser]:
+    def get_users(self, since: Opt[int] = NotSet) -> PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /users <https://docs.github.com/en/rest/reference/users>`_
         """
@@ -430,7 +432,7 @@ class Github:
             url_parameters["since"] = since
         return PaginatedList(NamedUser.NamedUser, self.__requester, "/users", url_parameters)
 
-    def get_organization(self, org: str) -> Organization:
+    def get_organization(self, org: str) -> Organization.Organization:
         """
         :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
@@ -439,7 +441,7 @@ class Github:
         url = f"/orgs/{org}"
         return Organization.Organization(self.__requester, url=url)
 
-    def get_organizations(self, since: Opt[int] = NotSet) -> PaginatedList[Organization]:
+    def get_organizations(self, since: Opt[int] = NotSet) -> PaginatedList[Organization.Organization]:
         """
         :calls: `GET /organizations <https://docs.github.com/en/rest/reference/orgs#list-organizations>`_
         """
@@ -466,7 +468,7 @@ class Github:
         return Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
     # v3: remove lazy option
-    def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
+    def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository.Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{repository_id} <https://docs.github.com/en/rest/reference/repos>`_
         """
@@ -485,7 +487,7 @@ class Github:
         self,
         since: Opt[int] = NotSet,
         visibility: Opt[str] = NotSet,
-    ) -> PaginatedList[Repository]:
+    ) -> PaginatedList[Repository.Repository]:
         """
         :calls: `GET /repositories <https://docs.github.com/en/rest/reference/repos#list-public-repositories>`_
         :param since: integer
@@ -505,19 +507,21 @@ class Github:
             url_parameters,
         )
 
-    async def get_repository_discussion(self, node_id: str, discussion_graphql_schema: str) -> RepositoryDiscussion:
+    async def get_repository_discussion(
+        self, node_id: str, discussion_graphql_schema: str
+    ) -> RepositoryDiscussion.RepositoryDiscussion:
         return await self.__requester.graphql_node_class(
             node_id, discussion_graphql_schema, RepositoryDiscussion.RepositoryDiscussion, "Discussion"
         )
 
-    def get_project(self, id: int) -> Project:
+    def get_project(self, id: int) -> Project.Project:
         """
         :calls: `GET /projects/{project_id} <https://docs.github.com/en/rest/reference/projects#get-a-project>`_
         """
         url = f"/projects/{id:d}"
         return Project.Project(self.__requester, url=url, accept=Consts.mediaTypeProjectsPreview)
 
-    async def get_project_column(self, id: int) -> ProjectColumn:
+    async def get_project_column(self, id: int) -> ProjectColumn.ProjectColumn:
         """
         :calls: `GET /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#get-a-project-column>`_
         """
@@ -528,7 +532,7 @@ class Github:
         )
         return ProjectColumn.ProjectColumn(self.__requester, headers, data)
 
-    def get_gist(self, id: str) -> Gist:
+    def get_gist(self, id: str) -> Gist.Gist:
         """
         :calls: `GET /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
@@ -536,7 +540,7 @@ class Github:
         url = f"/gists/{id}"
         return Gist.Gist(self.__requester, url=url)
 
-    def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
+    def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist.Gist]:
         """
         :calls: `GET /gists/public <https://docs.github.com/en/rest/reference/gists>`_
         """
@@ -546,7 +550,7 @@ class Github:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return PaginatedList(Gist.Gist, self.__requester, "/gists/public", url_parameters)
 
-    async def get_global_advisory(self, ghsa_id: str) -> GlobalAdvisory:
+    async def get_global_advisory(self, ghsa_id: str) -> GlobalAdvisory.GlobalAdvisory:
         """
         :calls: `GET /advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/global-advisories>`_
         :param ghsa_id: string
@@ -576,7 +580,7 @@ class Github:
         per_page: Opt[str] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
-    ) -> PaginatedList[GlobalAdvisory]:
+    ) -> PaginatedList[GlobalAdvisory.GlobalAdvisory]:
         """
         :calls: `GET /advisories <https://docs.github.com/en/rest/security-advisories/global-advisories>`
         :param type: Optional string
@@ -865,7 +869,7 @@ class Github:
             headers={"Accept": Consts.mediaTypeCommitSearchPreview},
         )
 
-    def search_topics(self, query: str, **qualifiers: Any) -> PaginatedList[Topic]:
+    def search_topics(self, query: str, **qualifiers: Any) -> PaginatedList[Topic.Topic]:
         """
         :calls: `GET /search/topics <https://docs.github.com/en/rest/reference/search>`_
         :param query: string
@@ -893,7 +897,7 @@ class Github:
             headers={"Accept": Consts.mediaTypeTopicsPreview},
         )
 
-    async def render_markdown(self, text: str, context: Opt[Repository] = NotSet) -> str:
+    async def render_markdown(self, text: str, context: Opt[Repository.Repository] = NotSet) -> str:
         """
         :calls: `POST /markdown <https://docs.github.com/en/rest/reference/markdown>`_
         :param text: string
@@ -959,7 +963,7 @@ class Github:
         headers, data = await self.__requester.requestJsonAndCheck("GET", "/gitignore/templates")
         return data
 
-    async def get_gitignore_template(self, name: str) -> GitignoreTemplate:
+    async def get_gitignore_template(self, name: str) -> GitignoreTemplate.GitignoreTemplate:
         """
         :calls: `GET /gitignore/templates/{name} <https://docs.github.com/en/rest/reference/gitignore>`_
         """
@@ -1020,14 +1024,14 @@ class Github:
         """
         return self.create_from_raw_data(*pickle.load(f))
 
-    def get_oauth_application(self, client_id: str, client_secret: str) -> ApplicationOAuth:
+    def get_oauth_application(self, client_id: str, client_secret: str) -> ApplicationOAuth.ApplicationOAuth:
         return ApplicationOAuth.ApplicationOAuth(
             self.__requester,
             headers={},
             attributes={"client_id": client_id, "client_secret": client_secret},
         )
 
-    def get_app(self, slug: Opt[str] = NotSet) -> GithubApp:
+    def get_app(self, slug: Opt[str] = NotSet) -> GithubApp.GithubApp:
         """
         :calls: `GET /apps/{app_slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """

@@ -55,7 +55,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         self._commit_sha: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
-        self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
+        self._location: Attribute[CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation] = NotSet
         self._message: Attribute[dict[str, Any]] = NotSet
         self._ref: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
@@ -88,7 +88,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         return self._html_url.value
 
     @property
-    def location(self) -> CodeScanAlertInstanceLocation:
+    def location(self) -> CodeScanAlertInstanceLocation.CodeScanAlertInstanceLocation:
         return self._location.value
 
     @property

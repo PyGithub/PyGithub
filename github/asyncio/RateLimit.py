@@ -62,74 +62,74 @@ class RateLimit(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._actions_runner_registration: Attribute[Rate] = NotSet
-        self._code_scanning_autofix: Attribute[Rate] = NotSet
-        self._code_scanning_upload: Attribute[Rate] = NotSet
-        self._code_search: Attribute[Rate] = NotSet
-        self._core: Attribute[Rate] = NotSet
-        self._dependency_sbom: Attribute[Rate] = NotSet
-        self._dependency_snapshots: Attribute[Rate] = NotSet
-        self._graphql: Attribute[Rate] = NotSet
-        self._integration_manifest: Attribute[Rate] = NotSet
-        self._scim: Attribute[Rate] = NotSet
-        self._search: Attribute[Rate] = NotSet
-        self._source_import: Attribute[Rate] = NotSet
+        self._actions_runner_registration: Attribute[Rate.Rate] = NotSet
+        self._code_scanning_autofix: Attribute[Rate.Rate] = NotSet
+        self._code_scanning_upload: Attribute[Rate.Rate] = NotSet
+        self._code_search: Attribute[Rate.Rate] = NotSet
+        self._core: Attribute[Rate.Rate] = NotSet
+        self._dependency_sbom: Attribute[Rate.Rate] = NotSet
+        self._dependency_snapshots: Attribute[Rate.Rate] = NotSet
+        self._graphql: Attribute[Rate.Rate] = NotSet
+        self._integration_manifest: Attribute[Rate.Rate] = NotSet
+        self._scim: Attribute[Rate.Rate] = NotSet
+        self._search: Attribute[Rate.Rate] = NotSet
+        self._source_import: Attribute[Rate.Rate] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"core": self._core.value})
 
     @property
-    def actions_runner_registration(self) -> Rate:
+    def actions_runner_registration(self) -> Rate.Rate:
         """
         Rate limit for registering self-hosted runners in GitHub Actions.
         """
         return self._actions_runner_registration.value
 
     @property
-    def code_scanning_autofix(self) -> Rate:
+    def code_scanning_autofix(self) -> Rate.Rate:
         return self._code_scanning_autofix.value
 
     @property
-    def code_scanning_upload(self) -> Rate:
+    def code_scanning_upload(self) -> Rate.Rate:
         """
         Rate limit for uploading SARIF results to code scanning.
         """
         return self._code_scanning_upload.value
 
     @property
-    def code_search(self) -> Rate:
+    def code_search(self) -> Rate.Rate:
         """
         Rate limit for the REST API for searching code.
         """
         return self._code_search.value
 
     @property
-    def core(self) -> Rate:
+    def core(self) -> Rate.Rate:
         """
         Rate limit for the non-search-related API.
         """
         return self._core.value
 
     @property
-    def dependency_sbom(self) -> Rate:
+    def dependency_sbom(self) -> Rate.Rate:
         return self._dependency_sbom.value
 
     @property
-    def dependency_snapshots(self) -> Rate:
+    def dependency_snapshots(self) -> Rate.Rate:
         """
         Rate limit for submitting snapshots to the dependency graph.
         """
         return self._dependency_snapshots.value
 
     @property
-    def graphql(self) -> Rate:
+    def graphql(self) -> Rate.Rate:
         """
         (Experimental) Rate limit for GraphQL API, use with caution.
         """
         return self._graphql.value
 
     @property
-    def integration_manifest(self) -> Rate:
+    def integration_manifest(self) -> Rate.Rate:
         """
         Rate limit for POST /app-manifests/{code}/conversions operation.
         """
@@ -140,7 +140,7 @@ class RateLimit(NonCompletableGithubObject):
         return self._scim.value
 
     @property
-    def search(self) -> Rate:
+    def search(self) -> Rate.Rate:
         """
         Rate limit for the Search API.
         """

@@ -63,7 +63,7 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._prevent_self_review: Attribute[bool] = NotSet
-        self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer]] = NotSet
+        self._reviewers: Attribute[list[EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer]] = NotSet
         self._type: Attribute[str] = NotSet
         self._wait_timer: Attribute[int] = NotSet
 
@@ -85,7 +85,7 @@ class EnvironmentProtectionRule(NonCompletableGithubObject):
     @property
     def reviewers(
         self,
-    ) -> list[EnvironmentProtectionRuleReviewer]:
+    ) -> list[EnvironmentProtectionRuleReviewer.EnvironmentProtectionRuleReviewer]:
         return self._reviewers.value
 
     @property

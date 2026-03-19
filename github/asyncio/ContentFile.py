@@ -72,7 +72,7 @@ class ContentFile(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self.__links: Attribute[dict[str, Any]] = NotSet
-        self._commit: Attribute[GitCommit] = NotSet
+        self._commit: Attribute[GitCommit.GitCommit] = NotSet
         self._content: Attribute[str] = NotSet
         self._download_url: Attribute[str] = NotSet
         self._encoding: Attribute[str] = NotSet
@@ -81,11 +81,11 @@ class ContentFile(CompletableGithubObject):
         self._html_url: Attribute[str] = NotSet
         self._language: Attribute[str] = NotSet
         self._last_modified_at: Attribute[datetime] = NotSet
-        self._license: Attribute[License] = NotSet
+        self._license: Attribute[License.License] = NotSet
         self._line_numbers: Attribute[list[str]] = NotSet
         self._name: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._sha: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._submodule_git_url: Attribute[str] = NotSet
@@ -103,7 +103,7 @@ class ContentFile(CompletableGithubObject):
         return self.__links.value
 
     @property
-    async def commit(self) -> GitCommit:
+    async def commit(self) -> GitCommit.GitCommit:
         await self._completeIfNotSet(self._commit)
         return self._commit.value
 
@@ -153,7 +153,7 @@ class ContentFile(CompletableGithubObject):
         return self._last_modified_at.value
 
     @property
-    async def license(self) -> License:
+    async def license(self) -> License.License:
         await self._completeIfNotSet(self._license)
         return self._license.value
 
@@ -173,7 +173,7 @@ class ContentFile(CompletableGithubObject):
         return self._path.value
 
     @property
-    async def repository(self) -> Repository:
+    async def repository(self) -> Repository.Repository:
         if is_undefined(self._repository):
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join((await self.url).split("/")[:6])  # pragma no cover (Should be covered)

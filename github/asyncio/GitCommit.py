@@ -70,9 +70,9 @@ class GitCommit(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[GitAuthor] = NotSet
+        self._author: Attribute[GitAuthor.GitAuthor] = NotSet
         self._comment_count: Attribute[int] = NotSet
-        self._committer: Attribute[GitAuthor] = NotSet
+        self._committer: Attribute[GitAuthor.GitAuthor] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._message: Attribute[str] = NotSet
@@ -80,10 +80,10 @@ class GitCommit(CompletableGithubObject):
         self._parents: Attribute[list[GitCommit]] = NotSet
         self._sha: Attribute[str] = NotSet
         self._timestamp: Attribute[datetime] = NotSet
-        self._tree: Attribute[GitTree] = NotSet
+        self._tree: Attribute[GitTree.GitTree] = NotSet
         self._tree_id: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._verification: Attribute[GitCommitVerification] = NotSet
+        self._verification: Attribute[GitCommitVerification.GitCommitVerification] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
@@ -93,7 +93,7 @@ class GitCommit(CompletableGithubObject):
         return await self.sha
 
     @property
-    async def author(self) -> GitAuthor:
+    async def author(self) -> GitAuthor.GitAuthor:
         await self._completeIfNotSet(self._author)
         return self._author.value
 
@@ -103,7 +103,7 @@ class GitCommit(CompletableGithubObject):
         return self._comment_count.value
 
     @property
-    async def committer(self) -> GitAuthor:
+    async def committer(self) -> GitAuthor.GitAuthor:
         await self._completeIfNotSet(self._committer)
         return self._committer.value
 
@@ -146,7 +146,7 @@ class GitCommit(CompletableGithubObject):
         return self._timestamp.value
 
     @property
-    async def tree(self) -> GitTree:
+    async def tree(self) -> GitTree.GitTree:
         # if populated from a simple-commit, tree_id holds the sha
         if is_undefined(self._tree) and is_defined(self._tree_id):
             return GitTree.GitTree(self._requester, self._headers, {"sha": self._tree_id.value})
@@ -164,7 +164,7 @@ class GitCommit(CompletableGithubObject):
         return self._url.value
 
     @property
-    async def verification(self) -> GitCommitVerification:
+    async def verification(self) -> GitCommitVerification.GitCommitVerification:
         await self._completeIfNotSet(self._verification)
         return self._verification.value
 

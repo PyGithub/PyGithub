@@ -67,9 +67,9 @@ class BranchProtection(GithubObject.CompletableGithubObject):
         self._protection_url: Attribute[str] = NotSet
         self._required_conversation_resolution: Attribute[bool] = NotSet
         self._required_linear_history: Attribute[bool] = NotSet
-        self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews] = NotSet
+        self._required_pull_request_reviews: Attribute[RequiredPullRequestReviews.RequiredPullRequestReviews] = NotSet
         self._required_signatures: Attribute[bool] = NotSet
-        self._required_status_checks: Attribute[RequiredStatusChecks] = NotSet
+        self._required_status_checks: Attribute[RequiredStatusChecks.RequiredStatusChecks] = NotSet
         self._restrictions: Attribute[dict[str, Any]] = NotSet
         self._team_push_restrictions: Opt[str] = NotSet
         self._url: Attribute[str] = NotSet
@@ -130,7 +130,7 @@ class BranchProtection(GithubObject.CompletableGithubObject):
         return self._required_linear_history.value
 
     @property
-    async def required_pull_request_reviews(self) -> RequiredPullRequestReviews:
+    async def required_pull_request_reviews(self) -> RequiredPullRequestReviews.RequiredPullRequestReviews:
         await self._completeIfNotSet(self._required_pull_request_reviews)
         return self._required_pull_request_reviews.value
 
@@ -139,7 +139,7 @@ class BranchProtection(GithubObject.CompletableGithubObject):
         return self._required_signatures.value
 
     @property
-    async def required_status_checks(self) -> RequiredStatusChecks:
+    async def required_status_checks(self) -> RequiredStatusChecks.RequiredStatusChecks:
         await self._completeIfNotSet(self._required_status_checks)
         return self._required_status_checks.value
 
@@ -151,7 +151,7 @@ class BranchProtection(GithubObject.CompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def get_user_push_restrictions(self) -> PaginatedList[NamedUser] | None:
+    def get_user_push_restrictions(self) -> PaginatedList[NamedUser.NamedUser] | None:
         if not is_defined(self._user_push_restrictions):
             return None
         return PaginatedList(
@@ -161,7 +161,7 @@ class BranchProtection(GithubObject.CompletableGithubObject):
             None,
         )
 
-    def get_team_push_restrictions(self) -> PaginatedList[Team] | None:
+    def get_team_push_restrictions(self) -> PaginatedList[Team.Team] | None:
         if not is_defined(self._team_push_restrictions):
             return None
         return PaginatedList(Team.Team, self._requester, self._team_push_restrictions, None)

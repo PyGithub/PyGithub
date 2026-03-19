@@ -82,7 +82,7 @@ class CommitComment(CompletableGithubObject):
         self._reactions: Attribute[dict[str, Any]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser | Organization] = NotSet
+        self._user: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -153,7 +153,7 @@ class CommitComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    async def user(self) -> NamedUser | Organization:
+    async def user(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -176,7 +176,7 @@ class CommitComment(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
-    async def get_reactions(self) -> PaginatedList[Reaction]:
+    async def get_reactions(self) -> PaginatedList[Reaction.Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-commit-comment>`_
@@ -190,7 +190,7 @@ class CommitComment(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
 
-    async def create_reaction(self, reaction_type: str) -> Reaction:
+    async def create_reaction(self, reaction_type: str) -> Reaction.Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-commit-comment>`_

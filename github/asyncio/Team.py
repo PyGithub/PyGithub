@@ -113,12 +113,12 @@ class Team(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._notification_setting: Attribute[str] = NotSet
-        self._organization: Attribute[Organization] = NotSet
+        self._organization: Attribute[Organization.Organization] = NotSet
         self._organization_id: Attribute[int] = NotSet
         self._organization_selection_type: Attribute[str] = NotSet
         self._parent: Attribute[Team] = NotSet
         self._permission: Attribute[str] = NotSet
-        self._permissions: Attribute[Permissions] = NotSet
+        self._permissions: Attribute[Permissions.Permissions] = NotSet
         self._privacy: Attribute[str] = NotSet
         self._repos_count: Attribute[int] = NotSet
         self._repositories_url: Attribute[str] = NotSet
@@ -201,7 +201,7 @@ class Team(CompletableGithubObject):
         return self._notification_setting.value
 
     @property
-    async def organization(self) -> Organization:
+    async def organization(self) -> Organization.Organization:
         await self._completeIfNotSet(self._organization)
         return self._organization.value
 
@@ -226,7 +226,7 @@ class Team(CompletableGithubObject):
         return self._permission.value
 
     @property
-    async def permissions(self) -> Permissions:
+    async def permissions(self) -> Permissions.Permissions:
         await self._completeIfNotSet(self._permissions)
         return self._permissions.value
 
@@ -271,7 +271,7 @@ class Team(CompletableGithubObject):
         return self._url.value
 
     @deprecated("Use add_membership instead")
-    async def add_to_members(self, member: NamedUser) -> None:
+    async def add_to_members(self, member: NamedUser.NamedUser) -> None:
         """
         This API call is deprecated. Use `add_membership` instead.
         https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
@@ -283,7 +283,7 @@ class Team(CompletableGithubObject):
             "PUT", f"{await self.url}/members/{(await member._identity)}"
         )
 
-    async def add_membership(self, member: NamedUser, role: Opt[str] = NotSet) -> None:
+    async def add_membership(self, member: NamedUser.NamedUser, role: Opt[str] = NotSet) -> None:
         """
         :calls: `PUT /teams/{team_id}/memberships/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -302,7 +302,7 @@ class Team(CompletableGithubObject):
             "PUT", f"{await self.url}/memberships/{(await member._identity)}", input=put_parameters
         )
 
-    async def get_team_membership(self, member: str | NamedUser) -> Membership:
+    async def get_team_membership(self, member: str | NamedUser.NamedUser) -> Membership.Membership:
         """
         :calls: `GET /orgs/{org}/teams/{team_slug}/memberships/{username} <https://docs.github.com/en/rest/reference/teams#get-team-membership-for-a-user>`_
         """
@@ -314,7 +314,7 @@ class Team(CompletableGithubObject):
         headers, data = await self._requester.requestJsonAndCheck("GET", f"{await self.url}/memberships/{member}")
         return Membership.Membership(self._requester, headers, data, completed=True)
 
-    async def add_to_repos(self, repo: str | Repository) -> None:
+    async def add_to_repos(self, repo: str | Repository.Repository) -> None:
         """
         :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -324,7 +324,7 @@ class Team(CompletableGithubObject):
         )
 
     @method_returns(schema_property="permissions")
-    async def get_repo_permission(self, repo: str | Repository) -> Permissions | None:
+    async def get_repo_permission(self, repo: str | Repository.Repository) -> Permissions.Permissions | None:
         """
         :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -344,7 +344,7 @@ class Team(CompletableGithubObject):
         Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
         """
     )
-    async def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
+    async def set_repo_permission(self, repo: str | Repository.Repository, permission: str) -> None:
         """
         :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         :param repo: :class:`Repository.Repository`
@@ -359,7 +359,7 @@ class Team(CompletableGithubObject):
             "PUT", f"{await self.url}/repos/{await Repository.Repository.as_url_param(repo)}", input=put_parameters
         )
 
-    async def update_team_repository(self, repo: str | Repository, permission: str) -> bool:
+    async def update_team_repository(self, repo: str | Repository.Repository, permission: str) -> bool:
         """
         :calls: `PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams#check-team-permissions-for-a-repository>`_
         """
@@ -414,7 +414,7 @@ class Team(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
-    async def get_teams(self) -> PaginatedList[Team]:
+    async def get_teams(self) -> PaginatedList.PaginatedList[Team]:
         """
         :calls: `GET /teams/{team_id}/teams <https://docs.github.com/en/rest/reference/teams#list-teams>`_
         """
@@ -425,7 +425,7 @@ class Team(CompletableGithubObject):
             None,
         )
 
-    async def get_discussions(self) -> PaginatedList[TeamDiscussion]:
+    async def get_discussions(self) -> PaginatedList.PaginatedList[TeamDiscussion.TeamDiscussion]:
         """
         :calls: `GET /teams/{team_id}/discussions <https://docs.github.com/en/rest/reference/teams#list-discussions>`_
         """
@@ -437,7 +437,7 @@ class Team(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeTeamDiscussionsPreview},
         )
 
-    async def get_members(self, role: Opt[str] = NotSet) -> PaginatedList[NamedUser]:
+    async def get_members(self, role: Opt[str] = NotSet) -> PaginatedList.PaginatedList[NamedUser.NamedUser]:
         """
         :calls: `GET /teams/{team_id}/members <https://docs.github.com/en/rest/reference/teams#list-team-members>`_
         """
@@ -453,13 +453,13 @@ class Team(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_repos(self) -> PaginatedList[Repository]:
+    async def get_repos(self) -> PaginatedList.PaginatedList[Repository.Repository]:
         """
         :calls: `GET /teams/{team_id}/repos <https://docs.github.com/en/rest/reference/teams>`_
         """
         return PaginatedList.PaginatedList(Repository.Repository, self._requester, f"{await self.url}/repos", None)
 
-    async def invitations(self) -> PaginatedList[OrganizationInvitation]:
+    async def invitations(self) -> PaginatedList.PaginatedList[OrganizationInvitation]:
         """
         :calls: `GET /teams/{team_id}/invitations <https://docs.github.com/en/rest/reference/teams#members>`_
         """
@@ -471,7 +471,7 @@ class Team(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeOrganizationInvitationPreview},
         )
 
-    async def has_in_members(self, member: NamedUser) -> bool:
+    async def has_in_members(self, member: NamedUser.NamedUser) -> bool:
         """
         :calls: `GET /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -481,7 +481,7 @@ class Team(CompletableGithubObject):
         )
         return status == 204
 
-    async def has_in_repos(self, repo: str | Repository) -> bool:
+    async def has_in_repos(self, repo: str | Repository.Repository) -> bool:
         """
         :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -491,7 +491,7 @@ class Team(CompletableGithubObject):
         )
         return status == 204
 
-    async def remove_membership(self, member: NamedUser) -> None:
+    async def remove_membership(self, member: NamedUser.NamedUser) -> None:
         """
         :calls: `DELETE /teams/{team_id}/memberships/{username} <https://docs.github.com/en/rest/reference/teams#remove-team-membership-for-a-user>`_
         """
@@ -501,7 +501,7 @@ class Team(CompletableGithubObject):
         )
 
     @deprecated("Use remove_membership instead")
-    async def remove_from_members(self, member: NamedUser) -> None:
+    async def remove_from_members(self, member: NamedUser.NamedUser) -> None:
         """
         This API call is deprecated. Use `remove_membership` instead:
         https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
@@ -513,7 +513,7 @@ class Team(CompletableGithubObject):
             "DELETE", f"{await self.url}/members/{(await member._identity)}"
         )
 
-    async def remove_from_repos(self, repo: str | Repository) -> None:
+    async def remove_from_repos(self, repo: str | Repository.Repository) -> None:
         """
         :calls: `DELETE /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """

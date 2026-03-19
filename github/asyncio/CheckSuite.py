@@ -56,19 +56,19 @@ class CheckSuite(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._after: Attribute[str] = NotSet
-        self._app: Attribute[GithubApp] = NotSet
+        self._app: Attribute[GithubApp.GithubApp] = NotSet
         self._before: Attribute[str] = NotSet
         self._check_runs_url: Attribute[str] = NotSet
         self._conclusion: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._head_branch: Attribute[str] = NotSet
-        self._head_commit: Attribute[GitCommit] = NotSet
+        self._head_commit: Attribute[GitCommit.GitCommit] = NotSet
         self._head_sha: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._latest_check_runs_count: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._pull_requests: Attribute[list[PullRequest]] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._pull_requests: Attribute[list[PullRequest.PullRequest]] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._rerequestable: Attribute[bool] = NotSet
         self._runs_rerequestable: Attribute[bool] = NotSet
         self._status: Attribute[str] = NotSet
@@ -87,7 +87,7 @@ class CheckSuite(CompletableGithubObject):
         return self._after.value
 
     @property
-    async def app(self) -> GithubApp:
+    async def app(self) -> GithubApp.GithubApp:
         """
         :type: :class:`GithubApp.GithubApp`
         """
@@ -135,7 +135,7 @@ class CheckSuite(CompletableGithubObject):
         return self._head_branch.value
 
     @property
-    async def head_commit(self) -> GitCommit:
+    async def head_commit(self) -> GitCommit.GitCommit:
         """
         :type: :class:`GitCommit.GitCommit`
         """
@@ -172,7 +172,7 @@ class CheckSuite(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def pull_requests(self) -> list[PullRequest]:
+    async def pull_requests(self) -> list[PullRequest.PullRequest]:
         """
         :type: list of :class:`PullRequest.PullRequest`
         """
@@ -180,7 +180,7 @@ class CheckSuite(CompletableGithubObject):
         return self._pull_requests.value
 
     @property
-    async def repository(self) -> Repository:
+    async def repository(self) -> Repository.Repository:
         """
         :type: :class:`Repository.Repository`
         """
@@ -234,7 +234,7 @@ class CheckSuite(CompletableGithubObject):
         check_name: Opt[str] = NotSet,
         status: Opt[str] = NotSet,
         filter: Opt[str] = NotSet,
-    ) -> PaginatedList[CheckRun]:
+    ) -> PaginatedList[CheckRun.CheckRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-in-a-check-suite>`_
         """

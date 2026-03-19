@@ -51,19 +51,19 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._answer: Attribute[RepositoryDiscussionComment | None] = NotSet
+        self._answer: Attribute[RepositoryDiscussionComment.RepositoryDiscussionComment | None] = NotSet
         self._body_text: Attribute[str] = NotSet
-        self._category: Attribute[RepositoryDiscussionCategory] = NotSet
+        self._category: Attribute[RepositoryDiscussionCategory.RepositoryDiscussionCategory] = NotSet
         self._comments_page = None
         self._database_id: Attribute[int] = NotSet
-        self._editor: Attribute[NamedUser] = NotSet
+        self._editor: Attribute[NamedUser.NamedUser] = NotSet
         self._id: Attribute[str] = NotSet
         self._labels_page = None
         self._reactions_page = None
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
 
     @property
-    def answer(self) -> RepositoryDiscussionComment | None:
+    def answer(self) -> RepositoryDiscussionComment.RepositoryDiscussionComment | None:
         return self._answer.value
 
     @property
@@ -71,7 +71,7 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         return self._body_text.value
 
     @property
-    def category(self) -> RepositoryDiscussionCategory:
+    def category(self) -> RepositoryDiscussionCategory.RepositoryDiscussionCategory:
         return self._category.value
 
     @property
@@ -79,7 +79,7 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         return self._database_id.value
 
     @property
-    def editor(self) -> NamedUser:
+    def editor(self) -> NamedUser.NamedUser:
         return self._editor.value
 
     @property
@@ -91,10 +91,12 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         return self.id
 
     @property
-    def repository(self) -> Repository:
+    def repository(self) -> Repository.Repository:
         return self._repository.value
 
-    def get_comments(self, comment_graphql_schema: str) -> PaginatedList[RepositoryDiscussionComment]:
+    def get_comments(
+        self, comment_graphql_schema: str
+    ) -> PaginatedList[RepositoryDiscussionComment.RepositoryDiscussionComment]:
         if self._comments_page is not None:
             return PaginatedList(
                 RepositoryDiscussionComment.RepositoryDiscussionComment,
@@ -138,19 +140,22 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
             list_item=["node", "comments"],
         )
 
-    def get_labels(self) -> PaginatedList[Label]:
+    def get_labels(self) -> PaginatedList[Label.Label]:
         if self._labels_page is None:
             raise RuntimeError("Fetching labels not implemented")
         return PaginatedList(Label.Label, self._requester, firstData=self._labels_page, firstHeaders={})
 
-    def get_reactions(self) -> PaginatedList[Reaction]:
+    def get_reactions(self) -> PaginatedList[Reaction.Reaction]:
         if self._reactions_page is None:
             raise RuntimeError("Fetching reactions not implemented")
         return PaginatedList(Reaction.Reaction, self._requester, firstData=self._reactions_page, firstHeaders={})
 
     async def add_comment(
-        self, body: str, reply_to: RepositoryDiscussionComment | str | None = None, output_schema: str = "id"
-    ) -> RepositoryDiscussionComment:
+        self,
+        body: str,
+        reply_to: RepositoryDiscussionComment.RepositoryDiscussionComment | str | None = None,
+        output_schema: str = "id",
+    ) -> RepositoryDiscussionComment.RepositoryDiscussionComment:
         reply_to_id = (
             reply_to.id
             if isinstance(

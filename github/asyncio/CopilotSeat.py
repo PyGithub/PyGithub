@@ -51,7 +51,7 @@ class CopilotSeat(NonCompletableGithubObject):
         self._last_activity_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_editor: Attribute[str] | _NotSetType = NotSet
         self._last_authenticated_at: Attribute[datetime] = NotSet
-        self._organization: Attribute[Organization] = NotSet
+        self._organization: Attribute[Organization.Organization] = NotSet
         self._pending_cancellation_date: Attribute[datetime] | _NotSetType = NotSet
         self._plan_type: Attribute[str] | _NotSetType = NotSet
         self._updated_at: Attribute[datetime] | _NotSetType = NotSet
@@ -84,7 +84,7 @@ class CopilotSeat(NonCompletableGithubObject):
         return self._last_authenticated_at.value
 
     @property
-    def organization(self) -> Organization:
+    def organization(self) -> Organization.Organization:
         return self._organization.value
 
     @property

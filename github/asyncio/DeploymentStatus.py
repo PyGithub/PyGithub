@@ -67,7 +67,7 @@ class DeploymentStatus(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[NamedUser] = NotSet
+        self._creator: Attribute[NamedUser.NamedUser] = NotSet
         self._deployment_url: Attribute[str] = NotSet
         self._description: Attribute[str] = NotSet
         self._environment: Attribute[str] = NotSet
@@ -75,7 +75,7 @@ class DeploymentStatus(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._log_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp.GithubApp] = NotSet
         self._repository_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
@@ -91,7 +91,7 @@ class DeploymentStatus(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    async def creator(self) -> NamedUser:
+    async def creator(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._creator)
         return self._creator.value
 
@@ -131,7 +131,7 @@ class DeploymentStatus(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def performed_via_github_app(self) -> GithubApp:
+    async def performed_via_github_app(self) -> GithubApp.GithubApp:
         await self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 

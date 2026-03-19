@@ -63,7 +63,7 @@ class GitRef(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._node_id: Attribute[str] = NotSet
-        self._object: Attribute[GitObject] = NotSet
+        self._object: Attribute[GitObject.GitObject] = NotSet
         self._ref: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -76,7 +76,7 @@ class GitRef(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def object(self) -> GitObject:
+    async def object(self) -> GitObject.GitObject:
         await self._completeIfNotSet(self._object)
         return self._object.value
 

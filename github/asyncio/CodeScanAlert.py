@@ -54,21 +54,21 @@ class CodeScanAlert(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._assignees: Attribute[list[NamedUser]] = NotSet
+        self._assignees: Attribute[list[NamedUser.NamedUser]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._dismissal_approved_by: Attribute[NamedUser | Organization] = NotSet
+        self._dismissal_approved_by: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
-        self._dismissed_by: Attribute[NamedUser | None] = NotSet
+        self._dismissed_by: Attribute[NamedUser.NamedUser | None] = NotSet
         self._dismissed_comment: Attribute[str | None] = NotSet
         self._dismissed_reason: Attribute[str | None] = NotSet
         self._fixed_at: Attribute[datetime | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._instances_url: Attribute[str] = NotSet
-        self._most_recent_instance: Attribute[CodeScanAlertInstance] = NotSet
+        self._most_recent_instance: Attribute[CodeScanAlertInstance.CodeScanAlertInstance] = NotSet
         self._number: Attribute[int] = NotSet
-        self._rule: Attribute[CodeScanRule] = NotSet
+        self._rule: Attribute[CodeScanRule.CodeScanRule] = NotSet
         self._state: Attribute[str] = NotSet
-        self._tool: Attribute[CodeScanTool] = NotSet
+        self._tool: Attribute[CodeScanTool.CodeScanTool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -76,7 +76,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self.get__repr__({"number": self._number.value, "id": self.rule.id})
 
     @property
-    def assignees(self) -> list[NamedUser]:
+    def assignees(self) -> list[NamedUser.NamedUser]:
         return self._assignees.value
 
     @property
@@ -84,7 +84,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def dismissal_approved_by(self) -> NamedUser | Organization:
+    def dismissal_approved_by(self) -> NamedUser.NamedUser | Organization.Organization:
         return self._dismissal_approved_by.value
 
     @property
@@ -92,7 +92,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._dismissed_at.value
 
     @property
-    def dismissed_by(self) -> NamedUser | None:
+    def dismissed_by(self) -> NamedUser.NamedUser | None:
         return self._dismissed_by.value
 
     @property
@@ -116,7 +116,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._instances_url.value
 
     @property
-    def most_recent_instance(self) -> CodeScanAlertInstance:
+    def most_recent_instance(self) -> CodeScanAlertInstance.CodeScanAlertInstance:
         return self._most_recent_instance.value
 
     @property
@@ -124,7 +124,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._number.value
 
     @property
-    def rule(self) -> CodeScanRule:
+    def rule(self) -> CodeScanRule.CodeScanRule:
         return self._rule.value
 
     @property
@@ -132,7 +132,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def tool(self) -> CodeScanTool:
+    def tool(self) -> CodeScanTool.CodeScanTool:
         return self._tool.value
 
     @property
@@ -143,7 +143,7 @@ class CodeScanAlert(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def get_instances(self) -> PaginatedList[CodeScanAlertInstance]:
+    def get_instances(self) -> PaginatedList[CodeScanAlertInstance.CodeScanAlertInstance]:
         """
         :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances <https://docs.github.com/en/rest/code-scanning/code-scanning#list-instances-of-a-code-scanning-alert>`_
         """

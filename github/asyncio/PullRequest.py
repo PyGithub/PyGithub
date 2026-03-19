@@ -146,11 +146,11 @@ class PullRequest(CompletableGithubObject):
         self.__links: Attribute[dict[str, Any]] = NotSet
         self._active_lock_reason: Attribute[str] = NotSet
         self._additions: Attribute[int] = NotSet
-        self._assignee: Attribute[NamedUser] = NotSet
-        self._assignees: Attribute[list[NamedUser]] = NotSet
+        self._assignee: Attribute[NamedUser.NamedUser] = NotSet
+        self._assignees: Attribute[list[NamedUser.NamedUser]] = NotSet
         self._author_association: Attribute[str] = NotSet
         self._auto_merge: Attribute[dict[str, Any]] = NotSet
-        self._base: Attribute[PullRequestPart] = NotSet
+        self._base: Attribute[PullRequestPart.PullRequestPart] = NotSet
         self._body: Attribute[str] = NotSet
         self._changed_files: Attribute[int] = NotSet
         self._closed_at: Attribute[datetime | None] = NotSet
@@ -162,11 +162,11 @@ class PullRequest(CompletableGithubObject):
         self._deletions: Attribute[int] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._draft: Attribute[bool] = NotSet
-        self._head: Attribute[PullRequestPart] = NotSet
+        self._head: Attribute[PullRequestPart.PullRequestPart] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
-        self._labels: Attribute[list[Label]] = NotSet
+        self._labels: Attribute[list[Label.Label]] = NotSet
         self._locked: Attribute[bool] = NotSet
         self._maintainer_can_modify: Attribute[bool] = NotSet
         self._merge_commit_sha: Attribute[str] = NotSet
@@ -174,14 +174,14 @@ class PullRequest(CompletableGithubObject):
         self._mergeable_state: Attribute[str] = NotSet
         self._merged: Attribute[bool] = NotSet
         self._merged_at: Attribute[datetime | None] = NotSet
-        self._merged_by: Attribute[NamedUser] = NotSet
-        self._milestone: Attribute[Milestone] = NotSet
+        self._merged_by: Attribute[NamedUser.NamedUser] = NotSet
+        self._milestone: Attribute[Milestone.Milestone] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
         self._patch_url: Attribute[str] = NotSet
         self._rebaseable: Attribute[bool] = NotSet
-        self._requested_reviewers: Attribute[list[NamedUser]] = NotSet
-        self._requested_teams: Attribute[list[Team]] = NotSet
+        self._requested_reviewers: Attribute[list[NamedUser.NamedUser]] = NotSet
+        self._requested_teams: Attribute[list[Team.Team]] = NotSet
         self._review_comment_url: Attribute[str] = NotSet
         self._review_comments: Attribute[int] = NotSet
         self._review_comments_url: Attribute[str] = NotSet
@@ -190,7 +190,7 @@ class PullRequest(CompletableGithubObject):
         self._title: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -211,12 +211,12 @@ class PullRequest(CompletableGithubObject):
         return self._additions.value
 
     @property
-    async def assignee(self) -> NamedUser:
+    async def assignee(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    async def assignees(self) -> list[NamedUser]:
+    async def assignees(self) -> list[NamedUser.NamedUser]:
         await self._completeIfNotSet(self._assignees)
         return self._assignees.value
 
@@ -231,7 +231,7 @@ class PullRequest(CompletableGithubObject):
         return self._auto_merge.value
 
     @property
-    async def base(self) -> PullRequestPart:
+    async def base(self) -> PullRequestPart.PullRequestPart:
         await self._completeIfNotSet(self._base)
         return self._base.value
 
@@ -291,7 +291,7 @@ class PullRequest(CompletableGithubObject):
         return self._draft.value
 
     @property
-    async def head(self) -> PullRequestPart:
+    async def head(self) -> PullRequestPart.PullRequestPart:
         await self._completeIfNotSet(self._head)
         return self._head.value
 
@@ -311,7 +311,7 @@ class PullRequest(CompletableGithubObject):
         return self._issue_url.value
 
     @property
-    async def labels(self) -> list[Label]:
+    async def labels(self) -> list[Label.Label]:
         await self._completeIfNotSet(self._labels)
         return self._labels.value
 
@@ -351,12 +351,12 @@ class PullRequest(CompletableGithubObject):
         return self._merged_at.value
 
     @property
-    async def merged_by(self) -> NamedUser:
+    async def merged_by(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._merged_by)
         return self._merged_by.value
 
     @property
-    async def milestone(self) -> Milestone:
+    async def milestone(self) -> Milestone.Milestone:
         await self._completeIfNotSet(self._milestone)
         return self._milestone.value
 
@@ -381,12 +381,12 @@ class PullRequest(CompletableGithubObject):
         return self._rebaseable.value
 
     @property
-    async def requested_reviewers(self) -> list[NamedUser]:
+    async def requested_reviewers(self) -> list[NamedUser.NamedUser]:
         await self._completeIfNotSet(self._requested_reviewers)
         return self._requested_reviewers.value
 
     @property
-    async def requested_teams(self) -> list[Team]:
+    async def requested_teams(self) -> list[Team.Team]:
         await self._completeIfNotSet(self._requested_teams)
         return self._requested_teams.value
 
@@ -431,7 +431,7 @@ class PullRequest(CompletableGithubObject):
         return self._url.value
 
     @property
-    async def user(self) -> NamedUser:
+    async def user(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -441,7 +441,9 @@ class PullRequest(CompletableGithubObject):
         """
         return Issue(self._requester, url=await self.issue_url)
 
-    async def create_comment(self, body: str, commit: Commit.Commit, path: str, position: int) -> PullRequestComment:
+    async def create_comment(
+        self, body: str, commit: Commit.Commit, path: str, position: int
+    ) -> PullRequestComment.PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -460,7 +462,7 @@ class PullRequest(CompletableGithubObject):
         in_reply_to: Opt[int] = NotSet,
         subject_type: Opt[str] = NotSet,
         as_suggestion: bool = False,
-    ) -> PullRequestComment:
+    ) -> PullRequestComment.PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -505,7 +507,7 @@ class PullRequest(CompletableGithubObject):
         )
         return PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
-    async def create_review_comment_reply(self, comment_id: int, body: str) -> PullRequestComment:
+    async def create_review_comment_reply(self, comment_id: int, body: str) -> PullRequestComment.PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -519,7 +521,7 @@ class PullRequest(CompletableGithubObject):
         )
         return PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
-    async def create_issue_comment(self, body: str) -> IssueComment:
+    async def create_issue_comment(self, body: str) -> IssueComment.IssueComment:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -538,7 +540,7 @@ class PullRequest(CompletableGithubObject):
         body: Opt[str] = NotSet,
         event: Opt[str] = NotSet,
         comments: Opt[list[ReviewComment]] = NotSet,
-    ) -> PullRequestReview:
+    ) -> PullRequestReview.PullRequestReview:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews <https://docs.github.com/en/free-pro-team@latest/rest/pulls/reviews?apiVersion=2022-11-28#create-a-review-for-a-pull-request>`_
         """
@@ -627,13 +629,13 @@ class PullRequest(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
-    async def get_comment(self, id: int) -> PullRequestComment:
+    async def get_comment(self, id: int) -> PullRequestComment.PullRequestComment:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         return await self.get_review_comment(id)
 
-    async def get_review_comment(self, id: int) -> PullRequestComment:
+    async def get_review_comment(self, id: int) -> PullRequestComment.PullRequestComment:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
@@ -646,7 +648,7 @@ class PullRequest(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[PullRequestComment]:
+    ) -> PaginatedList[PullRequestComment.PullRequestComment]:
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
 
@@ -664,7 +666,7 @@ class PullRequest(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-    ) -> PaginatedList[PullRequestComment]:
+    ) -> PaginatedList[PullRequestComment.PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
@@ -686,7 +688,7 @@ class PullRequest(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_single_review_comments(self, id: int) -> PaginatedList[PullRequestComment]:
+    async def get_single_review_comments(self, id: int) -> PaginatedList[PullRequestComment.PullRequestComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         """
@@ -698,19 +700,19 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    async def get_commits(self) -> PaginatedList[Commit]:
+    async def get_commits(self) -> PaginatedList[Commit.Commit]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/commits <https://docs.github.com/en/rest/reference/pulls>`_
         """
         return PaginatedList(Commit.Commit, self._requester, f"{await self.url}/commits", None)
 
-    async def get_files(self) -> PaginatedList[File]:
+    async def get_files(self) -> PaginatedList[File.File]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/files <https://docs.github.com/en/rest/reference/pulls>`_
         """
         return PaginatedList(File.File, self._requester, f"{await self.url}/files", None)
 
-    async def get_issue_comment(self, id: int) -> IssueComment:
+    async def get_issue_comment(self, id: int) -> IssueComment.IssueComment:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -718,7 +720,7 @@ class PullRequest(CompletableGithubObject):
         url = f"{self._parentUrl(await self.issue_url)}/comments/{id}"
         return IssueComment.IssueComment(self._requester, url=url)
 
-    async def get_issue_comments(self) -> PaginatedList[IssueComment]:
+    async def get_issue_comments(self) -> PaginatedList[IssueComment.IssueComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -729,7 +731,7 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    async def get_issue_events(self) -> PaginatedList[IssueEvent]:
+    async def get_issue_events(self) -> PaginatedList[IssueEvent.IssueEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/events <https://docs.github.com/en/rest/reference/issues#events>`_
         :rtype: :class:`PaginatedList` of :class:`IssueEvent.IssueEvent`
@@ -742,7 +744,7 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    async def get_issue_timeline(self) -> PaginatedList[TimelineEvent]:
+    async def get_issue_timeline(self) -> PaginatedList[TimelineEvent.TimelineEvent]:
         """
         :calls `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline <https://docs.github.com/en/rest/reference/issues#timeline>`_
         :rtype: :class:`PaginatedList` of :class:`github.TimelineEvent`
@@ -755,7 +757,7 @@ class PullRequest(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    async def get_review(self, id: int) -> PullRequestReview:
+    async def get_review(self, id: int) -> PullRequestReview.PullRequestReview:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id} <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :param id: integer
@@ -768,7 +770,7 @@ class PullRequest(CompletableGithubObject):
         )
         return PullRequestReview.PullRequestReview(self._requester, headers, data)
 
-    async def get_reviews(self) -> PaginatedList[PullRequestReview]:
+    async def get_reviews(self) -> PaginatedList[PullRequestReview.PullRequestReview]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :rtype: :class:`PaginatedList` of :class:`PullRequestReview.PullRequestReview`
@@ -780,7 +782,7 @@ class PullRequest(CompletableGithubObject):
             None,
         )
 
-    async def get_review_requests(self) -> tuple[PaginatedList[NamedUser], PaginatedList[Team]]:
+    async def get_review_requests(self) -> tuple[PaginatedList[NamedUser.NamedUser], PaginatedList[Team.Team]]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         :rtype: tuple of :class:`PaginatedList` of :class:`NamedUser.NamedUser` and of :class:`PaginatedList` of :class:`Team.Team`
@@ -802,7 +804,7 @@ class PullRequest(CompletableGithubObject):
             ),
         )
 
-    async def get_labels(self) -> PaginatedList[Label]:
+    async def get_labels(self) -> PaginatedList[Label.Label]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
@@ -856,7 +858,7 @@ class PullRequest(CompletableGithubObject):
         status, headers, data = await self._requester.requestJson("GET", f"{await self.url}/merge")
         return status == 204
 
-    async def restore_branch(self) -> GitRef:
+    async def restore_branch(self) -> GitRef.GitRef:
         """
         Convenience function that calls :meth:`Repository.create_git_ref` :rtype: :class:`GitRef.GitRef`
         """
@@ -950,7 +952,7 @@ class PullRequest(CompletableGithubObject):
         merge_method: Opt[str] = NotSet,
         sha: Opt[str] = NotSet,
         delete_branch: bool = False,
-    ) -> PullRequestMergeStatus:
+    ) -> PullRequestMergeStatus.PullRequestMergeStatus:
         """
         :calls: `PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
         """

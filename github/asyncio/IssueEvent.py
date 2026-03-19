@@ -65,9 +65,9 @@ class IssueEvent(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._actor: Attribute[NamedUser | Organization] = NotSet
-        self._assignee: Attribute[NamedUser | Organization] = NotSet
-        self._assigner: Attribute[NamedUser | Organization] = NotSet
+        self._actor: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
+        self._assignee: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
+        self._assigner: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
         self._author_association: Attribute[dict[str, Any]] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._commit_url: Attribute[str] = NotSet
@@ -75,34 +75,34 @@ class IssueEvent(CompletableGithubObject):
         self._dismissed_review: Attribute[dict] = NotSet
         self._event: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._issue: Attribute[Issue] = NotSet
-        self._label: Attribute[Label] = NotSet
+        self._issue: Attribute[Issue.Issue] = NotSet
+        self._label: Attribute[Label.Label] = NotSet
         self._lock_reason: Attribute[str] = NotSet
-        self._milestone: Attribute[Milestone] = NotSet
+        self._milestone: Attribute[Milestone.Milestone] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp.GithubApp] = NotSet
         self._project_card: Attribute[dict[str, Any]] = NotSet
         self._rename: Attribute[dict] = NotSet
-        self._requested_reviewer: Attribute[NamedUser | Organization] = NotSet
-        self._requested_team: Attribute[Team] = NotSet
-        self._review_requester: Attribute[NamedUser | Organization] = NotSet
+        self._requested_reviewer: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
+        self._requested_team: Attribute[Team.Team] = NotSet
+        self._review_requester: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    async def actor(self) -> NamedUser | Organization:
+    async def actor(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._actor)
         return self._actor.value
 
     @property
-    async def assignee(self) -> NamedUser | Organization:
+    async def assignee(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    async def assigner(self) -> NamedUser | Organization:
+    async def assigner(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._assigner)
         return self._assigner.value
 
@@ -142,12 +142,12 @@ class IssueEvent(CompletableGithubObject):
         return self._id.value
 
     @property
-    async def issue(self) -> Issue:
+    async def issue(self) -> Issue.Issue:
         await self._completeIfNotSet(self._issue)
         return self._issue.value
 
     @property
-    async def label(self) -> Label:
+    async def label(self) -> Label.Label:
         await self._completeIfNotSet(self._label)
         return self._label.value
 
@@ -157,7 +157,7 @@ class IssueEvent(CompletableGithubObject):
         return self._lock_reason.value
 
     @property
-    async def milestone(self) -> Milestone:
+    async def milestone(self) -> Milestone.Milestone:
         await self._completeIfNotSet(self._milestone)
         return self._milestone.value
 
@@ -167,7 +167,7 @@ class IssueEvent(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def performed_via_github_app(self) -> GithubApp:
+    async def performed_via_github_app(self) -> GithubApp.GithubApp:
         await self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
@@ -182,17 +182,17 @@ class IssueEvent(CompletableGithubObject):
         return self._rename.value
 
     @property
-    async def requested_reviewer(self) -> NamedUser | Organization:
+    async def requested_reviewer(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._requested_reviewer)
         return self._requested_reviewer.value
 
     @property
-    async def requested_team(self) -> Team:
+    async def requested_team(self) -> Team.Team:
         await self._completeIfNotSet(self._requested_team)
         return self._requested_team.value
 
     @property
-    async def review_requester(self) -> NamedUser | Organization:
+    async def review_requester(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._review_requester)
         return self._review_requester.value
 

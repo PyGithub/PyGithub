@@ -61,7 +61,7 @@ class Clones(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._clones: Attribute[list[Traffic]] = NotSet
+        self._clones: Attribute[list[Traffic.Traffic]] = NotSet
         self._count: Attribute[int] = NotSet
         self._uniques: Attribute[int] = NotSet
 
@@ -74,7 +74,7 @@ class Clones(NonCompletableGithubObject):
         )
 
     @property
-    def clones(self) -> list[Traffic]:
+    def clones(self) -> list[Traffic.Traffic]:
         return self._clones.value
 
     @property

@@ -67,11 +67,11 @@ class Invitation(CompletableGithubObject):
         self._expired: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._invitee: Attribute[NamedUser | Organization] = NotSet
-        self._inviter: Attribute[NamedUser | Organization] = NotSet
+        self._invitee: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
+        self._inviter: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._permissions: Attribute[str] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -98,12 +98,12 @@ class Invitation(CompletableGithubObject):
         return self._id.value
 
     @property
-    async def invitee(self) -> NamedUser | Organization:
+    async def invitee(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._invitee)
         return self._invitee.value
 
     @property
-    async def inviter(self) -> NamedUser | Organization:
+    async def inviter(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._inviter)
         return self._inviter.value
 
@@ -118,7 +118,7 @@ class Invitation(CompletableGithubObject):
         return self._permissions.value
 
     @property
-    async def repository(self) -> Repository:
+    async def repository(self) -> Repository.Repository:
         await self._completeIfNotSet(self._repository)
         return self._repository.value
 

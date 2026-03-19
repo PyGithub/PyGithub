@@ -62,9 +62,9 @@ class InstallationAuthorization(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._expires_at: Attribute[datetime] = NotSet
         self._has_multiple_single_files: Attribute[bool] = NotSet
-        self._on_behalf_of: Attribute[NamedUser] = NotSet
+        self._on_behalf_of: Attribute[NamedUser.NamedUser] = NotSet
         self._permissions: Attribute[dict] = NotSet
-        self._repositories: Attribute[list[Repository]] = NotSet
+        self._repositories: Attribute[list[Repository.Repository]] = NotSet
         self._repository_selection: Attribute[str] = NotSet
         self._single_file: Attribute[str] = NotSet
         self._single_file_paths: Attribute[list[str]] = NotSet
@@ -82,7 +82,7 @@ class InstallationAuthorization(NonCompletableGithubObject):
         return self._has_multiple_single_files.value
 
     @property
-    def on_behalf_of(self) -> NamedUser:
+    def on_behalf_of(self) -> NamedUser.NamedUser:
         return self._on_behalf_of.value
 
     @property
@@ -90,7 +90,7 @@ class InstallationAuthorization(NonCompletableGithubObject):
         return self._permissions.value
 
     @property
-    def repositories(self) -> list[Repository]:
+    def repositories(self) -> list[Repository.Repository]:
         return self._repositories.value
 
     @property

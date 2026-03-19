@@ -69,23 +69,23 @@ class BypassPullRequestAllowances(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._apps: Attribute[list[GithubApp]] = NotSet
-        self._teams: Attribute[list[Team]] = NotSet
-        self._users: Attribute[list[NamedUser]] = NotSet
+        self._apps: Attribute[list[GithubApp.GithubApp]] = NotSet
+        self._teams: Attribute[list[Team.Team]] = NotSet
+        self._users: Attribute[list[NamedUser.NamedUser]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"apps": self._apps.value, "teams": self._teams.value, "users": self._users.value})
 
     @property
-    def apps(self) -> list[GithubApp]:
+    def apps(self) -> list[GithubApp.GithubApp]:
         return self._apps.value
 
     @property
-    def teams(self) -> list[Team]:
+    def teams(self) -> list[Team.Team]:
         return self._teams.value
 
     @property
-    def users(self) -> list[NamedUser]:
+    def users(self) -> list[NamedUser.NamedUser]:
         return self._users.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
@@ -112,22 +112,22 @@ class DismissalRestrictions(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._apps: Attribute[list[GithubApp]] = NotSet
-        self._teams: Attribute[list[Team]] = NotSet
+        self._apps: Attribute[list[GithubApp.GithubApp]] = NotSet
+        self._teams: Attribute[list[Team.Team]] = NotSet
         self._teams_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._users: Attribute[list[NamedUser]] = NotSet
+        self._users: Attribute[list[NamedUser.NamedUser]] = NotSet
         self._users_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"apps": self._apps.value, "teams": self._teams.value, "users": self._users.value})
 
     @property
-    def apps(self) -> list[GithubApp]:
+    def apps(self) -> list[GithubApp.GithubApp]:
         return self._apps.value
 
     @property
-    def teams(self) -> list[Team]:
+    def teams(self) -> list[Team.Team]:
         return self._teams.value
 
     @property
@@ -139,7 +139,7 @@ class DismissalRestrictions(NonCompletableGithubObject):
         return self._url.value
 
     @property
-    def users(self) -> list[NamedUser]:
+    def users(self) -> list[NamedUser.NamedUser]:
         return self._users.value
 
     @property
@@ -211,12 +211,12 @@ class RequiredPullRequestReviews(CompletableGithubObject):
 
     @property
     @deprecated("Use dismissal_restrictions.teams")
-    async def dismissal_teams(self) -> list[Team]:
+    async def dismissal_teams(self) -> list[Team.Team]:
         return (await self.dismissal_restrictions).teams if (await self.dismissal_restrictions) is not None else None
 
     @property
     @deprecated("Use dismissal_restrictions.users")
-    async def dismissal_users(self) -> list[NamedUser]:
+    async def dismissal_users(self) -> list[NamedUser.NamedUser]:
         return (await self.dismissal_restrictions).users if (await self.dismissal_restrictions) is not None else None
 
     @property

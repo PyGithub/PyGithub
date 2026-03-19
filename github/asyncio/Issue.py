@@ -118,14 +118,14 @@ class Issue(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._active_lock_reason: Attribute[str | None] = NotSet
-        self._assignee: Attribute[NamedUser | None] = NotSet
-        self._assignees: Attribute[list[NamedUser]] = NotSet
+        self._assignee: Attribute[NamedUser.NamedUser | None] = NotSet
+        self._assignees: Attribute[list[NamedUser.NamedUser]] = NotSet
         self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
         self._closed_at: Attribute[datetime] = NotSet
-        self._closed_by: Attribute[NamedUser] = NotSet
+        self._closed_by: Attribute[NamedUser.NamedUser] = NotSet
         self._comments: Attribute[int] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -133,29 +133,29 @@ class Issue(CompletableGithubObject):
         self._events_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._issue_dependencies_summary: Attribute[IssueDependenciesSummary] = NotSet
-        self._labels: Attribute[list[Label]] = NotSet
+        self._issue_dependencies_summary: Attribute[IssueDependenciesSummary.IssueDependenciesSummary] = NotSet
+        self._labels: Attribute[list[Label.Label]] = NotSet
         self._labels_url: Attribute[str] = NotSet
         self._locked: Attribute[bool] = NotSet
-        self._milestone: Attribute[Milestone] = NotSet
+        self._milestone: Attribute[Milestone.Milestone] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
         self._parent_issue_url: Attribute[str] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
-        self._pull_request: Attribute[IssuePullRequest] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp.GithubApp] = NotSet
+        self._pull_request: Attribute[IssuePullRequest.IssuePullRequest] = NotSet
         self._reactions: Attribute[dict] = NotSet
-        self._repository: Attribute[Repository] = NotSet
+        self._repository: Attribute[Repository.Repository] = NotSet
         self._repository_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._state_reason: Attribute[str | None] = NotSet
-        self._sub_issues_summary: Attribute[SubIssueSummary] = NotSet
+        self._sub_issues_summary: Attribute[SubIssueSummary.SubIssueSummary] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._timeline_url: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
-        self._type: Attribute[IssueType] = NotSet
+        self._type: Attribute[IssueType.IssueType] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -171,12 +171,12 @@ class Issue(CompletableGithubObject):
 
     @property
     @deprecated("Use assignees instead")
-    async def assignee(self) -> NamedUser | None:
+    async def assignee(self) -> NamedUser.NamedUser | None:
         await self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    async def assignees(self) -> list[NamedUser]:
+    async def assignees(self) -> list[NamedUser.NamedUser]:
         await self._completeIfNotSet(self._assignees)
         return self._assignees.value
 
@@ -206,7 +206,7 @@ class Issue(CompletableGithubObject):
         return self._closed_at.value
 
     @property
-    async def closed_by(self) -> NamedUser | None:
+    async def closed_by(self) -> NamedUser.NamedUser | None:
         await self._completeIfNotSet(self._closed_by)
         return self._closed_by.value
 
@@ -246,12 +246,12 @@ class Issue(CompletableGithubObject):
         return self._id.value
 
     @property
-    async def issue_dependencies_summary(self) -> IssueDependenciesSummary:
+    async def issue_dependencies_summary(self) -> IssueDependenciesSummary.IssueDependenciesSummary:
         await self._completeIfNotSet(self._issue_dependencies_summary)
         return self._issue_dependencies_summary.value
 
     @property
-    async def labels(self) -> list[Label]:
+    async def labels(self) -> list[Label.Label]:
         await self._completeIfNotSet(self._labels)
         return self._labels.value
 
@@ -266,7 +266,7 @@ class Issue(CompletableGithubObject):
         return self._locked.value
 
     @property
-    async def milestone(self) -> Milestone:
+    async def milestone(self) -> Milestone.Milestone:
         await self._completeIfNotSet(self._milestone)
         return self._milestone.value
 
@@ -286,12 +286,12 @@ class Issue(CompletableGithubObject):
         return self._parent_issue_url.value
 
     @property
-    async def performed_via_github_app(self) -> GithubApp:
+    async def performed_via_github_app(self) -> GithubApp.GithubApp:
         await self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
     @property
-    async def pull_request(self) -> IssuePullRequest | None:
+    async def pull_request(self) -> IssuePullRequest.IssuePullRequest | None:
         await self._completeIfNotSet(self._pull_request)
         return self._pull_request.value
 
@@ -301,7 +301,7 @@ class Issue(CompletableGithubObject):
         return self._reactions.value
 
     @property
-    async def repository(self) -> Repository:
+    async def repository(self) -> Repository.Repository:
         await self._completeIfNotSet(self._repository)
         if is_undefined(self._repository):
             # The repository was not set automatically, so it must be looked up by url.
@@ -327,7 +327,7 @@ class Issue(CompletableGithubObject):
         return self._state_reason.value
 
     @property
-    async def sub_issues_summary(self) -> SubIssueSummary:
+    async def sub_issues_summary(self) -> SubIssueSummary.SubIssueSummary:
         await self._completeIfNotSet(self._sub_issues_summary)
         return self._sub_issues_summary.value
 
@@ -347,7 +347,7 @@ class Issue(CompletableGithubObject):
         return self._title.value
 
     @property
-    async def type(self) -> IssueType:
+    async def type(self) -> IssueType.IssueType:
         await self._completeIfNotSet(self._type)
         return self._type.value
 
@@ -362,18 +362,18 @@ class Issue(CompletableGithubObject):
         return self._url.value
 
     @property
-    async def user(self) -> NamedUser:
+    async def user(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._user)
         return self._user.value
 
-    async def as_pull_request(self) -> PullRequest:
+    async def as_pull_request(self) -> PullRequest.PullRequest:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls>`_
         """
         url = "/pulls/".join((await self.url).rsplit("/issues/", 1))
         return PullRequest.PullRequest(self._requester, url=url)
 
-    async def add_to_assignees(self, *assignees: NamedUser | str) -> None:
+    async def add_to_assignees(self, *assignees: NamedUser.NamedUser | str) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
         """
@@ -394,7 +394,7 @@ class Issue(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
-    async def add_to_labels(self, *labels: Label | str) -> None:
+    async def add_to_labels(self, *labels: Label.Label | str) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
@@ -406,7 +406,7 @@ class Issue(CompletableGithubObject):
             "POST", f"{await self.url}/labels", input=post_parameters
         )
 
-    async def create_comment(self, body: str) -> IssueComment:
+    async def create_comment(self, body: str) -> IssueComment.IssueComment:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -430,11 +430,11 @@ class Issue(CompletableGithubObject):
         self,
         title: Opt[str] = NotSet,
         body: Opt[str] = NotSet,
-        assignee: Opt[str | NamedUser | None] = NotSet,
+        assignee: Opt[str | NamedUser.NamedUser | None] = NotSet,
         state: Opt[str] = NotSet,
-        milestone: Opt[Milestone | None] = NotSet,
+        milestone: Opt[Milestone.Milestone | None] = NotSet,
         labels: Opt[list[str]] = NotSet,
-        assignees: Opt[list[NamedUser | str]] = NotSet,
+        assignees: Opt[list[NamedUser.NamedUser | str]] = NotSet,
         state_reason: Opt[str] = NotSet,
     ) -> None:
         """
@@ -502,7 +502,7 @@ class Issue(CompletableGithubObject):
         """
         headers, data = await self._requester.requestJsonAndCheck("DELETE", f"{await self.url}/lock")
 
-    async def get_comment(self, id: int) -> IssueComment:
+    async def get_comment(self, id: int) -> IssueComment.IssueComment:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -510,7 +510,7 @@ class Issue(CompletableGithubObject):
         url = f"{self._parentUrl(await self.url)}/comments/{id}"
         return IssueComment.IssueComment(self._requester, url=url)
 
-    async def get_comments(self, since: Opt[datetime] = NotSet) -> PaginatedList[IssueComment]:
+    async def get_comments(self, since: Opt[datetime] = NotSet) -> PaginatedList[IssueComment.IssueComment]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
@@ -526,7 +526,7 @@ class Issue(CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_events(self) -> PaginatedList[IssueEvent]:
+    async def get_events(self) -> PaginatedList[IssueEvent.IssueEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/events <https://docs.github.com/en/rest/reference/issues#events>`_
         """
@@ -538,13 +538,13 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLockReasonPreview},
         )
 
-    async def get_labels(self) -> PaginatedList[Label]:
+    async def get_labels(self) -> PaginatedList[Label.Label]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         return PaginatedList(Label.Label, self._requester, f"{await self.url}/labels", None)
 
-    async def remove_from_assignees(self, *assignees: NamedUser | str) -> None:
+    async def remove_from_assignees(self, *assignees: NamedUser.NamedUser | str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
         """
@@ -565,7 +565,7 @@ class Issue(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
-    async def remove_from_labels(self, label: Label | str) -> None:
+    async def remove_from_labels(self, label: Label.Label | str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
@@ -576,7 +576,7 @@ class Issue(CompletableGithubObject):
             label = urllib.parse.quote(label)
         headers, data = await self._requester.requestJsonAndCheck("DELETE", f"{await self.url}/labels/{label}")
 
-    async def set_labels(self, *labels: Label | str) -> None:
+    async def set_labels(self, *labels: Label.Label | str) -> None:
         """
         :calls: `PUT /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
@@ -588,7 +588,7 @@ class Issue(CompletableGithubObject):
             "PUT", f"{await self.url}/labels", input=post_parameters
         )
 
-    async def get_reactions(self) -> PaginatedList[Reaction]:
+    async def get_reactions(self) -> PaginatedList[Reaction.Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/reactions <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-an-issue>`_
         """
@@ -685,7 +685,7 @@ class Issue(CompletableGithubObject):
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
-    async def create_reaction(self, reaction_type: str) -> Reaction:
+    async def create_reaction(self, reaction_type: str) -> Reaction.Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/reactions <https://docs.github.com/en/rest/reference/reactions>`_
         """
@@ -713,7 +713,7 @@ class Issue(CompletableGithubObject):
         )
         return status == 204
 
-    async def get_timeline(self) -> PaginatedList[TimelineEvent]:
+    async def get_timeline(self) -> PaginatedList[TimelineEvent.TimelineEvent]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline <https://docs.github.com/en/rest/reference/issues#list-timeline-events-for-an-issue>`_
         """

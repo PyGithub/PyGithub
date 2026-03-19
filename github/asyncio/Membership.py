@@ -68,13 +68,13 @@ class Membership(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._direct_membership: Attribute[bool] = NotSet
         self._enterprise_teams_providing_indirect_membership: Attribute[list[str]] = NotSet
-        self._organization: Attribute[Organization] = NotSet
+        self._organization: Attribute[Organization.Organization] = NotSet
         self._organization_url: Attribute[str] = NotSet
         self._permissions: Attribute[dict[str, Any]] = NotSet
         self._role: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser.NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
@@ -90,7 +90,7 @@ class Membership(CompletableGithubObject):
         return self._enterprise_teams_providing_indirect_membership.value
 
     @property
-    async def organization(self) -> Organization:
+    async def organization(self) -> Organization.Organization:
         await self._completeIfNotSet(self._organization)
         return self._organization.value
 
@@ -120,7 +120,7 @@ class Membership(CompletableGithubObject):
         return self._url.value
 
     @property
-    async def user(self) -> NamedUser:
+    async def user(self) -> NamedUser.NamedUser:
         await self._completeIfNotSet(self._user)
         return self._user.value
 

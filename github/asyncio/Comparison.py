@@ -59,7 +59,7 @@ class Comparison(CompletableGithubObject):
         self._ahead_by: Attribute[int] = NotSet
         self._base_commit: Attribute[Commit.Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
-        self._commits: Attribute[list[Commit]] = NotSet
+        self._commits: Attribute[list[Commit.Commit]] = NotSet
         self._diff_url: Attribute[str] = NotSet
         self._files: Attribute[list[File.File]] = NotSet
         self._html_url: Attribute[str] = NotSet

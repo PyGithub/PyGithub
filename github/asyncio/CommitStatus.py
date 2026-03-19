@@ -63,7 +63,7 @@ class CommitStatus(NonCompletableGithubObject):
         self._avatar_url: Attribute[str] = NotSet
         self._context: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[NamedUser | Organization] = NotSet
+        self._creator: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
         self._description: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
@@ -95,7 +95,7 @@ class CommitStatus(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> NamedUser | Organization:
+    def creator(self) -> NamedUser.NamedUser | Organization.Organization:
         return self._creator.value
 
     @property

@@ -51,8 +51,8 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
         super()._initAttributes()
         self._body_text: Attribute[str] = NotSet
         self._database_id: Attribute[int] = NotSet
-        self._discussion: Attribute[RepositoryDiscussion]
-        self._editor: Attribute[NamedUser] = NotSet
+        self._discussion: Attribute[RepositoryDiscussion.RepositoryDiscussion]
+        self._editor: Attribute[NamedUser.NamedUser] = NotSet
         self._id: Attribute[str] = NotSet
         self._reactions_page = None
         self._replies_page = None
@@ -66,11 +66,11 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
         return self._database_id.value
 
     @property
-    def discussion(self) -> RepositoryDiscussion:
+    def discussion(self) -> RepositoryDiscussion.RepositoryDiscussion:
         return self._discussion.value
 
     @property
-    def editor(self) -> NamedUser:
+    def editor(self) -> NamedUser.NamedUser:
         return self._editor.value
 
     @property
@@ -83,7 +83,7 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
             return super().node_id
         return self.id
 
-    def get_reactions(self) -> PaginatedList[Reaction]:
+    def get_reactions(self) -> PaginatedList[Reaction.Reaction]:
         if self._reactions_page is None:
             raise RuntimeError("Fetching reactions not implemented")
         return PaginatedList(Reaction.Reaction, self._requester, firstData=self._reactions_page, firstHeaders={})

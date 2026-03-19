@@ -119,8 +119,8 @@ class NamedUser(GithubObject.CompletableGithubObject):
         self._notification_email: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
-        self._permissions: Attribute[Permissions] = NotSet
-        self._plan: Attribute[Plan] = NotSet
+        self._permissions: Attribute[Permissions.Permissions] = NotSet
+        self._plan: Attribute[Plan.Plan] = NotSet
         self._private_gists: Attribute[int] = NotSet
         self._public_gists: Attribute[int] = NotSet
         self._public_repos: Attribute[int] = NotSet
@@ -312,12 +312,12 @@ class NamedUser(GithubObject.CompletableGithubObject):
         return self._owned_private_repos.value
 
     @property
-    async def permissions(self) -> Permissions:
+    async def permissions(self) -> Permissions.Permissions:
         await self._completeIfNotSet(self._permissions)
         return self._permissions.value
 
     @property
-    async def plan(self) -> Plan | None:
+    async def plan(self) -> Plan.Plan | None:
         await self._completeIfNotSet(self._plan)
         return self._plan.value
 
@@ -421,7 +421,7 @@ class NamedUser(GithubObject.CompletableGithubObject):
     def user_view_type(self) -> str:
         return self._user_view_type.value
 
-    async def get_events(self) -> PaginatedList[Event]:
+    async def get_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /users/{username}/events <https://docs.github.com/en/rest/reference/activity#events>`_
         """
@@ -439,7 +439,7 @@ class NamedUser(GithubObject.CompletableGithubObject):
         """
         return PaginatedList(NamedUser, self._requester, f"{await self.url}/following", None)
 
-    async def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
+    async def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist.Gist]:
         """
         :calls: `GET /users/{username}/gists <https://docs.github.com/en/rest/reference/gists>`_
         """
@@ -449,19 +449,19 @@ class NamedUser(GithubObject.CompletableGithubObject):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return PaginatedList(Gist.Gist, self._requester, f"{await self.url}/gists", url_parameters)
 
-    async def get_keys(self) -> PaginatedList[UserKey]:
+    async def get_keys(self) -> PaginatedList[UserKey.UserKey]:
         """
         :calls: `GET /users/{username}/keys <https://docs.github.com/en/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user>`_
         """
         return PaginatedList(UserKey.UserKey, self._requester, f"{await self.url}/keys", None)
 
-    async def get_orgs(self) -> PaginatedList[Organization]:
+    async def get_orgs(self) -> PaginatedList[Organization.Organization]:
         """
         :calls: `GET /users/{username}/orgs <https://docs.github.com/en/rest/reference/orgs>`_
         """
         return PaginatedList(Organization.Organization, self._requester, f"{await self.url}/orgs", None)
 
-    async def get_projects(self, state: str = "open") -> PaginatedList[Project]:
+    async def get_projects(self, state: str = "open") -> PaginatedList[Project.Project]:
         """
         :calls: `GET /users/{username}/projects <https://docs.github.com/en/rest/reference/projects#list-user-projects>`_
         """
@@ -475,13 +475,13 @@ class NamedUser(GithubObject.CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
 
-    async def get_public_events(self) -> PaginatedList[Event]:
+    async def get_public_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /users/{username}/events/public <https://docs.github.com/en/rest/reference/activity#events>`_
         """
         return PaginatedList(Event.Event, self._requester, f"{await self.url}/events/public", None)
 
-    async def get_public_received_events(self) -> PaginatedList[Event]:
+    async def get_public_received_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /users/{username}/received_events/public <https://docs.github.com/en/rest/reference/activity#events>`_
         """
@@ -492,13 +492,13 @@ class NamedUser(GithubObject.CompletableGithubObject):
             None,
         )
 
-    async def get_received_events(self) -> PaginatedList[Event]:
+    async def get_received_events(self) -> PaginatedList[Event.Event]:
         """
         :calls: `GET /users/{username}/received_events <https://docs.github.com/en/rest/reference/activity#events>`_
         """
         return PaginatedList(Event.Event, self._requester, f"{await self.url}/received_events", None)
 
-    async def get_repo(self, name: str) -> Repository:
+    async def get_repo(self, name: str) -> Repository.Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
         """
@@ -511,7 +511,7 @@ class NamedUser(GithubObject.CompletableGithubObject):
         type: Opt[str] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
-    ) -> PaginatedList[Repository]:
+    ) -> PaginatedList[Repository.Repository]:
         """
         :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
         """
@@ -532,13 +532,13 @@ class NamedUser(GithubObject.CompletableGithubObject):
             url_parameters,
         )
 
-    async def get_starred(self) -> PaginatedList[Repository]:
+    async def get_starred(self) -> PaginatedList[Repository.Repository]:
         """
         :calls: `GET /users/{username}/starred <https://docs.github.com/en/rest/reference/activity#starring>`_
         """
         return PaginatedList(Repository.Repository, self._requester, f"{await self.url}/starred", None)
 
-    async def get_subscriptions(self) -> PaginatedList[Repository]:
+    async def get_subscriptions(self) -> PaginatedList[Repository.Repository]:
         """
         :calls: `GET /users/{username}/subscriptions <https://docs.github.com/en/rest/reference/activity#watching>`_
         """
@@ -549,7 +549,7 @@ class NamedUser(GithubObject.CompletableGithubObject):
             None,
         )
 
-    async def get_watched(self) -> PaginatedList[Repository]:
+    async def get_watched(self) -> PaginatedList[Repository.Repository]:
         """
         :calls: `GET /users/{username}/watched <https://docs.github.com/en/rest/reference/activity#starring>`_
         """
@@ -565,7 +565,7 @@ class NamedUser(GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    async def get_organization_membership(self, org: str | Organization) -> Membership:
+    async def get_organization_membership(self, org: str | Organization.Organization) -> Membership.Membership:
         """
         :calls: `GET /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#check-organization-membership-for-a-user>`_
         """

@@ -66,7 +66,7 @@ class GitTree(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._sha: Attribute[str] = NotSet
-        self._tree: Attribute[list[GitTreeElement]] = NotSet
+        self._tree: Attribute[list[GitTreeElement.GitTreeElement]] = NotSet
         self._truncated: Attribute[bool] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -83,7 +83,7 @@ class GitTree(CompletableGithubObject):
         return self._sha.value
 
     @property
-    async def tree(self) -> list[GitTreeElement]:
+    async def tree(self) -> list[GitTreeElement.GitTreeElement]:
         await self._completeIfNotSet(self._tree)
         return self._tree.value
 

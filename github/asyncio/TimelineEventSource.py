@@ -57,14 +57,14 @@ class TimelineEventSource(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._issue: Attribute[Issue] = NotSet
+        self._issue: Attribute[Issue.Issue] = NotSet
         self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def issue(self) -> Issue:
+    def issue(self) -> Issue.Issue:
         return self._issue.value
 
     @property

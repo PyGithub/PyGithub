@@ -63,12 +63,12 @@ class GitTag(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self._message: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._object: Attribute[GitObject] = NotSet
+        self._object: Attribute[GitObject.GitObject] = NotSet
         self._sha: Attribute[str] = NotSet
         self._tag: Attribute[str] = NotSet
-        self._tagger: Attribute[GitAuthor] = NotSet
+        self._tagger: Attribute[GitAuthor.GitAuthor] = NotSet
         self._url: Attribute[str] = NotSet
-        self._verification: Attribute[GitCommitVerification] = NotSet
+        self._verification: Attribute[GitCommitVerification.GitCommitVerification] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "tag": self._tag.value})
@@ -84,7 +84,7 @@ class GitTag(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    async def object(self) -> GitObject:
+    async def object(self) -> GitObject.GitObject:
         await self._completeIfNotSet(self._object)
         return self._object.value
 
@@ -99,7 +99,7 @@ class GitTag(CompletableGithubObject):
         return self._tag.value
 
     @property
-    async def tagger(self) -> GitAuthor:
+    async def tagger(self) -> GitAuthor.GitAuthor:
         await self._completeIfNotSet(self._tagger)
         return self._tagger.value
 
@@ -109,7 +109,7 @@ class GitTag(CompletableGithubObject):
         return self._url.value
 
     @property
-    async def verification(self) -> GitCommitVerification:
+    async def verification(self) -> GitCommitVerification.GitCommitVerification:
         await self._completeIfNotSet(self._verification)
         return self._verification.value
 

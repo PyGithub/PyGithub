@@ -93,7 +93,7 @@ class Installation(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._access_tokens_url: Attribute[str] = NotSet
-        self._account: Attribute[NamedUser | Organization] = NotSet
+        self._account: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
         self._app_id: Attribute[int] = NotSet
         self._app_slug: Attribute[str] = NotSet
         self._client_id: Attribute[str] = NotSet
@@ -109,7 +109,7 @@ class Installation(NonCompletableGithubObject):
         self._single_file_name: Attribute[str] = NotSet
         self._single_file_paths: Attribute[list[str]] = NotSet
         self._suspended_at: Attribute[datetime] = NotSet
-        self._suspended_by: Attribute[NamedUser] = NotSet
+        self._suspended_by: Attribute[NamedUser.NamedUser] = NotSet
         self._target_id: Attribute[int] = NotSet
         self._target_type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -122,7 +122,7 @@ class Installation(NonCompletableGithubObject):
         return self._access_tokens_url.value
 
     @property
-    def account(self) -> NamedUser | Organization:
+    def account(self) -> NamedUser.NamedUser | Organization.Organization:
         return self._account.value
 
     @property
@@ -196,7 +196,7 @@ class Installation(NonCompletableGithubObject):
         return self._suspended_at.value
 
     @property
-    def suspended_by(self) -> NamedUser:
+    def suspended_by(self) -> NamedUser.NamedUser:
         return self._suspended_by.value
 
     @property

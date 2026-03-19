@@ -46,19 +46,19 @@ class RateLimitOverview(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._rate: Attribute[Rate] = NotSet
-        self._resources: Attribute[RateLimit] = NotSet
+        self._rate: Attribute[Rate.Rate] = NotSet
+        self._resources: Attribute[RateLimit.RateLimit] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"rate": self._rate.value})
 
     @property
-    def rate(self) -> Rate:
+    def rate(self) -> Rate.Rate:
         return self._rate.value
 
     @property
-    def resources(self) -> RateLimit:
+    def resources(self) -> RateLimit.RateLimit:
         return self._resources.value
 
     @property

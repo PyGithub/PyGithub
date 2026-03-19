@@ -74,7 +74,7 @@ class Project(CompletableGithubObject):
         self._body: Attribute[str] = NotSet
         self._columns_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[NamedUser | Organization] = NotSet
+        self._creator: Attribute[NamedUser.NamedUser | Organization.Organization] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
@@ -106,7 +106,7 @@ class Project(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    async def creator(self) -> NamedUser | Organization:
+    async def creator(self) -> NamedUser.NamedUser | Organization.Organization:
         await self._completeIfNotSet(self._creator)
         return self._creator.value
 
