@@ -132,10 +132,10 @@ class RequestsResponse:
         return self.headers.items()
 
     def read(self) -> str:
-        return self.response.text
+        return self.response.text or ""
 
-    def iter_content(self, chunk_size: int | None = 1) -> Iterator:
-        return self.response.iter_content(chunk_size=chunk_size)
+    def iter_content(self, chunk_size: int | None = -1) -> Iterator:
+        return self.response.iter_content(chunk_size=chunk_size or -1)
 
     def raise_for_status(self) -> None:
         self.response.raise_for_status()

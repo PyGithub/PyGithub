@@ -64,7 +64,7 @@ class NiquestsMock(responses.RequestsMock):
     """
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(
+        super().__init__(  # type: ignore[misc]
             *args,
             target="niquests.adapters.HTTPAdapter.send",
             **kwargs,
@@ -94,13 +94,13 @@ class NiquestsMock(responses.RequestsMock):
                     # not all kwargs are required
                     pass
 
-            resp = self._on_request(adapter, request, **kwargs)
+            resp = self._on_request(adapter, request, **kwargs)  # type: ignore[arg-type]
 
             if kwargs["stream"]:
-                return resp
+                return resp  # type: ignore[return-value]
 
-            resp.__class__ = niquests.Response
-            return resp
+            resp.__class__ = niquests.Response  # type: ignore[assignment]
+            return resp  # type: ignore[return-value]
 
         return send
 
@@ -126,7 +126,7 @@ class NiquestsMock(responses.RequestsMock):
                     # not all kwargs are required
                     pass
 
-            return self._on_request(adapter, request, **kwargs)
+            return self._on_request(adapter, request, **kwargs)  # type: ignore[arg-type,return-value]
 
         return send
 
@@ -138,18 +138,18 @@ class NiquestsMock(responses.RequestsMock):
             return
 
         self._patcher = std_mock.patch(target=self.target, new=self.unbound_on_send())
-        self._patcher_async = std_mock.patch(
+        self._patcher_async = std_mock.patch(  # type: ignore[assignment]
             target=self.target.replace("HTTPAdapter", "AsyncHTTPAdapter"), new=self.unbound_on_async_send()
         )
 
         self._patcher.start()
-        self._patcher_async.start()
+        self._patcher_async.start()  # type: ignore[attr-defined]
 
     def stop(self, allow_assert: bool = True) -> None:
         if self._patcher:
             # prevent stopping unstarted patchers
             self._patcher.stop()
-            self._patcher_async.stop()
+            self._patcher_async.stop()  # type: ignore[attr-defined]
 
             # once patcher is stopped, clean it. This is required to create a new
             # fresh patcher on self.start()
