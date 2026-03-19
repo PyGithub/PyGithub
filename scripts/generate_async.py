@@ -5361,17 +5361,15 @@ def main():
         try:
             compile(p.read_text(encoding="utf-8"), str(p), "exec")
         except SyntaxError as e:
-            logger.error(f"  SYNTAX ERROR in tests/{p.name}:{e.lineno}: {e.msg}")
+            logger.error(f"SYNTAX ERROR in tests/{p.name}:{e.lineno}: {e.msg}")
             errors += 1
 
-    logger.info(f"\n{'=' * 60}")
     logger.info("Generation complete!")
-    logger.info(f"  Async source: {DST_PKG}")
-    logger.info(f"  Async tests:  {TEST_DST}")
-    logger.info(f"{'=' * 60}")
+    logger.info(f"Async source: {DST_PKG}")
+    logger.info(f"Async tests:  {TEST_DST}")
 
     if errors:
-        logger.error(f"\n  {errors} files with syntax errors! The async_generator NEED updating!")
+        logger.error(f"{errors} files with syntax errors! The async_generator NEED updating!")
         exit(1)
     else:
         logger.info("All files pass syntax check. Excellent news! Have a great day.")

@@ -55,7 +55,7 @@ contains classes with I/O-dependent methods gets a mirror in
 2. Copies each source file and applies a series of AST + regex transformations:
    methods become ``async def``, calls to I/O methods receive ``await``, properties
    that trigger lazy-loading are promoted to awaitable properties, and so on.
-3. Runs ``black`` and ``ruff`` to keep the output clean.
+3. Runs ``black``, ``ruff``, ``docformatter``, and ``pyupgrade`` to keep the output clean.
 
 The generated files carry the header ``# FILE AUTO GENERATED DO NOT TOUCH`` --
 do not edit them by hand.
@@ -173,8 +173,7 @@ Threading vs asyncio
 
 The sync API uses ``threading.Lock`` for connection pooling. The async API
 replaces these with ``asyncio.Lock`` and uses ``niquests.AsyncSession`` under the
-hood. Do not mix sync and async ``Github`` instances in the same event loop
-without proper isolation.
+hood. Do not mix sync and async ``Github`` instances.
 
 Running tests
 -------------
@@ -187,5 +186,5 @@ They reuse the same ``ReplayData`` fixtures as the sync tests:
     # run async tests
     python -m pytest tests/asyncio/ -q
 
-    # run sync tests
+    # run sync tests only
     python -m pytest tests/ --ignore=tests/asyncio/ -q
