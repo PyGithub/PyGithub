@@ -91,54 +91,54 @@ Deprecations
 
 New Features
 ^^^^^^^^^^^^
-* Consider per-page settings when iterating paginated properties (`#3377 <https://github.com/PyGithub/PyGithub/pull/3377>`_) (b1a9b7e2a)
-* Add Secret Scanning Alerts and Improve Code Scan Alerts (`#3307 <https://github.com/PyGithub/PyGithub/pull/3307>`_) (646190988)
+* Consider per-page settings when iterating paginated properties (`#3377 <https://github.com/PyGithub/PyGithub/pull/3377>`_) (`b1a9b7e2a <https://github.com/PyGithub/PyGithub/commit/b1a9b7e2a>`_)
+* Add Secret Scanning Alerts and Improve Code Scan Alerts (`#3307 <https://github.com/PyGithub/PyGithub/pull/3307>`_) (`646190988 <https://github.com/PyGithub/PyGithub/commit/646190988>`_)
 
 Improvements
 ^^^^^^^^^^^^
-* Make more objects lazy (`#3403 <https://github.com/PyGithub/PyGithub/pull/3403>`_) (e79d9bc1e)
-* Allow for enterprise base url prefixed with ``api.`` (`#3419 <https://github.com/PyGithub/PyGithub/pull/3419>`_) (61dcf49d3)
-* Add ``throw`` option to ``Workflow.create_dispatch`` to raise exceptions (`#2966 <https://github.com/PyGithub/PyGithub/pull/2966>`_) (19e1c5032)
-* Use ``GET`` url or ``_links.self`` as object url (`#3421 <https://github.com/PyGithub/PyGithub/pull/3421>`_) (3716bab10)
-* Add support for ``type`` parameter to get_issues (`#3381 <https://github.com/PyGithub/PyGithub/pull/3381>`_) (22263b72f)
-* Align implemented paths with OpenAPI spec (`#3413 <https://github.com/PyGithub/PyGithub/pull/3413>`_) (0ede65793)
-* Add suggested OpenAPI schemas (`#3411 <https://github.com/PyGithub/PyGithub/pull/3411>`_) (a0a9f0172)
-* Apply OpenAPI schemas (`#3412 <https://github.com/PyGithub/PyGithub/pull/3412>`_) (c92f5552c)
+* Make more objects lazy (`#3403 <https://github.com/PyGithub/PyGithub/pull/3403>`_) (`e79d9bc1e <https://github.com/PyGithub/PyGithub/commit/e79d9bc1e>`_)
+* Allow for enterprise base url prefixed with ``api.`` (`#3419 <https://github.com/PyGithub/PyGithub/pull/3419>`_) (`61dcf49d3 <https://github.com/PyGithub/PyGithub/commit/61dcf49d3>`_)
+* Add ``throw`` option to ``Workflow.create_dispatch`` to raise exceptions (`#2966 <https://github.com/PyGithub/PyGithub/pull/2966>`_) (`19e1c5032 <https://github.com/PyGithub/PyGithub/commit/19e1c5032>`_)
+* Use ``GET`` url or ``_links.self`` as object url (`#3421 <https://github.com/PyGithub/PyGithub/pull/3421>`_) (`3716bab10 <https://github.com/PyGithub/PyGithub/commit/3716bab10>`_)
+* Add support for ``type`` parameter to get_issues (`#3381 <https://github.com/PyGithub/PyGithub/pull/3381>`_) (`22263b72f <https://github.com/PyGithub/PyGithub/commit/22263b72f>`_)
+* Align implemented paths with OpenAPI spec (`#3413 <https://github.com/PyGithub/PyGithub/pull/3413>`_) (`0ede65793 <https://github.com/PyGithub/PyGithub/commit/0ede65793>`_)
+* Add suggested OpenAPI schemas (`#3411 <https://github.com/PyGithub/PyGithub/pull/3411>`_) (`a0a9f0172 <https://github.com/PyGithub/PyGithub/commit/a0a9f0172>`_)
+* Apply OpenAPI schemas (`#3412 <https://github.com/PyGithub/PyGithub/pull/3412>`_) (`c92f5552c <https://github.com/PyGithub/PyGithub/commit/c92f5552c>`_)
 
 Bug Fixes
 ^^^^^^^^^
-* Fix ``PaginatedList.totalCount`` returning 0 with GitHub deprecation notices (`#3382 <https://github.com/PyGithub/PyGithub/pull/3382>`_) (c4ec16a18)
-* Use default type if known type is not supported (`#3365 <https://github.com/PyGithub/PyGithub/pull/3365>`_) (f5f9756a1)
+* Fix ``PaginatedList.totalCount`` returning 0 with GitHub deprecation notices (`#3382 <https://github.com/PyGithub/PyGithub/pull/3382>`_) (`c4ec16a18 <https://github.com/PyGithub/PyGithub/commit/c4ec16a18>`_)
+* Use default type if known type is not supported (`#3365 <https://github.com/PyGithub/PyGithub/pull/3365>`_) (`f5f9756a1 <https://github.com/PyGithub/PyGithub/commit/f5f9756a1>`_)
 
 Maintenance
 ^^^^^^^^^^^
 
-* Deprecate ``Reaction.delete`` (`#3435 <https://github.com/PyGithub/PyGithub/pull/3435>`_) (f2540db50)
-* Deprecate ``Issue.assignee`` (`#3366 <https://github.com/PyGithub/PyGithub/pull/3366>`_) (8a0fa32de)
-* Deprecate ``Organization.edit_hook`` (`#3404 <https://github.com/PyGithub/PyGithub/pull/3404>`_) (d7395df9c)
-* Deprecate ``Team.add_to_members`` and ``Team.remove_from_members`` (`#3368 <https://github.com/PyGithub/PyGithub/pull/3368>`_) (78050d397)
+* Deprecate ``Reaction.delete`` (`#3435 <https://github.com/PyGithub/PyGithub/pull/3435>`_) (`f2540db50 <https://github.com/PyGithub/PyGithub/commit/f2540db50>`_)
+* Deprecate ``Issue.assignee`` (`#3366 <https://github.com/PyGithub/PyGithub/pull/3366>`_) (`8a0fa32de <https://github.com/PyGithub/PyGithub/commit/8a0fa32de>`_)
+* Deprecate ``Organization.edit_hook`` (`#3404 <https://github.com/PyGithub/PyGithub/pull/3404>`_) (`d7395df9c <https://github.com/PyGithub/PyGithub/commit/d7395df9c>`_)
+* Deprecate ``Team.add_to_members`` and ``Team.remove_from_members`` (`#3368 <https://github.com/PyGithub/PyGithub/pull/3368>`_) (`78050d397 <https://github.com/PyGithub/PyGithub/commit/78050d397>`_)
 
-* Various minor OpenAPI fixes (`#3375 <https://github.com/PyGithub/PyGithub/pull/3375>`_) (7de26441c)
+* Various minor OpenAPI fixes (`#3375 <https://github.com/PyGithub/PyGithub/pull/3375>`_) (`7de26441c <https://github.com/PyGithub/PyGithub/commit/7de26441c>`_)
 
-* Update test key pair (`#3453 <https://github.com/PyGithub/PyGithub/pull/3453>`_) (24305f6d6)
-* Pin CI lint Python version to 3.13 (`#3406 <https://github.com/PyGithub/PyGithub/pull/3406>`_) (786c37c53)
-* Improve error message on replay data mismatch (`#3385 <https://github.com/PyGithub/PyGithub/pull/3385>`_) (`#3386 <https://github.com/PyGithub/PyGithub/pull/3386>`_) (8be9c5cb9) (927cf227a)
-* Disable sleeps in tests (`#3383 <https://github.com/PyGithub/PyGithub/pull/3383>`_) (4294a652e)
+* Update test key pair (`#3453 <https://github.com/PyGithub/PyGithub/pull/3453>`_) (`24305f6d6 <https://github.com/PyGithub/PyGithub/commit/24305f6d6>`_)
+* Pin CI lint Python version to 3.13 (`#3406 <https://github.com/PyGithub/PyGithub/pull/3406>`_) (`786c37c53 <https://github.com/PyGithub/PyGithub/commit/786c37c53>`_)
+* Improve error message on replay data mismatch (`#3385 <https://github.com/PyGithub/PyGithub/pull/3385>`_) (`#3386 <https://github.com/PyGithub/PyGithub/pull/3386>`_) (`8be9c5cb9 <https://github.com/PyGithub/PyGithub/commit/8be9c5cb9>`_) (`927cf227a <https://github.com/PyGithub/PyGithub/commit/927cf227a>`_)
+* Disable sleeps in tests (`#3383 <https://github.com/PyGithub/PyGithub/pull/3383>`_) (`4294a652e <https://github.com/PyGithub/PyGithub/commit/4294a652e>`_)
 
-* Update autodoc defaults (`#3369 <https://github.com/PyGithub/PyGithub/pull/3369>`_) (0b4503cb6)
+* Update autodoc defaults (`#3369 <https://github.com/PyGithub/PyGithub/pull/3369>`_) (`0b4503cb6 <https://github.com/PyGithub/PyGithub/commit/0b4503cb6>`_)
 
-* Add Python 3.14 to CI and tox (`#3429 <https://github.com/PyGithub/PyGithub/pull/3429>`_) (95648db47)
-* Restrict PyPi release workflow permissions (`#3418 <https://github.com/PyGithub/PyGithub/pull/3418>`_) (ae23d6075)
-* Fix OpenApi workflow (`#3389 <https://github.com/PyGithub/PyGithub/pull/3389>`_) (9e1c2bfe5)
-* Bump codecov/codecov-action from 3 to 5 (`#3284 <https://github.com/PyGithub/PyGithub/pull/3284>`_) (5752d52e7)
-* Bump actions/setup-python from 5 to 6 (`#3370 <https://github.com/PyGithub/PyGithub/pull/3370>`_) (1f5f434b3)
-* Bump dawidd6/action-download-artifact from 3.0.0 to 3.1.4 (`#3282 <https://github.com/PyGithub/PyGithub/pull/3282>`_) (5db532b87)
-* Bump github/codeql-action from 3 to 4 (`#3391 <https://github.com/PyGithub/PyGithub/pull/3391>`_) (47478b002)
-* Bump actions/upload-artifact from 4 to 5 (`#3394 <https://github.com/PyGithub/PyGithub/pull/3394>`_) (8b87fd1c8)
-* Bump actions/download-artifact from 5 to 6 (`#3393 <https://github.com/PyGithub/PyGithub/pull/3393>`_) (511f3b3f4)
+* Add Python 3.14 to CI and tox (`#3429 <https://github.com/PyGithub/PyGithub/pull/3429>`_) (`95648db47 <https://github.com/PyGithub/PyGithub/commit/95648db47>`_)
+* Restrict PyPi release workflow permissions (`#3418 <https://github.com/PyGithub/PyGithub/pull/3418>`_) (`ae23d6075 <https://github.com/PyGithub/PyGithub/commit/ae23d6075>`_)
+* Fix OpenApi workflow (`#3389 <https://github.com/PyGithub/PyGithub/pull/3389>`_) (`9e1c2bfe5 <https://github.com/PyGithub/PyGithub/commit/9e1c2bfe5>`_)
+* Bump codecov/codecov-action from 3 to 5 (`#3284 <https://github.com/PyGithub/PyGithub/pull/3284>`_) (`5752d52e7 <https://github.com/PyGithub/PyGithub/commit/5752d52e7>`_)
+* Bump actions/setup-python from 5 to 6 (`#3370 <https://github.com/PyGithub/PyGithub/pull/3370>`_) (`1f5f434b3 <https://github.com/PyGithub/PyGithub/commit/1f5f434b3>`_)
+* Bump dawidd6/action-download-artifact from 3.0.0 to 3.1.4 (`#3282 <https://github.com/PyGithub/PyGithub/pull/3282>`_) (`5db532b87 <https://github.com/PyGithub/PyGithub/commit/5db532b87>`_)
+* Bump github/codeql-action from 3 to 4 (`#3391 <https://github.com/PyGithub/PyGithub/pull/3391>`_) (`47478b002 <https://github.com/PyGithub/PyGithub/commit/47478b002>`_)
+* Bump actions/upload-artifact from 4 to 5 (`#3394 <https://github.com/PyGithub/PyGithub/pull/3394>`_) (`8b87fd1c8 <https://github.com/PyGithub/PyGithub/commit/8b87fd1c8>`_)
+* Bump actions/download-artifact from 5 to 6 (`#3393 <https://github.com/PyGithub/PyGithub/pull/3393>`_) (`511f3b3f4 <https://github.com/PyGithub/PyGithub/commit/511f3b3f4>`_)
 
-* Drop Python 3.8 support due to EOL (`#3191 <https://github.com/PyGithub/PyGithub/pull/3191>`_) (3ccecbb99)
-* Merge changelog updates from v2.8 release branch (`#3367 <https://github.com/PyGithub/PyGithub/pull/3367>`_) (4a353f730)
+* Drop Python 3.8 support due to EOL (`#3191 <https://github.com/PyGithub/PyGithub/pull/3191>`_) (`3ccecbb99 <https://github.com/PyGithub/PyGithub/commit/3ccecbb99>`_)
+* Merge changelog updates from v2.8 release branch (`#3367 <https://github.com/PyGithub/PyGithub/pull/3367>`_) (`4a353f730 <https://github.com/PyGithub/PyGithub/commit/4a353f730>`_)
 
 Version 2.8.1 (September 02, 2025)
 ----------------------------------
