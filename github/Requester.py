@@ -60,9 +60,11 @@
 # Copyright 2025 Alec Ostrander <alec.ostrander@gmail.com>                     #
 # Copyright 2025 Chris Kuehl <ckuehl@ckuehl.me>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 # Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

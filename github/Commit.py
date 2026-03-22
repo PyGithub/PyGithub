@@ -26,6 +26,7 @@
 # Copyright 2024 iarspider <iarspider@gmail.com>                               #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
