@@ -38,6 +38,7 @@
 # Copyright 2025 Maja Massarini <2678400+majamassarini@users.noreply.github.com>#
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
