@@ -33,8 +33,17 @@ Pagination
 
 .. autoclass:: github.PaginatedList.PaginatedList()
 
+.. _utilities-classes-with-paginated-properties:
+
 Classes with paginated properties
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The GitHub API has the "feature" of paginated properties.
+Some objects returned by the API have a property that allows for pagination.
+Fetching subsequent pages of that property means fetching the entire object (with all other properties)
+and the specified page of the paginated property. Iterating over the paginated property means fetching
+all other properties multiple times. Fortunately, the allowed size of each page (``per_page`` is usually 300,
+in contrast to the "usual" ``per_page`` maximum of 100).
 
 A few classes have paginated properties. The classes and their paginated properties are:
 

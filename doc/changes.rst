@@ -7,22 +7,39 @@ Stable versions
 Version 2.9.0 (March 22, 2026)
 ------------------------------
 
+Notable changes
+^^^^^^^^^^^^^^^
+
 Lazy PyGithub objects
 """""""""""""""""""""
 
-The notion of lazy object has been added to some PyGithub classes in version 2.6.0.
-This release now makes all ``CompletableGithubObject``s optionally lazy (where useful).
+The notion of lazy objects has been added to some PyGithub classes in version 2.6.0.
+This release now makes all ``CompletableGithubObject``\s optionally lazy (if useful).
 See `#3403 <https://github.com/PyGithub/PyGithub/pull/3403>`_ for a complete list.
 
 In lazy mode, getting a PyGithub object does not send a request to the GitHub API.
 Only accessing methods and properties sends the necessary requests to the GitHub API:
 
+.. code-block:: python
+
+    # Use lazy mode
     g = Github(auth=auth, lazy=True)
 
-    repo = g.get_repo("PyGithub/PyGithub")    # does not call the Github API
-    issue = repo.create_issue(…)              # does only call the create-issue API, not the get-repo API
-    created = repo.created_at                 # calls the get-repo API
-    licence = repo.license                    # does not call the get-repo API again
+    # these method calls do not send requests to the GitHub API
+    user = g.get_user("PyGithub")    # get the user
+    repo = user.get_repo("PyGithub") # get the user's repo
+    pull = repo.get_pull(3403)       # get a known pull request
+    issue = pull.as_issue()          # turn the pull request into an issue
+
+    # these method and property calls send requests to Github API
+    issue.create_reaction("rocket")  # create a reaction
+    created = repo.created_at        # get property of lazy object repo
+
+    # once a lazy object has been fetched, all properties are available (no more requests)
+    licence = repo.license
+
+All PyGithub classes that implement ``CompletableGithubObject`` support lazy mode (if useful).
+This is only useful for classes that have methods creating, changing, or getting objects.
 
 By default, PyGithub objects are not lazy.
 
@@ -38,16 +55,16 @@ in contrast to the "usual" ``per_page`` maximum of 100).
 
 Objects with paginated properties:
 
-    Commit.files
-    Comparison.commits
-    EnterpriseConsumedLicenses.users
+- Commit.files
+- Comparison.commits
+- EnterpriseConsumedLicenses.users
 
 This PR makes iterating those paginated properties use the configured ``per_page`` setting.
 
 It further allows to specify an individual ``per_page`` when either retrieving such objects,
 or fetching paginated properties.
 
-See `#3377 <https://github.com/PyGithub/PyGithub/pull/3377>`_ (b1a9b7e2a) for details.
+See :ref:`Classes with paginated properties <utilities-classes-with-paginated-properties>` for details.
 
 Drop Python 3.8 support due to End-of-Life
 """"""""""""""""""""""""""""""""""""""""""
@@ -65,6 +82,8 @@ Deprecations
   If you need to avoid ``Organization.get_hook(id)`` to fetch the ``Hook`` object from Github API,
   use a lazy Github instance:
 
+.. code-block:: python
+
       Github(…, lazy=True).get_organization(…).get_hook(id).edit(…)
 
 * Methods ``Team.add_to_members`` and ``Team.remove_from_members`` are deprecated,
@@ -78,26 +97,26 @@ New Features
 Improvements
 ^^^^^^^^^^^^
 * Make more objects lazy (`#3403 <https://github.com/PyGithub/PyGithub/pull/3403>`_) (e79d9bc1e)
-* Allow for enterprise base url prefixed with `api.` (`#3419 <https://github.com/PyGithub/PyGithub/pull/3419>`_) (61dcf49d3)
-* Add `throw` option to `Workflow.create_dispatch` to raise exceptions (`#2966 <https://github.com/PyGithub/PyGithub/pull/2966>`_) (19e1c5032)
-* Use `GET` url or `_links.self` as object url (`#3421 <https://github.com/PyGithub/PyGithub/pull/3421>`_) (3716bab10)
-* Add support for `type` parameter to get_issues (`#3381 <https://github.com/PyGithub/PyGithub/pull/3381>`_) (22263b72f)
+* Allow for enterprise base url prefixed with ``api.`` (`#3419 <https://github.com/PyGithub/PyGithub/pull/3419>`_) (61dcf49d3)
+* Add ``throw`` option to ``Workflow.create_dispatch`` to raise exceptions (`#2966 <https://github.com/PyGithub/PyGithub/pull/2966>`_) (19e1c5032)
+* Use ``GET`` url or ``_links.self`` as object url (`#3421 <https://github.com/PyGithub/PyGithub/pull/3421>`_) (3716bab10)
+* Add support for ``type`` parameter to get_issues (`#3381 <https://github.com/PyGithub/PyGithub/pull/3381>`_) (22263b72f)
 * Align implemented paths with OpenAPI spec (`#3413 <https://github.com/PyGithub/PyGithub/pull/3413>`_) (0ede65793)
 * Add suggested OpenAPI schemas (`#3411 <https://github.com/PyGithub/PyGithub/pull/3411>`_) (a0a9f0172)
 * Apply OpenAPI schemas (`#3412 <https://github.com/PyGithub/PyGithub/pull/3412>`_) (c92f5552c)
 
 Bug Fixes
 ^^^^^^^^^
-* Fix `PaginatedList.totalCount` returning 0 with GitHub deprecation notices (`#3382 <https://github.com/PyGithub/PyGithub/pull/3382>`_) (c4ec16a18)
+* Fix ``PaginatedList.totalCount`` returning 0 with GitHub deprecation notices (`#3382 <https://github.com/PyGithub/PyGithub/pull/3382>`_) (c4ec16a18)
 * Use default type if known type is not supported (`#3365 <https://github.com/PyGithub/PyGithub/pull/3365>`_) (f5f9756a1)
 
 Maintenance
 ^^^^^^^^^^^
 
-* Deprecate `Reaction.delete` (`#3435 <https://github.com/PyGithub/PyGithub/pull/3435>`_) (f2540db50)
-* Deprecate `Issue.assignee` (`#3366 <https://github.com/PyGithub/PyGithub/pull/3366>`_) (8a0fa32de)
-* Deprecate `Organization.edit_hook` (`#3404 <https://github.com/PyGithub/PyGithub/pull/3404>`_) (d7395df9c)
-* Deprecate `Team.add_to_members` and `Team.remove_from_members` (`#3368 <https://github.com/PyGithub/PyGithub/pull/3368>`_) (78050d397)
+* Deprecate ``Reaction.delete`` (`#3435 <https://github.com/PyGithub/PyGithub/pull/3435>`_) (f2540db50)
+* Deprecate ``Issue.assignee`` (`#3366 <https://github.com/PyGithub/PyGithub/pull/3366>`_) (8a0fa32de)
+* Deprecate ``Organization.edit_hook`` (`#3404 <https://github.com/PyGithub/PyGithub/pull/3404>`_) (d7395df9c)
+* Deprecate ``Team.add_to_members`` and ``Team.remove_from_members`` (`#3368 <https://github.com/PyGithub/PyGithub/pull/3368>`_) (78050d397)
 
 * Various minor OpenAPI fixes (`#3375 <https://github.com/PyGithub/PyGithub/pull/3375>`_) (7de26441c)
 
