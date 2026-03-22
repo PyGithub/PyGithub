@@ -31,8 +31,11 @@
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 Sam <35731946+sam93210@users.noreply.github.com>              #
+# Copyright 2025 odedperezcodes <oded.perez.codes@gmail.com>                   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

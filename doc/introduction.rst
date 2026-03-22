@@ -18,7 +18,7 @@ First create a Github instance::
     # Authentication is defined via github.Auth
     from github import Auth
 
-    # using an access token
+    # Using an access token
     auth = Auth.Token("access_token")
 
     # Public Web Github
@@ -26,6 +26,9 @@ First create a Github instance::
 
     # Github Enterprise with custom hostname
     g = Github(auth=auth, base_url="https://{hostname}/api/v3")
+
+    # Use lazy mode (see https://pygithub.readthedocs.io/en/stable/examples/LazyMode.html)
+    g = Github(auth=auth, lazy=True)
 
 Then play with your Github objects::
 
