@@ -62,27 +62,57 @@ Creating a Webhook Programmatically
 
 Instead of manually configuring a webhook via GitHub's UI, you can create it programmatically using PyGithub:
 
-.. code-block:: python
+.. tabs::
 
-    def create_webhook():
-        """
-        Creates a webhook for a specified GitHub repository.
-        """
-        USERNAME = ""
-        PASSWORD = ""
-        OWNER = ""
-        REPO_NAME = ""
-        EVENTS = ["push", "pull_request"]
-        HOST = ""
+    .. tab:: Sync
 
-        config = {
-            "url": "http://{host}/{endpoint}".format(host=HOST, endpoint=ENDPOINT),
-            "content_type": "json"
-        }
+        .. code-block:: python
 
-        g = Github(USERNAME, PASSWORD)
-        repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
-        repo.create_hook("web", config, EVENTS, active=True)
+            def create_webhook():
+                """
+                Creates a webhook for a specified GitHub repository.
+                """
+                USERNAME = ""
+                PASSWORD = ""
+                OWNER = ""
+                REPO_NAME = ""
+                EVENTS = ["push", "pull_request"]
+                HOST = ""
+
+                config = {
+                    "url": "http://{host}/{endpoint}".format(host=HOST, endpoint=ENDPOINT),
+                    "content_type": "json"
+                }
+
+                g = Github(USERNAME, PASSWORD)
+                repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
+                repo.create_hook("web", config, EVENTS, active=True)
+
+    .. tab:: Async
+
+        .. code-block:: python
+
+            async def create_webhook():
+                """
+                Creates a webhook for a specified GitHub repository.
+                """
+                from github.asyncio import Github
+
+                USERNAME = ""
+                PASSWORD = ""
+                OWNER = ""
+                REPO_NAME = ""
+                EVENTS = ["push", "pull_request"]
+                HOST = ""
+
+                config = {
+                    "url": "http://{host}/{endpoint}".format(host=HOST, endpoint=ENDPOINT),
+                    "content_type": "json"
+                }
+
+                g = Github(USERNAME, PASSWORD)
+                repo = g.get_repo("{owner}/{repo_name}".format(owner=OWNER, repo_name=REPO_NAME))
+                await repo.create_hook("web", config, EVENTS, active=True)
 
 Running the Webhook Server
 --------------------------

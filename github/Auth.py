@@ -35,10 +35,10 @@ import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Callable, Union
+from typing import TYPE_CHECKING, Any, Callable, Union
 
 import jwt
-from requests import utils
+from niquests import utils
 
 from github import Consts
 from github.InstallationAuthorization import InstallationAuthorization
@@ -254,7 +254,7 @@ class AppAuth(JWT):
         self,
         installation_id: int,
         token_permissions: dict[str, str] | None = None,
-        requester: Requester | None = None,
+        requester: Any = None,
     ) -> AppInstallationAuth:
         """
         Creates a github.Auth.AppInstallationAuth instance for an installation.
@@ -327,14 +327,13 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         app_auth: AppAuth,
         installation_id: int,
         token_permissions: dict[str, str] | None = None,
-        requester: Requester | None = None,
+        requester: Any = None,
     ):
         super().__init__()
 
         assert isinstance(app_auth, AppAuth), app_auth
         assert isinstance(installation_id, int), installation_id
         assert token_permissions is None or isinstance(token_permissions, dict), token_permissions
-        assert requester is None or isinstance(requester, Requester), requester
 
         self._app_auth = app_auth
         self._installation_id = installation_id
@@ -343,8 +342,7 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         if requester is not None:
             self.withRequester(requester)
 
-    def withRequester(self, requester: Requester) -> AppInstallationAuth:
-        assert isinstance(requester, Requester), requester
+    def withRequester(self, requester: Any) -> AppInstallationAuth:
         super().withRequester(requester.withAuth(self._app_auth))
 
         # imported here to avoid circular import
@@ -425,7 +423,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         expires_at: datetime | None = None,
         refresh_token: str | None = None,
         refresh_expires_at: datetime | None = None,
-        requester: Requester | None = None,
+        requester: Any = None,
     ) -> None:
         super().__init__()
 
@@ -436,7 +434,6 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         assert expires_at is None or isinstance(expires_at, datetime), expires_at
         assert refresh_token is None or isinstance(refresh_token, str) and len(refresh_token) > 0
         assert refresh_expires_at is None or isinstance(refresh_expires_at, datetime), refresh_expires_at
-        assert requester is None or isinstance(requester, Requester), requester
 
         self._client_id = client_id
         self._client_secret = client_secret
@@ -459,8 +456,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
             self._refresh()
         return self._token
 
-    def withRequester(self, requester: Requester) -> AppUserAuth:
-        assert isinstance(requester, Requester), requester
+    def withRequester(self, requester: Any) -> AppUserAuth:
         super().withRequester(requester.withAuth(None))
 
         # imported here to avoid circular import
