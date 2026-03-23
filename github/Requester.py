@@ -880,7 +880,15 @@ class Requester:
                     if href:
                         data["url"] = href
             else:
-                data["url"] = url
+                # GitHub API provides name-based lookup shortcuts (e.g., /releases/tags/{tag})
+                # that return the same resource as the ID-based endpoint (e.g., /releases/{id}).
+                # When the response includes an ID, reconstruct the URL with the canonical form.
+                if "id" in data and "/tags/" in url:
+                    # Extract the base path before /tags/ and reconstruct with the ID
+                    base_path = url.rsplit("/tags/", 1)[0]
+                    data["url"] = f"{base_path}/{data['id']}"
+                else:
+                    data["url"] = url
         return responseHeaders, data
 
     @classmethod

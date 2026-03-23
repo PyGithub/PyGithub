@@ -228,6 +228,20 @@ class GitRelease(Framework.TestCase):
         self.assertTrue(asset is not None)
         self.assertEqual(asset.id, asset_id)
 
+    def testGetAssetsByTag(self):
+        """
+        Test getting assets from a release fetched by tag name (issue #3467)
+        """
+        repo = self.repo
+        release = repo.get_release(tag)
+        self.assertEqual(release.tag_name, tag)
+
+        # This should work without 404 error
+        asset_list = [x for x in release.get_assets()]
+        self.assertTrue(asset_list is not None)
+        self.assertEqual(len(asset_list), 1)
+        self.assertEqual(asset_list[0].name, "fact")
+
     def testDelete(self):
         self.setUpNewRelease()
         self.new_release.delete_release()
