@@ -3672,10 +3672,12 @@ class Repository(CompletableGithubObject):
         assert isinstance(id, (int, str)), id
         if isinstance(id, int):
             url = f"{self.url}/releases/{id}"
+            return github.GitRelease.GitRelease(self._requester, url=url)
         else:
             tag = urllib.parse.quote(id, safe="")
             url = f"{self.url}/releases/tags/{tag}"
-        return github.GitRelease.GitRelease(self._requester, url=url)
+            # a release by tag cannot be lazy, we need to get the url with release id
+            return github.GitRelease.GitRelease(self._requester, url=url).complete()
 
     def get_latest_release(self) -> GitRelease:
         """
