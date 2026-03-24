@@ -315,6 +315,16 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
+    def get_attempt(self, attempt_number: int) -> WorkflowRun:
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number} <https://docs.github.com/en/rest/actions/workflow-runs#get-a-workflow-run-attempt>`_
+        :param attempt_number: int
+        :rtype: :class:`github.WorkflowRun.WorkflowRun`
+        """
+        assert isinstance(attempt_number, int)
+        url = f"{self.url}/attempts/{attempt_number}"
+        return WorkflowRun(self._requester, url=url)
+
     def get_artifacts(self) -> PaginatedList[Artifact]:
         return PaginatedList(
             github.Artifact.Artifact,
