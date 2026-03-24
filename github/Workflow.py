@@ -46,6 +46,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from typing import Any
 
@@ -57,6 +58,7 @@ import github.Tag
 import github.WorkflowRun
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 from github.PaginatedList import PaginatedList
+from github.WorkflowRun import WorkflowRunDetails
 
 
 class Workflow(CompletableGithubObject):
@@ -149,7 +151,8 @@ class Workflow(CompletableGithubObject):
         ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
-    ) -> bool:
+        return_run_details: bool = False,
+    ) -> bool | WorkflowRunDetails:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
         Note: raises or return False without details on error, depending on the ``throw`` parameter.
@@ -172,12 +175,20 @@ class Workflow(CompletableGithubObject):
         url = f"{self.url}/dispatches"
         input = {"ref": ref, "inputs": inputs}
 
+        # Add return_run_details to the request body if requested
+        if return_run_details:
+            input["return_run_details"] = True
+
         if throw:
-            self._requester.requestJsonAndCheck("POST", url, input=input)
+            _, data = self._requester.requestJsonAndCheck("POST", url, input=input)
+            if return_run_details and data:
+                return data
             return True
         else:
-            status, _, _ = self._requester.requestJson("POST", url, input=input)
-            return status == 204
+            status, _, data = self._requester.requestJson("POST", url, input=input)
+            if return_run_details and status == 200 and data:
+                return json.loads(data)
+            return status in (200, 204)
 
     def get_runs(
         self,

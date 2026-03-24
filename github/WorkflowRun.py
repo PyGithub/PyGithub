@@ -38,7 +38,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple, TypedDict
 
 import github.GitCommit
 import github.NamedUser
@@ -55,6 +55,20 @@ if TYPE_CHECKING:
     from github.PullRequest import PullRequest
     from github.Repository import Repository
     from github.WorkflowJob import WorkflowJob
+
+
+class WorkflowRunDetails(TypedDict):
+    """
+    Workflow run details returned when return_run_details is True.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event
+
+    """
+
+    workflow_run_id: int
+    run_url: str
+    html_url: str
 
 
 class TimingData(NamedTuple):
