@@ -46,6 +46,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from typing import Any
 
@@ -149,7 +150,8 @@ class Workflow(CompletableGithubObject):
         ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
-    ) -> bool:
+        return_run_details: bool = False,
+    ) -> bool | github.WorkflowRun.WorkflowRun:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
         Note: raises or return False without details on error, depending on the ``throw`` parameter.
@@ -172,12 +174,37 @@ class Workflow(CompletableGithubObject):
         url = f"{self.url}/dispatches"
         input = {"ref": ref, "inputs": inputs}
 
+        # Add return_run_details to the request body if requested
+        if return_run_details:
+            input["return_run_details"] = True
+
         if throw:
-            self._requester.requestJsonAndCheck("POST", url, input=input)
+            _, data = self._requester.requestJsonAndCheck("POST", url, input=input)
+            if return_run_details and data:
+                # Map API response to WorkflowRun attributes
+                workflow_run_data = {
+                    "id": data["workflow_run_id"],
+                    "url": data["run_url"],
+                    "html_url": data["html_url"],
+                }
+                return github.WorkflowRun.WorkflowRun(
+                    self._requester, headers={}, attributes=workflow_run_data, completed=False
+                )
             return True
         else:
-            status, _, _ = self._requester.requestJson("POST", url, input=input)
-            return status == 204
+            status, _, data = self._requester.requestJson("POST", url, input=input)
+            if return_run_details and status == 200 and data:
+                # Parse JSON and map API response to WorkflowRun attributes
+                run_data = json.loads(data)
+                workflow_run_data = {
+                    "id": run_data["workflow_run_id"],
+                    "url": run_data["run_url"],
+                    "html_url": run_data["html_url"],
+                }
+                return github.WorkflowRun.WorkflowRun(
+                    self._requester, headers={}, attributes=workflow_run_data, completed=False
+                )
+            return status in (200, 204)
 
     def get_runs(
         self,
