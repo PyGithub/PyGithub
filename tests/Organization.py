@@ -625,6 +625,13 @@ class Organization(Framework.TestCase):
         variable = self.org.create_variable("variable-name", "variable-value", "all")
         self.assertIsNotNone(variable)
 
+    def testCreateVariableUrl(self):
+        variable = self.org.create_variable("variable-name", "variable-value", "all")
+        self.assertEqual(
+            variable.url,
+            "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name",
+        )
+
     def testCreateVariableSelected(self):
         repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
         variable = self.org.create_variable("variable-name", "variable-value", "selected", repos)
@@ -650,6 +657,14 @@ class Organization(Framework.TestCase):
     def testGetVariables(self):
         variables = self.org.get_variables()
         self.assertEqual(len(list(variables)), 1)
+
+    def testEditVariable(self):
+        variable = self.org.get_variable("variable-name")
+        self.assertTrue(variable.edit("variable-value-updated"))
+
+    def testEditSecret(self):
+        secret = self.org.get_secret("secret-name")
+        self.assertTrue(secret.edit("secret-value-updated"))
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateActionsSecret(self, encrypt):
