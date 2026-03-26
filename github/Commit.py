@@ -274,14 +274,11 @@ class Commit(CompletableGithubObject):
             None,
         )
 
-    def get_combined_status(self, per_page: Opt[int] = NotSet) -> CommitCombinedStatus:
+    def get_combined_status(self) -> CommitCombinedStatus:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <http://docs.github.com/en/rest/reference/repos#statuses>`_
-        :param per_page: int
         """
-        assert is_optional(per_page, int), per_page
-        url_parameters = NotSet.remove_unset_items({"per_page": per_page})
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status", parameters=url_parameters)
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
         return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data)
 
     def get_pulls(self) -> PaginatedList[PullRequest]:

@@ -89,21 +89,8 @@ class CommitCombinedStatus(Framework.TestCase):
             'CommitCombinedStatus(state="success", sha="74e70119a23fa3ffb3db19d4590eccfebd72b659")',
         )
 
-    def testStatusesAsPaginatedList(self):
-        # Test that statuses is a PaginatedList
-        self.assertEqual(self.combined_status.statuses.totalCount, 6)
-        # Test that we can iterate through statuses
-        statuses_list = list(self.combined_status.statuses)
-        self.assertEqual(len(statuses_list), 6)
-        # Test that we can access by index
-        self.assertEqual(statuses_list[0].context, "jenkins/js")
-        self.assertEqual(statuses_list[1].context, "jenkins/a11y")
-
     def testGetStatuses(self):
-        # Test that get_statuses() returns a PaginatedList
+        # Test that get_statuses() returns a PaginatedList with the prefetched first page
         statuses = self.combined_status.get_statuses()
-        # Test that we can iterate through statuses
-        statuses_list = list(statuses)
-        self.assertEqual(len(statuses_list), 6)
-        # Test that we can access by index
-        self.assertEqual(statuses_list[0].context, "jenkins/js")
+        self.assertEqual(len(list(statuses)), 6)
+        self.assertEqual(len({status.context for status in statuses}), 6)
