@@ -54,7 +54,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     This class represents CommitCombinedStatuses.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/repos#statuses
+    https://docs.github.com/en/rest/commits/statuses#get-the-combined-status-for-a-specific-reference
 
     The OpenAPI schema can be found at
 
@@ -114,7 +114,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
 
     def get_statuses(self, per_page: Opt[int] = NotSet) -> PaginatedList[github.CommitStatus.CommitStatus]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <https://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <https://docs.github.com/en/rest/commits/statuses#get-the-combined-status-for-a-specific-reference>`_
         :param per_page: int
         :rtype: :class:`PaginatedList` of :class:`github.CommitStatus.CommitStatus`
         """
