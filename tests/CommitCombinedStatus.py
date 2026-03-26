@@ -89,3 +89,9 @@ class CommitCombinedStatus(Framework.TestCase):
             repr(self.combined_status),
             'CommitCombinedStatus(state="success", sha="74e70119a23fa3ffb3db19d4590eccfebd72b659")',
         )
+
+    def testGetStatuses(self):
+        # Test that get_statuses() returns a PaginatedList with the prefetched first page
+        statuses = self.combined_status.get_statuses()
+        self.assertEqual(len(list(statuses)), 6)
+        self.assertEqual(len({status.context for status in statuses}), 6)
