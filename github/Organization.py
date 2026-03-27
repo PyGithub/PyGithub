@@ -1251,6 +1251,12 @@ class Organization(CompletableGithubObject):
     ) -> PaginatedList[NamedUser]:
         """
         :calls: `GET /orgs/{org}/members <https://docs.github.com/en/rest/reference/orgs#members>`_
+        Note:
+    The GitHub API does not include role or permission details
+    for organization members returned by this method.
+    As a result, attributes such as `user.role` and
+    `user.permissions` will be None for these users.
+
         """
         assert is_optional(filter_, str), filter_
         assert is_optional(role, str), role
