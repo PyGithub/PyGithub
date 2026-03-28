@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/pulls/31/merge
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+401
+[('Server', 'GitHub.com'), ('Content-Type', 'application/json; charset=utf-8')]
+{"message":"Bad credentials","documentation_url":"https://docs.github.com/rest"}
