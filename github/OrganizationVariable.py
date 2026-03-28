@@ -56,12 +56,21 @@ class OrganizationVariable(Variable):
         self._selected_repositories_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._value: Attribute[str] = NotSet
         self._visibility: Attribute[str] = NotSet
 
     @property
     def selected_repositories_url(self) -> str:
         self._completeIfNotSet(self._selected_repositories_url)
         return self._selected_repositories_url.value
+
+    @property
+    def value(self) -> str:
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._value)
+        return self._value.value
 
     @property
     def visibility(self) -> str:
@@ -146,5 +155,7 @@ class OrganizationVariable(Variable):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+        if "value" in attributes:
+            self._value = self._makeStringAttribute(attributes["value"])
         if "visibility" in attributes:
             self._visibility = self._makeStringAttribute(attributes["visibility"])
