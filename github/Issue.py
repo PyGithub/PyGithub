@@ -712,6 +712,52 @@ class Issue(CompletableGithubObject):
             None,
             headers={"Accept": Consts.issueTimelineEventsPreview},
         )
+    
+    def get_blocked_by(self) -> PaginatedList[Issue]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+        return PaginatedList(
+            Issue,
+            self._requester,
+            f"{self.url}/dependencies/blocked_by",
+            None,
+            headers={"Accept": Consts.mediaType},
+        )
+    
+    def add_blocked_by(self, issue: Issue) -> None:
+        """
+        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#add-a-dependency-an-issue-is-blocked-by>`_
+        """
+        assert isinstance(issue, github.Issue.Issue)
+        post_parameters: dict[str, int] = {
+            "issue_id": issue.id
+        }
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/dependencies/blocked_by", input=post_parameters)
+
+    def remove_blocked_by(self, issue: Issue) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by/{issue_id}
+        """
+        assert isinstance(issue, github.Issue.Issue)
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            f"{self.url}/dependencies/blocked_by/{issue.id}"
+        )
+
+    def get_blocking(self) -> PaginatedList[Issue]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocking
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+        return PaginatedList(
+            Issue,
+            self._requester,
+            f"{self.url}/dependencies/blocking",
+            None,
+            headers={"Accept": Consts.mediaType},
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
