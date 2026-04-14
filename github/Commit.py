@@ -302,12 +302,15 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
             None,
         )
 
-    def get_combined_status(self) -> CommitCombinedStatus:
+    def get_combined_status(self, *, combined_status_statuses_per_page: int | None = None) -> CommitCombinedStatus:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <http://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <https://docs.github.com/en/rest/commits/statuses#get-the-combined-status-for-a-specific-reference>`_
+        :param combined_status_statuses_per_page: int Number of statuses retrieved with the combined status. Iterating over the statuses property will fetch pages of this size. The default page size is 30, the maximum is 100.
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
-        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data)
+        # combined_status_statuses_per_page asserted in CommitCombinedStatus(CompletableGithubObjectWithPaginatedProperty)
+        return github.CommitCombinedStatus.CommitCombinedStatus(
+            self._requester, url=f"{self.url}/status", per_page=combined_status_statuses_per_page
+        )
 
     def get_pulls(self) -> PaginatedList[PullRequest]:
         """
