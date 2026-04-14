@@ -638,6 +638,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(variable.created_at, datetime(2019, 8, 10, 14, 59, 22, tzinfo=timezone.utc))
         self.assertEqual(variable.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
         self.assertEqual(variable.visibility, "selected")
+        self.assertEqual(variable.value, "variable-value123")
         self.assertEqual(list(variable.selected_repositories), repos)
         self.assertEqual(variable.url, "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name")
 
