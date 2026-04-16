@@ -509,6 +509,11 @@ class PullRequest(Framework.TestCase):
             'PullRequestMergeStatus(sha="688208b1a5a074871d0e9376119556897439697d", merged=True)',
         )
 
+    def testIsMergedRaisesOnUnexpectedStatus(self):
+        """Test that is_merged() raises an exception for non-204/non-404 status codes (e.g. 401)."""
+        with self.assertRaises(github.GithubException.BadCredentialsException):
+            self.repo.get_pull(31).is_merged()
+
     def testMergeWithCommitMessage(self):
         self.repo.get_pull(39).merge("Custom commit message created by PyGithub")
 
