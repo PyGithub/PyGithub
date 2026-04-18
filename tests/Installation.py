@@ -40,7 +40,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from urllib3.exceptions import InsecureRequestWarning
+from niquests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts

@@ -1,0 +1,457 @@
+# FILE AUTO GENERATED DO NOT TOUCH
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
+# Copyright 2016 Benjamin Whitney <benjamin.whitney@ironnetcybersecurity.com>  #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Daniel Kesler <kesler.daniel@gmail.com>                       #
+# Copyright 2018 Ggicci <ggicci.t@gmail.com>                                   #
+# Copyright 2018 Kuba <jakub.glapa@adspired.com>                               #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 edquist <edquist@users.noreply.github.com>                    #
+# Copyright 2018 nurupo <nurupo.contributions@gmail.com>                       #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Alice GIRARD <bouhahah@gmail.com>                             #
+# Copyright 2020 Jesse Li <jesse.li2002@gmail.com>                             #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2021 Mark Walker <mark.walker@realbuzz.com>                        #
+# Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2023 Wojciech Barczyński <104033489+WojciechBarczynski@users.noreply.github.com>#
+# Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+#                                                                              #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
+from __future__ import annotations
+
+import urllib.parse
+from datetime import datetime
+from os.path import basename
+from typing import Any, BinaryIO
+
+from typing_extensions import deprecated
+
+from github import Consts
+
+from . import GitReleaseAsset, NamedUser
+from .GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined, is_optional, is_undefined
+from .PaginatedList import PaginatedList
+
+
+class GitRelease(CompletableGithubObject):
+    """
+    This class represents GitReleases.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/repos#releases
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/release
+
+    """
+
+    def _initAttributes(self) -> None:
+        self._assets: Attribute[list[GitReleaseAsset.GitReleaseAsset]] = NotSet
+        self._assets_url: Attribute[str] = NotSet
+        self._author: Attribute[NamedUser.NamedUser] = NotSet
+        self._body: Attribute[str] = NotSet
+        self._body_html: Attribute[str] = NotSet
+        self._body_text: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime] = NotSet
+        self._discussion_url: Attribute[str] = NotSet
+        self._documentation_url: Attribute[str] = NotSet
+        self._draft: Attribute[bool] = NotSet
+        self._generate_release_notes: Attribute[bool] = NotSet
+        self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._immutable: Attribute[bool] = NotSet
+        self._mentions_count: Attribute[int] = NotSet
+        self._message: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._prerelease: Attribute[bool] = NotSet
+        self._published_at: Attribute[datetime] = NotSet
+        self._reactions: Attribute[dict[str, Any]] = NotSet
+        self._status: Attribute[str] = NotSet
+        self._tag_name: Attribute[str] = NotSet
+        self._tarball_url: Attribute[str] = NotSet
+        self._target_commitish: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._upload_url: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._zipball_url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self._name.value})
+
+    @property
+    async def assets(self) -> list[GitReleaseAsset.GitReleaseAsset]:
+        await self._completeIfNotSet(self._assets)
+        return self._assets.value
+
+    @property
+    async def assets_url(self) -> str:
+        await self._completeIfNotSet(self._assets_url)
+        return self._assets_url.value
+
+    @property
+    async def author(self) -> NamedUser.NamedUser:
+        await self._completeIfNotSet(self._author)
+        return self._author.value
+
+    @property
+    async def body(self) -> str:
+        await self._completeIfNotSet(self._body)
+        return self._body.value
+
+    @property
+    async def body_html(self) -> str:
+        await self._completeIfNotSet(self._body_html)
+        return self._body_html.value
+
+    @property
+    async def body_text(self) -> str:
+        await self._completeIfNotSet(self._body_text)
+        return self._body_text.value
+
+    @property
+    async def created_at(self) -> datetime:
+        await self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    async def discussion_url(self) -> str:
+        await self._completeIfNotSet(self._discussion_url)
+        return self._discussion_url.value
+
+    @property
+    async def documentation_url(self) -> str:
+        await self._completeIfNotSet(self._documentation_url)
+        return self._documentation_url.value
+
+    @property
+    async def draft(self) -> bool:
+        await self._completeIfNotSet(self._draft)
+        return self._draft.value
+
+    @property
+    async def html_url(self) -> str:
+        await self._completeIfNotSet(self._html_url)
+        return self._html_url.value
+
+    @property
+    async def id(self) -> int:
+        await self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
+    async def immutable(self) -> bool:
+        await self._completeIfNotSet(self._immutable)
+        return self._immutable.value
+
+    @property
+    async def mentions_count(self) -> int:
+        await self._completeIfNotSet(self._mentions_count)
+        return self._mentions_count.value
+
+    @property
+    async def message(self) -> str:
+        await self._completeIfNotSet(self._message)
+        return self._message.value
+
+    @property
+    async def name(self) -> str:
+        await self._completeIfNotSet(self._name)
+        return self._name.value
+
+    @property
+    async def node_id(self) -> str:
+        await self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
+    async def prerelease(self) -> bool:
+        await self._completeIfNotSet(self._prerelease)
+        return self._prerelease.value
+
+    @property
+    async def published_at(self) -> datetime:
+        await self._completeIfNotSet(self._published_at)
+        return self._published_at.value
+
+    @property
+    async def reactions(self) -> dict[str, Any]:
+        await self._completeIfNotSet(self._reactions)
+        return self._reactions.value
+
+    @property
+    async def status(self) -> str:
+        await self._completeIfNotSet(self._status)
+        return self._status.value
+
+    @property
+    async def tag_name(self) -> str:
+        await self._completeIfNotSet(self._tag_name)
+        return self._tag_name.value
+
+    @property
+    async def tarball_url(self) -> str:
+        await self._completeIfNotSet(self._tarball_url)
+        return self._tarball_url.value
+
+    @property
+    async def target_commitish(self) -> str:
+        await self._completeIfNotSet(self._target_commitish)
+        return self._target_commitish.value
+
+    @property
+    @deprecated("Use name instead")
+    async def title(self) -> str:
+        # alias for name
+        return await self.name
+
+    @property
+    async def updated_at(self) -> datetime:
+        await self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
+
+    @property
+    async def upload_url(self) -> str:
+        await self._completeIfNotSet(self._upload_url)
+        return self._upload_url.value
+
+    @property
+    async def url(self) -> str:
+        await self._completeIfNotSet(self._url)
+        return self._url.value
+
+    @property
+    async def zipball_url(self) -> str:
+        await self._completeIfNotSet(self._zipball_url)
+        return self._zipball_url.value
+
+    async def delete_release(self) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#delete-a-release>`_
+        """
+        headers, data = await self._requester.requestJsonAndCheck("DELETE", await self.url)
+
+    async def update_release(
+        self,
+        name: str,
+        message: str,
+        draft: bool = False,
+        prerelease: bool = False,
+        tag_name: Opt[str] = NotSet,
+        target_commitish: Opt[str] = NotSet,
+        make_latest: Opt[str] = NotSet,
+        discussion_category_name: Opt[str] = NotSet,
+    ) -> GitRelease:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#update-a-release>`_
+        """
+        assert isinstance(name, str), name
+        assert isinstance(message, str), message
+        assert isinstance(draft, bool), draft
+        assert isinstance(prerelease, bool), prerelease
+        assert is_optional(tag_name, str), "tag_name must be a str/unicode object"
+        assert is_optional(target_commitish, str), "target_commitish must be a str/unicode object"
+        assert make_latest in ["true", "false", "legacy", NotSet], make_latest
+        assert is_optional(discussion_category_name, str), discussion_category_name
+        # default tag_name with instance attribute if not given to the method
+        if is_undefined(tag_name):
+            tag_name = await self.tag_name
+        post_parameters = {
+            "tag_name": tag_name,
+            "name": name,
+            "body": message,
+            "draft": draft,
+            "prerelease": prerelease,
+        }
+        # Do not set target_commitish to self.target_commitish when omitted, just don't send it
+        # altogether in that case, in order to match the Github API behaviour. Only send it when set.
+        if is_defined(target_commitish):
+            post_parameters["target_commitish"] = target_commitish
+        if is_defined(make_latest):
+            post_parameters["make_latest"] = make_latest
+        if is_defined(discussion_category_name):
+            post_parameters["discussion_category_name"] = discussion_category_name
+        headers, data = await self._requester.requestJsonAndCheck("PATCH", await self.url, input=post_parameters)
+        return GitRelease(self._requester, headers, data, completed=True)
+
+    async def upload_asset(
+        self, path: str, label: str = "", content_type: Opt[str] = NotSet, name: Opt[str] = NotSet
+    ) -> GitReleaseAsset.GitReleaseAsset:
+        """
+        :calls: `POST /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`__
+        """
+        assert isinstance(path, str), path
+        assert isinstance(label, str), label
+        assert is_undefined(name) or isinstance(name, str), name
+
+        post_parameters: dict[str, Any] = {"label": label}
+        if is_undefined(name):
+            post_parameters["name"] = basename(path)
+        else:
+            post_parameters["name"] = name
+        headers: dict[str, Any] = {}
+        if is_defined(content_type):
+            headers["Content-Type"] = content_type
+        resp_headers, data = await self._requester.requestBlobAndCheck(
+            "POST",
+            (await self.upload_url).split("{?")[0],
+            parameters=post_parameters,
+            headers=headers,
+            input=path,
+        )
+        return GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
+
+    async def upload_asset_from_memory(
+        self,
+        file_like: BinaryIO,
+        file_size: int,
+        name: str,
+        content_type: Opt[str] = NotSet,
+        label: str = "",
+    ) -> GitReleaseAsset.GitReleaseAsset:
+        """
+        Uploads an asset.
+
+        Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
+        Note that this method is more strict and requires you to specify the ``name``, since there's no file name to infer these from.
+        :calls: `POST /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`__
+        :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
+        :param file_size: int, size in bytes of ``file_like``
+
+        """
+        assert isinstance(name, str), name
+        assert isinstance(file_size, int), file_size
+        assert isinstance(label, str), label
+
+        post_parameters = {"label": label, "name": name}
+        content_type = content_type if is_defined(content_type) else Consts.defaultMediaType
+        headers = {"Content-Type": content_type, "Content-Length": str(file_size)}
+
+        resp_headers, data = await self._requester.requestMemoryBlobAndCheck(
+            "POST",
+            (await self.upload_url).split("{?")[0],
+            parameters=post_parameters,
+            headers=headers,
+            file_like=file_like,
+        )
+        return GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
+
+    async def get_assets(self) -> PaginatedList[GitReleaseAsset.GitReleaseAsset]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#get-a-release-asset>`_
+        """
+        return PaginatedList(
+            GitReleaseAsset.GitReleaseAsset,
+            self._requester,
+            f"{await self.url}/assets",
+            None,
+        )
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "assets" in attributes:
+            self._assets = self._makeListOfClassesAttribute(GitReleaseAsset.GitReleaseAsset, attributes["assets"])
+        if "assets_url" in attributes:  # pragma no branch
+            self._assets_url = self._makeStringAttribute(attributes["assets_url"])
+        if "author" in attributes:
+            self._author = self._makeClassAttribute(NamedUser.NamedUser, attributes["author"])
+        if "body" in attributes:
+            self._body = self._makeStringAttribute(attributes["body"])
+        if "body_html" in attributes:  # pragma no branch
+            self._body_html = self._makeStringAttribute(attributes["body_html"])
+        if "body_text" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["body_text"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "discussion_url" in attributes:  # pragma no branch
+            self._discussion_url = self._makeStringAttribute(attributes["discussion_url"])
+        if "documentation_url" in attributes:  # pragma no branch
+            self._documentation_url = self._makeStringAttribute(attributes["documentation_url"])
+        if "draft" in attributes:
+            self._draft = self._makeBoolAttribute(attributes["draft"])
+        if "generate_release_notes" in attributes:
+            self._generate_release_notes = self._makeBoolAttribute(attributes["generate_release_notes"])
+        if "html_url" in attributes:
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "id" in attributes:
+            self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
+        if "immutable" in attributes:  # pragma no branch
+            self._immutable = self._makeBoolAttribute(attributes["immutable"])
+        if "mentions_count" in attributes:  # pragma no branch
+            self._mentions_count = self._makeIntAttribute(attributes["mentions_count"])
+        if "message" in attributes:  # pragma no branch
+            self._message = self._makeStringAttribute(attributes["message"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "prerelease" in attributes:
+            self._prerelease = self._makeBoolAttribute(attributes["prerelease"])
+        if "published_at" in attributes:
+            self._published_at = self._makeDatetimeAttribute(attributes["published_at"])
+        if "reactions" in attributes:  # pragma no branch
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
+        if "status" in attributes:  # pragma no branch
+            self._status = self._makeStringAttribute(attributes["status"])
+        if "tag_name" in attributes:
+            self._tag_name = self._makeStringAttribute(attributes["tag_name"])
+        elif "url" in attributes and attributes["url"] and isinstance(attributes["url"], str):
+            quoted_tag_name = attributes["url"].split("/")[-1]
+            tag_name = urllib.parse.unquote(quoted_tag_name)
+            self._tag_name = self._makeStringAttribute(tag_name)
+        if "tarball_url" in attributes:
+            self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
+        if "target_commitish" in attributes:
+            self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "upload_url" in attributes:
+            self._upload_url = self._makeStringAttribute(attributes["upload_url"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])
+        if "zipball_url" in attributes:
+            self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])

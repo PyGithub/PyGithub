@@ -1,0 +1,154 @@
+# FILE AUTO GENERATED DO NOT TOUCH
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2023 Andrew Dawes <53574062+AndrewJDawes@users.noreply.github.com> #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+#                                                                              #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
+from __future__ import annotations
+
+import urllib.parse
+from datetime import datetime
+from typing import Any
+
+from .GithubObject import Attribute, CompletableGithubObject, NotSet, is_undefined
+
+
+class Variable(CompletableGithubObject):
+    """
+    This class represents a GitHub variable.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/actions/variables
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/actions-variable
+
+    """
+
+    def _initAttributes(self) -> None:
+        self._created_at: Attribute[datetime] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url: Attribute[str] = NotSet
+        self._value: Attribute[str] = NotSet
+        self._variables_url: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"name": self._name.value})
+
+    @property
+    async def created_at(self) -> datetime:
+        """
+        :type: datetime.datetime
+        """
+        await self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    async def name(self) -> str:
+        """
+        :type: string
+        """
+        await self._completeIfNotSet(self._name)
+        return self._name.value
+
+    @property
+    async def updated_at(self) -> datetime:
+        """
+        :type: datetime.datetime
+        """
+        await self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
+
+    @property
+    async def url(self) -> str:
+        """
+        :type: string
+        """
+        # Construct url from variables_url and name, if self._url. is not set
+        if is_undefined(self._url):
+            self._url = self._makeStringAttribute(self.variables_url + "/" + await self.name)
+        return self._url.value
+
+    @property
+    async def value(self) -> str:
+        """
+        :type: string
+        """
+        await self._completeIfNotSet(self._value)
+        return self._value.value
+
+    @property
+    def variables_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._variables_url.value
+
+    async def edit(self, value: str) -> bool:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions/variables#update-a-repository-variable>`_
+        :param variable_name: string
+        :param value: string
+        :rtype: bool
+        """
+        assert isinstance(value, str), value
+        patch_parameters = {
+            "name": await self.name,
+            "value": value,
+        }
+        status, _, _ = await self._requester.requestJson(
+            "PATCH",
+            await self.url,
+            input=patch_parameters,
+        )
+        return status == 204
+
+    async def delete(self) -> None:
+        """
+        :calls: `DELETE /orgs/{org}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#delete-an-organization-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#delete-a-repository-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/rest/actions/variables#delete-an-environment-variable>`_
+        :rtype: None
+        """
+        await self._requester.requestJsonAndCheck("DELETE", await self.url)
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])
+        if "value" in attributes:
+            self._value = self._makeStringAttribute(attributes["value"])
+        if "variables_url" in attributes:
+            self._variables_url = self._makeStringAttribute(attributes["variables_url"])
