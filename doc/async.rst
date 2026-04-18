@@ -80,7 +80,7 @@ In async code these must be ``await``-ed:
 .. code-block:: python
 
     user = await g.get_user()
-    repos = user.get_repos()  # not a coroutine on AuthenticatedUser
+    repos = user.get_repos()  # returns PaginatedList. no HTTP call yet, pages fetched during iteration
 
 Properties (lazy-loading)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -164,9 +164,9 @@ The async package mirrors the sync package structure:
    * - Sync
      - Async
    * - ``from github import Github``
-      - ``from github.asyncio import Github``
+     - ``from github.asyncio import Github``
    * - ``github.Repository.Repository``
-      - ``github.asyncio.Repository.Repository``
+     - ``github.asyncio.Repository.Repository``
 
 Threading vs asyncio
 --------------------
