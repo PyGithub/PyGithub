@@ -41,7 +41,6 @@ import re
 import shutil
 import subprocess
 import sys
-import textwrap
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -70,7 +69,6 @@ SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
 # Test files to skip (not test modules, or infrastructure)
 SKIP_TEST_FILES = {
     "__init__.py",
-    "conftest.py",
     "Framework.py",
     "__pycache__",
     # ExposeAllAttributes: request ordering differs in async due to eager completion timing
@@ -153,6 +151,81 @@ class IOAnalyzer:
         self.param_types: dict[str, dict[str, dict[str, set[str]]]] = {}
         # class_name -> set of method names that are @staticmethod or @classmethod
         self.static_methods: dict[str, set[str]] = {}
+        # regex pattern cache and reusable match
+        self._re_cache: dict[str, re.Pattern[str]] = {}
+        self._method_src_cache: dict[tuple[str, str], str] = {}
+        self._mro_cache: dict[str, list[str]] = {}
+
+    def _search(self, pattern: str, text: str) -> re.Match[str] | None:
+        """
+        Regex search with compilation cache (avoids re-compiling the same patterns).
+        """
+        compiled = self._re_cache.get(pattern)
+        if compiled is None:
+            compiled = re.compile(pattern)
+            self._re_cache[pattern] = compiled
+        return compiled.search(text)
+
+    def _get_method_src(
+        self, cls_name: str, method_name: str, method_node: ast.FunctionDef | ast.AsyncFunctionDef
+    ) -> str:
+        """
+        Get method source text, cached.
+        """
+        key = (cls_name, method_name)
+        result = self._method_src_cache.get(key)
+        if result is None:
+            stem = self.class_to_file.get(cls_name)
+            if stem is None:
+                return ""
+            src = self.sources.get(stem, "")
+            result = ast.get_source_segment(src, method_node) or ""
+            self._method_src_cache[key] = result
+        return result
+
+    def _get_mro(self, cls_name: str) -> list[str]:
+        """
+        Get full ancestor list (excluding cls_name itself), cached.
+        """
+        result = self._mro_cache.get(cls_name)
+        if result is not None:
+            return result
+        ancestors: list[str] = []
+        visited: set[str] = set()
+        queue = list(self.class_bases.get(cls_name, []))
+        while queue:
+            base = queue.pop(0)
+            if base in visited:
+                continue
+            visited.add(base)
+            ancestors.append(base)
+            queue.extend(self.class_bases.get(base, []))
+        self._mro_cache[cls_name] = ancestors
+        return ancestors
+
+    def _invalidate_mro_cache(self) -> None:
+        """
+        Invalidate the MRO cache (call when class_bases changes).
+        """
+        self._mro_cache.clear()
+
+    def _get_inherited_async(self, cls_name: str) -> set[str]:
+        """
+        Get all async methods inherited from ancestor classes.
+        """
+        result: set[str] = set()
+        for base in self._get_mro(cls_name):
+            result |= self.async_methods.get(base, set())
+        return result
+
+    def _get_inherited_promoted(self, cls_name: str) -> set[str]:
+        """
+        Get all promoted properties from ancestor classes.
+        """
+        result: set[str] = set()
+        for base in self._get_mro(cls_name):
+            result |= self.promoted_properties.get(base, set())
+        return result
 
     def parse_all(self):
         """
@@ -526,19 +599,33 @@ class IOAnalyzer:
 
         """
         for type_name in type_names:
+            # 0) Check if this type has a sync @property override of the attribute
+            # AND no descendant promotes it to async.  If the declared type is a
+            # base class, the runtime object may be a subclass that promotes it,
+            # so we can only short-circuit when the type has no subclasses that
+            # promote the attribute.  We defer this check: first scan ancestors
+            # (fast path), then descendants.  The descendant walk will catch the
+            # polymorphic case regardless.
+            local_sync = self.property_methods.get(type_name, set())
+            local_promoted = self.promoted_properties.get(type_name, set())
+            has_sync_override = attr_name in local_sync and attr_name not in local_promoted
+
             # 1) Check ancestors (walk UP the MRO)
-            visited: set[str] = set()
-            queue = [type_name]
-            while queue:
-                cn = queue.pop(0)
-                if cn in visited:
-                    continue
-                visited.add(cn)
-                if attr_name in self.async_methods.get(cn, set()):
-                    return True
-                if attr_name in self.promoted_properties.get(cn, set()):
-                    return True
-                queue.extend(self.class_bases.get(cn, []))
+            # If the type itself has a sync override, ancestor promotion doesn't
+            # apply (the subclass override wins).  Skip the upward walk.
+            if not has_sync_override:
+                visited: set[str] = set()
+                queue = [type_name]
+                while queue:
+                    cn = queue.pop(0)
+                    if cn in visited:
+                        continue
+                    visited.add(cn)
+                    if attr_name in self.async_methods.get(cn, set()):
+                        return True
+                    if attr_name in self.promoted_properties.get(cn, set()):
+                        return True
+                    queue.extend(self.class_bases.get(cn, []))
 
             # 2) Check descendants (walk DOWN the inheritance tree)
             # If the declared type is a base class, any concrete subclass
@@ -1068,12 +1155,13 @@ class IOAnalyzer:
             "getStream",
         }
 
+        # Pre-compile I/O method patterns
+        io_method_res = {p: re.compile(rf"\.{re.escape(p)}\s*\(") for p in io_method_patterns}
+
         for cls_name in self.async_classes:
             cls_node = self._get_class_node(cls_name)
             if cls_node is None:
                 continue
-            stem = self.class_to_file[cls_name]
-            src = self.sources[stem]
             methods_needing_async = set()
 
             # Build set of ALL property names for this class.
@@ -1110,13 +1198,13 @@ class IOAnalyzer:
                 if method_name in all_property_methods:
                     continue
 
-                method_src = ast.get_source_segment(src, item) or ""
+                method_src = self._get_method_src(cls_name, method_name, item)
 
                 needs_async = False
 
                 # Direct I/O calls - must be actual method calls (preceded by '.')
-                for pattern in io_method_patterns:
-                    if re.search(rf"\.{re.escape(pattern)}\s*\(", method_src):
+                for pattern_str, pattern_re in io_method_res.items():
+                    if pattern_str in method_src and pattern_re.search(method_src):
                         needs_async = True
                         break
 
@@ -1140,10 +1228,10 @@ class IOAnalyzer:
                     # Also check for name-mangled calls to these methods
                     for priv in requester_always_async:
                         mangled = f"_Requester{priv}"
-                        if re.search(rf"self\.{re.escape(mangled)}\s*\(", method_src):
+                        if mangled in method_src and self._search(rf"self\.{re.escape(mangled)}\s*\(", method_src):
                             needs_async = True
                             break
-                        if re.search(rf"self\.{re.escape(priv)}\s*\(", method_src):
+                        if priv in method_src and self._search(rf"self\.{re.escape(priv)}\s*\(", method_src):
                             needs_async = True
                             break
                     # The actual I/O method
@@ -1185,7 +1273,7 @@ class IOAnalyzer:
                 # PaginatedList methods
                 if cls_name in ("PaginatedList", "PaginatedListBase"):
                     if any(
-                        re.search(rf"\.{re.escape(x)}\s*\(", method_src)
+                        x in method_src and self._search(rf"\.{re.escape(x)}\s*\(", method_src)
                         for x in ["requestJsonAndCheck", "graphql_query", "_fetchNextPage", "_getLastPageUrl", "_grow"]
                     ):
                         needs_async = True
@@ -1218,22 +1306,11 @@ class IOAnalyzer:
                     cls_node = self._get_class_node(cls_name)
                     if cls_node is None:
                         continue
-                    stem = self.class_to_file[cls_name]
-                    src = self.sources[stem]
                     current = self.async_methods.get(cls_name, set())
                     cls_properties = self.property_methods.get(cls_name, set())
 
                     # Gather inherited async methods from parent classes for super() detection
-                    inherited_async: set[str] = set()
-                    visited2 = set()
-                    queue2 = list(self.class_bases.get(cls_name, []))
-                    while queue2:
-                        base = queue2.pop(0)
-                        if base in visited2:
-                            continue
-                        visited2.add(base)
-                        inherited_async |= self.async_methods.get(base, set())
-                        queue2.extend(self.class_bases.get(base, []))
+                    inherited_async = self._get_inherited_async(cls_name)
 
                     for item in ast.walk(cls_node):
                         if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -1246,10 +1323,13 @@ class IOAnalyzer:
                         # NEVER make @property methods async
                         if item.name in cls_properties:
                             continue
-                        method_src = ast.get_source_segment(src, item) or ""
+                        method_src = self._get_method_src(cls_name, item.name, item)
                         for async_method in list(current):
                             # Check for self.method( or self.__method( or self._method(
-                            if re.search(rf"self\.(?:_\w+)?{re.escape(async_method)}\s*\(", method_src):
+                            # Fast pre-check: method name must appear in source
+                            if async_method in method_src and self._search(
+                                rf"self\.(?:_\w+)?{re.escape(async_method)}\s*\(", method_src
+                            ):
                                 current.add(item.name)
                                 logger.debug(
                                     "analyze[pass2] %s.%s: calls async method '%s'", cls_name, item.name, async_method
@@ -1259,28 +1339,37 @@ class IOAnalyzer:
                         if item.name in current:
                             continue
                         # Also check for super().method( calls to inherited async methods
-                        for async_method in inherited_async:
-                            if re.search(rf"super\(\)\.{re.escape(async_method)}\s*\(", method_src):
-                                current.add(item.name)
-                                logger.debug(
-                                    "analyze[pass2] %s.%s: calls inherited async method via super().%s()",
-                                    cls_name,
-                                    item.name,
-                                    async_method,
-                                )
-                                changed = True
-                                break
+                        if "super()" in method_src:
+                            for async_method in inherited_async:
+                                if async_method in method_src and self._search(
+                                    rf"super\(\)\.{re.escape(async_method)}\s*\(", method_src
+                                ):
+                                    current.add(item.name)
+                                    logger.debug(
+                                        "analyze[pass2] %s.%s: calls inherited async method via super().%s()",
+                                        cls_name,
+                                        item.name,
+                                        async_method,
+                                    )
+                                    changed = True
+                                    break
                         if item.name in current:
                             continue
                         # Check for inline construction patterns: ClassName(...).async_method(...)
                         # E.g. GithubIntegration(**self.__requester.kwargs).get_app()
                         # If ClassName has async_method, the caller must also be async.
                         for other_cls in self.async_classes:
+                            # Fast pre-check: class name must appear in source
+                            if other_cls not in method_src:
+                                continue
                             other_async = self.async_methods.get(other_cls, set())
                             for async_method in other_async:
                                 if async_method in NEVER_ASYNC_METHODS:
                                     continue
-                                if re.search(
+                                # Fast pre-check: method name must appear in source
+                                if async_method not in method_src:
+                                    continue
+                                if self._search(
                                     rf"\b{re.escape(other_cls)}\s*\([^)]*\)\.{re.escape(async_method)}\s*\(",
                                     method_src,
                                 ):
@@ -1316,6 +1405,7 @@ class IOAnalyzer:
             # from property_methods so it gets the `async def` treatment.
             # We loop until no more promotions happen (transitive closure for property-calls-property).
             io_method_patterns_re = "|".join(re.escape(p) for p in io_method_patterns)
+            io_method_combined_re = re.compile(rf"\.(?:{io_method_patterns_re})\s*\(")
             prop_changed = True
             pass3_num = 0
             while prop_changed:
@@ -1326,31 +1416,13 @@ class IOAnalyzer:
                     cls_node = self._get_class_node(cls_name)
                     if cls_node is None:
                         continue
-                    stem = self.class_to_file[cls_name]
-                    src = self.sources[stem]
                     current_async = set(self.async_methods[cls_name])
                     # Include inherited async methods from ALL ancestor classes (full MRO)
-                    visited = set()
-                    queue = list(self.class_bases.get(cls_name, []))
-                    while queue:
-                        base = queue.pop(0)
-                        if base in visited:
-                            continue
-                        visited.add(base)
-                        current_async |= self.async_methods.get(base, set())
-                        queue.extend(self.class_bases.get(base, []))
+                    current_async |= self._get_inherited_async(cls_name)
 
                     # Also gather promoted properties (async properties accessed without parens)
                     current_promoted = set(self.promoted_properties.get(cls_name, set()))
-                    visited3 = set()
-                    queue3 = list(self.class_bases.get(cls_name, []))
-                    while queue3:
-                        base = queue3.pop(0)
-                        if base in visited3:
-                            continue
-                        visited3.add(base)
-                        current_promoted |= self.promoted_properties.get(base, set())
-                        queue3.extend(self.class_bases.get(base, []))
+                    current_promoted |= self._get_inherited_promoted(cls_name)
 
                     props = self.property_methods.get(cls_name, set())
                     promote = set()
@@ -1359,10 +1431,10 @@ class IOAnalyzer:
                             continue
                         if item.name not in props:
                             continue
-                        method_src = ast.get_source_segment(src, item) or ""
+                        method_src = self._get_method_src(cls_name, item.name, item)
                         # Check 1: does this property call any known async method?
                         for am in current_async:
-                            if re.search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
+                            if am in method_src and self._search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
                                 promote.add(item.name)
                                 logger.debug(
                                     "analyze[pass3] %s.%s: promoting @property (calls async method '%s')",
@@ -1374,20 +1446,21 @@ class IOAnalyzer:
                         if item.name in promote:
                             continue
                         # Check 1b: does this property call an inherited async method via super()?
-                        for am in current_async:
-                            if re.search(rf"super\(\)\.{re.escape(am)}\s*\(", method_src):
-                                promote.add(item.name)
-                                logger.debug(
-                                    "analyze[pass3] %s.%s: promoting @property (calls super().%s())",
-                                    cls_name,
-                                    item.name,
-                                    am,
-                                )
-                                break
+                        if "super()" in method_src:
+                            for am in current_async:
+                                if am in method_src and self._search(rf"super\(\)\.{re.escape(am)}\s*\(", method_src):
+                                    promote.add(item.name)
+                                    logger.debug(
+                                        "analyze[pass3] %s.%s: promoting @property (calls super().%s())",
+                                        cls_name,
+                                        item.name,
+                                        am,
+                                    )
+                                    break
                         if item.name in promote:
                             continue
                         # Check 2: does this property call a direct I/O pattern?
-                        if re.search(rf"\.(?:{io_method_patterns_re})\s*\(", method_src):
+                        if io_method_combined_re.search(method_src):
                             promote.add(item.name)
                             logger.debug(
                                 "analyze[pass3] %s.%s: promoting @property (direct I/O pattern)", cls_name, item.name
@@ -1397,7 +1470,7 @@ class IOAnalyzer:
                         # (without parentheses)? e.g. `return self.login` where `login` is async
                         for pp in current_promoted:
                             # Match self.prop NOT followed by ( — it's a property access
-                            if re.search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
+                            if pp in method_src and self._search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
                                 promote.add(item.name)
                                 logger.debug(
                                     "analyze[pass3] %s.%s: promoting @property (accesses promoted property '%s')",
@@ -1410,16 +1483,19 @@ class IOAnalyzer:
                             continue
                         # Check 3b: does this property ACCESS a promoted property via super()?
                         # e.g. `return super().node_id` where parent's node_id is async
-                        for pp in current_promoted:
-                            if re.search(rf"super\(\)\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
-                                promote.add(item.name)
-                                logger.debug(
-                                    "analyze[pass3] %s.%s: promoting @property (accesses super().%s)",
-                                    cls_name,
-                                    item.name,
-                                    pp,
-                                )
-                                break
+                        if "super()" in method_src:
+                            for pp in current_promoted:
+                                if pp in method_src and self._search(
+                                    rf"super\(\)\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src
+                                ):
+                                    promote.add(item.name)
+                                    logger.debug(
+                                        "analyze[pass3] %s.%s: promoting @property (accesses super().%s)",
+                                        cls_name,
+                                        item.name,
+                                        pp,
+                                    )
+                                    break
                     if promote:
                         self.async_methods[cls_name] |= promote
                         self.property_methods[cls_name] -= promote
@@ -1443,34 +1519,16 @@ class IOAnalyzer:
                     cls_node = self._get_class_node(cls_name)
                     if cls_node is None:
                         continue
-                    stem = self.class_to_file[cls_name]
-                    src = self.sources[stem]
 
                     # Gather async methods from this class + all ancestors (full MRO)
                     current_async = set(self.async_methods.get(cls_name, set()))
-                    visited4m = set()
-                    queue4m = list(self.class_bases.get(cls_name, []))
-                    while queue4m:
-                        base = queue4m.pop(0)
-                        if base in visited4m:
-                            continue
-                        visited4m.add(base)
-                        current_async |= self.async_methods.get(base, set())
-                        queue4m.extend(self.class_bases.get(base, []))
+                    current_async |= self._get_inherited_async(cls_name)
 
                     cls_properties = self.property_methods.get(cls_name, set())
 
                     # Gather promoted properties from this class + all ancestors (full MRO)
                     all_promoted = set(self.promoted_properties.get(cls_name, set()))
-                    visited4 = set()
-                    queue4 = list(self.class_bases.get(cls_name, []))
-                    while queue4:
-                        base = queue4.pop(0)
-                        if base in visited4:
-                            continue
-                        visited4.add(base)
-                        all_promoted |= self.promoted_properties.get(base, set())
-                        queue4.extend(self.class_bases.get(base, []))
+                    all_promoted |= self._get_inherited_promoted(cls_name)
 
                     promote_methods = set()
                     for item in ast.walk(cls_node):
@@ -1482,33 +1540,37 @@ class IOAnalyzer:
                             continue
                         if item.name in NEVER_ASYNC_METHODS:
                             continue
-                        method_src = ast.get_source_segment(src, item) or ""
+                        method_src = self._get_method_src(cls_name, item.name, item)
                         found = False
                         found_reason = ""
                         # Check A: accesses a promoted async property via self
                         for pp in all_promoted:
-                            if re.search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
+                            if pp in method_src and self._search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
                                 found = True
                                 found_reason = "accesses promoted property '%s'" % pp
                                 break
                         # Check A2: accesses a promoted async property via super()
-                        if not found:
+                        if not found and "super()" in method_src:
                             for pp in all_promoted:
-                                if re.search(rf"super\(\)\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
+                                if pp in method_src and self._search(
+                                    rf"super\(\)\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src
+                                ):
                                     found = True
                                     found_reason = "accesses promoted property via super().%s" % pp
                                     break
                         # Check B: calls an async method via self
                         if not found:
                             for am in current_async:
-                                if re.search(rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src):
+                                if am in method_src and self._search(
+                                    rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src
+                                ):
                                     found = True
                                     found_reason = "calls async method '%s'" % am
                                     break
                         # Check B2: calls an async method via super()
-                        if not found:
+                        if not found and "super()" in method_src:
                             for am in current_async:
-                                if re.search(rf"super\(\)\.{re.escape(am)}\s*\(", method_src):
+                                if am in method_src and self._search(rf"super\(\)\.{re.escape(am)}\s*\(", method_src):
                                     found = True
                                     found_reason = "calls async method via super().%s()" % am
                                     break
@@ -3107,6 +3169,11 @@ class AsyncTransformer:
         # Fix: split into temp variable "(_tmp = await repo.get_git_ref(args))" + "_tmp.delete()".
         src = self._break_async_method_chains(src, class_name)
 
+        # Phase J: Add # type: ignore[override] to sync @property definitions that
+        # override an async property from a base class. mypy flags these as signature
+        # mismatches (str vs Coroutine[Any, Any, str]).
+        src = self._annotate_sync_property_overrides(src, class_name)
+
         return src
 
     def _make_method_async(self, src: str, class_name: str, method_name: str) -> str:
@@ -3148,15 +3215,8 @@ class AsyncTransformer:
         """
         methods = set(self.analyzer.async_methods.get(class_name, set()))
         # Include inherited async methods from ALL ancestor classes (full MRO)
-        visited = set()
-        queue = list(self.analyzer.class_bases.get(class_name, []))
-        while queue:
-            base = queue.pop(0)
-            if base in visited:
-                continue
-            visited.add(base)
+        for base in self.analyzer._get_mro(class_name):
             methods |= self.analyzer.async_methods.get(base, set())
-            queue.extend(self.analyzer.class_bases.get(base, []))
 
         logger.debug(
             "add_awaits[%s]: %d async methods (including inherited): %s",
@@ -3165,37 +3225,50 @@ class AsyncTransformer:
             sorted(methods),
         )
 
-        # For self.method() calls where method is async
-        for method in methods:
-            if method in NEVER_ASYNC_METHODS:
-                continue
-            # self.method( -> await self.method(
-            # But avoid double-await and avoid property access without call
-            # Use a negative lookbehind to avoid matching inside longer attribute chains
-            # like self._requester.requestJsonAndCheck (where requestJsonAndCheck
-            # would incorrectly match self.SOMETHING.requestJsonAndCheck)
-            src = self._safe_add_await(src, rf"(?<!\w)self\.{re.escape(method)}\s*\(")
+        # For self.method() calls where method is async - batch into a single regex
+        present_methods = [m for m in methods if m not in NEVER_ASYNC_METHODS and m in src]
+        if present_methods:
+            # Batch: combine all method names into one alternation pattern for a single pass
+            alt = "|".join(re.escape(m) for m in sorted(present_methods, key=len, reverse=True))
+            src = self._safe_add_await(src, rf"(?<!\w)self\.(?:{alt})\s*\(")
 
-            # Also handle name-mangled versions for private methods
+        # Handle name-mangled versions for private methods
+        mangled_methods = []
+        for method in present_methods:
             if method.startswith("__") and not method.endswith("__"):
                 mangled = f"_{class_name}{method}"
-                src = self._safe_add_await(src, rf"(?<!\w)self\.{re.escape(mangled)}\s*\(")
+                if mangled in src:
+                    mangled_methods.append(mangled)
+        if mangled_methods:
+            alt = "|".join(re.escape(m) for m in mangled_methods)
+            src = self._safe_add_await(src, rf"(?<!\w)self\.(?:{alt})\s*\(")
 
-            # super().method( -> await super().method(
-            src = self._safe_add_await(src, rf"super\(\)\.{re.escape(method)}\s*\(")
+        # super().method( -> await super().method( — batch
+        if "super()" in src:
+            super_methods = [m for m in present_methods if m in src]
+            if super_methods:
+                alt = "|".join(re.escape(m) for m in sorted(super_methods, key=len, reverse=True))
+                src = self._safe_add_await(src, rf"super\(\)\.(?:{alt})\s*\(")
 
         # For async properties: self.prop (no parentheses) -> await self.prop
         # Gather promoted properties for this class + all ancestors
         promoted = set(self.analyzer.promoted_properties.get(class_name, set()))
-        visited2 = set()
-        queue2 = list(self.analyzer.class_bases.get(class_name, []))
-        while queue2:
-            base = queue2.pop(0)
-            if base in visited2:
-                continue
-            visited2.add(base)
-            promoted |= self.analyzer.promoted_properties.get(base, set())
-            queue2.extend(self.analyzer.class_bases.get(base, []))
+        promoted |= self.analyzer._get_inherited_promoted(class_name)
+
+        # Exclude inherited promoted properties that the current class overrides
+        # with a sync @property (e.g. CheckRun.url is sync even though the base
+        # CompletableGithubObject.url is promoted to async).
+        local_sync_props = self.analyzer.property_methods.get(class_name, set())
+        local_promoted = self.analyzer.promoted_properties.get(class_name, set())
+        sync_overrides = local_sync_props - local_promoted
+        if sync_overrides & promoted:
+            logger.debug(
+                "add_awaits[%s]: excluding %d sync property override(s) from promoted set: %s",
+                class_name,
+                len(sync_overrides & promoted),
+                sorted(sync_overrides & promoted),
+            )
+            promoted -= sync_overrides
 
         if promoted:
             logger.debug(
@@ -3207,6 +3280,9 @@ class AsyncTransformer:
 
         for prop in promoted:
             if prop in NEVER_ASYNC_METHODS:
+                continue
+            # Fast pre-check: skip if property name doesn't appear in source
+            if prop not in src:
                 continue
             # Match self.prop NOT followed by ( (not a method call — those are handled above)
             # and NOT being a definition line (def prop or async def prop)
@@ -3247,8 +3323,10 @@ class AsyncTransformer:
             "check",
             "postProcess",
         ]
-        for method in requester_async_methods:
-            # Match various requester access patterns
+        present_req_methods = [m for m in requester_async_methods if m in src]
+        if present_req_methods:
+            req_alt = "|".join(re.escape(m) for m in sorted(present_req_methods, key=len, reverse=True))
+            # Match various requester access patterns — batch per prefix
             # IMPORTANT: Use word boundary / specific prefixes to avoid
             # 'requester\.' matching inside 'self.__requester.'
             for prefix in [
@@ -3259,11 +3337,10 @@ class AsyncTransformer:
                 r"self\._Github__requester\.",
                 r"self\._PaginatedList__requester\.",
             ]:
-                src = self._safe_add_await(src, rf"{prefix}{re.escape(method)}\s*\(")
+                src = self._safe_add_await(src, rf"{prefix}(?:{req_alt})\s*\(")
 
-            # For bare 'requester.method(' - use negative lookbehind to ensure
-            # we don't match inside self.__requester, self._requester, etc.
-            src = self._safe_add_await(src, rf"(?<!\w)(?<!_)(?<!\.)requester\.{re.escape(method)}\s*\(")
+            # For bare 'requester.method(' - batch
+            src = self._safe_add_await(src, rf"(?<!\w)(?<!_)(?<!\.)requester\.(?:{req_alt})\s*\(")
 
         # For connection class method calls (getresponse is async, request is sync)
         if class_name in ("Requester", "HTTPSRequestsConnectionClass", "HTTPRequestsConnectionClass"):
@@ -3280,49 +3357,61 @@ class AsyncTransformer:
         # These are CompletableGithubObject.complete() which is async.
         src = self._safe_add_await(src, r"(?<!\w)(?<!self\.)\b\w+\.complete\s*\(")
 
+        # Handle .complete() chained on constructor/method calls ending with ')'.
+        # E.g.: return ClassName(requester, url=url).complete()
+        #     → return await ClassName(requester, url=url).complete()
+        # _safe_add_await can't handle this because the match starts at ')',
+        # and inserting 'await' there gives wrong placement. Instead, use a
+        # line-level regex that inserts 'await' after 'return' or '='.
+        src = re.sub(
+            r"^(\s*(?:return\s+))(?!await\b)(.*\)\.complete\s*\(\s*\))",
+            r"\1await \2",
+            src,
+            flags=re.MULTILINE,
+        )
+        src = re.sub(
+            r"^(\s*\w[\w\s,]*=\s*)(?!await\b)(.*\)\.complete\s*\(\s*\))",
+            r"\1await \2",
+            src,
+            flags=re.MULTILINE,
+        )
+
         # Phase H: Static/classmethod calls via Module.ClassName.method()
-        # When code uses e.g. Repository.Repository.as_url_param(repo) and
-        # as_url_param is an async static method on Repository, add await.
-        # Pattern: Module.ClassName.method( where ClassName has method in async_methods.
         # Only check methods that are @staticmethod/@classmethod (small set).
         for cls_name, statics in self.analyzer.static_methods.items():
+            if cls_name not in src:
+                continue
             cls_async = self.analyzer.async_methods.get(cls_name, set())
-            async_statics = statics & cls_async
-            for meth in async_statics:
-                if meth in NEVER_ASYNC_METHODS:
-                    continue
-                # Match Module.ClassName.method( or just ClassName.method(
-                # Module is typically the same as ClassName (import aliasing).
-                # Use \w+ for module prefix to be generic.
-                src = self._safe_add_await(
-                    src,
-                    rf"(?<!\w)\w+\.{re.escape(cls_name)}\.{re.escape(meth)}\s*\(",
-                )
-                # Also match bare ClassName.method( (without module prefix)
-                src = self._safe_add_await(
-                    src,
-                    rf"(?<!\w)(?<!\.){re.escape(cls_name)}\.{re.escape(meth)}\s*\(",
-                )
+            async_statics = [m for m in (statics & cls_async) if m not in NEVER_ASYNC_METHODS and m in src]
+            if not async_statics:
+                continue
+            alt = "|".join(re.escape(m) for m in sorted(async_statics, key=len, reverse=True))
+            # Match Module.ClassName.method( or just ClassName.method(
+            src = self._safe_add_await(
+                src,
+                rf"(?<!\w)\w+\.{re.escape(cls_name)}\.(?:{alt})\s*\(",
+            )
+            src = self._safe_add_await(
+                src,
+                rf"(?<!\w)(?<!\.){re.escape(cls_name)}\.(?:{alt})\s*\(",
+            )
 
         # Phase I: Inline construction → async method call:
         # ClassName(...).async_method(...) needs await because async_method is async.
-        # E.g. GithubIntegration(**kwargs).get_app()
-        # We check ALL async classes: if ClassName has async_method, match
-        # ClassName(...).method( patterns and add await.
+        # Batch per class: combine all async methods into one alternation pattern.
         for cls_name in self.analyzer.async_classes:
+            # Fast pre-check: class name must appear in source
+            if cls_name not in src:
+                continue
             cls_async = self.analyzer.async_methods.get(cls_name, set())
-            for meth in cls_async:
-                if meth in NEVER_ASYNC_METHODS:
-                    continue
-                # Match ClassName(<anything>).method( — the ClassName is followed by
-                # ( ... ) which we skip via a non-greedy match, then .method(
-                # We use a simpler approach: just match ClassName( ... ).method( on a
-                # single line.  The regex ClassName\([^)]*\)\.method\s*\( handles most cases.
-                # For multi-arg calls with nested parens we do a broader match.
-                src = self._safe_add_await(
-                    src,
-                    rf"(?<!\w){re.escape(cls_name)}\([^)]*\)\.{re.escape(meth)}\s*\(",
-                )
+            present_methods = [m for m in cls_async if m not in NEVER_ASYNC_METHODS and m in src]
+            if not present_methods:
+                continue
+            alt = "|".join(re.escape(m) for m in sorted(present_methods, key=len, reverse=True))
+            src = self._safe_add_await(
+                src,
+                rf"(?<!\w){re.escape(cls_name)}\([^)]*\)\.(?:{alt})\s*\(",
+            )
 
         return src
 
@@ -3449,6 +3538,47 @@ class AsyncTransformer:
                 pass_num + 1,
             )
             src = new_src
+        return src
+
+    def _annotate_sync_property_overrides(self, src: str, class_name: str) -> str:
+        """Phase J: Add ``# type: ignore[override]`` to sync @property defs that
+        override an async property inherited from a base class.
+
+        mypy reports these as signature mismatches (e.g. ``str`` vs
+        ``Coroutine[Any, Any, str]``).  The override is intentional — the
+        subclass property does *not* need completion so it stays sync.
+        """
+        # Compute which properties are sync overrides of inherited async ones
+        inherited_promoted = self.analyzer._get_inherited_promoted(class_name)
+        if not inherited_promoted:
+            return src
+
+        local_sync_props = self.analyzer.property_methods.get(class_name, set())
+        local_promoted = self.analyzer.promoted_properties.get(class_name, set())
+        sync_overrides = (local_sync_props - local_promoted) & inherited_promoted
+
+        if not sync_overrides:
+            return src
+
+        for prop in sync_overrides:
+            # Match the def line for this property within the class body.
+            # Pattern: indented 'def prop(self' possibly with return annotation, colon, rest
+            pattern = rf"(^[ \t]+def {re.escape(prop)}\(self[^)]*\)[^:\n]*:)(.*)"
+
+            def _add_ignore(m):
+                defline = m.group(1)
+                rest = m.group(2)
+                if "type: ignore" in rest:
+                    return m.group(0)  # Already annotated
+                return f"{defline}  # type: ignore[override]{rest}"
+
+            src = re.sub(pattern, _add_ignore, src, count=1, flags=re.MULTILINE)
+
+        logger.debug(
+            "annotate_sync_overrides[%s]: added type: ignore[override] to %s",
+            class_name,
+            sorted(sync_overrides),
+        )
         return src
 
     def _break_async_method_chains(self, src: str, class_name: str) -> str:
@@ -4284,8 +4414,25 @@ class AsyncTransformer:
 
         return "\n".join(result_lines)
 
-    @staticmethod
-    def _safe_add_await(src: str, pattern: str) -> str:
+    # Pre-compiled regex for checking if 'await' already precedes a match
+    _AWAIT_LOOKBACK_RE = re.compile(r"await\s+$")
+
+    # Cache for compiled regex patterns used in _safe_add_await
+    _await_re_cache: dict[str, re.Pattern[str]] = {}
+
+    @classmethod
+    def _get_compiled_re(cls, pattern: str) -> re.Pattern[str]:
+        """
+        Get or compile and cache a regex pattern.
+        """
+        compiled = cls._await_re_cache.get(pattern)
+        if compiled is None:
+            compiled = re.compile(pattern)
+            cls._await_re_cache[pattern] = compiled
+        return compiled
+
+    @classmethod
+    def _safe_add_await(cls, src: str, pattern: str) -> str:
         """
         Add 'await' before pattern matches, avoiding double-insertion.
 
@@ -4293,17 +4440,17 @@ class AsyncTransformer:
         to check if 'await' already precedes it (with optional whitespace).
 
         """
+        compiled = cls._get_compiled_re(pattern)
         result_parts = []
         last_end = 0
 
-        for m in re.finditer(pattern, src):
+        for m in compiled.finditer(src):
             start = m.start()
             # Check if 'await ' already precedes this match
             # Look back further (up to 20 chars) to handle indentation
             lookback = src[max(0, start - 20) : start]
-            if re.search(r"await\s+$", lookback):
+            if cls._AWAIT_LOOKBACK_RE.search(lookback):
                 continue  # Already has await
-            # Also check if this is part of a string literal (basic check)
             # Insert 'await ' before the match
             result_parts.append(src[last_end:start])
             result_parts.append("await ")
@@ -4876,481 +5023,6 @@ def generate_async_init() -> str:
     return "\n".join(lines)
 
 
-def generate_async_test_framework() -> str:
-    """
-    Generate the async test Framework.py with SyncProxy for transparent async-to-sync bridging.
-    """
-    return textwrap.dedent(
-        '''\
-        # FILE AUTO GENERATED DO NOT TOUCH
-        """
-        Async test framework - wraps the sync Framework for async tests.
-
-        Uses a SyncProxy approach: the async Github object and all objects returned
-        from it are wrapped in a proxy that automatically runs coroutines synchronously.
-        This allows test method bodies to remain identical to sync tests.
-        """
-        from __future__ import annotations
-
-        import asyncio
-        import inspect
-        from collections.abc import AsyncIterator
-
-        import responses
-
-        from github.GithubException import IncompletableObject
-        import github.GithubObject
-        import github.Requester
-        import github.asyncio.GithubObject
-        import github.asyncio.Requester
-        from github.asyncio.MainClass import Github
-        from tests import Framework
-
-        # Re-export BasicTestCase so that async test files referencing
-        # Framework.BasicTestCase find it here.
-        BasicTestCase = Framework.BasicTestCase
-
-
-        def _is_completable(obj):
-            """Check if an object is a CompletableGithubObject that may need completion."""
-            try:
-                return isinstance(obj, github.asyncio.GithubObject.CompletableGithubObject)
-            except Exception:
-                return False
-
-
-        class AsyncReplayingConnection(Framework.ReplayingConnection):
-            """Async-aware replaying connection.
-
-            Inherits the replay file logic from ReplayingConnection.
-            Overrides getresponse() and close() to be async, since the
-            async Requester awaits these methods.
-            """
-
-            async def getresponse(self):
-                # The real connection's getresponse is async
-                response = await self._ReplayingConnection__cnx.getresponse()
-                # Restore original headers to the response
-                response.headers = self.response_headers
-                return response
-
-            async def close(self):
-                await self._ReplayingConnection__cnx.close()
-
-
-        class AsyncReplayingHttpConnection(AsyncReplayingConnection):
-            _realConnection = github.asyncio.Requester.HTTPRequestsConnectionClass
-
-            def __init__(self, *args, **kwds):
-                super().__init__("http", *args, **kwds)
-
-
-        class AsyncReplayingHttpsConnection(AsyncReplayingConnection):
-            _realConnection = github.asyncio.Requester.HTTPSRequestsConnectionClass
-
-            def __init__(self, *args, **kwds):
-                super().__init__("https", *args, **kwds)
-
-
-        class SyncProxy:
-            """Proxy that wraps an async object and makes its async methods callable synchronously.
-
-            When an async method is called, it is automatically run to completion in an event loop.
-            Objects returned from async calls are recursively wrapped in SyncProxy.
-            Supports sync iteration over objects that implement __aiter__/__anext__.
-            """
-
-            # Types that should NOT be wrapped (they are plain values)
-            _PASSTHROUGH = (str, int, float, bool, bytes, type(None))
-            # Cache: id(obj) -> SyncProxy, so the same underlying object always
-            # returns the same wrapper (preserves `is` identity checks).
-            _cache: dict[int, "SyncProxy"] = {}
-
-            def __init__(self, obj, loop=None):
-                object.__setattr__(self, '_obj', obj)
-                object.__setattr__(self, '_loop', loop or asyncio.new_event_loop())
-                # Register in cache
-                SyncProxy._cache[id(obj)] = self
-
-            @staticmethod
-            def _deep_unwrap(obj):
-                """Recursively unwrap SyncProxy objects inside containers.
-
-                This is needed because async methods may iterate over list/tuple/dict
-                arguments and access async properties on the elements. If the elements
-                are still SyncProxy-wrapped, accessing an async property triggers
-                SyncProxy.__getattr__ -> run_until_complete, which fails with
-                'RuntimeError: This event loop is already running' since the outer
-                async call is already running on the same loop.
-                """
-                if isinstance(obj, SyncProxy):
-                    return object.__getattribute__(obj, '_obj')
-                if isinstance(obj, list):
-                    return [SyncProxy._deep_unwrap(item) for item in obj]
-                if isinstance(obj, tuple):
-                    if hasattr(type(obj), '_fields'):
-                        # NamedTuple
-                        return type(obj)(*[SyncProxy._deep_unwrap(item) for item in obj])
-                    return tuple(SyncProxy._deep_unwrap(item) for item in obj)
-                if isinstance(obj, dict):
-                    return {k: SyncProxy._deep_unwrap(v) for k, v in obj.items()}
-                if isinstance(obj, set):
-                    return {SyncProxy._deep_unwrap(item) for item in obj}
-                return obj
-
-            @classmethod
-            def _wrap(cls, result, loop):
-                """Wrap a result if it's a complex object, pass through primitives."""
-                if isinstance(result, cls._PASSTHROUGH):
-                    return result
-                # Don't wrap _NotSetType instances (NotSet sentinel).
-                # Tests call is_undefined(obj._attr) which needs the raw _NotSetType,
-                # not a SyncProxy wrapper.
-                if isinstance(result, (
-                    github.GithubObject._NotSetType,
-                    github.asyncio.GithubObject._NotSetType,
-                )):
-                    return result
-                # Also pass through _ValuedAttribute and _BadAttribute instances
-                # which are internal attribute wrappers, not user-facing objects.
-                if isinstance(result, (
-                    github.GithubObject._ValuedAttribute,
-                    github.asyncio.GithubObject._ValuedAttribute,
-                    github.GithubObject._BadAttribute,
-                    github.asyncio.GithubObject._BadAttribute,
-                )):
-                    return result
-                if isinstance(result, dict):
-                    return {k: cls._wrap(v, loop) for k, v in result.items()}
-                if isinstance(result, (list, tuple)):
-                    wrapped = [cls._wrap(item, loop) for item in result]
-                    # NamedTuples require positional args, not a single list
-                    if hasattr(type(result), '_fields'):
-                        return type(result)(*wrapped)
-                    return type(result)(wrapped)
-                if isinstance(result, set):
-                    return {cls._wrap(item, loop) for item in result}
-                # Return cached wrapper if we've already wrapped this exact object
-                # (preserves `is` identity checks across multiple attribute accesses).
-                cached = cls._cache.get(id(result))
-                if cached is not None and object.__getattribute__(cached, "_obj") is result:
-                    return cached
-                # Auto-complete CompletableGithubObjects created with _needs_async_completion.
-                # This handles the case where sync __init__ would call self.complete()
-                # immediately (requester.is_not_lazy, completed=None, no response).
-                # The async __init__ stores a flag instead; we check and run it here.
-                # NOTE: We do NOT complete objects with completed=False here (lazy objects).
-                # Those are completed lazily on first attribute access in __getattr__,
-                # matching the sync behavior where _completeIfNotSet triggers on property access.
-                if _is_completable(result) and getattr(result, "_needs_async_completion", False):
-                    try:
-                        coro = result.complete()
-                        if asyncio.iscoroutine(coro):
-                            loop.run_until_complete(coro)
-                    except IncompletableObject:
-                        pass  # May fail for objects without URLs, that's OK
-                return cls(result, loop)
-
-            def _ensure_completed(self):
-                """Lazily complete the underlying object if it's a CompletableGithubObject
-                that hasn't been completed yet. This mirrors the sync code's
-                _completeIfNotSet() which triggers completion on property access."""
-                obj = object.__getattribute__(self, '_obj')
-                loop = object.__getattribute__(self, '_loop')
-                if _is_completable(obj) and not obj.completed:
-                    try:
-                        coro = obj.complete()
-                        if asyncio.iscoroutine(coro):
-                            loop.run_until_complete(coro)
-                    except IncompletableObject:
-                        pass
-
-            def __getattr__(self, name):
-                obj = object.__getattribute__(self, '_obj')
-                loop = object.__getattribute__(self, '_loop')
-
-                # Properties that call _completeIfNotSet are now async def,
-                # so they return coroutines. We handle that below.
-
-                attr = getattr(obj, name)
-
-                # If attr is a class/type, return it directly without wrapping
-                # in a function wrapper. This preserves identity across multiple
-                # accesses (e.g., obj.__contentClass == obj.__contentClass).
-                if isinstance(attr, type):
-                    return attr
-
-                if callable(attr):
-                    if asyncio.iscoroutinefunction(attr):
-                        def async_wrapper(*args, **kwargs):
-                            # Deep-unwrap any SyncProxy arguments (including inside containers)
-                            args = tuple(SyncProxy._deep_unwrap(a) for a in args)
-                            kwargs = {k: SyncProxy._deep_unwrap(v) for k, v in kwargs.items()}
-                            result = loop.run_until_complete(attr(*args, **kwargs))
-                            return SyncProxy._wrap(result, loop)
-                        return async_wrapper
-                    else:
-                        def sync_wrapper(*args, **kwargs):
-                            args = tuple(SyncProxy._deep_unwrap(a) for a in args)
-                            kwargs = {k: SyncProxy._deep_unwrap(v) for k, v in kwargs.items()}
-                            result = attr(*args, **kwargs)
-                            if asyncio.iscoroutine(result):
-                                result = loop.run_until_complete(result)
-                            return SyncProxy._wrap(result, loop)
-                        return sync_wrapper
-
-                # Handle coroutines from async properties (property getter returns coroutine)
-                if asyncio.iscoroutine(attr):
-                    attr = loop.run_until_complete(attr)
-                return SyncProxy._wrap(attr, loop)
-
-            def __setattr__(self, name, value):
-                if isinstance(value, SyncProxy):
-                    value = object.__getattribute__(value, '_obj')
-                setattr(object.__getattribute__(self, '_obj'), name, value)
-
-            @property  # type: ignore[misc]
-            def __class__(self):
-                return type(object.__getattribute__(self, '_obj'))
-
-            def __repr__(self):
-                return repr(object.__getattribute__(self, '_obj'))
-
-            def __str__(self):
-                return str(object.__getattribute__(self, '_obj'))
-
-            def __eq__(self, other):
-                if isinstance(other, SyncProxy):
-                    other = object.__getattribute__(other, '_obj')
-                return object.__getattribute__(self, '_obj') == other
-
-            def __ne__(self, other):
-                if isinstance(other, SyncProxy):
-                    other = object.__getattribute__(other, '_obj')
-                return object.__getattribute__(self, '_obj') != other
-
-            def __hash__(self):
-                return hash(object.__getattribute__(self, '_obj'))
-
-            def __bool__(self):
-                return bool(object.__getattribute__(self, '_obj'))
-
-            def __len__(self):
-                obj = object.__getattribute__(self, '_obj')
-                if hasattr(obj, '__len__'):
-                    return len(obj)
-                raise TypeError(f"object of type '{type(obj).__name__}' has no len()")
-
-            def __iter__(self):
-                obj = object.__getattribute__(self, '_obj')
-                loop = object.__getattribute__(self, '_loop')
-
-                if hasattr(obj, '__aiter__'):
-                    # Async iterable - use async iteration
-                    aiter = obj.__aiter__()
-                    while True:
-                        try:
-                            item = loop.run_until_complete(aiter.__anext__())
-                            yield SyncProxy._wrap(item, loop)
-                        except StopAsyncIteration:
-                            return
-                elif hasattr(obj, '__iter__'):
-                    for item in obj:
-                        yield SyncProxy._wrap(item, loop)
-                else:
-                    raise TypeError(f"'{type(obj).__name__}' object is not iterable")
-
-            def __getitem__(self, index):
-                obj = object.__getattribute__(self, '_obj')
-                loop = object.__getattribute__(self, '_loop')
-                # Use the async getitem() method if available (PaginatedListBase)
-                # so that pages are fetched on demand.  Fall back to sync
-                # __getitem__ for non-PaginatedList objects.
-                if hasattr(obj, 'getitem'):
-                    result = loop.run_until_complete(obj.getitem(index))
-                else:
-                    result = obj.__getitem__(index)
-                    if asyncio.iscoroutine(result):
-                        result = loop.run_until_complete(result)
-                return SyncProxy._wrap(result, loop)
-
-            def __reversed__(self):
-                obj = object.__getattribute__(self, '_obj')
-                loop = object.__getattribute__(self, '_loop')
-                # For PaginatedList, .reversed returns a new PaginatedList.
-                # Use try/except instead of hasattr() to avoid triggering the
-                # property getter twice (hasattr calls getattr internally).
-                try:
-                    rev = obj.reversed
-                    if asyncio.iscoroutine(rev):
-                        rev = loop.run_until_complete(rev)
-                    return iter(SyncProxy._wrap(rev, loop))
-                except AttributeError:
-                    pass
-                # Fallback: try __reversed__
-                try:
-                    return iter([SyncProxy._wrap(item, loop) for item in obj.__reversed__()])
-                except AttributeError:
-                    raise TypeError(f"'{type(obj).__name__}' object is not reversible")
-
-            def __contains__(self, item):
-                obj = object.__getattribute__(self, '_obj')
-                if isinstance(item, SyncProxy):
-                    item = object.__getattribute__(item, '_obj')
-                return item in obj
-
-            def __enter__(self):
-                obj = object.__getattribute__(self, '_obj')
-                loop = object.__getattribute__(self, '_loop')
-                if hasattr(obj, '__aenter__'):
-                    result = loop.run_until_complete(obj.__aenter__())
-                    return SyncProxy._wrap(result, loop)
-                return SyncProxy._wrap(obj.__enter__(), loop)
-
-            def __exit__(self, *args):
-                obj = object.__getattribute__(self, '_obj')
-                loop = object.__getattribute__(self, '_loop')
-                if hasattr(obj, '__aexit__'):
-                    return loop.run_until_complete(obj.__aexit__(*args))
-                return obj.__exit__(*args)
-
-            def __isinstance_check__(self):
-                """Return the wrapped object for isinstance checks."""
-                return object.__getattribute__(self, '_obj')
-
-
-        class TestCase(Framework.BasicTestCase):
-            """Async version of Framework.TestCase.
-
-            Creates an async Github instance wrapped in SyncProxy,
-            so test methods can call async methods synchronously.
-            """
-
-            @staticmethod
-            def _unwrap(obj):
-                """Unwrap a SyncProxy to get the underlying object."""
-                if isinstance(obj, SyncProxy):
-                    return object.__getattribute__(obj, '_obj')
-                return obj
-
-            @staticmethod
-            def _resolve_async_class(cls):
-                """Try to find the async equivalent of a sync class.
-
-                For example, github.Repository.Repository -> github.asyncio.Repository.Repository
-                """
-                mod = getattr(cls, '__module__', '') or ''
-                if mod.startswith('github.') and not mod.startswith('github.asyncio.'):
-                    async_mod_name = mod.replace('github.', 'github.asyncio.', 1)
-                    try:
-                        import importlib
-                        async_mod = importlib.import_module(async_mod_name)
-                        return getattr(async_mod, cls.__name__, cls)
-                    except (ImportError, AttributeError):
-                        pass
-                return cls
-
-            def assertIsInstance(self, obj, cls, msg=None):
-                """Override to unwrap SyncProxy and also check async class hierarchy."""
-                unwrapped = self._unwrap(obj)
-                if isinstance(unwrapped, cls):
-                    return
-                # Try async version of the class
-                async_cls = self._resolve_async_class(cls)
-                if async_cls is not cls and isinstance(unwrapped, async_cls):
-                    return
-                # Fall through to standard assertion for proper error message
-                super().assertIsInstance(unwrapped, cls, msg)
-
-            def assertNotIsInstance(self, obj, cls, msg=None):
-                """Override to unwrap SyncProxy and also check async class hierarchy."""
-                unwrapped = self._unwrap(obj)
-                async_cls = self._resolve_async_class(cls)
-                # Must not be instance of EITHER sync or async class
-                if isinstance(unwrapped, async_cls) and async_cls is not cls:
-                    self.fail(
-                        msg or f'{unwrapped!r} is an instance of async {async_cls!r}'
-                    )
-                super().assertNotIsInstance(unwrapped, cls, msg)
-
-            def doCheckFrame(self, obj, frame):
-                if obj._headers == {} and frame is None:
-                    return
-                if obj._headers is None and frame == {}:
-                    return
-                self.assertEqual(obj._headers, frame[2])
-
-            def getFrameChecker(self):
-                return lambda requester, obj, frame: self.doCheckFrame(obj, frame)
-
-            def setUp(self):
-                super().setUp()
-
-                # Set up frame debugging on BOTH sync and async classes.
-                # The async GithubObject/Requester are separate class hierarchies,
-                # so we must set flags on both.
-                github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
-                github.Requester.Requester.setDebugFlag(True)
-                github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
-                github.asyncio.GithubObject.GithubObject.setCheckAfterInitFlag(True)
-                github.asyncio.Requester.Requester.setDebugFlag(True)
-                github.asyncio.Requester.Requester.setOnCheckMe(self.getFrameChecker())
-
-                # Inject async replaying connection classes into the async Requester
-                github.asyncio.Requester.Requester.injectConnectionClasses(
-                    AsyncReplayingHttpConnection,
-                    AsyncReplayingHttpsConnection,
-                )
-
-                self.g = self.get_github(self.authMode, self.retry, self.pool_size)
-
-            def tearDown(self):
-                super().tearDown()
-                github.asyncio.Requester.Requester.resetConnectionClasses()
-
-            def get_github(self, authMode, retry=None, pool_size=None):
-                if authMode == "token":
-                    auth = self.oauth_token
-                elif authMode == "jwt":
-                    auth = self.jwt
-                elif authMode == "app":
-                    auth = self.app_auth
-                elif self.authMode == "none":
-                    auth = None
-                else:
-                    raise ValueError(f"Unsupported test auth mode: {authMode}")
-
-                g = Github(
-                    auth=auth,
-                    per_page=self.per_page,
-                    retry=retry,
-                    pool_size=pool_size,
-                    seconds_between_requests=self.seconds_between_requests,
-                    seconds_between_writes=self.seconds_between_writes,
-                )
-                return SyncProxy(g)
-    '''
-    )
-
-
-def generate_async_test_conftest() -> str:
-    """
-    Generate conftest.py for async tests.
-    """
-    return textwrap.dedent(
-        '''\
-        # FILE AUTO GENERATED DO NOT TOUCH
-        """
-        Conftest for async tests.
-
-        The parent tests/conftest.py already sets up NiquestsMock with both
-        sync and async support. Nothing additional needed here since test
-        methods are synchronous (SyncProxy handles async bridging).
-        """
-    '''
-    )
-
-
 def transform_test_file(src: str, test_stem: str) -> str:
     """
     Transform a sync test file into an async version.
@@ -5699,14 +5371,19 @@ def main():
 
     logger.info(f"[4/6] Generating async test files in {TEST_DST}...")
 
+    # Clean generated test files but preserve hand-maintained ones (Framework.py).
+    PRESERVE_TEST_FILES = {"Framework.py"}
     if TEST_DST.exists():
-        shutil.rmtree(TEST_DST)
-
-    TEST_DST.mkdir(parents=True)
+        for p in TEST_DST.iterdir():
+            if p.name not in PRESERVE_TEST_FILES:
+                if p.is_dir():
+                    shutil.rmtree(p)
+                else:
+                    p.unlink()
+    else:
+        TEST_DST.mkdir(parents=True)
 
     write_file(TEST_DST / "__init__.py", AUTO_HEADER)
-    write_file(TEST_DST / "Framework.py", generate_async_test_framework())
-    write_file(TEST_DST / "conftest.py", generate_async_test_conftest())
 
     test_count = 0
     for p in sorted(TEST_SRC.glob("*.py")):
