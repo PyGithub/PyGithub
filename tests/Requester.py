@@ -8,6 +8,7 @@
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -168,15 +169,15 @@ class Requester(Framework.TestCase):
             gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10, "page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10", {"page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10&page=1", {"page": 2}),
         )
         self.assertEqual(

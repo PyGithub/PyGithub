@@ -24,6 +24,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Nick McClorey <32378821+nickrmcclorey@users.noreply.github.com>#
+# Copyright 2026 Denis Blanchette <dblanchette@coveo.com>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

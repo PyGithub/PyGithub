@@ -10,6 +10,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
