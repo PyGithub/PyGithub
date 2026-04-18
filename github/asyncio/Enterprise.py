@@ -20,6 +20,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -135,15 +136,17 @@ class Enterprise(NonCompletableGithubObject):
     def from_slug(requester: Requester.Requester, slug: str) -> Enterprise:
         return Enterprise(requester, {}, {"slug": slug})
 
-    async def get_consumed_licenses(self) -> EnterpriseConsumedLicenses.EnterpriseConsumedLicenses:
+    def get_consumed_licenses(
+        self, *, licence_users_per_page: int | None = None
+    ) -> EnterpriseConsumedLicenses.EnterpriseConsumedLicenses:
         """
         :calls: `GET /enterprises/{enterprise}/consumed-licenses <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses>`_
+        :param licence_users_per_page: int Number of users retrieved with the licences. Iterating over users property will fetch pages of this size. The default page size is 30, the maximum is 100.
         """
-        headers, data = await self._requester.requestJsonAndCheck("GET", self.url + "/consumed-licenses")
-        if "url" not in data:
-            data["url"] = self.url + "/consumed-licenses"
-
-        return EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(self._requester, headers, data, completed=True)
+        # licence_users_per_page asserted in EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty)
+        return EnterpriseConsumedLicenses.EnterpriseConsumedLicenses(
+            self._requester, url=self.url + "/consumed-licenses", per_page=licence_users_per_page
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "avatar_url" in attributes:  # pragma no branch

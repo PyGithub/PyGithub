@@ -148,7 +148,7 @@ class BranchProtection(GithubObject.CompletableGithubObject):
         return self._restrictions.value
 
     @property
-    def url(self) -> str:
+    def url(self) -> str:  # type: ignore[override]
         return self._url.value
 
     def get_user_push_restrictions(self) -> PaginatedList[NamedUser.NamedUser] | None:

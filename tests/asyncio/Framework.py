@@ -1,4 +1,3 @@
-# FILE AUTO GENERATED DO NOT TOUCH
 """
 Async test framework - wraps the sync Framework for async tests.
 
@@ -6,6 +5,7 @@ Uses a SyncProxy approach: the async Github object and all objects returned
 from it are wrapped in a proxy that automatically runs coroutines synchronously.
 This allows test method bodies to remain identical to sync tests.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -436,6 +436,13 @@ class TestCase(Framework.BasicTestCase):
         github.asyncio.GithubObject.GithubObject.setCheckAfterInitFlag(True)
         github.asyncio.Requester.Requester.setDebugFlag(True)
         github.asyncio.Requester.Requester.setOnCheckMe(self.getFrameChecker())
+
+        # super().setUp() calls setOpenFile on the SYNC ReplayingHttp(s)Connection
+        # classes. Due to Python's name mangling of __openFile, the async subclasses
+        # (AsyncReplayingHttp(s)Connection) don't inherit that class-level attribute.
+        # We must explicitly propagate it to the async connection classes.
+        AsyncReplayingHttpConnection.setOpenFile(Framework.ReplayingHttpConnection._Connection__openFile)
+        AsyncReplayingHttpsConnection.setOpenFile(Framework.ReplayingHttpsConnection._Connection__openFile)
 
         # Inject async replaying connection classes into the async Requester
         github.asyncio.Requester.Requester.injectConnectionClasses(

@@ -183,10 +183,10 @@ class CheckRun(CompletableGithubObject):
         return self._status.value
 
     @property
-    def url(self) -> str:
+    def url(self) -> str:  # type: ignore[override]
         return self._url.value
 
-    def get_annotations(self) -> PaginatedList[CheckRunAnnotation.CheckRunAnnotation]:
+    async def get_annotations(self) -> PaginatedList[CheckRunAnnotation.CheckRunAnnotation]:
         """
         :calls: `GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations <https://docs.github.com/en/rest/reference/checks#list-check-run-annotations>`_
         """

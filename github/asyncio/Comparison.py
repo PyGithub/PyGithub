@@ -17,6 +17,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,13 +43,19 @@ from __future__ import annotations
 from typing import Any
 
 from . import Commit, File
-from .GithubObject import Attribute, CompletableGithubObject, NotSet
+from .GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
 from .PaginatedList import PaginatedList
 
 
-class Comparison(CompletableGithubObject):
+class Comparison(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Comparisons.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/commits/commits#compare-two-commits
+
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`Comparison.commits` or :meth:`Comparison.get_commits`.
 
     The OpenAPI schema can be found at
 
@@ -56,6 +64,7 @@ class Comparison(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._ahead_by: Attribute[int] = NotSet
         self._base_commit: Attribute[Commit.Commit] = NotSet
         self._behind_by: Attribute[int] = NotSet
@@ -68,7 +77,6 @@ class Comparison(CompletableGithubObject):
         self._permalink_url: Attribute[str] = NotSet
         self._status: Attribute[str] = NotSet
         self._total_commits: Attribute[int] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
@@ -88,20 +96,28 @@ class Comparison(CompletableGithubObject):
         await self._completeIfNotSet(self._behind_by)
         return self._behind_by.value
 
-    # This should be a method, but this used to be a property and cannot be changed without breaking user code
-    # TODO: remove @property on version 3
     @property
     async def commits(self) -> PaginatedList[Commit.Commit]:
+        """
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`Repository.Repository.compare`,
+        :meth:`Comparison.get_commits`, or :meth:`Github`.
+
+        If no ``per_page`` is given, the default page size is 250. The maximum is 1000.
+
+        At most 10000 commits can be retrieved.
+        """
         return PaginatedList(
             Commit.Commit,
             self._requester,
             await self.url,
-            {},
-            headers=None,
+            self._pagination_parameters,
             list_item="commits",
             total_count_item="total_commits",
-            firstData=await self.raw_data,
-            firstHeaders=await self.raw_headers,
+            firstData=(await self.raw_data) if self.completed else None,
+            firstHeaders=(await self.raw_headers) if self.completed else None,
         )
 
     @property
@@ -111,6 +127,9 @@ class Comparison(CompletableGithubObject):
 
     @property
     async def files(self) -> list[File.File]:
+        """
+        Only the first 300 changed files.
+        """
         await self._completeIfNotSet(self._files)
         return self._files.value
 
@@ -144,12 +163,29 @@ class Comparison(CompletableGithubObject):
         await self._completeIfNotSet(self._total_commits)
         return self._total_commits.value
 
-    @property
-    async def url(self) -> str:
-        await self._completeIfNotSet(self._url)
-        return self._url.value
+    async def get_commits(self, *, comparison_commits_per_page: int | None = None) -> PaginatedList[Commit.Commit]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
+
+        Identical to calling :meth:`Comparison.commits`, except that this uses the given ``per_page`` value.
+
+        For more details, see :meth:`Comparison.commits`.
+
+        :param comparison_commits_per_page: int Number of commits retrieved per page.
+               Iterating over the commits will fetch pages of this size. The default page size is 250, the maximum is 1000.
+               At most 10000 commits can be retrieved.
+        """
+        return PaginatedList(
+            Commit.Commit,
+            self._requester,
+            await self.url,
+            self._pagination_parameters_with(page=1, per_page=comparison_commits_per_page),
+            headers=None,
+            list_item="commits",
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "ahead_by" in attributes:  # pragma no branch
             self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch
@@ -174,5 +210,3 @@ class Comparison(CompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "total_commits" in attributes:  # pragma no branch
             self._total_commits = self._makeIntAttribute(attributes["total_commits"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])

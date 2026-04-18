@@ -14,6 +14,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -205,9 +206,11 @@ class SourceImport(CompletableGithubObject):
         await self._completeIfNotSet(self._vcs_url)
         return self._vcs_url.value
 
-    async def update(self, additional_headers: None | dict[str, Any] = None) -> bool:
+    async def update(
+        self, additional_headers: dict[str, Any] | None = None, parameters: dict[str, Any] | None = None
+    ) -> bool:
         import_header = {"Accept": Consts.mediaTypeImportPreview}
-        return await super().update(additional_headers=import_header)
+        return await super().update(additional_headers=import_header, parameters=parameters)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "authors_count" in attributes:  # pragma no branch

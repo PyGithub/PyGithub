@@ -214,7 +214,7 @@ class CheckSuite(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def url(self) -> str:
+    def url(self) -> str:  # type: ignore[override]
         """
         :type: string
         """
@@ -229,7 +229,7 @@ class CheckSuite(CompletableGithubObject):
         status, _, _ = await self._requester.requestJson("POST", f"{self.url}/rerequest", headers=request_headers)
         return status == 201
 
-    def get_check_runs(
+    async def get_check_runs(
         self,
         check_name: Opt[str] = NotSet,
         status: Opt[str] = NotSet,
