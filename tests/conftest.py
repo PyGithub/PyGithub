@@ -131,7 +131,7 @@ class NiquestsMock(responses.RequestsMock):
         return send
 
     def start(self) -> None:
-        if self._patcher:
+        if self._patcher:  # type: ignore[has-type]
             # we must not override value of the _patcher if already applied
             # this prevents issues when one decorated function is called from
             # another decorated function
@@ -153,7 +153,7 @@ class NiquestsMock(responses.RequestsMock):
 
             # once patcher is stopped, clean it. This is required to create a new
             # fresh patcher on self.start()
-            self._patcher = None
+            self._patcher = None  # type: ignore[assignment]
             self._patcher_async = None
 
         if not self.assert_all_requests_are_fired:
