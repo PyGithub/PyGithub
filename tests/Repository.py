@@ -1647,6 +1647,16 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(pull.id, 1436215)
 
+    def testCreatePullWithHeadRepo(self):
+        pull = self.repo.create_pull(
+            title="Pull request with head_repo",
+            body="Testing head_repo parameter",
+            base="main",
+            head="patch-1",
+            head_repo="octocat/PyGithub",
+        )
+        self.assertEqual(pull.id, 1436216)
+
     def testCreateProject(self):
         project = self.repo.create_project("Project created by PyGithub", "Body of the project")
         self.assertEqual(project.id, 2013820)

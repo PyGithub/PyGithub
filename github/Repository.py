@@ -1838,6 +1838,7 @@ class Repository(CompletableGithubObject):
         maintainer_can_modify: Opt[bool] = NotSet,
         draft: Opt[bool] = NotSet,
         issue: Opt[github.Issue.Issue] = NotSet,
+        head_repo: Opt[str] = NotSet,
     ) -> github.PullRequest.PullRequest:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls <https://docs.github.com/en/free-pro-team@latest/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request>`_
@@ -1849,6 +1850,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(maintainer_can_modify, bool), maintainer_can_modify
         assert is_optional(draft, bool), draft
         assert is_optional(issue, github.Issue.Issue), issue
+        assert is_optional(head_repo, str), head_repo
 
         post_parameters = NotSet.remove_unset_items(
             {
@@ -1858,6 +1860,7 @@ class Repository(CompletableGithubObject):
                 "body": body,
                 "maintainer_can_modify": maintainer_can_modify,
                 "draft": draft,
+                "head_repo": head_repo,
             }
         )
 
