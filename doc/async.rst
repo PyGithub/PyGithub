@@ -148,7 +148,7 @@ What stays the same
   objects are plain data holders and are not async.
 - **Exceptions** -- ``GithubException``, ``UnknownObjectException``,
   ``BadCredentialsException``, etc. are raised the same way.
-- **``__repr__``/``__eq__``/``__hash__``** -- These dunder methods stay synchronous;
+- **``__repr__`` / ``__eq__`` / ``__hash__``** -- These dunder methods stay synchronous;
   they access internal ``_X.value`` attributes directly instead of going through the
   async property.
 
