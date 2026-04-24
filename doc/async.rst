@@ -5,43 +5,173 @@ PyGithub ships with full async support built on top of `Niquests <https://niques
 native ``AsyncSession``. Every sync class and method has an automatically generated async counterpart
 in the ``github.asyncio`` subpackage.
 
-Quick start
------------
+Turning sync code into async
+-----------------------------
 
-.. tabs::
+If you already have working sync code, converting it to async is straightforward.
+The following rules cover the vast majority of cases:
 
-    .. tab:: Sync
+1. **Import from** ``github.asyncio`` **instead of** ``github``:
 
-        .. code-block:: python
+   .. code-block:: python
 
-            from github import Github, Auth
+       # Sync
+       from github import Github
 
-            auth = Auth.Token("access_token")
-            g = Github(auth=auth)
+       # Async
+       from github.asyncio import Github
 
-            for repo in g.get_user().get_repos():
-                print(repo.name)
+   ``Auth``, exceptions, and input classes (``InputGitTreeElement``, etc.) are still
+   imported from ``github`` -- only the I/O classes move.
 
-            g.close()
+2. **Add** ``await`` **to any method that hits the network**:
 
-    .. tab:: Async
+   .. code-block:: python
 
-        .. code-block:: python
+       # Sync
+       user = g.get_user()
+       repo = g.get_repo("PyGithub/PyGithub")
+       issue = repo.get_issue(number=874)
+       issue.create_comment("Hello")
 
-            import asyncio
-            from github.asyncio import Github
-            from github import Auth
+       # Async
+       user = await g.get_user()
+       repo = g.get_repo("PyGithub/PyGithub")   # no HTTP call, no await needed
+       issue = await repo.get_issue(number=874)
+       await issue.create_comment("Hello")
 
-            async def main():
-                auth = Auth.Token("access_token")
-                g = Github(auth=auth)
+   ``get_repo()`` is a special case: it builds the URL locally and does not send a
+   request until a property or method on the returned object is accessed.
 
-                async for repo in (await g.get_user()).get_repos():
-                    print(await repo.name)
+3. **Add** ``await`` **to properties that lazy-load data**:
 
-                await g.close()
+   .. code-block:: python
 
-            asyncio.run(main())
+       # Sync
+       print(repo.description)
+       print(user.login)
+
+       # Async
+       print(await repo.description)
+       print(await user.login)
+
+   This applies to any property on a ``CompletableGithubObject`` subclass that
+   internally calls ``_completeIfNotSet``. Common examples: ``name``,
+   ``description``, ``url``, ``login``, ``id``, ``html_url``, ``full_name``, etc.
+
+4. **Replace** ``for`` **with** ``async for`` **when iterating paginated results**:
+
+   .. code-block:: python
+
+       # Sync
+       for repo in g.get_user().get_repos():
+           print(repo.name)
+
+       # Async
+       async for repo in (await g.get_user()).get_repos():
+           print(await repo.name)
+
+5. **Use** ``getitem()`` **instead of** ``[]`` **for index access on paginated lists**:
+
+   .. code-block:: python
+
+       # Sync
+       first = repos[0]
+
+       # Async
+       first = await repos.getitem(0)
+
+   Python cannot implicitly ``await`` dunder methods like ``__getitem__``.
+
+6. **Use** ``async with`` **for context managers**:
+
+   .. code-block:: python
+
+       # Sync
+       with Github(auth=auth) as g:
+           ...
+
+       # Async
+       async with Github(auth=auth) as g:
+           ...
+
+Async examples
+--------------
+
+Below are a few representative examples showing complete async usage.
+
+**Listing repositories**
+
+.. code-block:: python
+
+    import asyncio
+    from github.asyncio import Github
+    from github import Auth
+
+    async def main():
+        auth = Auth.Token("access_token")
+        async with Github(auth=auth) as g:
+            user = await g.get_user()
+            async for repo in user.get_repos():
+                print(await repo.name)
+
+    asyncio.run(main())
+
+**Creating an issue**
+
+.. code-block:: python
+
+    import asyncio
+    from github.asyncio import Github
+    from github import Auth
+
+    async def main():
+        auth = Auth.Token("access_token")
+        async with Github(auth=auth) as g:
+            repo = g.get_repo("PyGithub/PyGithub")
+            issue = await repo.create_issue(
+                title="Found a bug",
+                body="Description of the bug",
+            )
+            print(issue)
+
+    asyncio.run(main())
+
+**Working with pull requests**
+
+.. code-block:: python
+
+    import asyncio
+    from github.asyncio import Github
+    from github import Auth
+
+    async def main():
+        auth = Auth.Token("access_token")
+        async with Github(auth=auth) as g:
+            repo = g.get_repo("PyGithub/PyGithub")
+            pulls = repo.get_pulls(state="open", sort="created", base="master")
+            async for pr in pulls:
+                print(await pr.number, await pr.title)
+
+    asyncio.run(main())
+
+**App installation authentication**
+
+.. code-block:: python
+
+    import asyncio
+    from github.asyncio import Github
+    from github import Auth
+
+    async def main():
+        auth = Auth.AppAuth(123456, private_key).get_installation_auth(
+            installation_id, token_permissions
+        )
+        async with Github(auth=auth) as g:
+            repo = g.get_repo("user/repo")
+            print(await repo.name)
+
+    asyncio.run(main())
 
 How it works
 ------------
@@ -59,85 +189,6 @@ contains classes with I/O-dependent methods gets a mirror in
 
 The generated files carry the header ``# FILE AUTO GENERATED DO NOT TOUCH`` --
 do not edit them by hand.
-
-What becomes awaitable
-----------------------
-
-Methods
-~~~~~~~
-
-Any method that performs an HTTP request (directly or indirectly) becomes a
-coroutine. This includes:
-
-- All methods on ``Github`` (``get_user()``, ``get_repo()``, ``search_repositories()``, ...).
-- All methods on domain objects that call the API (``repo.get_issues()``,
-  ``issue.create_comment()``, ``pr.merge()``, ...).
-- Internal helpers like ``_completeIfNotSet`` / ``_completeIfNeeded`` /
-  ``requestJsonAndCheck``.
-
-In async code these must be ``await``-ed:
-
-.. code-block:: python
-
-    user = await g.get_user()
-    repos = user.get_repos()  # returns PaginatedList. no HTTP call yet, pages fetched during iteration
-
-Properties (lazy-loading)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In the sync API, many properties trigger a hidden HTTP request on first access
-to complete the object's data. For example:
-
-.. code-block:: python
-
-    repo = g.get_repo("PyGithub/PyGithub")
-    print(repo.description)  # may trigger an HTTP call behind the scenes
-
-In the async API, these properties return a coroutine and must be ``await``-ed:
-
-.. code-block:: python
-
-    repo = g.get_repo("PyGithub/PyGithub")
-    print(await repo.description)
-
-This applies to any property on a ``CompletableGithubObject`` subclass that calls
-``_completeIfNotSet`` internally. Common examples: ``name``, ``description``,
-``url``, ``login``, ``id``, ``html_url``, ``full_name``, etc.
-
-Pagination
-~~~~~~~~~~
-
-``PaginatedList`` objects support async iteration:
-
-.. code-block:: python
-
-    repos = (await g.get_user()).get_repos()
-    async for repo in repos:
-        print(await repo.name)
-
-For indexing, use the ``getitem()`` method instead of ``[]`` — Python cannot
-implicitly ``await`` dunder methods like ``__getitem__``, so ``[]`` only works on
-already-fetched elements:
-
-.. code-block:: python
-
-    repos = (await g.get_user()).get_repos()
-    first = await repos.getitem(0)      # fetches pages on demand
-    print(await first.name)
-
-You can also call ``await repos.get_page(0)`` to fetch a specific page, or use
-``repos.totalCount`` (awaitable) to get the total count.
-
-Context managers
-~~~~~~~~~~~~~~~~
-
-The ``Github`` object supports ``async with``:
-
-.. code-block:: python
-
-    async with Github(auth=auth) as g:
-        user = await g.get_user()
-        print(await user.login)
 
 What stays the same
 -------------------
