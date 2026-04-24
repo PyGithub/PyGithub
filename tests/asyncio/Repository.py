@@ -276,6 +276,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.web_commit_signoff_required, False)
         self.assertEqual(self.repo.custom_properties, {})
 
+        # this attribute is populated by a special header and exists for any PyGithub object
+        self.assertEqual(self.repo.api_version, "2022-11-28")
+
     def testAsUrlParam(self):
         self.assertEqual(
             object.__getattribute__(self.repo, "_loop").run_until_complete(

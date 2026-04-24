@@ -110,7 +110,7 @@ class OrganizationSecret(Secret):
 
         status, _, _ = await self._requester.requestJson(
             "PATCH",
-            f"{await self.url}/{secret_type}/secrets/{await self.name}",
+            await self.url,
             input=patch_parameters,
         )
         return status == 204

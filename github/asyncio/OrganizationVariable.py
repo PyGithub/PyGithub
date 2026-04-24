@@ -105,7 +105,7 @@ class OrganizationVariable(Variable):
 
         status, _, _ = await self._requester.requestJson(
             "PATCH",
-            f"{await self.url}/actions/variables/{await self.name}",
+            await self.url,
             input=patch_parameters,
         )
         return status == 204
