@@ -334,43 +334,83 @@ class PaginatedList(Framework.TestCase):
     def doTestSearchCompleteness(self, incomplete_results: bool):
         self.g.per_page = 5
 
-        # TODO: capture requests once #3377 is merged
+        with self.captureRequests() as requests:
+            # starting iteration fetches the first page which contains totalCount and incomplete_results
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
 
-        # starting iteration fetches the first page which contains totalCount and incomplete_results
-        results = self.g.search_code('"profile = black" in:file language:toml')
-        self.assertEqual(iter(results).__next__().score, 1.0)
-        self.assertEqual(results.totalCount, 7)
-        self.assertEqual(results.incomplete_results, incomplete_results)
-        # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
-        self.assertEqual(len(list(results)), 7)
-        self.assertEqual(results.totalCount, 7)
-        self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(iter(results).__next__().score, 1.0)
+            self.assertEqual(len(requests), 1)
 
-        # fetching a specific page provides totalCount and incomplete_results
-        results = self.g.search_code('"profile = black" in:file language:toml')
-        results.get_page(0)
-        self.assertEqual(results.totalCount, 7)
-        self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
 
-        # accessing totalCount first fetches totalCount and incomplete_results in a different code path
-        results = self.g.search_code('"profile = black" in:file language:toml')
-        # accessing the totalCount fetches incomplete_results as well
-        self.assertEqual(results.totalCount, 7)
-        self.assertEqual(results.incomplete_results, incomplete_results)
-        # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
-        self.assertEqual(len(list(results)), 7)
-        self.assertEqual(results.totalCount, 7)
-        self.assertEqual(results.incomplete_results, incomplete_results)
+            # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+            self.assertEqual(len(list(results)), 7)
+            self.assertEqual(len(requests), 2)
 
-        # accessing incomplete_results first fetches totalCount and incomplete_results in a different code path
-        results = self.g.search_code('"profile = black" in:file language:toml')
-        # accessing the incomplete_results fetches totalCount as well
-        self.assertEqual(results.incomplete_results, incomplete_results)
-        self.assertEqual(results.totalCount, 7)
-        # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
-        self.assertEqual(len(list(results)), 7)
-        self.assertEqual(results.totalCount, 7)
-        self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 2)
+
+        with self.captureRequests() as requests:
+            # fetching a specific page provides totalCount and incomplete_results
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
+
+            results.get_page(0)
+            self.assertEqual(len(requests), 1)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
+
+        with self.captureRequests() as requests:
+            # accessing totalCount first fetches totalCount and incomplete_results in a different code path
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
+
+            # accessing the totalCount fetches incomplete_results as well
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(len(requests), 1)
+            self.assertIn("?per_page=1&", requests[0].url)
+
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
+
+            # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+            self.assertEqual(len(list(results)), 7)
+            self.assertEqual(len(requests), 3)
+            self.assertIn("?per_page=5&", requests[1].url)
+            self.assertIn("&per_page=5&", requests[2].url)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 3)
+
+        with self.captureRequests() as requests:
+            # accessing incomplete_results first fetches totalCount and incomplete_results in a different code path
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
+
+            # accessing the incomplete_results fetches totalCount as well
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
+            self.assertIn("?per_page=1&", requests[0].url)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(len(requests), 1)
+
+            # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+            self.assertEqual(len(list(results)), 7)
+            self.assertEqual(len(requests), 3)
+            self.assertIn("?per_page=5&", requests[1].url)
+            self.assertIn("&per_page=5&", requests[2].url)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 3)
 
         if not incomplete_results:
             # non-search result paginated lists have None incomplete_results
