@@ -4,6 +4,13 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.9.1 (April 14, 2026)
+------------------------------
+
+Bug Fixes
+^^^^^^^^^
+* Fix getting release by tag in lazy mode (`#3469 <https://github.com/PyGithub/PyGithub/pull/3469>`_) (`7d1ba281e <https://github.com/PyGithub/PyGithub/commit/7d1ba281e>`_)
+
 Version 2.9.0 (March 22, 2026)
 ------------------------------
 
