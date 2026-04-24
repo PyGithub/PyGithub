@@ -1054,6 +1054,8 @@ class Organization(CompletableGithubObject):
 
         self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
 
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/actions/variables/{quoted_variable_name}"
         return github.OrganizationVariable.OrganizationVariable(
             requester=self._requester,
             headers={},
@@ -1061,8 +1063,8 @@ class Organization(CompletableGithubObject):
                 "name": variable_name,
                 "visibility": visibility,
                 "value": value,
-                "selected_repositories_url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}/repositories",
-                "url": self.url,
+                "selected_repositories_url": f"{url}/repositories",
+                "url": url,
             },
             completed=False,
         )

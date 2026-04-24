@@ -109,7 +109,7 @@ class OrganizationSecret(Secret):
 
         status, _, _ = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/{secret_type}/secrets/{self.name}",
+            self.url,
             input=patch_parameters,
         )
         return status == 204
