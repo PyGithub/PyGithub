@@ -265,6 +265,7 @@ class GithubObject(ABC):
     def _storeAndUseAttributes(self, headers: dict[str, str | int], attributes: Any) -> None:
         # Make sure headers are assigned before calling _useAttributes
         # (Some derived classes will use headers in _useAttributes)
+        self._api_version = headers.get(Consts.headerApiVersionSelected)
         self._headers = headers
         self._rawData = attributes
         self._useAttributes(attributes)
@@ -292,6 +293,18 @@ class GithubObject(ABC):
         :type: dict
         """
         return self._headers
+
+    @property
+    def api_version(self) -> str | None:
+        """
+        The Github API version of this PyGithub object as returned by the Github API.
+
+        This does not reflect the API version configured via Github(api_version=…) or GithubIntegration(api_version=…).
+
+        :type: str
+
+        """
+        return self._api_version  # type: ignore
 
     @staticmethod
     def _parentUrl(url: str) -> str:
