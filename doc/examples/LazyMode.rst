@@ -26,3 +26,5 @@ All PyGithub classes that implement ``CompletableGithubObject`` support lazy mod
 This is only useful for classes that have methods creating, changing, or getting objects.
 
 By default, PyGithub objects are not lazy.
+
+.. warning:: ``lazy=True`` have no effect in async. Constructors can't be made awaitable, so eager completion of objects is impossible.
