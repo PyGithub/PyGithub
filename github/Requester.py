@@ -60,9 +60,11 @@
 # Copyright 2025 Alec Ostrander <alec.ostrander@gmail.com>                     #
 # Copyright 2025 Chris Kuehl <ckuehl@ckuehl.me>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 # Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -399,6 +401,7 @@ class Requester:
         seconds_between_requests: float | None = None,
         seconds_between_writes: float | None = None,
         lazy: bool = False,
+        api_version: str | None = None,
     ):
         self._initializeDebugFeature()
 
@@ -434,6 +437,7 @@ class Requester:
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
+        assert isinstance(per_page, int) and per_page > 0, per_page
         self.per_page = per_page
 
         self.oauth_scopes = None
@@ -445,6 +449,7 @@ class Requester:
         self.__userAgent = user_agent
         self.__verify = verify
         self.__lazy = lazy
+        self.__apiVersion = api_version
 
         self.__installation_authorization = None
 
@@ -496,7 +501,7 @@ class Requester:
     ) -> str:
         scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
         url_params = urllib.parse.parse_qs(query)
-        # union parameters in url with given parameters, the latter have precedence
+        # union parameters in url with given parameters, the latter has precedence
         url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
         parameter_list = [(key, value) for key, values in url_params.items() for value in values]
         # remove query from url
@@ -505,7 +510,8 @@ class Requester:
         if len(parameter_list) == 0:
             return url
         else:
-            return f"{url}?{urllib.parse.urlencode(parameter_list)}"
+            # we need deterministic URLs for stable test assertions
+            return f"{url}?{urllib.parse.urlencode(sorted(parameter_list))}"
 
     def close(self) -> None:
         """
@@ -536,6 +542,7 @@ class Requester:
             seconds_between_requests=self.__seconds_between_requests,
             seconds_between_writes=self.__seconds_between_writes,
             lazy=self.__lazy,
+            api_version=self.__apiVersion,
         )
 
     @property
@@ -598,6 +605,27 @@ class Requester:
 
         kwargs = self.kwargs
         kwargs.update(lazy=lazy)
+        return Requester(**kwargs)
+
+    @property
+    def api_version(self) -> str | None:
+        return self.__apiVersion
+
+    def withApiVersion(self, api_version: str | None) -> Requester:
+        """
+        Create a new requester instance with identical configuration but the given API version setting.
+
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-
+            api/api-versions). Note that some PyGithub methods might downgrade this version if it is not supported by
+            the implementation. Set to None to not specify any version
+        :return: new Requester instance if is_defined(lazy) and lazy != self.is_lazy, this instance otherwise
+
+        """
+        if api_version == self.api_version:
+            return self
+
+        kwargs = self.kwargs
+        kwargs.update(api_version=api_version)
         return Requester(**kwargs)
 
     def requestJsonAndCheck(
@@ -1195,6 +1223,8 @@ class Requester:
         if self.__auth is not None:
             self.__auth.authentication(requestHeaders)
         requestHeaders["User-Agent"] = self.__userAgent
+        if self.__apiVersion is not None:
+            requestHeaders[Consts.headerApiVersion] = self.__apiVersion
 
         url = self.__makeAbsoluteUrl(url)
         url = Requester.add_parameters_to_url(url, parameters)

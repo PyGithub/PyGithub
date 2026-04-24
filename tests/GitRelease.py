@@ -200,15 +200,24 @@ class GitRelease(Framework.TestCase):
         self.assertEqual(id_release.id, 42)
         self.assertEqual(id_release.url, "/repos/lazy/repo/releases/42")
 
-        id_release = self.g.withLazy(True).get_repo("lazy/repo").get_release("v42")
-        self.assertEqual(str(id_release), "GitRelease(name=None)")
-        self.assertEqual(id_release.tag_name, "v42")
-        self.assertEqual(id_release.url, "/repos/lazy/repo/releases/tags/v42")
-
     def testGetRelease(self):
         release_by_id = self.release
         release_by_tag = self.repo.get_release(tag)
         self.assertEqual(release_by_id, release_by_tag)
+
+    def testGetReleaseByTag(self):
+        release = self.g.get_repo("EnricoMi/PyGithub").get_release("v1.55")
+        assets = list(release.get_assets())
+        self.assertEqual(len(assets), 2)
+        self.assertEqual(assets[0].name, "asset1.md")
+        self.assertEqual(assets[1].name, "asset2.gz")
+
+    def testGetLazyReleaseByTag(self):
+        release = self.g.withLazy(True).get_repo("EnricoMi/PyGithub").get_release("v1.55")
+        assets = list(release.get_assets())
+        self.assertEqual(len(assets), 2)
+        self.assertEqual(assets[0].name, "asset1.md")
+        self.assertEqual(assets[1].name, "asset2.gz")
 
     def testGetLatestRelease(self):
         latest_release = self.repo.get_latest_release()

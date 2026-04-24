@@ -3,6 +3,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,7 +43,7 @@ class EnterpriseAdmin(Framework.TestCase):
         self.assertEqual(consumed_licenses.total_seats_purchased, 103)
 
     def testGetEnterpriseUsers(self):
-        enterprise_users = self.enterprise.get_consumed_licenses().get_users()
+        enterprise_users = self.enterprise.get_consumed_licenses().users
         enterprise_users_list = [
             [
                 users.github_com_login,
@@ -68,3 +69,11 @@ class EnterpriseAdmin(Framework.TestCase):
         ]
         self.assertEqual(len(enterprise_users_list), 102)
         self.assertEqual(enterprise_users_list[42][0], "beaver-user043")
+
+    def testGetEnterpriseGetUsers(self):
+        enterprise_users = self.enterprise.get_consumed_licenses(licence_users_per_page=1).get_users(
+            licence_users_per_page=100
+        )
+        enterprise_users_list = list(enterprise_users)
+        self.assertEqual(len(enterprise_users_list), 102)
+        self.assertEqual(enterprise_users_list[42].github_com_login, "beaver-user043")
