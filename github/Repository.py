@@ -3195,6 +3195,7 @@ class Repository(CompletableGithubObject):
         :param direction: string
         :param since: datetime
         :param creator: string or :class:`github.NamedUser.NamedUser`
+        :param type: string, deprecated, use issue_type instead
         :param issue_type: string
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
