@@ -3202,6 +3202,13 @@ class Repository(CompletableGithubObject):
         assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
         assert is_optional(state, str), state
         assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
+        # v3: remove deprecated argument
+        assert is_optional(type, str), type
+        if (isinstance(type, str)):
+            warnings.warn(
+                "Argument type is deprecated, please use issue_type instead",
+                category=DeprecationWarning,
+            )
         assert is_optional(issue_type, str), issue_type
         assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
         assert is_optional_list(labels, (github.Label.Label, str)), labels
