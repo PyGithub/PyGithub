@@ -57,7 +57,7 @@ Get list of code scanning alerts
         Use of a broken or weak cryptographic hashing algorithm on sensitive data
       refs/heads/master | open
         src/secrets/rats.py @ l42:c13-l42:c69
-        Sensitive data (password) is used in a hashing algorithm (SHA1) that is insecure
+        Sensitive data (password) is used in a hashing algorithm (SHA1) that is insecure⤶
         for password hashing, since it is not a computationally expensive hash function.
 
 Get all the labels of the repository
