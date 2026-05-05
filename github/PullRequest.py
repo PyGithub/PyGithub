@@ -775,6 +775,21 @@ class PullRequest(CompletableGithubObject):
         )
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
+    # TODO: Paginate
+    def get_linked_issues(self) -> list[Issue]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>` for PullRequest.closingIssuesReferences
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+        query = 'query($id: ID!) { node(id: $id) { ...on PullRequest { closingIssuesReferences(first: 10) { nodes { number } } } } }'
+        _, data = self.requester.graphql_query(query, {'id': self.node_id})
+
+        parentUrl = self._parentUrl(self.issue_url)
+        return [
+            Issue(self.requester, url=f'{parentUrl}/{issue['number']}')
+            for issue in data['data']['node']['closingIssuesReferences']['nodes']
+        ]
+
     def get_reviews(self) -> PaginatedList[PullRequestReview]:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_

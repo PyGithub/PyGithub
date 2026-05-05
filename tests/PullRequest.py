@@ -677,3 +677,7 @@ class PullRequest(Framework.TestCase):
             },
             "clientMutationId": None,
         }
+
+    def testGetLinkedIssues(self):
+        issues = self.pull.get_linked_issues()
+        assert [issue.number for issue in issues] == [2166, 2253, 2812]
