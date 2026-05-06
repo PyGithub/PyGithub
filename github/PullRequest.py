@@ -775,20 +775,48 @@ class PullRequest(CompletableGithubObject):
         )
         return github.PullRequestReview.PullRequestReview(self._requester, headers, data)
 
-    # TODO: Paginate
-    def get_linked_issues(self) -> list[Issue]:
+    def get_linked_issues(self) -> PaginatedList[Issue]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>` for PullRequest.closingIssuesReferences
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        query = 'query($id: ID!) { node(id: $id) { ...on PullRequest { closingIssuesReferences(first: 10) { nodes { number } } } } }'
-        _, data = self.requester.graphql_query(query, {'id': self.node_id})
+        query = (
+            '''
+            query($id: ID!, $first: Int, $last: Int, $before: String, $after: String) {
+              node(id: $id) {
+                ...on PullRequest {
+                  closingIssuesReferences(first: $first, last: $last, before: $before, after: $after) {
+                    totalCount
+                    pageInfo {
+                      startCursor
+                      endCursor
+                      hasNextPage
+                      hasPreviousPage
+                    }
+                    nodes {
+                      number
+                      title
+                    }
+                  }
+                }
+              }
+            }
+            '''
+        )
 
-        parentUrl = self._parentUrl(self.issue_url)
-        return [
-            Issue(self.requester, url=f'{parentUrl}/{issue['number']}')
-            for issue in data['data']['node']['closingIssuesReferences']['nodes']
-        ]
+        # GraphQL's `url` field is HTML, not REST API we need
+        def url_from_number(data: dict[str, Any]) -> dict[str, Any]:
+            data['url'] = f'{self._parentUrl(self.issue_url)}/{data['number']}'
+            return data
+
+        return PaginatedList(
+            Issue,
+            self.requester,
+            graphql_query=query,
+            graphql_variables={'id': self.node_id},
+            list_item=['node', 'closingIssuesReferences'],
+            attributesTransformer=url_from_number,
+        )
 
     def get_reviews(self) -> PaginatedList[PullRequestReview]:
         """
