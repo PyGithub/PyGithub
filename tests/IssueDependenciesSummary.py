@@ -33,6 +33,7 @@ class IssueDependenciesSummary(Framework.TestCase):
         with self.replayData("Issue.setUp.txt"):
             self.repo = self.g.get_repo("PyGithub/PyGithub")
             self.issue = self.repo.get_issue(28)
+            self.issue_with_links = self.repo.get_issue(2567)
             self.ids = self.issue.issue_dependencies_summary
 
     def testAttributes(self):
