@@ -67,6 +67,7 @@ class PullRequest(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(31)
+        self.pull_with_links = self.repo.get_pull(3396)
 
         marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
         self.pullIssue256Closed = marco_repo.get_pull(1).complete()
@@ -677,3 +678,11 @@ class PullRequest(Framework.TestCase):
             },
             "clientMutationId": None,
         }
+
+    def testGetLinkedIssues(self):
+        issues = self.pull_with_links.get_linked_issues()
+        assert [issue.number for issue in issues] == [2166, 2253, 2812]
+
+    def testGetLinkedIssuesNone(self):
+        issues = self.pull.get_linked_issues()
+        assert [issue.number for issue in issues] == []
