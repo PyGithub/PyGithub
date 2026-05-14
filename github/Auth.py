@@ -35,20 +35,50 @@ import base64
 import time
 from abc import ABC
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Any, Callable, Union
+from typing import TYPE_CHECKING, Any, Callable, Protocol, Union, runtime_checkable
 
 import jwt
 from niquests import utils
 
 from github import Consts
 from github.InstallationAuthorization import InstallationAuthorization
-from github.Requester import Requester, WithRequester
+from github.Requester import WithRequester
 
 if TYPE_CHECKING:
     from github.GithubIntegration import GithubIntegration
 
 PrivateKeyGenerator = Callable[[], Union[str, bytes]]
 DictSignFunction = Callable[[dict], Union[str, bytes]]
+
+
+@runtime_checkable
+class RequesterLike(Protocol):
+    """
+    Structural type matching both github.Requester.Requester and github.asyncio.Requester.Requester.
+
+    The Auth classes are shared between the sync (github) and async (github.asyncio) packages — github/asyncio/Auth.py
+    is a pure re-export of github/Auth.py — so the requester instance attached to an Auth can be either flavor.
+    Importing github.asyncio.Requester from this module would create a circular dependency (and confuses the async
+    generator), so a runtime_checkable Protocol is used to validate either kind via isinstance() based on the structural
+    surface that Auth itself relies on.
+
+    """
+
+    @property
+    def kwargs(self) -> dict[str, Any]:
+        ...
+
+    @property
+    def base_url(self) -> str:
+        ...
+
+    @property
+    def hostname(self) -> str:
+        ...
+
+    def withAuth(self, auth: Auth | None) -> RequesterLike:
+        ...
+
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20
@@ -254,7 +284,7 @@ class AppAuth(JWT):
         self,
         installation_id: int,
         token_permissions: dict[str, str] | None = None,
-        requester: Any = None,
+        requester: RequesterLike | None = None,
     ) -> AppInstallationAuth:
         """
         Creates a github.Auth.AppInstallationAuth instance for an installation.
@@ -327,13 +357,14 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         app_auth: AppAuth,
         installation_id: int,
         token_permissions: dict[str, str] | None = None,
-        requester: Any = None,
+        requester: RequesterLike | None = None,
     ):
         super().__init__()
 
         assert isinstance(app_auth, AppAuth), app_auth
         assert isinstance(installation_id, int), installation_id
         assert token_permissions is None or isinstance(token_permissions, dict), token_permissions
+        assert requester is None or isinstance(requester, RequesterLike), requester
 
         self._app_auth = app_auth
         self._installation_id = installation_id
@@ -342,7 +373,8 @@ class AppInstallationAuth(Auth, WithRequester["AppInstallationAuth"]):
         if requester is not None:
             self.withRequester(requester)
 
-    def withRequester(self, requester: Any) -> AppInstallationAuth:
+    def withRequester(self, requester: RequesterLike) -> AppInstallationAuth:
+        assert isinstance(requester, RequesterLike), requester
         super().withRequester(requester.withAuth(self._app_auth))
 
         # imported here to avoid circular import
@@ -423,7 +455,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         expires_at: datetime | None = None,
         refresh_token: str | None = None,
         refresh_expires_at: datetime | None = None,
-        requester: Any = None,
+        requester: RequesterLike | None = None,
     ) -> None:
         super().__init__()
 
@@ -434,6 +466,7 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
         assert expires_at is None or isinstance(expires_at, datetime), expires_at
         assert refresh_token is None or isinstance(refresh_token, str) and len(refresh_token) > 0
         assert refresh_expires_at is None or isinstance(refresh_expires_at, datetime), refresh_expires_at
+        assert requester is None or isinstance(requester, RequesterLike), requester
 
         self._client_id = client_id
         self._client_secret = client_secret
@@ -456,7 +489,8 @@ class AppUserAuth(Auth, WithRequester["AppUserAuth"]):
             self._refresh()
         return self._token
 
-    def withRequester(self, requester: Any) -> AppUserAuth:
+    def withRequester(self, requester: RequesterLike) -> AppUserAuth:
+        assert isinstance(requester, RequesterLike), requester
         super().withRequester(requester.withAuth(None))
 
         # imported here to avoid circular import
@@ -537,8 +571,8 @@ class NetrcAuth(HTTPBasicAuth, WithRequester["NetrcAuth"]):
         assert self._password is not None, "Method withRequester(Requester) must be called first"
         return self._password
 
-    def withRequester(self, requester: Requester) -> NetrcAuth:
-        assert isinstance(requester, Requester), requester
+    def withRequester(self, requester: RequesterLike) -> NetrcAuth:
+        assert isinstance(requester, RequesterLike), requester
         super().withRequester(requester)
 
         auth = utils.get_netrc_auth(requester.base_url, raise_errors=True)
