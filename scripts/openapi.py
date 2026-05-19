@@ -4335,7 +4335,7 @@ class OpenApi:
             if dry_run:
                 with NamedTemporaryFile(delete_on_close=False) as f:
                     f.close()
-                    print(f"Updating temporary index {f.name}")
+                    print("Updating temporary index")
                     self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
                     self.apply_properties(
                         github_path,

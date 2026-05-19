@@ -1,0 +1,35 @@
+diff --recursive --new-file before/github/Repository.py after/github/Repository.py
+28a29
+> import github.NamedUser
+30a32
+>     from github.NamedUser import NamedUser
+113a116
+>         self._owner: Attribute[NamedUser] = NotSet
+470a474,478
+>     def owner(self) -> NamedUser:
+>         self._completeIfNotSet(self._owner)
+>         return self._owner.value
+> 
+>     @property
+731a740,741
+>         if "owner" in attributes:  # pragma no branch
+>             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+diff --recursive --new-file before/openapi.index after/openapi.index
+2535a2536,2549
+>         "owner": {
+>           "name": "owner",
+>           "returns": [
+>             "NamedUser"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/simple-user"
+>           },
+>           "schemas": {
+>             "/components/schemas/repository": {
+>               "$ref": "#/components/schemas/simple-user"
+>             }
+>           }
+>         },
+diff --recursive --new-file before/tests/Repository.py after/tests/Repository.py
+105a106
+>         self.assertEqual(r.owner.some_attribute, "")
