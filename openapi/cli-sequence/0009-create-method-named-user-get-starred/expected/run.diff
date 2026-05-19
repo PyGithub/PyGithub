@@ -25,7 +25,7 @@ diff --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
 >         )
 >         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/starred")
 diff --recursive --new-file before/openapi.index after/openapi.index
-467c467,479
+478c478,490
 <       "methods": {},
 ---
 >       "methods": {
@@ -41,19 +41,19 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >           ]
 >         }
 >       },
-1403a1416,1420
+1417a1430,1434
 >       },
 >       "/users/{username}/starred": {
 >         "get": [
 >           "NamedUser.get_starred"
 >         ]
-1410a1428,1432
+1427a1445,1449
 >       },
 >       "/users/{username}/starred": {
 >         "get": [
 >           "None"
 >         ]
-2055a2078,2090
+2083a2106,2118
 >             ]
 >           }
 >         ]

@@ -1,0 +1,53 @@
+diff --recursive --new-file before/github/IssueComment.py after/github/IssueComment.py
+132a133,150
+>     def create_reaction(self, content: str) -> Reaction:
+>         """
+>         Create reaction for an issue comment
+> 
+>         Create a reaction to an [issue comment](https://docs.github.com/rest/issues/comments#get-an-issue-comment). A response with an HTTP `200` status means that you already added the reaction type to this issue comment.
+> 
+>         :calls: `POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions <https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue-comment>`_
+>         :param content: The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the issue comment.
+>         """
+>         assert isinstance(content, str), content
+>         post_parameters = NotSet.remove_unset_items(
+>             {
+>                 "content": content,
+>             }
+>         )
+>         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reactions", input=post_parameters)
+>         return github.Reaction.Reaction(self._requester, headers, data)
+>     
+diff --recursive --new-file before/openapi.index after/openapi.index
+225a226,236
+>         "create_reaction": {
+>           "call": {
+>             "docs": "<https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue-comment>`_",
+>             "path": "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
+>             "verb": "POST"
+>           },
+>           "name": "create_reaction",
+>           "returns": [
+>             "Reaction"
+>           ]
+>         },
+1402a1414,1416
+>         ],
+>         "post": [
+>           "IssueComment.create_reaction"
+1409a1424,1426
+>         ],
+>         "post": [
+>           "Reaction"
+2055a2073,2083
+>             ]
+>           }
+>         ]
+>       },
+>       "POST": {
+>         "methods": [
+>           {
+>             "class": "IssueComment",
+>             "name": "create_reaction",
+>             "returns": [
+>               "Reaction"
