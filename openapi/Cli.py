@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import sys
 import unittest
 from pathlib import Path
 from unittest import SkipTest
@@ -14,9 +15,13 @@ from parameterized.parameterized import param
 class Cli(unittest.TestCase):
     keepMode = False
     approveMode = False
+    openapi_spec = "api.github.com"
+    openapi_version = "2022-11-28"
+    openapi_commit = "567046173a5469ed9d537d9d3ac397f51f1c6c77"
 
     pwd = Path(os.curdir).absolute()
     root_path = Path(__file__).parent.parent
+    openapi_spec_path = Path(root_path, f"{openapi_spec}.{openapi_version}.sha-{openapi_commit[:9]}.json")
     tests_path = Path(__file__).parent / "cli-sequence"
     tests = [
         test
@@ -25,6 +30,14 @@ class Cli(unittest.TestCase):
     ]
     tests = windowed([None] + sorted(tests), n=2)
     fail_fast = False
+
+    @classmethod
+    def setUpClass(cls):
+        if not cls.openapi_spec_path.exists():
+            code = os.system(
+                f"{sys.executable} {cls.root_path}/scripts/openapi.py fetch --commit {cls.openapi_commit} {cls.openapi_spec} {cls.openapi_version} {cls.openapi_spec_path}"
+            )
+            assert code == 0, "Fetching OpenAPI spec failed"
 
     @staticmethod
     def get_test_name(func, num, p: param):
@@ -63,10 +76,11 @@ class Cli(unittest.TestCase):
         # copy previous test's run directory
         if run_path.exists():
             shutil.rmtree(run_path)
-        if prev_run_path is not None:
-            shutil.copytree(prev_run_path, run_path, symlinks=True)
-        else:
+        if prev_run_path is None:
             os.mkdir(run_path)
+            os.symlink(self.openapi_spec_path, Path(run_path, "openapi.spec.json"))
+        else:
+            shutil.copytree(prev_run_path, run_path, symlinks=True)
 
         def execute(cmd: str, error_codes: dict[int, str] | None = None):
             code = os.system(cmd)
