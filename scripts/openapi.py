@@ -1928,11 +1928,8 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             {
                 k: v
                 for k, v in [
-                    ("name", cst_to_python(name)),
-                ]
-                + [
                     (arg.keyword.value, cst_to_python(arg.value))
-                    for arg in args[1:]
+                    for arg in args
                     if isinstance(arg, cst.Arg) and isinstance(arg.keyword, cst.Name)
                 ]
             }
