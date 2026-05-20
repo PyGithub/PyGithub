@@ -752,7 +752,7 @@ Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
 
 
-# decorator to annotate methods with method metadata
+# decorator to annotate methods with OpenAPI mapping information
 def method_parameter(
     *, name: str, required: bool = False, merge: list[str] | None = None, docstring_prepend: str | None = None
 ) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
@@ -762,7 +762,7 @@ def method_parameter(
     return method_parameter_decorator
 
 
-# decorator to annotate methods with OpenAPI metadata
+# decorator to annotate methods with OpenAPI mapping information
 def method_returns(
     *, schema_property: str | None = None
 ) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
