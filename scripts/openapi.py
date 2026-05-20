@@ -3843,7 +3843,7 @@ class OpenApi:
                                     print(f"    - {verb} {candidate_path} should be implemented as {implementations}")
                                     for suggested_method in suggested_methods:
                                         print(
-                                            f"      {sys.executable} {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
+                                            f"      python {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
                                         )
                             print()
             print()
