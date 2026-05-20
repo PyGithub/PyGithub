@@ -101,7 +101,7 @@ class Cli(unittest.TestCase):
             execute(
                 f"cd {self.tests_path}; env LANG=en_US.UTF-8 diff --unified '{expected_stdout.relative_to(self.tests_path)}' '{actual_stdout.relative_to(self.tests_path)}'",
                 {
-                    256: f"Unexpected changes in STDOUT, approve changes by replacing '{expected_stdout.relative_to(self.pwd)}' with '{actual_stdout.relative_to(self.pwd)}'."
+                    256: f"Unexpected changes in STDOUT, approve changes by running: cp '{actual_stdout.relative_to(self.pwd)}' '{expected_stdout.relative_to(self.pwd)}'."
                 },
             )
 
@@ -130,7 +130,7 @@ class Cli(unittest.TestCase):
                 execute(
                     f"cd {self.tests_path}; env LANG=en_US.UTF-8 diff --unified '{expected_diff.relative_to(self.tests_path)}' '{actual_diff.relative_to(self.tests_path)}'",
                     {
-                        256: f"Unexpected changes, approve changes by replacing '{expected_diff.relative_to(self.pwd)}' with '{actual_diff.relative_to(self.pwd)}'."
+                        256: f"Unexpected changes, approve changes by running: cp '{actual_diff.relative_to(self.pwd)}' '{expected_diff.relative_to(self.pwd)}'."
                     },
                 )
             if not self.keepMode:
