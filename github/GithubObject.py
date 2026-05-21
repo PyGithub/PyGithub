@@ -403,6 +403,7 @@ class GithubObject(ABC):
 
         if fallback_type is not None:
             fallback_class = class_and_name_index.get(fallback_type)
+            assert fallback_class is not None
             return self._makeClassAttribute(fallback_class, value)
 
         return _BadAttribute(value, type)  # type: ignore
@@ -416,6 +417,8 @@ class GithubObject(ABC):
     ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
+        default_type: str | None
+        fallback_type: str | None
         if isinstance(default_and_fallback_type, tuple):
             default_type, fallback_type = default_and_fallback_type
         else:
@@ -435,6 +438,8 @@ class GithubObject(ABC):
     ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
+        default_type: str | None
+        fallback_type: str | None
         if isinstance(default_and_fallback_type, tuple):
             default_type, fallback_type = default_and_fallback_type
         else:
@@ -484,6 +489,7 @@ class GithubObject(ABC):
         assert default_type in class_and_name_index
         assert fallback_type in class_and_name_index
         fallback_class = class_and_name_index.get(fallback_type)
+        assert fallback_class is not None
         if isinstance(value, list) and all(isinstance(element, dict) for element in value):
             return _ValuedAttribute(
                 [
