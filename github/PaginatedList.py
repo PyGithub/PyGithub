@@ -31,8 +31,11 @@
 # Copyright 2023 YugoHino <henom06@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 Sam <35731946+sam93210@users.noreply.github.com>              #
+# Copyright 2025 odedperezcodes <oded.perez.codes@gmail.com>                   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -111,6 +114,12 @@ class PaginatedListBase(Generic[T]):
         self.__elements += newElements
         return newElements
 
+    def _clear(self) -> None:
+        self.__elements.clear()
+
+    def _reverse(self) -> None:
+        self.__elements.reverse()
+
     class _Slice:
         def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
             self.__list = theList
@@ -162,6 +171,23 @@ class PaginatedList(PaginatedListBase[T]):
 
         some_repos = repos.get_page(0)
         some_other_repos = repos.get_page(3)
+
+    Individual items of this list are fetched in pages. The size of those pages
+    is configured via ``per_page`` when creating the :class:`github.MainClass.Github` instance::
+
+        g = github.Github(per_page=100)
+
+    The default page size is 30. The maximum page size is usually 100.
+
+    Paginated lists are returned by ``get_…`` methods. Additionally, some classes have one property
+    that is a paginated list, called `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+
+    You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+        results = gh.search_code("query")
+        if results.incomplete_results:
+            print(f"Not sure if {results.totalCount} results are actually all results")
+
     """
 
     # v3: move * before firstUrl and fix call sites
@@ -189,21 +215,31 @@ class PaginatedList(PaginatedListBase[T]):
             if not (isinstance(list_item, list) and all(isinstance(item, str) for item in list_item)):
                 raise ValueError("With graphql_query given, item_list must be a list of strings")
 
+        firstParams = firstParams or {}
+
+        # we add the per_page parameter if that value is not the default
+        # but only if there is no per_page parameter in the firstParams
+        if "per_page" not in firstParams and requester.per_page != Consts.DEFAULT_PER_PAGE:
+            firstParams["per_page"] = requester.per_page
+
         self.__requester = requester
         self.__contentClass = contentClass
 
         self.__is_rest = firstUrl is not None or firstData is not None
         self.__firstUrl = firstUrl
-        self.__firstParams: dict[str, Any] = firstParams or {}
+        self.__firstParams: dict[str, Any] = firstParams
+        self.__firstData = firstData
+        self.__firstHeaders = firstHeaders
         self.__nextUrl = firstUrl
-        self.__nextParams: dict[str, Any] = firstParams or {}
+        self.__nextParams: dict[str, Any] = firstParams
+        self.__lastUrl: str | None = None
         self.__headers = headers
         self.__list_item = list_item
         self.__total_count_item = total_count_item
-        if self.__requester.per_page != 30:
-            self.__nextParams["per_page"] = self.__requester.per_page
+
         self._reversed = False
         self.__totalCount: int | None = None
+        self.__incomplete_results = None
         self._attributesTransformer = attributesTransformer
 
         self.__graphql_query = graphql_query
@@ -231,41 +267,63 @@ class PaginatedList(PaginatedListBase[T]):
             return element
         return self._attributesTransformer(element)
 
+    def _fetchFirstElement(self) -> None:
+        # fetches the first element only, updates __totalCount and __incomplete_results
+        if self.is_rest:
+            params = self.__nextParams.copy()
+            # set per_page = 1 so the totalCount is just the number of pages
+            params.update({"per_page": 1})
+            headers, data = self.__requester.requestJsonAndCheck(
+                "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
+            )
+            links = self.__parseLinkHeader(headers)
+            lastUrl = links.get("last")
+
+            # update totalCount
+            if lastUrl:
+                self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+            elif data and "total_count" in data:
+                self.__totalCount = data["total_count"]
+            elif data:
+                if isinstance(data, dict):
+                    data = data[self.__list_item]
+                self.__totalCount = len(data)
+            else:
+                self.__totalCount = 0
+
+            # update incomplete_results
+            if data and "incomplete_results" in data:
+                self.__incomplete_results = data.get("incomplete_results")
+        else:
+            variables = self.__graphql_variables.copy()
+            if not self._reversed:
+                variables["first"] = 1
+                variables["after"] = None
+            else:
+                variables["last"] = 1
+                variables["before"] = None
+
+            _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+            pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
+            self.__totalCount = pagination.get("totalCount")
+
     @property
     def totalCount(self) -> int:
         if self.__totalCount is None:
-            if self.is_rest:
-                params = self.__nextParams.copy()
-                # set per_page = 1 so the totalCount is just the number of pages
-                params.update({"per_page": 1})
-                headers, data = self.__requester.requestJsonAndCheck(
-                    "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
-                )
-                links = self.__parseLinkHeader(headers)
-                lastUrl = links.get("last")
-                if lastUrl:
-                    self.__totalCount = int(parse_qs(lastUrl)["page"][0])
-                elif data and "total_count" in data:
-                    self.__totalCount = data["total_count"]
-                elif data:
-                    if isinstance(data, dict):
-                        data = data[self.__list_item]
-                    self.__totalCount = len(data)
-                else:
-                    self.__totalCount = 0
-            else:
-                variables = self.__graphql_variables.copy()
-                if not self._reversed:
-                    variables["first"] = 1
-                    variables["after"] = None
-                else:
-                    variables["last"] = 1
-                    variables["before"] = None
-
-                _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
-                pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
-                self.__totalCount = pagination.get("totalCount")
+            self._fetchFirstElement()
         return self.__totalCount  # type: ignore
+
+    @property
+    def incomplete_results(self) -> bool | None:
+        """
+        Reflects `incomplete search results
+        <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_
+        """
+        # we deliberately check __totalCount here as well to check if any page has ever been fetched
+        # because __incomplete_results may not get updated by _fetchFirstElement()
+        if self.__incomplete_results is None and self.__totalCount is None:
+            self._fetchFirstElement()
+        return self.__incomplete_results
 
     def _getLastPageUrl(self) -> str | None:
         headers, data = self.__requester.requestJsonAndCheck(
@@ -283,6 +341,9 @@ class PaginatedList(PaginatedListBase[T]):
             self.__firstParams,
             headers=self.__headers,
             list_item=self.__list_item,
+            total_count_item=self.__total_count_item,
+            firstData=self.__firstData,
+            firstHeaders=self.__firstHeaders,
             attributesTransformer=self._attributesTransformer,
             graphql_query=self.__graphql_query,
             graphql_variables=self.__graphql_variables,
@@ -293,16 +354,20 @@ class PaginatedList(PaginatedListBase[T]):
     def __reverse(self) -> None:
         self._reversed = True
         if self.is_rest:
-            lastUrl = self._getLastPageUrl()
-            if lastUrl:
-                self.__nextUrl = lastUrl
-                if self.__nextParams:
-                    # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
-                    self.__nextParams = {
-                        k: v
-                        for k, v in self.__nextParams.items()
-                        if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
-                    }
+            if self.__lastUrl is None:
+                self.__lastUrl = self._getLastPageUrl()
+            if self.__lastUrl:
+                if self.__lastUrl != self.__firstUrl:
+                    super()._clear()
+                    self.__nextUrl = self.__lastUrl
+                    if self.__nextParams:
+                        # #2929: remove all parameters from self.__nextParams contained in self.__nextUrl
+                        self.__nextParams = {
+                            k: v
+                            for k, v in self.__nextParams.items()
+                            if k not in Requester.get_parameters_of_url(self.__nextUrl).keys()
+                        }
+            super()._reverse()
 
     # To support Python's built-in `reversed()` method
     def __reversed__(self) -> PaginatedList[T]:
@@ -364,7 +429,11 @@ class PaginatedList(PaginatedListBase[T]):
                         self.__nextUrl = links["prev"]
                 elif "next" in links:
                     self.__nextUrl = links["next"]
+                if "last" in links:
+                    self.__lastUrl = links["last"]
             self.__nextParams = {}
+            if "incomplete_results" in data:
+                self.__incomplete_results = data.get("incomplete_results")
             if self.__list_item in data:
                 self.__totalCount = data.get(self.__total_count_item)
                 data = data[self.__list_item]
@@ -428,6 +497,8 @@ class PaginatedList(PaginatedListBase[T]):
 
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")
+            if "incomplete_results" in data:
+                self.__incomplete_results = data.get("incomplete_results")
             data = data[self.__list_item]
         return [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
 

@@ -104,7 +104,7 @@ class OrganizationVariable(Variable):
 
         status, _, _ = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/variables/{self.name}",
+            self.url,
             input=patch_parameters,
         )
         return status == 204

@@ -22,6 +22,8 @@
 # Copyright 2024 Kian-Meng Ang <kianmeng.ang@gmail.com>                        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
+# Copyright 2025 odedperezcodes <oded.perez.codes@gmail.com>                   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -64,7 +66,7 @@ class PaginatedList(Framework.TestCase):
 
     def testIterationWithPrefetchedFirstPage(self):
         # test data taken from EnterpriseAdmin.testGetEnterpriseUsers
-        users = self.licenses.get_users()
+        users = self.licenses.users
         self.assertEqual(len(list(users)), 102)
         self.assertEqual(len({user.github_com_login for user in users}), 102)
 
@@ -329,6 +331,101 @@ class PaginatedList(Framework.TestCase):
         # Should return the actual count from JSON, not 0
         self.assertEqual(issues.totalCount, 1)
 
+    def doTestSearchCompleteness(self, incomplete_results: bool):
+        self.g.per_page = 5
+
+        with self.captureRequests() as requests:
+            # starting iteration fetches the first page which contains totalCount and incomplete_results
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
+
+            self.assertEqual(iter(results).__next__().score, 1.0)
+            self.assertEqual(len(requests), 1)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
+
+            # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+            self.assertEqual(len(list(results)), 7)
+            self.assertEqual(len(requests), 2)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 2)
+
+        with self.captureRequests() as requests:
+            # fetching a specific page provides totalCount and incomplete_results
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
+
+            results.get_page(0)
+            self.assertEqual(len(requests), 1)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
+
+        with self.captureRequests() as requests:
+            # accessing totalCount first fetches totalCount and incomplete_results in a different code path
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
+
+            # accessing the totalCount fetches incomplete_results as well
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(len(requests), 1)
+            self.assertIn("?per_page=1&", requests[0].url)
+
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
+
+            # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+            self.assertEqual(len(list(results)), 7)
+            self.assertEqual(len(requests), 3)
+            self.assertIn("?per_page=5&", requests[1].url)
+            self.assertIn("&per_page=5&", requests[2].url)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 3)
+
+        with self.captureRequests() as requests:
+            # accessing incomplete_results first fetches totalCount and incomplete_results in a different code path
+            results = self.g.search_code('"profile = black" in:file language:toml')
+            self.assertEqual(len(requests), 0)
+
+            # accessing the incomplete_results fetches totalCount as well
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 1)
+            self.assertIn("?per_page=1&", requests[0].url)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(len(requests), 1)
+
+            # exhaustive iteration fetches all pages, totalCount and incomplete_results should stay the same
+            self.assertEqual(len(list(results)), 7)
+            self.assertEqual(len(requests), 3)
+            self.assertIn("?per_page=5&", requests[1].url)
+            self.assertIn("&per_page=5&", requests[2].url)
+
+            self.assertEqual(results.totalCount, 7)
+            self.assertEqual(results.incomplete_results, incomplete_results)
+            self.assertEqual(len(requests), 3)
+
+        if not incomplete_results:
+            # non-search result paginated lists have None incomplete_results
+            labels = self.repo.get_labels()
+            self.assertEqual(labels.totalCount, 57)
+            self.assertIsNone(labels.incomplete_results)
+
+    def testSearchWithCompleteResults(self):
+        self.doTestSearchCompleteness(incomplete_results=False)
+
+    def testSearchWithIncompleteResults(self):
+        # test data for this test are copied from testSearchWithCompleteResults and manually modified:
+        # sed -e 's/"incomplete_results":false/"incomplete_results":true/' tests/ReplayData/PaginatedList.testSearchWithCompleteResults.txt | head -n -11 > tests/ReplayData/PaginatedList.testSearchWithIncompleteResults.txt
+        self.doTestSearchCompleteness(incomplete_results=True)
+
     def testCustomPerPage(self):
         self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100
@@ -376,6 +473,179 @@ class PaginatedList(Framework.TestCase):
             ],
             [comment.created_at for comment in comments],
         )
+
+    def testCustomPerPageReversedIterationSinglePage(self):
+        self.g.per_page = 4
+        repo = self.g.get_repo("PyGithub/PyGithub")
+        comments = repo.get_issue(3372).get_comments().reversed
+        self.assertEqual(
+            [
+                datetime(2025, 9, 17, 19, 49, 40, tzinfo=timezone.utc),
+                datetime(2025, 9, 17, 8, 44, 18, tzinfo=timezone.utc),
+                datetime(2025, 9, 16, 19, 22, 2, tzinfo=timezone.utc),
+                datetime(2025, 9, 15, 12, 15, 13, tzinfo=timezone.utc),
+            ],
+            [comment.created_at for comment in comments],
+        )
+
+    # more custom per page tests in CompletableGithubObjectWithPaginatedProperty
+
+    def testWithFirstPage(self):
+        # fetching the commit also fetches the fist page of files
+        with self.captureRequests() as requests:
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
+            files = commit.files
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repos/PyGithub/PyGithub/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=1&per_page=3"],
+        )
+
+        # consuming the first page of files should not fire a request
+        with self.captureRequests() as requests:
+            self.assertEqual(files[0].filename, "github/GeneratedReleaseNotes.py")
+            self.assertEqual(files[1].filename, "github/Repository.py")
+            self.assertEqual(files[2].filename, "pyproject.toml")
+        self.assertEqual(len(requests), 0)
+
+        # consuming items of the second page fetches the second page
+        with self.captureRequests() as requests:
+            self.assertEqual(files[3].filename, "tests/ReplayData/Repository.testGenerateReleaseNotes.txt")
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=2&per_page=3"],
+        )
+
+        # consuming further items of the second page does not fire a request
+        with self.captureRequests() as requests:
+            self.assertEqual(
+                files[4].filename, "tests/ReplayData/Repository.testGenerateReleaseNotesWithAllArguments.txt"
+            )
+            self.assertEqual(files[5].filename, "tests/Repository.py")
+        self.assertEqual(len(requests), 0)
+
+        # consuming items of the last page fetches the that page
+        with self.captureRequests() as requests:
+            self.assertEqual(files[6].filename, "tests/test_release_notes.yml")
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=3&per_page=3"],
+        )
+
+    def testWithFirstSinglePage(self):
+        # fetching the commit also fetches the fist page of files
+        with self.captureRequests() as requests:
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            commit = repo.get_commit("f5f9756a1dd52a53820cc54927abb34725377987", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
+            files = commit.files
+            # with a single page we by now know the total count without firing a request
+            self.assertEqual(files.totalCount, 3)
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repos/PyGithub/PyGithub/commits/f5f9756a1dd52a53820cc54927abb34725377987?page=1&per_page=3"],
+        )
+
+        # consuming the first page of files should not fire a request
+        with self.captureRequests() as requests:
+            self.assertEqual(files[0].filename, "github/GithubApp.py")
+            self.assertEqual(files[1].filename, "github/GithubObject.py")
+            self.assertEqual(files[2].filename, "tests/GithubObject.py")
+        self.assertEqual(len(requests), 0)
+
+    def testReversedWithFirstPage(self):
+        # this is all lazy, no requests fired
+        with self.captureRequests() as requests:
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
+            files = commit.files
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repos/PyGithub/PyGithub/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=1&per_page=3"],
+        )
+
+        # reversing files does not fire a request because there is a last Link header in the first response
+        with self.captureRequests() as requests:
+            files = files.reversed
+        self.assertEqual(len(requests), 0)
+
+        # consuming the first page of the reversed files fetches the "last" URL
+        with self.captureRequests() as requests:
+            self.assertEqual(files[0].filename, "tests/test_release_notes.yml")
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=3&per_page=3"],
+        )
+
+        # consuming items of the second page fetches the second page
+        with self.captureRequests() as requests:
+            self.assertEqual(files[1].filename, "tests/Repository.py")
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=2&per_page=3"],
+        )
+        # consuming further items of the second page does not fire a request
+        with self.captureRequests() as requests:
+            self.assertEqual(
+                files[2].filename, "tests/ReplayData/Repository.testGenerateReleaseNotesWithAllArguments.txt"
+            )
+            self.assertEqual(files[3].filename, "tests/ReplayData/Repository.testGenerateReleaseNotes.txt")
+        self.assertEqual(len(requests), 0)
+
+        # consuming items of the last page fetches the that page
+        with self.captureRequests() as requests:
+            self.assertEqual(files[4].filename, "pyproject.toml")
+            self.assertEqual(files[5].filename, "github/Repository.py")
+            self.assertEqual(files[6].filename, "github/GeneratedReleaseNotes.py")
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repositories/3544490/commits/e359b83a04e8f34bedab0f2180169012d238a135?page=1&per_page=3"],
+        )
+
+    def testReversedWithFirstSinglePage(self):
+        # fetching the commit also fetches the fist page of files
+        with self.captureRequests() as requests:
+            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            commit = repo.get_commit("f5f9756a1dd52a53820cc54927abb34725377987", commit_files_per_page=3)
+            # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
+            commit.complete()
+            files = commit.files
+            # with a single page we by now know the total count without firing a request
+            self.assertEqual(files.totalCount, 3)
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            [
+                "/repos/PyGithub/PyGithub/commits/f5f9756a1dd52a53820cc54927abb34725377987?page=1&per_page=3",
+            ],
+        )
+
+        # reversing files fires another request because there were no Link headers in the first response
+        with self.captureRequests() as requests:
+            files = files.reversed
+        self.assertListKeyEqual(
+            requests, lambda r: r.url, ["/repos/PyGithub/PyGithub/commits/f5f9756a1dd52a53820cc54927abb34725377987"]
+        )
+
+        # consuming the first page of files should not fire a request
+        with self.captureRequests() as requests:
+            self.assertEqual(files[0].filename, "tests/GithubObject.py")
+            self.assertEqual(files[1].filename, "github/GithubObject.py")
+            self.assertEqual(files[2].filename, "github/GithubApp.py")
+        self.assertEqual(len(requests), 0)
 
     def testNoFirstPage(self):
         self.assertFalse(next(iter(self.list), None))

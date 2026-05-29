@@ -67,7 +67,7 @@
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Pavel Abramov <31950564+uncleDecart@users.noreply.github.com> #
 # Copyright 2025 Zachary <6599715+interifter@users.noreply.github.com>         #
-# Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
+# Copyright 2026 Matt Davis <35502728+matt-davis27@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -1054,6 +1054,8 @@ class Organization(CompletableGithubObject):
 
         self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
 
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/actions/variables/{quoted_variable_name}"
         return github.OrganizationVariable.OrganizationVariable(
             requester=self._requester,
             headers={},
@@ -1061,8 +1063,8 @@ class Organization(CompletableGithubObject):
                 "name": variable_name,
                 "visibility": visibility,
                 "value": value,
-                "selected_repositories_url": f"{self.url}/actions/variables/{urllib.parse.quote(variable_name)}/repositories",
-                "url": self.url,
+                "selected_repositories_url": f"{url}/repositories",
+                "url": url,
             },
             completed=False,
         )

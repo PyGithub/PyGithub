@@ -72,6 +72,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 blyedev <63808441+blyedev@users.noreply.github.com>           #
 # Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
@@ -190,6 +191,7 @@ class Github:
         auth: github.Auth.Auth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
+        api_version: str | None = None,
     ) -> None:
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
@@ -210,6 +212,9 @@ class Github:
         :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-api/api-versions).
+                            Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
+                            Set to None to not specify any version
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -226,6 +231,7 @@ class Github:
         assert seconds_between_writes is None or seconds_between_writes >= 0
         assert auth is None or isinstance(auth, github.Auth.Auth), auth
         assert isinstance(lazy, bool), lazy
+        assert api_version is None or isinstance(api_version, str), api_version
 
         if password is not None:
             warnings.warn(
@@ -271,6 +277,7 @@ class Github:
             seconds_between_requests,
             seconds_between_writes,
             lazy,
+            api_version,
         )
 
     def withLazy(self, lazy: bool) -> Github:
@@ -680,6 +687,13 @@ class Github:
         :param sort: string ('stars', 'forks', 'updated')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`PaginatedList` of :class:`github.Repository.RepositorySearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_repositories("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -721,6 +735,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUserSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_users("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -762,6 +782,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Issue.IssueSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_issues("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -800,6 +826,12 @@ class Github:
         :param highlight: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.ContentFile.ContentFileSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_code("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -844,6 +876,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Commit.CommitSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_commits("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -878,6 +916,12 @@ class Github:
         :param query: string
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Topic.Topic`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_topics("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
