@@ -59,7 +59,7 @@ setupVersion = version("pygithub")
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage", "sphinx.ext.mathjax"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage", "sphinx.ext.mathjax", "sphinx_copybutton"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -201,6 +201,7 @@ html_static_path = ["_static"]
 htmlhelp_basename = "PyGithubdoc"
 
 
+
 # -- Options for LaTeX output --------------------------------------------------
 
 # latex_elements = {
@@ -299,7 +300,7 @@ def collect_classes(types: set[str]) -> Iterable[tuple[str, str]]:
 
     for filename in sorted(glob.glob("../github/*.py")):
         module = f"github.{filename[10:-3]}"
-        with open(filename) as r:
+        with open(filename, encoding="utf-8") as r:
             for line in r.readlines():
                 if line.startswith("class ") and any([base in types for base in get_base_classes(line)]):
                     class_name = re.match(r"class (\w+)[:(]", line).group(1)
@@ -342,7 +343,7 @@ methods = dict()
 githubObjectClasses.update([("MainClass", "github.MainClass")])
 githubObjectClasses.update([("GithubIntegration", "github.GithubIntegration")])
 for githubObjectClass, module in githubObjectClasses.items():
-    with open("../" + module.replace(".", "/") + ".py") as f:
+    with open("../" + module.replace(".", "/") + ".py", encoding="utf-8") as f:
         method = None
         isProperty = False
         for line in f:
