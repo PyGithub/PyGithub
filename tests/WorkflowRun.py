@@ -44,11 +44,6 @@ class WorkflowRun(Framework.TestCase):
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.workflow_run = self.repo.get_workflow_run(3881497935)
 
-    def testGetAttempt(self):
-        workflow_attempt = self.workflow_run.get_attempt(1)
-        self.assertEqual(workflow_attempt.id, 3881497935)
-        self.assertEqual(workflow_attempt.run_attempt, 1)
-
     def testAttributes(self):
         self.assertEqual(
             repr(self.workflow_run),
@@ -205,3 +200,10 @@ class WorkflowRun(Framework.TestCase):
             lambda j: j.id,
             [10545727758, 10545727888, 10545728039, 10545728190, 10545728356],
         )
+
+    def testGetAttempt(self):
+        workflow_run = self.g.get_repo("EnricoMi/PyGithub").get_workflow_run(26365060973)
+        workflow_attempt = workflow_run.get_attempt(2)
+        self.assertEqual(workflow_attempt.id, 26365060973)
+        self.assertEqual(workflow_attempt.name, "CodeQL Advanced")
+        self.assertEqual(workflow_attempt.run_attempt, 2)
