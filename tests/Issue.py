@@ -372,8 +372,8 @@ class Issue(Framework.TestCase):
         assert [pr.number for pr in prs] == [3482]
 
     def testGetLinkedPullRequestsNone(self):
-        issues = self.issue.get_linked_pull_requests()
-        assert [issue.number for issue in issues] == []
+        prs = self.issue.get_linked_pull_requests()
+        assert [pr.number for pr in prs] == []
 
     def testGetLinkedPullRequestsClosed(self):
         prs = self.issue_with_links.get_linked_pull_requests(True)
