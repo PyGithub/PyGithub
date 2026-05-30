@@ -200,8 +200,6 @@ html_static_path = ["_static"]
 # Output file base name for HTML help builder.
 htmlhelp_basename = "PyGithubdoc"
 
-
-
 # -- Options for LaTeX output --------------------------------------------------
 
 # latex_elements = {
@@ -300,7 +298,7 @@ def collect_classes(types: set[str]) -> Iterable[tuple[str, str]]:
 
     for filename in sorted(glob.glob("../github/*.py")):
         module = f"github.{filename[10:-3]}"
-        with open(filename, encoding="utf-8") as r:
+        with open(filename) as r:
             for line in r.readlines():
                 if line.startswith("class ") and any([base in types for base in get_base_classes(line)]):
                     class_name = re.match(r"class (\w+)[:(]", line).group(1)
@@ -343,7 +341,7 @@ methods = dict()
 githubObjectClasses.update([("MainClass", "github.MainClass")])
 githubObjectClasses.update([("GithubIntegration", "github.GithubIntegration")])
 for githubObjectClass, module in githubObjectClasses.items():
-    with open("../" + module.replace(".", "/") + ".py", encoding="utf-8") as f:
+    with open("../" + module.replace(".", "/") + ".py") as f:
         method = None
         isProperty = False
         for line in f:
