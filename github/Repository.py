@@ -2055,7 +2055,6 @@ class Repository(CompletableGithubObject):
     def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
-        :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/dependabot#get-an-organization-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name

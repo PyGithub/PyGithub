@@ -171,12 +171,8 @@ def as_python_type(
                 inner_types=[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes],
             )
         if collect_new_schemas is not None:
-            if schema.split("/")[-1].startswith("_"):
-                print(f"Not creating schema {schema}")
-            else:
-                collect_new_schemas.append(schema)
+            collect_new_schemas.append(schema or ".".join([""] + schema_path))
         if verbose:
-            # here we use dot-notation to ease usage with jq
             print(f"Schema not implemented: {schema or '.'.join([''] + schema_path)}")
         return PythonType(type="dict", inner_types=[PythonType("str"), PythonType("Any")])
 
@@ -834,11 +830,6 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
         self.visit_class_name.pop()
         return super().leave_ClassDef(original_node, updated_node)
 
-    @staticmethod
-    def read_index(filename: str) -> dict[str, Any]:
-        with open(filename) as r:
-            return json.load(r)
-
     @property
     def current_class_name(self) -> str:
         return ".".join(self.visit_class_name)
@@ -914,22 +905,12 @@ class CstTransformerBase(cst.CSTTransformer, CstMethods, abc.ABC):
 
 
 class IndexPythonClassesVisitor(CstVisitorBase):
-    # This visitor does not work with classes that have inner classes
-    # except for inner classes defined at the top of the outer class
-    def __init__(
-        self,
-        spec: dict[str, Any] | None,
-        classes: dict[str, Any],
-        paths: dict[str, Any],
-        method_verbs: dict[str, str] | None,
-    ):
+    def __init__(self, classes: dict[str, Any], paths: dict[str, Any], method_verbs: dict[str, str] | None):
         super().__init__()
         self._module = None
         self._package = None
         self._filename = None
         self._test_filename = None
-        self._spec = spec
-        self._class = None
         self._classes = classes
         self._paths = paths
         self._ids = []
@@ -953,8 +934,8 @@ class IndexPythonClassesVisitor(CstVisitorBase):
     def classes(self) -> dict[str, Any]:
         return self._classes
 
-    @staticmethod
-    def process_class_def(node: cst.ClassDef, classes: dict[str, Any]) -> dict[str, Any]:
+    def leave_ClassDef(self, node: cst.ClassDef) -> bool | None:
+        class_name = self.current_class_name
         class_name_short = node.name.value
         class_docstring = get_class_docstring(node)
         class_docstring = class_docstring.strip('"\r\n ') if class_docstring else None
@@ -977,46 +958,28 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             break
                         class_schemas.append(schema.strip().lstrip("- "))
 
-        if class_name_short in classes:
+        if class_name_short in self._classes:
             print(f"Duplicate class definition for {class_name_short}")
 
         # TODO: ideally, the key should be the fully qualified class name and there
         #       should be an index from class_name to the fully qualified class name
-        return {
+        self._classes[class_name_short] = {
+            "ids": self._ids,
+            "name": class_name,
+            "module": self._module,
+            "package": self._package,
+            "filename": self._filename,
+            "test_filename": self._test_filename,
             "docstring": class_docstring,
             "schemas": class_schemas,
             "inherited_schemas": [],
             "bases": class_bases,
+            "properties": self._properties,
+            "methods": self._methods,
         }
-
-    def visit_ClassDef(self, node: cst.ClassDef) -> bool | None:
-        super().visit_ClassDef(node)
-        class_name = self.current_class_name
-        self._class = self.process_class_def(node, self._classes)
-        self._class.update(name=class_name)
-
-    def leave_ClassDef(self, node: cst.ClassDef) -> bool | None:
-        class_name = self.current_class_name
-        class_name_short = node.name.value
-        self._class = self.process_class_def(node, self._classes)
-        self._class.update(
-            **{
-                "name": class_name,
-                "ids": self._ids,
-                "module": self._module,
-                "package": self._package,
-                "filename": self._filename,
-                "test_filename": self._test_filename,
-                "properties": self._properties,
-                "methods": self._methods,
-            }
-        )
-        self._classes[class_name_short] = self._class
-
         self._ids = []
         self._properties = {}
         self._methods = {}
-        self._class = None
 
         return super().leave_ClassDef(node)
 
@@ -1049,28 +1012,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         returns = self.return_types(cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None)
 
         if self.is_github_object_property(node):
-            # collect schemas of this property
-            schema = None
-            schemas = None
-            if self._spec and self._class:
-                schemas = {
-                    "/".join([""] + schema_path): schema["properties"][method_name]
-                    for schema in self._class.get("schemas", [])
-                    for schema_path, schema in [OpenApi.get_schema(self._spec, schema)]
-                    if "properties" in schema and method_name in schema["properties"]
-                }
-                # consolidate schema
-                schema = next(iter(schemas.values()), None)
-                if schema is not None and any(schema != s for s in schemas.values()):
-                    schema = None
-            # memorize this property
-            self._properties[method_name] = {
-                "name": method_name,
-                "returns": returns,
-                "schemas": schemas,
-                "schema": schema,
-            }
-            return
+            self._properties[method_name] = {"name": method_name, "returns": returns}
 
         visitor = SimpleStringCollector()
         node.body.visit(visitor)
@@ -1251,10 +1193,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         decorators = list(node.decorators)
         decorators.append(cst.Decorator(decorator=cst.Name(value="deprecated")))
         return node.with_changes(decorators=decorators)
-
-    @staticmethod
-    def code(node: cst.Node) -> str:
-        return cst.Module([]).code_for_node(node)
 
     def inner_github_type(self, data_type: PythonType | GithubClass | list[PythonType | GithubClass]) -> [GithubClass]:
         if data_type is None:
@@ -1500,20 +1438,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             ]
         )
 
-    @staticmethod
-    def get_type_value(clazz: GithubClass) -> str:
-        if "type" in clazz.properties:
-            type_property = clazz.properties["type"]
-            schema = type_property.get("schema")
-            if (
-                type_property.get("returns") == ["str"]
-                and schema
-                and schema.get("type") == "string"
-                and len(schema.get("enum", [])) == 1
-            ):
-                return schema["enum"][0]
-        return clazz.name
-
     @classmethod
     def make_attribute(cls, prop: Property) -> cst.Call:
         func_name = None
@@ -1559,25 +1483,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 func_name = "_makeListOfClassesAttribute"
                 args = [cst.Arg(cls.create_type(prop.data_type.inner_types[0])), cst.Arg(attr)]
                 # TODO: warn about unknown / supported type
-            elif prop.data_type.inner_types[0].type == "union" and all(
-                isinstance(t, GithubClass) for t in prop.data_type.inner_types[0].inner_types
-            ):
-                func_name = "_makeListOfUnionClassesAttributeFromTypeKey"
-                args = [
-                    cst.Arg(cst.SimpleString('"type"')),
-                    cst.Arg(cst.SimpleString('"unknown"')),
-                    cst.Arg(attr),
-                ] + [
-                    cst.Arg(
-                        cst.Tuple(
-                            elements=[
-                                cst.Element(cls.create_type(dt)),
-                                cst.Element(cst.SimpleString(f'"{cls.get_type_value(dt)}"')),
-                            ]
-                        )
-                    )
-                    for dt in prop.data_type.inner_types[0].inner_types
-                ]
             elif prop.data_type.inner_types[0].type == "int":
                 func_name = "_makeListOfIntsAttribute"
                 args = [cst.Arg(attr)]
@@ -1601,15 +1506,12 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             func_name = "_makeUnionClassAttributeFromTypeKey"
             args = [
                 cst.Arg(cst.SimpleString('"type"')),
-                cst.Arg(cst.SimpleString('"unknown"')),
+                cst.Arg(cst.SimpleString(f'"{prop.data_type.inner_types[0].name}"')),
                 cst.Arg(attr),
             ] + [
                 cst.Arg(
                     cst.Tuple(
-                        elements=[
-                            cst.Element(cls.create_type(dt)),
-                            cst.Element(cst.SimpleString(f'"{cls.get_type_value(dt)}"')),
-                        ]
+                        elements=[cst.Element(cls.create_type(dt)), cst.Element(cst.SimpleString(f'"{dt.name}"'))]
                     )
                 )
                 for dt in prop.data_type.inner_types
@@ -1665,10 +1567,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         while new_statements:
             updated_statements.append(new_statements.pop(0))
 
-        # remove dangling pass command
-        if len(updated_statements) > 1 and self.code(updated_statements[0]).strip().strip() == "pass":
-            updated_statements = updated_statements[1:]
-
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
     def update_use_attrs(self, func: cst.FunctionDef) -> cst.FunctionDef:
@@ -1696,10 +1594,6 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                 updated_statements.append(statement)
         while new_statements:
             updated_statements.append(new_statements.pop(0))
-
-        # remove dangling pass command
-        if len(updated_statements) > 1 and self.code(updated_statements[0]).strip() == "pass":
-            updated_statements = updated_statements[1:]
 
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
@@ -2803,7 +2697,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
         api_response: str | None,
         prefix_path,
         return_property: str | None,
-        create_new_class_func: Callable[[str], dict[str, Any]] | None,
+        create_new_class_func: Callable[str] | None,
     ):
         super().__init__()
         self.spec = spec
@@ -2870,13 +2764,9 @@ class CreateClassMethodTransformer(CstTransformerBase):
                 verbose=False,
                 collect_new_schemas=new_schemas,
             )
-            if new_schemas:
-                for new_schema in new_schemas:
-                    print(f"Creating new class for schema {new_schema}")
-                    index = create_new_class_func(new_schema)
-                self.classes = index.get("classes", {})
-                self.schema_to_class = index.get("indices", {}).get("schema_to_classes", {})
-                self.schema_to_class["default"] = ["GithubObject"]
+            for new_schema in new_schemas:
+                print(f"creating new class for schea {new_schema}")
+                create_new_class_func(new_schema)
         self.api_content = (
             as_python_type(content_schema, schema_path, self.schema_to_class, self.classes, self.spec, verbose=True)
             if content_schema
@@ -2922,24 +2812,11 @@ class CreateClassMethodTransformer(CstTransformerBase):
         return (function_name,)
 
     def create_method(self) -> cst.FunctionDef:
-        # extract url parameters that are not given by the class' GET url
         url_params = [
             elem[1:-1] for elem in self.relative_path.split("/") if elem.startswith("{") and elem.endswith("}")
         ]
-        # add an input decorator to pull these url parameters into method parameters
-        decorators = [
-            cst.Decorator(
-                decorator=cst.Call(
-                    func=cst.Name("openapi_parameter"),
-                    args=[
-                        cst.Arg(cst.SimpleString(f'"{url_param}"')),
-                        cst.Arg(keyword=cst.Name("input"), value=cst.Name("True"), equal=equal),
-                    ],
-                ),
-                leading_lines=[cst.EmptyLine()] if idx == 0 else [],
-            )
-            for idx, url_param in enumerate(url_params)
-        ]
+        if url_params:
+            raise ValueError(f"URL parameter not implemented: {', '.join(url_params)}")
 
         # TODO: use Method.from_schema
         request_schema = (
@@ -2955,7 +2832,6 @@ class CreateClassMethodTransformer(CstTransformerBase):
             "schema",
             "properties",
         )
-        request_properties_var = f"{self.api_verb}_parameters"
         request_properties = (
             {
                 prop: as_python_type(
@@ -2968,17 +2844,26 @@ class CreateClassMethodTransformer(CstTransformerBase):
         )
         required_properties = request_schema.get("required") if request_schema else []
         # TODO: ignore parameters:
+        #       - those covered by prefix_path
         #       - those referring to pagination
+        #       - add all others to method name, e.g dir in /repos/{owner}/{repo}/readme/{dir}
 
         stmts = []
 
-        # add docstring template, this will be populated when calling apply_methods
+        # TODO: combine this with UpdateMethodsTransformer.update_docstring
         docstrings = []
         docstrings.append('"""')
         if self.api_docs:
             docstrings.append(f":calls: `{self.api_verb.upper()} {self.api_path} <{self.api_docs}>`_")
         else:
             docstrings.append(f":calls: {self.api_verb.upper()} {self.api_path}")
+        for prop_name, prop_type in request_properties.items():
+            docstrings.append(f":param {prop_name}: {prop_type}")
+        if self.api_content:
+            docstrings.append(f":rtype: {self.api_content}")
+        if self.api_descr:
+            docstrings.append("")
+            docstrings.append(self.api_descr)
         docstrings.append('"""')
         docstring = "\n        ".join(docstrings)
         stmts.append(cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))]))
@@ -3006,7 +2891,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
             parameter_stmt = cst.SimpleStatementLine(
                 body=[
                     cst.Assign(
-                        targets=[cst.AssignTarget(cst.Name(request_properties_var))],
+                        targets=[cst.AssignTarget(cst.Name("parameters"))],
                         value=cst.Dict(
                             [
                                 cst.DictElement(key=cst.SimpleString(f'"{prop_name}"'), value=cst.Name(prop_name))
@@ -3045,12 +2930,7 @@ class CreateClassMethodTransformer(CstTransformerBase):
                             ),
                         )
                         + (
-                            (cst.Arg(keyword=cst.Name("parameters"), value=cst.Name("url_parameters"), equal=equal),)
-                            if url_params
-                            else ()
-                        )
-                        + (
-                            (cst.Arg(keyword=cst.Name("input"), value=cst.Name(request_properties_var), equal=equal),)
+                            (cst.Arg(keyword=cst.Name("input"), value=cst.Name("parameters"), equal=equal),)
                             if request_properties
                             else ()
                         ),
@@ -3105,12 +2985,11 @@ class CreateClassMethodTransformer(CstTransformerBase):
         body = cst.IndentedBlock(body=stmts)
 
         return cst.FunctionDef(
-            decorators=decorators,
             name=cst.Name(value=self.method_name),
             params=params,
             body=body,
             returns=returns,
-            lines_after_decorators=[] if decorators else [cst.EmptyLine()],
+            lines_after_decorators=[cst.EmptyLine()],
         )
 
 
@@ -3123,14 +3002,8 @@ class JsonSerializer(JSONEncoder):
 
 class IndexFileWorker:
     def __init__(
-        self,
-        spec: dict[str, Any] | None,
-        classes: dict[str, Any],
-        index_config_file: Path,
-        paths: list[dict[str, Any]],
-        check_verbs: bool,
+        self, classes: dict[str, Any], index_config_file: Path, paths: list[dict[str, Any]], check_verbs: bool
     ):
-        self.spec = spec
         self.classes = classes
         self.paths = paths
         self.config = {}
@@ -3149,7 +3022,7 @@ class IndexFileWorker:
 
         paths = {}
         visitor = IndexPythonClassesVisitor(
-            self.spec, self.classes, paths, self.config.get("known method verbs", {}) if self.check_verbs else None
+            self.classes, paths, self.config.get("known method verbs", {}) if self.check_verbs else None
         )
         visitor.package("github")
         visitor.module(Path(filename.removesuffix(".py")).name)
@@ -3403,7 +3276,7 @@ class OpenApi:
                             self.as_python_type(v, schema_path + ["properties", k], collect_new_schemas=new_schemas)
                     # handle new schemas
                     for new_schema in new_schemas:
-                        index = self.create_class_for_schema(
+                        self.create_class_for_schema(
                             github_path, spec_file, index_filename, spec, classes, tests, new_schema
                         )
 
@@ -3625,13 +3498,12 @@ class OpenApi:
         print(f"Indexing {len(files)} Python files")
 
         # index files in parallel
-        spec = self.read_json(spec_file) if spec_file is not None else None
         with multiprocessing.Manager() as manager:
             classes = manager.dict()
             paths = manager.list()
             if check_verbs and not config_file.exists():
                 raise RuntimeError(f"Cannot check verbs without config: {config_file}")
-            indexer = IndexFileWorker(spec, classes, config_file, paths, check_verbs)
+            indexer = IndexFileWorker(classes, config_file, paths, check_verbs)
             with multiprocessing.Pool() as pool:
                 pool.map(indexer.index_file, iterable=[join(github_path, file) for file in files])
             classes = dict(classes)
@@ -4215,72 +4087,60 @@ class OpenApi:
             raise ValueError(f"File exists already: {clazz.test_filename}")
 
         source = (
-            (
-                f"############################ Copyrights and license ############################\n"
-                f"#                                                                              #\n"
-                f"#                                                                              #\n"
-                f"# This file is part of PyGithub.                                               #\n"
-                f"# http://pygithub.readthedocs.io/                                              #\n"
-                f"#                                                                              #\n"
-                f"# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
-                f"# the terms of the GNU Lesser General Public License as published by the Free  #\n"
-                f"# Software Foundation, either version 3 of the License, or (at your option)    #\n"
-                f"# any later version.                                                           #\n"
-                f"#                                                                              #\n"
-                f"# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
-                f"# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
-                f"# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
-                f"# details.                                                                     #\n"
-                f"#                                                                              #\n"
-                f"# You should have received a copy of the GNU Lesser General Public License     #\n"
-                f"# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
-                f"#                                                                              #\n"
-                f"################################################################################\n"
-                f"\n"
-                f"from __future__ import annotations\n"
-                f"\n"
-                f"from typing import Any, TYPE_CHECKING\n"
-                f"\n"
-                f"from {parent_class.package}.{parent_class.module} import {parent_class.name}\n"
-                f"from github.GithubObject import Attribute, NotSet\n"
-                f"\n"
-                f"if TYPE_CHECKING:\n"
-                f"    pass\n"
-                f"\n"
-                f"\n"
-                f"class {clazz.name}({parent_class.name}):\n"
-                f'    """\n'
-                f"    This class represents {clazz.name}.\n"
-                f"\n"
-                f"    The reference can be found here\n"
-                f"    {docs_url}\n"
-                f"\n"
-                f"    The OpenAPI schema can be found at\n\n"
-                + "".join(f"    - {schema}\n" for schema in schemas)
-                + "\n"
-                '    """\n'
-                "\n"
-                "    def _initAttributes(self) -> None:\n"
-            )
-            + (
-                "        pass\n"
-                if parent_class.name == "NonCompletableGithubObject"
-                else "        super()._initAttributes()\n"
-            )
-            + (
-                "\n"
-                "    def __repr__(self) -> str:\n"
-                '        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:\n'
-                '        return self.get__repr__({"some_attribute": self._some_attribute.value})\n'
-                "\n"
-                "    def _useAttributes(self, attributes: dict[str, Any]) -> None:\n"
-            )
-            + (
-                "        pass\n"
-                if parent_class.name == "NonCompletableGithubObject"
-                else "        super()._useAttributes(attributes)\n"
-            )
-            + ("\n")
+            f"############################ Copyrights and license ############################\n"
+            f"#                                                                              #\n"
+            f"#                                                                              #\n"
+            f"# This file is part of PyGithub.                                               #\n"
+            f"# http://pygithub.readthedocs.io/                                              #\n"
+            f"#                                                                              #\n"
+            f"# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
+            f"# the terms of the GNU Lesser General Public License as published by the Free  #\n"
+            f"# Software Foundation, either version 3 of the License, or (at your option)    #\n"
+            f"# any later version.                                                           #\n"
+            f"#                                                                              #\n"
+            f"# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
+            f"# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
+            f"# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
+            f"# details.                                                                     #\n"
+            f"#                                                                              #\n"
+            f"# You should have received a copy of the GNU Lesser General Public License     #\n"
+            f"# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
+            f"#                                                                              #\n"
+            f"################################################################################\n"
+            f"\n"
+            f"from __future__ import annotations\n"
+            f"\n"
+            f"from typing import Any, TYPE_CHECKING\n"
+            f"\n"
+            f"from {parent_class.package}.{parent_class.module} import {parent_class.name}\n"
+            f"from github.GithubObject import Attribute, NotSet\n"
+            f"\n"
+            f"if TYPE_CHECKING:\n"
+            f"    from {parent_class.package}.{parent_class.module} import {parent_class.name}\n"
+            f"\n"
+            f"\n"
+            f"class {clazz.name}({parent_class.name}):\n"
+            f'    """\n'
+            f"    This class represents {clazz.name}.\n"
+            f"\n"
+            f"    The reference can be found here\n"
+            f"    {docs_url}\n"
+            f"\n"
+            f"    The OpenAPI schema can be found at\n" + "".join(f"    - {schema}\n" for schema in schemas) + "\n"
+            '    """\n'
+            "\n"
+            "    def _initAttributes(self) -> None:\n"
+            "        # TODO: remove if parent does not implement this\n"
+            "        super()._initAttributes()\n"
+            "\n"
+            "    def __repr__(self) -> str:\n"
+            '        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:\n'
+            '        return self.get__repr__({"some_attribute": self._some_attribute.value})\n'
+            "\n"
+            "    def _useAttributes(self, attributes: dict[str, Any]) -> None:\n"
+            "        # TODO: remove if parent does not implement this\n"
+            "        super()._useAttributes(attributes)\n"
+            "\n"
         )
         self.write_code("", source, clazz.filename, dry_run=False)
 
@@ -4379,19 +4239,6 @@ class OpenApi:
                     os.unlink(clazz.test_filename)
         return True
 
-    @staticmethod
-    def class_name_from_schema(schema: str) -> str:
-        item_pos = 1  # from right
-        schema_path = schema.split("/")
-        name = ""
-        while len(schema) >= item_pos:
-            item = schema_path[-item_pos]
-            name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)]) + name
-            if len(schema_path) > item_pos and schema_path[-(item_pos + 1)] != "properties":
-                return name
-            item_pos += 2
-        return name
-
     def create_class_for_schema(
         self,
         github_path: str,
@@ -4401,14 +4248,14 @@ class OpenApi:
         classes: dict[str, Any],
         tests: bool,
         schema: str,
-    ) -> dict[str, Any]:
+    ) -> None:
         item = schema.split("/")[-1]
         if item.startswith("_"):
-            return self.read_json(index_filename)
-        new_class_name = self.class_name_from_schema(schema)
+            return None
+        new_class_name = "".join([term[0].upper() + term[1:] for term in re.split("[-_]", item)])
         if new_class_name in classes:
             # we probably created that class in an earlier iteration, or we have a name collision here
-            return self.read_json(index_filename)
+            return
         is_completable = "url" in self.get_schema(spec, schema)[1].get("properties", [])
         parent_name = "CompletableGithubObject" if is_completable else "NonCompletableGithubObject"
         # TODO: get path from schema via indices.path_to_return_classes, get docs from spec.paths.PATH.get.externalDocs.url
@@ -4429,14 +4276,13 @@ class OpenApi:
 
         # update index
         self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
-        index = self.read_json(index_filename)
+        with open(index_filename) as r:
+            index = json.load(r)
         classes.clear()
         classes.update(**index.get("classes", {}))
-        return index
 
     def create_method(
         self,
-        github_path: str,
         spec_file: str,
         index_filename: str,
         class_name: str,
@@ -4462,37 +4308,30 @@ class OpenApi:
         with open(clazz.filename) as r:
             code = "".join(r.readlines())
 
+        prefix_path = None
         return_schema_to_paths = index.get("indices", {}).get("return_schema_to_paths")
         if return_schema_to_paths is None:
             raise RuntimeError("OpenAPI spec has not been indexed via openapi.py index")
-
-        # get all paths that return clazz, that are a prefix of api_path
-        class_paths = [
-            path
-            for schema in clazz.schemas
-            for path in return_schema_to_paths.get(schema, [])
-            if api_path.startswith(f"{path}/")
-        ]
-        # pick the longest match
-        class_paths = sorted(class_paths, key=lambda p: len(p), reverse=True)
-        prefix_path = next(iter(class_paths), None)
+        for schema in clazz.schemas:
+            for path in return_schema_to_paths.get(schema, []):
+                if api_path.startswith(f"{path}/"):
+                    prefix_path = path
+                    break
+            if prefix_path:
+                break
 
         create_new_class_func = None
         if handle_new_schemas == HandleNewSchemas.create_class:
 
-            def create_new_class(schema: str) -> dict[str, Any]:
+            def create_new_class(schema: str) -> None:
                 classes = index.get("classes", {})
                 github_path = index.get("sources")
-                new_index = self.create_class_for_schema(
+                self.create_class_for_schema(
                     github_path, spec_file, index_filename, spec, classes, tests=True, schema=schema
                 )
-                index.clear()
-                index.update(**new_index)
-                return index
 
             create_new_class_func = create_new_class
 
-        # add the method template
         transformer = CreateClassMethodTransformer(
             spec,
             index,
@@ -4508,13 +4347,6 @@ class OpenApi:
         tree = cst.parse_module(code)
         tree_updated = tree.visit(transformer)
         changed = self.write_code(code, tree_updated.code, clazz.filename, dry_run)
-
-        # populate the method (this only works on actual file changes)
-        if not dry_run:
-            print("Updating index")
-            self.index(github_path, spec_file, index_filename, check_verbs=False, dry_run=False)
-            self.apply_methods(spec_file, index_filename, [f"{class_name}.{method_name}"], dry_run, rewrite=True)
-
         return changed
 
     @staticmethod
@@ -4632,7 +4464,6 @@ class OpenApi:
             help="Return the value of this response property, instead of the entire response object",
             nargs="?",
         )
-        create_method_parser.add_argument("github_path", help="Path to PyGithub Python files")
         create_method_parser.add_argument("spec", help="Github API OpenAPI spec file")
         create_method_parser.add_argument("index_filename", help="Path of index file")
         create_method_parser.add_argument("class_name", help="PyGithub GithubObject class name")
@@ -4712,7 +4543,6 @@ class OpenApi:
                 )
             if self.args.component == "method":
                 changes = self.create_method(
-                    self.args.github_path,
                     self.args.spec,
                     self.args.index_filename,
                     self.args.class_name,
