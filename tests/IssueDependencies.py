@@ -30,14 +30,16 @@ from . import Framework
 class IssueDependencies(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("PyGithub/PyGithub")
-        self.issue = self.repo.get_issue(96)
-        self.blocking_issue = self.repo.get_issue(28)
+        self.repo = self.g.get_repo("EnricoMi/PyGithub", lazy=True)
+        self.issue = self.repo.get_issue(24).complete()
+        self.blocking_issue = self.repo.get_issue(13).complete()
 
     def testAddBlockedBy(self):
+        self.assertNotIn(self.blocking_issue, list(self.issue.get_blocked_by()))
         self.issue.add_blocked_by(self.blocking_issue)
-        self.assertIn(self.blocking_issue, list(self.get_blocked_by()))
+        self.assertIn(self.blocking_issue, list(self.issue.get_blocked_by()))
 
     def testRemoveBlockedBy(self):
+        self.assertIn(self.blocking_issue, list(self.issue.get_blocked_by()))
         self.issue.remove_blocked_by(self.blocking_issue)
-        self.assertNotIn(self.blocking_issue, list(self.get_blocked_by()))
+        self.assertNotIn(self.blocking_issue, list(self.issue.get_blocked_by()))
