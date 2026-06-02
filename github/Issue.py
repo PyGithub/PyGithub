@@ -712,10 +712,10 @@ class Issue(CompletableGithubObject):
             None,
             headers={"Accept": Consts.issueTimelineEventsPreview},
         )
-    
+
     def get_blocked_by(self) -> PaginatedList[Issue]:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocked-by>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         return PaginatedList(
@@ -725,30 +725,27 @@ class Issue(CompletableGithubObject):
             None,
             headers={"Accept": Consts.mediaType},
         )
-    
+
     def add_blocked_by(self, issue: Issue) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#add-a-dependency-an-issue-is-blocked-by>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocked-by>`_
         """
         assert isinstance(issue, github.Issue.Issue)
-        post_parameters: dict[str, int] = {
-            "issue_id": issue.id
-        }
-        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/dependencies/blocked_by", input=post_parameters)
+        post_parameters: dict[str, int] = {"issue_id": issue.id}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/dependencies/blocked_by", input=post_parameters
+        )
 
     def remove_blocked_by(self, issue: Issue) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by/{issue_id}
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by/{issue_id} <https://docs.github.com/en/rest/issues/issue-dependencies#remove-dependency-an-issue-is-blocked-by>`_
         """
         assert isinstance(issue, github.Issue.Issue)
-        headers, data = self._requester.requestJsonAndCheck(
-            "DELETE",
-            f"{self.url}/dependencies/blocked_by/{issue.id}"
-        )
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/dependencies/blocked_by/{issue.id}")
 
     def get_blocking(self) -> PaginatedList[Issue]:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocking
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocking <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocking>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         return PaginatedList(
