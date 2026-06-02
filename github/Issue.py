@@ -726,6 +726,19 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaType},
         )
 
+    def get_blocking(self) -> PaginatedList[Issue]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocking <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocking>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+        return PaginatedList(
+            Issue,
+            self._requester,
+            f"{self.url}/dependencies/blocking",
+            None,
+            headers={"Accept": Consts.mediaType},
+        )
+
     def add_blocked_by(self, issue: Issue) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocked-by>`_
@@ -746,19 +759,6 @@ class Issue(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/dependencies/blocked_by/{issue.id}")
         self._useAttributes(data)
         self._set_complete()
-
-    def get_blocking(self) -> PaginatedList[Issue]:
-        """
-        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocking <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocking>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
-        """
-        return PaginatedList(
-            Issue,
-            self._requester,
-            f"{self.url}/dependencies/blocking",
-            None,
-            headers={"Accept": Consts.mediaType},
-        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
