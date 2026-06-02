@@ -417,7 +417,7 @@ class Issue(CompletableGithubObject):
         )
         # GraphQL's `url` field is HTML, not REST API we need
         def url_from_number(data: dict[str, Any]) -> dict[str, Any]:
-            data['url'] = f'{self._parentUrl(self._pull_url())}/{data['number']}'
+            data['url'] = f'{self._parentUrl(self._pull_url())}/{data["number"]}'
             return data
 
         return PaginatedList(
