@@ -735,6 +735,8 @@ class Issue(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/dependencies/blocked_by", input=post_parameters
         )
+        self._useAttributes(data)
+        self._set_complete()
 
     def remove_blocked_by(self, issue: Issue) -> None:
         """
@@ -742,6 +744,8 @@ class Issue(CompletableGithubObject):
         """
         assert isinstance(issue, github.Issue.Issue)
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/dependencies/blocked_by/{issue.id}")
+        self._useAttributes(data)
+        self._set_complete()
 
     def get_blocking(self) -> PaginatedList[Issue]:
         """
