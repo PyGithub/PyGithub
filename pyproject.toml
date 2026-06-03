@@ -102,4 +102,4 @@ unfixable = ["F401"]
 
 [tool.pytest.ini_options]
 python_files = "tests/*.py"
-addopts = "--color=yes"
+addopts = "--color=yes --ignore=openapi"

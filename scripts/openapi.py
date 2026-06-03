@@ -3214,7 +3214,7 @@ class OpenApi:
         )
 
     @staticmethod
-    def read_json(filename: str) -> dict[str, Any]:
+    def read_json(filename: str | Path) -> dict[str, Any]:
         with open(filename) as r:
             return json.load(r)
 
@@ -3848,7 +3848,7 @@ class OpenApi:
                                     print(f"    - {verb} {candidate_path} should be implemented as {implementations}")
                                     for suggested_method in suggested_methods:
                                         print(
-                                            f"      {sys.executable} {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
+                                            f"      python {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
                                         )
                             print()
             print()
@@ -4340,7 +4340,7 @@ class OpenApi:
             if dry_run:
                 with NamedTemporaryFile(delete_on_close=False) as f:
                     f.close()
-                    print(f"Updating temporary index {f.name}")
+                    print("Updating temporary index")
                     self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
                     self.apply_properties(
                         github_path,
