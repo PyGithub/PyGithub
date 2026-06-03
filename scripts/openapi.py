@@ -1154,10 +1154,15 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                             and args
                             and args[0]
                             in [
-                                "self._requester",
-                                "self.__requester",
-                                "requester=self._requester",
-                                "requester=self.__requester",
+                                requester + withLazy
+                                for requester in [
+                                    "requester",
+                                    "self._requester",
+                                    "self.__requester",
+                                    "requester=self._requester",
+                                    "requester=self.__requester",
+                                ]
+                                for withLazy in ["", ".withLazy(lazy)"]
                             ]
                             and (
                                 len(args) > 1
