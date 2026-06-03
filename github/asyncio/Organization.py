@@ -1334,7 +1334,10 @@ class Organization(CompletableGithubObject):
 
     async def get_copilot(self) -> Copilot.Copilot:
         """
-        :calls: Various Copilot-related endpoints for this organization :rtype: :class:`Copilot.Copilot`
+        Provides various Copilot-related endpoints for this organization.
+
+        :rtype: :class:`Copilot.Copilot`
+
         """
         return Copilot.Copilot(self._requester, await self.login)
 

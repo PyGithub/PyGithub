@@ -254,6 +254,7 @@ from . import (
     Variable,
     View,
     Workflow,
+    WorkflowJob,
     WorkflowRun,
 )
 from .GeneratedReleaseNotes import GeneratedReleaseNotes
@@ -2032,6 +2033,7 @@ class Repository(CompletableGithubObject):
     async def get_secret(self, secret_name: str, secret_type: str = "actions") -> Secret.Secret:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/dependabot#get-an-organization-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
@@ -3798,6 +3800,16 @@ class Repository(CompletableGithubObject):
         assert isinstance(id_, int)
         url = f"{await self.url}/actions/runs/{id_}"
         return WorkflowRun.WorkflowRun(self._requester, url=url)
+
+    async def get_workflow_job(self, id_: int) -> WorkflowJob.WorkflowJob:
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/jobs/{job_id} <https://docs.github.com/en/rest/actions/workflow-jobs#get-a-job-for-a-workflow-run>`_
+        :param id_: int
+        :rtype: :class:`WorkflowJob.WorkflowJob`
+        """
+        assert isinstance(id_, int)
+        url = f"{await self.url}/actions/jobs/{id_}"
+        return WorkflowJob.WorkflowJob(self._requester, url=url)
 
     async def has_in_assignees(self, assignee: str | NamedUser.NamedUser) -> bool:
         """

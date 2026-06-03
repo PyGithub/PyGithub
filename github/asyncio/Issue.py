@@ -721,6 +721,55 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.issueTimelineEventsPreview},
         )
 
+    async def get_blocked_by(self) -> PaginatedList[Issue]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocked-by>`_
+        :rtype: :class:`PaginatedList` of :class:`Issue`
+        """
+        return PaginatedList(
+            Issue,
+            self._requester,
+            f"{await self.url}/dependencies/blocked_by",
+            None,
+            headers={"Accept": Consts.mediaType},
+        )
+
+    async def get_blocking(self) -> PaginatedList[Issue]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocking <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocking>`_
+        :rtype: :class:`PaginatedList` of :class:`Issue`
+        """
+        return PaginatedList(
+            Issue,
+            self._requester,
+            f"{await self.url}/dependencies/blocking",
+            None,
+            headers={"Accept": Consts.mediaType},
+        )
+
+    async def add_blocked_by(self, issue: Issue) -> None:
+        """
+        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocked-by>`_
+        """
+        assert isinstance(issue, Issue)
+        post_parameters: dict[str, int] = {"issue_id": (await issue.id)}
+        headers, data = await self._requester.requestJsonAndCheck(
+            "POST", f"{await self.url}/dependencies/blocked_by", input=post_parameters
+        )
+        self._useAttributes(data)
+        self._set_complete()
+
+    async def remove_blocked_by(self, issue: Issue) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by/{issue_id} <https://docs.github.com/en/rest/issues/issue-dependencies#remove-dependency-an-issue-is-blocked-by>`_
+        """
+        assert isinstance(issue, Issue)
+        headers, data = await self._requester.requestJsonAndCheck(
+            "DELETE", f"{await self.url}/dependencies/blocked_by/{(await issue.id)}"
+        )
+        self._useAttributes(data)
+        self._set_complete()
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "active_lock_reason" in attributes:  # pragma no branch
             self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
