@@ -266,6 +266,7 @@ from github.GithubObject import (
     is_optional,
     is_optional_list,
     is_undefined,
+    method_parameter,
     openapi_parameter,
 )
 from github.PaginatedList import PaginatedList
@@ -1375,6 +1376,8 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/invitations/{invite_id}")
 
+    @openapi_parameter(name="basehead", matches=["base", "head"], input=True)
+    @method_parameter(name="comparison_commits_per_page")
     def compare(self, base: str, head: str, *, comparison_commits_per_page: int | None = None) -> Comparison:
         """
         :calls: `GET /repos/{owner}/{repo}/compare/{basehead} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
