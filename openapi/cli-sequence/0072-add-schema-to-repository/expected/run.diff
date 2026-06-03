@@ -1,0 +1,794 @@
+diff --recursive --new-file before/github/Repository.py after/github/Repository.py
+44a45
+>     - /components/schemas/full-repository
+diff --recursive --new-file before/openapi.index after/openapi.index
+1413c1413
+<       "docstring": "This class represents Repository.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/repos\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/repository",
+---
+>       "docstring": "This class represents Repository.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/repos\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/full-repository\n    - /components/schemas/repository",
+1434,1439c1434
+<           "schema": {
+<             "default": false,
+<             "description": "Whether to allow Auto-merge to be used on pull requests.",
+<             "example": false,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1440a1436,1439
+>             "/components/schemas/full-repository": {
+>               "example": false,
+>               "type": "boolean"
+>             },
+1454,1457c1453
+<           "schema": {
+<             "description": "Whether to allow forking this repo",
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1458a1455,1458
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+1470,1475c1470
+<           "schema": {
+<             "default": true,
+<             "description": "Whether to allow merge commits for pull requests.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1476a1472,1475
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+1490,1495c1489
+<           "schema": {
+<             "default": true,
+<             "description": "Whether to allow rebase merges for pull requests.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1496a1491,1494
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+1510,1515c1508
+<           "schema": {
+<             "default": true,
+<             "description": "Whether to allow squash merges for pull requests.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1516a1510,1513
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+1530,1535c1527
+<           "schema": {
+<             "default": false,
+<             "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
+<             "example": false,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1536a1529,1532
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+1550,1553c1546
+<           "schema": {
+<             "description": "Whether anonymous git access is enabled for this repository",
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1554a1548,1552
+>             "/components/schemas/full-repository": {
+>               "default": true,
+>               "description": "Whether anonymous git access is allowed.",
+>               "type": "boolean"
+>             },
+1570a1569,1572
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
+>               "type": "string"
+>             },
+1582,1586c1584
+<           "schema": {
+<             "default": false,
+<             "description": "Whether the repository is archived.",
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1587a1586,1588
+>             "/components/schemas/full-repository": {
+>               "type": "boolean"
+>             },
+1604a1606,1609
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}",
+>               "type": "string"
+>             },
+1620a1626,1629
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
+>               "type": "string"
+>             },
+1636a1646,1649
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}",
+>               "type": "string"
+>             },
+1652a1666,1669
+>             "/components/schemas/full-repository": {
+>               "example": "https://github.com/octocat/Hello-World.git",
+>               "type": "string"
+>             },
+1668a1686,1689
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
+>               "type": "string"
+>             },
+1684a1706,1709
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}",
+>               "type": "string"
+>             },
+1700a1726,1729
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}",
+>               "type": "string"
+>             },
+1716a1746,1749
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
+>               "type": "string"
+>             },
+1732a1766,1769
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}",
+>               "type": "string"
+>             },
+1749a1787,1791
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/contributors",
+>               "format": "uri",
+>               "type": "string"
+>             },
+1762,1767c1804
+<           "schema": {
+<             "example": "2011-01-26T19:01:12Z",
+<             "format": "date-time",
+<             "nullable": true,
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+1768a1806,1810
+>             "/components/schemas/full-repository": {
+>               "example": "2011-01-26T19:01:12Z",
+>               "format": "date-time",
+>               "type": "string"
+>             },
+1782,1786c1824
+<           "schema": {
+<             "description": "The default branch of the repository.",
+<             "example": "master",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+1787a1826,1829
+>             "/components/schemas/full-repository": {
+>               "example": "master",
+>               "type": "string"
+>             },
+1800,1805c1842
+<           "schema": {
+<             "default": false,
+<             "description": "Whether to delete head branches when pull requests are merged",
+<             "example": false,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+1806a1844,1847
+>             "/components/schemas/full-repository": {
+>               "example": false,
+>               "type": "boolean"
+>             },
+1825a1867,1871
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/deployments",
+>               "format": "uri",
+>               "type": "string"
+>             },
+1843a1890,1894
+>             "/components/schemas/full-repository": {
+>               "example": "This your first repo!",
+>               "nullable": true,
+>               "type": "string"
+>             },
+1860a1912,1915
+>             "/components/schemas/full-repository": {
+>               "description": "Returns whether or not this repository disabled.",
+>               "type": "boolean"
+>             },
+1877a1933,1937
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/downloads",
+>               "format": "uri",
+>               "type": "string"
+>             },
+1895a1956,1960
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/events",
+>               "format": "uri",
+>               "type": "string"
+>             },
+1911a1977,1979
+>             "/components/schemas/full-repository": {
+>               "type": "boolean"
+>             },
+1925a1994,1996
+>             "/components/schemas/full-repository": {
+>               "type": "integer"
+>             },
+1940a2012,2015
+>             "/components/schemas/full-repository": {
+>               "example": 9,
+>               "type": "integer"
+>             },
+1957a2033,2037
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/forks",
+>               "format": "uri",
+>               "type": "string"
+>             },
+1974a2055,2058
+>             "/components/schemas/full-repository": {
+>               "example": "octocat/Hello-World",
+>               "type": "string"
+>             },
+1990a2075,2078
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
+>               "type": "string"
+>             },
+2006a2095,2098
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
+>               "type": "string"
+>             },
+2022a2115,2118
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
+>               "type": "string"
+>             },
+2038a2135,2138
+>             "/components/schemas/full-repository": {
+>               "example": "git:github.com/octocat/Hello-World.git",
+>               "type": "string"
+>             },
+2050,2055c2150
+<           "schema": {
+<             "default": false,
+<             "description": "Whether discussions are enabled.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2056a2152,2155
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+2070,2076c2169
+<           "schema": {
+<             "default": true,
+<             "deprecated": true,
+<             "description": "Whether downloads are enabled.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2077a2171,2174
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+2092,2097c2189
+<           "schema": {
+<             "default": true,
+<             "description": "Whether issues are enabled.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2098a2191,2194
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+2115a2212,2214
+>             "/components/schemas/full-repository": {
+>               "type": "boolean"
+>             },
+2126,2131c2225
+<           "schema": {
+<             "default": true,
+<             "description": "Whether projects are enabled.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2132a2227,2230
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+2146,2151c2244
+<           "schema": {
+<             "default": true,
+<             "description": "Whether the wiki is enabled.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2152a2246,2249
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+2172a2270,2275
+>             "/components/schemas/full-repository": {
+>               "example": "https://github.com",
+>               "format": "uri",
+>               "nullable": true,
+>               "type": "string"
+>             },
+2191a2295,2299
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/hooks",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2209a2318,2322
+>             "/components/schemas/full-repository": {
+>               "example": "https://github.com/octocat/Hello-World",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2222,2227c2335
+<           "schema": {
+<             "description": "Unique identifier of the repository",
+<             "example": 42,
+<             "format": "int64",
+<             "type": "integer"
+<           },
+---
+>           "schema": null,
+2228a2337,2341
+>             "/components/schemas/full-repository": {
+>               "example": 1296269,
+>               "format": "int64",
+>               "type": "integer"
+>             },
+2242,2247c2355
+<           "schema": {
+<             "default": false,
+<             "description": "Whether this repository acts as a template that can be used to generate new repositories.",
+<             "example": true,
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2248a2357,2360
+>             "/components/schemas/full-repository": {
+>               "example": true,
+>               "type": "boolean"
+>             },
+2266a2379,2382
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
+>               "type": "string"
+>             },
+2282a2399,2402
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
+>               "type": "string"
+>             },
+2298a2419,2422
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}",
+>               "type": "string"
+>             },
+2314a2439,2442
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
+>               "type": "string"
+>             },
+2330a2459,2462
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}",
+>               "type": "string"
+>             },
+2346a2479,2482
+>             "/components/schemas/full-repository": {
+>               "nullable": true,
+>               "type": "string"
+>             },
+2363a2500,2504
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/languages",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2379a2521,2523
+>             "/components/schemas/full-repository": {
+>               "type": "string"
+>             },
+2390,2398c2534
+<           "schema": {
+<             "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message.",
+<             "enum": [
+<               "PR_BODY",
+<               "PR_TITLE",
+<               "BLANK"
+<             ],
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2399a2536,2545
+>             "/components/schemas/full-repository": {
+>               "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message.",
+>               "enum": [
+>                 "PR_BODY",
+>                 "PR_TITLE",
+>                 "BLANK"
+>               ],
+>               "example": "PR_BODY",
+>               "type": "string"
+>             },
+2416,2423c2562
+<           "schema": {
+<             "description": "The default value for a merge commit title.\n\n- `PR_TITLE` - default to the pull request's title.\n- `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).",
+<             "enum": [
+<               "PR_TITLE",
+<               "MERGE_MESSAGE"
+<             ],
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2424a2564,2572
+>             "/components/schemas/full-repository": {
+>               "description": "The default value for a merge commit title.\n\n  - `PR_TITLE` - default to the pull request's title.\n  - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).",
+>               "enum": [
+>                 "PR_TITLE",
+>                 "MERGE_MESSAGE"
+>               ],
+>               "example": "PR_TITLE",
+>               "type": "string"
+>             },
+2445a2594,2598
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/merges",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2462a2616,2619
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}",
+>               "type": "string"
+>             },
+2480a2638,2643
+>             "/components/schemas/full-repository": {
+>               "example": "git:git.example.com/octocat/Hello-World",
+>               "format": "uri",
+>               "nullable": true,
+>               "type": "string"
+>             },
+2494,2498c2657
+<           "schema": {
+<             "description": "The name of the repository.",
+<             "example": "Team Environment",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2499a2659,2662
+>             "/components/schemas/full-repository": {
+>               "example": "Hello-World",
+>               "type": "string"
+>             },
+2516a2680,2683
+>             "/components/schemas/full-repository": {
+>               "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+>               "type": "string"
+>             },
+2532a2700,2703
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
+>               "type": "string"
+>             },
+2547a2719,2721
+>             "/components/schemas/full-repository": {
+>               "type": "integer"
+>             },
+2562a2737,2740
+>             "/components/schemas/full-repository": {
+>               "example": 0,
+>               "type": "integer"
+>             },
+2577a2756,2758
+>             "/components/schemas/full-repository": {
+>               "$ref": "#/components/schemas/simple-user"
+>             },
+2588,2592c2769
+<           "schema": {
+<             "default": false,
+<             "description": "Whether the repository is private or public.",
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2593a2771,2773
+>             "/components/schemas/full-repository": {
+>               "type": "boolean"
+>             },
+2610a2791,2794
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}",
+>               "type": "string"
+>             },
+2622,2627c2806
+<           "schema": {
+<             "example": "2011-01-26T19:06:43Z",
+<             "format": "date-time",
+<             "nullable": true,
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2628a2808,2812
+>             "/components/schemas/full-repository": {
+>               "example": "2011-01-26T19:06:43Z",
+>               "format": "date-time",
+>               "type": "string"
+>             },
+2646a2831,2834
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}",
+>               "type": "string"
+>             },
+2663a2852,2856
+>             "/components/schemas/full-repository": {
+>               "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
+>               "example": 108,
+>               "type": "integer"
+>             },
+2676,2684c2869
+<           "schema": {
+<             "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message.",
+<             "enum": [
+<               "PR_BODY",
+<               "COMMIT_MESSAGES",
+<               "BLANK"
+<             ],
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2685a2871,2880
+>             "/components/schemas/full-repository": {
+>               "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message.",
+>               "enum": [
+>                 "PR_BODY",
+>                 "COMMIT_MESSAGES",
+>                 "BLANK"
+>               ],
+>               "example": "PR_BODY",
+>               "type": "string"
+>             },
+2702,2709c2897
+<           "schema": {
+<             "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).",
+<             "enum": [
+<               "PR_TITLE",
+<               "COMMIT_OR_PR_TITLE"
+<             ],
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2710a2899,2907
+>             "/components/schemas/full-repository": {
+>               "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).",
+>               "enum": [
+>                 "PR_TITLE",
+>                 "COMMIT_OR_PR_TITLE"
+>               ],
+>               "example": "PR_TITLE",
+>               "type": "string"
+>             },
+2730a2928,2931
+>             "/components/schemas/full-repository": {
+>               "example": "git@github.com:octocat/Hello-World.git",
+>               "type": "string"
+>             },
+2746a2948,2951
+>             "/components/schemas/full-repository": {
+>               "example": 80,
+>               "type": "integer"
+>             },
+2763a2969,2973
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/stargazers",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2796a3007,3010
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
+>               "type": "string"
+>             },
+2813a3028,3032
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/subscribers",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2831a3051,3055
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/subscription",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2849a3074,3078
+>             "/components/schemas/full-repository": {
+>               "example": "https://svn.github.com/octocat/Hello-World",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2867a3097,3101
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/tags",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2885a3120,3124
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/teams",
+>               "format": "uri",
+>               "type": "string"
+>             },
+2898,2900c3137
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2901a3139,3142
+>             "/components/schemas/full-repository": {
+>               "nullable": true,
+>               "type": "string"
+>             },
+2912,2917c3153
+<           "schema": {
+<             "items": {
+<               "type": "string"
+<             },
+<             "type": "array"
+<           },
+---
+>           "schema": null,
+2918a3155,3166
+>             "/components/schemas/full-repository": {
+>               "example": [
+>                 "octocat",
+>                 "atom",
+>                 "electron",
+>                 "API"
+>               ],
+>               "items": {
+>                 "type": "string"
+>               },
+>               "type": "array"
+>             },
+2936a3185,3188
+>             "/components/schemas/full-repository": {
+>               "example": "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
+>               "type": "string"
+>             },
+2948,2953c3200
+<           "schema": {
+<             "example": "2011-01-26T19:14:43Z",
+<             "format": "date-time",
+<             "nullable": true,
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2954a3202,3206
+>             "/components/schemas/full-repository": {
+>               "example": "2011-01-26T19:14:43Z",
+>               "format": "date-time",
+>               "type": "string"
+>             },
+2968,2973c3220
+<           "schema": {
+<             "default": false,
+<             "deprecated": true,
+<             "description": "Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.",
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+2974a3222,3225
+>             "/components/schemas/full-repository": {
+>               "example": false,
+>               "type": "boolean"
+>             },
+2988,2992c3239
+<           "schema": {
+<             "default": "public",
+<             "description": "The repository visibility: public, private, or internal.",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+2993a3241,3245
+>             "/components/schemas/full-repository": {
+>               "description": "The repository visibility: public, private, or internal.",
+>               "example": "public",
+>               "type": "string"
+>             },
+3009a3262,3264
+>             "/components/schemas/full-repository": {
+>               "type": "integer"
+>             },
+3024a3280,3283
+>             "/components/schemas/full-repository": {
+>               "example": 80,
+>               "type": "integer"
+>             },
+3036,3040c3295
+<           "schema": {
+<             "default": false,
+<             "description": "Whether to require contributors to sign off on web-based commits",
+<             "type": "boolean"
+<           },
+---
+>           "schema": null,
+3041a3297,3300
+>             "/components/schemas/full-repository": {
+>               "example": false,
+>               "type": "boolean"
+>             },
+3050a3310
+>         "/components/schemas/full-repository",
+3855a4116,4118
+>       "/components/schemas/full-repository": [
+>         "Repository"
+>       ],

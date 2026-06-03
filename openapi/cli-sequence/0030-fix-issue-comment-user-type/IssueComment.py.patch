@@ -1,5 +1,5 @@
---- IssueComment.py.orig	2026-05-20 11:47:50.894138029 +0200
-+++ IssueComment.py.patched	2026-05-20 11:52:25.002488310 +0200
+--- github/IssueComment.py.orig	2026-05-20 11:47:50.894138029 +0200
++++ github/IssueComment.py.patched	2026-05-20 11:52:25.002488310 +0200
 @@ -24,11 +24,12 @@
  from typing import Any, TYPE_CHECKING
  from datetime import datetime, timezone

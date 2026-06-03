@@ -1,0 +1,134 @@
+diff --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+26a27,28
+> import github.Repository
+> from github.PaginatedList import PaginatedList
+28c30
+< from github.GithubObject import Attribute, NotSet
+---
+> from github.GithubObject import Attribute, NotSet, is_optional, method_parameter, openapi_parameter, Opt
+31c33
+<     pass
+---
+>     from github.Repository import Repository
+289c291,333
+<     
+---
+> 
+>     @method_parameter(
+>         name="name",
+>         required=True,
+>         merge=["owner", "repo"],
+>         docstring_prepend='The name of the repository in the form "{owner}/{repo}" with:\n',
+>     )
+>     @openapi_parameter(name="owner", input=True, docstring_prepend='- "{owner}": ')
+>     @openapi_parameter(name="repo", input=True, docstring_prepend='- "{repo}": ')
+>     def get_repo(self, name: str) -> Repository:
+>         """
+>         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
+>         """
+>         assert isinstance(name, str), name
+>         url = f"/repos/{self.login}/{name}"
+>         return github.Repository.Repository(self._requester, url=url)
+> 
+>     def get_repos(
+>         self,
+>         type: Opt[str] = NotSet,
+>         sort: Opt[str] = NotSet,
+>         direction: Opt[str] = NotSet,
+>     ) -> PaginatedList[Repository]:
+>         """
+>         :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
+>         """
+>         assert type is NotSet or isinstance(type, str), type
+>         assert sort is NotSet or isinstance(sort, str), sort
+>         assert direction is NotSet or isinstance(direction, str), direction
+>         url_parameters = dict()
+>         if type is not NotSet:
+>             url_parameters["type"] = type
+>         if sort is not NotSet:
+>             url_parameters["sort"] = sort
+>         if direction is not NotSet:
+>             url_parameters["direction"] = direction
+>         return github.PaginatedList.PaginatedList(
+>             github.Repository.Repository,
+>             self._requester,
+>             f"{self.url}/repos",
+>             url_parameters,
+>         )
+> 
+diff --recursive --new-file before/openapi.index after/openapi.index
+478a479,500
+>         "get_repo": {
+>           "call": {
+>             "docs": "<https://docs.github.com/en/rest/reference/repos>`_",
+>             "path": "/repos/{owner}/{repo}",
+>             "verb": "GET"
+>           },
+>           "name": "get_repo",
+>           "returns": [
+>             "Repository"
+>           ]
+>         },
+>         "get_repos": {
+>           "call": {
+>             "docs": "<https://docs.github.com/en/rest/reference/repos>`_",
+>             "path": "/users/{username}/repos",
+>             "verb": "GET"
+>           },
+>           "name": "get_repos",
+>           "returns": [
+>             "PaginatedList[Repository]"
+>           ]
+>         },
+3164a3187,3191
+>       "/repos/{owner}/{repo}": {
+>         "get": [
+>           "NamedUser.get_repo"
+>         ]
+>       },
+3172a3200,3204
+>       "/users/{username}/repos": {
+>         "get": [
+>           "NamedUser.get_repos"
+>         ]
+>       },
+3179a3212,3216
+>       "/repos/{owner}/{repo}": {
+>         "get": [
+>           "Repository"
+>         ]
+>       },
+3187a3225,3229
+>       "/users/{username}/repos": {
+>         "get": [
+>           "PaginatedList[Repository]"
+>         ]
+>       },
+3834a3877,3889
+>     "/repos/{owner}/{repo}": {
+>       "GET": {
+>         "methods": [
+>           {
+>             "class": "NamedUser",
+>             "name": "get_repo",
+>             "returns": [
+>               "Repository"
+>             ]
+>           }
+>         ]
+>       }
+>     },
+3853a3909,3921
+>             ]
+>           }
+>         ]
+>       }
+>     },
+>     "/users/{username}/repos": {
+>       "GET": {
+>         "methods": [
+>           {
+>             "class": "NamedUser",
+>             "name": "get_repos",
+>             "returns": [
+>               "PaginatedList[Repository]"

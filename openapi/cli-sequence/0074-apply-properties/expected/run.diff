@@ -1,0 +1,147 @@
+diff --recursive --new-file before/github/Repository.py after/github/Repository.py
+112a113
+>         self._network_count: Attribute[int] = NotSet
+116a118
+>         self._organization: Attribute[NamedUser] = NotSet
+117a120
+>         self._parent: Attribute[Repository] = NotSet
+122a126
+>         self._source: Attribute[Repository] = NotSet
+129a134
+>         self._subscribers_count: Attribute[int] = NotSet
+454a460,464
+>     def network_count(self) -> int:
+>         self._completeIfNotSet(self._network_count)
+>         return self._network_count.value
+> 
+>     @property
+474a485,489
+>     def organization(self) -> NamedUser:
+>         self._completeIfNotSet(self._organization)
+>         return self._organization.value
+> 
+>     @property
+479a495,499
+>     def parent(self) -> Repository:
+>         self._completeIfNotSet(self._parent)
+>         return self._parent.value
+> 
+>     @property
+504a525,529
+>     def source(self) -> Repository:
+>         self._completeIfNotSet(self._source)
+>         return self._source.value
+> 
+>     @property
+539a565,569
+>     def subscribers_count(self) -> int:
+>         self._completeIfNotSet(self._subscribers_count)
+>         return self._subscribers_count.value
+> 
+>     @property
+732a763,764
+>         if "network_count" in attributes:  # pragma no branch
+>             self._network_count = self._makeIntAttribute(attributes["network_count"])
+740a773,774
+>         if "organization" in attributes:  # pragma no branch
+>             self._organization = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["organization"])
+742a777,778
+>         if "parent" in attributes:  # pragma no branch
+>             self._parent = self._makeClassAttribute(github.Repository.Repository, attributes["parent"])
+752a789,790
+>         if "source" in attributes:  # pragma no branch
+>             self._source = self._makeClassAttribute(github.Repository.Repository, attributes["source"])
+766a805,806
+>         if "subscribers_count" in attributes:  # pragma no branch
+>             self._subscribers_count = self._makeIntAttribute(attributes["subscribers_count"])
+diff --recursive --new-file before/openapi.index after/openapi.index
+2669a2670,2685
+>         "network_count": {
+>           "name": "network_count",
+>           "returns": [
+>             "int"
+>           ],
+>           "schema": {
+>             "example": 0,
+>             "type": "integer"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "example": 0,
+>               "type": "integer"
+>             }
+>           }
+>         },
+2746a2763,2776
+>         "organization": {
+>           "name": "organization",
+>           "returns": [
+>             "NamedUser"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/nullable-simple-user"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "$ref": "#/components/schemas/nullable-simple-user"
+>             }
+>           }
+>         },
+2763a2794,2807
+>         "parent": {
+>           "name": "parent",
+>           "returns": [
+>             "Repository"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/repository"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "$ref": "#/components/schemas/repository"
+>             }
+>           }
+>         },
+2863a2908,2921
+>         "source": {
+>           "name": "source",
+>           "returns": [
+>             "Repository"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/repository"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "$ref": "#/components/schemas/repository"
+>             }
+>           }
+>         },
+3013a3072,3087
+>             }
+>           }
+>         },
+>         "subscribers_count": {
+>           "name": "subscribers_count",
+>           "returns": [
+>             "int"
+>           ],
+>           "schema": {
+>             "example": 42,
+>             "type": "integer"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "example": 42,
+>               "type": "integer"
+diff --recursive --new-file before/tests/Repository.py after/tests/Repository.py
+101a102
+>         self.assertEqual(r.network_count, 0)
+105a107
+>         self.assertEqual(r.organization.some_attribute, "")
+106a109
+>         self.assertEqual(r.parent.some_attribute, "")
+111a115
+>         self.assertEqual(r.source.some_attribute, "")
+118a123
+>         self.assertEqual(r.subscribers_count, 0)
