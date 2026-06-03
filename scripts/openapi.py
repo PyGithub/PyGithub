@@ -2101,7 +2101,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         if parameter_and_idx is not None:
             parameter_idx, parameter = parameter_and_idx
         else:
-            parameter = Parameter(name, name, None, None, "input", False, None)
+            parameter = Parameter(name, name, None, None, "input", False, ParameterOrder.POSITIONAL, None)
             parameter_idx = len(method.parameters)
             parameters[name] = (parameter_idx, parameter)
             method.parameters.append(parameter)
@@ -2724,13 +2724,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             )
         else:
             if request_parameters_idx is None:
-                print(f"Cannot update {var_name} is statement cannot be found.")
+                print(f"Cannot update {var_name} as statement cannot be found.")
                 return node
 
             request_parameters_stmt = stmts[request_parameters_idx]
             dict_node = get_request_parameters(request_parameters_stmt, var_name)
             if len(dict_node.elements) == 0:
-                print(f"Cannot update {var_name} is is an empty dict indicating.")
+                print(f"Cannot update {var_name} as it is an empty dict.")
                 return node
 
             last_existing_element = dict_node.elements[-1]
