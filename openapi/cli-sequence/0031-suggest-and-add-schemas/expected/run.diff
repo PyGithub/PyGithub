@@ -1,0 +1,241 @@
+diff --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+42a43
+>     - /components/schemas/nullable-simple-user
+diff --recursive --new-file before/openapi.index after/openapi.index
+444c444
+<       "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/public-user",
+---
+>       "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user",
+465,468c465
+<           "schema": {
+<             "format": "uri",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+469a467,471
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://github.com/images/error/octocat_happy.gif",
+>               "format": "uri",
+>               "type": "string"
+>             },
+577,581c579
+<           "schema": {
+<             "format": "email",
+<             "nullable": true,
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+582a581,584
+>             "/components/schemas/nullable-simple-user": {
+>               "nullable": true,
+>               "type": "string"
+>             },
+595,597c597
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+598a599,602
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/events{/privacy}",
+>               "type": "string"
+>             },
+623,626c627
+<           "schema": {
+<             "format": "uri",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+627a629,633
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/followers",
+>               "format": "uri",
+>               "type": "string"
+>             },
+653,655c659
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+656a661,664
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/following{/other_user}",
+>               "type": "string"
+>             },
+667,669c675
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+670a677,680
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+>               "type": "string"
+>             },
+681,684c691
+<           "schema": {
+<             "nullable": true,
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+685a693,697
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "41d064eb2195891e12d0413f63227ea7",
+>               "nullable": true,
+>               "type": "string"
+>             },
+713,716c725
+<           "schema": {
+<             "format": "uri",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+717a727,731
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://github.com/octocat",
+>               "format": "uri",
+>               "type": "string"
+>             },
+729,732c743
+<           "schema": {
+<             "format": "int64",
+<             "type": "integer"
+<           },
+---
+>           "schema": null,
+733a745,749
+>             "/components/schemas/nullable-simple-user": {
+>               "example": 1,
+>               "format": "int64",
+>               "type": "integer"
+>             },
+761,763c777
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+764a779,782
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "octocat",
+>               "type": "string"
+>             },
+779a798,801
+>             "/components/schemas/nullable-simple-user": {
+>               "nullable": true,
+>               "type": "string"
+>             },
+791,793c813
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+794a815,818
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "MDQ6VXNlcjE=",
+>               "type": "string"
+>             },
+823,826c847
+<           "schema": {
+<             "format": "uri",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+827a849,853
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/orgs",
+>               "format": "uri",
+>               "type": "string"
+>             },
+899,902c925
+<           "schema": {
+<             "format": "uri",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+903a927,931
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/received_events",
+>               "format": "uri",
+>               "type": "string"
+>             },
+915,918c943
+<           "schema": {
+<             "format": "uri",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+919a945,949
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/repos",
+>               "format": "uri",
+>               "type": "string"
+>             },
+934a965,967
+>             "/components/schemas/nullable-simple-user": {
+>               "type": "boolean"
+>             },
+945,947c978
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+948a980,983
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+>               "type": "string"
+>             },
+959,962c994
+<           "schema": {
+<             "format": "uri",
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+963a996,1000
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "https://api.github.com/users/octocat/subscriptions",
+>               "format": "uri",
+>               "type": "string"
+>             },
+1007,1009c1044
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+1010a1046,1049
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "User",
+>               "type": "string"
+>             },
+1037,1039c1076
+<           "schema": {
+<             "type": "string"
+<           },
+---
+>           "schema": null,
+1040a1078,1081
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "public",
+>               "type": "string"
+>             },
+1047a1089
+>         "/components/schemas/nullable-simple-user",
+1819a1862,1864
+>       ],
+>       "/components/schemas/nullable-simple-user": [
+>         "NamedUser"
