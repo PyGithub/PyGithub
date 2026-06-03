@@ -323,7 +323,7 @@ class WorkflowRun(CompletableGithubObject):
         """
         assert isinstance(attempt_number, int)
         url = f"{self.url}/attempts/{attempt_number}"
-        return WorkflowRun(self._requester, url=url)
+        return github.WorkflowRun.WorkflowRun(self._requester, url=url)
 
     def get_artifacts(self) -> PaginatedList[Artifact]:
         return PaginatedList(
