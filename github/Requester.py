@@ -97,10 +97,10 @@ import time
 import urllib
 import urllib.parse
 from collections import deque
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from datetime import datetime, timezone
 from io import IOBase
-from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar, Iterator
+from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
 
 import niquests
 import niquests.adapters
