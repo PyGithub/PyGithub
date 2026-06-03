@@ -97,10 +97,10 @@ import time
 import urllib
 import urllib.parse
 from collections import deque
-from collections.abc import Callable, ItemsView, Iterator
+from collections.abc import Callable
 from datetime import datetime, timezone
 from io import IOBase
-from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar, Iterator
 
 import niquests
 import niquests.adapters
@@ -130,7 +130,7 @@ class RequestsResponse:
         self.headers = r.headers
         self.response = r
 
-    def getheaders(self) -> ItemsView[str, str]:
+    def getheaders(self) -> Iterator[tuple[str, str]]:
         return self.headers.items()
 
     def read(self) -> str:
