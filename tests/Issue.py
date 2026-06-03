@@ -57,6 +57,7 @@ class Issue(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.issue = self.repo.get_issue(28)
+        self.issue_with_links = self.repo.get_issue(2567)
 
     def testAttributes(self):
         self.assertIsNone(self.issue.active_lock_reason)
@@ -365,3 +366,15 @@ class Issue(Framework.TestCase):
                 else:
                     self.assertIsNone(event.source)
                     self.assertIsNotNone(event.actor)
+
+    def testGetLinkedPullRequests(self):
+        prs = self.issue_with_links.get_linked_pull_requests()
+        assert [pr.number for pr in prs] == [3482]
+
+    def testGetLinkedPullRequestsNone(self):
+        prs = self.issue.get_linked_pull_requests()
+        assert [pr.number for pr in prs] == []
+
+    def testGetLinkedPullRequestsClosed(self):
+        prs = self.issue_with_links.get_linked_pull_requests(True)
+        assert [pr.number for pr in prs] == [3482, 3484]
