@@ -52,7 +52,7 @@ class SecurityAndAnalysis(Framework.TestCase):
         self.assertIsNone(security_and_analysis.advanced_security)
         self.assertEqual(security_and_analysis.dependabot_security_updates.status, "enabled")
         self.assertEqual(security_and_analysis.secret_scanning.status, "disabled")
-        self.assertIsNone(security_and_analysis.secret_scanning_ai_detection)
+        self.assertEqual(security_and_analysis.secret_scanning_ai_detection.status, "disabled")
         self.assertEqual(security_and_analysis.secret_scanning_push_protection.status, "disabled")
         self.assertEqual(security_and_analysis.secret_scanning_non_provider_patterns.status, "disabled")
         self.assertIsNone(security_and_analysis.secret_scanning_validity_checks)
@@ -64,6 +64,7 @@ class SecurityAndAnalysis(Framework.TestCase):
             'secret_scanning_validity_checks="None", '
             'secret_scanning_push_protection="SecurityAndAnalysisFeature(status="disabled")", '
             'secret_scanning_non_provider_patterns="SecurityAndAnalysisFeature(status="disabled")", '
+            'secret_scanning_ai_detection="SecurityAndAnalysisFeature(status="disabled")", '
             'secret_scanning="SecurityAndAnalysisFeature(status="disabled")", '
             'dependabot_security_updates="SecurityAndAnalysisFeature(status="enabled")", '
             'advanced_security="None")',
