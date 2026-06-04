@@ -2828,7 +2828,9 @@ class AsyncTransformer:
             # Find the best insertion point — after existing `from . import` block or
             # after last top-level import
             # Look for existing `from . import (...)` block to extend, or insert a new one
-            existing_block = re.search(r"^from \. import \(\s*\n((?:\s+\w+,?\s*\n)*)\)", result, re.MULTILINE)
+            existing_block = re.search(
+                r"^from \. import \(\s*\n((?:[ \t]*\w+,?[ \t]*\n|[ \t]*\n)*)\)", result, re.MULTILINE
+            )
             if existing_block:
                 # Insert into the existing `from . import (...)` block
                 block_end = existing_block.end(1)
