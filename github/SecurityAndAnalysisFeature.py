@@ -55,6 +55,8 @@ class SecurityAndAnalysisFeature(NonCompletableGithubObject):
     - /components/schemas/security-and-analysis/properties/dependabot_security_updates
     - /components/schemas/security-and-analysis/properties/secret_scanning
     - /components/schemas/security-and-analysis/properties/secret_scanning_ai_detection
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_alert_dismissal
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_bypass
     - /components/schemas/security-and-analysis/properties/secret_scanning_non_provider_patterns
     - /components/schemas/security-and-analysis/properties/secret_scanning_push_protection
     - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_alert_dismissal
