@@ -76,9 +76,12 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
     def __repr__(self) -> str:
         repr_attributes = {
             "advanced_security": repr(self._advanced_security.value),
+            "code_security": repr(self._code_security.value),
             "dependabot_security_updates": repr(self._dependabot_security_updates.value),
             "secret_scanning": repr(self._secret_scanning.value),
             "secret_scanning_ai_detection": repr(self._secret_scanning_ai_detection.value),
+            "secret_scanning_delegated_alert_dismissal": repr(self._secret_scanning_delegated_alert_dismissal.value),
+            "secret_scanning_delegated_bypass": repr(self._secret_scanning_delegated_bypass.value),
             "secret_scanning_non_provider_patterns": repr(self._secret_scanning_non_provider_patterns.value),
             "secret_scanning_push_protection": repr(self._secret_scanning_push_protection.value),
             "secret_scanning_validity_checks": repr(self._secret_scanning_validity_checks.value),
