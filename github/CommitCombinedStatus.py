@@ -45,15 +45,19 @@ from typing import Any
 
 import github.CommitStatus
 import github.Repository
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
+from github.PaginatedList import PaginatedList
 
 
-class CommitCombinedStatus(NonCompletableGithubObject):
+class CommitCombinedStatus(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents CommitCombinedStatuses.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/repos#statuses
+    https://docs.github.com/en/rest/commits/statuses#get-the-combined-status-for-a-specific-reference
+
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`CommitCombinedStatus.statuses` or :meth:`CommitCombinedStatus.get_statuses`.
 
     The OpenAPI schema can be found at
 
@@ -62,46 +66,87 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._commit_url: Attribute[str] = NotSet
         self._repository: Attribute[github.Repository.Repository] = NotSet
         self._sha: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._statuses: Attribute[list[github.CommitStatus.CommitStatus]] = NotSet
         self._total_count: Attribute[int] = NotSet
-        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value, "state": self._state.value})
 
     @property
     def commit_url(self) -> str:
+        self._completeIfNotSet(self._commit_url)
         return self._commit_url.value
 
     @property
     def repository(self) -> github.Repository.Repository:
+        self._completeIfNotSet(self._repository)
         return self._repository.value
 
     @property
     def sha(self) -> str:
+        self._completeIfNotSet(self._sha)
         return self._sha.value
 
     @property
     def state(self) -> str:
+        self._completeIfNotSet(self._state)
         return self._state.value
 
     @property
-    def statuses(self) -> list[github.CommitStatus.CommitStatus]:
-        return self._statuses.value
+    def statuses(self) -> PaginatedList[github.CommitStatus.CommitStatus]:
+        """
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`github.Commit.Commit.get_combined_status`,
+        :meth:`github.CommitCombinedStatus.CommitCombinedStatus.get_statuses`, or :meth:`github.Github`.
+
+        If no ``per_page`` is given, the default page size is 30. The maximum is 100.
+        """
+        return PaginatedList(
+            github.CommitStatus.CommitStatus,
+            self._requester,
+            self.url,
+            self._pagination_parameters,
+            headers=None,
+            list_item="statuses",
+            total_count_item="total_count",
+            firstData=self.raw_data if self.completed else None,
+            firstHeaders=self.raw_headers if self.completed else None,
+        )
 
     @property
     def total_count(self) -> int:
+        self._completeIfNotSet(self._total_count)
         return self._total_count.value
 
-    @property
-    def url(self) -> str:
-        return self._url.value
+    def get_statuses(self, *, combined_status_statuses_per_page: int | None = None) -> PaginatedList[github.CommitStatus.CommitStatus]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <https://docs.github.com/en/rest/commits/statuses#get-the-combined-status-for-a-specific-reference>`_
+
+        Identical to calling :meth:`github.CommitCombinedStatus.CommitCombinedStatus.statuses`, except that this uses the given ``per_page`` value.
+
+        For more details, see :meth:`github.CommitCombinedStatus.CommitCombinedStatus.statuses`.
+
+        :param combined_status_statuses_per_page: int Number of statuses retrieved per page.
+               Iterating over the statuses will fetch pages of this size. The default page size is 30, the maximum is 100.
+        """
+        return PaginatedList(
+            github.CommitStatus.CommitStatus,
+            self._requester,
+            self.url,
+            self._pagination_parameters_with(page=1, per_page=combined_status_statuses_per_page),
+            headers=None,
+            list_item="statuses",
+        )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "commit_url" in attributes:  # pragma no branch
             self._commit_url = self._makeStringAttribute(attributes["commit_url"])
         if "repository" in attributes:  # pragma no branch
@@ -114,5 +159,3 @@ class CommitCombinedStatus(NonCompletableGithubObject):
             self._statuses = self._makeListOfClassesAttribute(github.CommitStatus.CommitStatus, attributes["statuses"])
         if "total_count" in attributes:  # pragma no branch
             self._total_count = self._makeIntAttribute(attributes["total_count"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
