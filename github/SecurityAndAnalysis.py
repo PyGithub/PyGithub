@@ -63,9 +63,12 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._advanced_security: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._code_security: Attribute[SecurityAndAnalysisFeature] = NotSet
         self._dependabot_security_updates: Attribute[SecurityAndAnalysisFeature] = NotSet
         self._secret_scanning: Attribute[SecurityAndAnalysisFeature] = NotSet
         self._secret_scanning_ai_detection: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_delegated_alert_dismissal: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_delegated_bypass: Attribute[SecurityAndAnalysisFeature] = NotSet
         self._secret_scanning_non_provider_patterns: Attribute[SecurityAndAnalysisFeature] = NotSet
         self._secret_scanning_push_protection: Attribute[SecurityAndAnalysisFeature] = NotSet
         self._secret_scanning_validity_checks: Attribute[SecurityAndAnalysisFeature] = NotSet
@@ -88,6 +91,10 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self._advanced_security.value
 
     @property
+    def code_security(self) -> SecurityAndAnalysisFeature:
+        return self._code_security.value
+
+    @property
     def dependabot_security_updates(self) -> SecurityAndAnalysisFeature:
         return self._dependabot_security_updates.value
 
@@ -98,6 +105,16 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
     @property
     def secret_scanning_ai_detection(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_ai_detection.value
+
+    @property
+    def secret_scanning_delegated_alert_dismissal(
+        self,
+    ) -> SecurityAndAnalysisFeature | SecurityAndAnalysisFeature | SecurityAndAnalysisFeature:
+        return self._secret_scanning_delegated_alert_dismissal.value
+
+    @property
+    def secret_scanning_delegated_bypass(self) -> SecurityAndAnalysisFeature:
+        return self._secret_scanning_delegated_bypass.value
 
     @property
     def secret_scanning_non_provider_patterns(self) -> SecurityAndAnalysisFeature:
@@ -116,6 +133,10 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
             self._advanced_security = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
             )
+        if "code_security" in attributes:  # pragma no branch
+            self._code_security = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["code_security"]
+            )
         if "dependabot_security_updates" in attributes:  # pragma no branch
             self._dependabot_security_updates = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["dependabot_security_updates"]
@@ -127,6 +148,16 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         if "secret_scanning_ai_detection" in attributes:  # pragma no branch
             self._secret_scanning_ai_detection = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["secret_scanning_ai_detection"]
+            )
+        if "secret_scanning_delegated_alert_dismissal" in attributes:  # pragma no branch
+            self._secret_scanning_delegated_alert_dismissal = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
+                attributes["secret_scanning_delegated_alert_dismissal"],
+            )
+        if "secret_scanning_delegated_bypass" in attributes:  # pragma no branch
+            self._secret_scanning_delegated_bypass = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
+                attributes["secret_scanning_delegated_bypass"],
             )
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
             self._secret_scanning_non_provider_patterns = self._makeClassAttribute(
