@@ -42,10 +42,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.SecurityAndAnalysisFeature
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.SecurityAndAnalysisFeature import SecurityAndAnalysisFeature
 
 
 class SecurityAndAnalysis(NonCompletableGithubObject):
@@ -59,21 +62,13 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._advanced_security: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
-        self._dependabot_security_updates: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
-        self._secret_scanning: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
+        self._advanced_security: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._dependabot_security_updates: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning: Attribute[SecurityAndAnalysisFeature] = NotSet
         self._secret_scanning_ai_detection: Attribute[str] = NotSet
-        self._secret_scanning_non_provider_patterns: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
-        self._secret_scanning_push_protection: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
-        self._secret_scanning_validity_checks: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
+        self._secret_scanning_non_provider_patterns: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_push_protection: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_validity_checks: Attribute[SecurityAndAnalysisFeature] = NotSet
 
     def __repr__(self) -> str:
         repr_attributes = {
@@ -88,15 +83,15 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self.get__repr__(repr_attributes)
 
     @property
-    def advanced_security(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def advanced_security(self) -> SecurityAndAnalysisFeature:
         return self._advanced_security.value
 
     @property
-    def dependabot_security_updates(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def dependabot_security_updates(self) -> SecurityAndAnalysisFeature:
         return self._dependabot_security_updates.value
 
     @property
-    def secret_scanning(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def secret_scanning(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning.value
 
     @property
@@ -104,15 +99,15 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self._secret_scanning_ai_detection.value
 
     @property
-    def secret_scanning_non_provider_patterns(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def secret_scanning_non_provider_patterns(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_non_provider_patterns.value
 
     @property
-    def secret_scanning_push_protection(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def secret_scanning_push_protection(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_push_protection.value
 
     @property
-    def secret_scanning_validity_checks(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def secret_scanning_validity_checks(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_validity_checks.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
