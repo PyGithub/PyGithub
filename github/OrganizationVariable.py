@@ -26,8 +26,6 @@
 
 from __future__ import annotations
 
-import urllib.parse
-from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.Repository
@@ -53,12 +51,9 @@ class OrganizationVariable(Variable):
     """
 
     def _initAttributes(self) -> None:
-        self._created_at: Attribute[datetime] = NotSet
-        self._name: Attribute[str] = NotSet
+        super()._initAttributes()
         self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
         self._selected_repositories_url: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
         self._visibility: Attribute[str] = NotSet
 
     @property
@@ -135,19 +130,8 @@ class OrganizationVariable(Variable):
         return True
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
-        elif "url" in attributes and attributes["url"]:
-            quoted_name = attributes["url"].split("/")[-1]
-            name = urllib.parse.unquote(quoted_name)
-            self._name = self._makeStringAttribute(name)
+        super()._useAttributes(attributes)
         if "selected_repositories_url" in attributes:
             self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
         if "visibility" in attributes:
             self._visibility = self._makeStringAttribute(attributes["visibility"])
