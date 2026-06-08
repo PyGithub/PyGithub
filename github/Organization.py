@@ -102,6 +102,7 @@ import github.DefaultCodeSecurityConfig
 import github.Event
 import github.GithubObject
 import github.HookDelivery
+import github.Label
 import github.NamedUser
 import github.OrganizationCodeScanAlert
 import github.OrganizationCustomProperty
@@ -137,6 +138,7 @@ if TYPE_CHECKING:
     from github.DefaultCodeSecurityConfig import DefaultCodeSecurityConfig
     from github.Event import Event
     from github.Hook import Hook
+    from github.HookDelivery import HookDelivery, HookDeliverySummary
     from github.Installation import Installation
     from github.Issue import Issue
     from github.Label import Label
@@ -760,7 +762,7 @@ class Organization(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/hooks", input=post_parameters)
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
-    def create_project(self, name: str, body: Opt[str] = NotSet) -> github.Project.Project:
+    def create_project(self, name: str, body: Opt[str] = NotSet) -> Project:
         """
         :calls: `POST /orgs/{org}/projects <https://docs.github.com/en/rest/reference/projects#create-an-organization-project>`_
         """
@@ -804,7 +806,7 @@ class Organization(CompletableGithubObject):
         merge_commit_title: Opt[str] = NotSet,
         merge_commit_message: Opt[str] = NotSet,
         custom_properties: Opt[dict[str, Any]] = NotSet,
-    ) -> github.Repository.Repository:
+    ) -> Repository:
         """
         :calls: `POST /orgs/{org}/repos <https://docs.github.com/en/rest/reference/repos>`_
         """
@@ -883,9 +885,9 @@ class Organization(CompletableGithubObject):
         secret_name: str,
         unencrypted_value: str,
         visibility: str = "all",
-        selected_repositories: Opt[list[github.Repository.Repository]] = NotSet,
+        selected_repositories: Opt[list[Repository]] = NotSet,
         secret_type: str = "actions",
-    ) -> github.OrganizationSecret.OrganizationSecret:
+    ) -> OrganizationSecret:
         """
         :param secret_name: string name of the secret
         :param unencrypted_value: string plain text value of the secret
@@ -1024,8 +1026,8 @@ class Organization(CompletableGithubObject):
         variable_name: str,
         value: str,
         visibility: str = "all",
-        selected_repositories: github.GithubObject.Opt[list[github.Repository.Repository]] = NotSet,
-    ) -> github.OrganizationVariable.OrganizationVariable:
+        selected_repositories: Opt[list[Repository]] = NotSet,
+    ) -> OrganizationVariable:
         """
         :calls: `POST /orgs/{org}/actions/variables <https://docs.github.com/en/rest/actions/variables#create-an-organization-variable>`_
         :param variable_name: string
@@ -1169,7 +1171,7 @@ class Organization(CompletableGithubObject):
         """
         return PaginatedList(github.Event.Event, self._requester, f"{self.url}/events", None)
 
-    def get_hook(self, id: int) -> github.Hook.Hook:
+    def get_hook(self, id: int) -> Hook:
         """
         :calls: `GET /orgs/{org}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/orgs#webhooks>`_
         """
@@ -1183,7 +1185,7 @@ class Organization(CompletableGithubObject):
         """
         return PaginatedList(github.Hook.Hook, self._requester, f"{self.url}/hooks", None)
 
-    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> github.HookDelivery.HookDelivery:
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
         """
         :calls: `GET /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/reference/orgs#get-a-webhook-delivery-for-an-organization-webhook>`_
         :param hook_id: integer
@@ -1197,7 +1199,7 @@ class Organization(CompletableGithubObject):
         )
         return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
-    def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
+    def get_hook_deliveries(self, hook_id: int) -> PaginatedList[HookDeliverySummary]:
         """
         :calls: `GET /orgs/{org}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/reference/orgs#list-deliveries-for-an-organization-webhook>`_
         :param hook_id: integer

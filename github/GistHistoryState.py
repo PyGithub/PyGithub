@@ -39,15 +39,21 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.CommitStats
 import github.Gist
+import github.GistFile
 import github.GithubObject
 import github.NamedUser
 import github.Organization
-from github.GistFile import GistFile
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.CommitStats import CommitStats
+    from github.Gist import Gist
+    from github.GistFile import GistFile
+    from github.NamedUser import NamedUser
 
 
 class GistHistoryState(CompletableGithubObject):
@@ -61,7 +67,7 @@ class GistHistoryState(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._change_status: Attribute[github.CommitStats.CommitStats] = NotSet
+        self._change_status: Attribute[CommitStats] = NotSet
         self._comments: Attribute[int] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commits_url: Attribute[str] = NotSet
@@ -69,22 +75,22 @@ class GistHistoryState(CompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
         self._files: Attribute[dict[str, GistFile]] = NotSet
-        self._forks: Attribute[list[github.Gist.Gist]] = NotSet
+        self._forks: Attribute[list[Gist]] = NotSet
         self._forks_url: Attribute[str] = NotSet
         self._git_pull_url: Attribute[str] = NotSet
         self._git_push_url: Attribute[str] = NotSet
         self._history: Attribute[list[GistHistoryState]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
-        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._owner: Attribute[NamedUser] = NotSet
         self._public: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
         self._version: Attribute[str] = NotSet
 
     @property
-    def change_status(self) -> github.CommitStats.CommitStats:
+    def change_status(self) -> CommitStats:
         self._completeIfNotSet(self._change_status)
         return self._change_status.value
 
@@ -124,7 +130,7 @@ class GistHistoryState(CompletableGithubObject):
         return self._files.value
 
     @property
-    def forks(self) -> list[github.Gist.Gist]:
+    def forks(self) -> list[Gist]:
         self._completeIfNotSet(self._forks)
         return self._forks.value
 
@@ -159,7 +165,7 @@ class GistHistoryState(CompletableGithubObject):
         return self._id.value
 
     @property
-    def owner(self) -> github.NamedUser.NamedUser:
+    def owner(self) -> NamedUser:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
@@ -179,7 +185,7 @@ class GistHistoryState(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> github.NamedUser.NamedUser:
+    def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
