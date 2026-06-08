@@ -62,7 +62,7 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._reviewer: Attribute[github.NamedUser.NamedUser | github.Team.Team] = NotSet
+        self._reviewer: Attribute[NamedUser | Team] = NotSet
         self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:

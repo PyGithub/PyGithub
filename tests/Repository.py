@@ -275,6 +275,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.web_commit_signoff_required, False)
         self.assertEqual(self.repo.custom_properties, {})
 
+        # this attribute is populated by a special header and exists for any PyGithub object
+        self.assertEqual(self.repo.api_version, "2022-11-28")
+
     def testAsUrlParam(self):
         self.assertEqual(github.Repository.Repository.as_url_param(self.repo), "PyGithub/PyGithub")
         self.assertEqual(github.Repository.Repository.as_url_param(self.repo._identity), "PyGithub/PyGithub")
@@ -1470,6 +1473,10 @@ class Repository(Framework.TestCase):
             lambda r: r.id,
             [110932306, 110932159, 110932072, 110286191, 110278769],
         )
+
+    def testGetWorkflowJob(self):
+        job = self.g.get_repo("PyGithub/PyGithub").get_workflow_job(54251022208)
+        self.assertEqual(job.id, 54251022208)
 
     def testGetWorkflowRunsCreated(self):
         self.assertListKeyEqual(

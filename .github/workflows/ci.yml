@@ -68,6 +68,29 @@ jobs:
         run: false
         shell: bash
 
+  openapi:
+    name: "test OpenAPI script"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r requirements/scripts.txt -r requirements/test.txt
+      - name: Test OpenAPI script
+        shell: bash
+        run: |
+          pytest --junit-xml pytest.xml openapi/Cli.py
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: Test Results (OpenAPI script)
+          path: pytest.xml
+
   index:
     name: "Check verbs"
     needs: "test_success"
@@ -210,12 +233,12 @@ jobs:
 
           echo "::group::Head implementations:"
           python head/scripts/openapi.py --verbose index head/github openapi.json openapi.head.index
-          python head/scripts/openapi.py --verbose --dry-run apply --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
+          python head/scripts/openapi.py --verbose --dry-run apply properties --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
           echo "::endgroup::"
 
           echo "::group::Base implementations:"
           python head/scripts/openapi.py --verbose index base/github openapi.json openapi.base.index
-          python head/scripts/openapi.py --verbose --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
+          python head/scripts/openapi.py --verbose --dry-run apply properties --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
           echo "::endgroup::"
 
           if ! (diff <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]base/github/%(github/%" -e "s%Test base/%Test %" implementation.base.txt) <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]head/github/%(github/%" -e "s%Test head/%Test %" implementation.head.txt) > diff.txt)
@@ -227,7 +250,7 @@ jobs:
             (grep -E -e "^> Class \w+ changed$" diff.txt | sed -E -e "s/^> Class (\w+) changed$/\1/" || true) | while read class
             do
               echo "::group::Apply schema to $class:"
-              python head/scripts/openapi.py --verbose apply --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
+              python head/scripts/openapi.py --verbose apply properties --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
               (cd head; git diff; git reset --hard --quiet HEAD)
               echo "::endgroup::"
             done
@@ -238,7 +261,7 @@ jobs:
             echo "pip install -r requirements/scripts.txt"
             echo python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
             echo python scripts/openapi.py index github openapi.index
-            echo python scripts/openapi.py apply --tests --new-schemas create-class github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
+            echo python scripts/openapi.py apply properties --tests --new-schemas create-class github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
             (grep -E -e "^> Test .+ changed$" diff.txt | sed -E -e "s/^> Test (.+) changed$/\1/" || true) | while read test
             do
               echo python scripts/prepare-for-update-assertions.py "$test" testAttributes

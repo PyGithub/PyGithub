@@ -1,0 +1,26 @@
+diff --recursive --new-file before/github/IssueComment.py after/github/IssueComment.py
+26a27
+> import github.NamedUser
+31c32
+<     pass
+---
+>     from github.NamedUser import NamedUser
+61c62
+<         self._user: Attribute[dict[str, Any]] = NotSet
+---
+>         self._user: Attribute[NamedUser] = NotSet
+128c129
+<     def user(self) -> dict[str, Any]:
+---
+>     def user(self) -> NamedUser:
+159c160,162
+<             self._user = self._makeDictAttribute(attributes["user"])
+---
+>             self._user = self._makeClassAttribute(
+>                 github.NamedUser.NamedUser, attributes["user"]
+>             )
+diff --recursive --new-file before/openapi.index after/openapi.index
+423c423
+<             "dict[str, Any]"
+---
+>             "NamedUser"
