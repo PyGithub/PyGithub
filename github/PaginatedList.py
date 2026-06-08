@@ -271,6 +271,7 @@ class PaginatedList(PaginatedListBase[T]):
             params = self.__nextParams.copy()
             # set per_page = 1 so the totalCount is just the number of pages
             params.update({"per_page": 1})
+            assert self.__firstUrl is not None
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
                 self.__firstUrl,
@@ -327,6 +328,7 @@ class PaginatedList(PaginatedListBase[T]):
         return self.__incomplete_results
 
     def _getLastPageUrl(self) -> str | None:
+        assert self.__firstUrl is not None
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__firstUrl,
@@ -401,6 +403,7 @@ class PaginatedList(PaginatedListBase[T]):
     def _fetchNextPage(self) -> list[T]:
         if self.is_rest:
             # REST API pagination
+            assert self.__nextUrl is not None
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
                 self.__nextUrl,
@@ -498,6 +501,7 @@ class PaginatedList(PaginatedListBase[T]):
             params["page"] = page + 1
         if self.__requester.per_page != Consts.DEFAULT_PER_PAGE:
             params["per_page"] = self.__requester.per_page
+        assert self.__firstUrl is not None
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__firstUrl,
