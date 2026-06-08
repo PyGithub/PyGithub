@@ -1908,7 +1908,11 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             # this is the same logic as is used to come up with 'asserted_property' below
             existing_properties = {
                 attrs[1]
-                for node in updated_node.body.body
+                for node in [
+                    stmt
+                    for node in updated_node.body.body
+                    for stmt in (node.body.body if isinstance(node, cst.With) else [node])
+                ]
                 if isinstance(node.body[0].value, cst.Call) and node.body[0].value.args
                 for attr_nodes in [self.find_nodes(node.body[0].value.args[0].value, cst.Attribute)]
                 if attr_nodes
@@ -1926,15 +1930,17 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             self.properties = [property for property in self.properties if property.name not in existing_properties]
 
             i = 0
-            while i < len(updated_node.body.body):
-                if (
-                    not isinstance(updated_node.body.body[i].body[0].value, cst.Call)
-                    or not updated_node.body.body[i].body[0].value.args
+            stmts = list(updated_node.body.body)
+            while i < len(stmts):
+                if not (
+                    isinstance(stmts[i], cst.SimpleStatementLine)
+                    and isinstance(stmts[i].body[0].value, cst.Call)
+                    and stmts[i].body[0].value.args
                 ):
                     i = i + 1
                     continue
 
-                attr_nodes = self.find_nodes(updated_node.body.body[i].body[0].value.args[0].value, cst.Attribute)
+                attr_nodes = self.find_nodes(stmts[i].body[0].value.args[0].value, cst.Attribute)
                 if not attr_nodes:
                     i = i + 1
                     continue
@@ -1949,10 +1955,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                     while self.properties and self.properties[0].name < asserted_property:
                         prop = self.properties.pop(0)
                         stmt = create_statement(prop, self_attribute)
-                        stmts = updated_node.body.body
-                        updated_node = updated_node.with_changes(
-                            body=updated_node.body.with_changes(body=tuple(stmts[:i]) + (stmt,) + tuple(stmts[i:]))
-                        )
+                        stmts = stmts[:i] + [stmt] + stmts[i:]
                         i = i + 1
                     if self.properties and self.properties[0].name == asserted_property:
                         self.properties.pop(0)
@@ -1960,10 +1963,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             while self.properties:
                 prop = self.properties.pop(0)
                 stmt = create_statement(prop, self_attribute)
-                stmts = updated_node.body.body
-                updated_node = updated_node.with_changes(
-                    body=updated_node.body.with_changes(body=tuple(stmts) + (stmt,))
-                )
+                stmts = stmts + [stmt]
+
+            updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=tuple(stmts)))
         return updated_node
 
 
