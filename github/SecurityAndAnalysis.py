@@ -114,9 +114,7 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self._secret_scanning_ai_detection.value
 
     @property
-    def secret_scanning_delegated_alert_dismissal(
-        self,
-    ) -> SecurityAndAnalysisFeature:
+    def secret_scanning_delegated_alert_dismissal(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_delegated_alert_dismissal.value
 
     @property
