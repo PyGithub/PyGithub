@@ -340,10 +340,10 @@ Common parameter names follow the JSON field names verbatim (`state`, `since`, `
 
 Both use PUT, but the naming depends on **whose perspective** the method is written from:
 
-- **`add_to_X(item)` / `remove_from_X(item)`** — used when the *caller* is managing a collection they own.  
+- **`add_to_X(item)` / `remove_from_X(item)`** — used when the *caller* is managing a collection they own.
   E.g. `AuthenticatedUser.add_to_starred(repo)` — the user adds to their own starred-repos collection.
 
-- **`set_X()` / `reset_X()`** — used when the *resource itself* has a boolean state flag.  
+- **`set_X()` / `reset_X()`** — used when the *resource itself* has a boolean state flag.
   E.g. `Gist.set_starred()` — the gist has a "starred" state that the caller sets or clears.
 
 ---
@@ -360,7 +360,7 @@ Both use PUT, but the naming depends on **whose perspective** the method is writ
 
 ### Worked example — predicting the implementation of a new path
 
-**Path:** `POST /repos/{owner}/{repo}/issues/{issue_number}/sub-issues`  
+**Path:** `POST /repos/{owner}/{repo}/issues/{issue_number}/sub-issues`
 **Response:** `201` with `$ref: issue` schema
 
 1. Deepest resource: `{issue_number}` → **`Issue`** class
@@ -433,7 +433,7 @@ The `GET` response schema is `{ "type": "array", "items": { "$ref": "#/component
 }
 ```
 
-- `user` → `_makeClassAttribute(github.NamedUser.NamedUser, ...)` 
+- `user` → `_makeClassAttribute(github.NamedUser.NamedUser, ...)`
 - `author_association` resolves to an enum schema → `_makeStringAttribute`
 
 ### Path `/gists/{gist_id}/comments/{comment_id}`
