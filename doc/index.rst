@@ -5,6 +5,7 @@ PyGithub
    :maxdepth: 1
 
    introduction
+   async
    examples
    reference
    development

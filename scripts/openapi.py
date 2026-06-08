@@ -39,13 +39,18 @@ from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any
+from typing import Any, Final
 
 import libcst as cst
 import requests
 from libcst import IndentedBlock, Module, SimpleStatementLine, SimpleString
 
 equal = cst.AssignEqual(cst.SimpleWhitespace(""), cst.SimpleWhitespace(""))
+
+# Classes that are not backed by an OpenAPI schema and must be skipped when applying schemas.
+# E.g. Auth.RequesterLike is a typing Protocol (a structural-typing helper, not a PyGithub API
+# model)
+EXCLUDED_CLASSES: Final[set[str]] = {"RequesterLike"}
 
 
 def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
@@ -3371,6 +3376,14 @@ class OpenApi:
 
         if not class_names:
             class_names = classes.keys()
+
+        # Skip classes that are not backed by an OpenAPI schema.
+        def _is_excluded(class_name: str) -> bool:
+            short_class_name = GithubClass.from_class_name(class_name, index).short_class_name
+            return short_class_name in EXCLUDED_CLASSES
+
+        class_names = [class_name for class_name in class_names if not _is_excluded(class_name)]
+
         if len(class_names) == 1:
             print(f"Applying API schemas to PyGithub class {class_names[0]}")
         else:

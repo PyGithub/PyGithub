@@ -73,8 +73,8 @@ from io import BytesIO
 from typing import Any, Callable
 
 import responses
+from niquests.packages.urllib3.util import Url
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url
 
 import github
 from github import Consts

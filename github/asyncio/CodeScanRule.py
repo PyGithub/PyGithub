@@ -1,0 +1,133 @@
+# FILE AUTO GENERATED DO NOT TOUCH
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2019 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2020 Victor Zeng <zacker150@users.noreply.github.com>              #
+# Copyright 2022 Eric Nieuwland <eric.nieuwland@gmail.com>                     #
+# Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Matt Davis <35502728+matt-davis27@users.noreply.github.com>   #
+#                                                                              #
+# This file is part of PyGithub.                                               #
+# http://pygithub.readthedocs.io/                                              #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
+
+from __future__ import annotations
+
+from typing import Any
+
+from .GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+
+class CodeScanRule(NonCompletableGithubObject):
+    """
+    This class represents Alerts from code scanning.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/code-scanning.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/code-scanning-alert-rule
+    - /components/schemas/code-scanning-alert-rule-summary
+
+    """
+
+    def _initAttributes(self) -> None:
+        self._description: Attribute[str] = NotSet
+        self._full_description: Attribute[str] = NotSet
+        self._help: Attribute[str] = NotSet
+        self._help_uri: Attribute[str] = NotSet
+        self._id: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._security_severity_level: Attribute[str] = NotSet
+        self._severity: Attribute[str] = NotSet
+        self._tags: Attribute[list[str]] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"id": self._id.value, "name": self._name.value})
+
+    @property
+    def description(self) -> str:
+        return self._description.value
+
+    @property
+    def full_description(self) -> str:
+        return self._full_description.value
+
+    @property
+    def help(self) -> str:
+        return self._help.value
+
+    @property
+    def help_uri(self) -> str:
+        return self._help_uri.value
+
+    @property
+    def id(self) -> str:
+        return self._id.value
+
+    @property
+    def name(self) -> str:
+        return self._name.value
+
+    @property
+    def security_severity_level(self) -> str:
+        return self._security_severity_level.value
+
+    @property
+    def severity(self) -> str:
+        return self._severity.value
+
+    @property
+    def tags(self) -> list[str]:
+        return self._tags.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "description" in attributes:  # pragma no branch
+            self._description = self._makeStringAttribute(attributes["description"])
+        if "full_description" in attributes:  # pragma no branch
+            self._full_description = self._makeStringAttribute(attributes["full_description"])
+        if "help" in attributes:  # pragma no branch
+            self._help = self._makeStringAttribute(attributes["help"])
+        if "help_uri" in attributes:  # pragma no branch
+            self._help_uri = self._makeStringAttribute(attributes["help_uri"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeStringAttribute(attributes["id"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "security_severity_level" in attributes:  # pragma no branch
+            self._security_severity_level = self._makeStringAttribute(attributes["security_severity_level"])
+        if "severity" in attributes:  # pragma no branch
+            self._severity = self._makeStringAttribute(attributes["severity"])
+        if "tags" in attributes:  # pragma no branch
+            self._tags = self._makeListOfStringsAttribute(attributes["tags"])

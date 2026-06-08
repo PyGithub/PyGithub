@@ -36,14 +36,13 @@ from logging import Logger
 from types import TracebackType
 from typing import Any
 
-from requests import Response
-from requests.models import CaseInsensitiveDict
-from requests.utils import get_encoding_from_headers
+from niquests import Response, RetryConfiguration
+from niquests.models import CaseInsensitiveDict
+from niquests.packages.urllib3.connectionpool import ConnectionPool
+from niquests.packages.urllib3.exceptions import MaxRetryError
+from niquests.packages.urllib3.response import HTTPResponse
+from niquests.utils import get_encoding_from_headers
 from typing_extensions import Self
-from urllib3 import Retry
-from urllib3.connectionpool import ConnectionPool
-from urllib3.exceptions import MaxRetryError
-from urllib3.response import HTTPResponse
 
 from github.GithubException import GithubException
 from github.Requester import Requester
@@ -51,7 +50,7 @@ from github.Requester import Requester
 DEFAULT_SECONDARY_RATE_WAIT: int = 60
 
 
-class GithubRetry(Retry):
+class GithubRetry(RetryConfiguration):
     """
     A Github-specific implementation of `urllib3.Retry`
 
@@ -82,7 +81,9 @@ class GithubRetry(Retry):
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
         kwargs["status_forcelist"] = kwargs.get("status_forcelist", list(range(500, 600))) + [403]
-        kwargs["allowed_methods"] = kwargs.get("allowed_methods", Retry.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"}))
+        kwargs["allowed_methods"] = kwargs.get(
+            "allowed_methods", RetryConfiguration.DEFAULT_ALLOWED_METHODS.union({"GET", "POST"})
+        )
         super().__init__(**kwargs)
 
     def new(self, **kw: Any) -> Self:
@@ -97,7 +98,7 @@ class GithubRetry(Retry):
         error: Exception | None = None,
         _pool: ConnectionPool | None = None,
         _stacktrace: TracebackType | None = None,
-    ) -> Retry:
+    ) -> RetryConfiguration:
         if response:
             # we retry 403 only when there is a Retry-After header (indicating it is retry-able)
             # or the body message does imply a rate limit error
@@ -225,7 +226,7 @@ class GithubRetry(Retry):
 
         response.url = url
 
-        return response.content
+        return response.content or b""
 
     def __log(self, level: int, message: str, **kwargs: Any) -> None:
         if self.__logger is None:
