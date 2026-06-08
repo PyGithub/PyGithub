@@ -100,7 +100,7 @@ class CheckRun(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._output: Attribute[github.CheckRunOutput.CheckRunOutput] = NotSet
+        self._output: Attribute[CheckRunOutput] = NotSet
         self._pull_requests: Attribute[list[PullRequest]] = NotSet
         self._started_at: Attribute[datetime] = NotSet
         self._status: Attribute[str] = NotSet

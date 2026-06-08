@@ -28,11 +28,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import contextlib
 from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
+from github import Consts
 from github import Requester as gr
 
 from . import Framework
@@ -73,6 +76,7 @@ class Requester(Framework.TestCase):
             # v3: this should not be the default value, so if this has been changed in v3,
             # change it here is well
             lazy=True,
+            api_version="version",
         )
         kwargs = requester.kwargs
 
@@ -92,6 +96,7 @@ class Requester(Framework.TestCase):
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
                 lazy=True,
+                api_version="version",
             ),
         )
 
@@ -127,6 +132,7 @@ class Requester(Framework.TestCase):
             # v3: this should not be the default value, so if this has been changed in v3,
             # change it here is well
             lazy=True,
+            api_version="version",
         )
 
         # create a copy with different auth
@@ -148,8 +154,83 @@ class Requester(Framework.TestCase):
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
                 lazy=True,
+                api_version="version",
             ),
         )
+
+    def testApiVersion(self):
+        def requester(version: str | None) -> gr.Requester:
+            return gr.Requester(
+                auth=None,
+                base_url=Consts.DEFAULT_BASE_URL,
+                timeout=Consts.DEFAULT_TIMEOUT,
+                user_agent=Consts.DEFAULT_USER_AGENT,
+                per_page=Consts.DEFAULT_PER_PAGE,
+                verify=True,
+                retry=github.GithubRetry(),
+                pool_size=None,
+                api_version=version,
+            )
+
+        for api_version in [None, Consts.API_VERSION_2022_11_28, Consts.API_VERSION_2026_03_10, "version"]:
+            r = requester(api_version)
+            self.assertEqual(r.api_version, api_version)
+
+            with self.captureRequests() as requests:
+                # endpoint /rate_limit should contain the item "rate" for version "2022-11-28", but not for later versions
+                # json = r.requestJson("GET", "/rate_limit")
+                json = r.requestJson("GET", "/repos/PyGithub/PyGithub")
+
+            self.assertIsNotNone(json)
+            status, header, body = json
+            self.assertEqual(status, 200)
+            # you would expect the endpoint to fail for unknown / unsupported versions
+            # and return "x-github-api-version-selected": api_version for supported ones
+            # if api_version in [Consts.API_VERSION_2022_11_28, Consts.API_VERSION_2026_03_10]:
+            #    self.assertEqual(header.get("x-github-api-version-selected"), api_version)
+            # else:
+            self.assertEqual(header.get("x-github-api-version-selected"), "2022-11-28")
+            self.assertIn('"id":3544490,', body)
+
+            self.assertEqual(len(requests), 1)
+            request_headers = requests[0].request_headers
+            if api_version is None:
+                self.assertNotIn(Consts.headerApiVersion, request_headers)
+            else:
+                self.assertEqual(request_headers.get(Consts.headerApiVersion), api_version)
+
+    def testWithApiVersion(self):
+        r = gr.Requester(
+            auth=None,
+            base_url=Consts.DEFAULT_BASE_URL,
+            timeout=Consts.DEFAULT_TIMEOUT,
+            user_agent=Consts.DEFAULT_USER_AGENT,
+            per_page=Consts.DEFAULT_PER_PAGE,
+            verify=True,
+            retry=github.GithubRetry(),
+            pool_size=None,
+            api_version=None,
+        )
+        self.assertIsNone(r.api_version)
+
+        r2 = r.withApiVersion(None)
+        self.assertIs(r2, r)
+
+        r3 = r2.withApiVersion("version")
+        self.assertIsNot(r3, r2)
+        self.assertEqual(r3.api_version, "version")
+
+        r4 = r3.withApiVersion("version")
+        self.assertIs(r4, r3)
+
+        r5 = r4.withApiVersion("version2")
+        self.assertIsNot(r5, r4)
+        self.assertEqual(r5.api_version, "version2")
+
+        r6 = r5.withApiVersion(None)
+        self.assertIsNot(r6, r5)
+        self.assertIsNot(r6, r)
+        self.assertIsNone(r6.api_version)
 
     def testGetParametersOfUrl(self):
         self.assertEqual({}, gr.Requester.get_parameters_of_url("https://github.com/api"))

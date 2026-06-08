@@ -54,6 +54,10 @@ class WorkflowStep(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/actions#workflow-jobs
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/job/properties/steps/items
+
     """
 
     def _initAttributes(self) -> None:

@@ -1,0 +1,33 @@
+diff --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+80a81
+>         self._starred_at: Attribute[str] = NotSet
+248a250,254
+>     def starred_at(self) -> str:
+>         self._completeIfNotSet(self._starred_at)
+>         return self._starred_at.value
+> 
+>     @property
+346a353,354
+>         if "starred_at" in attributes:  # pragma no branch
+>             self._starred_at = self._makeStringAttribute(attributes["starred_at"])
+diff --recursive --new-file before/openapi.index after/openapi.index
+972a973,988
+>         "starred_at": {
+>           "name": "starred_at",
+>           "returns": [
+>             "str"
+>           ],
+>           "schema": {
+>             "example": "\"2020-07-09T00:17:55Z\"",
+>             "type": "string"
+>           },
+>           "schemas": {
+>             "/components/schemas/nullable-simple-user": {
+>               "example": "\"2020-07-09T00:17:55Z\"",
+>               "type": "string"
+>             }
+>           }
+>         },
+diff --recursive --new-file before/tests/NamedUser.py after/tests/NamedUser.py
+71a72
+>         self.assertEqual(nu.starred_at, "")

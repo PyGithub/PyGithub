@@ -118,37 +118,43 @@ import github.GithubIntegration
 import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
+import github.HookDelivery
+import github.HookDescription
 import github.Issue
 import github.License
 import github.NamedUser
+import github.RateLimitOverview
+import github.RepositoryDiscussion
 import github.Topic
 from github import Consts
 from github.GithubIntegration import GithubIntegration
 from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined, is_undefined
 from github.GithubRetry import GithubRetry
-from github.HookDelivery import HookDelivery, HookDeliverySummary
-from github.HookDescription import HookDescription
 from github.PaginatedList import PaginatedList
-from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
+    from github.Auth import Auth
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Commit import CommitSearchResult
     from github.ContentFile import ContentFileSearchResult
+    from github.Enterprise import Enterprise
     from github.Event import Event
     from github.Gist import Gist
     from github.GithubApp import GithubApp
     from github.GitignoreTemplate import GitignoreTemplate
     from github.GlobalAdvisory import GlobalAdvisory
+    from github.HookDelivery import HookDelivery, HookDeliverySummary
+    from github.HookDescription import HookDescription
     from github.Issue import IssueSearchResult
     from github.License import License
     from github.NamedUser import NamedUser, NamedUserSearchResult
     from github.Organization import Organization
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
+    from github.RateLimitOverview import RateLimitOverview
     from github.Repository import Repository, RepositorySearchResult
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
@@ -188,9 +194,10 @@ class Github:
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
-        auth: github.Auth.Auth | None = None,
+        auth: Auth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
+        api_version: str | None = None,
     ) -> None:
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
@@ -211,6 +218,9 @@ class Github:
         :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-api/api-versions).
+                            Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
+                            Set to None to not specify any version
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -227,6 +237,7 @@ class Github:
         assert seconds_between_writes is None or seconds_between_writes >= 0
         assert auth is None or isinstance(auth, github.Auth.Auth), auth
         assert isinstance(lazy, bool), lazy
+        assert api_version is None or isinstance(api_version, str), api_version
 
         if password is not None:
             warnings.warn(
@@ -269,6 +280,7 @@ class Github:
             seconds_between_requests,
             seconds_between_writes,
             lazy,
+            api_version,
         )
 
     def withLazy(self, lazy: bool) -> Github:
@@ -358,7 +370,7 @@ class Github:
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
-        return RateLimitOverview(self.__requester, headers, data)
+        return github.RateLimitOverview.RateLimitOverview(self.__requester, headers, data)
 
     @property
     def oauth_scopes(self) -> list[str] | None:
@@ -460,7 +472,7 @@ class Github:
         )
 
     # v3: rename enterprise to slug
-    def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
+    def get_enterprise(self, enterprise: str) -> Enterprise:
         """
         :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
         :param enterprise: string
@@ -678,6 +690,13 @@ class Github:
         :param sort: string ('stars', 'forks', 'updated')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`PaginatedList` of :class:`github.Repository.RepositorySearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_repositories("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -719,6 +738,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUserSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_users("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -760,6 +785,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Issue.IssueSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_issues("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -798,6 +829,12 @@ class Github:
         :param highlight: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.ContentFile.ContentFileSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_code("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -842,6 +879,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Commit.CommitSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_commits("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -876,6 +919,12 @@ class Github:
         :param query: string
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Topic.Topic`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_topics("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -921,7 +970,7 @@ class Github:
         assert isinstance(name, str), name
         name = urllib.parse.quote(name, safe="")
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
-        return HookDescription(self.__requester, headers, attributes)
+        return github.HookDescription.HookDescription(self.__requester, headers, attributes)
 
     def get_hooks(self) -> list[HookDescription]:
         """
@@ -929,7 +978,7 @@ class Github:
         :rtype: list of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/hooks")
-        return [HookDescription(self.__requester, headers, attributes) for attributes in data]
+        return [github.HookDescription.HookDescription(self.__requester, headers, attributes) for attributes in data]
 
     def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
         """
@@ -941,7 +990,7 @@ class Github:
         assert isinstance(hook_id, int), hook_id
         assert isinstance(delivery_id, int), delivery_id
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries/{delivery_id}")
-        return HookDelivery(self.__requester, headers, attributes)
+        return github.HookDelivery.HookDelivery(self.__requester, headers, attributes)
 
     def get_hook_deliveries(self, hook_id: int) -> list[HookDeliverySummary]:
         """
@@ -951,7 +1000,7 @@ class Github:
         """
         assert isinstance(hook_id, int), hook_id
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries")
-        return [HookDeliverySummary(self.__requester, headers, attributes) for attributes in data]
+        return [github.HookDelivery.HookDeliverySummary(self.__requester, headers, attributes) for attributes in data]
 
     def get_gitignore_templates(self) -> list[str]:
         """

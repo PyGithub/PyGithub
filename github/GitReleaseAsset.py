@@ -47,11 +47,14 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class GitReleaseAsset(CompletableGithubObject):
@@ -80,7 +83,7 @@ class GitReleaseAsset(CompletableGithubObject):
         self._size: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-        self._uploader: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._uploader: Attribute[NamedUser] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -147,7 +150,7 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def uploader(self) -> github.NamedUser.NamedUser:
+    def uploader(self) -> NamedUser:
         self._completeIfNotSet(self._uploader)
         return self._uploader.value
 

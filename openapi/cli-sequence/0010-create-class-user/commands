@@ -1,0 +1,3 @@
+python scripts/openapi.py --dry-run create class --completable --tests github openapi.spec.json openapi.index NamedUser "https://docs.github.com/en/rest/reference/users#get-a-user" "/components/schemas/public-user"
+python scripts/openapi.py create class --completable --tests github openapi.spec.json openapi.index NamedUser "https://docs.github.com/en/rest/reference/users#get-a-user" "/components/schemas/public-user"
+python scripts/openapi.py index github openapi.spec.json openapi.index

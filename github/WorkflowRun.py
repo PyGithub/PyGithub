@@ -291,7 +291,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._status.value
 
     @property
-    def triggering_actor(self) -> github.NamedUser.NamedUser:
+    def triggering_actor(self) -> NamedUser:
         self._completeIfNotSet(self._triggering_actor)
         return self._triggering_actor.value
 
@@ -314,6 +314,16 @@ class WorkflowRun(CompletableGithubObject):
     def workflow_url(self) -> str:
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
+
+    def get_attempt(self, attempt_number: int) -> WorkflowRun:
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number} <https://docs.github.com/en/rest/actions/workflow-runs#get-a-workflow-run-attempt>`_
+        :param attempt_number: int
+        :rtype: :class:`github.WorkflowRun.WorkflowRun`
+        """
+        assert isinstance(attempt_number, int)
+        url = f"{self.url}/attempts/{attempt_number}"
+        return github.WorkflowRun.WorkflowRun(self._requester, url=url)
 
     def get_artifacts(self) -> PaginatedList[Artifact]:
         return PaginatedList(
