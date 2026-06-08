@@ -52,7 +52,7 @@ packages = ["github"]
 github = ["py.typed", '*.pyi']
 
 [tool.mypy]
-python_version = '3.9'
+python_version = '3.12'
 ignore_missing_imports = true
 namespace_packages = true
 
@@ -102,4 +102,4 @@ unfixable = ["F401"]
 
 [tool.pytest.ini_options]
 python_files = "tests/*.py"
-addopts = "--color=yes"
+addopts = "--color=yes --ignore=openapi"

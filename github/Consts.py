@@ -78,6 +78,12 @@ headerRateReset = "x-ratelimit-reset"
 headerOAuthScopes = "x-oauth-scopes"
 headerOTP = "x-github-otp"
 
+# https://docs.github.com/en/rest/about-the-rest-api/api-versions
+headerApiVersion = "X-GitHub-Api-Version"
+headerApiVersionSelected = "x-github-api-version-selected"
+API_VERSION_2022_11_28 = "2022-11-28"
+API_VERSION_2026_03_10 = "2026-03-10"
+
 defaultMediaType = "application/octet-stream"
 
 # Custom media type for preview API

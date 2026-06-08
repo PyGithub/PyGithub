@@ -41,10 +41,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.CodeSecurityConfig
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.CodeSecurityConfig import CodeSecurityConfig
 
 
 class DefaultCodeSecurityConfig(NonCompletableGithubObject):
@@ -61,7 +64,7 @@ class DefaultCodeSecurityConfig(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._configuration: Attribute[github.CodeSecurityConfig.CodeSecurityConfig] = NotSet
+        self._configuration: Attribute[CodeSecurityConfig] = NotSet
         self._default_for_new_repos: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -72,7 +75,7 @@ class DefaultCodeSecurityConfig(NonCompletableGithubObject):
         )
 
     @property
-    def configuration(self) -> github.CodeSecurityConfig.CodeSecurityConfig:
+    def configuration(self) -> CodeSecurityConfig:
         return self._configuration.value
 
     @property

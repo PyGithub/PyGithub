@@ -1,0 +1,4 @@
+mkdir github tests scripts
+cp $ROOT/scripts/openapi.py scripts/
+cp $ROOT/github/GithubObject.py github/
+python scripts/openapi.py index github openapi.spec.json openapi.index

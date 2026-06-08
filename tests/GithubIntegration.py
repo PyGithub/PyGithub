@@ -192,6 +192,7 @@ class GithubIntegration(Framework.BasicTestCase):
                 # v3: this should not be the default value, so if this has been changed in v3,
                 # change it here is well
                 lazy=True,
+                api_version="version",
             )
 
             # assert kwargs consists of ALL requester constructor arguments
@@ -209,6 +210,7 @@ class GithubIntegration(Framework.BasicTestCase):
 
             repo = g.get_repo("PyGithub/PyGithub")
             self.assertEqual(repo.full_name, "PyGithub/PyGithub")
+            self.assertEqual(repo.id, 3544490)
 
     def testGetAccessToken(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)

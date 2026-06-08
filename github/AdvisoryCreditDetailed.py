@@ -42,10 +42,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class AdvisoryCreditDetailed(NonCompletableGithubObject):
@@ -65,7 +68,7 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._state: Attribute[str] = NotSet
         self._type: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -90,7 +93,7 @@ class AdvisoryCreditDetailed(NonCompletableGithubObject):
         return self._type.value
 
     @property
-    def user(self) -> github.NamedUser.NamedUser:
+    def user(self) -> NamedUser:
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
