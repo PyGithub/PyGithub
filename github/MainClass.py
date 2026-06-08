@@ -124,7 +124,15 @@ import github.NamedUser
 import github.Topic
 from github import Consts
 from github.GithubIntegration import GithubIntegration
-from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, _NotSetType, Opt, is_defined, is_undefined
+from github.GithubObject import (
+    CompletableGithubObject,
+    GithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+    is_defined,
+    is_undefined,
+)
 from github.GithubRetry import GithubRetry
 from github.HookDelivery import HookDelivery, HookDeliverySummary
 from github.HookDescription import HookDescription
@@ -405,11 +413,11 @@ class Github:
     @overload
     def get_user(self, login: _NotSetType = NotSet, lazy: Opt[bool] = NotSet) -> AuthenticatedUser:
         ...
-    
+
     @overload
     def get_user(self, login: str, lazy: Opt[bool] = NotSet) -> NamedUser:
         ...
-    
+
     # v3: remove lazy argument, laziness is fully controlled via requester
     def get_user(self, login=NotSet, lazy=NotSet):
         """
