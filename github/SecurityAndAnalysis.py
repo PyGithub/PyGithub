@@ -169,16 +169,6 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
                 attributes["secret_scanning_delegated_bypass"],
             )
-        if "secret_scanning_delegated_alert_dismissal" in attributes:  # pragma no branch
-            self._secret_scanning_delegated_alert_dismissal = self._makeClassAttribute(
-                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
-                attributes["secret_scanning_delegated_alert_dismissal"],
-            )
-        if "secret_scanning_delegated_bypass" in attributes:  # pragma no branch
-            self._secret_scanning_delegated_bypass = self._makeClassAttribute(
-                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
-                attributes["secret_scanning_delegated_bypass"],
-            )
         if "secret_scanning_delegated_bypass_options" in attributes:  # pragma no branch
             self._secret_scanning_delegated_bypass_options = self._makeDictAttribute(
                 attributes["secret_scanning_delegated_bypass_options"]
