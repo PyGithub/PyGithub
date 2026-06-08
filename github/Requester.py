@@ -1338,7 +1338,7 @@ class Requester:
         # and self.__seconds_between_writes seconds have passed since last write request (if verb refers to a write).
         # Uses self.__last_requests.
         requests = self.__last_requests.values()
-        writes = [l for v, l in self.__last_requests.items() if v != "GET"]
+        writes = [last for verb, last in self.__last_requests.items() if verb != "GET"]
 
         last_request = max(requests) if requests else 0
         last_write = max(writes) if writes else 0

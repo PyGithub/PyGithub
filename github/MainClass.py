@@ -556,7 +556,7 @@ class Github:
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/projects/columns/%d" % id,
+            f"/projects/columns/{id}",
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
         return github.ProjectColumn.ProjectColumn(self.__requester, headers, data)
