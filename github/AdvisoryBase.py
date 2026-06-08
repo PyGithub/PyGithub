@@ -27,11 +27,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from github.CVSS import CVSS
-from github.CWE import CWE
+import github.CVSS
+import github.CWE
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.CVSS import CVSS
+    from github.CWE import CWE
 
 
 class AdvisoryBase(NonCompletableGithubObject):
@@ -121,11 +125,11 @@ class AdvisoryBase(NonCompletableGithubObject):
         if "cve_id" in attributes:  # pragma no branch
             self._cve_id = self._makeStringAttribute(attributes["cve_id"])
         if "cvss" in attributes:  # pragma no branch
-            self._cvss = self._makeClassAttribute(CVSS, attributes["cvss"])
+            self._cvss = self._makeClassAttribute(github.CVSS.CVSS, attributes["cvss"])
         if "cvss_severities" in attributes:  # pragma no branch
             self._cvss_severities = self._makeDictAttribute(attributes["cvss_severities"])
         if "cwes" in attributes:  # pragma no branch
-            self._cwes = self._makeListOfClassesAttribute(CWE, attributes["cwes"])
+            self._cwes = self._makeListOfClassesAttribute(github.CWE.CWE, attributes["cwes"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "ghsa_id" in attributes:  # pragma no branch

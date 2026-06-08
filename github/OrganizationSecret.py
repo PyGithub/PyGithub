@@ -29,12 +29,15 @@ from __future__ import annotations
 
 import urllib.parse
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Repository
 from github.GithubObject import Attribute, NotSet
 from github.PaginatedList import PaginatedList
-from github.Repository import Repository
 from github.Secret import Secret
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class OrganizationSecret(Secret):
@@ -75,7 +78,7 @@ class OrganizationSecret(Secret):
     @property
     def selected_repositories(self) -> PaginatedList[Repository]:
         return PaginatedList(
-            Repository,
+            github.Repository.Repository,
             self._requester,
             self._selected_repositories_url.value,
             None,

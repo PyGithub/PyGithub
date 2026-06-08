@@ -86,6 +86,7 @@ from typing_extensions import NotRequired, TypedDict
 
 import github.Commit
 import github.File
+import github.Issue
 import github.IssueComment
 import github.IssueEvent
 import github.Label
@@ -110,13 +111,13 @@ from github.GithubObject import (
     is_optional_list,
     is_undefined,
 )
-from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Commit import Commit
     from github.File import File
     from github.GitRef import GitRef
+    from github.Issue import Issue
     from github.IssueComment import IssueComment
     from github.IssueEvent import IssueEvent
     from github.Label import Label

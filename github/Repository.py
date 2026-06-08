@@ -202,6 +202,7 @@ import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
 import github.EnvironmentProtectionRuleReviewer
 import github.Event
+import github.GeneratedReleaseNotes
 import github.GitBlob
 import github.GitCommit
 import github.GithubObject
@@ -255,7 +256,6 @@ import github.Workflow
 import github.WorkflowJob
 import github.WorkflowRun
 from github import Consts
-from github.GeneratedReleaseNotes import GeneratedReleaseNotes
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -291,6 +291,7 @@ if TYPE_CHECKING:
     )
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
+    from github.GeneratedReleaseNotes import GeneratedReleaseNotes
     from github.GitBlob import GitBlob
     from github.GitCommit import GitCommit
     from github.GitRef import GitRef
@@ -1610,7 +1611,7 @@ class Repository(CompletableGithubObject):
             "POST", f"{self.url}/releases/generate-notes", input=post_parameters
         )
 
-        return GeneratedReleaseNotes(self._requester, headers, data)
+        return github.GeneratedReleaseNotes.GeneratedReleaseNotes(self._requester, headers, data)
 
     def create_git_tag(
         self,

@@ -39,15 +39,18 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.CommitStats
 import github.Gist
+import github.GistFile
 import github.GithubObject
 import github.NamedUser
 import github.Organization
-from github.GistFile import GistFile
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.GistFile import GistFile
 
 
 class GistHistoryState(CompletableGithubObject):
