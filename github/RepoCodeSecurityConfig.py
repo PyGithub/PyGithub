@@ -48,6 +48,7 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
     pass
+    from github.CodeSecurityConfig import CodeSecurityConfig
 
 
 class RepoCodeSecurityConfig(NonCompletableGithubObject):
@@ -64,7 +65,7 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._configuration: Attribute[github.CodeSecurityConfig.CodeSecurityConfig] = NotSet
+        self._configuration: Attribute[CodeSecurityConfig] = NotSet
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -75,7 +76,7 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
         )
 
     @property
-    def configuration(self) -> github.CodeSecurityConfig.CodeSecurityConfig:
+    def configuration(self) -> CodeSecurityConfig:
         return self._configuration.value
 
     @property

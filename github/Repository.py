@@ -270,6 +270,8 @@ from github.GithubObject import (
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.AdvisoryCredit import AdvisoryCredit
+    from github.AdvisoryVulnerability import AdvisoryVulnerabilityInput
     from github.Artifact import Artifact
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Autolink import Autolink
@@ -300,6 +302,7 @@ if TYPE_CHECKING:
     from github.GitTag import GitTag
     from github.GitTree import GitTree
     from github.Hook import Hook
+    from github.HookDelivery import HookDelivery, HookDeliverySummary
     from github.InputGitAuthor import InputGitAuthor
     from github.InputGitTreeElement import InputGitTreeElement
     from github.Invitation import Invitation
@@ -321,9 +324,11 @@ if TYPE_CHECKING:
     from github.PullRequestComment import PullRequestComment
     from github.Referrer import Referrer
     from github.RepoCodeSecurityConfig import RepoCodeSecurityConfig
+    from github.RepositoryAdvisory import RepositoryAdvisory
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
+    from github.Secret import Secret
     from github.SecretScanAlert import SecretScanAlert
     from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
@@ -336,6 +341,7 @@ if TYPE_CHECKING:
     from github.StatsPunchCard import StatsPunchCard
     from github.Tag import Tag
     from github.Team import Team
+    from github.Variable import Variable
     from github.View import View
     from github.Workflow import Workflow
     from github.WorkflowJob import WorkflowJob
@@ -1216,7 +1222,7 @@ class Repository(CompletableGithubObject):
         return self._temp_clone_token.value
 
     @property
-    def template_repository(self) -> github.Repository.Repository:
+    def template_repository(self) -> Repository:
         self._completeIfNotSet(self._template_repository)
         return self._template_repository.value
 
@@ -1389,9 +1395,7 @@ class Repository(CompletableGithubObject):
             self._requester, url=f"{self.url}/compare/{base}...{head}", per_page=comparison_commits_per_page
         )
 
-    def create_autolink(
-        self, key_prefix: str, url_template: str, is_alphanumeric: Opt[bool] = NotSet
-    ) -> github.Autolink.Autolink:
+    def create_autolink(self, key_prefix: str, url_template: str, is_alphanumeric: Opt[bool] = NotSet) -> Autolink:
         """
         :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
         :param key_prefix: string
@@ -1840,8 +1844,8 @@ class Repository(CompletableGithubObject):
         body: Opt[str] = NotSet,
         maintainer_can_modify: Opt[bool] = NotSet,
         draft: Opt[bool] = NotSet,
-        issue: Opt[github.Issue.Issue] = NotSet,
-    ) -> github.PullRequest.PullRequest:
+        issue: Opt[Issue] = NotSet,
+    ) -> PullRequest:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls <https://docs.github.com/en/free-pro-team@latest/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request>`_
         """
@@ -1876,10 +1880,10 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
+        vulnerabilities: Iterable[AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
-    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        credits: Iterable[AdvisoryCredit] | None = None,
+    ) -> RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param summary: string
@@ -1908,10 +1912,10 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
+        vulnerabilities: Iterable[AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
-    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        credits: Iterable[AdvisoryCredit] | None = None,
+    ) -> RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
         :param summary: string
@@ -1940,11 +1944,11 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None,
+        vulnerabilities: Iterable[AdvisoryVulnerabilityInput] | None,
         cwe_ids: Iterable[str] | None,
-        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None,
+        credits: Iterable[AdvisoryCredit] | None,
         private_vulnerability_reporting: bool,
-    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+    ) -> RepositoryAdvisory:
         if vulnerabilities is None:
             vulnerabilities = []
         if cwe_ids is None:
@@ -2009,7 +2013,7 @@ class Repository(CompletableGithubObject):
         secret_name: str,
         unencrypted_value: str,
         secret_type: str = "actions",
-    ) -> github.Secret.Secret:
+    ) -> Secret:
         """
         :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
         :calls: `PUT /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
@@ -2038,7 +2042,7 @@ class Repository(CompletableGithubObject):
     def get_secrets(
         self,
         secret_type: str = "actions",
-    ) -> PaginatedList[github.Secret.Secret]:
+    ) -> PaginatedList[Secret]:
         """
         Gets all repository secrets :param secret_type: string options actions or dependabot.
         """
@@ -2055,7 +2059,7 @@ class Repository(CompletableGithubObject):
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> Secret:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
         :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/dependabot#get-an-organization-secret>`_
@@ -2068,7 +2072,7 @@ class Repository(CompletableGithubObject):
         url = f"{self.url}/{secret_type}/secrets/{secret_name}"
         return github.Secret.Secret(self._requester, url=url)
 
-    def create_variable(self, variable_name: str, value: str) -> github.Variable.Variable:
+    def create_variable(self, variable_name: str, value: str) -> Variable:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
         """
@@ -2092,7 +2096,7 @@ class Repository(CompletableGithubObject):
             completed=False,
         )
 
-    def get_variables(self) -> PaginatedList[github.Variable.Variable]:
+    def get_variables(self) -> PaginatedList[Variable]:
         """
         Gets all repository variables :rtype: :class:`PaginatedList` of :class:`github.Variable.Variable`
         """
@@ -2105,7 +2109,7 @@ class Repository(CompletableGithubObject):
             list_item="variables",
         )
 
-    def get_variable(self, variable_name: str) -> github.Variable.Variable:
+    def get_variable(self, variable_name: str) -> Variable:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#get-a-repository-variable>`_
         :param variable_name: string
@@ -2798,7 +2802,7 @@ class Repository(CompletableGithubObject):
 
     def get_repository_advisories(
         self,
-    ) -> PaginatedList[github.RepositoryAdvisory.RepositoryAdvisory]:
+    ) -> PaginatedList[RepositoryAdvisory]:
         """
         :calls: `GET /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :rtype: :class:`PaginatedList` of :class:`github.RepositoryAdvisory.RepositoryAdvisory`
@@ -2810,7 +2814,7 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def get_repository_advisory(self, ghsa: str) -> github.RepositoryAdvisory.RepositoryAdvisory:
+    def get_repository_advisory(self, ghsa: str) -> RepositoryAdvisory:
         """
         :calls: `GET /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param ghsa: string
@@ -3129,7 +3133,7 @@ class Repository(CompletableGithubObject):
         """
         return PaginatedList(github.Hook.Hook, self._requester, f"{self.url}/hooks", None)
 
-    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> github.HookDelivery.HookDelivery:
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
         """
         :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/webhooks/repo-deliveries>`_
         :param hook_id: integer
@@ -3143,7 +3147,7 @@ class Repository(CompletableGithubObject):
         )
         return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
-    def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
+    def get_hook_deliveries(self, hook_id: int) -> PaginatedList[HookDeliverySummary]:
         """
         :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/webhooks/repo-deliveries>`_
         :param hook_id: integer
@@ -4924,9 +4928,7 @@ class Repository(CompletableGithubObject):
         if "temp_clone_token" in attributes:  # pragma no branch
             self._temp_clone_token = self._makeStringAttribute(attributes["temp_clone_token"])
         if "template_repository" in attributes:  # pragma no branch
-            self._template_repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["template_repository"]
-            )
+            self._template_repository = self._makeClassAttribute(Repository, attributes["template_repository"])
         if "topics" in attributes:  # pragma no branch
             self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "trees_url" in attributes:  # pragma no branch

@@ -136,9 +136,11 @@ from github.Requester import Requester
 if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
+    from github.Auth import Auth
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Commit import CommitSearchResult
     from github.ContentFile import ContentFileSearchResult
+    from github.Enterprise import Enterprise
     from github.Event import Event
     from github.Gist import Gist
     from github.GithubApp import GithubApp
@@ -192,7 +194,7 @@ class Github:
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
-        auth: github.Auth.Auth | None = None,
+        auth: Auth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
         api_version: str | None = None,
@@ -473,7 +475,7 @@ class Github:
         )
 
     # v3: rename enterprise to slug
-    def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
+    def get_enterprise(self, enterprise: str) -> Enterprise:
         """
         :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
         :param enterprise: string
