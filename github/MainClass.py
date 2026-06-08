@@ -118,37 +118,43 @@ import github.GithubIntegration
 import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
+import github.HookDelivery
+import github.HookDescription
 import github.Issue
 import github.License
 import github.NamedUser
+import github.RateLimitOverview
+import github.RepositoryDiscussion
 import github.Topic
 from github import Consts
 from github.GithubIntegration import GithubIntegration
 from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined, is_undefined
 from github.GithubRetry import GithubRetry
-from github.HookDelivery import HookDelivery, HookDeliverySummary
-from github.HookDescription import HookDescription
 from github.PaginatedList import PaginatedList
-from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
+    from github.Auth import Auth
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Commit import CommitSearchResult
     from github.ContentFile import ContentFileSearchResult
+    from github.Enterprise import Enterprise
     from github.Event import Event
     from github.Gist import Gist
     from github.GithubApp import GithubApp
     from github.GitignoreTemplate import GitignoreTemplate
     from github.GlobalAdvisory import GlobalAdvisory
+    from github.HookDelivery import HookDelivery, HookDeliverySummary
+    from github.HookDescription import HookDescription
     from github.Issue import IssueSearchResult
     from github.License import License
     from github.NamedUser import NamedUser, NamedUserSearchResult
     from github.Organization import Organization
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
+    from github.RateLimitOverview import RateLimitOverview
     from github.Repository import Repository, RepositorySearchResult
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
@@ -188,7 +194,7 @@ class Github:
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
-        auth: github.Auth.Auth | None = None,
+        auth: Auth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
         api_version: str | None = None,
@@ -367,7 +373,7 @@ class Github:
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
-        return RateLimitOverview(self.__requester, headers, data)
+        return github.RateLimitOverview.RateLimitOverview(self.__requester, headers, data)
 
     @property
     def oauth_scopes(self) -> list[str] | None:
@@ -469,7 +475,7 @@ class Github:
         )
 
     # v3: rename enterprise to slug
-    def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
+    def get_enterprise(self, enterprise: str) -> Enterprise:
         """
         :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
         :param enterprise: string
@@ -967,7 +973,7 @@ class Github:
         assert isinstance(name, str), name
         name = urllib.parse.quote(name, safe="")
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
-        return HookDescription(self.__requester, headers, attributes)
+        return github.HookDescription.HookDescription(self.__requester, headers, attributes)
 
     def get_hooks(self) -> list[HookDescription]:
         """
@@ -975,7 +981,7 @@ class Github:
         :rtype: list of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/hooks")
-        return [HookDescription(self.__requester, headers, attributes) for attributes in data]
+        return [github.HookDescription.HookDescription(self.__requester, headers, attributes) for attributes in data]
 
     def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
         """
@@ -987,7 +993,7 @@ class Github:
         assert isinstance(hook_id, int), hook_id
         assert isinstance(delivery_id, int), delivery_id
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries/{delivery_id}")
-        return HookDelivery(self.__requester, headers, attributes)
+        return github.HookDelivery.HookDelivery(self.__requester, headers, attributes)
 
     def get_hook_deliveries(self, hook_id: int) -> list[HookDeliverySummary]:
         """
@@ -997,7 +1003,7 @@ class Github:
         """
         assert isinstance(hook_id, int), hook_id
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries")
-        return [HookDeliverySummary(self.__requester, headers, attributes) for attributes in data]
+        return [github.HookDelivery.HookDeliverySummary(self.__requester, headers, attributes) for attributes in data]
 
     def get_gitignore_templates(self) -> list[str]:
         """

@@ -291,7 +291,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._status.value
 
     @property
-    def triggering_actor(self) -> github.NamedUser.NamedUser:
+    def triggering_actor(self) -> NamedUser:
         self._completeIfNotSet(self._triggering_actor)
         return self._triggering_actor.value
 
