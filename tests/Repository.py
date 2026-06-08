@@ -1655,7 +1655,7 @@ class Repository(Framework.TestCase):
             head="patch-1",
             head_repo="octocat/PyGithub",
         )
-        self.assertEqual(pull.id, 1436216)
+        self.assertEqual(pull.head.repo.full_name, "octocat/PyGithub")
 
     def testCreateProject(self):
         project = self.repo.create_project("Project created by PyGithub", "Body of the project")
