@@ -47,7 +47,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, overload
 
 import github.NamedUser
 import github.Organization
@@ -165,6 +165,14 @@ class GitReleaseAsset(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
+
+    @overload
+    def download_asset(self, path: None = None, chunk_size: int | None = 1) -> tuple[int, dict[str, Any], Iterator]:
+        ...
+
+    @overload
+    def download_asset(self, path: str, chunk_size: int | None = 1) -> None:
+        ...
 
     def download_asset(
         self, path: None | str = None, chunk_size: int | None = 1
