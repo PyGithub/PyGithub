@@ -223,6 +223,11 @@ class GitRelease(Framework.TestCase):
         latest_release = self.repo.get_latest_release()
         self.assertEqual(latest_release.tag_name, tag)
 
+    def testGetLazyLatestRelease(self):
+        repo = self.g.get_user(user, lazy=True).get_repo(repo_name)
+        latest_release = repo.get_latest_release()
+        self.assertEqual(latest_release.tag_name, tag)
+
     def testGetAssets(self):
         repo = self.repo
         release = self.release
