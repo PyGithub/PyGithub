@@ -47,7 +47,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 import github.Issue
 import github.NamedUser
@@ -55,7 +55,7 @@ import github.Organization
 import github.ProjectColumn
 import github.PullRequest
 from github import Consts
-from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt, _NotSetType
 
 if TYPE_CHECKING:
     from github.Issue import Issue
@@ -152,6 +152,14 @@ class ProjectCard(NonCompletableGithubObject):
     @property
     def url(self) -> str:
         return self._url.value
+
+    @overload
+    def get_content(self, content_type: Literal["PullRequest"]) -> PullRequest | None:
+        ...
+
+    @overload
+    def get_content(self, content_type: Literal["Issue"] | _NotSetType = NotSet) -> Issue | None:
+        ...
 
     # Note that the content_url for any card will be an "issue" URL, from
     # which you can retrieve either an Issue or a PullRequest. Unfortunately
