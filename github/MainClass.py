@@ -101,7 +101,7 @@ import pickle
 import urllib.parse
 import warnings
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
+from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar, overload
 
 import urllib3
 from urllib3.util import Retry
@@ -128,7 +128,15 @@ import github.RepositoryDiscussion
 import github.Topic
 from github import Consts
 from github.GithubIntegration import GithubIntegration
-from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined, is_undefined
+from github.GithubObject import (
+    CompletableGithubObject,
+    GithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+    is_defined,
+    is_undefined,
+)
 from github.GithubRetry import GithubRetry
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
@@ -407,6 +415,14 @@ class Github:
         """
 
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
+
+    @overload
+    def get_user(self, login: _NotSetType = NotSet, lazy: Opt[bool] = NotSet) -> AuthenticatedUser:
+        ...
+
+    @overload
+    def get_user(self, login: str, lazy: Opt[bool] = NotSet) -> NamedUser:
+        ...
 
     # v3: remove lazy argument, laziness is fully controlled via requester
     def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
