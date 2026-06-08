@@ -167,12 +167,10 @@ class GitReleaseAsset(CompletableGithubObject):
         return True
 
     @overload
-    def download_asset(self, path: None = None, chunk_size: int | None = 1) -> tuple[int, dict[str, Any], Iterator]:
-        ...
+    def download_asset(self, path: None = None, chunk_size: int | None = 1) -> tuple[int, dict[str, Any], Iterator]: ...
 
     @overload
-    def download_asset(self, path: str, chunk_size: int | None = 1) -> None:
-        ...
+    def download_asset(self, path: str, chunk_size: int | None = 1) -> None: ...
 
     def download_asset(
         self, path: None | str = None, chunk_size: int | None = 1

@@ -842,7 +842,6 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /notifications/threads/{thread_id} <http://docs.github.com/en/rest/reference/activity#notifications>`_
         """
-
         assert isinstance(id, str), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"/notifications/threads/{id}")
         return github.Notification.Notification(self._requester, headers, data, completed=True)
@@ -857,7 +856,6 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         :calls: `GET /notifications <http://docs.github.com/en/rest/reference/activity#notifications>`_
         """
-
         assert is_optional(all, bool), all
         assert is_optional(participating, bool), participating
         assert is_optional(since, datetime), since

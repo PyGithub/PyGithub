@@ -230,7 +230,6 @@ class Github:
                             Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
                             Set to None to not specify any version
         """
-
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
         assert password is None or isinstance(password, str), password
         assert jwt is None or isinstance(jwt, str), jwt
@@ -305,7 +304,8 @@ class Github:
         return Github(**kwargs)
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the Github
+        """
+        Close connections to the server. Alternatively, use the Github
         object as a context manager:
 
         .. code-block:: python
@@ -391,7 +391,6 @@ class Github:
         """
         :calls: `GET /license/{license} <https://docs.github.com/en/rest/reference/licenses#get-a-license>`_
         """
-
         assert isinstance(key, str), key
         key = urllib.parse.quote(key)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/licenses/{key}")
@@ -401,7 +400,6 @@ class Github:
         """
         :calls: `GET /licenses <https://docs.github.com/en/rest/reference/licenses#get-all-commonly-used-licenses>`_
         """
-
         url_parameters: dict[str, Any] = {}
 
         return PaginatedList(github.License.License, self.__requester, "/licenses", url_parameters)
@@ -410,16 +408,13 @@ class Github:
         """
         :calls: `GET /events <https://docs.github.com/en/rest/reference/activity#list-public-events>`_
         """
-
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
     @overload
-    def get_user(self, login: _NotSetType = NotSet, lazy: Opt[bool] = NotSet) -> AuthenticatedUser:
-        ...
+    def get_user(self, login: _NotSetType = NotSet, lazy: Opt[bool] = NotSet) -> AuthenticatedUser: ...
 
     @overload
-    def get_user(self, login: str, lazy: Opt[bool] = NotSet) -> NamedUser:
-        ...
+    def get_user(self, login: str, lazy: Opt[bool] = NotSet) -> NamedUser: ...
 
     # v3: remove lazy argument, laziness is fully controlled via requester
     def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
@@ -1097,7 +1092,6 @@ class Github:
         """
         :calls: `GET /apps/{app_slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
-
         if slug is NotSet:
             # with no slug given, calling /app returns the authenticated app,
             # including the actual /apps/{slug}

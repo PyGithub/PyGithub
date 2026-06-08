@@ -100,7 +100,7 @@ from collections import deque
 from collections.abc import Callable, ItemsView, Iterator
 from datetime import datetime, timezone
 from io import IOBase
-from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, BinaryIO, Generic, TypeVar
 
 import requests
 import requests.adapters
@@ -433,7 +433,7 @@ class Requester:
             assert False, "Unknown URL scheme"
         self.__connection: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None
         self.__connection_lock = threading.Lock()
-        self.__custom_connections: Deque[HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass] = deque()
+        self.__custom_connections: deque[HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass] = deque()
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
