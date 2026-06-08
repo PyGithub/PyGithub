@@ -3889,7 +3889,8 @@ class OpenApi:
                 print(f"- {path}: {spec_fingerprints.get(fingerprint(path), ' ')}")
         print()
 
-    def suggest_method_names(self, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
+    @classmethod
+    def suggest_method_names(cls, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
         suffix_path = path.replace("-", "_")[len(prefix_path) + 1 :]
         fields = suffix_path.split("/")
         context = "_".join(fields[:-1])
