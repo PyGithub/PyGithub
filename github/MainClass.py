@@ -419,7 +419,7 @@ class Github:
         ...
 
     # v3: remove lazy argument, laziness is fully controlled via requester
-    def get_user(self, login=NotSet, lazy=NotSet):
+    def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
         """
         :calls: `GET /users/{username} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
