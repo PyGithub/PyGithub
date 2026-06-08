@@ -55,11 +55,20 @@ class OrganizationVariable(Variable):
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
         self._name: Attribute[str] = NotSet
-        self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
         self._selected_repositories_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
         self._visibility: Attribute[str] = NotSet
+
+    @property
+    def selected_repositories(self) -> PaginatedList[Repository]:
+        return PaginatedList(
+            github.Repository.Repository,
+            self._requester,
+            self.selected_repositories_url,
+            None,
+            list_item="repositories",
+        )
 
     @property
     def selected_repositories_url(self) -> str:
@@ -73,16 +82,6 @@ class OrganizationVariable(Variable):
         """
         self._completeIfNotSet(self._visibility)
         return self._visibility.value
-
-    @property
-    def selected_repositories(self) -> PaginatedList[Repository]:
-        return PaginatedList(
-            github.Repository.Repository,
-            self._requester,
-            self._selected_repositories_url.value,
-            None,
-            list_item="repositories",
-        )
 
     def edit(
         self,
