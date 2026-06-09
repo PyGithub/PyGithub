@@ -254,29 +254,43 @@ def string_as_python_type(type: str, classes: dict[str, dict]) -> PythonType | G
     return None
 
 
-def is_pagination_object(schema: dict[str, Any]) -> bool:
+def pagination_list_property(properties: dict[str, Any]) -> str | None:
+    # A pagination object looks like:
     # {
     #   "type": "object",
     #   "properties": {
     #     "total_…": {"type": "integer"},
     #     "…": {"type": "array", "items": …},
     # }
+    # It has exactly one "total_…" integer property and an array property holding
+    # the paginated items. Some objects may have further array properties. In that case the
+    # canonical "items" array identifies the paginated items.
+    #
+    # Returns the name of the paginated array property, or None if this is not a pagination object.
+    total_count_items = [n for n, p in properties.items() if n.startswith("total_") and p.get("type") == "integer"]
+    if len(total_count_items) != 1:
+        return None
+    list_items = [n for n, p in properties.items() if p.get("type") == "array" and "items" in p]
+    if len(list_items) == 1:
+        return list_items[0]
+    if len(list_items) > 1 and "items" in list_items:
+        return "items"
+    return None
+
+
+def is_pagination_object(schema: dict[str, Any]) -> bool:
     return (
         schema.get("type") == "object"
         and "properties" in schema
-        and len(
-            [n for n, p in schema.get("properties").items() if n.startswith("total_") and p.get("type") == "integer"]
-        )
-        == 1
-        and len([p for p in schema.get("properties").values() if p.get("type") == "array" and "items" in p]) == 1
+        and pagination_list_property(schema.get("properties")) is not None
     )
 
 
 def get_paginated_property(schema: dict[str, Any], schema_path: list[str]) -> (dict[str, Any], list[str]):
     # assumes is_pagination_object returns True for this schema
     props = schema.get("properties")
-    list_item = next(((n, p) for n, p in props.items() if p.get("type") == "array" and "items" in p))
-    return list_item[1], schema_path + ["properties", list_item[0]]
+    list_item = pagination_list_property(props)
+    return props.get(list_item), schema_path + ["properties", list_item]
 
 
 def responses_as_python_type(
@@ -3275,10 +3289,8 @@ class OpenApi:
         # extract the inner type of pagination objects
         if "properties" in schema:
             props = schema.get("properties")
-            list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
-            total_count_items = [n for n, p in props.items() if n.startswith("total_") and p.get("type") == "integer"]
-            if len(list_items) == 1 and len(total_count_items) == 1:
-                list_item = list_items[0]
+            list_item = pagination_list_property(props)
+            if list_item is not None:
                 return self.get_inner_spec_types(
                     props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
                 )
