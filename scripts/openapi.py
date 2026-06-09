@@ -986,9 +986,11 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                     while len(lines) > idx + 1 and not lines[idx + 1].strip():
                         idx = idx + 1
                     for schema in lines[idx + 1 :]:
-                        if not schema.strip().lstrip("- "):
+                        schema = schema.strip().lstrip("- ")
+                        if not schema:
                             break
-                        class_schemas.append(schema.strip().lstrip("- "))
+                        if schema not in class_schemas:
+                            class_schemas.append(schema)
 
         if class_name_short in classes:
             print(f"Duplicate class definition for {class_name_short}")
