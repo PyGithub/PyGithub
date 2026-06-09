@@ -2000,35 +2000,54 @@ class AddSchemasTransformer(CstTransformerBase):
                 lines = docstring.splitlines()
                 first_line = lines[1]
                 indent = first_line[: len(first_line) - len(first_line.lstrip())]
-                heading = len(lines) - 1  # if there is no heading, we place it before the last line (the closing """)
-                empty_footing = lines[-2].strip() == ""
-                schema_lines = []
+                # locate the existing schema list (the bullet lines following the heading);
+                # anything after those bullets (e.g. a trailing ".. warning::" block) is
+                # preserved verbatim and must not be treated as schema lines
+                heading = None
                 for idx, line in enumerate(lines):
                     if "The OpenAPI schema can be found at" in line:
                         heading = idx
-                        schema_lines = lines[idx + 1 : -2 if empty_footing else -1]
                         break
-                schema_lines = {schema_line for schema_line in schema_lines if schema_line}
+                if heading is not None:
+                    end = heading + 1
+                    while end < len(lines) and not lines[end].strip():  # skip blank lines after the heading
+                        end += 1
+                    existing_lines = []
+                    while end < len(lines) and lines[end].strip().startswith("- "):
+                        existing_lines.append(lines[end])
+                        end += 1
+                    prefix = lines[:heading]
+                    trailing = lines[end:]  # blank line(s), any trailing content and the closing """
+                else:
+                    # no heading yet: place the schema list right before the closing """
+                    existing_lines = []
+                    prefix = lines[:-1]
+                    trailing = lines[-1:]
+
+                schema_lines = {schema_line for schema_line in existing_lines if schema_line}
                 before = len(schema_lines)
                 schema_lines = sorted(list(schema_lines.union({f"{indent}- {schema}" for schema in self.schemas})))
                 after = len(schema_lines)
-                lines = (
-                    lines[:heading]
-                    +
-                    # we add an empty line before the schema lines title if there is none
-                    ([""] if lines[heading - 1].strip() else [])
-                    + [indent + "The OpenAPI schema can be found at"]
-                    # we add an empty line after the schema lines title to get a proper bullet list in the docs
-                    + [""]
-                    + schema_lines
-                    + [""]
-                    + lines[-1:]
-                )
-                docstring = "\n".join(lines)
-                stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
-                stmts = [stmt] + list(updated_node.body.body[1:])
-                updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=stmts))
-                self.schema_added += after - before
+                # do not add an empty schema heading to classes without any schemas
+                if schema_lines:
+                    lines = (
+                        prefix
+                        +
+                        # we add an empty line before the schema lines title if there is none
+                        ([""] if prefix and prefix[-1].strip() else [])
+                        + [indent + "The OpenAPI schema can be found at"]
+                        # we add an empty line after the schema lines title to get a proper bullet list in the docs
+                        + [""]
+                        + schema_lines
+                        # keep a blank line between the schema list and any trailing content
+                        + ([""] if trailing and trailing[0].strip() else [])
+                        + trailing
+                    )
+                    docstring = "\n".join(lines)
+                    stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
+                    stmts = [stmt] + list(updated_node.body.body[1:])
+                    updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=stmts))
+                    self.schema_added += after - before
 
         return super().leave_ClassDef(original_node, updated_node)
 
@@ -3348,7 +3367,11 @@ class OpenApi:
         transformer = AddSchemasTransformer(class_name, schemas)
         tree = cst.parse_module(code)
         updated_tree = tree.visit(transformer)
-        cls.write_code(code, updated_tree.code, filename, dry_run)
+        # only announce and write when the schema list actually changes; an
+        # unchanged list (already sorted and distinct) produces no output
+        if updated_tree.code != code:
+            print(f"Adding schemas to {class_name}")
+            cls.write_code(code, updated_tree.code, filename, dry_run)
         return transformer.schema_added
 
     @staticmethod
@@ -4084,14 +4107,16 @@ class OpenApi:
                 for providing_class, providing_property in sorted(providing_properties):
                     print(f"- {providing_class}.{providing_property}")
 
-                if add and schemas_to_implement:
-                    filename = clazz.get("filename")
-                    clazz_name = clazz.get("name")
-                    if not filename or not clazz_name:
+            # adding sorts and de-duplicates the schema list, so run it whenever
+            # --add is given, even when there are no new schemas to implement
+            if add:
+                filename = clazz.get("filename")
+                clazz_name = clazz.get("name")
+                if not filename or not clazz_name:
+                    if schemas_to_implement:
                         print(f"Class name or filename for class {cls} not known")
                         sys.exit(1)
-
-                    print(f"Adding schemas to {cls}")
+                else:
                     added = self.add_schema_to_class(clazz_name, filename, schemas_to_implement, dry_run)
                     schemas_added += added
             schemas_suggested += len(schemas_to_implement)
@@ -4195,13 +4220,15 @@ class OpenApi:
                     for path in sorted(verb_paths):
                         print(f"- {verb.upper()} {path}")
 
-                if add and schemas_to_implement:
-                    filename = clazz.get("filename")
-                    if not filename:
+            # adding sorts and de-duplicates the schema list, so run it whenever
+            # --add is given, even when there are no new schemas to implement
+            if add:
+                filename = clazz.get("filename")
+                if not filename:
+                    if schemas_to_implement:
                         print(f"Filename for class {cls} not known")
                         sys.exit(1)
-
-                    print(f"Adding schemas to {cls}")
+                else:
                     added = self.add_schema_to_class(cls, filename, schemas_to_implement, dry_run)
                     schemas_added += added
             schemas_suggested += len(schemas_to_implement)
