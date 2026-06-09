@@ -166,9 +166,8 @@ def as_python_type(
                 for class_name in classes:
                     if class_name not in classes:
                         print(f"Class not found in index: {class_name}")
-            return PythonType(
-                type="union",
-                inner_types=[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes],
+            return PythonType.union(
+                *[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes]
             )
         if collect_new_schemas is not None:
             if schema.split("/")[-1].startswith("_"):
