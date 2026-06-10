@@ -117,8 +117,12 @@ class Cli(unittest.TestCase):
                 os.unlink(after_path)
             os.symlink(Path(test, "run"), after_path, target_is_directory=True)
 
+            remove_file_timestamps = (
+                "sed -E -e 's/^([-+]{3} .*\\s)[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+ \\+0000/\\1YYYY-MM-DD HH:MM:SS +0000/'"
+                ""
+            )
             execute(
-                f"cd {self.tests_path}; env LANG=en_US.UTF-8 diff --recursive --new-file '{before_path.relative_to(self.tests_path)}' '{after_path.relative_to(self.tests_path)}' >'{actual_diff}' 2>&1 || true"
+                f"cd {self.tests_path}; env LANG=en_US.UTF-8 TZ=UTC diff --unified --recursive --new-file '{before_path.relative_to(self.tests_path)}' '{after_path.relative_to(self.tests_path)}' | {remove_file_timestamps} >'{actual_diff}' 2>&1 || true"
             )
 
             os.unlink(before_path)
