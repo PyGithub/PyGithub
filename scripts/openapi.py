@@ -4400,7 +4400,7 @@ class OpenApi:
         self.write_code(orig_source, source, clazz.filename, dry_run=False)
 
         if tests:
-            attr_name = re.sub("[a-z]", "", class_name).lower()
+            attr_name = re.sub("[a-z]", "", clazz.name).lower()
             if filename and Path(clazz.test_filename).exists():
                 # read original source
                 with open(clazz.test_filename) as r:
