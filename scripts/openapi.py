@@ -452,11 +452,45 @@ class GithubClass:
                 )
 
 
+# readable Python words for characters that are not allowed in Python identifiers
+_PROPERTY_NAME_SPECIAL_CHARS = {"+": "plus", "-": "minus", "1": "one"}
+
+
+def to_python_name(name: str) -> str:
+    """
+    Turn an OpenAPI property name into a valid Python identifier.
+
+    Names that already are valid identifiers are returned unchanged. Names with characters that are
+    not allowed in Python identifiers (e.g. the reaction rollup properties ``+1`` and ``-1``) are
+    translated: known special characters become readable words (``+`` -> ``plus``, ``1`` -> ``one``)
+    and any other invalid character becomes an underscore. So ``+1`` becomes ``plus_one``.
+
+    """
+    if name.isidentifier():
+        return name
+    result = name
+    for char, word in _PROPERTY_NAME_SPECIAL_CHARS.items():
+        result = result.replace(char, f"_{word}_")
+    # replace any remaining invalid characters and collapse / strip underscores
+    result = re.sub(r"\W", "_", result)
+    result = re.sub(r"_+", "_", result).strip("_")
+    # a valid identifier must not start with a digit
+    if result and result[0].isdigit():
+        result = f"_{result}"
+    return result
+
+
 @dataclasses.dataclass(frozen=True)
 class Property:
     name: str
     data_type: PythonType | GithubClass | None
     deprecated: bool
+    # the Python identifier for this property; defaults to a sanitized version of name
+    python_name: str = None  # type: ignore[assignment]
+
+    def __post_init__(self) -> None:
+        if self.python_name is None:
+            object.__setattr__(self, "python_name", to_python_name(self.name))
 
     @staticmethod
     def from_tuples(properties: dict[str, (PythonType | GithubClass | None, bool)]) -> list[Property]:
@@ -1243,7 +1277,7 @@ class ApplySchemaBaseTransformer(CstTransformerBase, abc.ABC):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
-        self.properties = sorted(properties, key=lambda p: p.name)
+        self.properties = sorted(properties, key=lambda p: p.python_name)
         self.all_properties = self.properties.copy()
         self.deprecate = deprecate
 
@@ -1435,7 +1469,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         if updated_node.name.value == "_useAttributes":
             while self.current_property:
                 prop = self.properties.pop(0)
-                node = self.create_property_function(prop.name, prop.data_type, prop.deprecated)
+                node = self.create_property_function(prop.python_name, prop.data_type, prop.deprecated)
                 nodes.append(cst.EmptyLine(indent=False))
                 nodes.append(node)
             nodes.append(self.update_use_attrs(updated_node))
@@ -1445,24 +1479,24 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
         while self.current_property and (
             updated_node_is_github_object_property
-            and self.current_property.name < updated_node.name.value
+            and self.current_property.python_name < updated_node.name.value
             or not updated_node_is_github_object_property
         ):
             prop = self.properties.pop(0)
-            node = self.create_property_function(prop.name, prop.data_type, prop.deprecated)
+            node = self.create_property_function(prop.python_name, prop.data_type, prop.deprecated)
             nodes.append(cst.EmptyLine(indent=False))
             nodes.append(node)
 
         if updated_node_is_github_object_property:
             if (
                 not self.current_property
-                or updated_node.name.value != self.current_property.name
+                or updated_node.name.value != self.current_property.python_name
                 or self.current_property.deprecated
             ):
                 nodes.append(self.deprecate_function(updated_node) if self.deprecate else updated_node)
             else:
                 nodes.append(updated_node)
-            if self.current_property and updated_node.name.value == self.current_property.name:
+            if self.current_property and updated_node.name.value == self.current_property.python_name:
                 self.properties.pop(0)
         else:
             nodes.append(updated_node)
@@ -1500,7 +1534,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
     def create_init_attr(cls, prop: Property) -> cst.SimpleStatementLine:
         # we need to make the 'headers' attribute truly private,
         # otherwise it conflicts with GithubObject._headers
-        attr_name = f"__{prop.name}" if prop.name == "headers" else f"_{prop.name}"
+        attr_name = f"__{prop.python_name}" if prop.python_name == "headers" else f"_{prop.python_name}"
         return cst.SimpleStatementLine(
             [
                 cst.AnnAssign(
@@ -1642,7 +1676,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
     def create_use_attr(cls, prop: Property) -> cst.BaseStatement:
         # we need to make the 'headers' attribute truly private,
         # otherwise it conflicts with GithubObject._headers
-        attr_name = f"__{prop.name}" if prop.name == "headers" else f"_{prop.name}"
+        attr_name = f"__{prop.python_name}" if prop.python_name == "headers" else f"_{prop.python_name}"
         return cst.If(
             test=cst.Comparison(
                 left=cst.SimpleString(f'"{prop.name}"'),
@@ -1819,7 +1853,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 and isinstance(prop.data_type.inner_types[0], GithubClass)
                 and prop.data_type.inner_types[0].ids
             ):
-                prop = dataclasses.replace(prop, name=f"{prop.name}[0]", data_type=prop.data_type.inner_types[0])
+                prop = dataclasses.replace(
+                    prop, python_name=f"{prop.python_name}[0]", data_type=prop.data_type.inner_types[0]
+                )
 
             if (
                 isinstance(prop.data_type, GithubClass)
@@ -1853,7 +1889,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                                     args=[
                                         cst.Arg(
                                             self.create_attribute(
-                                                (["self"] if self_attribute else []) + [attribute, prop.name, id]
+                                                (["self"] if self_attribute else []) + [attribute, prop.python_name, id]
                                             )
                                         ),
                                         cst.Arg(cst.SimpleString('""')),
@@ -1870,7 +1906,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                             func=self.create_attribute(["self", "assertEqual"]),
                             args=[
                                 cst.Arg(
-                                    self.create_attribute((["self"] if self_attribute else []) + [attribute, prop.name])
+                                    self.create_attribute(
+                                        (["self"] if self_attribute else []) + [attribute, prop.python_name]
+                                    )
                                 ),
                                 cst.Arg(self.get_value(prop.data_type)),
                             ],
@@ -1942,7 +1980,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             }
 
             # we can remove all properties that already exist in the test file
-            self.properties = [property for property in self.properties if property.name not in existing_properties]
+            self.properties = [
+                property for property in self.properties if property.python_name not in existing_properties
+            ]
 
             i = 0
             stmts = list(updated_node.body.body)
@@ -1967,12 +2007,12 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
                 if len(attrs) >= 2 and attrs[0] == attribute:
                     asserted_property = attrs[1]
-                    while self.properties and self.properties[0].name < asserted_property:
+                    while self.properties and self.properties[0].python_name < asserted_property:
                         prop = self.properties.pop(0)
                         stmt = create_statement(prop, self_attribute)
                         stmts = stmts[:i] + [stmt] + stmts[i:]
                         i = i + 1
-                    if self.properties and self.properties[0].name == asserted_property:
+                    if self.properties and self.properties[0].python_name == asserted_property:
                         self.properties.pop(0)
                 i = i + 1
             while self.properties:
