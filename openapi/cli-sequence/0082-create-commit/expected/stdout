@@ -2,9 +2,9 @@
 Creating class github.Commit.Commit with parent github.GithubObject.CompletableGithubObjectWithPaginatedProperty in ./github/Commit.py
 Updating temporary index
 Indexing 8 Python files
-Indexed 16 classes
+Indexed 17 classes
 Indexed 4 paths
-Indexed 21 schemas
+Indexed 22 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Commit
@@ -209,9 +209,9 @@ Test tests/Commit.py changed
 Creating class github.Commit.Commit with parent github.GithubObject.CompletableGithubObjectWithPaginatedProperty in ./github/Commit.py
 Updating index
 Indexing 8 Python files
-Indexed 16 classes
+Indexed 17 classes
 Indexed 4 paths
-Indexed 21 schemas
+Indexed 22 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Commit
@@ -224,9 +224,9 @@ Class Commit changed
 Test tests/Commit.py changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 8 Python files
-Indexed 16 classes
+Indexed 17 classes
 Indexed 4 paths
-Indexed 21 schemas
+Indexed 22 schemas
 Indexing OpenAPI spec
 + python scripts/openapi.py --dry-run apply properties --tests github openapi.spec.json openapi.index Commit
 Using spec openapi.spec.json
@@ -314,7 +314,7 @@ Class Commit changed
 Test tests/Commit.py changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 8 Python files
-Indexed 16 classes
+Indexed 17 classes
 Indexed 4 paths
-Indexed 21 schemas
+Indexed 22 schemas
 Indexing OpenAPI spec

@@ -31,15 +31,15 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "Reaction"
 >           ]
 >         },
-1402a1414,1416
+1470a1482,1484
 >         ],
 >         "post": [
 >           "IssueComment.create_reaction"
-1409a1424,1426
+1477a1492,1494
 >         ],
 >         "post": [
 >           "Reaction"
-2055a2073,2083
+2126a2144,2154
 >             ]
 >           }
 >         ]

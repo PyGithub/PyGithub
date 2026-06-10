@@ -351,32 +351,32 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "test_filename": "tests/Items.py"
 >     },
-4663a4865
+4726a4928
 >         "CommitSearchResult",
-4669a4872
+4732a4935
 >         "Items",
-4679a4883,4885
+4743a4947,4949
 >       "Commit": [
 >         "CommitSearchResult"
 >       ],
-4681a4888
+4745a4952
 >         "CommitSearchResult",
-4688c4895,4896
+4753c4960,4961
 <         "Commit"
 ---
 >         "Commit",
 >         "CommitSearchResult"
-4691a4900
+4756a4965
 >         "CommitSearchResult",
-4696a4906
+4761a4971
 >         "Items",
-4704a4915
+4773a4984
 >         "Items",
-5386a5598,5600
+5455a5667,5669
 >       "/components/schemas/commit-search-result-item": [
 >         "CommitSearchResult"
 >       ],
-5434a5649,5651
+5503a5718,5720
 >       ],
 >       "/components/schemas/search-result-text-matches/items": [
 >         "Items"

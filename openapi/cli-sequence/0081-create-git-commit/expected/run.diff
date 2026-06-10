@@ -410,25 +410,25 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "test_filename": "tests/GitCommit.py"
 >     },
-3891a4185
+3954a4248
 >         "GitCommit",
-3913a4208
+3978a4273
 >         "GitCommit",
-3921a4217
+3990a4286
 >         "GitCommit",
-4600a4897,4899
+4669a4966,4968
 >       "/components/schemas/commit-search-result-item/properties/commit": [
 >         "GitCommit"
 >       ],
-4603a4903,4905
+4672a4972,4974
 >       "/components/schemas/commit/properties/commit": [
 >         "GitCommit"
 >       ],
-4615a4918,4920
+4684a4987,4989
 >       "/components/schemas/nullable-simple-commit": [
 >         "GitCommit"
 >       ],
-4632a4938,4940
+4701a5007,5009
 >       ],
 >       "/components/schemas/simple-commit": [
 >         "GitCommit"

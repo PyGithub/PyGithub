@@ -152,7 +152,7 @@ Class Commit changed
 Test tests/Commit.py changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 8 Python files
-Indexed 16 classes
+Indexed 17 classes
 Indexed 4 paths
-Indexed 21 schemas
+Indexed 22 schemas
 Indexing OpenAPI spec

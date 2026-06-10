@@ -15,7 +15,7 @@ diff --recursive --new-file before/github/Repository.py after/github/Repository.
 >         if "owner" in attributes:  # pragma no branch
 >             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
 diff --recursive --new-file before/openapi.index after/openapi.index
-2546a2547,2560
+2609a2610,2623
 >         "owner": {
 >           "name": "owner",
 >           "returns": [

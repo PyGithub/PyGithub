@@ -2,9 +2,9 @@
 Creating class github.GitCommit.GitCommit with parent github.GithubObject.NonCompletableGithubObject in ./github/GitCommit.py
 Updating temporary index
 Indexing 7 Python files
-Indexed 15 classes
+Indexed 16 classes
 Indexed 4 paths
-Indexed 18 schemas
+Indexed 19 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class GitCommit
@@ -186,9 +186,9 @@ Test tests/GitCommit.py changed
 Creating class github.GitCommit.GitCommit with parent github.GithubObject.NonCompletableGithubObject in ./github/GitCommit.py
 Updating index
 Indexing 7 Python files
-Indexed 15 classes
+Indexed 16 classes
 Indexed 4 paths
-Indexed 18 schemas
+Indexed 19 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class GitCommit
@@ -201,7 +201,7 @@ Class GitCommit changed
 Test tests/GitCommit.py changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 7 Python files
-Indexed 15 classes
+Indexed 16 classes
 Indexed 4 paths
-Indexed 18 schemas
+Indexed 19 schemas
 Indexing OpenAPI spec

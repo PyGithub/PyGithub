@@ -518,27 +518,27 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "test_filename": "tests/Commit.py"
 >     },
-4181a4553
+4244a4616
 >         "Commit",
-4198a4571
+4262a4635
 >         "Commit",
-4203a4577,4579
+4268a4642,4644
 >       "CompletableGithubObjectWithPaginatedProperty": [
 >         "Commit"
 >       ],
-4204a4581
+4269a4646
 >         "Commit",
-4896a5274,5276
+4965a5343,5345
 >       "/components/schemas/commit": [
 >         "Commit"
 >       ],
-4897a5278
+4966a5347
 >         "Commit",
-4902a5284,5286
+4971a5353,5355
 >       "/components/schemas/commit-search-result-item/properties/parents/items": [
 >         "Commit"
 >       ],
-4904a5289,5291
+4973a5358,5360
 >       ],
 >       "/components/schemas/commit/properties/parents/items": [
 >         "Commit"

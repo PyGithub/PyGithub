@@ -28,9 +28,9 @@ Drafting class Reaction for new schema /components/schemas/reaction
 Creating class github.Reaction.Reaction with parent github.GithubObject.NonCompletableGithubObject in ./github/Reaction.py
 Updating index
 Indexing 4 Python files
-Indexed 12 classes
+Indexed 13 classes
 Indexed 0 paths
-Indexed 4 schemas
+Indexed 5 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Reaction
@@ -39,15 +39,15 @@ Applying schema /components/schemas/reaction
 Class Reaction changed
 Test tests/Reaction.py changed
 Indexing 4 Python files
-Indexed 12 classes
+Indexed 13 classes
 Indexed 0 paths
-Indexed 4 schemas
+Indexed 5 schemas
 Indexing OpenAPI spec
 Updating index
 Indexing 4 Python files
-Indexed 12 classes
+Indexed 13 classes
 Indexed 1 paths
-Indexed 4 schemas
+Indexed 5 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class IssueComment
@@ -56,7 +56,7 @@ Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/Issu
 Class IssueComment changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 4 Python files
-Indexed 12 classes
+Indexed 13 classes
 Indexed 1 paths
-Indexed 4 schemas
+Indexed 5 schemas
 Indexing OpenAPI spec

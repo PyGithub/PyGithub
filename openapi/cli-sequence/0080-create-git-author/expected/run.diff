@@ -206,17 +206,17 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "test_filename": "tests/GitAuthor.py"
 >     },
-3766a3891
+3829a3954
 >         "GitAuthor",
-3787a3913
+3852a3978
 >         "GitAuthor",
-3794a3921
+3863a3990
 >         "GitAuthor",
-4473a4601,4603
+4542a4670,4672
 >       "/components/schemas/commit-search-result-item/properties/commit/properties/author": [
 >         "GitAuthor"
 >       ],
-4482a4613,4621
+4551a4682,4690
 >       "/components/schemas/nullable-git-user": [
 >         "GitAuthor"
 >       ],
@@ -226,7 +226,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       "/components/schemas/nullable-simple-commit/properties/committer": [
 >         "GitAuthor"
 >       ],
-4493a4633,4638
+4562a4702,4707
 >       ],
 >       "/components/schemas/simple-commit/properties/author": [
 >         "GitAuthor"

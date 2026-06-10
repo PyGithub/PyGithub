@@ -2,9 +2,9 @@
 Creating class github.GitAuthor.GitAuthor with parent github.GithubObject.NonCompletableGithubObject in ./github/GitAuthor.py
 Updating temporary index
 Indexing 6 Python files
-Indexed 14 classes
+Indexed 15 classes
 Indexed 4 paths
-Indexed 14 schemas
+Indexed 15 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class GitAuthor
@@ -148,9 +148,9 @@ Test tests/GitAuthor.py changed
 Creating class github.GitAuthor.GitAuthor with parent github.GithubObject.NonCompletableGithubObject in ./github/GitAuthor.py
 Updating index
 Indexing 6 Python files
-Indexed 14 classes
+Indexed 15 classes
 Indexed 4 paths
-Indexed 14 schemas
+Indexed 15 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class GitAuthor
@@ -165,7 +165,7 @@ Class GitAuthor changed
 Test tests/GitAuthor.py changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 6 Python files
-Indexed 14 classes
+Indexed 15 classes
 Indexed 4 paths
-Indexed 14 schemas
+Indexed 15 schemas
 Indexing OpenAPI spec

@@ -1,6 +1,6 @@
 + python scripts/openapi.py --dry-run apply properties --tests github openapi.spec.json openapi.index
 Using spec openapi.spec.json
-Applying API schemas to 13 PyGithub classes
+Applying API schemas to 14 PyGithub classes
 Applying spec openapi.spec.json to github.GithubObject.Attribute (github/GithubObject.py)
 Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObject (github/GithubObject.py)
 Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObjectWithPaginatedProperty (github/GithubObject.py)
@@ -24,6 +24,12 @@ Diff:
 Diff:
 
 Applying schema /components/schemas/simple-user
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.NamedUser.NamedUserSearchResult (github/NamedUser.py)
+Applying schema /components/schemas/user-search-result-item
 Diff:
 
 Diff:
@@ -333,7 +339,7 @@ Applying spec openapi.spec.json to github.GithubObject._NotSetType (github/Githu
 Applying spec openapi.spec.json to github.GithubObject._ValuedAttribute (github/GithubObject.py)
 + python scripts/openapi.py apply properties --tests github openapi.spec.json openapi.index
 Using spec openapi.spec.json
-Applying API schemas to 13 PyGithub classes
+Applying API schemas to 14 PyGithub classes
 Applying spec openapi.spec.json to github.GithubObject.Attribute (github/GithubObject.py)
 Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObject (github/GithubObject.py)
 Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObjectWithPaginatedProperty (github/GithubObject.py)
@@ -348,6 +354,10 @@ Applying schema /components/schemas/nullable-simple-user
 Applying schema /components/schemas/public-user
 Applying schema /components/schemas/simple-user
 Class NamedUser changed
+Test tests/NamedUser.py changed
+Applying spec openapi.spec.json to github.NamedUser.NamedUserSearchResult (github/NamedUser.py)
+Applying schema /components/schemas/user-search-result-item
+Class NamedUserSearchResult changed
 Test tests/NamedUser.py changed
 Applying spec openapi.spec.json to github.GithubObject.NonCompletableGithubObject (github/GithubObject.py)
 Applying spec openapi.spec.json to github.Reaction.Reaction (github/Reaction.py)
@@ -365,7 +375,7 @@ Applying spec openapi.spec.json to github.GithubObject._NotSetType (github/Githu
 Applying spec openapi.spec.json to github.GithubObject._ValuedAttribute (github/GithubObject.py)
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 5 Python files
-Indexed 13 classes
+Indexed 14 classes
 Indexed 4 paths
-Indexed 8 schemas
+Indexed 9 schemas
 Indexing OpenAPI spec

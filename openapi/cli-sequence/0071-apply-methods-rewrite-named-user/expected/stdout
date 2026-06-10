@@ -38,11 +38,10 @@ Diff:
 +        Lists public repositories for the specified user.
 +
          :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
--        """
 +        :param type: Limit results to repositories of the specified type.
 +        :param sort: The property to sort the results by.
 +        :param direction: The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.
-+        """
+         """
 +        assert is_optional(type, str), type
 +        assert is_optional(sort, str), sort
 +        assert is_optional(direction, str), direction
@@ -66,10 +65,9 @@ Diff:
      @openapi_parameter(name="owner", input=True, docstring_prepend='- "{owner}": ')
      @openapi_parameter(name="repo", input=True, docstring_prepend='- "{repo}": ')
 -    def get_repo(self, name: str) -> Repository:
--        """
--        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
 +    def get_repo(self, name: str) -> dict[str, Any]:
-+        """
+         """
+-        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
 +        Get a repository
 +
 +        The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.
@@ -91,11 +89,9 @@ Diff:
          sort: Opt[str] = NotSet,
          direction: Opt[str] = NotSet,
 -    ) -> PaginatedList[Repository]:
--        """
--        :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
--        """
 +    ) -> PaginatedList[dict[str, Any]]:
-+        """
+         """
+-        :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
 +        List repositories for a user
 +
 +        Lists public repositories for the specified user.
@@ -104,7 +100,7 @@ Diff:
 +        :param type: Limit results to repositories of the specified type.
 +        :param sort: The property to sort the results by.
 +        :param direction: The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.
-+        """
+         """
 +        assert is_optional(type, str), type
 +        assert is_optional(sort, str), sort
 +        assert is_optional(direction, str), direction
@@ -130,7 +126,7 @@ Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.
 Class NamedUser changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 5 Python files
-Indexed 13 classes
+Indexed 14 classes
 Indexed 4 paths
-Indexed 6 schemas
+Indexed 7 schemas
 Indexing OpenAPI spec

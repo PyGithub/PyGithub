@@ -66,7 +66,7 @@ diff --recursive --new-file before/github/Repository.py after/github/Repository.
 >         if "subscribers_count" in attributes:  # pragma no branch
 >             self._subscribers_count = self._makeIntAttribute(attributes["subscribers_count"])
 diff --recursive --new-file before/openapi.index after/openapi.index
-2850a2851,2866
+2913a2914,2929
 >         "network_count": {
 >           "name": "network_count",
 >           "returns": [
@@ -83,7 +83,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             }
 >           }
 >         },
-2937a2954,2967
+3000a3017,3030
 >         "organization": {
 >           "name": "organization",
 >           "returns": [
@@ -98,7 +98,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             }
 >           }
 >         },
-2957a2988,3001
+3020a3051,3064
 >         "parent": {
 >           "name": "parent",
 >           "returns": [
@@ -113,7 +113,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             }
 >           }
 >         },
-3051a3096,3111
+3114a3159,3174
 >         "role_name": {
 >           "name": "role_name",
 >           "returns": [
@@ -130,7 +130,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             }
 >           }
 >         },
-3074a3135,3148
+3137a3198,3211
 >         "source": {
 >           "name": "source",
 >           "returns": [
@@ -145,7 +145,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             }
 >           }
 >         },
-3233a3308,3323
+3296a3371,3386
 >             }
 >           }
 >         },

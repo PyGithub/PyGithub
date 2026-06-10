@@ -235,7 +235,9 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             },
 1047a1089
 >         "/components/schemas/nullable-simple-user",
-1819a1862,1864
+1067a1110
+>         "/components/schemas/nullable-simple-user",
+1886a1930,1932
 >       ],
 >       "/components/schemas/nullable-simple-user": [
 >         "NamedUser"

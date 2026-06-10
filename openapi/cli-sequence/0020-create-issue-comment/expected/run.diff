@@ -392,13 +392,13 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "test_filename": "tests/IssueComment.py"
 >     },
-937a1168
+998a1229
 >         "IssueComment",
-947a1179
+1009a1241
 >         "IssueComment",
-952a1185
+1015a1248
 >         "IssueComment",
-1584a1818,1820
+1651a1885,1887
 >       "/components/schemas/issue-comment": [
 >         "IssueComment"
 >       ],

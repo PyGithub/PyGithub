@@ -2,9 +2,9 @@
 Creating class github.CommitSearchResult.CommitSearchResult with parent github.Commit.Commit in ./github/Commit.py
 Updating temporary index
 Indexing 8 Python files
-Indexed 17 classes
+Indexed 18 classes
 Indexed 4 paths
-Indexed 22 schemas
+Indexed 23 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class CommitSearchResult
@@ -128,9 +128,9 @@ Diff:
 Creating class github.CommitSearchResult.CommitSearchResult with parent github.Commit.Commit in ./github/Commit.py
 Updating index
 Indexing 8 Python files
-Indexed 17 classes
+Indexed 18 classes
 Indexed 4 paths
-Indexed 22 schemas
+Indexed 23 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class CommitSearchResult
@@ -140,9 +140,9 @@ Drafting class Items for new schema /components/schemas/search-result-text-match
 Creating class github.Items.Items with parent github.GithubObject.NonCompletableGithubObject in ./github/Items.py
 Updating index
 Indexing 9 Python files
-Indexed 18 classes
+Indexed 19 classes
 Indexed 4 paths
-Indexed 23 schemas
+Indexed 24 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Items
@@ -151,15 +151,15 @@ Applying schema /components/schemas/search-result-text-matches/items
 Class Items changed
 Test tests/Items.py changed
 Indexing 9 Python files
-Indexed 18 classes
+Indexed 19 classes
 Indexed 4 paths
-Indexed 23 schemas
+Indexed 24 schemas
 Indexing OpenAPI spec
 Class CommitSearchResult changed
 Test tests/Commit.py changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 9 Python files
-Indexed 18 classes
+Indexed 19 classes
 Indexed 4 paths
-Indexed 23 schemas
+Indexed 24 schemas
 Indexing OpenAPI spec

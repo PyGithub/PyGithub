@@ -2,9 +2,9 @@
 Creating class github.IssueComment.IssueComment with parent github.GithubObject.CompletableGithubObject in ./github/IssueComment.py
 Updating temporary index
 Indexing 3 Python files
-Indexed 11 classes
+Indexed 12 classes
 Indexed 0 paths
-Indexed 2 schemas
+Indexed 3 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class IssueComment
@@ -234,9 +234,9 @@ Test tests/IssueComment.py changed
 Creating class github.IssueComment.IssueComment with parent github.GithubObject.CompletableGithubObject in ./github/IssueComment.py
 Updating index
 Indexing 3 Python files
-Indexed 11 classes
+Indexed 12 classes
 Indexed 0 paths
-Indexed 2 schemas
+Indexed 3 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class IssueComment
@@ -246,7 +246,7 @@ Class IssueComment changed
 Test tests/IssueComment.py changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 3 Python files
-Indexed 11 classes
+Indexed 12 classes
 Indexed 0 paths
-Indexed 2 schemas
+Indexed 3 schemas
 Indexing OpenAPI spec

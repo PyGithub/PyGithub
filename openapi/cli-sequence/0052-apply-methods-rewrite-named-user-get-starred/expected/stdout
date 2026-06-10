@@ -20,7 +20,7 @@ Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.
 Class NamedUser changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 5 Python files
-Indexed 13 classes
+Indexed 14 classes
 Indexed 2 paths
-Indexed 5 schemas
+Indexed 6 schemas
 Indexing OpenAPI spec

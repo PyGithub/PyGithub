@@ -16,19 +16,19 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <             "PaginatedList[dict[str, Any]]"
 ---
 >             "PaginatedList[Repository]"
-3742c3742
+3811c3811
 <           "dict[str, Any]"
 ---
 >           "Repository"
-3755c3755
+3824c3824
 <           "PaginatedList[dict[str, Any]]"
 ---
 >           "PaginatedList[Repository]"
-4418c4418
+4490c4490
 <               "dict[str, Any]"
 ---
 >               "Repository"
-4455c4455
+4527c4527
 <               "PaginatedList[dict[str, Any]]"
 ---
 >               "PaginatedList[Repository]"

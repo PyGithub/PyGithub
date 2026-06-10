@@ -2,7 +2,7 @@
 patching file github/NamedUser.py
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 5 Python files
-Indexed 13 classes
+Indexed 14 classes
 Indexed 2 paths
-Indexed 6 schemas
+Indexed 7 schemas
 Indexing OpenAPI spec

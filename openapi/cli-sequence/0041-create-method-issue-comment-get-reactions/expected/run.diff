@@ -128,7 +128,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >           ]
 >         }
 >       },
-1130a1143,1270
+1192a1205,1332
 >     "Reaction": {
 >       "bases": [
 >         "NonCompletableGithubObject"
@@ -257,20 +257,21 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "test_filename": "tests/Reaction.py"
 >     },
-1228c1368,1369
+1291c1431,1432
 <         "NonCompletableGithubObject"
 ---
 >         "NonCompletableGithubObject",
 >         "Reaction"
-1245c1386,1390
+1310c1451,1452
 <         "NonCompletableGithubObject"
 ---
 >         "NonCompletableGithubObject",
 >         "Reaction"
->       ],
+1314a1457,1459
 >       "NonCompletableGithubObject": [
 >         "Reaction"
-1254,1255c1399,1412
+>       ],
+1322,1323c1467,1480
 <     "path_to_call_methods": {},
 <     "path_to_return_classes": {},
 ---
@@ -288,11 +289,11 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >         ]
 >       }
 >     },
-1883a2041,2043
->       ],
+1952a2110,2112
 >       "/components/schemas/reaction": [
 >         "Reaction"
-1887c2047,2061
+>       ],
+1958c2118,2132
 <   "paths": {},
 ---
 >   "paths": {

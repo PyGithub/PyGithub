@@ -3,11 +3,11 @@ diff --recursive --new-file before/github/Repository.py after/github/Repository.
 >     - /components/schemas/full-repository
 >     - /components/schemas/minimal-repository
 diff --recursive --new-file before/openapi.index after/openapi.index
-1413c1413
+1476c1476
 <       "docstring": "This class represents Repository.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/repos\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/repository",
 ---
 >       "docstring": "This class represents Repository.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/repos\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/full-repository\n    - /components/schemas/minimal-repository\n    - /components/schemas/repository",
-1434,1439c1434
+1497,1502c1497
 <           "schema": {
 <             "default": false,
 <             "description": "Whether to allow Auto-merge to be used on pull requests.",
@@ -16,19 +16,19 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1440a1436,1439
+1503a1499,1502
 >             "/components/schemas/full-repository": {
 >               "example": false,
 >               "type": "boolean"
 >             },
-1454,1457c1453
+1517,1520c1516
 <           "schema": {
 <             "description": "Whether to allow forking this repo",
 <             "type": "boolean"
 <           },
 ---
 >           "schema": null,
-1458a1455,1461
+1521a1518,1524
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
@@ -36,7 +36,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-1470,1475c1473
+1533,1538c1536
 <           "schema": {
 <             "default": true,
 <             "description": "Whether to allow merge commits for pull requests.",
@@ -45,12 +45,12 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1476a1475,1478
+1539a1538,1541
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
 >             },
-1490,1495c1492
+1553,1558c1555
 <           "schema": {
 <             "default": true,
 <             "description": "Whether to allow rebase merges for pull requests.",
@@ -59,12 +59,12 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1496a1494,1497
+1559a1557,1560
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
 >             },
-1510,1515c1511
+1573,1578c1574
 <           "schema": {
 <             "default": true,
 <             "description": "Whether to allow squash merges for pull requests.",
@@ -73,12 +73,12 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1516a1513,1516
+1579a1576,1579
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
 >             },
-1530,1535c1530
+1593,1598c1593
 <           "schema": {
 <             "default": false,
 <             "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
@@ -87,25 +87,25 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1536a1532,1535
+1599a1595,1598
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
 >             },
-1550,1553c1549
+1613,1616c1612
 <           "schema": {
 <             "description": "Whether anonymous git access is enabled for this repository",
 <             "type": "boolean"
 <           },
 ---
 >           "schema": null,
-1554a1551,1555
+1617a1614,1618
 >             "/components/schemas/full-repository": {
 >               "default": true,
 >               "description": "Whether anonymous git access is allowed.",
 >               "type": "boolean"
 >             },
-1570a1572,1579
+1633a1635,1642
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
 >               "type": "string"
@@ -114,7 +114,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
 >               "type": "string"
 >             },
-1582,1586c1591
+1645,1649c1654
 <           "schema": {
 <             "default": false,
 <             "description": "Whether the repository is archived.",
@@ -122,14 +122,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1587a1593,1598
+1650a1656,1661
 >             "/components/schemas/full-repository": {
 >               "type": "boolean"
 >             },
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-1604a1616,1623
+1667a1679,1686
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}",
 >               "type": "string"
@@ -138,7 +138,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}",
 >               "type": "string"
 >             },
-1620a1640,1647
+1683a1703,1710
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
 >               "type": "string"
@@ -147,7 +147,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
 >               "type": "string"
 >             },
-1636a1664,1671
+1699a1727,1734
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}",
 >               "type": "string"
@@ -156,14 +156,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}",
 >               "type": "string"
 >             },
-1648,1651c1683
+1711,1714c1746
 <           "schema": {
 <             "example": "https://github.com/octocat/Hello-World.git",
 <             "type": "string"
 <           },
 ---
 >           "schema": null,
-1652a1685,1691
+1715a1748,1754
 >             "/components/schemas/full-repository": {
 >               "example": "https://github.com/octocat/Hello-World.git",
 >               "type": "string"
@@ -171,7 +171,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "string"
 >             },
-1668a1708,1715
+1731a1771,1778
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
 >               "type": "string"
@@ -180,7 +180,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
 >               "type": "string"
 >             },
-1684a1732,1739
+1747a1795,1802
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}",
 >               "type": "string"
@@ -189,7 +189,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}",
 >               "type": "string"
 >             },
-1700a1756,1763
+1763a1819,1826
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}",
 >               "type": "string"
@@ -198,7 +198,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}",
 >               "type": "string"
 >             },
-1716a1780,1787
+1779a1843,1850
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
 >               "type": "string"
@@ -207,7 +207,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
 >               "type": "string"
 >             },
-1732a1804,1811
+1795a1867,1874
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}",
 >               "type": "string"
@@ -216,7 +216,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}",
 >               "type": "string"
 >             },
-1749a1829,1838
+1812a1892,1901
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/contributors",
 >               "format": "uri",
@@ -227,7 +227,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-1762,1767c1851
+1825,1830c1914
 <           "schema": {
 <             "example": "2011-01-26T19:01:12Z",
 <             "format": "date-time",
@@ -236,7 +236,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1768a1853,1863
+1831a1916,1926
 >             "/components/schemas/full-repository": {
 >               "example": "2011-01-26T19:01:12Z",
 >               "format": "date-time",
@@ -248,7 +248,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "nullable": true,
 >               "type": "string"
 >             },
-1782,1786c1877
+1845,1849c1940
 <           "schema": {
 <             "description": "The default branch of the repository.",
 <             "example": "master",
@@ -256,7 +256,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1787a1879,1885
+1850a1942,1948
 >             "/components/schemas/full-repository": {
 >               "example": "master",
 >               "type": "string"
@@ -264,7 +264,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "string"
 >             },
-1800,1805c1898
+1863,1868c1961
 <           "schema": {
 <             "default": false,
 <             "description": "Whether to delete head branches when pull requests are merged",
@@ -273,7 +273,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-1806a1900,1906
+1869a1963,1969
 >             "/components/schemas/full-repository": {
 >               "example": false,
 >               "type": "boolean"
@@ -281,7 +281,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-1825a1926,1935
+1888a1989,1998
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/deployments",
 >               "format": "uri",
@@ -292,7 +292,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-1843a1954,1963
+1906a2017,2026
 >             "/components/schemas/full-repository": {
 >               "example": "This your first repo!",
 >               "nullable": true,
@@ -303,14 +303,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "nullable": true,
 >               "type": "string"
 >             },
-1856,1859c1976
+1919,1922c2039
 <           "schema": {
 <             "description": "Returns whether or not this repository disabled.",
 <             "type": "boolean"
 <           },
 ---
 >           "schema": null,
-1860a1978,1984
+1923a2041,2047
 >             "/components/schemas/full-repository": {
 >               "description": "Returns whether or not this repository disabled.",
 >               "type": "boolean"
@@ -318,7 +318,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-1877a2002,2011
+1940a2065,2074
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/downloads",
 >               "format": "uri",
@@ -329,7 +329,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-1895a2030,2039
+1958a2093,2102
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/events",
 >               "format": "uri",
@@ -340,20 +340,20 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-1911a2056,2061
+1974a2119,2124
 >             "/components/schemas/full-repository": {
 >               "type": "boolean"
 >             },
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-1922,1924c2072
+1985,1987c2135
 <           "schema": {
 <             "type": "integer"
 <           },
 ---
 >           "schema": null,
-1925a2074,2080
+1988a2137,2143
 >             "/components/schemas/full-repository": {
 >               "type": "integer"
 >             },
@@ -361,14 +361,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": 0,
 >               "type": "integer"
 >             },
-1936,1939c2091
+1999,2002c2154
 <           "schema": {
 <             "example": 9,
 <             "type": "integer"
 <           },
 ---
 >           "schema": null,
-1940a2093,2099
+2003a2156,2162
 >             "/components/schemas/full-repository": {
 >               "example": 9,
 >               "type": "integer"
@@ -376,7 +376,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "integer"
 >             },
-1957a2117,2126
+2020a2180,2189
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/forks",
 >               "format": "uri",
@@ -387,7 +387,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-1974a2144,2151
+2037a2207,2214
 >             "/components/schemas/full-repository": {
 >               "example": "octocat/Hello-World",
 >               "type": "string"
@@ -396,7 +396,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "octocat/Hello-World",
 >               "type": "string"
 >             },
-1990a2168,2175
+2053a2231,2238
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
 >               "type": "string"
@@ -405,7 +405,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
 >               "type": "string"
 >             },
-2006a2192,2199
+2069a2255,2262
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
 >               "type": "string"
@@ -414,7 +414,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
 >               "type": "string"
 >             },
-2022a2216,2223
+2085a2279,2286
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
 >               "type": "string"
@@ -423,14 +423,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
 >               "type": "string"
 >             },
-2034,2037c2235
+2097,2100c2298
 <           "schema": {
 <             "example": "git:github.com/octocat/Hello-World.git",
 <             "type": "string"
 <           },
 ---
 >           "schema": null,
-2038a2237,2243
+2101a2300,2306
 >             "/components/schemas/full-repository": {
 >               "example": "git:github.com/octocat/Hello-World.git",
 >               "type": "string"
@@ -438,7 +438,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "string"
 >             },
-2050,2055c2255
+2113,2118c2318
 <           "schema": {
 <             "default": false,
 <             "description": "Whether discussions are enabled.",
@@ -447,7 +447,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2056a2257,2263
+2119a2320,2326
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
@@ -455,7 +455,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2070,2076c2277
+2133,2139c2340
 <           "schema": {
 <             "default": true,
 <             "deprecated": true,
@@ -465,7 +465,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2077a2279,2285
+2140a2342,2348
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
@@ -473,7 +473,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2092,2097c2300
+2155,2160c2363
 <           "schema": {
 <             "default": true,
 <             "description": "Whether issues are enabled.",
@@ -482,7 +482,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2098a2302,2308
+2161a2365,2371
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
@@ -490,14 +490,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2115a2326,2331
+2178a2389,2394
 >             "/components/schemas/full-repository": {
 >               "type": "boolean"
 >             },
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2126,2131c2342
+2189,2194c2405
 <           "schema": {
 <             "default": true,
 <             "description": "Whether projects are enabled.",
@@ -506,7 +506,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2132a2344,2350
+2195a2407,2413
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
@@ -514,7 +514,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2146,2151c2364
+2209,2214c2427
 <           "schema": {
 <             "default": true,
 <             "description": "Whether the wiki is enabled.",
@@ -523,7 +523,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2152a2366,2372
+2215a2429,2435
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
@@ -531,7 +531,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2166,2171c2386
+2229,2234c2449
 <           "schema": {
 <             "example": "https://github.com",
 <             "format": "uri",
@@ -540,7 +540,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2172a2388,2397
+2235a2451,2460
 >             "/components/schemas/full-repository": {
 >               "example": "https://github.com",
 >               "format": "uri",
@@ -551,7 +551,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "nullable": true,
 >               "type": "string"
 >             },
-2191a2417,2426
+2254a2480,2489
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/hooks",
 >               "format": "uri",
@@ -562,7 +562,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2209a2445,2454
+2272a2508,2517
 >             "/components/schemas/full-repository": {
 >               "example": "https://github.com/octocat/Hello-World",
 >               "format": "uri",
@@ -573,7 +573,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2222,2227c2467
+2285,2290c2530
 <           "schema": {
 <             "description": "Unique identifier of the repository",
 <             "example": 42,
@@ -582,7 +582,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2228a2469,2478
+2291a2532,2541
 >             "/components/schemas/full-repository": {
 >               "example": 1296269,
 >               "format": "int64",
@@ -593,7 +593,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "int64",
 >               "type": "integer"
 >             },
-2242,2247c2492
+2305,2310c2555
 <           "schema": {
 <             "default": false,
 <             "description": "Whether this repository acts as a template that can be used to generate new repositories.",
@@ -602,7 +602,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2248a2494,2500
+2311a2557,2563
 >             "/components/schemas/full-repository": {
 >               "example": true,
 >               "type": "boolean"
@@ -610,7 +610,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2266a2519,2526
+2329a2582,2589
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
 >               "type": "string"
@@ -619,7 +619,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
 >               "type": "string"
 >             },
-2282a2543,2550
+2345a2606,2613
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
 >               "type": "string"
@@ -628,7 +628,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
 >               "type": "string"
 >             },
-2298a2567,2574
+2361a2630,2637
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}",
 >               "type": "string"
@@ -637,7 +637,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}",
 >               "type": "string"
 >             },
-2314a2591,2598
+2377a2654,2661
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
 >               "type": "string"
@@ -646,7 +646,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
 >               "type": "string"
 >             },
-2330a2615,2622
+2393a2678,2685
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}",
 >               "type": "string"
@@ -655,7 +655,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}",
 >               "type": "string"
 >             },
-2346a2639,2646
+2409a2702,2709
 >             "/components/schemas/full-repository": {
 >               "nullable": true,
 >               "type": "string"
@@ -664,7 +664,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "nullable": true,
 >               "type": "string"
 >             },
-2363a2664,2673
+2426a2727,2736
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/languages",
 >               "format": "uri",
@@ -675,11 +675,11 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2379a2690,2692
+2442a2753,2755
 >             "/components/schemas/full-repository": {
 >               "type": "string"
 >             },
-2390,2398c2703
+2453,2461c2766
 <           "schema": {
 <             "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message.",
 <             "enum": [
@@ -691,7 +691,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2399a2705,2714
+2462a2768,2777
 >             "/components/schemas/full-repository": {
 >               "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message.",
 >               "enum": [
@@ -702,7 +702,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "PR_BODY",
 >               "type": "string"
 >             },
-2416,2423c2731
+2479,2486c2794
 <           "schema": {
 <             "description": "The default value for a merge commit title.\n\n- `PR_TITLE` - default to the pull request's title.\n- `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).",
 <             "enum": [
@@ -713,7 +713,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2424a2733,2741
+2487a2796,2804
 >             "/components/schemas/full-repository": {
 >               "description": "The default value for a merge commit title.\n\n  - `PR_TITLE` - default to the pull request's title.\n  - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).",
 >               "enum": [
@@ -723,7 +723,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "PR_TITLE",
 >               "type": "string"
 >             },
-2445a2763,2772
+2508a2826,2835
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/merges",
 >               "format": "uri",
@@ -734,7 +734,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2462a2790,2797
+2525a2853,2860
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}",
 >               "type": "string"
@@ -743,7 +743,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}",
 >               "type": "string"
 >             },
-2474,2479c2809
+2537,2542c2872
 <           "schema": {
 <             "example": "git:git.example.com/octocat/Hello-World",
 <             "format": "uri",
@@ -752,7 +752,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2480a2811,2820
+2543a2874,2883
 >             "/components/schemas/full-repository": {
 >               "example": "git:git.example.com/octocat/Hello-World",
 >               "format": "uri",
@@ -763,7 +763,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "nullable": true,
 >               "type": "string"
 >             },
-2494,2498c2834
+2557,2561c2897
 <           "schema": {
 <             "description": "The name of the repository.",
 <             "example": "Team Environment",
@@ -771,7 +771,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2499a2836,2843
+2562a2899,2906
 >             "/components/schemas/full-repository": {
 >               "example": "Hello-World",
 >               "type": "string"
@@ -780,7 +780,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "Hello-World",
 >               "type": "string"
 >             },
-2516a2861,2868
+2579a2924,2931
 >             "/components/schemas/full-repository": {
 >               "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
 >               "type": "string"
@@ -789,7 +789,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
 >               "type": "string"
 >             },
-2532a2885,2892
+2595a2948,2955
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
 >               "type": "string"
@@ -798,13 +798,13 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
 >               "type": "string"
 >             },
-2544,2546c2904
+2607,2609c2967
 <           "schema": {
 <             "type": "integer"
 <           },
 ---
 >           "schema": null,
-2547a2906,2912
+2610a2969,2975
 >             "/components/schemas/full-repository": {
 >               "type": "integer"
 >             },
@@ -812,14 +812,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": 0,
 >               "type": "integer"
 >             },
-2558,2561c2923
+2621,2624c2986
 <           "schema": {
 <             "example": 0,
 <             "type": "integer"
 <           },
 ---
 >           "schema": null,
-2562a2925,2931
+2625a2988,2994
 >             "/components/schemas/full-repository": {
 >               "example": 0,
 >               "type": "integer"
@@ -827,14 +827,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "integer"
 >             },
-2577a2947,2952
+2640a3010,3015
 >             "/components/schemas/full-repository": {
 >               "$ref": "#/components/schemas/simple-user"
 >             },
 >             "/components/schemas/minimal-repository": {
 >               "$ref": "#/components/schemas/simple-user"
 >             },
-2588,2592c2963
+2651,2655c3026
 <           "schema": {
 <             "default": false,
 <             "description": "Whether the repository is private or public.",
@@ -842,14 +842,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2593a2965,2970
+2656a3028,3033
 >             "/components/schemas/full-repository": {
 >               "type": "boolean"
 >             },
 >             "/components/schemas/minimal-repository": {
 >               "type": "boolean"
 >             },
-2610a2988,2995
+2673a3051,3058
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}",
 >               "type": "string"
@@ -858,7 +858,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}",
 >               "type": "string"
 >             },
-2622,2627c3007
+2685,2690c3070
 <           "schema": {
 <             "example": "2011-01-26T19:06:43Z",
 <             "format": "date-time",
@@ -867,7 +867,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2628a3009,3019
+2691a3072,3082
 >             "/components/schemas/full-repository": {
 >               "example": "2011-01-26T19:06:43Z",
 >               "format": "date-time",
@@ -879,7 +879,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "nullable": true,
 >               "type": "string"
 >             },
-2646a3038,3045
+2709a3101,3108
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}",
 >               "type": "string"
@@ -888,7 +888,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}",
 >               "type": "string"
 >             },
-2658,2662c3057
+2721,2725c3120
 <           "schema": {
 <             "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
 <             "example": 108,
@@ -896,7 +896,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2663a3059,3067
+2726a3122,3130
 >             "/components/schemas/full-repository": {
 >               "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
 >               "example": 108,
@@ -906,7 +906,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
 >               "type": "integer"
 >             },
-2676,2684c3080
+2739,2747c3143
 <           "schema": {
 <             "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message.",
 <             "enum": [
@@ -918,7 +918,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2685a3082,3091
+2748a3145,3154
 >             "/components/schemas/full-repository": {
 >               "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message.",
 >               "enum": [
@@ -929,7 +929,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "PR_BODY",
 >               "type": "string"
 >             },
-2702,2709c3108
+2765,2772c3171
 <           "schema": {
 <             "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).",
 <             "enum": [
@@ -940,7 +940,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2710a3110,3118
+2773a3173,3181
 >             "/components/schemas/full-repository": {
 >               "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).",
 >               "enum": [
@@ -950,14 +950,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "PR_TITLE",
 >               "type": "string"
 >             },
-2726,2729c3134
+2789,2792c3197
 <           "schema": {
 <             "example": "git@github.com:octocat/Hello-World.git",
 <             "type": "string"
 <           },
 ---
 >           "schema": null,
-2730a3136,3142
+2793a3199,3205
 >             "/components/schemas/full-repository": {
 >               "example": "git@github.com:octocat/Hello-World.git",
 >               "type": "string"
@@ -965,14 +965,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "string"
 >             },
-2742,2745c3154
+2805,2808c3217
 <           "schema": {
 <             "example": 80,
 <             "type": "integer"
 <           },
 ---
 >           "schema": null,
-2746a3156,3162
+2809a3219,3225
 >             "/components/schemas/full-repository": {
 >               "example": 80,
 >               "type": "integer"
@@ -980,7 +980,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "integer"
 >             },
-2763a3180,3189
+2826a3243,3252
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/stargazers",
 >               "format": "uri",
@@ -991,7 +991,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2796a3223,3230
+2859a3286,3293
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
 >               "type": "string"
@@ -1000,7 +1000,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
 >               "type": "string"
 >             },
-2813a3248,3257
+2876a3311,3320
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/subscribers",
 >               "format": "uri",
@@ -1011,7 +1011,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2831a3276,3285
+2894a3339,3348
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/subscription",
 >               "format": "uri",
@@ -1022,7 +1022,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2844,2848c3298
+2907,2911c3361
 <           "schema": {
 <             "example": "https://svn.github.com/octocat/Hello-World",
 <             "format": "uri",
@@ -1030,7 +1030,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2849a3300,3307
+2912a3363,3370
 >             "/components/schemas/full-repository": {
 >               "example": "https://svn.github.com/octocat/Hello-World",
 >               "format": "uri",
@@ -1039,7 +1039,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "string"
 >             },
-2867a3326,3335
+2930a3389,3398
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/tags",
 >               "format": "uri",
@@ -1050,7 +1050,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2885a3354,3363
+2948a3417,3426
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/teams",
 >               "format": "uri",
@@ -1061,13 +1061,13 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "format": "uri",
 >               "type": "string"
 >             },
-2898,2900c3376
+2961,2963c3439
 <           "schema": {
 <             "type": "string"
 <           },
 ---
 >           "schema": null,
-2901a3378,3384
+2964a3441,3447
 >             "/components/schemas/full-repository": {
 >               "nullable": true,
 >               "type": "string"
@@ -1075,7 +1075,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "string"
 >             },
-2912,2917c3395
+2975,2980c3458
 <           "schema": {
 <             "items": {
 <               "type": "string"
@@ -1084,7 +1084,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2918a3397,3414
+2981a3460,3477
 >             "/components/schemas/full-repository": {
 >               "example": [
 >                 "octocat",
@@ -1103,7 +1103,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               },
 >               "type": "array"
 >             },
-2936a3433,3440
+2999a3496,3503
 >             "/components/schemas/full-repository": {
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
 >               "type": "string"
@@ -1112,7 +1112,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
 >               "type": "string"
 >             },
-2948,2953c3452
+3011,3016c3515
 <           "schema": {
 <             "example": "2011-01-26T19:14:43Z",
 <             "format": "date-time",
@@ -1121,7 +1121,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2954a3454,3464
+3017a3517,3527
 >             "/components/schemas/full-repository": {
 >               "example": "2011-01-26T19:14:43Z",
 >               "format": "date-time",
@@ -1133,7 +1133,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "nullable": true,
 >               "type": "string"
 >             },
-2968,2973c3478
+3031,3036c3541
 <           "schema": {
 <             "default": false,
 <             "deprecated": true,
@@ -1142,12 +1142,12 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2974a3480,3483
+3037a3543,3546
 >             "/components/schemas/full-repository": {
 >               "example": false,
 >               "type": "boolean"
 >             },
-2988,2992c3497
+3051,3055c3560
 <           "schema": {
 <             "default": "public",
 <             "description": "The repository visibility: public, private, or internal.",
@@ -1155,7 +1155,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-2993a3499,3506
+3056a3562,3569
 >             "/components/schemas/full-repository": {
 >               "description": "The repository visibility: public, private, or internal.",
 >               "example": "public",
@@ -1164,13 +1164,13 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "string"
 >             },
-3006,3008c3519
+3069,3071c3582
 <           "schema": {
 <             "type": "integer"
 <           },
 ---
 >           "schema": null,
-3009a3521,3527
+3072a3584,3590
 >             "/components/schemas/full-repository": {
 >               "type": "integer"
 >             },
@@ -1178,14 +1178,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": 0,
 >               "type": "integer"
 >             },
-3020,3023c3538
+3083,3086c3601
 <           "schema": {
 <             "example": 80,
 <             "type": "integer"
 <           },
 ---
 >           "schema": null,
-3024a3540,3546
+3087a3603,3609
 >             "/components/schemas/full-repository": {
 >               "example": 80,
 >               "type": "integer"
@@ -1193,7 +1193,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "/components/schemas/minimal-repository": {
 >               "type": "integer"
 >             },
-3036,3040c3558
+3099,3103c3621
 <           "schema": {
 <             "default": false,
 <             "description": "Whether to require contributors to sign off on web-based commits",
@@ -1201,7 +1201,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 <           },
 ---
 >           "schema": null,
-3041a3560,3567
+3104a3623,3630
 >             "/components/schemas/full-repository": {
 >               "example": false,
 >               "type": "boolean"
@@ -1210,14 +1210,14 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >               "example": false,
 >               "type": "boolean"
 >             },
-3050a3577,3578
+3113a3640,3641
 >         "/components/schemas/full-repository",
 >         "/components/schemas/minimal-repository",
-3855a4384,4386
+3924a4453,4455
 >       "/components/schemas/full-repository": [
 >         "Repository"
 >       ],
-3857a4389,4391
+3926a4458,4460
 >       ],
 >       "/components/schemas/minimal-repository": [
 >         "Repository"

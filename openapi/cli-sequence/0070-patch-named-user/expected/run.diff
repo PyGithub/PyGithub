@@ -80,31 +80,31 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >             "PaginatedList[Repository]"
 >           ]
 >         },
-3164a3187,3191
+3233a3256,3260
 >       "/repos/{owner}/{repo}": {
 >         "get": [
 >           "NamedUser.get_repo"
 >         ]
 >       },
-3172a3200,3204
+3241a3269,3273
 >       "/users/{username}/repos": {
 >         "get": [
 >           "NamedUser.get_repos"
 >         ]
 >       },
-3179a3212,3216
+3248a3281,3285
 >       "/repos/{owner}/{repo}": {
 >         "get": [
 >           "Repository"
 >         ]
 >       },
-3187a3225,3229
+3256a3294,3298
 >       "/users/{username}/repos": {
 >         "get": [
 >           "PaginatedList[Repository]"
 >         ]
 >       },
-3834a3877,3889
+3906a3949,3961
 >     "/repos/{owner}/{repo}": {
 >       "GET": {
 >         "methods": [
@@ -118,7 +118,7 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >         ]
 >       }
 >     },
-3853a3909,3921
+3925a3981,3993
 >             ]
 >           }
 >         ]

@@ -785,7 +785,7 @@ diff --recursive --new-file before/github/Repository.py after/github/Repository.
 >             self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
 > 
 diff --recursive --new-file before/openapi.index after/openapi.index
-1293a1294,2925
+1355a1356,2987
 >     "Repository": {
 >       "bases": [
 >         "CompletableGithubObject"
@@ -2418,22 +2418,22 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "test_filename": "tests/Repository.py"
 >     },
-1392c3024,3025
+1455c3087,3088
 <         "Reaction"
 ---
 >         "Reaction",
 >         "Repository"
-1402c3035,3036
-<         "NamedUser"
+1466c3099,3100
+<         "NamedUserSearchResult"
 ---
->         "NamedUser",
+>         "NamedUserSearchResult",
 >         "Repository"
-1410c3044,3045
+1475c3109,3110
 <         "Reaction"
 ---
 >         "Reaction",
 >         "Repository"
-2082a3718,3720
+2150a3786,3788
 >       ],
 >       "/components/schemas/repository": [
 >         "Repository"
