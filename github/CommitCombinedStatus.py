@@ -41,11 +41,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.CommitStatus
 import github.Repository
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.CommitStatus import CommitStatus
+    from github.Repository import Repository
 
 
 class CommitCombinedStatus(NonCompletableGithubObject):
@@ -63,10 +67,10 @@ class CommitCombinedStatus(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._commit_url: Attribute[str] = NotSet
-        self._repository: Attribute[github.Repository.Repository] = NotSet
+        self._repository: Attribute[Repository] = NotSet
         self._sha: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
-        self._statuses: Attribute[list[github.CommitStatus.CommitStatus]] = NotSet
+        self._statuses: Attribute[list[CommitStatus]] = NotSet
         self._total_count: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -78,7 +82,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
         return self._commit_url.value
 
     @property
-    def repository(self) -> github.Repository.Repository:
+    def repository(self) -> Repository:
         return self._repository.value
 
     @property
@@ -90,7 +94,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def statuses(self) -> list[github.CommitStatus.CommitStatus]:
+    def statuses(self) -> list[CommitStatus]:
         return self._statuses.value
 
     @property

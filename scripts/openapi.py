@@ -166,9 +166,8 @@ def as_python_type(
                 for class_name in classes:
                     if class_name not in classes:
                         print(f"Class not found in index: {class_name}")
-            return PythonType(
-                type="union",
-                inner_types=[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes],
+            return PythonType.union(
+                *[GithubClass(**classes.get(cls)) for cls in sorted(classes_of_schema) if cls in classes]
             )
         if collect_new_schemas is not None:
             if schema.split("/")[-1].startswith("_"):
@@ -254,29 +253,43 @@ def string_as_python_type(type: str, classes: dict[str, dict]) -> PythonType | G
     return None
 
 
-def is_pagination_object(schema: dict[str, Any]) -> bool:
+def pagination_list_property(properties: dict[str, Any]) -> str | None:
+    # A pagination object looks like:
     # {
     #   "type": "object",
     #   "properties": {
     #     "total_…": {"type": "integer"},
     #     "…": {"type": "array", "items": …},
     # }
+    # It has exactly one "total_…" integer property and an array property holding
+    # the paginated items. Some objects may have further array properties. In that case the
+    # canonical "items" array identifies the paginated items.
+    #
+    # Returns the name of the paginated array property, or None if this is not a pagination object.
+    total_count_items = [n for n, p in properties.items() if n.startswith("total_") and p.get("type") == "integer"]
+    if len(total_count_items) != 1:
+        return None
+    list_items = [n for n, p in properties.items() if p.get("type") == "array" and "items" in p]
+    if len(list_items) == 1:
+        return list_items[0]
+    if len(list_items) > 1 and "items" in list_items:
+        return "items"
+    return None
+
+
+def is_pagination_object(schema: dict[str, Any]) -> bool:
     return (
         schema.get("type") == "object"
         and "properties" in schema
-        and len(
-            [n for n, p in schema.get("properties").items() if n.startswith("total_") and p.get("type") == "integer"]
-        )
-        == 1
-        and len([p for p in schema.get("properties").values() if p.get("type") == "array" and "items" in p]) == 1
+        and pagination_list_property(schema.get("properties")) is not None
     )
 
 
 def get_paginated_property(schema: dict[str, Any], schema_path: list[str]) -> (dict[str, Any], list[str]):
     # assumes is_pagination_object returns True for this schema
     props = schema.get("properties")
-    list_item = next(((n, p) for n, p in props.items() if p.get("type") == "array" and "items" in p))
-    return list_item[1], schema_path + ["properties", list_item[0]]
+    list_item = pagination_list_property(props)
+    return props.get(list_item), schema_path + ["properties", list_item]
 
 
 def responses_as_python_type(
@@ -386,6 +399,15 @@ class GithubClass:
     def as_nullable(self) -> PythonType:
         return PythonType.union(self, None)
 
+    def with_filename(self, github_parent_path: str, filename: str | None) -> GithubClass:
+        if filename:
+            if github_parent_path and not github_parent_path.endswith("/"):
+                github_parent_path = f"{github_parent_path}/"
+            test_filename = f"{github_parent_path}tests/{filename}"
+            filename = f"{github_parent_path}{self.package}/{filename}"
+            return dataclasses.replace(self, filename=filename, test_filename=test_filename)
+        return self
+
     @property
     def short_class_name(self) -> str:
         return self.name.split(".")[-1]
@@ -439,11 +461,45 @@ class GithubClass:
                 )
 
 
+# readable Python words for characters that are not allowed in Python identifiers
+_PROPERTY_NAME_SPECIAL_CHARS = {"+": "plus", "-": "minus", "1": "one"}
+
+
+def to_python_name(name: str) -> str:
+    """
+    Turn an OpenAPI property name into a valid Python identifier.
+
+    Names that already are valid identifiers are returned unchanged. Names with characters that are
+    not allowed in Python identifiers (e.g. the reaction rollup properties ``+1`` and ``-1``) are
+    translated: known special characters become readable words (``+`` -> ``plus``, ``1`` -> ``one``)
+    and any other invalid character becomes an underscore. So ``+1`` becomes ``plus_one``.
+
+    """
+    if name.isidentifier():
+        return name
+    result = name
+    for char, word in _PROPERTY_NAME_SPECIAL_CHARS.items():
+        result = result.replace(char, f"_{word}_")
+    # replace any remaining invalid characters and collapse / strip underscores
+    result = re.sub(r"\W", "_", result)
+    result = re.sub(r"_+", "_", result).strip("_")
+    # a valid identifier must not start with a digit
+    if result and result[0].isdigit():
+        result = f"_{result}"
+    return result
+
+
 @dataclasses.dataclass(frozen=True)
 class Property:
     name: str
     data_type: PythonType | GithubClass | None
     deprecated: bool
+    # the Python identifier for this property; defaults to a sanitized version of name
+    python_name: str = None  # type: ignore[assignment]
+
+    def __post_init__(self) -> None:
+        if self.python_name is None:
+            object.__setattr__(self, "python_name", to_python_name(self.name))
 
     @staticmethod
     def from_tuples(properties: dict[str, (PythonType | GithubClass | None, bool)]) -> list[Property]:
@@ -973,9 +1029,11 @@ class IndexPythonClassesVisitor(CstVisitorBase):
                     while len(lines) > idx + 1 and not lines[idx + 1].strip():
                         idx = idx + 1
                     for schema in lines[idx + 1 :]:
-                        if not schema.strip().lstrip("- "):
+                        schema = schema.strip().lstrip("- ")
+                        if not schema:
                             break
-                        class_schemas.append(schema.strip().lstrip("- "))
+                        if schema not in class_schemas:
+                            class_schemas.append(schema)
 
         if class_name_short in classes:
             print(f"Duplicate class definition for {class_name_short}")
@@ -1228,7 +1286,7 @@ class ApplySchemaBaseTransformer(CstTransformerBase, abc.ABC):
         super().__init__()
         self.module_name = module_name
         self.class_name = class_name
-        self.properties = sorted(properties, key=lambda p: p.name)
+        self.properties = sorted(properties, key=lambda p: p.python_name)
         self.all_properties = self.properties.copy()
         self.deprecate = deprecate
 
@@ -1420,7 +1478,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         if updated_node.name.value == "_useAttributes":
             while self.current_property:
                 prop = self.properties.pop(0)
-                node = self.create_property_function(prop.name, prop.data_type, prop.deprecated)
+                node = self.create_property_function(prop.python_name, prop.data_type, prop.deprecated)
                 nodes.append(cst.EmptyLine(indent=False))
                 nodes.append(node)
             nodes.append(self.update_use_attrs(updated_node))
@@ -1430,24 +1488,24 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
         while self.current_property and (
             updated_node_is_github_object_property
-            and self.current_property.name < updated_node.name.value
+            and self.current_property.python_name < updated_node.name.value
             or not updated_node_is_github_object_property
         ):
             prop = self.properties.pop(0)
-            node = self.create_property_function(prop.name, prop.data_type, prop.deprecated)
+            node = self.create_property_function(prop.python_name, prop.data_type, prop.deprecated)
             nodes.append(cst.EmptyLine(indent=False))
             nodes.append(node)
 
         if updated_node_is_github_object_property:
             if (
                 not self.current_property
-                or updated_node.name.value != self.current_property.name
+                or updated_node.name.value != self.current_property.python_name
                 or self.current_property.deprecated
             ):
                 nodes.append(self.deprecate_function(updated_node) if self.deprecate else updated_node)
             else:
                 nodes.append(updated_node)
-            if self.current_property and updated_node.name.value == self.current_property.name:
+            if self.current_property and updated_node.name.value == self.current_property.python_name:
                 self.properties.pop(0)
         else:
             nodes.append(updated_node)
@@ -1485,7 +1543,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
     def create_init_attr(cls, prop: Property) -> cst.SimpleStatementLine:
         # we need to make the 'headers' attribute truly private,
         # otherwise it conflicts with GithubObject._headers
-        attr_name = f"__{prop.name}" if prop.name == "headers" else f"_{prop.name}"
+        attr_name = f"__{prop.python_name}" if prop.python_name == "headers" else f"_{prop.python_name}"
         return cst.SimpleStatementLine(
             [
                 cst.AnnAssign(
@@ -1627,7 +1685,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
     def create_use_attr(cls, prop: Property) -> cst.BaseStatement:
         # we need to make the 'headers' attribute truly private,
         # otherwise it conflicts with GithubObject._headers
-        attr_name = f"__{prop.name}" if prop.name == "headers" else f"_{prop.name}"
+        attr_name = f"__{prop.python_name}" if prop.python_name == "headers" else f"_{prop.python_name}"
         return cst.If(
             test=cst.Comparison(
                 left=cst.SimpleString(f'"{prop.name}"'),
@@ -1796,6 +1854,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         return node
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        if self.current_class_name != self.class_name:
+            return updated_node
+
         def create_statement(prop: Property, self_attribute: bool) -> cst.SimpleStatementLine:
             # turn a list of GithubClasses into the first element of the list
             if (
@@ -1804,7 +1865,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                 and isinstance(prop.data_type.inner_types[0], GithubClass)
                 and prop.data_type.inner_types[0].ids
             ):
-                prop = dataclasses.replace(prop, name=f"{prop.name}[0]", data_type=prop.data_type.inner_types[0])
+                prop = dataclasses.replace(
+                    prop, python_name=f"{prop.python_name}[0]", data_type=prop.data_type.inner_types[0]
+                )
 
             if (
                 isinstance(prop.data_type, GithubClass)
@@ -1838,7 +1901,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                                     args=[
                                         cst.Arg(
                                             self.create_attribute(
-                                                (["self"] if self_attribute else []) + [attribute, prop.name, id]
+                                                (["self"] if self_attribute else []) + [attribute, prop.python_name, id]
                                             )
                                         ),
                                         cst.Arg(cst.SimpleString('""')),
@@ -1855,7 +1918,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                             func=self.create_attribute(["self", "assertEqual"]),
                             args=[
                                 cst.Arg(
-                                    self.create_attribute((["self"] if self_attribute else []) + [attribute, prop.name])
+                                    self.create_attribute(
+                                        (["self"] if self_attribute else []) + [attribute, prop.python_name]
+                                    )
                                 ),
                                 cst.Arg(self.get_value(prop.data_type)),
                             ],
@@ -1908,7 +1973,11 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             # this is the same logic as is used to come up with 'asserted_property' below
             existing_properties = {
                 attrs[1]
-                for node in updated_node.body.body
+                for node in [
+                    stmt
+                    for node in updated_node.body.body
+                    for stmt in (node.body.body if isinstance(node, cst.With) else [node])
+                ]
                 if isinstance(node.body[0].value, cst.Call) and node.body[0].value.args
                 for attr_nodes in [self.find_nodes(node.body[0].value.args[0].value, cst.Attribute)]
                 if attr_nodes
@@ -1923,18 +1992,22 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             }
 
             # we can remove all properties that already exist in the test file
-            self.properties = [property for property in self.properties if property.name not in existing_properties]
+            self.properties = [
+                property for property in self.properties if property.python_name not in existing_properties
+            ]
 
             i = 0
-            while i < len(updated_node.body.body):
-                if (
-                    not isinstance(updated_node.body.body[i].body[0].value, cst.Call)
-                    or not updated_node.body.body[i].body[0].value.args
+            stmts = list(updated_node.body.body)
+            while i < len(stmts):
+                if not (
+                    isinstance(stmts[i], cst.SimpleStatementLine)
+                    and isinstance(stmts[i].body[0].value, cst.Call)
+                    and stmts[i].body[0].value.args
                 ):
                     i = i + 1
                     continue
 
-                attr_nodes = self.find_nodes(updated_node.body.body[i].body[0].value.args[0].value, cst.Attribute)
+                attr_nodes = self.find_nodes(stmts[i].body[0].value.args[0].value, cst.Attribute)
                 if not attr_nodes:
                     i = i + 1
                     continue
@@ -1946,24 +2019,20 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
 
                 if len(attrs) >= 2 and attrs[0] == attribute:
                     asserted_property = attrs[1]
-                    while self.properties and self.properties[0].name < asserted_property:
+                    while self.properties and self.properties[0].python_name < asserted_property:
                         prop = self.properties.pop(0)
                         stmt = create_statement(prop, self_attribute)
-                        stmts = updated_node.body.body
-                        updated_node = updated_node.with_changes(
-                            body=updated_node.body.with_changes(body=tuple(stmts[:i]) + (stmt,) + tuple(stmts[i:]))
-                        )
+                        stmts = stmts[:i] + [stmt] + stmts[i:]
                         i = i + 1
-                    if self.properties and self.properties[0].name == asserted_property:
+                    if self.properties and self.properties[0].python_name == asserted_property:
                         self.properties.pop(0)
                 i = i + 1
             while self.properties:
                 prop = self.properties.pop(0)
                 stmt = create_statement(prop, self_attribute)
-                stmts = updated_node.body.body
-                updated_node = updated_node.with_changes(
-                    body=updated_node.body.with_changes(body=tuple(stmts) + (stmt,))
-                )
+                stmts = stmts + [stmt]
+
+            updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=tuple(stmts)))
         return updated_node
 
 
@@ -1983,35 +2052,54 @@ class AddSchemasTransformer(CstTransformerBase):
                 lines = docstring.splitlines()
                 first_line = lines[1]
                 indent = first_line[: len(first_line) - len(first_line.lstrip())]
-                heading = len(lines) - 1  # if there is no heading, we place it before the last line (the closing """)
-                empty_footing = lines[-2].strip() == ""
-                schema_lines = []
+                # locate the existing schema list (the bullet lines following the heading);
+                # anything after those bullets (e.g. a trailing ".. warning::" block) is
+                # preserved verbatim and must not be treated as schema lines
+                heading = None
                 for idx, line in enumerate(lines):
                     if "The OpenAPI schema can be found at" in line:
                         heading = idx
-                        schema_lines = lines[idx + 1 : -2 if empty_footing else -1]
                         break
-                schema_lines = {schema_line for schema_line in schema_lines if schema_line}
+                if heading is not None:
+                    end = heading + 1
+                    while end < len(lines) and not lines[end].strip():  # skip blank lines after the heading
+                        end += 1
+                    existing_lines = []
+                    while end < len(lines) and lines[end].strip().startswith("- "):
+                        existing_lines.append(lines[end])
+                        end += 1
+                    prefix = lines[:heading]
+                    trailing = lines[end:]  # blank line(s), any trailing content and the closing """
+                else:
+                    # no heading yet: place the schema list right before the closing """
+                    existing_lines = []
+                    prefix = lines[:-1]
+                    trailing = lines[-1:]
+
+                schema_lines = {schema_line for schema_line in existing_lines if schema_line}
                 before = len(schema_lines)
                 schema_lines = sorted(list(schema_lines.union({f"{indent}- {schema}" for schema in self.schemas})))
                 after = len(schema_lines)
-                lines = (
-                    lines[:heading]
-                    +
-                    # we add an empty line before the schema lines title if there is none
-                    ([""] if lines[heading - 1].strip() else [])
-                    + [indent + "The OpenAPI schema can be found at"]
-                    # we add an empty line after the schema lines title to get a proper bullet list in the docs
-                    + [""]
-                    + schema_lines
-                    + [""]
-                    + lines[-1:]
-                )
-                docstring = "\n".join(lines)
-                stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
-                stmts = [stmt] + list(updated_node.body.body[1:])
-                updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=stmts))
-                self.schema_added += after - before
+                # do not add an empty schema heading to classes without any schemas
+                if schema_lines:
+                    lines = (
+                        prefix
+                        +
+                        # we add an empty line before the schema lines title if there is none
+                        ([""] if prefix and prefix[-1].strip() else [])
+                        + [indent + "The OpenAPI schema can be found at"]
+                        # we add an empty line after the schema lines title to get a proper bullet list in the docs
+                        + [""]
+                        + schema_lines
+                        # keep a blank line between the schema list and any trailing content
+                        + ([""] if trailing and trailing[0].strip() else [])
+                        + trailing
+                    )
+                    docstring = "\n".join(lines)
+                    stmt = cst.SimpleStatementLine([cst.Expr(cst.SimpleString(docstring))])
+                    stmts = [stmt] + list(updated_node.body.body[1:])
+                    updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=stmts))
+                    self.schema_added += after - before
 
         return super().leave_ClassDef(original_node, updated_node)
 
@@ -3273,10 +3361,8 @@ class OpenApi:
         # extract the inner type of pagination objects
         if "properties" in schema:
             props = schema.get("properties")
-            list_items = [n for n, p in props.items() if p.get("type") == "array" and "items" in p]
-            total_count_items = [n for n, p in props.items() if n.startswith("total_") and p.get("type") == "integer"]
-            if len(list_items) == 1 and len(total_count_items) == 1:
-                list_item = list_items[0]
+            list_item = pagination_list_property(props)
+            if list_item is not None:
                 return self.get_inner_spec_types(
                     props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
                 )
@@ -3333,7 +3419,11 @@ class OpenApi:
         transformer = AddSchemasTransformer(class_name, schemas)
         tree = cst.parse_module(code)
         updated_tree = tree.visit(transformer)
-        cls.write_code(code, updated_tree.code, filename, dry_run)
+        # only announce and write when the schema list actually changes; an
+        # unchanged list (already sorted and distinct) produces no output
+        if updated_tree.code != code:
+            print(f"Adding schemas to {class_name}")
+            cls.write_code(code, updated_tree.code, filename, dry_run)
         return transformer.schema_added
 
     @staticmethod
@@ -3887,7 +3977,8 @@ class OpenApi:
                 print(f"- {path}: {spec_fingerprints.get(fingerprint(path), ' ')}")
         print()
 
-    def suggest_method_names(self, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
+    @classmethod
+    def suggest_method_names(cls, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
         suffix_path = path.replace("-", "_")[len(prefix_path) + 1 :]
         fields = suffix_path.split("/")
         context = "_".join(fields[:-1])
@@ -4068,14 +4159,16 @@ class OpenApi:
                 for providing_class, providing_property in sorted(providing_properties):
                     print(f"- {providing_class}.{providing_property}")
 
-                if add and schemas_to_implement:
-                    filename = clazz.get("filename")
-                    clazz_name = clazz.get("name")
-                    if not filename or not clazz_name:
+            # adding sorts and de-duplicates the schema list, so run it whenever
+            # --add is given, even when there are no new schemas to implement
+            if add:
+                filename = clazz.get("filename")
+                clazz_name = clazz.get("name")
+                if not filename or not clazz_name:
+                    if schemas_to_implement:
                         print(f"Class name or filename for class {cls} not known")
                         sys.exit(1)
-
-                    print(f"Adding schemas to {cls}")
+                else:
                     added = self.add_schema_to_class(clazz_name, filename, schemas_to_implement, dry_run)
                     schemas_added += added
             schemas_suggested += len(schemas_to_implement)
@@ -4179,13 +4272,15 @@ class OpenApi:
                     for path in sorted(verb_paths):
                         print(f"- {verb.upper()} {path}")
 
-                if add and schemas_to_implement:
-                    filename = clazz.get("filename")
-                    if not filename:
+            # adding sorts and de-duplicates the schema list, so run it whenever
+            # --add is given, even when there are no new schemas to implement
+            if add:
+                filename = clazz.get("filename")
+                if not filename:
+                    if schemas_to_implement:
                         print(f"Filename for class {cls} not known")
                         sys.exit(1)
-
-                    print(f"Adding schemas to {cls}")
+                else:
                     added = self.add_schema_to_class(cls, filename, schemas_to_implement, dry_run)
                     schemas_added += added
             schemas_suggested += len(schemas_to_implement)
@@ -4201,6 +4296,7 @@ class OpenApi:
         index_filename: str,
         class_name: str,
         parent_name: str,
+        filename: str | None,
         docs_url: str,
         schemas: list[str],
         dry_run: bool,
@@ -4213,14 +4309,27 @@ class OpenApi:
         github_parent_path = str(Path(github_path).parent)
         clazz = GithubClass.from_class_name(class_name, github_parent_path=github_parent_path)
         parent_class = GithubClass.from_class_name(parent_name, index)
+        if filename is None and "." in class_name:
+            # a long class name like github.Commit.CommitSearchResult implies --file Commit.py
+            _, module, _ = class_name.split(".", 2)
+            filename = f"{module}.py"
+        clazz = clazz.with_filename(github_parent_path, filename)
         print(f"Creating class {clazz.full_class_name} with parent {parent_class.full_class_name} in {clazz.filename}")
-        if os.path.exists(clazz.filename):
+        if not filename and os.path.exists(clazz.filename):
             raise ValueError(f"File exists already: {clazz.filename}")
-        if tests and os.path.exists(clazz.test_filename):
+        if tests and not filename and os.path.exists(clazz.test_filename):
             raise ValueError(f"File exists already: {clazz.test_filename}")
 
-        source = (
-            (
+        if filename and Path(clazz.filename).exists():
+            # read original source
+            with open(clazz.filename) as r:
+                orig_source = "".join(r.readlines())
+            # prepare new source
+            source = orig_source
+        else:
+            # start new file
+            orig_source = ""
+            source = (
                 f"############################ Copyrights and license ############################\n"
                 f"#                                                                              #\n"
                 f"#                                                                              #\n"
@@ -4251,6 +4360,11 @@ class OpenApi:
                 f"\n"
                 f"if TYPE_CHECKING:\n"
                 f"    pass\n"
+            )
+
+        # add the new class to the source
+        source = source + (
+            (
                 f"\n"
                 f"\n"
                 f"class {clazz.name}({parent_class.name}):\n"
@@ -4287,37 +4401,49 @@ class OpenApi:
             )
             + ("\n")
         )
-        self.write_code("", source, clazz.filename, dry_run=False)
+        self.write_code(orig_source, source, clazz.filename, dry_run=False)
 
         if tests:
-            attr_name = re.sub("[a-z]", "", class_name).lower()
-            source = (
-                f"############################ Copyrights and license ############################\n"
-                f"#                                                                              #\n"
-                f"#                                                                              #\n"
-                f"# This file is part of PyGithub.                                               #\n"
-                f"# http://pygithub.readthedocs.io/                                              #\n"
-                f"#                                                                              #\n"
-                f"# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
-                f"# the terms of the GNU Lesser General Public License as published by the Free  #\n"
-                f"# Software Foundation, either version 3 of the License, or (at your option)    #\n"
-                f"# any later version.                                                           #\n"
-                f"#                                                                              #\n"
-                f"# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
-                f"# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
-                f"# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
-                f"# details.                                                                     #\n"
-                f"#                                                                              #\n"
-                f"# You should have received a copy of the GNU Lesser General Public License     #\n"
-                f"# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
-                f"#                                                                              #\n"
-                f"################################################################################\n"
-                f"\n"
-                f"from __future__ import annotations\n"
-                f"\n"
-                f"from datetime import datetime, timezone\n"
-                f"\n"
-                f"from . import Framework\n"
+            attr_name = re.sub("[a-z]", "", clazz.name).lower()
+            if filename and Path(clazz.test_filename).exists():
+                # read original source
+                with open(clazz.test_filename) as r:
+                    orig_test_source = "".join(r.readlines())
+                # prepare new source
+                test_source = orig_test_source
+            else:
+                # start new file
+                orig_test_source = ""
+                test_source = (
+                    "############################ Copyrights and license ############################\n"
+                    "#                                                                              #\n"
+                    "#                                                                              #\n"
+                    "# This file is part of PyGithub.                                               #\n"
+                    "# http://pygithub.readthedocs.io/                                              #\n"
+                    "#                                                                              #\n"
+                    "# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
+                    "# the terms of the GNU Lesser General Public License as published by the Free  #\n"
+                    "# Software Foundation, either version 3 of the License, or (at your option)    #\n"
+                    "# any later version.                                                           #\n"
+                    "#                                                                              #\n"
+                    "# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
+                    "# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
+                    "# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
+                    "# details.                                                                     #\n"
+                    "#                                                                              #\n"
+                    "# You should have received a copy of the GNU Lesser General Public License     #\n"
+                    "# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
+                    "#                                                                              #\n"
+                    "################################################################################\n"
+                    "\n"
+                    "from __future__ import annotations\n"
+                    "\n"
+                    "from datetime import datetime, timezone\n"
+                    "\n"
+                    "from . import Framework\n"
+                )
+
+            test_source = test_source + (
                 f"\n"
                 f"\n"
                 f"class {clazz.name}(Framework.TestCase):\n"
@@ -4333,7 +4459,7 @@ class OpenApi:
                 f"        {attr_name} = self.{attr_name}\n"
                 f'        self.assertEqual({attr_name}.__repr__(), "")\n'
             )
-            self.write_code("", source, clazz.test_filename, dry_run=False)
+            self.write_code(orig_test_source, test_source, clazz.test_filename, dry_run=False)
 
         success = True
         try:
@@ -4369,19 +4495,41 @@ class OpenApi:
         finally:
             if dry_run:
                 if success:
-                    # print created files
-                    files = [clazz.filename] + ([clazz.test_filename] if tests else [])
-                    for filename in files:
-                        print()
-                        print(f"{filename}:")
-                        with open(filename) as r:
-                            for line in r.readlines():
-                                print(f"+{line}", end="")
+                    if orig_source:
+                        with open(clazz.filename) as r:
+                            source = "".join(r.readlines())
+                        self.write_code(orig_source, source, None, dry_run=True)
 
-                # Remove created files
-                os.unlink(clazz.filename)
-                if tests:
-                    os.unlink(clazz.test_filename)
+                        if tests:
+                            with open(clazz.test_filename) as r:
+                                test_source = "".join(r.readlines())
+                            self.write_code(orig_test_source, test_source, None, dry_run=True)
+                    else:
+                        # print created files
+                        files = [clazz.filename] + ([clazz.test_filename] if tests else [])
+                        for filename in files:
+                            print()
+                            print(f"{filename}:")
+                            with open(filename) as r:
+                                for line in r.readlines():
+                                    print(f"+{line}", end="")
+
+                    if orig_source:
+                        # Revert changes to source file
+                        with open(clazz.filename, "w") as w:
+                            w.write(orig_source)
+                    else:
+                        # Remove created files
+                        os.unlink(clazz.filename)
+
+                    if tests:
+                        if orig_test_source:
+                            # Revert changes to source file
+                            with open(clazz.test_filename, "w") as w:
+                                w.write(orig_test_source)
+                        else:
+                            # Remove created files
+                            os.unlink(clazz.test_filename)
         return True
 
     @staticmethod
@@ -4425,6 +4573,7 @@ class OpenApi:
             index_filename,
             new_class_name,
             parent_name,
+            None,
             docs_url,
             [schema],
             dry_run=False,
@@ -4608,6 +4757,7 @@ class OpenApi:
             default="NonCompletableGithubObject",
         )
         create_class_parser.add_argument("--parent", help="A parent PyGithub class")
+        create_class_parser.add_argument("--file", help="A custom filename for the PyGithub class")
         create_class_parser.add_argument("--tests", help="Also create test file", action="store_true")
         create_class_parser.add_argument(
             "--new-schemas",
@@ -4709,6 +4859,7 @@ class OpenApi:
                     self.args.index_filename,
                     self.args.class_name,
                     self.args.parent,
+                    self.args.file,
                     self.args.docs_url,
                     self.args.schema,
                     self.args.dry_run,
