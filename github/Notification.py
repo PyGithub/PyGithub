@@ -45,7 +45,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.Issue
@@ -53,6 +53,12 @@ import github.NotificationSubject
 import github.PullRequest
 import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Issue import Issue
+    from github.NotificationSubject import NotificationSubject
+    from github.PullRequest import PullRequest
+    from github.Repository import Repository
 
 
 class Notification(CompletableGithubObject):
@@ -72,8 +78,8 @@ class Notification(CompletableGithubObject):
         self._id: Attribute[str] = NotSet
         self._last_read_at: Attribute[datetime] = NotSet
         self._reason: Attribute[str] = NotSet
-        self._repository: Attribute[github.Repository.Repository] = NotSet
-        self._subject: Attribute[github.NotificationSubject.NotificationSubject] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._subject: Attribute[NotificationSubject] = NotSet
         self._subscription_url: Attribute[str] = NotSet
         self._unread: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -98,12 +104,12 @@ class Notification(CompletableGithubObject):
         return self._reason.value
 
     @property
-    def repository(self) -> github.Repository.Repository:
+    def repository(self) -> Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
     @property
-    def subject(self) -> github.NotificationSubject.NotificationSubject:
+    def subject(self) -> NotificationSubject:
         self._completeIfNotSet(self._subject)
         return self._subject.value
 
@@ -145,10 +151,10 @@ class Notification(CompletableGithubObject):
             self.url,
         )
 
-    def get_pull_request(self) -> github.PullRequest.PullRequest:
+    def get_pull_request(self) -> PullRequest:
         return github.PullRequest.PullRequest(self._requester, url=self.subject.url)
 
-    def get_issue(self) -> github.Issue.Issue:
+    def get_issue(self) -> Issue:
         return github.Issue.Issue(self._requester, url=self.subject.url)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

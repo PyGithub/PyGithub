@@ -1,0 +1,130 @@
+diff --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+44a45
+>     - /components/schemas/simple-user
+diff --recursive --new-file before/openapi.index after/openapi.index
+467c467
+<       "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user",
+---
+>       "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user\n    - /components/schemas/simple-user",
+509a510,514
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://github.com/images/error/octocat_happy.gif",
+>               "format": "uri",
+>               "type": "string"
+623a629,632
+>             },
+>             "/components/schemas/simple-user": {
+>               "nullable": true,
+>               "type": "string"
+639a649,652
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/events{/privacy}",
+>               "type": "string"
+671a685,689
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/followers",
+>               "format": "uri",
+>               "type": "string"
+701a720,723
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/following{/other_user}",
+>               "type": "string"
+717a740,743
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/gists{/gist_id}",
+>               "type": "string"
+735a762,766
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "41d064eb2195891e12d0413f63227ea7",
+>               "nullable": true,
+>               "type": "string"
+769a801,805
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://github.com/octocat",
+>               "format": "uri",
+>               "type": "string"
+787a824,828
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": 1,
+>               "format": "int64",
+>               "type": "integer"
+819a861,864
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "octocat",
+>               "type": "string"
+839a885,888
+>             },
+>             "/components/schemas/simple-user": {
+>               "nullable": true,
+>               "type": "string"
+855a905,908
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "MDQ6VXNlcjE=",
+>               "type": "string"
+891a945,949
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/orgs",
+>               "format": "uri",
+>               "type": "string"
+969a1028,1032
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/received_events",
+>               "format": "uri",
+>               "type": "string"
+987a1051,1055
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/repos",
+>               "format": "uri",
+>               "type": "string"
+1004a1073,1075
+>             },
+>             "/components/schemas/simple-user": {
+>               "type": "boolean"
+1020a1092,1095
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "\"2020-07-09T00:17:55Z\"",
+>               "type": "string"
+1036a1112,1115
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+>               "type": "string"
+1054a1134,1138
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "https://api.github.com/users/octocat/subscriptions",
+>               "format": "uri",
+>               "type": "string"
+1102a1187,1190
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "User",
+>               "type": "string"
+1134a1223,1226
+>             },
+>             "/components/schemas/simple-user": {
+>               "example": "public",
+>               "type": "string"
+1141c1233,1234
+<         "/components/schemas/public-user"
+---
+>         "/components/schemas/public-user",
+>         "/components/schemas/simple-user"
+3720a3814,3816
+>       ],
+>       "/components/schemas/simple-user": [
+>         "NamedUser"

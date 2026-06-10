@@ -1908,7 +1908,11 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             # this is the same logic as is used to come up with 'asserted_property' below
             existing_properties = {
                 attrs[1]
-                for node in updated_node.body.body
+                for node in [
+                    stmt
+                    for node in updated_node.body.body
+                    for stmt in (node.body.body if isinstance(node, cst.With) else [node])
+                ]
                 if isinstance(node.body[0].value, cst.Call) and node.body[0].value.args
                 for attr_nodes in [self.find_nodes(node.body[0].value.args[0].value, cst.Attribute)]
                 if attr_nodes
@@ -1926,15 +1930,17 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             self.properties = [property for property in self.properties if property.name not in existing_properties]
 
             i = 0
-            while i < len(updated_node.body.body):
-                if (
-                    not isinstance(updated_node.body.body[i].body[0].value, cst.Call)
-                    or not updated_node.body.body[i].body[0].value.args
+            stmts = list(updated_node.body.body)
+            while i < len(stmts):
+                if not (
+                    isinstance(stmts[i], cst.SimpleStatementLine)
+                    and isinstance(stmts[i].body[0].value, cst.Call)
+                    and stmts[i].body[0].value.args
                 ):
                     i = i + 1
                     continue
 
-                attr_nodes = self.find_nodes(updated_node.body.body[i].body[0].value.args[0].value, cst.Attribute)
+                attr_nodes = self.find_nodes(stmts[i].body[0].value.args[0].value, cst.Attribute)
                 if not attr_nodes:
                     i = i + 1
                     continue
@@ -1949,10 +1955,7 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
                     while self.properties and self.properties[0].name < asserted_property:
                         prop = self.properties.pop(0)
                         stmt = create_statement(prop, self_attribute)
-                        stmts = updated_node.body.body
-                        updated_node = updated_node.with_changes(
-                            body=updated_node.body.with_changes(body=tuple(stmts[:i]) + (stmt,) + tuple(stmts[i:]))
-                        )
+                        stmts = stmts[:i] + [stmt] + stmts[i:]
                         i = i + 1
                     if self.properties and self.properties[0].name == asserted_property:
                         self.properties.pop(0)
@@ -1960,10 +1963,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
             while self.properties:
                 prop = self.properties.pop(0)
                 stmt = create_statement(prop, self_attribute)
-                stmts = updated_node.body.body
-                updated_node = updated_node.with_changes(
-                    body=updated_node.body.with_changes(body=tuple(stmts) + (stmt,))
-                )
+                stmts = stmts + [stmt]
+
+            updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=tuple(stmts)))
         return updated_node
 
 
@@ -2101,7 +2103,7 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         if parameter_and_idx is not None:
             parameter_idx, parameter = parameter_and_idx
         else:
-            parameter = Parameter(name, name, None, None, "input", False, None)
+            parameter = Parameter(name, name, None, None, "input", False, ParameterOrder.POSITIONAL, None)
             parameter_idx = len(method.parameters)
             parameters[name] = (parameter_idx, parameter)
             method.parameters.append(parameter)
@@ -2724,13 +2726,13 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
             )
         else:
             if request_parameters_idx is None:
-                print(f"Cannot update {var_name} is statement cannot be found.")
+                print(f"Cannot update {var_name} as statement cannot be found.")
                 return node
 
             request_parameters_stmt = stmts[request_parameters_idx]
             dict_node = get_request_parameters(request_parameters_stmt, var_name)
             if len(dict_node.elements) == 0:
-                print(f"Cannot update {var_name} is is an empty dict indicating.")
+                print(f"Cannot update {var_name} as it is an empty dict.")
                 return node
 
             last_existing_element = dict_node.elements[-1]
@@ -3214,7 +3216,7 @@ class OpenApi:
         )
 
     @staticmethod
-    def read_json(filename: str) -> dict[str, Any]:
+    def read_json(filename: str | Path) -> dict[str, Any]:
         with open(filename) as r:
             return json.load(r)
 
@@ -3848,7 +3850,7 @@ class OpenApi:
                                     print(f"    - {verb} {candidate_path} should be implemented as {implementations}")
                                     for suggested_method in suggested_methods:
                                         print(
-                                            f"      {sys.executable} {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
+                                            f"      python {sys.argv[0]} create method {spec_file} {index_filename} {cls} {suggested_method} {verb} {candidate_path}"
                                         )
                             print()
             print()
@@ -3887,7 +3889,8 @@ class OpenApi:
                 print(f"- {path}: {spec_fingerprints.get(fingerprint(path), ' ')}")
         print()
 
-    def suggest_method_names(self, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
+    @classmethod
+    def suggest_method_names(cls, verb: str, prefix_path: str, path: str, spec: dict[str, Any]) -> list[str]:
         suffix_path = path.replace("-", "_")[len(prefix_path) + 1 :]
         fields = suffix_path.split("/")
         context = "_".join(fields[:-1])
@@ -4340,7 +4343,7 @@ class OpenApi:
             if dry_run:
                 with NamedTemporaryFile(delete_on_close=False) as f:
                     f.close()
-                    print(f"Updating temporary index {f.name}")
+                    print("Updating temporary index")
                     self.index(github_path, spec_file, f.name, check_verbs=False, dry_run=False)
                     self.apply_properties(
                         github_path,

@@ -125,7 +125,7 @@ class Team(CompletableGithubObject):
         self._organization: Attribute[Organization] = NotSet
         self._organization_id: Attribute[int] = NotSet
         self._organization_selection_type: Attribute[str] = NotSet
-        self._parent: Attribute[github.Team.Team] = NotSet
+        self._parent: Attribute[Team] = NotSet
         self._permission: Attribute[str] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._privacy: Attribute[str] = NotSet
