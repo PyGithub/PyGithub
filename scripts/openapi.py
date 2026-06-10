@@ -4309,6 +4309,10 @@ class OpenApi:
         github_parent_path = str(Path(github_path).parent)
         clazz = GithubClass.from_class_name(class_name, github_parent_path=github_parent_path)
         parent_class = GithubClass.from_class_name(parent_name, index)
+        if filename is None and "." in class_name:
+            # a long class name like github.Commit.CommitSearchResult implies --file Commit.py
+            _, module, _ = class_name.split(".", 2)
+            filename = f"{module}.py"
         clazz = clazz.with_filename(github_parent_path, filename)
         print(f"Creating class {clazz.full_class_name} with parent {parent_class.full_class_name} in {clazz.filename}")
         if not filename and os.path.exists(clazz.filename):
