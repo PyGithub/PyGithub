@@ -399,6 +399,15 @@ class GithubClass:
     def as_nullable(self) -> PythonType:
         return PythonType.union(self, None)
 
+    def with_filename(self, github_parent_path: str, filename: str | None) -> GithubClass:
+        if filename:
+            if github_parent_path and not github_parent_path.endswith("/"):
+                github_parent_path = f"{github_parent_path}/"
+            test_filename = f"{github_parent_path}tests/{filename}"
+            filename = f"{github_parent_path}{self.package}/{filename}"
+            return dataclasses.replace(self, filename=filename, test_filename=test_filename)
+        return self
+
     @property
     def short_class_name(self) -> str:
         return self.name.split(".")[-1]
@@ -1845,6 +1854,9 @@ class ApplySchemaTestTransformer(ApplySchemaBaseTransformer):
         return node
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef):
+        if self.current_class_name != self.class_name:
+            return updated_node
+
         def create_statement(prop: Property, self_attribute: bool) -> cst.SimpleStatementLine:
             # turn a list of GithubClasses into the first element of the list
             if (
@@ -4284,6 +4296,7 @@ class OpenApi:
         index_filename: str,
         class_name: str,
         parent_name: str,
+        filename: str | None,
         docs_url: str,
         schemas: list[str],
         dry_run: bool,
@@ -4296,14 +4309,23 @@ class OpenApi:
         github_parent_path = str(Path(github_path).parent)
         clazz = GithubClass.from_class_name(class_name, github_parent_path=github_parent_path)
         parent_class = GithubClass.from_class_name(parent_name, index)
+        clazz = clazz.with_filename(github_parent_path, filename)
         print(f"Creating class {clazz.full_class_name} with parent {parent_class.full_class_name} in {clazz.filename}")
-        if os.path.exists(clazz.filename):
+        if not filename and os.path.exists(clazz.filename):
             raise ValueError(f"File exists already: {clazz.filename}")
-        if tests and os.path.exists(clazz.test_filename):
+        if tests and not filename and os.path.exists(clazz.test_filename):
             raise ValueError(f"File exists already: {clazz.test_filename}")
 
-        source = (
-            (
+        if filename and Path(clazz.filename).exists():
+            # read original source
+            with open(clazz.filename) as r:
+                orig_source = "".join(r.readlines())
+            # prepare new source
+            source = orig_source
+        else:
+            # start new file
+            orig_source = ""
+            source = (
                 f"############################ Copyrights and license ############################\n"
                 f"#                                                                              #\n"
                 f"#                                                                              #\n"
@@ -4334,6 +4356,11 @@ class OpenApi:
                 f"\n"
                 f"if TYPE_CHECKING:\n"
                 f"    pass\n"
+            )
+
+        # add the new class to the source
+        source = source + (
+            (
                 f"\n"
                 f"\n"
                 f"class {clazz.name}({parent_class.name}):\n"
@@ -4370,37 +4397,49 @@ class OpenApi:
             )
             + ("\n")
         )
-        self.write_code("", source, clazz.filename, dry_run=False)
+        self.write_code(orig_source, source, clazz.filename, dry_run=False)
 
         if tests:
             attr_name = re.sub("[a-z]", "", class_name).lower()
-            source = (
-                f"############################ Copyrights and license ############################\n"
-                f"#                                                                              #\n"
-                f"#                                                                              #\n"
-                f"# This file is part of PyGithub.                                               #\n"
-                f"# http://pygithub.readthedocs.io/                                              #\n"
-                f"#                                                                              #\n"
-                f"# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
-                f"# the terms of the GNU Lesser General Public License as published by the Free  #\n"
-                f"# Software Foundation, either version 3 of the License, or (at your option)    #\n"
-                f"# any later version.                                                           #\n"
-                f"#                                                                              #\n"
-                f"# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
-                f"# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
-                f"# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
-                f"# details.                                                                     #\n"
-                f"#                                                                              #\n"
-                f"# You should have received a copy of the GNU Lesser General Public License     #\n"
-                f"# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
-                f"#                                                                              #\n"
-                f"################################################################################\n"
-                f"\n"
-                f"from __future__ import annotations\n"
-                f"\n"
-                f"from datetime import datetime, timezone\n"
-                f"\n"
-                f"from . import Framework\n"
+            if filename and Path(clazz.test_filename).exists():
+                # read original source
+                with open(clazz.test_filename) as r:
+                    orig_test_source = "".join(r.readlines())
+                # prepare new source
+                test_source = orig_test_source
+            else:
+                # start new file
+                orig_test_source = ""
+                test_source = (
+                    "############################ Copyrights and license ############################\n"
+                    "#                                                                              #\n"
+                    "#                                                                              #\n"
+                    "# This file is part of PyGithub.                                               #\n"
+                    "# http://pygithub.readthedocs.io/                                              #\n"
+                    "#                                                                              #\n"
+                    "# PyGithub is free software: you can redistribute it and/or modify it under    #\n"
+                    "# the terms of the GNU Lesser General Public License as published by the Free  #\n"
+                    "# Software Foundation, either version 3 of the License, or (at your option)    #\n"
+                    "# any later version.                                                           #\n"
+                    "#                                                                              #\n"
+                    "# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #\n"
+                    "# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #\n"
+                    "# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #\n"
+                    "# details.                                                                     #\n"
+                    "#                                                                              #\n"
+                    "# You should have received a copy of the GNU Lesser General Public License     #\n"
+                    "# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #\n"
+                    "#                                                                              #\n"
+                    "################################################################################\n"
+                    "\n"
+                    "from __future__ import annotations\n"
+                    "\n"
+                    "from datetime import datetime, timezone\n"
+                    "\n"
+                    "from . import Framework\n"
+                )
+
+            test_source = test_source + (
                 f"\n"
                 f"\n"
                 f"class {clazz.name}(Framework.TestCase):\n"
@@ -4416,7 +4455,7 @@ class OpenApi:
                 f"        {attr_name} = self.{attr_name}\n"
                 f'        self.assertEqual({attr_name}.__repr__(), "")\n'
             )
-            self.write_code("", source, clazz.test_filename, dry_run=False)
+            self.write_code(orig_test_source, test_source, clazz.test_filename, dry_run=False)
 
         success = True
         try:
@@ -4452,19 +4491,41 @@ class OpenApi:
         finally:
             if dry_run:
                 if success:
-                    # print created files
-                    files = [clazz.filename] + ([clazz.test_filename] if tests else [])
-                    for filename in files:
-                        print()
-                        print(f"{filename}:")
-                        with open(filename) as r:
-                            for line in r.readlines():
-                                print(f"+{line}", end="")
+                    if orig_source:
+                        with open(clazz.filename) as r:
+                            source = "".join(r.readlines())
+                        self.write_code(orig_source, source, None, dry_run=True)
 
-                # Remove created files
-                os.unlink(clazz.filename)
-                if tests:
-                    os.unlink(clazz.test_filename)
+                        if tests:
+                            with open(clazz.test_filename) as r:
+                                test_source = "".join(r.readlines())
+                            self.write_code(orig_test_source, test_source, None, dry_run=True)
+                    else:
+                        # print created files
+                        files = [clazz.filename] + ([clazz.test_filename] if tests else [])
+                        for filename in files:
+                            print()
+                            print(f"{filename}:")
+                            with open(filename) as r:
+                                for line in r.readlines():
+                                    print(f"+{line}", end="")
+
+                    if orig_source:
+                        # Revert changes to source file
+                        with open(clazz.filename, "w") as w:
+                            w.write(orig_source)
+                    else:
+                        # Remove created files
+                        os.unlink(clazz.filename)
+
+                    if tests:
+                        if orig_test_source:
+                            # Revert changes to source file
+                            with open(clazz.test_filename, "w") as w:
+                                w.write(orig_test_source)
+                        else:
+                            # Remove created files
+                            os.unlink(clazz.test_filename)
         return True
 
     @staticmethod
@@ -4508,6 +4569,7 @@ class OpenApi:
             index_filename,
             new_class_name,
             parent_name,
+            None,
             docs_url,
             [schema],
             dry_run=False,
@@ -4691,6 +4753,7 @@ class OpenApi:
             default="NonCompletableGithubObject",
         )
         create_class_parser.add_argument("--parent", help="A parent PyGithub class")
+        create_class_parser.add_argument("--file", help="A custom filename for the PyGithub class")
         create_class_parser.add_argument("--tests", help="Also create test file", action="store_true")
         create_class_parser.add_argument(
             "--new-schemas",
@@ -4792,6 +4855,7 @@ class OpenApi:
                     self.args.index_filename,
                     self.args.class_name,
                     self.args.parent,
+                    self.args.file,
                     self.args.docs_url,
                     self.args.schema,
                     self.args.dry_run,
