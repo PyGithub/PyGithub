@@ -42,6 +42,15 @@ Diff:
          """
          Get a repository
  
+@@ -322,7 +322,7 @@
+         type: Opt[str] = NotSet,
+         sort: Opt[str] = NotSet,
+         direction: Opt[str] = NotSet,
+-    ) -> PaginatedList[dict[str, Any]]:
++    ) -> PaginatedList[Repository]:
+         """
+         List repositories for a user
+ 
 
 Class NamedUser changed
 + python scripts/openapi.py apply methods --rewrite openapi.spec.json openapi.index NamedUser
@@ -56,5 +65,5 @@ Class NamedUser changed
 Indexing 5 Python files
 Indexed 13 classes
 Indexed 4 paths
-Indexed 7 schemas
+Indexed 8 schemas
 Indexing OpenAPI spec

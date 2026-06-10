@@ -1,0 +1,3 @@
+python scripts/openapi.py --dry-run create class --tests github openapi.spec.json openapi.index GitCommit "https://docs.github.com/en/rest/reference/git#commits" "/components/schemas/commit-search-result-item/properties/commit" "/components/schemas/commit/properties/commit" "/components/schemas/nullable-simple-commit" "/components/schemas/simple-commit"
+python scripts/openapi.py create class --tests github openapi.spec.json openapi.index GitCommit "https://docs.github.com/en/rest/reference/git#commits" "/components/schemas/commit-search-result-item/properties/commit" "/components/schemas/commit/properties/commit" "/components/schemas/nullable-simple-commit" "/components/schemas/simple-commit"
+python scripts/openapi.py index github openapi.spec.json openapi.index

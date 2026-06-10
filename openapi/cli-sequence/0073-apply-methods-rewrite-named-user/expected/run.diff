@@ -3,16 +3,32 @@ diff --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
 <     def get_repo(self, name: str) -> dict[str, Any]:
 ---
 >     def get_repo(self, name: str) -> Repository:
+325c325
+<     ) -> PaginatedList[dict[str, Any]]:
+---
+>     ) -> PaginatedList[Repository]:
 diff --recursive --new-file before/openapi.index after/openapi.index
 487c487
 <             "dict[str, Any]"
 ---
 >             "Repository"
-3474c3474
+498c498
+<             "PaginatedList[dict[str, Any]]"
+---
+>             "PaginatedList[Repository]"
+3742c3742
 <           "dict[str, Any]"
 ---
 >           "Repository"
-4147c4147
+3755c3755
+<           "PaginatedList[dict[str, Any]]"
+---
+>           "PaginatedList[Repository]"
+4418c4418
 <               "dict[str, Any]"
 ---
 >               "Repository"
+4455c4455
+<               "PaginatedList[dict[str, Any]]"
+---
+>               "PaginatedList[Repository]"

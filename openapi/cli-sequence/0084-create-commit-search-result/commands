@@ -1,0 +1,5 @@
+#python scripts/openapi.py --dry-run create class --parent Commit --file Commit.py --tests github openapi.spec.json openapi.index github.Commit.CommitSearchResult "https://docs.github.com/en/rest/reference/search#search-commits" "/components/schemas/commit-search-result-item"
+python scripts/openapi.py --dry-run create class --parent Commit --file Commit.py --tests --new-schemas as-dict github openapi.spec.json openapi.index CommitSearchResult "https://docs.github.com/en/rest/reference/search#search-commits" "/components/schemas/commit-search-result-item" "/components/schemas/commit-search-result-item/properties/commit"
+# note: same as above but --new-schemas as-dict replaced with --new-schemas create-class (and without --dry-run)
+python scripts/openapi.py create class --parent Commit --file Commit.py --tests --new-schemas create-class github openapi.spec.json openapi.index CommitSearchResult "https://docs.github.com/en/rest/reference/search#search-commits" "/components/schemas/commit-search-result-item"
+python scripts/openapi.py index github openapi.spec.json openapi.index

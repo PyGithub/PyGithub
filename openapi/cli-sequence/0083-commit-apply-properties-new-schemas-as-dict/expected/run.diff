@@ -1,0 +1,160 @@
+diff --recursive --new-file before/github/Commit.py after/github/Commit.py
+62a63
+>         self._files: Attribute[list[dict[str, Any]]] = NotSet
+67a69,71
+>         self._stats: Attribute[dict[str, Any]] = NotSet
+>         self._tree: Attribute[dict[str, Any]] = NotSet
+>         self._verification: Attribute[dict[str, Any]] = NotSet
+98a103,107
+>     def files(self) -> list[dict[str, Any]]:
+>         self._completeIfNotSet(self._files)
+>         return self._files.value
+> 
+>     @property
+122a132,146
+>     @property
+>     def stats(self) -> dict[str, Any]:
+>         self._completeIfNotSet(self._stats)
+>         return self._stats.value
+> 
+>     @property
+>     def tree(self) -> dict[str, Any]:
+>         self._completeIfNotSet(self._tree)
+>         return self._tree.value
+> 
+>     @property
+>     def verification(self) -> dict[str, Any]:
+>         self._completeIfNotSet(self._verification)
+>         return self._verification.value
+> 
+134a159,160
+>         if "files" in attributes:  # pragma no branch
+>             self._files = self._makeListOfDictsAttribute(attributes["files"])
+144a171,176
+>         if "stats" in attributes:  # pragma no branch
+>             self._stats = self._makeDictAttribute(attributes["stats"])
+>         if "tree" in attributes:  # pragma no branch
+>             self._tree = self._makeDictAttribute(attributes["tree"])
+>         if "verification" in attributes:  # pragma no branch
+>             self._verification = self._makeDictAttribute(attributes["verification"])
+diff --recursive --new-file before/openapi.index after/openapi.index
+260a261,280
+>         "files": {
+>           "name": "files",
+>           "returns": [
+>             "list[dict[str, Any]]"
+>           ],
+>           "schema": {
+>             "items": {
+>               "$ref": "#/components/schemas/diff-entry"
+>             },
+>             "type": "array"
+>           },
+>           "schemas": {
+>             "/components/schemas/commit": {
+>               "items": {
+>                 "$ref": "#/components/schemas/diff-entry"
+>               },
+>               "type": "array"
+>             }
+>           }
+>         },
+389a410,499
+>             }
+>           }
+>         },
+>         "stats": {
+>           "name": "stats",
+>           "returns": [
+>             "dict[str, Any]"
+>           ],
+>           "schema": {
+>             "properties": {
+>               "additions": {
+>                 "type": "integer"
+>               },
+>               "deletions": {
+>                 "type": "integer"
+>               },
+>               "total": {
+>                 "type": "integer"
+>               }
+>             },
+>             "type": "object"
+>           },
+>           "schemas": {
+>             "/components/schemas/commit": {
+>               "properties": {
+>                 "additions": {
+>                   "type": "integer"
+>                 },
+>                 "deletions": {
+>                   "type": "integer"
+>                 },
+>                 "total": {
+>                   "type": "integer"
+>                 }
+>               },
+>               "type": "object"
+>             }
+>           }
+>         },
+>         "tree": {
+>           "name": "tree",
+>           "returns": [
+>             "dict[str, Any]"
+>           ],
+>           "schema": {
+>             "properties": {
+>               "sha": {
+>                 "type": "string"
+>               },
+>               "url": {
+>                 "format": "uri",
+>                 "type": "string"
+>               }
+>             },
+>             "required": [
+>               "sha",
+>               "url"
+>             ],
+>             "type": "object"
+>           },
+>           "schemas": {
+>             "/components/schemas/commit-search-result-item/properties/commit": {
+>               "properties": {
+>                 "sha": {
+>                   "type": "string"
+>                 },
+>                 "url": {
+>                   "format": "uri",
+>                   "type": "string"
+>                 }
+>               },
+>               "required": [
+>                 "sha",
+>                 "url"
+>               ],
+>               "type": "object"
+>             }
+>           }
+>         },
+>         "verification": {
+>           "name": "verification",
+>           "returns": [
+>             "dict[str, Any]"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/verification"
+>           },
+>           "schemas": {
+>             "/components/schemas/commit-search-result-item/properties/commit": {
+>               "$ref": "#/components/schemas/verification"
+diff --recursive --new-file before/tests/Commit.py after/tests/Commit.py
+45a46
+>         self.assertEqual(c.files, "list[dict[str, Any]]")
+50a52,53
+>         self.assertEqual(c.stats, "dict[str, Any]")
+>         self.assertEqual(c.tree, "dict[str, Any]")
+51a55
+>         self.assertEqual(c.verification, "dict[str, Any]")
