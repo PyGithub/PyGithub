@@ -66,7 +66,7 @@ class ApplicationOAuth(Framework.TestCase):
         self.assertTrue(f"client_id={self.CLIENT_ID}" in self.app.get_login_url(state="123abc", login="user"))
 
     def testGetAccessToken(self):
-        access_token = self.app.get_access_token("oauth_code_removed", state="state_removed")
+        access_token = self.app.get_access_token("oauth_code_removed", code_verifier="code_verifier_removed")
         # Test string representation
         self.assertEqual(
             str(access_token),
@@ -105,7 +105,7 @@ class ApplicationOAuth(Framework.TestCase):
         self.assertTrue(f"client_id={self.CLIENT_ID}" in self.ent_app.get_login_url(state="123abc", login="user"))
 
     def testEnterpriseGetAccessToken(self):
-        access_token = self.ent_app.get_access_token("oauth_code_removed", state="state_removed")
+        access_token = self.ent_app.get_access_token("oauth_code_removed", code_verifier="code_verifier_removed")
         # Test string representation
         self.assertEqual(
             str(access_token),
@@ -124,7 +124,7 @@ class ApplicationOAuth(Framework.TestCase):
     def testGetAccessTokenWithExpiry(self):
         with mock.patch("github.AccessToken.datetime") as dt:
             dt.now = mock.Mock(return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc))
-            access_token = self.app.get_access_token("oauth_code_removed", state="state_removed")
+            access_token = self.app.get_access_token("oauth_code_removed", code_verifier="code_verifier_removed")
         # Test string representation
         self.assertEqual(
             str(access_token),
@@ -147,7 +147,7 @@ class ApplicationOAuth(Framework.TestCase):
         )
 
     def testRefreshAccessToken(self):
-        access_token = self.app.get_access_token("oauth_code_removed", state="state_removed")
+        access_token = self.app.get_access_token("oauth_code_removed", code_verifier="code_verifier_removed")
 
         with mock.patch("github.AccessToken.datetime") as dt:
             dt.now = mock.Mock(return_value=datetime(2023, 6, 7, 12, 0, 0, 123, tzinfo=timezone.utc))
@@ -183,7 +183,7 @@ class ApplicationOAuth(Framework.TestCase):
 
     def testGetAccessTokenBadCode(self):
         with self.assertRaises(github.BadCredentialsException) as exc:
-            self.app.get_access_token("oauth_code_removed", state="state_removed")
+            self.app.get_access_token("oauth_code_removed", code_verifier="code_verifier_removed")
         self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
@@ -191,7 +191,7 @@ class ApplicationOAuth(Framework.TestCase):
 
     def testGetAccessTokenUnknownError(self):
         with self.assertRaises(github.GithubException) as exc:
-            self.app.get_access_token("oauth_code_removed", state="state_removed")
+            self.app.get_access_token("oauth_code_removed", code_verifier="code_verifier_removed")
         self.assertIsNone(exc.exception.message)
         self.assertEqual(exc.exception.status, 200)
         self.assertIn("error", exc.exception.data)
