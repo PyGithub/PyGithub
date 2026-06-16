@@ -124,7 +124,12 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 ---
 >         "/components/schemas/public-user",
 >         "/components/schemas/simple-user"
-3720a3814,3816
+1162c1255,1256
+<         "/components/schemas/public-user"
+---
+>         "/components/schemas/public-user",
+>         "/components/schemas/simple-user"
+3788a3883,3885
 >       ],
 >       "/components/schemas/simple-user": [
 >         "NamedUser"

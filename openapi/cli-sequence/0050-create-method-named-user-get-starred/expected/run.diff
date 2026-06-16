@@ -41,19 +41,19 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >           ]
 >         }
 >       },
-1417a1430,1434
+1485a1498,1502
 >       },
 >       "/users/{username}/starred": {
 >         "get": [
 >           "NamedUser.get_starred"
 >         ]
-1427a1445,1449
+1495a1513,1517
 >       },
 >       "/users/{username}/starred": {
 >         "get": [
 >           "None"
 >         ]
-2083a2106,2118
+2154a2177,2189
 >             ]
 >           }
 >         ]

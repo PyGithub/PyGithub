@@ -1,5 +1,5 @@
---- cli-sequence/0012-add-simple-user-schema/run/github/NamedUser.py	2026-05-19 18:23:33.791552854 +0200
-+++ cli-sequence/0012-add-simple-user-schema/run/github/NamedUser.py.bak	2026-05-19 18:23:28.069329117 +0200
+--- github/NamedUser.py.orig	2026-05-19 18:23:33.791552854 +0200
++++ github/NamedUser.py.patched	2026-05-19 18:23:28.069329117 +0200
 @@ -42,6 +42,7 @@
  
      - /components/schemas/nullable-simple-user

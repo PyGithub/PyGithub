@@ -23,7 +23,7 @@ Class IssueComment
 
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 3 Python files
-Indexed 11 classes
+Indexed 12 classes
 Indexed 0 paths
-Indexed 3 schemas
+Indexed 4 schemas
 Indexing OpenAPI spec

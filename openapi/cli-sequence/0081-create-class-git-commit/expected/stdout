@@ -1,0 +1,207 @@
++ python scripts/openapi.py --dry-run create class --tests github openapi.spec.json openapi.index GitCommit https://docs.github.com/en/rest/reference/git#commits /components/schemas/commit-search-result-item/properties/commit /components/schemas/commit/properties/commit /components/schemas/nullable-simple-commit /components/schemas/simple-commit
+Creating class github.GitCommit.GitCommit with parent github.GithubObject.NonCompletableGithubObject in ./github/GitCommit.py
+Updating temporary index
+Indexing 7 Python files
+Indexed 16 classes
+Indexed 4 paths
+Indexed 19 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class GitCommit
+Applying spec openapi.spec.json to github.GitCommit.GitCommit (github/GitCommit.py)
+Applying schema /components/schemas/commit-search-result-item/properties/commit
+Applying schema /components/schemas/commit/properties/commit
+Applying schema /components/schemas/nullable-simple-commit
+Applying schema /components/schemas/simple-commit
+Class GitCommit changed
+Test tests/GitCommit.py changed
+
+./github/GitCommit.py:
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++import github.GitAuthor
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    from github.GitAuthor import GitAuthor
++    pass
++
++
++class GitCommit(NonCompletableGithubObject):
++    """
++    This class represents GitCommit.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/git#commits
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/commit-search-result-item/properties/commit
++    - /components/schemas/commit/properties/commit
++    - /components/schemas/nullable-simple-commit
++    - /components/schemas/simple-commit
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._author: Attribute[GitAuthor] = NotSet
++        self._comment_count: Attribute[int] = NotSet
++        self._committer: Attribute[GitAuthor] = NotSet
++        self._id: Attribute[str] = NotSet
++        self._message: Attribute[str] = NotSet
++        self._timestamp: Attribute[datetime] = NotSet
++        self._tree_id: Attribute[str] = NotSet
++        self._url: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def author(self) -> GitAuthor:
++        return self._author.value
++
++    @property
++    def comment_count(self) -> int:
++        return self._comment_count.value
++
++    @property
++    def committer(self) -> GitAuthor:
++        return self._committer.value
++
++    @property
++    def id(self) -> str:
++        return self._id.value
++
++    @property
++    def message(self) -> str:
++        return self._message.value
++
++    @property
++    def timestamp(self) -> datetime:
++        return self._timestamp.value
++
++    @property
++    def tree_id(self) -> str:
++        return self._tree_id.value
++
++    @property
++    def url(self) -> str:
++        return self._url.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "author" in attributes:  # pragma no branch
++            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
++        if "comment_count" in attributes:  # pragma no branch
++            self._comment_count = self._makeIntAttribute(attributes["comment_count"])
++        if "committer" in attributes:  # pragma no branch
++            self._committer = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["committer"])
++        if "id" in attributes:  # pragma no branch
++            self._id = self._makeStringAttribute(attributes["id"])
++        if "message" in attributes:  # pragma no branch
++            self._message = self._makeStringAttribute(attributes["message"])
++        if "timestamp" in attributes:  # pragma no branch
++            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
++        if "tree_id" in attributes:  # pragma no branch
++            self._tree_id = self._makeStringAttribute(attributes["tree_id"])
++        if "url" in attributes:  # pragma no branch
++            self._url = self._makeStringAttribute(attributes["url"])
++
+
+./tests/GitCommit.py:
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class GitCommit(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type GitCommit and assign to self.gc, then run:
++        #   pytest ./tests/GitCommit.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/GitCommit.py testAttributes
++        #   pre-commit run --all-files
++        self.gc = None
++
++    def testAttributes(self):
++        gc = self.gc
++        self.assertEqual(gc.__repr__(), "")
++        self.assertEqual(gc.author.some_attribute, "")
++        self.assertEqual(gc.comment_count, 0)
++        self.assertEqual(gc.committer.some_attribute, "")
++        self.assertEqual(gc.id, "")
++        self.assertEqual(gc.message, "")
++        self.assertEqual(gc.timestamp, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(gc.tree_id, "")
++        self.assertEqual(gc.url, "")
++ python scripts/openapi.py create class --tests github openapi.spec.json openapi.index GitCommit https://docs.github.com/en/rest/reference/git#commits /components/schemas/commit-search-result-item/properties/commit /components/schemas/commit/properties/commit /components/schemas/nullable-simple-commit /components/schemas/simple-commit
+Creating class github.GitCommit.GitCommit with parent github.GithubObject.NonCompletableGithubObject in ./github/GitCommit.py
+Updating index
+Indexing 7 Python files
+Indexed 16 classes
+Indexed 4 paths
+Indexed 19 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class GitCommit
+Applying spec openapi.spec.json to github.GitCommit.GitCommit (github/GitCommit.py)
+Applying schema /components/schemas/commit-search-result-item/properties/commit
+Applying schema /components/schemas/commit/properties/commit
+Applying schema /components/schemas/nullable-simple-commit
+Applying schema /components/schemas/simple-commit
+Class GitCommit changed
+Test tests/GitCommit.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 7 Python files
+Indexed 16 classes
+Indexed 4 paths
+Indexed 19 schemas
+Indexing OpenAPI spec

@@ -1,0 +1,177 @@
+diff --recursive --new-file before/github/Repository.py after/github/Repository.py
+113a114
+>         self._network_count: Attribute[int] = NotSet
+117a119
+>         self._organization: Attribute[NamedUser] = NotSet
+118a121
+>         self._parent: Attribute[Repository] = NotSet
+122a126
+>         self._role_name: Attribute[str] = NotSet
+123a128
+>         self._source: Attribute[Repository] = NotSet
+130a136
+>         self._subscribers_count: Attribute[int] = NotSet
+455a462,466
+>     def network_count(self) -> int:
+>         self._completeIfNotSet(self._network_count)
+>         return self._network_count.value
+> 
+>     @property
+475a487,491
+>     def organization(self) -> NamedUser:
+>         self._completeIfNotSet(self._organization)
+>         return self._organization.value
+> 
+>     @property
+480a497,501
+>     def parent(self) -> Repository:
+>         self._completeIfNotSet(self._parent)
+>         return self._parent.value
+> 
+>     @property
+500a522,526
+>     def role_name(self) -> str:
+>         self._completeIfNotSet(self._role_name)
+>         return self._role_name.value
+> 
+>     @property
+505a532,536
+>     def source(self) -> Repository:
+>         self._completeIfNotSet(self._source)
+>         return self._source.value
+> 
+>     @property
+540a572,576
+>     def subscribers_count(self) -> int:
+>         self._completeIfNotSet(self._subscribers_count)
+>         return self._subscribers_count.value
+> 
+>     @property
+733a770,771
+>         if "network_count" in attributes:  # pragma no branch
+>             self._network_count = self._makeIntAttribute(attributes["network_count"])
+741a780,781
+>         if "organization" in attributes:  # pragma no branch
+>             self._organization = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["organization"])
+743a784,785
+>         if "parent" in attributes:  # pragma no branch
+>             self._parent = self._makeClassAttribute(github.Repository.Repository, attributes["parent"])
+751a794,795
+>         if "role_name" in attributes:  # pragma no branch
+>             self._role_name = self._makeStringAttribute(attributes["role_name"])
+753a798,799
+>         if "source" in attributes:  # pragma no branch
+>             self._source = self._makeClassAttribute(github.Repository.Repository, attributes["source"])
+767a814,815
+>         if "subscribers_count" in attributes:  # pragma no branch
+>             self._subscribers_count = self._makeIntAttribute(attributes["subscribers_count"])
+diff --recursive --new-file before/openapi.index after/openapi.index
+2913a2914,2929
+>         "network_count": {
+>           "name": "network_count",
+>           "returns": [
+>             "int"
+>           ],
+>           "schema": null,
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "example": 0,
+>               "type": "integer"
+>             },
+>             "/components/schemas/minimal-repository": {
+>               "type": "integer"
+>             }
+>           }
+>         },
+3000a3017,3030
+>         "organization": {
+>           "name": "organization",
+>           "returns": [
+>             "NamedUser"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/nullable-simple-user"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "$ref": "#/components/schemas/nullable-simple-user"
+>             }
+>           }
+>         },
+3020a3051,3064
+>         "parent": {
+>           "name": "parent",
+>           "returns": [
+>             "Repository"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/repository"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "$ref": "#/components/schemas/repository"
+>             }
+>           }
+>         },
+3114a3159,3174
+>         "role_name": {
+>           "name": "role_name",
+>           "returns": [
+>             "str"
+>           ],
+>           "schema": {
+>             "example": "admin",
+>             "type": "string"
+>           },
+>           "schemas": {
+>             "/components/schemas/minimal-repository": {
+>               "example": "admin",
+>               "type": "string"
+>             }
+>           }
+>         },
+3137a3198,3211
+>         "source": {
+>           "name": "source",
+>           "returns": [
+>             "Repository"
+>           ],
+>           "schema": {
+>             "$ref": "#/components/schemas/repository"
+>           },
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "$ref": "#/components/schemas/repository"
+>             }
+>           }
+>         },
+3296a3371,3386
+>             }
+>           }
+>         },
+>         "subscribers_count": {
+>           "name": "subscribers_count",
+>           "returns": [
+>             "int"
+>           ],
+>           "schema": null,
+>           "schemas": {
+>             "/components/schemas/full-repository": {
+>               "example": 42,
+>               "type": "integer"
+>             },
+>             "/components/schemas/minimal-repository": {
+>               "type": "integer"
+diff --recursive --new-file before/tests/Repository.py after/tests/Repository.py
+101a102
+>         self.assertEqual(r.network_count, 0)
+105a107
+>         self.assertEqual(r.organization.some_attribute, "")
+106a109
+>         self.assertEqual(r.parent.some_attribute, "")
+110a114
+>         self.assertEqual(r.role_name, "")
+111a116
+>         self.assertEqual(r.source.some_attribute, "")
+118a124
+>         self.assertEqual(r.subscribers_count, 0)

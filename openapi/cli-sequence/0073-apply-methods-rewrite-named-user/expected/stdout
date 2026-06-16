@@ -1,0 +1,69 @@
++ python scripts/openapi.py --dry-run apply methods openapi.spec.json openapi.index NamedUser
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class NamedUser
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+- Updating method get_repo
+- Updating method get_repos
+- Updating method get_starred
+Diff:
+--- 
++++ 
+@@ -309,9 +309,9 @@
+ 
+         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/rest/repos/repos#get-a-repository>`_
+         :param name: The name of the repository in the form "{owner}/{repo}" with:
+-            
+-            - "{owner}": The account owner of the repository. The name is not case sensitive.
+-            - "{repo}": The name of the repository without the `.git` extension. The name is not case sensitive.
++
++        - "{owner}": The account owner of the repository. The name is not case sensitive.
++        - "{repo}": The name of the repository without the `.git` extension. The name is not case sensitive.
+         """
+         assert isinstance(name, str), name
+         url = f"/repos/{self.login}/{name}"
+
+Class NamedUser changed
++ python scripts/openapi.py --dry-run apply methods --rewrite openapi.spec.json openapi.index NamedUser
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class NamedUser
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+- Updating method get_repo
+- Updating method get_repos
+- Updating method get_starred
+Diff:
+--- 
++++ 
+@@ -297,7 +297,7 @@
+     )
+     @openapi_parameter(name="owner", input=True, docstring_prepend='- "{owner}": ')
+     @openapi_parameter(name="repo", input=True, docstring_prepend='- "{repo}": ')
+-    def get_repo(self, name: str) -> dict[str, Any]:
++    def get_repo(self, name: str) -> Repository:
+         """
+         Get a repository
+ 
+@@ -322,7 +322,7 @@
+         type: Opt[str] = NotSet,
+         sort: Opt[str] = NotSet,
+         direction: Opt[str] = NotSet,
+-    ) -> PaginatedList[dict[str, Any]]:
++    ) -> PaginatedList[Repository]:
+         """
+         List repositories for a user
+ 
+
+Class NamedUser changed
++ python scripts/openapi.py apply methods --rewrite openapi.spec.json openapi.index NamedUser
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class NamedUser
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+- Updating method get_repo
+- Updating method get_repos
+- Updating method get_starred
+Class NamedUser changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 5 Python files
+Indexed 14 classes
+Indexed 4 paths
+Indexed 9 schemas
+Indexing OpenAPI spec
