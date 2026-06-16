@@ -167,9 +167,9 @@ diff --recursive --new-file before/openapi.index after/openapi.index
 >       ],
 >       "inherited_schemas": [
 >         "/components/schemas/commit",
->         "/components/schemas/commit/properties/parents/items",
 >         "/components/schemas/commit-search-result-item/properties/commit",
->         "/components/schemas/commit-search-result-item/properties/parents/items"
+>         "/components/schemas/commit-search-result-item/properties/parents/items",
+>         "/components/schemas/commit/properties/parents/items"
 >       ],
 >       "methods": {},
 >       "module": "Commit",
