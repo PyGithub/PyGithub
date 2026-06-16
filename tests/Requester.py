@@ -265,6 +265,10 @@ class Requester(Framework.TestCase):
             "https://github.com/api?item=3&item=4",
             gr.Requester.add_parameters_to_url("https://github.com/api?item=1&item=2&item=3", {"item": [3, 4]}),
         )
+        self.assertEqual(
+            "https://github.com/api?all=true&participating=false",
+            gr.Requester.add_parameters_to_url("https://github.com/api", {"all": True, "participating": False}),
+        )
 
     def testCloseGithub(self):
         mocked_connection = mock.MagicMock()
