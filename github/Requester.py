@@ -503,7 +503,12 @@ class Requester:
         url_params = urllib.parse.parse_qs(query)
         # union parameters in url with given parameters, the latter has precedence
         url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
-        parameter_list = [(key, value) for key, values in url_params.items() for value in values]
+        # GitHub expects lowercase booleans (true/false) in the query string
+        parameter_list = [
+            (key, str(value).lower() if isinstance(value, bool) else value)
+            for key, values in url_params.items()
+            for value in values
+        ]
         # remove query from url
         url = urllib.parse.urlunparse((scheme, netloc, url, params, "", fragment))
 

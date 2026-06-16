@@ -316,6 +316,11 @@ class PaginatedList(Framework.TestCase):
         repos = self.g.get_repos()
         self.assertEqual(0, repos.totalCount)
 
+    def testTotalCountWithLastPageAndPageFirst(self):
+        # the last link may list page before per_page, totalCount must still parse
+        repos = self.g.get_repos()
+        self.assertEqual(42, repos.totalCount)
+
     def testTotalCountWithDictionary(self):
         # PullRequest.get_review_requests() actually returns a dictionary that
         # we fudge into two lists, which means data is a dict, not a list.

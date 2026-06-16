@@ -3761,7 +3761,7 @@ class OpenApi:
                     for schema in schemas:
                         if schema not in derived_schemas:
                             derived_schemas.append(schema)
-                    classes[derived]["inherited_schemas"] = derived_schemas
+                    classes[derived]["inherited_schemas"] = sorted(derived_schemas)
 
         path_to_call_methods = {}
         path_to_return_classes = {}
@@ -3804,6 +3804,8 @@ class OpenApi:
                     schema_to_classes[schema] = []
                 schema_to_classes[schema].append(cls_name)
 
+        schema_to_classes = {schema: sorted(cls_names) for schema, cls_names in schema_to_classes.items()}
+
         print(f"Indexed {len(classes)} classes")
         print(f"Indexed {len(path_to_return_classes)} paths")
         print(f"Indexed {len(schema_to_classes)} schemas")
@@ -3844,7 +3846,9 @@ class OpenApi:
                         if schema.startswith("#/components/"):
                             return_schema_to_paths[schema[1:]].append(path)
 
-            data["indices"]["return_schema_to_paths"] = return_schema_to_paths
+            data["indices"]["return_schema_to_paths"] = {
+                schema: sorted(paths) for schema, paths in return_schema_to_paths.items()
+            }
 
         if dry_run:
             if os.path.exists(index_filename):
