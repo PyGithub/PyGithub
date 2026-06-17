@@ -299,3 +299,20 @@ class Search(Framework.TestCase):
         # Example taken from #236
         issues = self.g.search_issues("repo:saltstack/salt-api type:Issues updated:>2014-03-04T18:28:11Z")
         self.assertEqual(issues[0].id, 29138794)
+
+    def testSearchListQualifierExpandsToRepeatedChunks(self):
+        # A list-valued qualifier must expand into repeated "qualifier:value" chunks
+        # rather than being serialized as a Python list repr on the wire.
+        repos = self.g.search_repositories("x", language=["python", "ruby"])
+        q = repos._PaginatedList__firstParams["q"]
+        self.assertEqual(q, "x language:python language:ruby")
+
+    def testSearchTupleQualifierExpandsToRepeatedChunks(self):
+        repos = self.g.search_repositories("x", language=("python", "ruby"))
+        q = repos._PaginatedList__firstParams["q"]
+        self.assertEqual(q, "x language:python language:ruby")
+
+    def testSearchScalarQualifierUnchanged(self):
+        repos = self.g.search_repositories("x", language="python")
+        q = repos._PaginatedList__firstParams["q"]
+        self.assertEqual(q, "x language:python")
