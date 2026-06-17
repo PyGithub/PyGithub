@@ -288,6 +288,19 @@ class PullRequest(Framework.TestCase):
         )
         self.assertEqual(comment.id, 886298)
 
+    def testCreateReviewCommentInvalidStartSide(self):
+        # "side" is not a valid start_side; only LEFT and RIGHT are accepted.
+        with self.assertRaises(AssertionError) as raisedexp:
+            self.pull.create_review_comment(
+                "Comment created by PyGithub",
+                "8a4f306d4b223682dd19410d4a9150636ebe4206",
+                "src/github/Issue.py",
+                10,
+                start_line=5,
+                start_side="side",
+            )
+        self.assertEqual(str(raisedexp.exception), "side")
+
     def testGetComments(self):
         epoch = datetime(1970, 1, 1, 0, 0)
         comments = self.pull.get_comments(sort="updated", direction="desc", since=epoch)
