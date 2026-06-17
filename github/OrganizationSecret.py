@@ -31,8 +31,9 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.PublicKey
 import github.Repository
-from github.GithubObject import Attribute, NotSet
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_optional_list
 from github.PaginatedList import PaginatedList
 from github.Secret import Secret
 
@@ -80,7 +81,7 @@ class OrganizationSecret(Secret):
         return PaginatedList(
             github.Repository.Repository,
             self._requester,
-            self._selected_repositories_url.value,
+            self.selected_repositories_url,
             None,
             list_item="repositories",
         )
@@ -90,32 +91,57 @@ class OrganizationSecret(Secret):
         value: str,
         visibility: str = "all",
         secret_type: str = "actions",
+        selected_repositories: Opt[list[Repository]] = NotSet,
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
-        :calls: `PATCH /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/dependabot/secrets#create-or-update-an-organization-secret>`_
-        :param variable_name: string
-        :param value: string
-        :param visibility: string
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/dependabot/secrets#create-or-update-an-organization-secret>`_
+        :param value: string plain text value of the secret
+        :param visibility: string options all, private or selected
         :param secret_type: string options actions or dependabot
+        :param selected_repositories: list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
+        assert is_optional_list(selected_repositories, github.Repository.Repository), selected_repositories
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
-        patch_parameters: dict[str, Any] = {
-            "name": self.name,
-            "value": value,
+        public_key = self.get_public_key(secret_type=secret_type)
+        encrypted_value = public_key.encrypt(value)
+        put_parameters: dict[str, Any] = {
+            "key_id": public_key.key_id,
+            "encrypted_value": encrypted_value,
             "visibility": visibility,
         }
+        if visibility == "selected" and is_defined(selected_repositories):
+            # Dependabot and Actions endpoints expect different types
+            # https://docs.github.com/en/rest/dependabot/secrets#create-or-update-an-organization-secret
+            # https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret
+            if secret_type == "actions":
+                put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
+            else:
+                put_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]
 
         status, _, _ = self._requester.requestJson(
-            "PATCH",
+            "PUT",
             self.url,
-            input=patch_parameters,
+            input=put_parameters,
         )
-        return status == 204
+        return status in (201, 204)
+
+    def get_public_key(self, secret_type: str = "actions") -> github.PublicKey.PublicKey:
+        """
+        :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/actions/secrets#get-an-organization-public-key>`_
+        :calls: `GET /orgs/{org}/dependabot/secrets/public-key <https://docs.github.com/en/rest/dependabot/secrets#get-an-organization-public-key>`_
+        :param secret_type: string options actions or dependabot
+        :rtype: :class:`github.PublicKey.PublicKey`
+        """
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+        # self.url is .../orgs/{org}/{secret_type}/secrets/{secret_name}
+        base_url = self.url.rsplit("/secrets/", 1)[0]
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{base_url}/secrets/public-key")
+        return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def add_repo(self, repo: Repository) -> bool:
         """
