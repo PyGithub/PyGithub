@@ -967,9 +967,9 @@ class Requester:
         cls,
         status: int,
         headers: dict[str, Any],
-        output: dict[str, Any],
+        output: Any,
     ) -> GithubException.GithubException:
-        message = output.get("message") if output else None
+        message = output.get("message") if isinstance(output, dict) else None
         lc_message = message.lower() if message else ""
 
         msg = None
