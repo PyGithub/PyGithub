@@ -96,6 +96,20 @@ def _datetime_from_http_date(value: str) -> datetime:
     return dt
 
 
+def _format_query_datetime(dt: datetime) -> str:
+    """
+    Format a datetime as an ISO 8601 UTC string for use as a query parameter.
+
+    Timezone-aware datetimes are converted to UTC first, so the correct
+    instant is sent rather than the wall-clock fields with a literal "Z".
+
+    """
+
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(timezone.utc)
+    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _datetime_from_github_isoformat(value: str) -> datetime:
     """
     Convert an GitHub API timestamps to a datetime object.

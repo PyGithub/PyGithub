@@ -243,6 +243,20 @@ class GithubObject(unittest.TestCase):
             self.assertEqual(int, e.exception.expected_type)
             self.assertIsNone(e.exception.transformation_exception)
 
+    def testFormatQueryDatetime(self):
+        # Aware datetimes must be converted to the correct UTC instant, not
+        # emitted as wall-clock fields with a literal "Z" (see issue #2282).
+        aware = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone(timedelta(hours=-5)))
+        self.assertEqual(gho._format_query_datetime(aware), "2024-01-01T17:00:00Z")
+
+        # UTC-aware datetimes are unchanged
+        utc = datetime(2024, 1, 1, 17, 0, 0, tzinfo=timezone.utc)
+        self.assertEqual(gho._format_query_datetime(utc), "2024-01-01T17:00:00Z")
+
+        # Naive datetimes are treated as-is (backwards compatible)
+        naive = datetime(2024, 1, 1, 17, 0, 0)
+        self.assertEqual(gho._format_query_datetime(naive), "2024-01-01T17:00:00Z")
+
 
 class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
     def testRepoCommitFilesDefault(self):

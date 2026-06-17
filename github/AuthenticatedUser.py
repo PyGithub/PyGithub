@@ -98,6 +98,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
+    _format_query_datetime,
     is_defined,
     is_optional,
     is_optional_list,
@@ -755,7 +756,7 @@ class AuthenticatedUser(CompletableGithubObject):
         assert is_optional(since, datetime), since
         url_parameters: dict[str, Any] = {}
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return PaginatedList(github.Gist.Gist, self._requester, "/gists", url_parameters)
 
     def get_issues(
@@ -788,7 +789,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(direction):
             url_parameters["direction"] = direction
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return PaginatedList(github.Issue.Issue, self._requester, "/issues", url_parameters)
 
     def get_user_issues(
@@ -821,7 +822,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(direction):
             url_parameters["direction"] = direction
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return PaginatedList(github.Issue.Issue, self._requester, "/user/issues", url_parameters)
 
     def get_key(self, id: int) -> UserKey:
@@ -871,9 +872,9 @@ class AuthenticatedUser(CompletableGithubObject):
             # convert True, False to true, false for api parameters
             params["participating"] = "true" if participating else "false"
         if is_defined(since):
-            params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            params["since"] = _format_query_datetime(since)
         if is_defined(before):
-            params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
+            params["before"] = _format_query_datetime(before)
 
         return PaginatedList(github.Notification.Notification, self._requester, "/notifications", params)
 
@@ -1013,7 +1014,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if last_read_at is None:
             last_read_at = datetime.now(timezone.utc)
         assert isinstance(last_read_at, datetime)
-        put_parameters = {"last_read_at": last_read_at.strftime("%Y-%m-%dT%H:%M:%SZ")}
+        put_parameters = {"last_read_at": _format_query_datetime(last_read_at)}
 
         headers, data = self._requester.requestJsonAndCheck("PUT", "/notifications", input=put_parameters)
 
