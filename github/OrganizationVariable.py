@@ -29,7 +29,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import github.Repository
-from github.GithubObject import Attribute, NotSet
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_optional_list
 from github.PaginatedList import PaginatedList
 from github.Variable import Variable
 
@@ -82,22 +82,26 @@ class OrganizationVariable(Variable):
         self,
         value: str,
         visibility: str = "all",
+        selected_repositories: Opt[list[Repository]] = NotSet,
     ) -> bool:
         """
         :calls: `PATCH /orgs/{org}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
-        :param variable_name: string
         :param value: string
-        :param visibility: string
+        :param visibility: string options all, private or selected
+        :param selected_repositories: list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
+        assert is_optional_list(selected_repositories, github.Repository.Repository), selected_repositories
 
         patch_parameters: dict[str, Any] = {
             "name": self.name,
             "value": value,
             "visibility": visibility,
         }
+        if visibility == "selected" and is_defined(selected_repositories):
+            patch_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
 
         status, _, _ = self._requester.requestJson(
             "PATCH",
