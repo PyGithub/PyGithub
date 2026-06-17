@@ -417,7 +417,7 @@ class Requester:
         else:
             self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})  # type: ignore
         self.__port = o.port
-        self.__prefix = o.path
+        self.__prefix = o.path.rstrip("/")
         self.__timeout = timeout
         self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__pool_size = pool_size
@@ -484,8 +484,8 @@ class Requester:
     def get_graphql_prefix(path: str | None) -> str:
         if path is None or path in ["", "/"]:
             path = ""
-        if path.endswith(("/v3", "/v3/")):
-            path = Requester.remove_suffix(path, "/")
+        path = path.rstrip("/")
+        if path.endswith("/v3"):
             path = Requester.remove_suffix(path, "/v3")
         return path + "/graphql"
 
