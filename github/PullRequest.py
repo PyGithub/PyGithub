@@ -487,7 +487,6 @@ class PullRequest(CompletableGithubObject):
         assert is_undefined(start_side) or start_side in [
             "LEFT",
             "RIGHT",
-            "side",
         ], start_side
         assert is_optional(in_reply_to, int), in_reply_to
         assert is_undefined(subject_type) or subject_type in [
