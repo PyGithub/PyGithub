@@ -50,6 +50,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
+    _format_query_datetime,
     is_defined,
     is_optional,
     is_optional_list,
@@ -250,9 +251,9 @@ class CheckRun(CompletableGithubObject):
         if is_defined(status):
             post_parameters["status"] = status
         if is_defined(started_at):
-            post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+            post_parameters["started_at"] = _format_query_datetime(started_at)
         if is_defined(completed_at):
-            post_parameters["completed_at"] = completed_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+            post_parameters["completed_at"] = _format_query_datetime(completed_at)
         if is_defined(conclusion):
             post_parameters["conclusion"] = conclusion
         if is_defined(output):

@@ -106,6 +106,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
+    _format_query_datetime,
     is_defined,
     is_optional,
     is_optional_list,
@@ -685,7 +686,7 @@ class PullRequest(CompletableGithubObject):
 
         url_parameters = NotSet.remove_unset_items({"sort": sort, "direction": direction})
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
 
         return PaginatedList(
             github.PullRequestComment.PullRequestComment,
