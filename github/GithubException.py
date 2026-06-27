@@ -136,6 +136,32 @@ class RateLimitExceededException(GithubException):
     """
 
 
+class RateLimitExceededExceedsMaxWait(RateLimitExceededException):
+    """
+    Exception raised when the wait required to respect a rate limit reset exceeds the configured
+    ``max_rate_limit_wait`` on ``GithubRetry``, instead of blocking until the rate limit resets.
+    """
+
+    def __init__(
+        self,
+        status: int,
+        data: Any = None,
+        headers: dict[str, str] | None = None,
+        message: str | None = None,
+        wait: float | None = None,
+    ):
+        super().__init__(status, data, headers, message)
+        self.__wait = wait
+
+    @property
+    def wait(self) -> float | None:
+        """
+        The backoff in seconds that would have been required to respect the rate limit reset, before it was capped by
+        ``max_rate_limit_wait``.
+        """
+        return self.__wait
+
+
 class BadAttributeException(Exception):
     """
     Exception raised when Github returns an attribute with the wrong type.
