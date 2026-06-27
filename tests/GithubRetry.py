@@ -406,3 +406,39 @@ class GithubRetry(unittest.TestCase):
             )
 
         log.assert_called_once_with(logging.INFO, "Request TEST URL failed with 403: NOT GOOD")
+
+    def test_primary_rate_error_exceeds_max_wait(self):
+        retry = github.GithubRetry(total=3, max_rate_limit_wait=10)
+        response = self.response_func(PrimaryRateLimitJson, 1644768012)
+
+        with self.mock_retry_now(1644768000):
+            # reset is 12 seconds away, +1s = 13s backoff, which exceeds max_rate_limit_wait=10
+            with self.assertRaises(github.RateLimitExceededExceedsMaxWait) as exp:
+                retry.increment("TEST", "URL", response())
+
+            self.assertEqual(13, exp.exception.wait)
+            self.assertEqual(403, exp.exception.status)
+            self.assertEqual(PrimaryRateLimitMessage, exp.exception.data.get("message"))
+
+    def test_primary_rate_error_within_max_wait(self):
+        retry = github.GithubRetry(total=3, max_rate_limit_wait=20)
+        response = self.response_func(PrimaryRateLimitJson, 1644768012)
+
+        with self.mock_retry_now(1644768000):
+            # reset is 12 seconds away, +1s = 13s backoff, under max_rate_limit_wait=20
+            retry = retry.increment("TEST", "URL", response())
+
+            self.assertEqual(2, retry.total)
+            self.assertEqual(13, retry.get_backoff_time())
+
+    def test_secondary_rate_error_exceeds_max_wait(self):
+        retry = github.GithubRetry(total=3, secondary_rate_wait=60, max_rate_limit_wait=10)
+        response = self.response_func(SecondaryRateLimitJson, reset=None)
+
+        # secondary backoff is fixed at secondary_rate_wait=60, which exceeds max_rate_limit_wait=10
+        with self.assertRaises(github.RateLimitExceededExceedsMaxWait) as exp:
+            retry.increment("TEST", "URL", response())
+
+        self.assertEqual(60, exp.exception.wait)
+        self.assertEqual(403, exp.exception.status)
+        self.assertEqual(SecondaryRateLimitMessage, exp.exception.data.get("message"))
