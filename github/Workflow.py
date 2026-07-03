@@ -183,6 +183,8 @@ class Workflow(CompletableGithubObject):
             self._requester.requestJsonAndCheck("POST", url, input=input)
             return True
         else:
+            # Deliberately swallows every non-204 status (not just 404) as False here: this
+            # branch only exists for callers that opted out of exceptions via throw=False.
             status, _, _ = self._requester.requestJson("POST", url, input=input)
             return status == 204
 
@@ -240,16 +242,16 @@ class Workflow(CompletableGithubObject):
         :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#disable-a-workflow>`_
         :rtype: bool
         """
-        status, _, _ = self._requester.requestJson("PUT", f"{self.url}/disable")
-        return status == 204
+        status, headers, data = self._requester.requestJson("PUT", f"{self.url}/disable")
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def enable(self) -> bool:
         """
         :calls: `PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#enable-a-workflow>`_
         :rtype: bool
         """
-        status, _, _ = self._requester.requestJson("PUT", f"{self.url}/enable")
-        return status == 204
+        status, headers, data = self._requester.requestJson("PUT", f"{self.url}/enable")
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "badge_url" in attributes:  # pragma no branch

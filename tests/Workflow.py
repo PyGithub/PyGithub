@@ -170,7 +170,10 @@ class Workflow(Framework.TestCase):
 
     def testDisabledWhenAlreadyDisabled(self):
         workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
-        self.assertFalse(workflow.disable())
+        with self.assertRaises(GithubException) as raisedexp:
+            workflow.disable()
+        self.assertEqual(raisedexp.exception.status, 403)
+        self.assertEqual(raisedexp.exception.data["message"], "Unable to disable a workflow that is not active.")
 
     def testEnable(self):
         workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")

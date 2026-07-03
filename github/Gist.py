@@ -288,7 +288,7 @@ class Gist(CompletableGithubObject):
         :calls: `GET /gists/{gist_id}/star <https://docs.github.com/en/rest/reference/gists>`_
         """
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/star")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def reset_starred(self) -> None:
         """

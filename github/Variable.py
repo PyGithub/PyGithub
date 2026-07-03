@@ -119,12 +119,12 @@ class Variable(CompletableGithubObject):
             "name": self.name,
             "value": value,
         }
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "PATCH",
             self.url,
             input=patch_parameters,
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def delete(self) -> None:
         """

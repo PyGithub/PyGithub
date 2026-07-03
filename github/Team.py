@@ -375,12 +375,12 @@ class Team(CompletableGithubObject):
         put_parameters = {
             "permission": permission,
         }
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "PUT",
             f"{self.organization.url}/teams/{self.slug}/repos/{github.Repository.Repository.as_url_param(repo)}",
             input=put_parameters,
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def delete(self) -> None:
         """
@@ -486,7 +486,7 @@ class Team(CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def has_in_repos(self, repo: str | Repository) -> bool:
         """
@@ -496,7 +496,7 @@ class Team(CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}"
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def remove_membership(self, member: NamedUser) -> None:
         """

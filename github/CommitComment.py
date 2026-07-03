@@ -220,12 +220,12 @@ class CommitComment(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(reaction_id, int), reaction_id
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
             f"{self.url}/reactions/{reaction_id}",
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "author_association" in attributes:  # pragma no branch

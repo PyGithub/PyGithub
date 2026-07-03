@@ -183,12 +183,12 @@ class ProjectColumn(NonCompletableGithubObject):
         """
         :calls: `DELETE /projects/columns/{column_id} <https://docs.github.com/en/rest/reference/projects#delete-a-project-column>`_
         """
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
             self.url,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def edit(self, name: str) -> None:
         """

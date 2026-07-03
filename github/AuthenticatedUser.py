@@ -980,7 +980,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson("GET", f"/user/following/{following._identity}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def has_in_starred(self, starred: Repository) -> bool:
         """
@@ -988,7 +988,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert isinstance(starred, github.Repository.Repository), starred
         status, headers, data = self._requester.requestJson("GET", f"/user/starred/{starred._identity}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def has_in_subscriptions(self, subscription: Repository) -> bool:
         """
@@ -996,7 +996,7 @@ class AuthenticatedUser(CompletableGithubObject):
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
         status, headers, data = self._requester.requestJson("GET", f"/user/subscriptions/{subscription._identity}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def has_in_watched(self, watched: Repository) -> bool:
         """

@@ -584,7 +584,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/following/{following._identity}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def get_organization_membership(self, org: str | Organization) -> Membership:
         """
@@ -798,7 +798,7 @@ class OrganizationInvitation(NamedUser):
         :rtype: bool
         """
         status, headers, data = self._requester.requestJson("DELETE", self.url)
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)

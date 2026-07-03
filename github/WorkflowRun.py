@@ -366,8 +366,8 @@ class WorkflowRun(CompletableGithubObject):
         """
         :calls: `DELETE /repos/{owner}/{repo}/actions/runs/{run_id} <https://docs.github.com/en/rest/reference/actions#workflow-runs>`_
         """
-        status, _, _ = self._requester.requestJson("DELETE", self.url)
-        return status == 204
+        status, headers, data = self._requester.requestJson("DELETE", self.url)
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def jobs(self, _filter: Opt[str] = NotSet) -> PaginatedList[WorkflowJob]:
         """

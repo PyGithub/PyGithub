@@ -140,7 +140,7 @@ class Artifact(NonCompletableGithubObject):
         :calls: `DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id} <https://docs.github.com/en/rest/actions/artifacts#delete-an-artifact>`_
         """
         status, headers, data = self._requester.requestBlob("DELETE", self.url)
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "archive_download_url" in attributes:  # pragma no branch
