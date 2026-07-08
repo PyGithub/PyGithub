@@ -455,16 +455,28 @@ class PullRequest(CompletableGithubObject):
         """
         return github.Issue.Issue(self._requester, url=self.issue_url)
 
-    def get_linked_issues(self) -> PaginatedList[Issue]:
+    def get_linked_issues(
+        self,
+        schema: str = "number",
+        *,
+        user_linked_only: bool = False,
+    ) -> PaginatedList[Issue]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>` for PullRequest.closingIssuesReferences
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        query = """
-            query($id: ID!, $first: Int, $last: Int, $before: String, $after: String) {
+
+        schema_list = schema.split()
+        if "number" not in schema.split():
+            schema_list += ["number"]
+        schema = "\n".join(schema_list)
+
+        query = (
+            """
+            query($id: ID!, $user: Boolean, $first: Int, $last: Int, $before: String, $after: String) {
               node(id: $id) {
                 ...on PullRequest {
-                  closingIssuesReferences(first: $first, last: $last, before: $before, after: $after) {
+                  closingIssuesReferences(userLinkedOnly: $user, first: $first, last: $last, before: $before, after: $after) {
                     totalCount
                     pageInfo {
                       startCursor
@@ -473,25 +485,34 @@ class PullRequest(CompletableGithubObject):
                       hasPreviousPage
                     }
                     nodes {
-                      number
-                      title
+            """
+            + schema
+            + """
                     }
                   }
                 }
               }
             }
             """
+        )
+
+        variables = {
+            "id": self.node_id,
+            "user": user_linked_only,
+        }
 
         # GraphQL's `url` field is HTML, not REST API we need
         def url_from_number(data: dict[str, Any]) -> dict[str, Any]:
+            if "url" in data:
+                data["html_url"] = data["url"]
             data["url"] = f'{self._parentUrl(self.issue_url)}/{data["number"]}'
             return data
 
         return PaginatedList(
-            Issue,
+            github.Issue.Issue,
             self.requester,
             graphql_query=query,
-            graphql_variables={"id": self.node_id},
+            graphql_variables=variables,
             list_item=["node", "closingIssuesReferences"],
             attributesTransformer=url_from_number,
         )

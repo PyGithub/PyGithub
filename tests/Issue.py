@@ -376,5 +376,31 @@ class Issue(Framework.TestCase):
         assert [pr.number for pr in prs] == []
 
     def testGetLinkedPullRequestsClosed(self):
-        prs = self.issue_with_links.get_linked_pull_requests(True)
+        prs = self.issue_with_links.get_linked_pull_requests(include_closed=True)
         assert [pr.number for pr in prs] == [3482, 3484]
+
+    def testGetLinkedPullRequestsUser(self):
+        prs = self.issue_with_links.get_linked_pull_requests(user_linked_only=True)
+        # TODO: Ask maintainer to add manual links to older open and closed issue
+        assert [pr.number for pr in prs] == []
+
+    def testGetLinkedPullRequestsOrdered(self):
+        prs = self.issue_with_links.get_linked_pull_requests(order_by_state=True)
+        # TODO: Need manual link to older closed issue for reorder to be visible
+        assert [pr.number for pr in prs] == [3482]
+
+    def testGetLinkedPullRequestsComplete(self):
+        prs = self.issue_with_links.get_linked_pull_requests()
+        # Triggers completion as title not fetched by default
+        # TODO: How to assert this?
+        assert [pr.title for pr in prs] == [
+            "Support GraphQL closingIssuesReferences and closedByPullRequestsReferences"
+        ]
+
+    def testGetLinkedPullRequestsSchema(self):
+        prs = self.issue_with_links.get_linked_pull_requests("title")
+        # No completion needed as custom schema fetches it in GraphQL query
+        # TODO: How to assert this?
+        assert [pr.title for pr in prs] == [
+            "Support GraphQL closingIssuesReferences and closedByPullRequestsReferences"
+        ]
