@@ -460,8 +460,7 @@ class PullRequest(CompletableGithubObject):
         :calls: `POST /graphql <https://docs.github.com/en/graphql>` for PullRequest.closingIssuesReferences
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        query = (
-            '''
+        query = """
             query($id: ID!, $first: Int, $last: Int, $before: String, $after: String) {
               node(id: $id) {
                 ...on PullRequest {
@@ -481,19 +480,19 @@ class PullRequest(CompletableGithubObject):
                 }
               }
             }
-            '''
-        )
+            """
+
         # GraphQL's `url` field is HTML, not REST API we need
         def url_from_number(data: dict[str, Any]) -> dict[str, Any]:
-            data['url'] = f'{self._parentUrl(self.issue_url)}/{data["number"]}'
+            data["url"] = f'{self._parentUrl(self.issue_url)}/{data["number"]}'
             return data
 
         return PaginatedList(
             Issue,
             self.requester,
             graphql_query=query,
-            graphql_variables={'id': self.node_id},
-            list_item=['node', 'closingIssuesReferences'],
+            graphql_variables={"id": self.node_id},
+            list_item=["node", "closingIssuesReferences"],
             attributesTransformer=url_from_number,
         )
 
