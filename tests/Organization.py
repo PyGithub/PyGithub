@@ -778,6 +778,7 @@ class Organization(Framework.TestCase):
             required=True,
             default_value="foo",
             description="description",
+            values_editable_by="org_actors",
         )
         created_property = self.org.create_custom_property(custom_property)
         self.assertEqual(created_property.property_name, "property_1")

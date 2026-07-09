@@ -1817,7 +1817,6 @@ class Organization(CompletableGithubObject):
         :rtype: :class:`github.OrganizationCustomProperty.OrganizationCustomProperty`
         """
         assert isinstance(property, github.OrganizationCustomProperty.CustomProperty), property
-        assert property.values_editable_by is NotSet
 
         post_parameters = property.to_dict()
         property_name = post_parameters.pop("property_name")
