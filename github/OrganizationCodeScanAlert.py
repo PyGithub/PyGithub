@@ -26,11 +26,14 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Repository
 from github.CodeScanAlert import CodeScanAlert
 from github.GithubObject import Attribute, NotSet
-from github.Repository import Repository
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class OrganizationCodeScanAlert(CodeScanAlert):
@@ -57,4 +60,4 @@ class OrganizationCodeScanAlert(CodeScanAlert):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "repository" in attributes:
-            self._repository = self._makeClassAttribute(Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

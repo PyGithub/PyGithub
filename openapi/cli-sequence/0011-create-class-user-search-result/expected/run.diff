@@ -1,0 +1,213 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -358,3 +358,44 @@
+         if "user_view_type" in attributes:  # pragma no branch
+             self._user_view_type = self._makeStringAttribute(attributes["user_view_type"])
+ 
++
++
++class NamedUserSearchResult(NamedUser):
++    """
++    This class represents NamedUserSearchResult.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/search#search-users
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/user-search-result-item
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self._score: Attribute[float] = NotSet
++        self._suspended_at: Attribute[datetime] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def score(self) -> float:
++        self._completeIfNotSet(self._score)
++        return self._score.value
++
++    @property
++    def suspended_at(self) -> datetime:
++        self._completeIfNotSet(self._suspended_at)
++        return self._suspended_at.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "score" in attributes:  # pragma no branch
++            self._score = self._makeFloatAttribute(attributes["score"])
++        if "suspended_at" in attributes:  # pragma no branch
++            self._suspended_at = self._makeDatetimeAttribute(attributes["suspended_at"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -819,6 +819,67 @@
+       ],
+       "test_filename": "tests/NamedUser.py"
+     },
++    "NamedUserSearchResult": {
++      "bases": [
++        "NamedUser"
++      ],
++      "docstring": "This class represents NamedUserSearchResult.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/search#search-users\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/user-search-result-item",
++      "filename": "github/NamedUser.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "CompletableGithubObject",
++        "GithubObject",
++        "NamedUser"
++      ],
++      "inherited_schemas": [
++        "/components/schemas/public-user"
++      ],
++      "methods": {},
++      "module": "NamedUser",
++      "name": "NamedUserSearchResult",
++      "package": "github",
++      "properties": {
++        "score": {
++          "name": "score",
++          "returns": [
++            "float"
++          ],
++          "schema": {
++            "type": "number"
++          },
++          "schemas": {
++            "/components/schemas/user-search-result-item": {
++              "type": "number"
++            }
++          }
++        },
++        "suspended_at": {
++          "name": "suspended_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "format": "date-time",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/user-search-result-item": {
++              "format": "date-time",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/user-search-result-item"
++      ],
++      "test_filename": "tests/NamedUser.py"
++    },
+     "NonCompletableGithubObject": {
+       "bases": [
+         "GithubObject",
+@@ -936,6 +997,7 @@
+         "CompletableGithubObjectWithPaginatedProperty",
+         "GithubObject",
+         "NamedUser",
++        "NamedUserSearchResult",
+         "NonCompletableGithubObject"
+       ],
+       "Attribute": [
+@@ -945,14 +1007,19 @@
+       ],
+       "CompletableGithubObject": [
+         "CompletableGithubObjectWithPaginatedProperty",
+-        "NamedUser"
++        "NamedUser",
++        "NamedUserSearchResult"
+       ],
+       "GithubObject": [
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
+         "NamedUser",
++        "NamedUserSearchResult",
+         "NonCompletableGithubObject"
+       ],
++      "NamedUser": [
++        "NamedUserSearchResult"
++      ],
+       "Protocol": [
+         "Attribute",
+         "_BadAttribute",
+@@ -1584,6 +1651,9 @@
+     "schema_to_classes": {
+       "/components/schemas/public-user": [
+         "NamedUser"
++      ],
++      "/components/schemas/user-search-result-item": [
++        "NamedUserSearchResult"
+       ]
+     }
+   },
+diff --unified --recursive --new-file before/tests/NamedUser.py after/tests/NamedUser.py
+--- before/tests/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -77,3 +77,51 @@
+         self.assertEqual(nu.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+         self.assertEqual(nu.url, "")
+         self.assertEqual(nu.user_view_type, "")
++
++
++class NamedUserSearchResult(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type NamedUserSearchResult and assign to self.nusr, then run:
++        #   pytest ./tests/NamedUser.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/NamedUser.py testAttributes
++        #   pre-commit run --all-files
++        self.nusr = None
++
++    def testAttributes(self):
++        nusr = self.nusr
++        self.assertEqual(nusr.__repr__(), "")
++        self.assertEqual(nusr.avatar_url, "")
++        self.assertEqual(nusr.bio, "")
++        self.assertEqual(nusr.blog, "")
++        self.assertEqual(nusr.company, "")
++        self.assertEqual(nusr.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(nusr.email, "")
++        self.assertEqual(nusr.events_url, "")
++        self.assertEqual(nusr.followers, 0)
++        self.assertEqual(nusr.followers_url, "")
++        self.assertEqual(nusr.following, 0)
++        self.assertEqual(nusr.following_url, "")
++        self.assertEqual(nusr.gists_url, "")
++        self.assertEqual(nusr.gravatar_id, "")
++        self.assertEqual(nusr.hireable, False)
++        self.assertEqual(nusr.html_url, "")
++        self.assertEqual(nusr.id, 0)
++        self.assertEqual(nusr.location, "")
++        self.assertEqual(nusr.login, "")
++        self.assertEqual(nusr.name, "")
++        self.assertEqual(nusr.node_id, "")
++        self.assertEqual(nusr.organizations_url, "")
++        self.assertEqual(nusr.public_gists, 0)
++        self.assertEqual(nusr.public_repos, 0)
++        self.assertEqual(nusr.received_events_url, "")
++        self.assertEqual(nusr.repos_url, "")
++        self.assertEqual(nusr.score, 0.0)
++        self.assertEqual(nusr.site_admin, False)
++        self.assertEqual(nusr.starred_url, "")
++        self.assertEqual(nusr.subscriptions_url, "")
++        self.assertEqual(nusr.suspended_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(nusr.type, "")
++        self.assertEqual(nusr.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(nusr.url, "")
++        self.assertEqual(nusr.user_view_type, "")

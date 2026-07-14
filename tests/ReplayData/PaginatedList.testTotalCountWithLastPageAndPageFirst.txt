@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repositories?per_page=1
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Date', 'Mon, 03 Aug 2020 09:02:17 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('Link', '<https://api.github.com/repositories?page=42&per_page=1>; rel="last", <https://api.github.com/repositories?page=2&per_page=1>; rel="next", <https://api.github.com/repositories?page=1&per_page=1>; rel="first"')]
+[]

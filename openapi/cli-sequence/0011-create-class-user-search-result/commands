@@ -1,0 +1,3 @@
+python scripts/openapi.py --dry-run create class --parent NamedUser --file NamedUser.py --tests github openapi.spec.json openapi.index NamedUserSearchResult "https://docs.github.com/en/rest/reference/search#search-users" "/components/schemas/user-search-result-item"
+python scripts/openapi.py create class --parent NamedUser --file NamedUser.py --tests github openapi.spec.json openapi.index NamedUserSearchResult "https://docs.github.com/en/rest/reference/search#search-users" "/components/schemas/user-search-result-item"
+python scripts/openapi.py index github openapi.spec.json openapi.index

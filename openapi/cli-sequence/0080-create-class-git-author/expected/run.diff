@@ -1,0 +1,328 @@
+diff --unified --recursive --new-file before/github/GitAuthor.py after/github/GitAuthor.py
+--- before/github/GitAuthor.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/GitAuthor.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,80 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class GitAuthor(NonCompletableGithubObject):
++    """
++    This class represents GitAuthor.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/nullable-git-user
++    - /components/schemas/commit-search-result-item/properties/commit/properties/author
++    - /components/schemas/nullable-simple-commit/properties/author
++    - /components/schemas/nullable-simple-commit/properties/committer
++    - /components/schemas/simple-commit/properties/author
++    - /components/schemas/simple-commit/properties/committer
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._date: Attribute[str] = NotSet
++        self._email: Attribute[str] = NotSet
++        self._name: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def date(self) -> str:
++        return self._date.value
++
++    @property
++    def email(self) -> str:
++        return self._email.value
++
++    @property
++    def name(self) -> str:
++        return self._name.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "date" in attributes:  # pragma no branch
++            self._date = self._makeStringAttribute(attributes["date"])
++        if "email" in attributes:  # pragma no branch
++            self._email = self._makeStringAttribute(attributes["email"])
++        if "name" in attributes:  # pragma no branch
++            self._name = self._makeStringAttribute(attributes["name"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -112,6 +112,130 @@
+       "schemas": [],
+       "test_filename": "tests/GithubObject.py"
+     },
++    "GitAuthor": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents GitAuthor.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-git-user\n    - /components/schemas/commit-search-result-item/properties/commit/properties/author\n    - /components/schemas/nullable-simple-commit/properties/author\n    - /components/schemas/nullable-simple-commit/properties/committer\n    - /components/schemas/simple-commit/properties/author\n    - /components/schemas/simple-commit/properties/committer",
++      "filename": "github/GitAuthor.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "GitAuthor",
++      "name": "GitAuthor",
++      "package": "github",
++      "properties": {
++        "date": {
++          "name": "date",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit/properties/author": {
++              "format": "date-time",
++              "type": "string"
++            },
++            "/components/schemas/nullable-git-user": {
++              "example": "\"2007-10-29T02:42:39.000-07:00\"",
++              "type": "string"
++            }
++          }
++        },
++        "email": {
++          "name": "email",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit/properties/author": {
++              "type": "string"
++            },
++            "/components/schemas/nullable-git-user": {
++              "example": "\"chris@ozmm.org\"",
++              "type": "string"
++            },
++            "/components/schemas/nullable-simple-commit/properties/author": {
++              "description": "Git email address of the commit's author",
++              "example": "monalisa.octocat@example.com",
++              "format": "email",
++              "type": "string"
++            },
++            "/components/schemas/nullable-simple-commit/properties/committer": {
++              "description": "Git email address of the commit's committer",
++              "example": "monalisa.octocat@example.com",
++              "format": "email",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit/properties/author": {
++              "description": "Git email address of the commit's author",
++              "example": "monalisa.octocat@example.com",
++              "format": "email",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit/properties/committer": {
++              "description": "Git email address of the commit's committer",
++              "example": "monalisa.octocat@example.com",
++              "format": "email",
++              "type": "string"
++            }
++          }
++        },
++        "name": {
++          "name": "name",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit/properties/author": {
++              "type": "string"
++            },
++            "/components/schemas/nullable-git-user": {
++              "example": "\"Chris Wanstrath\"",
++              "type": "string"
++            },
++            "/components/schemas/nullable-simple-commit/properties/author": {
++              "description": "Name of the commit's author",
++              "example": "Monalisa Octocat",
++              "type": "string"
++            },
++            "/components/schemas/nullable-simple-commit/properties/committer": {
++              "description": "Name of the commit's committer",
++              "example": "Monalisa Octocat",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit/properties/author": {
++              "description": "Name of the commit's author",
++              "example": "Monalisa Octocat",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit/properties/committer": {
++              "description": "Name of the commit's committer",
++              "example": "Monalisa Octocat",
++              "type": "string"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/nullable-git-user",
++        "/components/schemas/commit-search-result-item/properties/commit/properties/author",
++        "/components/schemas/nullable-simple-commit/properties/author",
++        "/components/schemas/nullable-simple-commit/properties/committer",
++        "/components/schemas/simple-commit/properties/author",
++        "/components/schemas/simple-commit/properties/committer"
++      ],
++      "test_filename": "tests/GitAuthor.py"
++    },
+     "GithubObject": {
+       "bases": [
+         "ABC"
+@@ -3827,6 +3951,7 @@
+       "ABC": [
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
++        "GitAuthor",
+         "GithubObject",
+         "IssueComment",
+         "NamedUser",
+@@ -3850,6 +3975,7 @@
+       "GithubObject": [
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
++        "GitAuthor",
+         "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult",
+@@ -3861,6 +3987,7 @@
+         "NamedUserSearchResult"
+       ],
+       "NonCompletableGithubObject": [
++        "GitAuthor",
+         "Reaction"
+       ],
+       "Protocol": [
+@@ -4540,6 +4667,9 @@
+       ]
+     },
+     "schema_to_classes": {
++      "/components/schemas/commit-search-result-item/properties/commit/properties/author": [
++        "GitAuthor"
++      ],
+       "/components/schemas/full-repository": [
+         "Repository"
+       ],
+@@ -4549,6 +4679,15 @@
+       "/components/schemas/minimal-repository": [
+         "Repository"
+       ],
++      "/components/schemas/nullable-git-user": [
++        "GitAuthor"
++      ],
++      "/components/schemas/nullable-simple-commit/properties/author": [
++        "GitAuthor"
++      ],
++      "/components/schemas/nullable-simple-commit/properties/committer": [
++        "GitAuthor"
++      ],
+       "/components/schemas/nullable-simple-user": [
+         "NamedUser"
+       ],
+@@ -4561,6 +4700,12 @@
+       "/components/schemas/repository": [
+         "Repository"
+       ],
++      "/components/schemas/simple-commit/properties/author": [
++        "GitAuthor"
++      ],
++      "/components/schemas/simple-commit/properties/committer": [
++        "GitAuthor"
++      ],
+       "/components/schemas/simple-user": [
+         "NamedUser"
+       ],
+diff --unified --recursive --new-file before/tests/GitAuthor.py after/tests/GitAuthor.py
+--- before/tests/GitAuthor.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/GitAuthor.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,43 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class GitAuthor(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type GitAuthor and assign to self.ga, then run:
++        #   pytest ./tests/GitAuthor.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/GitAuthor.py testAttributes
++        #   pre-commit run --all-files
++        self.ga = None
++
++    def testAttributes(self):
++        ga = self.ga
++        self.assertEqual(ga.__repr__(), "")
++        self.assertEqual(ga.date, "")
++        self.assertEqual(ga.email, "")
++        self.assertEqual(ga.name, "")

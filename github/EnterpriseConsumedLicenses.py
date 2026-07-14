@@ -41,11 +41,14 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.NamedEnterpriseUser
 from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet
-from github.NamedEnterpriseUser import NamedEnterpriseUser
 from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.NamedEnterpriseUser import NamedEnterpriseUser
 
 
 class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
@@ -94,7 +97,7 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
         If no ``per_page`` is given, the default page size is 30. The maximum is 100.
         """
         return PaginatedList(
-            NamedEnterpriseUser,
+            github.NamedEnterpriseUser.NamedEnterpriseUser,
             self._requester,
             self.url,
             self._pagination_parameters,
@@ -116,7 +119,7 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
                Iterating over the users will fetch pages of this size. The default page size is 30, the maximum is 100.
         """
         return PaginatedList(
-            NamedEnterpriseUser,
+            github.NamedEnterpriseUser.NamedEnterpriseUser,
             self._requester,
             self.url,
             self._pagination_parameters_with(page=1, per_page=licence_users_per_page),

@@ -27,9 +27,9 @@ Using spec openapi.spec.json
 Creating method github.IssueComment.IssueComment.create_reaction in github/IssueComment.py
 Updating index
 Indexing 4 Python files
-Indexed 12 classes
+Indexed 13 classes
 Indexed 1 paths
-Indexed 4 schemas
+Indexed 5 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class IssueComment
@@ -38,7 +38,7 @@ Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/Issu
 Class IssueComment changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 4 Python files
-Indexed 12 classes
+Indexed 13 classes
 Indexed 1 paths
-Indexed 4 schemas
+Indexed 5 schemas
 Indexing OpenAPI spec

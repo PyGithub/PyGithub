@@ -41,11 +41,14 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class DiscussionCommentBase(CompletableGithubObject):
@@ -56,7 +59,7 @@ class DiscussionCommentBase(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[github.NamedUser.NamedUser | None] = NotSet
+        self._author: Attribute[NamedUser | None] = NotSet
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -70,7 +73,7 @@ class DiscussionCommentBase(CompletableGithubObject):
         return self.get__repr__({"node_id": self._node_id.value})
 
     @property
-    def author(self) -> github.NamedUser.NamedUser | None:
+    def author(self) -> NamedUser | None:
         self._completeIfNotSet(self._author)
         return self._author.value
 

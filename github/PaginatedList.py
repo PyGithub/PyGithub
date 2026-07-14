@@ -59,7 +59,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from typing import Any, Generic, TypeVar, overload
-from urllib.parse import parse_qs
 
 from github import Consts
 from github.GithubObject import GithubObject
@@ -281,7 +280,7 @@ class PaginatedList(PaginatedListBase[T]):
 
             # update totalCount
             if lastUrl:
-                self.__totalCount = int(parse_qs(lastUrl)["page"][0])
+                self.__totalCount = int(Requester.get_parameters_of_url(lastUrl)["page"][0])
             elif data and "total_count" in data:
                 self.__totalCount = data["total_count"]
             elif data:

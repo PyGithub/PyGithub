@@ -1,0 +1,11 @@
+--- github/Repository.py.orig	2026-06-03 11:13:35.169780195 +0200
++++ github/Repository.py.patched	2026-06-03 11:25:55.637075316 +0200
+@@ -42,6 +42,8 @@
+ 
+     The OpenAPI schema can be found at
+ 
++    - /components/schemas/full-repository
++    - /components/schemas/minimal-repository
+     - /components/schemas/repository
+ 
+     """
