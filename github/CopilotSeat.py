@@ -32,7 +32,9 @@ import github.Team
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, _NotSetType
 
 if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
     from github.Organization import Organization
+    from github.Team import Team
 
 
 class CopilotSeat(NonCompletableGithubObject):
@@ -49,8 +51,8 @@ class CopilotSeat(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._assignee: Attribute[github.NamedUser.NamedUser] | _NotSetType = NotSet
-        self._assigning_team: Attribute[github.Team.Team] | _NotSetType = NotSet
+        self._assignee: Attribute[NamedUser] | _NotSetType = NotSet
+        self._assigning_team: Attribute[Team] | _NotSetType = NotSet
         self._created_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_editor: Attribute[str] | _NotSetType = NotSet
@@ -64,11 +66,11 @@ class CopilotSeat(NonCompletableGithubObject):
         return self.get__repr__({"assignee": self._assignee.value})
 
     @property
-    def assignee(self) -> github.NamedUser.NamedUser:
+    def assignee(self) -> NamedUser:
         return self._assignee.value
 
     @property
-    def assigning_team(self) -> github.Team.Team:
+    def assigning_team(self) -> Team:
         return self._assigning_team.value
 
     @property

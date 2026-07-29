@@ -20,6 +20,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 iarspider <iarspider@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -43,6 +45,8 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
+
+from typing_extensions import deprecated
 
 import github.Consts
 import github.NamedUser
@@ -96,6 +100,9 @@ class Reaction(NonCompletableGithubObject):
     def user(self) -> NamedUser:
         return self._user.value
 
+    @deprecated(
+        "Deprecated, use IssueComment.delete_reaction, PullRequestComment.delete_reaction, CommitComment.delete_reaction or Issue.delete_reaction"
+    )
     def delete(self) -> None:
         """
         :calls: `DELETE /reactions/{id} <https://docs.github.com/en/rest/reference/reactions#delete-a-reaction-legacy>`_

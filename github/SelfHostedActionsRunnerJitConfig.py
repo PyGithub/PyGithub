@@ -26,10 +26,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.SelfHostedActionsRunner
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 
 
 class SelfHostedActionsRunnerJitConfig(NonCompletableGithubObject):
@@ -47,7 +50,7 @@ class SelfHostedActionsRunnerJitConfig(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._encoded_jit_config: Attribute[str] = NotSet
-        self._runner: Attribute[github.SelfHostedActionsRunner.SelfHostedActionsRunner] = NotSet
+        self._runner: Attribute[SelfHostedActionsRunner] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"encoded_jit_config": self._encoded_jit_config.value})
@@ -57,7 +60,7 @@ class SelfHostedActionsRunnerJitConfig(NonCompletableGithubObject):
         return self._encoded_jit_config.value
 
     @property
-    def runner(self) -> github.SelfHostedActionsRunner.SelfHostedActionsRunner:
+    def runner(self) -> SelfHostedActionsRunner:
         return self._runner.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

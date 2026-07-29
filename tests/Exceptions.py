@@ -115,6 +115,10 @@ class Exceptions(Framework.TestCase):
     def testExceptionPickling(self):
         pickle.loads(pickle.dumps(github.GithubException("foo", "bar", None)))
 
+    def testBytesData(self):
+        exc = github.GithubException(403, b"<html>rate limit</html>", message="rate limit")
+        self.assertEqual(str(exc), 'rate limit: 403 "<html>rate limit</html>"')
+
     def testJSONParseError(self):
         # Replay data was forged to force a JSON error
         with self.assertRaises(ValueError):

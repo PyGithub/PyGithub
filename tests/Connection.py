@@ -9,6 +9,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Maja Massarini <2678400+majamassarini@users.noreply.github.com>#
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -92,7 +93,7 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
 
     # write mock response to buffer
     rdf = Framework.ReplayDataFile("string", file)
-    RecordingMockConnection.setOpenFile(lambda slf, mode: rdf)
+    RecordingMockConnection.setOpenFile(lambda mode: rdf)
     recording_connection = RecordingMockConnection(protocol, host, None, lambda *args, **kwds: connection)
     recording_connection.request(verb, url, None, headers)
     recording_connection.getresponse()
@@ -109,7 +110,7 @@ def testRecordAndReplay(replaying_connection_class, protocol, response_body, exp
     # rewind buffer and attempt to replay response from it
     file.seek(0)
     rdf = Framework.ReplayDataFile("string", file)
-    replaying_connection_class.setOpenFile(lambda slf, mode: rdf)
+    replaying_connection_class.setOpenFile(lambda mode: rdf)
     replaying_connection = replaying_connection_class(host=host, port=None)
     replaying_connection.request(verb, url, None, headers)
     replaying_connection.getresponse()

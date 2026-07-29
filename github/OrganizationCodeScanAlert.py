@@ -1,6 +1,10 @@
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2025 Matthew Davis <35502728+matt-davis27@users.noreply.github.com>#
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Matt Davis <35502728+matt-davis27@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -22,11 +26,14 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Repository
 from github.CodeScanAlert import CodeScanAlert
 from github.GithubObject import Attribute, NotSet
-from github.Repository import Repository
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class OrganizationCodeScanAlert(CodeScanAlert):
@@ -53,4 +60,4 @@ class OrganizationCodeScanAlert(CodeScanAlert):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "repository" in attributes:
-            self._repository = self._makeClassAttribute(Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

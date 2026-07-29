@@ -9,6 +9,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -186,7 +187,7 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def offer_credit(
         self,
-        login_or_user: str | github.NamedUser.NamedUser,
+        login_or_user: str | NamedUser,
         credit_type: str,
     ) -> None:
         """
@@ -227,7 +228,7 @@ class RepositoryAdvisory(AdvisoryBase):
         )
         self._useAttributes(data)
 
-    def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser) -> None:
+    def revoke_credit(self, login_or_user: str | NamedUser) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """

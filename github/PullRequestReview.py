@@ -46,12 +46,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class PullRequestReview(NonCompletableGithubObject):
@@ -79,7 +82,7 @@ class PullRequestReview(NonCompletableGithubObject):
         self._pull_request_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._submitted_at: Attribute[datetime] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -129,7 +132,7 @@ class PullRequestReview(NonCompletableGithubObject):
         return self._submitted_at.value
 
     @property
-    def user(self) -> github.NamedUser.NamedUser:
+    def user(self) -> NamedUser:
         return self._user.value
 
     def dismiss(self, message: str) -> None:

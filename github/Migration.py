@@ -170,7 +170,7 @@ class Migration(CompletableGithubObject):
         return self._owner.value
 
     @property
-    def repositories(self) -> list[github.Repository.Repository]:
+    def repositories(self) -> list[Repository]:
         self._completeIfNotSet(self._repositories)
         return self._repositories.value
 

@@ -31,11 +31,14 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.WorkflowStep
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.WorkflowStep import WorkflowStep
 
 
 class WorkflowJob(CompletableGithubObject):
@@ -44,6 +47,10 @@ class WorkflowJob(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/actions#workflow-jobs
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/job
 
     """
 
@@ -68,7 +75,7 @@ class WorkflowJob(CompletableGithubObject):
         self._runner_name: Attribute[str] = NotSet
         self._started_at: Attribute[datetime] = NotSet
         self._status: Attribute[str] = NotSet
-        self._steps: Attribute[list[github.WorkflowStep.WorkflowStep]] = NotSet
+        self._steps: Attribute[list[WorkflowStep]] = NotSet
         self._url: Attribute[str] = NotSet
         self._workflow_name: Attribute[str] = NotSet
 
@@ -176,7 +183,7 @@ class WorkflowJob(CompletableGithubObject):
         return self._status.value
 
     @property
-    def steps(self) -> list[github.WorkflowStep.WorkflowStep]:
+    def steps(self) -> list[WorkflowStep]:
         self._completeIfNotSet(self._steps)
         return self._steps.value
 

@@ -69,6 +69,7 @@ if TYPE_CHECKING:
     from github.MainClass import Github
     from github.NamedUser import NamedUser
     from github.Organization import Organization
+    from github.Repository import Repository
 
 INTEGRATION_PREVIEW_HEADERS = {"Accept": Consts.mediaTypeIntegrationPreview}
 
@@ -224,7 +225,7 @@ class Installation(NonCompletableGithubObject):
     def get_github_for_installation(self) -> Github:
         return github.Github(**self._requester.kwargs)
 
-    def get_repos(self) -> PaginatedList[github.Repository.Repository]:
+    def get_repos(self) -> PaginatedList[Repository]:
         """
         :calls: `GET /installation/repositories <https://docs.github.com/en/rest/reference/integrations/installations#list-repositories>`_
         """

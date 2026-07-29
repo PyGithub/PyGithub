@@ -1,0 +1,78 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -297,7 +297,7 @@
+     )
+     @openapi_parameter(name="owner", input=True, docstring_prepend='- "{owner}": ')
+     @openapi_parameter(name="repo", input=True, docstring_prepend='- "{repo}": ')
+-    def get_repo(self, name: str) -> dict[str, Any]:
++    def get_repo(self, name: str) -> Repository:
+         """
+         Get a repository
+ 
+@@ -322,7 +322,7 @@
+         type: Opt[str] = NotSet,
+         sort: Opt[str] = NotSet,
+         direction: Opt[str] = NotSet,
+-    ) -> PaginatedList[dict[str, Any]]:
++    ) -> PaginatedList[Repository]:
+         """
+         List repositories for a user
+ 
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -484,7 +484,7 @@
+           },
+           "name": "get_repo",
+           "returns": [
+-            "dict[str, Any]"
++            "Repository"
+           ]
+         },
+         "get_repos": {
+@@ -495,7 +495,7 @@
+           },
+           "name": "get_repos",
+           "returns": [
+-            "PaginatedList[dict[str, Any]]"
++            "PaginatedList[Repository]"
+           ]
+         },
+         "get_starred": {
+@@ -3808,7 +3808,7 @@
+     "path_to_return_classes": {
+       "/repos/{owner}/{repo}": {
+         "get": [
+-          "dict[str, Any]"
++          "Repository"
+         ]
+       },
+       "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
+@@ -3821,7 +3821,7 @@
+       },
+       "/users/{username}/repos": {
+         "get": [
+-          "PaginatedList[dict[str, Any]]"
++          "PaginatedList[Repository]"
+         ]
+       },
+       "/users/{username}/starred": {
+@@ -4487,7 +4487,7 @@
+             "class": "NamedUser",
+             "name": "get_repo",
+             "returns": [
+-              "dict[str, Any]"
++              "Repository"
+             ]
+           }
+         ]
+@@ -4524,7 +4524,7 @@
+             "class": "NamedUser",
+             "name": "get_repos",
+             "returns": [
+-              "PaginatedList[dict[str, Any]]"
++              "PaginatedList[Repository]"
+             ]
+           }
+         ]

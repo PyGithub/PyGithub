@@ -102,7 +102,10 @@ class GithubException(Exception):
             msg = f"{self.status}"
 
         if self.data is not None:
-            msg += " " + json.dumps(self.data)
+            data = self.data
+            if isinstance(data, bytes):
+                data = data.decode("utf-8", errors="replace")
+            msg += " " + json.dumps(data)
 
         return msg
 

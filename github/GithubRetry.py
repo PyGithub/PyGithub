@@ -225,7 +225,7 @@ class GithubRetry(Retry):
 
         response.url = url
 
-        return response.content
+        return response.content or b""
 
     def __log(self, level: int, message: str, **kwargs: Any) -> None:
         if self.__logger is None:

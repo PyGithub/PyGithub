@@ -30,6 +30,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -141,8 +142,12 @@ def is_optional(v: Any, type: type | tuple[type, ...]) -> bool:
     return isinstance(v, _NotSetType) or isinstance(v, type)
 
 
+def is_list(v: Any, type: type | tuple[type, ...]) -> bool:
+    return isinstance(v, list) and all(isinstance(element, type) for element in v)
+
+
 def is_optional_list(v: Any, type: type | tuple[type, ...]) -> bool:
-    return isinstance(v, _NotSetType) or isinstance(v, list) and all(isinstance(element, type) for element in v)
+    return is_undefined(v) or is_list(v, type)
 
 
 camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
@@ -264,6 +269,7 @@ class GithubObject(ABC):
     def _storeAndUseAttributes(self, headers: dict[str, str | int], attributes: Any) -> None:
         # Make sure headers are assigned before calling _useAttributes
         # (Some derived classes will use headers in _useAttributes)
+        self._api_version = headers.get(Consts.headerApiVersionSelected)
         self._headers = headers
         self._rawData = attributes
         self._useAttributes(attributes)
@@ -291,6 +297,18 @@ class GithubObject(ABC):
         :type: dict
         """
         return self._headers
+
+    @property
+    def api_version(self) -> str | None:
+        """
+        The Github API version of this PyGithub object as returned by the Github API.
+
+        This does not reflect the API version configured via Github(api_version=…) or GithubIntegration(api_version=…).
+
+        :type: str
+
+        """
+        return self._api_version  # type: ignore
 
     @staticmethod
     def _parentUrl(url: str) -> str:
@@ -372,48 +390,63 @@ class GithubObject(ABC):
     def _makeUnionClassAttributeFromTypeName(
         self, type_name: str | None, fallback_type: str | None, value: Any, *class_and_names: tuple[type[T_gh], str]
     ) -> Attribute[T_gh]:
+        class_and_name_index = {name: clazz for clazz, name in class_and_names}
+        if fallback_type is not None:
+            assert fallback_type in class_and_name_index
+
         if value is None or type_name is None:
             return _ValuedAttribute(None)  # type: ignore
-        fallback_class = None
-        for klass, name in class_and_names:
-            if type_name == name:
-                return self._makeClassAttribute(klass, value)
-            if fallback_type == name:
-                fallback_class = klass
+
+        klass = class_and_name_index.get(type_name)
+        if klass is not None:
+            return self._makeClassAttribute(klass, value)
+
         if fallback_type is not None:
-            if fallback_class is None:
-                # this is misconfiguration in PyGithub code, not a user's fault
-                raise ValueError(
-                    f"Fallback type {fallback_type} is not among classes and names: {[name for klass, name in class_and_names]}"
-                )
+            fallback_class = class_and_name_index.get(fallback_type)
+            assert fallback_class is not None
             return self._makeClassAttribute(fallback_class, value)
+
         return _BadAttribute(value, type)  # type: ignore
 
     def _makeUnionClassAttributeFromTypeKey(
         self,
         type_key: str,
-        default_type: str | None,
+        default_and_fallback_type: str | tuple[str, str] | None,
         value: Any,
         *class_and_names: tuple[type[T_gh], str],
     ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
+        default_type: str | None
+        fallback_type: str | None
+        if isinstance(default_and_fallback_type, tuple):
+            default_type, fallback_type = default_and_fallback_type
+        else:
+            default_type = default_and_fallback_type
+            fallback_type = default_and_fallback_type
         return self._makeUnionClassAttributeFromTypeName(
-            value.get(type_key, default_type), default_type, value, *class_and_names
+            value.get(type_key, default_type), fallback_type, value, *class_and_names
         )
 
     def _makeUnionClassAttributeFromTypeKeyAndValueKey(
         self,
         type_key: str,
         value_key: str,
-        default_type: str | None,
+        default_and_fallback_type: str | tuple[str, str] | None,
         value: Any,
         *class_and_names: tuple[type[T_gh], str],
     ) -> Attribute[T_gh]:
         if value is None or not isinstance(value, dict):
             return _ValuedAttribute(None)  # type: ignore
+        default_type: str | None
+        fallback_type: str | None
+        if isinstance(default_and_fallback_type, tuple):
+            default_type, fallback_type = default_and_fallback_type
+        else:
+            default_type = default_and_fallback_type
+            fallback_type = default_and_fallback_type
         return self._makeUnionClassAttributeFromTypeName(
-            value.get(type_key, default_type), default_type, value.get(value_key), *class_and_names
+            value.get(type_key, default_type), fallback_type, value.get(value_key), *class_and_names
         )
 
     @staticmethod
@@ -437,6 +470,35 @@ class GithubObject(ABC):
     def _makeListOfClassesAttribute(self, klass: type[T_gh], value: Any) -> Attribute[list[T_gh]]:
         if isinstance(value, list) and all(isinstance(element, dict) for element in value):
             return _ValuedAttribute([klass(self._requester, self._headers, element) for element in value])
+        else:
+            return _BadAttribute(value, [dict])
+
+    def _makeListOfUnionClassesAttributeFromTypeKey(
+        self,
+        type_key: str,
+        default_and_fallback_type: str | tuple[str, str],
+        value: Any,
+        *class_and_names: tuple[type[T_gh], str],
+    ) -> Attribute[list[T_gh]]:
+        class_and_name_index = {name: clazz for clazz, name in class_and_names}
+        if isinstance(default_and_fallback_type, str):
+            default_type = default_and_fallback_type
+            fallback_type = default_and_fallback_type
+        else:
+            default_type, fallback_type = default_and_fallback_type
+        assert default_type in class_and_name_index
+        assert fallback_type in class_and_name_index
+        fallback_class = class_and_name_index.get(fallback_type)
+        assert fallback_class is not None
+        if isinstance(value, list) and all(isinstance(element, dict) for element in value):
+            return _ValuedAttribute(
+                [
+                    klass(self._requester, self._headers, element)
+                    for element in value
+                    for type_name in [element.get(type_key, default_type)]
+                    for klass in [class_and_name_index.get(type_name, fallback_class)]
+                ]
+            )
         else:
             return _BadAttribute(value, [dict])
 
@@ -536,12 +598,12 @@ class CompletableGithubObject(GithubObject, ABC):
         initialized will then trigger a request to complete all attributes.
 
         A partially initialized CompletableGithubObject (completed=False) can be completed
-        via complete(). This requires the url to be given via parameter `url` or `attributes`.
+        via ``complete()``. This requires the url to be given via parameter ``url`` or ``attributes``.
 
-        With a requester where `Requester.is_lazy == True`, this CompletableGithubObjects is
-        partially initialized. This requires the url to be given via parameter `url` or `attributes`.
+        With a requester where ``Requester.is_lazy == True``, this CompletableGithubObjects is
+        partially initialized. This requires the url to be given via parameter ``url`` or ``attributes``.
         Any CompletableGithubObject created from this lazy object will be lazy itself if created with
-        parameter `url` or `attributes`.
+        parameter ``url`` or ``attributes``.
 
         :param requester: requester
         :param headers: response headers
@@ -567,6 +629,9 @@ class CompletableGithubObject(GithubObject, ABC):
         # neither of complete and headers are given
         if requester.is_not_lazy and completed is None and not response_given:
             self.complete()
+
+    def _initAttributes(self) -> None:
+        self._url: Attribute[str] = NotSet
 
     def __eq__(self, other: Any) -> bool:
         return (
@@ -602,6 +667,11 @@ class CompletableGithubObject(GithubObject, ABC):
         self._completeIfNeeded()
         return super().raw_headers
 
+    @property
+    def url(self) -> str:
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
     def complete(self) -> Self:
         self._completeIfNeeded()
         return self
@@ -612,19 +682,23 @@ class CompletableGithubObject(GithubObject, ABC):
 
     def _completeIfNeeded(self) -> None:
         if not self.__completed:
-            self.__complete()
+            self._complete()
 
-    def __complete(self) -> None:
+    def _complete(self, parameters: dict[str, Any] | None = None) -> None:
         if self._url.value is None:
             raise IncompletableObject(400, message="Cannot complete object as it contains no URL")
-        headers, data = self._requester.requestJsonAndCheck("GET", self._url.value, headers=self.__completeHeaders)
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", self._url.value, parameters=parameters, headers=self.__completeHeaders
+        )
         self._storeAndUseAttributes(headers, data)
         self._set_complete()
 
     def _set_complete(self) -> None:
         self.__completed = True
 
-    def update(self, additional_headers: dict[str, Any] | None = None) -> bool:
+    def update(
+        self, additional_headers: dict[str, Any] | None = None, parameters: dict[str, Any] | None = None
+    ) -> bool:
         """
         Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
         changed.
@@ -638,7 +712,7 @@ class CompletableGithubObject(GithubObject, ABC):
             conditionalRequestHeader.update(additional_headers)
 
         status, responseHeaders, output = self._requester.requestJson(
-            "GET", self._url.value, headers=conditionalRequestHeader
+            "GET", self._url.value, parameters=parameters, headers=conditionalRequestHeader
         )
         if status == 304:
             return False
@@ -648,9 +722,9 @@ class CompletableGithubObject(GithubObject, ABC):
             self.__completed = True
             return True
 
-    def _useAttributes(self, attributes: Any) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         # populate url attribute with self-link
-        if isinstance(attributes, dict) and "url" not in attributes:
+        if "url" not in attributes:
             self_link = attributes.get("_links", {}).get("self", {})
             if self_link:
                 if isinstance(self_link, str):
@@ -659,17 +733,109 @@ class CompletableGithubObject(GithubObject, ABC):
                     href = self_link.get("href")
                     if href:
                         attributes["url"] = href
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
+
+
+class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
+    """
+    A CompletableGithubObject that has a property that is subject to pagination.
+
+    An instance created from a Requester with a non-default value for ``per_page`` must have the
+    ``per_page`` value in the URL in order for the paginated property to use the ``per_page`` value.
+
+    """
+
+    def __init__(
+        self,
+        requester: Requester,
+        headers: dict[str, str | int] | None = None,
+        attributes: dict[str, Any] | None = None,
+        completed: bool | None = None,
+        *,
+        url: str | None = None,
+        accept: str | None = None,
+        per_page: int | None = None,
+    ):
+        assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
+
+        # we set page=1 to get pagination links, PaginatedList can work from there
+        self.__pagination_parameters = {"page": 1}
+        if per_page is not None:
+            # we set the given per_page
+            self.__pagination_parameters["per_page"] = per_page
+        else:
+            # we use the per_page explicitly configured with the Requester
+            if requester.per_page != Consts.DEFAULT_PER_PAGE:
+                self.__pagination_parameters["per_page"] = requester.per_page
+            else:
+                # we use the default (no) per_page (not Consts.DEFAULT_PER_PAGE, the URL might have a different default)
+                pass
+
+        super().__init__(requester, headers, attributes, completed, url=url, accept=accept)
+
+    @property
+    def _pagination_parameters(self) -> dict[str, Any]:
+        return self.__pagination_parameters
+
+    def _pagination_parameters_with(self, page: int, per_page: int | None) -> dict[str, Any]:
+        assert page > 0, page
+        assert per_page is None or isinstance(per_page, int) and per_page > 0, per_page
+        parameters = self._pagination_parameters.copy()
+        parameters["page"] = page
+        if per_page is not None:
+            parameters["per_page"] = per_page
+        return parameters
+
+    def _complete(self, parameters: dict[str, Any] | None = None) -> None:
+        # inject pagination parameters into the complete request
+        parameters = {**parameters} if parameters else {}
+        parameters.update(**self.__pagination_parameters)
+        super()._complete(parameters=parameters)
+
+    def update(
+        self, additional_headers: dict[str, Any] | None = None, parameters: dict[str, Any] | None = None
+    ) -> bool:
+        # inject pagination parameters into the complete request
+        parameters = {**parameters} if parameters else {}
+        parameters.update(**self.__pagination_parameters)
+        return super().update(parameters=parameters)
 
 
 Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
 
 
-# decorator to annotate methods with OpenAPI metadata
+# decorator to annotate methods with OpenAPI mapping information
+def method_parameter(
+    *, name: str, required: bool = False, merge: list[str] | None = None, docstring_prepend: str | None = None
+) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
+    def method_parameter_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+        return fn
+
+    return method_parameter_decorator
+
+
+# decorator to annotate methods with OpenAPI mapping information
 def method_returns(
     *, schema_property: str | None = None
 ) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
-    def openapi_method_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+    def method_returns_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
         return fn
 
-    return openapi_method_decorator
+    return method_returns_decorator
+
+
+# decorator to annotate methods with OpenAPI mapping information
+def openapi_parameter(
+    *,
+    name: str,
+    matches: str | None = None,
+    type: str | None = None,
+    input: bool | None = None,
+    docstring_prepend: str | None = None,
+) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
+    def openapi_parameter_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+        return fn
+
+    return openapi_parameter_decorator

@@ -1,0 +1,3 @@
+python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index NamedUser get_starred get /users/{username}/starred
+python scripts/openapi.py create method github openapi.spec.json openapi.index NamedUser get_starred get /users/{username}/starred
+python scripts/openapi.py index github openapi.spec.json openapi.index

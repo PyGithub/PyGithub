@@ -83,6 +83,7 @@ import github.Gist
 import github.GithubObject
 import github.Invitation
 import github.Issue
+import github.Label
 import github.Membership
 import github.Migration
 import github.NamedUser
@@ -185,7 +186,7 @@ class AuthenticatedUser(CompletableGithubObject):
         self._notification_email: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
-        self._plan: Attribute[github.Plan.Plan] = NotSet
+        self._plan: Attribute[Plan] = NotSet
         self._private_gists: Attribute[int] = NotSet
         self._public_gists: Attribute[int] = NotSet
         self._public_repos: Attribute[int] = NotSet

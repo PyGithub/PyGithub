@@ -1,0 +1,59 @@
++ python scripts/openapi.py suggest schemas openapi.spec.json openapi.index
+Using spec openapi.spec.json
+Suggesting API schemas for PyGithub classes
+schema not implemented: /components/schemas/nullable-simple-user
+
+Class NamedUser:
+- should implement schema /components/schemas/nullable-simple-user
+  Properties returning the schema:
+  - IssueComment.user
+Properties returning the class:
+- IssueComment.user
+Suggested 1 schemas
+Added 0 schemas
++ python scripts/openapi.py --dry-run suggest schemas --add openapi.spec.json openapi.index
+Using spec openapi.spec.json
+Suggesting API schemas for PyGithub classes
+schema not implemented: /components/schemas/nullable-simple-user
+
+Class NamedUser:
+- should implement schema /components/schemas/nullable-simple-user
+  Properties returning the schema:
+  - IssueComment.user
+Properties returning the class:
+- IssueComment.user
+Adding schemas to NamedUser
+Diff:
+--- 
++++ 
+@@ -40,6 +40,7 @@
+ 
+     The OpenAPI schema can be found at
+ 
++    - /components/schemas/nullable-simple-user
+     - /components/schemas/public-user
+ 
+     """
+
+Suggested 1 schemas
+Added 1 schemas
++ python scripts/openapi.py suggest schemas --add openapi.spec.json openapi.index
+Using spec openapi.spec.json
+Suggesting API schemas for PyGithub classes
+schema not implemented: /components/schemas/nullable-simple-user
+
+Class NamedUser:
+- should implement schema /components/schemas/nullable-simple-user
+  Properties returning the schema:
+  - IssueComment.user
+Properties returning the class:
+- IssueComment.user
+Adding schemas to NamedUser
+Suggested 1 schemas
+Added 1 schemas
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 3 Python files
+Indexed 12 classes
+Indexed 0 paths
+Indexed 4 schemas
+Indexing OpenAPI spec

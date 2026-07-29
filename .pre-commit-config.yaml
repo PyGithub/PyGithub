@@ -7,6 +7,7 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        exclude: openapi/cli-sequence
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: mixed-line-ending
