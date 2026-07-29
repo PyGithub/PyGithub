@@ -723,6 +723,16 @@ class CompletableGithubObject(GithubObject, ABC):
             return True
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        # populate url attribute with self-link
+        if "url" not in attributes:
+            self_link = attributes.get("_links", {}).get("self", {})
+            if self_link:
+                if isinstance(self_link, str):
+                    attributes["url"] = self_link
+                elif isinstance(self_link, dict):
+                    href = self_link.get("href")
+                    if href:
+                        attributes["url"] = href
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
 
