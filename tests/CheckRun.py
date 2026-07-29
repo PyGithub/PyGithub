@@ -209,15 +209,19 @@ class CheckRun(Framework.TestCase):
         self.assertEqual(check_run.name, "completed_check_run")
         self.assertEqual(check_run.head_sha, "0283d46537193f1fed7d46859f15c5304b9836f9")
         self.assertEqual(check_run.status, "completed")
-        self.assertEqual(
-            check_run.started_at,
-            datetime(2020, 10, 20, 10, 30, 29, tzinfo=timezone.utc),
-        ),
+        (
+            self.assertEqual(
+                check_run.started_at,
+                datetime(2020, 10, 20, 10, 30, 29, tzinfo=timezone.utc),
+            ),
+        )
         self.assertEqual(check_run.conclusion, "success")
-        self.assertEqual(
-            check_run.completed_at,
-            datetime(2020, 10, 20, 11, 30, 50, tzinfo=timezone.utc),
-        ),
+        (
+            self.assertEqual(
+                check_run.completed_at,
+                datetime(2020, 10, 20, 11, 30, 50, tzinfo=timezone.utc),
+            ),
+        )
         self.assertEqual(check_run.output.annotations_count, 2)
 
     def testUpdateCheckRunSuccess(self):

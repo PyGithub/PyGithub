@@ -163,9 +163,9 @@ class GithubIntegration:
                     jwt_issued_at=jwt_issued_at,
                 )
 
-        assert isinstance(
-            auth, AppAuth
-        ), f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
+        assert isinstance(auth, AppAuth), (
+            f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
+        )
 
         self.auth = auth
 
@@ -198,7 +198,8 @@ class GithubIntegration:
         return GithubIntegration(**kwargs)
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the
+        """
+        Close connections to the server. Alternatively, use the
         GithubIntegration object as a context manager:
 
         .. code-block:: python
@@ -345,6 +346,5 @@ class GithubIntegration:
         """
         :calls: `GET /app <https://docs.github.com/en/rest/reference/apps#get-the-authenticated-app>`_
         """
-
         headers, data = self.__requester.requestJsonAndCheck("GET", "/app", headers=self._get_headers())
         return GithubApp(requester=self.__requester, headers=headers, attributes=data, completed=True)

@@ -154,12 +154,10 @@ class ProjectCard(NonCompletableGithubObject):
         return self._url.value
 
     @overload
-    def get_content(self, content_type: Literal["PullRequest"]) -> PullRequest | None:
-        ...
+    def get_content(self, content_type: Literal["PullRequest"]) -> PullRequest | None: ...
 
     @overload
-    def get_content(self, content_type: Literal["Issue"] | _NotSetType = NotSet) -> Issue | None:
-        ...
+    def get_content(self, content_type: Literal["Issue"] | _NotSetType = NotSet) -> Issue | None: ...
 
     # Note that the content_url for any card will be an "issue" URL, from
     # which you can retrieve either an Issue or a PullRequest. Unfortunately

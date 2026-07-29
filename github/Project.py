@@ -219,7 +219,6 @@ class Project(CompletableGithubObject):
         """
         :calls: `GET /projects/{project_id}/columns <https://docs.github.com/en/rest/reference/projects#list-project-columns>`_
         """
-
         return PaginatedList(
             github.ProjectColumn.ProjectColumn,
             self._requester,
