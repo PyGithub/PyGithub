@@ -5,7 +5,7 @@ description: 'A GitHub Action that runs pre-commit'
 runs:
   using: 'composite'
   steps:
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
       with:
         python-version: "3.13"
     # FIXME: pin pre-commit<4 pending PyCQA/docformatter#287
@@ -15,7 +15,7 @@ runs:
     - name: show environment
       run: python -m pip freeze --local
       shell: bash
-    - uses: actions/cache@v4
+    - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
       with:
         path: ~/.cache/pre-commit
         key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
