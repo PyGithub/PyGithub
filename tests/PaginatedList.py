@@ -292,6 +292,13 @@ class PaginatedList(Framework.TestCase):
                 ],
             )
 
+    def testSliceIndexingAtOrPastEnd(self):
+        # Slicing at or past the end must return [] like a plain list, not raise IndexError
+        with self.replayData("PaginatedList.testIteration.txt"):
+            self.assertEqual(list(self.list[333:]), [])
+            self.assertEqual(list(self.list[400:405]), [])
+            self.assertEqual(list(self.list[500::3]), [])
+
     def testInterruptedIteration(self):
         # No asserts, but checks that only three pages are fetched
         count = 0
