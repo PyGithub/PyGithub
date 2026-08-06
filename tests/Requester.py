@@ -647,6 +647,16 @@ class Requester(Framework.TestCase):
                 exc = self.g._Github__requester.createException(status, {}, None)
                 self.assertException(exc, github.GithubException, None, status, None, {}, f"{status}")
 
+    def testShouldCreateExceptionWithNonDictOutput(self):
+        # GitHub can return a non-object JSON body (list, string, number, bool)
+        # for an error, for example during an incident. createException must not
+        # crash with AttributeError; it should still build a GithubException.
+        for output in ([{"url": "x"}], "boom", 42, True):
+            with self.subTest(output=output):
+                exc = self.g._Github__requester.createException(500, {}, output)
+                self.assertIsInstance(exc, github.GithubException)
+                self.assertEqual(exc.status, 500)
+
 
 class RequesterThrottleTestCase(Framework.TestCase):
     def setUp(self):
