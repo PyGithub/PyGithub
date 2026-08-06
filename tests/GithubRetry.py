@@ -124,7 +124,7 @@ class GithubRetry(unittest.TestCase):
 
     @contextlib.contextmanager
     def mock_retry_now(self, now):
-        if sys.version_info[0] > 3 or sys.version_info[0] == 3 and sys.version_info[1] >= 11:
+        if sys.version_info >= (3, 11):
             attr = "github.GithubRetry.GithubRetry._GithubRetry__datetime"
         else:
             attr = "github.GithubRetry._GithubRetry__datetime"

@@ -56,12 +56,13 @@ import email.utils
 import re
 import typing
 from abc import ABC
+from collections.abc import Callable
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Callable, Union, overload
+from typing import TYPE_CHECKING, Any, TypeGuard, Union, overload
 
-from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar
+from typing_extensions import ParamSpec, Protocol, Self, TypeVar
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
