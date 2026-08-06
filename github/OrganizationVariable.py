@@ -99,12 +99,12 @@ class OrganizationVariable(Variable):
             "visibility": visibility,
         }
 
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "PATCH",
             self.url,
             input=patch_parameters,
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def add_repo(self, repo: Repository) -> bool:
         """

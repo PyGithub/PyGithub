@@ -647,6 +647,31 @@ class Requester(Framework.TestCase):
                 exc = self.g._Github__requester.createException(status, {}, None)
                 self.assertException(exc, github.GithubException, None, status, None, {}, f"{status}")
 
+    def testCheckStatusOrRaiseTrueOn204(self):
+        requester = self.g._Github__requester
+        self.assertTrue(requester.checkStatusOrRaise(204, {}, ""))
+
+    def testCheckStatusOrRaiseFalseOn404(self):
+        requester = self.g._Github__requester
+        self.assertFalse(requester.checkStatusOrRaise(404, {}, ""))
+
+    def testCheckStatusOrRaiseFalseOnCustomFalseStatus(self):
+        requester = self.g._Github__requester
+        self.assertFalse(requester.checkStatusOrRaise(302, {}, "", false_status=302))
+        # 404 is no longer treated as False when a different false_status was requested.
+        with self.assertRaises(github.GithubException):
+            requester.checkStatusOrRaise(404, {}, "", false_status=302)
+
+    def testCheckStatusOrRaiseRaisesOnUnexpectedStatus(self):
+        # Regression test for https://github.com/PyGithub/PyGithub/issues/2760:
+        # any status other than 204/404 (such as an expired token returning 401) used to be
+        # silently swallowed as False, hiding the real error from the caller.
+        requester = self.g._Github__requester
+        with self.assertRaises(github.BadCredentialsException) as raisedexp:
+            requester.checkStatusOrRaise(401, {}, '{"message": "Bad credentials"}')
+        self.assertEqual(raisedexp.exception.status, 401)
+        self.assertEqual(raisedexp.exception.data["message"], "Bad credentials")
+
 
 class RequesterThrottleTestCase(Framework.TestCase):
     def setUp(self):

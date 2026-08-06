@@ -694,12 +694,12 @@ class Issue(CompletableGithubObject):
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id} <https://docs.github.com/en/rest/reference/reactions#delete-an-issue-reaction>`_
         """
         assert isinstance(reaction_id, int), reaction_id
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
             f"{self.url}/reactions/{reaction_id}",
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def get_timeline(self) -> PaginatedList[TimelineEvent]:
         """

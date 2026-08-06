@@ -2500,8 +2500,12 @@ class LazyRepository(Framework.TestCase):
 
     def testChangeAutomateFixWhenNoVulnerabilityAlert(self):
         lazy_repo = self.getLazyRepository()
-        self.assertFalse(lazy_repo.enable_automated_security_fixes())
-        self.assertFalse(lazy_repo.disable_automated_security_fixes())
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.enable_automated_security_fixes()
+        self.assertEqual(raisedexp.exception.status, 422)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            lazy_repo.disable_automated_security_fixes()
+        self.assertEqual(raisedexp.exception.status, 422)
 
     def testGetVulnerabilityAlertWhenTurnedOff(self):
         lazy_repo = self.getEagerRepository()

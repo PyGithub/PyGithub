@@ -2009,7 +2009,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(client_payload, dict), client_payload
         post_parameters = NotSet.remove_unset_items({"event_type": event_type, "client_payload": client_payload})
         status, headers, data = self._requester.requestJson("POST", f"{self.url}/dispatches", input=post_parameters)
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def create_secret(
         self,
@@ -2135,7 +2135,7 @@ class Repository(CompletableGithubObject):
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
         secret_name = urllib.parse.quote(secret_name, safe="")
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/{secret_type}/secrets/{secret_name}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def delete_variable(self, variable_name: str) -> bool:
         """
@@ -2146,7 +2146,7 @@ class Repository(CompletableGithubObject):
         assert isinstance(variable_name, str), variable_name
         variable_name = urllib.parse.quote(variable_name, safe="")
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/variables/{variable_name}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def create_source_import(
         self,
@@ -3847,7 +3847,7 @@ class Repository(CompletableGithubObject):
             assignee = urllib.parse.quote(assignee, safe="")
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/assignees/{assignee}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def has_in_collaborators(self, collaborator: str | NamedUser) -> bool:
         """
@@ -3863,7 +3863,7 @@ class Repository(CompletableGithubObject):
             collaborator = urllib.parse.quote(collaborator, safe="")
 
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/collaborators/{collaborator}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def _legacy_convert_issue(self, attributes: dict[str, Any]) -> dict[str, Any]:
         convertedAttributes = {
@@ -4002,36 +4002,36 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/vulnerability-alerts <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: bool
         """
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "GET",
             f"{self.url}/vulnerability-alerts",
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def enable_vulnerability_alert(self) -> bool:
         """
         :calls: `PUT /repos/{owner}/{repo}/vulnerability-alerts <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: bool
         """
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "PUT",
             f"{self.url}/vulnerability-alerts",
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def disable_vulnerability_alert(self) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/vulnerability-alerts <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: bool
         """
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
             f"{self.url}/vulnerability-alerts",
             headers={"Accept": Consts.vulnerabilityAlertsPreview},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def get_automated_security_fixes(self) -> dict[str, bool]:
         """
@@ -4050,24 +4050,24 @@ class Repository(CompletableGithubObject):
         :calls: `PUT /repos/{owner}/{repo}/automated-security-fixes <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: bool
         """
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "PUT",
             f"{self.url}/automated-security-fixes",
             headers={"Accept": Consts.automatedSecurityFixes},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def disable_automated_security_fixes(self) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/automated-security-fixes <https://docs.github.com/en/rest/reference/repos>`_
         :rtype: bool
         """
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
             f"{self.url}/automated-security-fixes",
             headers={"Accept": Consts.automatedSecurityFixes},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def remove_from_collaborators(self, collaborator: str | NamedUser) -> None:
         """
@@ -4097,8 +4097,8 @@ class Repository(CompletableGithubObject):
         if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
             runner = runner.id
 
-        status, _, _ = self._requester.requestJson("DELETE", f"{self.url}/actions/runners/{runner}")
-        return status == 204
+        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/actions/runners/{runner}")
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def remove_autolink(self, autolink: Autolink | int) -> bool:
         """
@@ -4109,10 +4109,10 @@ class Repository(CompletableGithubObject):
         is_autolink = isinstance(autolink, github.Autolink.Autolink)
         assert is_autolink or isinstance(autolink, int), autolink
 
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def subscribe_to_hub(self, event: str, callback: str, secret: Opt[str] = NotSet) -> None:
         """

@@ -351,7 +351,10 @@ class Organization(Framework.TestCase):
         lyloa = self.g.get_user("Lyloa")
         self.assertTrue(self.org.has_in_members(lyloa))
         self.org.remove_from_members(lyloa)
-        self.assertFalse(self.org.has_in_members(lyloa))
+        with self.assertRaises(github.GithubException) as raisedexp:
+            self.org.has_in_members(lyloa)
+        self.assertEqual(raisedexp.exception.status, 403)
+        self.assertEqual(raisedexp.exception.data["message"], "You need to be a member")
 
     def testGetRepos(self):
         repos = self.org.get_repos()

@@ -1466,7 +1466,7 @@ class Organization(CompletableGithubObject):
         """
         assert isinstance(invitee, github.NamedUser.NamedUser), invitee
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/invitations/{invitee.id}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def has_in_members(self, member: NamedUser) -> bool:
         """
@@ -1478,7 +1478,7 @@ class Organization(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
         if status == 302:
             status, headers, data = self._requester.requestJson("GET", headers["location"])
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def has_in_public_members(self, public_member: NamedUser) -> bool:
         """
@@ -1490,7 +1490,7 @@ class Organization(CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET", f"{self.url}/public_members/{public_member._identity}"
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def remove_from_membership(self, member: NamedUser) -> None:
         """

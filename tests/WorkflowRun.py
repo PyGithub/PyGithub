@@ -35,6 +35,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+from github import GithubException
+
 from . import Framework
 
 
@@ -192,7 +194,10 @@ class WorkflowRun(Framework.TestCase):
 
     def test_delete(self):
         wr = self.repo.get_workflow_run(3881497935)
-        self.assertFalse(wr.delete())
+        with self.assertRaises(GithubException) as raisedexp:
+            wr.delete()
+        self.assertEqual(raisedexp.exception.status, 403)
+        self.assertEqual(raisedexp.exception.data["message"], "Must have admin rights to Repository.")
 
     def test_jobs(self):
         self.assertListKeyEqual(

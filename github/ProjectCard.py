@@ -206,12 +206,12 @@ class ProjectCard(NonCompletableGithubObject):
         """
         :calls: `DELETE /projects/columns/cards/{card_id} <https://docs.github.com/en/rest/reference/projects#cards>`_
         """
-        status, _, _ = self._requester.requestJson(
+        status, headers, data = self._requester.requestJson(
             "DELETE",
             self.url,
             headers={"Accept": Consts.mediaTypeProjectsPreview},
         )
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def edit(self, note: Opt[str] = NotSet, archived: Opt[bool] = NotSet) -> None:
         """

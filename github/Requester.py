@@ -667,6 +667,29 @@ class Requester:
             ),
         )
 
+    def checkStatusOrRaise(
+        self,
+        status: int,
+        responseHeaders: dict[str, Any],
+        output: str,
+        false_status: int = 404,
+    ) -> bool:
+        """
+        Interpret a response status as a boolean, for endpoints that use ``204`` to mean
+        ``True`` and ``false_status`` (``404`` by default) to mean ``False``.
+
+        Any other status, such as ``401`` or ``403``, is treated as an error and raises,
+        instead of being silently interpreted as ``False``.
+
+        :raises: :class:`GithubException.GithubException` for any status code other than
+            ``204`` and ``false_status``
+        """
+        if status == 204:
+            return True
+        if status == false_status:
+            return False
+        raise self.createException(status, responseHeaders, self.__structuredFromJson(output))
+
     def requestMultipartAndCheck(
         self,
         verb: str,

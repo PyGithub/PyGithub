@@ -263,7 +263,7 @@ class Environment(CompletableGithubObject):
         """
         assert isinstance(secret_name, str), secret_name
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/secrets/{secret_name}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def delete_variable(self, variable_name: str) -> bool:
         """
@@ -273,7 +273,7 @@ class Environment(CompletableGithubObject):
         """
         assert isinstance(variable_name, str), variable_name
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/variables/{variable_name}")
-        return status == 204
+        return self._requester.checkStatusOrRaise(status, headers, data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
