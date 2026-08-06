@@ -50,6 +50,7 @@ import os
 import zipfile
 from datetime import datetime, timezone
 
+import github.GitRelease
 from github import GithubException
 
 from . import Framework
@@ -222,6 +223,20 @@ class GitRelease(Framework.TestCase):
     def testGetLatestRelease(self):
         latest_release = self.repo.get_latest_release()
         self.assertEqual(latest_release.tag_name, tag)
+
+    def testLazyLatestReleaseDoesNotDeriveTagNameFromUrl(self):
+        # A lazily-constructed release pointing at .../releases/latest must not
+        # derive a tag_name of "latest" from the URL; _tag_name must stay NotSet
+        # so that lazy completion fetches the real tag_name.
+        from github.GithubObject import NotSet
+
+        release = github.GitRelease.GitRelease(
+            self.g.requester,
+            {},
+            {"url": "https://api.github.com/repos/edx/edx-platform/releases/latest"},
+            completed=False,
+        )
+        self.assertIs(release._tag_name, NotSet)
 
     def testGetAssets(self):
         repo = self.repo
