@@ -90,6 +90,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
+    _format_query_datetime,
     is_defined,
     is_optional,
     is_optional_list,
@@ -515,7 +516,7 @@ class Issue(CompletableGithubObject):
         url_parameters = {}
         if is_defined(since):
             assert isinstance(since, datetime), since
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
 
         return PaginatedList(
             github.IssueComment.IssueComment,

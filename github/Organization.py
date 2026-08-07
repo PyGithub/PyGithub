@@ -124,6 +124,7 @@ from github.GithubObject import (
     CompletableGithubObject,
     NotSet,
     Opt,
+    _format_query_datetime,
     is_defined,
     is_optional,
     is_optional_list,
@@ -1245,7 +1246,7 @@ class Organization(CompletableGithubObject):
         if is_defined(labels):
             url_parameters["labels"] = ",".join(label.name for label in labels)
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return PaginatedList(github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters)
 
     def get_members(

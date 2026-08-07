@@ -262,6 +262,7 @@ from github.GithubObject import (
     NotSet,
     Opt,
     _NotSetType,
+    _format_query_datetime,
     is_defined,
     is_optional,
     is_optional_list,
@@ -2450,9 +2451,9 @@ class Repository(CompletableGithubObject):
         if is_defined(path):
             url_parameters["path"] = path
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         if is_defined(until):
-            url_parameters["until"] = until.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["until"] = _format_query_datetime(until)
         if is_defined(author):
             if isinstance(
                 author,
@@ -3238,7 +3239,7 @@ class Repository(CompletableGithubObject):
         if is_defined(direction):
             url_parameters["direction"] = direction
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         if is_defined(creator):
             if isinstance(creator, str):
                 url_parameters["creator"] = creator
@@ -3268,7 +3269,7 @@ class Repository(CompletableGithubObject):
         if is_defined(direction):
             url_parameters["direction"] = direction
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
@@ -3511,7 +3512,7 @@ class Repository(CompletableGithubObject):
         if is_defined(direction):
             url_parameters["direction"] = direction
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
@@ -3927,9 +3928,9 @@ class Repository(CompletableGithubObject):
 
         params = NotSet.remove_unset_items({"all": all, "participating": participating})
         if is_defined(since):
-            params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            params["since"] = _format_query_datetime(since)
         if is_defined(before):
-            params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
+            params["before"] = _format_query_datetime(before)
 
         return PaginatedList(
             github.Notification.Notification,
@@ -3944,7 +3945,7 @@ class Repository(CompletableGithubObject):
         :param last_read_at: datetime
         """
         assert isinstance(last_read_at, datetime)
-        put_parameters = {"last_read_at": last_read_at.strftime("%Y-%m-%dT%H:%M:%SZ")}
+        put_parameters = {"last_read_at": _format_query_datetime(last_read_at)}
 
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/notifications", input=put_parameters)
 
@@ -4247,9 +4248,9 @@ class Repository(CompletableGithubObject):
         )
 
         if is_defined(started_at):
-            post_parameters["started_at"] = started_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+            post_parameters["started_at"] = _format_query_datetime(started_at)
         if is_defined(completed_at):
-            post_parameters["completed_at"] = completed_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+            post_parameters["completed_at"] = _format_query_datetime(completed_at)
 
         headers, data = self._requester.requestJsonAndCheck(
             "POST",

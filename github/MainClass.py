@@ -134,6 +134,7 @@ from github.GithubObject import (
     NotSet,
     Opt,
     _NotSetType,
+    _format_query_datetime,
     is_defined,
     is_undefined,
 )
@@ -576,7 +577,7 @@ class Github:
         assert since is NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return PaginatedList(github.Gist.Gist, self.__requester, "/gists/public", url_parameters)
 
     def get_global_advisory(self, ghsa_id: str) -> GlobalAdvisory:
