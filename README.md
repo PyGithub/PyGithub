@@ -67,3 +67,6 @@ For more information read [CONTRIBUTING.md].
 
 We're actively seeking maintainers that will triage issues and pull requests and cut releases.
 If you work on a project that leverages PyGitHub and have a vested interest in keeping the code alive and well, send an email to someone in the MAINTAINERS file.
+
+### Test Changes
+Change 1
