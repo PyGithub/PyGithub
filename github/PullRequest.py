@@ -453,7 +453,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number} <https://docs.github.com/en/rest/reference/issues>`_
         """
-        return github.Issue.Issue(self._requester, url=self.issue_url)
+        return github.Issue.Issue(self._requester, url=self.issue_url, completed=False)
 
     def create_comment(self, body: str, commit: Commit, path: str, position: int) -> PullRequestComment:
         """
