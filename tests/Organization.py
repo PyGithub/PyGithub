@@ -663,6 +663,18 @@ class Organization(Framework.TestCase):
         variable = self.org.get_variable("variable-name")
         self.assertTrue(variable.edit("variable-value-updated"))
 
+    def testEditVariableSelected(self):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        variable = self.org.get_variable("variable-name")
+        self.assertTrue(variable.edit("variable-value-updated", visibility="selected", selected_repositories=repos))
+
+    def testLazySecretSelectedRepositories(self):
+        # A lazily loaded secret only knows its name/url; accessing selected_repositories
+        # must complete the object so the repositories URL is resolved rather than None.
+        secret = self.g.withLazy(True).get_organization("BeaverSoftware").get_secret("secret-name")
+        repos = list(secret.selected_repositories)
+        self.assertEqual([repo.name for repo in repos], ["TestPyGithub", "FatherBeaver"])
+
     def testEditSecret(self):
         secret = self.org.get_secret("secret-name")
         self.assertTrue(secret.edit("secret-value-updated"))

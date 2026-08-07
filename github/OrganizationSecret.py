@@ -80,7 +80,7 @@ class OrganizationSecret(Secret):
         return PaginatedList(
             github.Repository.Repository,
             self._requester,
-            self._selected_repositories_url.value,
+            self.selected_repositories_url,
             None,
             list_item="repositories",
         )
