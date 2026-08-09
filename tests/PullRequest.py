@@ -509,6 +509,10 @@ class PullRequest(Framework.TestCase):
             'PullRequestMergeStatus(sha="688208b1a5a074871d0e9376119556897439697d", merged=True)',
         )
 
+    def testIsMergedWithRealError(self):
+        with self.assertRaises(github.GithubException):
+            self.pull.is_merged()
+
     def testMergeWithCommitMessage(self):
         self.repo.get_pull(39).merge("Custom commit message created by PyGithub")
 

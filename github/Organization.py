@@ -1475,9 +1475,9 @@ class Organization(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
-        if status == 302:
-            status, headers, data = self._requester.requestJson("GET", headers["location"])
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"{self.url}/members/{member._identity}", valid_codes={204, 302, 403, 404}, follow_302_redirect=True
+        )
         return status == 204
 
     def has_in_public_members(self, public_member: NamedUser) -> bool:
@@ -1487,8 +1487,8 @@ class Organization(CompletableGithubObject):
         :rtype: bool
         """
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
-        status, headers, data = self._requester.requestJson(
-            "GET", f"{self.url}/public_members/{public_member._identity}"
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"{self.url}/public_members/{public_member._identity}", valid_codes={204, 404}
         )
         return status == 204
 
