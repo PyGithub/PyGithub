@@ -34,8 +34,9 @@ import abc
 import base64
 import time
 from abc import ABC
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Callable, Union
+from typing import TYPE_CHECKING, Union
 
 import jwt
 from requests import utils
