@@ -74,6 +74,7 @@ from urllib.parse import urlsplit
 
 import vcr
 import vcr.cassette
+from niquests.packages.urllib3.util import Url
 from requests.structures import CaseInsensitiveDict
 from vcr.matchers import requests_match
 
