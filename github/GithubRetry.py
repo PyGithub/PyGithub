@@ -140,7 +140,7 @@ class GithubRetry(RetryConfiguration):
                         try:
                             raise RuntimeError("Failed to inspect response message") from e
                         except RuntimeError as e:
-                            raise GithubException(response.status, content, response.headers) from e  # type: ignore
+                            raise GithubException(response.status, content or response.reason, response.headers) from e  # type: ignore
 
                     try:
                         if Requester.isRateLimitError(message):
