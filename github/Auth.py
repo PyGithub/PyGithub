@@ -39,7 +39,7 @@ from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Union
 
 import jwt
-from requests import utils
+from niquests import utils
 
 from github import Consts
 from github.InstallationAuthorization import InstallationAuthorization
