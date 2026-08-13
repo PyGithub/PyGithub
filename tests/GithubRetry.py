@@ -385,7 +385,7 @@ class GithubRetry(unittest.TestCase):
         response = niquests.packages.urllib3.response.HTTPResponse()
         self.do_test_default_behaviour(retry, response)
 
-    def test_error_in_get_content(self):
+    def test_error_inspecting_response_body(self):
         retry = github.GithubRetry(total=3)
         response = niquests.packages.urllib3.response.HTTPResponse(status=403, reason="NOT GOOD")
 
@@ -402,7 +402,7 @@ class GithubRetry(unittest.TestCase):
 
             self.assertIsInstance(exp.exception.__cause__.__cause__, ValueError)
             self.assertEqual(
-                ("Unable to determine whether fp is closed.",),
+                ("Expecting value: line 1 column 1 (char 0)",),
                 exp.exception.__cause__.__cause__.args,
             )
 
