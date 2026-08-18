@@ -167,7 +167,7 @@ class Workflow(CompletableGithubObject):
         ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
-        return_run_details: Literal[True] = False,
+        return_run_details: Literal[True] = True,
     ) -> github.WorkflowRun.WorkflowRun:
         ...
 
@@ -199,7 +199,7 @@ class Workflow(CompletableGithubObject):
         if inputs is NotSet:
             inputs = {}
         url = f"{self.url}/dispatches"
-        input = {"ref": ref, "inputs": inputs}
+        input: dict[str, str | bool | dict] = NotSet.remove_unset_items({"ref": ref, "inputs": inputs})
 
         # Add return_run_details to the request body if requested
         if return_run_details:
