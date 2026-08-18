@@ -48,7 +48,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, overload
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 import github.Branch
 import github.Commit
@@ -167,7 +167,7 @@ class Workflow(CompletableGithubObject):
         ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
-        return_run_details: Literal[True],
+        return_run_details: Literal[True] = False,
     ) -> github.WorkflowRun.WorkflowRun:
         ...
 
