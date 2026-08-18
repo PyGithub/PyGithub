@@ -603,10 +603,10 @@ class Github:
         published: Opt[str] = NotSet,
         updated: Opt[str] = NotSet,
         modified: Opt[str] = NotSet,
-        keywords: Opt[str] = NotSet,
+        epss_percentage: Opt[str] = NotSet,
+        epss_percentile: Opt[str] = NotSet,
         before: Opt[str] = NotSet,
         after: Opt[str] = NotSet,
-        per_page: Opt[str] = NotSet,
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
     ) -> PaginatedList[GlobalAdvisory]:
@@ -623,6 +623,8 @@ class Github:
         :param published: Optional string
         :param updated: Optional string
         :param modified: Optional string
+        :param epss_percentage: Optional string
+        :param epss_percentile: Optional string
         :param before: Optional string
         :param after: Optional string
         :param sort: Optional string
@@ -640,6 +642,8 @@ class Github:
         assert published is github.GithubObject.NotSet or isinstance(published, str), published
         assert updated is github.GithubObject.NotSet or isinstance(updated, str), updated
         assert modified is github.GithubObject.NotSet or isinstance(modified, str), modified
+        assert epss_percentage is github.GithubObject.NotSet or isinstance(epss_percentage, str), epss_percentage
+        assert epss_percentile is github.GithubObject.NotSet or isinstance(epss_percentile, str), epss_percentile
         assert before is github.GithubObject.NotSet or isinstance(before, str), before
         assert after is github.GithubObject.NotSet or isinstance(after, str), after
         assert sort is github.GithubObject.NotSet or isinstance(sort, str), sort
@@ -676,6 +680,10 @@ class Github:
             url_parameters["updated"] = updated
         if modified is not github.GithubObject.NotSet:
             url_parameters["modified"] = modified
+        if epss_percentage is not github.GithubObject.NotSet:
+            url_parameters["epss_percentage"] = epss_percentage
+        if epss_percentile is not github.GithubObject.NotSet:
+            url_parameters["epss_percentile"] = epss_percentile
         if before is not github.GithubObject.NotSet:
             url_parameters["before"] = before
         if after is not github.GithubObject.NotSet:
