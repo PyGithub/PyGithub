@@ -44,6 +44,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from github import GithubException
+from github.WorkflowRun import WorkflowRun
 
 from . import Framework
 
@@ -163,6 +164,15 @@ class Workflow(Framework.TestCase):
             workflow.create_dispatch("main", throw=True)
         self.assertEqual(raisedexp.exception.status, 422)
         self.assertEqual(raisedexp.exception.data["message"], "Required input 'mandatory-parameter' not provided")
+
+    def testCreateDispatchWithReturnRunDetails(self):
+        dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
+        run = workflow.create_dispatch("main", dispatch_inputs, return_run_details=True)
+        self.assertIsInstance(run, WorkflowRun)
+        self.assertEqual(run.id, 123456789)
+        self.assertEqual(run.url, "https://api.github.com/repos/wrecker/PyGithub/actions/runs/123456789")
+        self.assertEqual(run.html_url, "https://github.com/wrecker/PyGithub/actions/runs/123456789")
 
     def testDisable(self):
         workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")
