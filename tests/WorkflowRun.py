@@ -194,6 +194,32 @@ class WorkflowRun(Framework.TestCase):
         wr = self.repo.get_workflow_run(3881497935)
         self.assertFalse(wr.delete())
 
+    def testGetPendingDeployments(self):
+        pending_deployments = self.workflow_run.get_pending_deployments()
+        self.assertEqual(len(pending_deployments), 1)
+        pending_deployment = pending_deployments[0]
+        self.assertEqual(pending_deployment.environment.id, 161088068)
+        self.assertEqual(pending_deployment.environment.name, "staging")
+        self.assertEqual(pending_deployment.wait_timer, 30)
+        self.assertEqual(
+            pending_deployment.wait_timer_started_at,
+            datetime(2020, 11, 23, 22, 0, 40, tzinfo=timezone.utc),
+        )
+        self.assertTrue(pending_deployment.current_user_can_approve)
+        self.assertEqual(len(pending_deployment.reviewers), 2)
+        self.assertEqual(pending_deployment.reviewers[0]["type"], "User")
+        self.assertEqual(pending_deployment.reviewers[0]["reviewer"]["login"], "nuang-ee")
+        self.assertEqual(pending_deployment.reviewers[1]["type"], "Team")
+        self.assertEqual(pending_deployment.reviewers[1]["reviewer"]["slug"], "justice-league")
+
+    def testReviewPendingDeployments(self):
+        deployments = self.workflow_run.review_pending_deployments([161088068], "approved", "Ship it")
+        self.assertEqual(len(deployments), 1)
+        self.assertEqual(deployments[0].id, 145988310)
+        self.assertEqual(deployments[0].environment, "staging")
+        self.assertEqual(deployments[0].ref, "feat/workflow-run")
+        self.assertEqual(deployments[0].task, "deploy")
+
     def test_jobs(self):
         self.assertListKeyEqual(
             self.workflow_run.jobs(),

@@ -40,8 +40,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, NamedTuple
 
+import github.Deployment
 import github.GitCommit
 import github.NamedUser
+import github.PendingDeployment
 import github.PullRequest
 import github.Repository
 import github.WorkflowJob
@@ -50,8 +52,10 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Artifact import Artifact
+    from github.Deployment import Deployment
     from github.GitCommit import GitCommit
     from github.NamedUser import NamedUser
+    from github.PendingDeployment import PendingDeployment
     from github.PullRequest import PullRequest
     from github.Repository import Repository
     from github.WorkflowJob import WorkflowJob
@@ -368,6 +372,35 @@ class WorkflowRun(CompletableGithubObject):
         """
         status, _, _ = self._requester.requestJson("DELETE", self.url)
         return status == 204
+
+    def get_pending_deployments(self) -> list[PendingDeployment]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments <https://docs.github.com/en/rest/actions/workflow-runs#get-pending-deployments-for-a-workflow-run>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/pending_deployments")
+        return [github.PendingDeployment.PendingDeployment(self._requester, headers, item) for item in data]
+
+    def review_pending_deployments(self, environment_ids: list[int], state: str, comment: str = "") -> list[Deployment]:
+        """
+        :calls: `POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments <https://docs.github.com/en/rest/actions/workflow-runs#review-pending-deployments-for-a-workflow-run>`_
+        :param environment_ids: list of integers, the ids of the environments to approve or reject
+        :param state: string, either ``approved`` or ``rejected``
+        :param comment: string, a comment to accompany the deployment review
+        """
+        assert isinstance(environment_ids, list) and all(
+            isinstance(element, int) for element in environment_ids
+        ), environment_ids
+        assert state in ("approved", "rejected"), state
+        assert isinstance(comment, str), comment
+        post_parameters = {
+            "environment_ids": environment_ids,
+            "state": state,
+            "comment": comment,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/pending_deployments", input=post_parameters
+        )
+        return [github.Deployment.Deployment(self._requester, headers, item, completed=True) for item in data]
 
     def jobs(self, _filter: Opt[str] = NotSet) -> PaginatedList[WorkflowJob]:
         """

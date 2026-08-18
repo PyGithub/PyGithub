@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/actions/runs/3881497935/pending_deployments
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Content-Type', 'application/json; charset=utf-8'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('status', '200 OK')]
+[{"environment":{"id":161088068,"node_id":"MDExOkVudmlyb25tZW50MTYxMDg4MDY4","name":"staging","url":"https://api.github.com/repos/PyGithub/PyGithub/environments/staging","html_url":"https://github.com/PyGithub/PyGithub/deployments/activity_log?environments_filter=staging"},"wait_timer":30,"wait_timer_started_at":"2020-11-23T22:00:40Z","current_user_can_approve":true,"reviewers":[{"type":"User","reviewer":{"login":"nuang-ee","id":50770626,"node_id":"MDQ6VXNlcjUwNzcwNjI2","type":"User"}},{"type":"Team","reviewer":{"id":1,"node_id":"MDQ6VGVhbTE=","name":"Justice League","slug":"justice-league"}}]}]
