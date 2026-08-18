@@ -83,6 +83,7 @@ class GithubRetry(Retry):
         :param max_rate_limit_wait: maximum seconds to wait for a primary or secondary rate limit reset;
             if the required backoff would exceed this, raises
             :class:`~github.GithubException.RateLimitExceededExceedsMaxWait` instead of waiting.
+            Note that ``max_rate_limit_wait < secondary_rate_wait`` causes any secondary rate limit error to raise an exception and never wait.
             ``None`` (the default) means no cap is applied.
         :param kwargs: see urllib3.Retry for more arguments
         """
