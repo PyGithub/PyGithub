@@ -138,7 +138,7 @@ class RateLimit(NonCompletableGithubObject):
         return self._integration_manifest.value
 
     @property
-    def scim(self) -> github.Rate.Rate:
+    def scim(self) -> Rate:
         return self._scim.value
 
     @property
@@ -149,7 +149,7 @@ class RateLimit(NonCompletableGithubObject):
         return self._search.value
 
     @property
-    def source_import(self) -> github.Rate.Rate:
+    def source_import(self) -> Rate:
         return self._source_import.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

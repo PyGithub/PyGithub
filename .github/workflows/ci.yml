@@ -24,18 +24,19 @@ jobs:
       fail-fast: false
       matrix:
         # keep in sync with tox.ini [gh-actions] section
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
         os: ["ubuntu-latest"]
         os-label: ["Ubuntu"]
         include:
-          - {python-version: "3.9", os: "windows-latest", os-label: "Windows"}
-          - {python-version: "3.9", os: "macos-latest", os-label: "macOS"}
+          - {python-version: "3.10", os: "windows-latest", os-label: "Windows"}
+          - {python-version: "3.10", os: "macos-latest", os-label: "macOS"}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "${{ matrix.python-version }}"
+          allow-prereleases: true
       - name: Install tox
         run: |
           python -m pip install --upgrade pip
@@ -44,12 +45,12 @@ jobs:
         run: tox
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: Test Results (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
           path: pytest.xml
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
 
   test_success:
     # this aggregates success state of all jobs listed in `needs`
@@ -68,21 +69,44 @@ jobs:
         run: false
         shell: bash
 
+  openapi:
+    name: "test OpenAPI script"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Set up dependencies
+        run: |
+          pip install -r requirements/scripts.txt -r requirements/test.txt
+      - name: Test OpenAPI script
+        shell: bash
+        run: |
+          pytest --junit-xml pytest.xml openapi/Cli.py
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: Test Results (OpenAPI script)
+          path: pytest.xml
+
   index:
     name: "Check verbs"
     needs: "test_success"
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           path: head
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.12"
       - name: Set up dependencies
@@ -124,15 +148,15 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           path: head
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.12"
       - name: Set up dependencies
@@ -186,15 +210,15 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           path: head
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.12"
       - name: Set up dependencies
@@ -210,12 +234,12 @@ jobs:
 
           echo "::group::Head implementations:"
           python head/scripts/openapi.py --verbose index head/github openapi.json openapi.head.index
-          python head/scripts/openapi.py --verbose --dry-run apply --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
+          python head/scripts/openapi.py --verbose --dry-run apply properties --tests head/github openapi.json openapi.head.index | tee implementation.head.txt
           echo "::endgroup::"
 
           echo "::group::Base implementations:"
           python head/scripts/openapi.py --verbose index base/github openapi.json openapi.base.index
-          python head/scripts/openapi.py --verbose --dry-run apply --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
+          python head/scripts/openapi.py --verbose --dry-run apply properties --tests base/github openapi.json openapi.base.index | tee implementation.base.txt
           echo "::endgroup::"
 
           if ! (diff <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]base/github/%(github/%" -e "s%Test base/%Test %" implementation.base.txt) <(sed -E -e "s/^[@]{2} .+ [@]{2}$/…/" -e "s%[(]head/github/%(github/%" -e "s%Test head/%Test %" implementation.head.txt) > diff.txt)
@@ -227,7 +251,7 @@ jobs:
             (grep -E -e "^> Class \w+ changed$" diff.txt | sed -E -e "s/^> Class (\w+) changed$/\1/" || true) | while read class
             do
               echo "::group::Apply schema to $class:"
-              python head/scripts/openapi.py --verbose apply --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
+              python head/scripts/openapi.py --verbose apply properties --tests --new-schemas create-class head/github openapi.json openapi.head.index "$class" > /dev/null
               (cd head; git diff; git reset --hard --quiet HEAD)
               echo "::endgroup::"
             done
@@ -238,7 +262,7 @@ jobs:
             echo "pip install -r requirements/scripts.txt"
             echo python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
             echo python scripts/openapi.py index github openapi.index
-            echo python scripts/openapi.py apply --tests --new-schemas create-class github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
+            echo python scripts/openapi.py apply properties --tests --new-schemas create-class github openapi.json openapi.index $(grep -E -e "^> Class \w+:$" diff.txt | sed -E -e "s/^> Class (\w+):$/\1/")
             (grep -E -e "^> Test .+ changed$" diff.txt | sed -E -e "s/^> Test (.+) changed$/\1/" || true) | while read test
             do
               echo python scripts/prepare-for-update-assertions.py "$test" testAttributes
@@ -258,7 +282,7 @@ jobs:
     needs: "test_success"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - uses: ./.github/actions/sort-classes
       - name: changes
         run: |
@@ -291,7 +315,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upload
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: Event File
           path: ${{ github.event_path }}

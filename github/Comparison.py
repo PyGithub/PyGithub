@@ -48,6 +48,7 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Commit import Commit
+    from github.File import File
 
 
 class Comparison(CompletableGithubObjectWithPaginatedProperty):
@@ -73,7 +74,7 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         self._behind_by: Attribute[int] = NotSet
         self._commits: Attribute[list[Commit]] = NotSet
         self._diff_url: Attribute[str] = NotSet
-        self._files: Attribute[list[github.File.File]] = NotSet
+        self._files: Attribute[list[File]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._merge_base_commit: Attribute[Commit] = NotSet
         self._patch_url: Attribute[str] = NotSet
@@ -129,7 +130,7 @@ class Comparison(CompletableGithubObjectWithPaginatedProperty):
         return self._diff_url.value
 
     @property
-    def files(self) -> list[github.File.File]:
+    def files(self) -> list[File]:
         """
         Only the first 300 changed files.
         """

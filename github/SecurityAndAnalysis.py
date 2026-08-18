@@ -42,10 +42,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+from typing_extensions import deprecated
 
 import github.SecurityAndAnalysisFeature
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.SecurityAndAnalysisFeature import SecurityAndAnalysisFeature
 
 
 class SecurityAndAnalysis(NonCompletableGithubObject):
@@ -59,27 +64,28 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._advanced_security: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
-        self._dependabot_security_updates: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
-        self._secret_scanning: Attribute[github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature] = NotSet
-        self._secret_scanning_ai_detection: Attribute[str] = NotSet
-        self._secret_scanning_non_provider_patterns: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
-        self._secret_scanning_push_protection: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
-        self._secret_scanning_validity_checks: Attribute[
-            github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature
-        ] = NotSet
+        self._advanced_security: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._code_security: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._dependabot_security_updates: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_ai_detection: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_delegated_alert_dismissal: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_delegated_bypass: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_delegated_bypass_options: Attribute[dict[str, Any]] = NotSet
+        self._secret_scanning_non_provider_patterns: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_push_protection: Attribute[SecurityAndAnalysisFeature] = NotSet
+        self._secret_scanning_validity_checks: Attribute[SecurityAndAnalysisFeature] = NotSet
 
     def __repr__(self) -> str:
         repr_attributes = {
             "advanced_security": repr(self._advanced_security.value),
+            "code_security": repr(self._code_security.value),
             "dependabot_security_updates": repr(self._dependabot_security_updates.value),
             "secret_scanning": repr(self._secret_scanning.value),
+            "secret_scanning_ai_detection": repr(self._secret_scanning_ai_detection.value),
+            "secret_scanning_delegated_alert_dismissal": repr(self._secret_scanning_delegated_alert_dismissal.value),
+            "secret_scanning_delegated_bypass": repr(self._secret_scanning_delegated_bypass.value),
+            "secret_scanning_delegated_bypass_options": repr(self._secret_scanning_delegated_bypass_options.value),
             "secret_scanning_non_provider_patterns": repr(self._secret_scanning_non_provider_patterns.value),
             "secret_scanning_push_protection": repr(self._secret_scanning_push_protection.value),
             "secret_scanning_validity_checks": repr(self._secret_scanning_validity_checks.value),
@@ -88,37 +94,58 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
         return self.get__repr__(repr_attributes)
 
     @property
-    def advanced_security(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def advanced_security(self) -> SecurityAndAnalysisFeature:
         return self._advanced_security.value
 
     @property
-    def dependabot_security_updates(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def code_security(self) -> SecurityAndAnalysisFeature:
+        return self._code_security.value
+
+    @property
+    def dependabot_security_updates(self) -> SecurityAndAnalysisFeature:
         return self._dependabot_security_updates.value
 
     @property
-    def secret_scanning(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def secret_scanning(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning.value
 
     @property
-    def secret_scanning_ai_detection(self) -> str:
+    def secret_scanning_ai_detection(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_ai_detection.value
 
     @property
-    def secret_scanning_non_provider_patterns(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def secret_scanning_delegated_alert_dismissal(self) -> SecurityAndAnalysisFeature:
+        return self._secret_scanning_delegated_alert_dismissal.value
+
+    @property
+    def secret_scanning_delegated_bypass(self) -> SecurityAndAnalysisFeature:
+        return self._secret_scanning_delegated_bypass.value
+
+    @property
+    def secret_scanning_delegated_bypass_options(self) -> dict[str, Any]:
+        return self._secret_scanning_delegated_bypass_options.value
+
+    @property
+    def secret_scanning_non_provider_patterns(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_non_provider_patterns.value
 
     @property
-    def secret_scanning_push_protection(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    def secret_scanning_push_protection(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_push_protection.value
 
     @property
-    def secret_scanning_validity_checks(self) -> github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature:
+    @deprecated("Property secret_scanning_validity_checks is deprecated and will be removed")
+    def secret_scanning_validity_checks(self) -> SecurityAndAnalysisFeature:
         return self._secret_scanning_validity_checks.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "advanced_security" in attributes:  # pragma no branch
             self._advanced_security = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["advanced_security"]
+            )
+        if "code_security" in attributes:  # pragma no branch
+            self._code_security = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["code_security"]
             )
         if "dependabot_security_updates" in attributes:  # pragma no branch
             self._dependabot_security_updates = self._makeClassAttribute(
@@ -129,7 +156,23 @@ class SecurityAndAnalysis(NonCompletableGithubObject):
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["secret_scanning"]
             )
         if "secret_scanning_ai_detection" in attributes:  # pragma no branch
-            self._secret_scanning_ai_detection = self._makeStringAttribute(attributes["secret_scanning_ai_detection"])
+            self._secret_scanning_ai_detection = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature, attributes["secret_scanning_ai_detection"]
+            )
+        if "secret_scanning_delegated_alert_dismissal" in attributes:  # pragma no branch
+            self._secret_scanning_delegated_alert_dismissal = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
+                attributes["secret_scanning_delegated_alert_dismissal"],
+            )
+        if "secret_scanning_delegated_bypass" in attributes:  # pragma no branch
+            self._secret_scanning_delegated_bypass = self._makeClassAttribute(
+                github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,
+                attributes["secret_scanning_delegated_bypass"],
+            )
+        if "secret_scanning_delegated_bypass_options" in attributes:  # pragma no branch
+            self._secret_scanning_delegated_bypass_options = self._makeDictAttribute(
+                attributes["secret_scanning_delegated_bypass_options"]
+            )
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
             self._secret_scanning_non_provider_patterns = self._makeClassAttribute(
                 github.SecurityAndAnalysisFeature.SecurityAndAnalysisFeature,

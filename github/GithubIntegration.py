@@ -89,6 +89,7 @@ class GithubIntegration:
         auth: AppAuth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
+        api_version: str | None = None,
     ) -> None:
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -108,6 +109,9 @@ class GithubIntegration:
         :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-api/api-versions).
+                            Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
+                            Set to None to not specify any version
         """
         if integration_id is not None:
             assert isinstance(integration_id, (int, str)), integration_id
@@ -126,6 +130,7 @@ class GithubIntegration:
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
         assert isinstance(jwt_issued_at, int)
         assert isinstance(lazy, bool), lazy
+        assert api_version is None or isinstance(api_version, str), api_version
 
         self.base_url = base_url
 
@@ -176,6 +181,7 @@ class GithubIntegration:
             seconds_between_requests=seconds_between_requests,
             seconds_between_writes=seconds_between_writes,
             lazy=lazy,
+            api_version=api_version,
         )
 
     def withLazy(self, lazy: bool) -> GithubIntegration:

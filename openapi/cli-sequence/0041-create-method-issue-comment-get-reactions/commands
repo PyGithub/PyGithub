@@ -1,0 +1,3 @@
+python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index IssueComment get_reactions get /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
+python scripts/openapi.py create method --new-schemas create-class github openapi.spec.json openapi.index IssueComment get_reactions get /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
+python scripts/openapi.py index github openapi.spec.json openapi.index

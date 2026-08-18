@@ -1,0 +1,381 @@
++ python scripts/openapi.py --dry-run apply properties --tests github openapi.spec.json openapi.index
+Using spec openapi.spec.json
+Applying API schemas to 14 PyGithub classes
+Applying spec openapi.spec.json to github.GithubObject.Attribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObjectWithPaginatedProperty (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GraphQlObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/IssueComment.py)
+Applying schema /components/schemas/issue-comment
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+Applying schema /components/schemas/nullable-simple-user
+Diff:
+
+Diff:
+
+Applying schema /components/schemas/public-user
+Diff:
+
+Diff:
+
+Applying schema /components/schemas/simple-user
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.NamedUser.NamedUserSearchResult (github/NamedUser.py)
+Applying schema /components/schemas/user-search-result-item
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.GithubObject.NonCompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.Reaction.Reaction (github/Reaction.py)
+Applying schema /components/schemas/reaction
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.Repository.Repository (github/Repository.py)
+Applying schema /components/schemas/full-repository
+Diff:
+--- 
++++ 
+@@ -111,16 +111,20 @@
+         self._milestones_url: Attribute[str] = NotSet
+         self._mirror_url: Attribute[str] = NotSet
+         self._name: Attribute[str] = NotSet
++        self._network_count: Attribute[int] = NotSet
+         self._node_id: Attribute[str] = NotSet
+         self._notifications_url: Attribute[str] = NotSet
+         self._open_issues: Attribute[int] = NotSet
+         self._open_issues_count: Attribute[int] = NotSet
++        self._organization: Attribute[NamedUser] = NotSet
+         self._owner: Attribute[NamedUser] = NotSet
++        self._parent: Attribute[Repository] = NotSet
+         self._private: Attribute[bool] = NotSet
+         self._pulls_url: Attribute[str] = NotSet
+         self._pushed_at: Attribute[datetime] = NotSet
+         self._releases_url: Attribute[str] = NotSet
+         self._size: Attribute[int] = NotSet
++        self._source: Attribute[Repository] = NotSet
+         self._squash_merge_commit_message: Attribute[str] = NotSet
+         self._squash_merge_commit_title: Attribute[str] = NotSet
+         self._ssh_url: Attribute[str] = NotSet
+@@ -128,6 +132,7 @@
+         self._stargazers_url: Attribute[str] = NotSet
+         self._starred_at: Attribute[str] = NotSet
+         self._statuses_url: Attribute[str] = NotSet
++        self._subscribers_count: Attribute[int] = NotSet
+         self._subscribers_url: Attribute[str] = NotSet
+         self._subscription_url: Attribute[str] = NotSet
+         self._svn_url: Attribute[str] = NotSet
+@@ -453,6 +458,11 @@
+         return self._name.value
+ 
+     @property
++    def network_count(self) -> int:
++        self._completeIfNotSet(self._network_count)
++        return self._network_count.value
++
++    @property
+     def node_id(self) -> str:
+         self._completeIfNotSet(self._node_id)
+         return self._node_id.value
+@@ -473,11 +483,21 @@
+         return self._open_issues_count.value
+ 
+     @property
++    def organization(self) -> NamedUser:
++        self._completeIfNotSet(self._organization)
++        return self._organization.value
++
++    @property
+     def owner(self) -> NamedUser:
+         self._completeIfNotSet(self._owner)
+         return self._owner.value
+ 
+     @property
++    def parent(self) -> Repository:
++        self._completeIfNotSet(self._parent)
++        return self._parent.value
++
++    @property
+     def private(self) -> bool:
+         self._completeIfNotSet(self._private)
+         return self._private.value
+@@ -503,6 +523,11 @@
+         return self._size.value
+ 
+     @property
++    def source(self) -> Repository:
++        self._completeIfNotSet(self._source)
++        return self._source.value
++
++    @property
+     def squash_merge_commit_message(self) -> str:
+         self._completeIfNotSet(self._squash_merge_commit_message)
+         return self._squash_merge_commit_message.value
+@@ -536,6 +561,11 @@
+     def statuses_url(self) -> str:
+         self._completeIfNotSet(self._statuses_url)
+         return self._statuses_url.value
++
++    @property
++    def subscribers_count(self) -> int:
++        self._completeIfNotSet(self._subscribers_count)
++        return self._subscribers_count.value
+ 
+     @property
+     def subscribers_url(self) -> str:
+@@ -731,6 +761,8 @@
+             self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
+         if "name" in attributes:  # pragma no branch
+             self._name = self._makeStringAttribute(attributes["name"])
++        if "network_count" in attributes:  # pragma no branch
++            self._network_count = self._makeIntAttribute(attributes["network_count"])
+         if "node_id" in attributes:  # pragma no branch
+             self._node_id = self._makeStringAttribute(attributes["node_id"])
+         if "notifications_url" in attributes:  # pragma no branch
+@@ -739,8 +771,12 @@
+             self._open_issues = self._makeIntAttribute(attributes["open_issues"])
+         if "open_issues_count" in attributes:  # pragma no branch
+             self._open_issues_count = self._makeIntAttribute(attributes["open_issues_count"])
++        if "organization" in attributes:  # pragma no branch
++            self._organization = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["organization"])
+         if "owner" in attributes:  # pragma no branch
+             self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
++        if "parent" in attributes:  # pragma no branch
++            self._parent = self._makeClassAttribute(github.Repository.Repository, attributes["parent"])
+         if "private" in attributes:  # pragma no branch
+             self._private = self._makeBoolAttribute(attributes["private"])
+         if "pulls_url" in attributes:  # pragma no branch
+@@ -751,6 +787,8 @@
+             self._releases_url = self._makeStringAttribute(attributes["releases_url"])
+         if "size" in attributes:  # pragma no branch
+             self._size = self._makeIntAttribute(attributes["size"])
++        if "source" in attributes:  # pragma no branch
++            self._source = self._makeClassAttribute(github.Repository.Repository, attributes["source"])
+         if "squash_merge_commit_message" in attributes:  # pragma no branch
+             self._squash_merge_commit_message = self._makeStringAttribute(attributes["squash_merge_commit_message"])
+         if "squash_merge_commit_title" in attributes:  # pragma no branch
+@@ -765,6 +803,8 @@
+             self._starred_at = self._makeStringAttribute(attributes["starred_at"])
+         if "statuses_url" in attributes:  # pragma no branch
+             self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
++        if "subscribers_count" in attributes:  # pragma no branch
++            self._subscribers_count = self._makeIntAttribute(attributes["subscribers_count"])
+         if "subscribers_url" in attributes:  # pragma no branch
+             self._subscribers_url = self._makeStringAttribute(attributes["subscribers_url"])
+         if "subscription_url" in attributes:  # pragma no branch
+
+Diff:
+--- 
++++ 
+@@ -99,16 +99,20 @@
+         self.assertEqual(r.milestones_url, "")
+         self.assertEqual(r.mirror_url, "")
+         self.assertEqual(r.name, "")
++        self.assertEqual(r.network_count, 0)
+         self.assertEqual(r.node_id, "")
+         self.assertEqual(r.notifications_url, "")
+         self.assertEqual(r.open_issues, 0)
+         self.assertEqual(r.open_issues_count, 0)
++        self.assertEqual(r.organization.some_attribute, "")
+         self.assertEqual(r.owner.some_attribute, "")
++        self.assertEqual(r.parent.some_attribute, "")
+         self.assertEqual(r.private, False)
+         self.assertEqual(r.pulls_url, "")
+         self.assertEqual(r.pushed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+         self.assertEqual(r.releases_url, "")
+         self.assertEqual(r.size, 0)
++        self.assertEqual(r.source.some_attribute, "")
+         self.assertEqual(r.squash_merge_commit_message, "")
+         self.assertEqual(r.squash_merge_commit_title, "")
+         self.assertEqual(r.ssh_url, "")
+@@ -116,6 +120,7 @@
+         self.assertEqual(r.stargazers_url, "")
+         self.assertEqual(r.starred_at, "")
+         self.assertEqual(r.statuses_url, "")
++        self.assertEqual(r.subscribers_count, 0)
+         self.assertEqual(r.subscribers_url, "")
+         self.assertEqual(r.subscription_url, "")
+         self.assertEqual(r.svn_url, "")
+
+Applying schema /components/schemas/minimal-repository
+Diff:
+--- 
++++ 
+@@ -111,6 +111,7 @@
+         self._milestones_url: Attribute[str] = NotSet
+         self._mirror_url: Attribute[str] = NotSet
+         self._name: Attribute[str] = NotSet
++        self._network_count: Attribute[int] = NotSet
+         self._node_id: Attribute[str] = NotSet
+         self._notifications_url: Attribute[str] = NotSet
+         self._open_issues: Attribute[int] = NotSet
+@@ -120,6 +121,7 @@
+         self._pulls_url: Attribute[str] = NotSet
+         self._pushed_at: Attribute[datetime] = NotSet
+         self._releases_url: Attribute[str] = NotSet
++        self._role_name: Attribute[str] = NotSet
+         self._size: Attribute[int] = NotSet
+         self._squash_merge_commit_message: Attribute[str] = NotSet
+         self._squash_merge_commit_title: Attribute[str] = NotSet
+@@ -128,6 +130,7 @@
+         self._stargazers_url: Attribute[str] = NotSet
+         self._starred_at: Attribute[str] = NotSet
+         self._statuses_url: Attribute[str] = NotSet
++        self._subscribers_count: Attribute[int] = NotSet
+         self._subscribers_url: Attribute[str] = NotSet
+         self._subscription_url: Attribute[str] = NotSet
+         self._svn_url: Attribute[str] = NotSet
+@@ -453,6 +456,11 @@
+         return self._name.value
+ 
+     @property
++    def network_count(self) -> int:
++        self._completeIfNotSet(self._network_count)
++        return self._network_count.value
++
++    @property
+     def node_id(self) -> str:
+         self._completeIfNotSet(self._node_id)
+         return self._node_id.value
+@@ -498,6 +506,11 @@
+         return self._releases_url.value
+ 
+     @property
++    def role_name(self) -> str:
++        self._completeIfNotSet(self._role_name)
++        return self._role_name.value
++
++    @property
+     def size(self) -> int:
+         self._completeIfNotSet(self._size)
+         return self._size.value
+@@ -536,6 +549,11 @@
+     def statuses_url(self) -> str:
+         self._completeIfNotSet(self._statuses_url)
+         return self._statuses_url.value
++
++    @property
++    def subscribers_count(self) -> int:
++        self._completeIfNotSet(self._subscribers_count)
++        return self._subscribers_count.value
+ 
+     @property
+     def subscribers_url(self) -> str:
+@@ -731,6 +749,8 @@
+             self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
+         if "name" in attributes:  # pragma no branch
+             self._name = self._makeStringAttribute(attributes["name"])
++        if "network_count" in attributes:  # pragma no branch
++            self._network_count = self._makeIntAttribute(attributes["network_count"])
+         if "node_id" in attributes:  # pragma no branch
+             self._node_id = self._makeStringAttribute(attributes["node_id"])
+         if "notifications_url" in attributes:  # pragma no branch
+@@ -749,6 +769,8 @@
+             self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
+         if "releases_url" in attributes:  # pragma no branch
+             self._releases_url = self._makeStringAttribute(attributes["releases_url"])
++        if "role_name" in attributes:  # pragma no branch
++            self._role_name = self._makeStringAttribute(attributes["role_name"])
+         if "size" in attributes:  # pragma no branch
+             self._size = self._makeIntAttribute(attributes["size"])
+         if "squash_merge_commit_message" in attributes:  # pragma no branch
+@@ -765,6 +787,8 @@
+             self._starred_at = self._makeStringAttribute(attributes["starred_at"])
+         if "statuses_url" in attributes:  # pragma no branch
+             self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
++        if "subscribers_count" in attributes:  # pragma no branch
++            self._subscribers_count = self._makeIntAttribute(attributes["subscribers_count"])
+         if "subscribers_url" in attributes:  # pragma no branch
+             self._subscribers_url = self._makeStringAttribute(attributes["subscribers_url"])
+         if "subscription_url" in attributes:  # pragma no branch
+
+Diff:
+--- 
++++ 
+@@ -99,6 +99,7 @@
+         self.assertEqual(r.milestones_url, "")
+         self.assertEqual(r.mirror_url, "")
+         self.assertEqual(r.name, "")
++        self.assertEqual(r.network_count, 0)
+         self.assertEqual(r.node_id, "")
+         self.assertEqual(r.notifications_url, "")
+         self.assertEqual(r.open_issues, 0)
+@@ -108,6 +109,7 @@
+         self.assertEqual(r.pulls_url, "")
+         self.assertEqual(r.pushed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+         self.assertEqual(r.releases_url, "")
++        self.assertEqual(r.role_name, "")
+         self.assertEqual(r.size, 0)
+         self.assertEqual(r.squash_merge_commit_message, "")
+         self.assertEqual(r.squash_merge_commit_title, "")
+@@ -116,6 +118,7 @@
+         self.assertEqual(r.stargazers_url, "")
+         self.assertEqual(r.starred_at, "")
+         self.assertEqual(r.statuses_url, "")
++        self.assertEqual(r.subscribers_count, 0)
+         self.assertEqual(r.subscribers_url, "")
+         self.assertEqual(r.subscription_url, "")
+         self.assertEqual(r.svn_url, "")
+
+Applying schema /components/schemas/repository
+Diff:
+
+Diff:
+
+Class Repository changed
+Test tests/Repository.py changed
+Applying spec openapi.spec.json to github.GithubObject._BadAttribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._NotSetType (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._ValuedAttribute (github/GithubObject.py)
++ python scripts/openapi.py apply properties --tests github openapi.spec.json openapi.index
+Using spec openapi.spec.json
+Applying API schemas to 14 PyGithub classes
+Applying spec openapi.spec.json to github.GithubObject.Attribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObjectWithPaginatedProperty (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GraphQlObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/IssueComment.py)
+Applying schema /components/schemas/issue-comment
+Class IssueComment changed
+Test tests/IssueComment.py changed
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+Applying schema /components/schemas/nullable-simple-user
+Applying schema /components/schemas/public-user
+Applying schema /components/schemas/simple-user
+Class NamedUser changed
+Test tests/NamedUser.py changed
+Applying spec openapi.spec.json to github.NamedUser.NamedUserSearchResult (github/NamedUser.py)
+Applying schema /components/schemas/user-search-result-item
+Class NamedUserSearchResult changed
+Test tests/NamedUser.py changed
+Applying spec openapi.spec.json to github.GithubObject.NonCompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.Reaction.Reaction (github/Reaction.py)
+Applying schema /components/schemas/reaction
+Class Reaction changed
+Test tests/Reaction.py changed
+Applying spec openapi.spec.json to github.Repository.Repository (github/Repository.py)
+Applying schema /components/schemas/full-repository
+Applying schema /components/schemas/minimal-repository
+Applying schema /components/schemas/repository
+Class Repository changed
+Test tests/Repository.py changed
+Applying spec openapi.spec.json to github.GithubObject._BadAttribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._NotSetType (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._ValuedAttribute (github/GithubObject.py)
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 5 Python files
+Indexed 14 classes
+Indexed 4 paths
+Indexed 9 schemas
+Indexing OpenAPI spec

@@ -30,6 +30,9 @@ First create a Github instance::
     # Use lazy mode (see https://pygithub.readthedocs.io/en/stable/examples/LazyMode.html)
     g = Github(auth=auth, lazy=True)
 
+    # Set a Github API version (see https://docs.github.com/en/rest/about-the-rest-api/api-versions)
+    g = Github(auth=auth, api_version="2022-11-28")
+
 Then play with your Github objects::
 
     for repo in g.get_user().get_repos():

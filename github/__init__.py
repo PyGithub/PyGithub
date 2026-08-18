@@ -59,6 +59,7 @@ from .GithubException import (
     BadUserAgentException,
     GithubException,
     IncompletableObject,
+    RateLimitExceededExceedsMaxWait,
     RateLimitExceededException,
     TwoFactorException,
     UnknownObjectException,
@@ -107,6 +108,7 @@ __all__ = [
     "InputGitAuthor",
     "InputGitTreeElement",
     "RateLimitExceededException",
+    "RateLimitExceededExceedsMaxWait",
     "TwoFactorException",
     "UnknownObjectException",
 ]

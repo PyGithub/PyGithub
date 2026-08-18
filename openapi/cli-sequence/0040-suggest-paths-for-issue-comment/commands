@@ -1,0 +1,2 @@
+python scripts/openapi.py suggest paths openapi.spec.json openapi.index IssueComment
+python scripts/openapi.py index github openapi.spec.json openapi.index

@@ -187,7 +187,7 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def offer_credit(
         self,
-        login_or_user: str | github.NamedUser.NamedUser,
+        login_or_user: str | NamedUser,
         credit_type: str,
     ) -> None:
         """
@@ -228,7 +228,7 @@ class RepositoryAdvisory(AdvisoryBase):
         )
         self._useAttributes(data)
 
-    def revoke_credit(self, login_or_user: str | github.NamedUser.NamedUser) -> None:
+    def revoke_credit(self, login_or_user: str | NamedUser) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         """

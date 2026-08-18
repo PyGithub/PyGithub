@@ -91,7 +91,6 @@ import json
 import logging
 import mimetypes
 import os
-import re
 import threading
 import time
 import urllib
@@ -135,7 +134,7 @@ class RequestsResponse:
         return self.headers.items()
 
     def read(self) -> str:
-        return self.response.text
+        return self.response.text or ""
 
     def iter_content(self, chunk_size: int | None = 1) -> Iterator:
         return self.response.iter_content(chunk_size=chunk_size)
@@ -401,6 +400,7 @@ class Requester:
         seconds_between_requests: float | None = None,
         seconds_between_writes: float | None = None,
         lazy: bool = False,
+        api_version: str | None = None,
     ):
         self._initializeDebugFeature()
 
@@ -448,6 +448,7 @@ class Requester:
         self.__userAgent = user_agent
         self.__verify = verify
         self.__lazy = lazy
+        self.__apiVersion = api_version
 
         self.__installation_authorization = None
 
@@ -501,7 +502,12 @@ class Requester:
         url_params = urllib.parse.parse_qs(query)
         # union parameters in url with given parameters, the latter has precedence
         url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
-        parameter_list = [(key, value) for key, values in url_params.items() for value in values]
+        # GitHub expects lowercase booleans (true/false) in the query string
+        parameter_list = [
+            (key, str(value).lower() if isinstance(value, bool) else value)
+            for key, values in url_params.items()
+            for value in values
+        ]
         # remove query from url
         url = urllib.parse.urlunparse((scheme, netloc, url, params, "", fragment))
 
@@ -540,6 +546,7 @@ class Requester:
             seconds_between_requests=self.__seconds_between_requests,
             seconds_between_writes=self.__seconds_between_writes,
             lazy=self.__lazy,
+            api_version=self.__apiVersion,
         )
 
     @property
@@ -602,6 +609,27 @@ class Requester:
 
         kwargs = self.kwargs
         kwargs.update(lazy=lazy)
+        return Requester(**kwargs)
+
+    @property
+    def api_version(self) -> str | None:
+        return self.__apiVersion
+
+    def withApiVersion(self, api_version: str | None) -> Requester:
+        """
+        Create a new requester instance with identical configuration but the given API version setting.
+
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-
+            api/api-versions). Note that some PyGithub methods might downgrade this version if it is not supported by
+            the implementation. Set to None to not specify any version
+        :return: new Requester instance if is_defined(lazy) and lazy != self.is_lazy, this instance otherwise
+
+        """
+        if api_version == self.api_version:
+            return self
+
+        kwargs = self.kwargs
+        kwargs.update(api_version=api_version)
         return Requester(**kwargs)
 
     def requestJsonAndCheck(
@@ -870,17 +898,9 @@ class Requester:
     def __postProcess(
         self, verb: str, url: str, responseHeaders: dict[str, Any], data: Any
     ) -> tuple[dict[str, Any], Any]:
+        # make GET url available as "url" attribute
         if verb == "GET" and isinstance(data, dict) and "url" not in data:
-            if "_links" in data and "self" in data["_links"] and data["_links"]["self"]:
-                self_link = data["_links"]["self"]
-                if isinstance(self_link, str):
-                    data["url"] = self_link
-                elif isinstance(self_link, dict):
-                    href = self_link.get("href")
-                    if href:
-                        data["url"] = href
-            else:
-                data["url"] = url
+            data["url"] = url
         return responseHeaders, data
 
     @classmethod
@@ -947,7 +967,7 @@ class Requester:
         exc = GithubException.GithubException
         if status == 401 and lc_message == "bad credentials":
             exc = GithubException.BadCredentialsException
-        elif status == 401 and Consts.headerOTP in headers and re.match(r".*required.*", headers[Consts.headerOTP]):
+        elif status == 401 and Consts.headerOTP in headers and "required" in headers[Consts.headerOTP]:
             exc = GithubException.TwoFactorException
         elif status == 403 and lc_message.startswith("missing or invalid user agent string"):
             exc = GithubException.BadUserAgentException
@@ -1199,6 +1219,8 @@ class Requester:
         if self.__auth is not None:
             self.__auth.authentication(requestHeaders)
         requestHeaders["User-Agent"] = self.__userAgent
+        if self.__apiVersion is not None:
+            requestHeaders[Consts.headerApiVersion] = self.__apiVersion
 
         url = self.__makeAbsoluteUrl(url)
         url = Requester.add_parameters_to_url(url, parameters)

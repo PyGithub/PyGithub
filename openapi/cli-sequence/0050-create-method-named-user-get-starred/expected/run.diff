@@ -1,0 +1,102 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -285,6 +285,30 @@
+     def user_view_type(self) -> str:
+         self._completeIfNotSet(self._user_view_type)
+         return self._user_view_type.value
++    
++    def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> None:
++        """
++        List repositories starred by a user
++
++        Lists repositories a user has starred.
++
++        This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
++
++        - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
++
++        :calls: `GET /users/{username}/starred <https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user>`_
++        :param sort: The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to.
++        :param direction: The direction to sort the results by.
++        """
++        assert is_optional(sort, str), sort
++        assert is_optional(direction, str), direction
++        url_parameters = NotSet.remove_unset_items(
++            {
++                "sort": sort,
++                "direction": direction,
++            }
++        )
++        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/starred")
+ 
+     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+         super()._useAttributes(attributes)
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -475,7 +475,19 @@
+         "GithubObject"
+       ],
+       "inherited_schemas": [],
+-      "methods": {},
++      "methods": {
++        "get_starred": {
++          "call": {
++            "docs": "<https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user>`_",
++            "path": "/users/{username}/starred",
++            "verb": "GET"
++          },
++          "name": "get_starred",
++          "returns": [
++            "None"
++          ]
++        }
++      },
+       "module": "NamedUser",
+       "name": "NamedUser",
+       "package": "github",
+@@ -1483,6 +1495,11 @@
+         "post": [
+           "IssueComment.create_reaction"
+         ]
++      },
++      "/users/{username}/starred": {
++        "get": [
++          "NamedUser.get_starred"
++        ]
+       }
+     },
+     "path_to_return_classes": {
+@@ -1493,6 +1510,11 @@
+         "post": [
+           "Reaction"
+         ]
++      },
++      "/users/{username}/starred": {
++        "get": [
++          "None"
++        ]
+       }
+     },
+     "return_schema_to_paths": {
+@@ -2155,6 +2177,19 @@
+             ]
+           }
+         ]
++      }
++    },
++    "/users/{username}/starred": {
++      "GET": {
++        "methods": [
++          {
++            "class": "NamedUser",
++            "name": "get_starred",
++            "returns": [
++              "None"
++            ]
++          }
++        ]
+       }
+     }
+   },

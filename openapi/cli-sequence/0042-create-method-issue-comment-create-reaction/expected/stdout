@@ -1,0 +1,44 @@
++ python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index IssueComment create_reaction post '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions'
+Using spec openapi.spec.json
+Creating method github.IssueComment.IssueComment.create_reaction in github/IssueComment.py
+Diff:
+--- 
++++ 
+@@ -130,6 +130,16 @@
+         self._completeIfNotSet(self._user)
+         return self._user.value
+     
++    def create_reaction(self, content: str) -> Reaction:
++        """
++        :calls: `POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions <https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue-comment>`_
++        """
++        assert isinstance(content, str), content
++        
++        post_parameters = {"content": content}
++        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reactions", input=post_parameters)
++        return github.Reaction.Reaction(self._requester, headers, data)
++    
+     def get_reactions(self, content: Opt[str] = NotSet) -> PaginatedList[Reaction]:
+         """
+         List reactions for an issue comment
+
++ python scripts/openapi.py create method github openapi.spec.json openapi.index IssueComment create_reaction post '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions'
+Using spec openapi.spec.json
+Creating method github.IssueComment.IssueComment.create_reaction in github/IssueComment.py
+Updating index
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 1 paths
+Indexed 5 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class IssueComment
+Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/IssueComment.py)
+- Updating method create_reaction
+Class IssueComment changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 1 paths
+Indexed 5 schemas
+Indexing OpenAPI spec

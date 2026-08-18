@@ -8,6 +8,7 @@
     "GithubIntegration.get_user_installation": "GET",
     "GithubIntegration.get_app_installation": "GET",
     "Organization.create_fork": "POST",
+    "ProjectCard.get_content": "GET",
     "PullRequest.create_comment": "POST",
     "PullRequest.get_comment": "GET",
     "PullRequest.get_comments": "GET",

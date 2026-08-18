@@ -200,3 +200,10 @@ class WorkflowRun(Framework.TestCase):
             lambda j: j.id,
             [10545727758, 10545727888, 10545728039, 10545728190, 10545728356],
         )
+
+    def testGetAttempt(self):
+        workflow_run = self.g.get_repo("EnricoMi/PyGithub").get_workflow_run(26365060973)
+        workflow_attempt = workflow_run.get_attempt(2)
+        self.assertEqual(workflow_attempt.id, 26365060973)
+        self.assertEqual(workflow_attempt.name, "CodeQL Advanced")
+        self.assertEqual(workflow_attempt.run_attempt, 2)
