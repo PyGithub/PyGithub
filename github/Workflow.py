@@ -77,6 +77,7 @@ class Workflow(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/workflow
+    - /components/schemas/workflow-dispatch-response
 
     """
 
