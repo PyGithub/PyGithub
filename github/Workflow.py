@@ -48,7 +48,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from typing import Any
+from typing import Any, overload
 
 import github.Branch
 import github.Commit
@@ -143,6 +143,26 @@ class Workflow(CompletableGithubObject):
     def url(self) -> str:
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    @overload
+    def create_dispatch(
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+        return_run_details: Literal[False] = False,
+    ) -> bool:
+        ...
+
+    @overload
+    def create_dispatch(
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+        return_run_details: Literal[True],
+    ) -> github.WorkflowRun.WorkflowRun:
+        ...
 
     # v3: default throw to True
     def create_dispatch(
