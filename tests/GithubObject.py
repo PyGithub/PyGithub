@@ -249,7 +249,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
         for lazy in [True, False]:
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
                     files = list(commit.files)
 
@@ -276,7 +276,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
                     files = list(commit.files)
 
@@ -306,7 +306,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5", commit_files_per_page=3)
                     files = list(commit.files)
 
@@ -335,7 +335,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
         for lazy in [True, False]:
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
                     files = list(commit.get_files())
 
@@ -371,7 +371,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5")
                     files = list(commit.get_files())
 
@@ -408,7 +408,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     commit = repo.get_commit("3253acaabd86de12b73d0a24c98eb9c13d1987b5", commit_files_per_page=1)
                     files = list(commit.get_files(commit_files_per_page=3))
 
@@ -445,7 +445,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     commits = repo.get_commits(sha="release-v2-0")
                     commit = commits[0]
                     files = list(commit.files)
@@ -476,7 +476,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     # tests paginated property of Comparison.commits and Commit.files
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     comparison = repo.compare(
                         "6cfe46b712e2bf65560bd8189c4654cd6c56eeca", "cef98416f45a9cdaf84d7f53cea13ac074a2c05d"
                     )
@@ -509,7 +509,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 with self.captureRequests() as requests:
                     # tests paginated property of Comparison.commits and Commit.files
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     comparison = repo.compare(
                         "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
                         "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
@@ -545,7 +545,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 with self.captureRequests() as requests:
                     # tests paginated property of Comparison.commits and Commit.files
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     comparison = repo.compare(
                         "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
                         "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
@@ -582,7 +582,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 with self.captureRequests() as requests:
                     # tests paginated property of Comparison.commits and Commit.files
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     comparison = repo.compare(
                         "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
                         "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
@@ -620,7 +620,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
                 with self.captureRequests() as requests:
                     # tests paginated property of Comparison.commits and Commit.files
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     comparison = repo.compare(
                         "19e1c5032397a95c58fe25760723ffc24cbe0ec8",
                         "4bf07a2f5123f78fc6759bc2ade0c74154c1ba86",
@@ -654,7 +654,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
         for lazy in [True, False]:
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     pull = repo.get_pull(3370)
                     # PaginatedList commits should use default per_page
                     commits = list(pull.get_commits())
@@ -690,7 +690,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     pull = repo.get_pull(3370)
                     # PaginatedList commits should respect configured per_page
                     commits = list(pull.get_commits())
@@ -726,7 +726,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
         for lazy in [True, False]:
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     pull = repo.get_pull(3370)
                     # PaginatedList commits should respect configured per_page
                     commits = list(pull.get_commits())
@@ -762,7 +762,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     pull = repo.get_pull(3370)
                     # PaginatedList commits should respect configured per_page
                     commits = list(pull.get_commits())
@@ -799,7 +799,7 @@ class CompletableGithubObjectWithPaginatedProperty(Framework.TestCase):
             with self.subTest(lazy=lazy):
                 with self.captureRequests() as requests:
                     self.g.per_page = 2
-                    repo = self.g.get_repo("PyGithub/PyGithub", lazy=lazy)
+                    repo = self.g.withLazy(lazy).get_repo("PyGithub/PyGithub")
                     pull = repo.get_pull(3370)
                     # PaginatedList commits should respect configured per_page
                     commits = list(pull.get_commits())

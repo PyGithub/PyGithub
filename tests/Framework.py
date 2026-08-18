@@ -67,10 +67,10 @@ import os
 import traceback
 import unittest
 import warnings
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Any, Callable
+from typing import Any
 
 import responses
 from requests.structures import CaseInsensitiveDict
