@@ -779,6 +779,23 @@ class CstMethods(abc.ABC):
             if isinstance(name, SimpleString)
         ]
 
+    @staticmethod
+    def get_ignored_return_types(decorators: Sequence[cst.Decorator]) -> list[str]:
+        """
+        Returns the class names given in the ``types`` argument of the ``ignore_return_types`` decorators.
+        """
+        return [
+            cst.Module([]).code_for_node(element.value).strip().replace('"', "")
+            for decorator in decorators
+            for decorator in [decorator.decorator]
+            if isinstance(decorator, cst.Call)
+            and isinstance(decorator.func, cst.Name)
+            and decorator.func.value == "ignore_return_types"
+            for arg in decorator.args
+            if isinstance(arg.keyword, cst.Name) and arg.keyword.value == "types" and isinstance(arg.value, cst.List)
+            for element in arg.value.elements
+        ]
+
     @classmethod
     def create_subscript(cls, name: str) -> cst.Subscript:
         fields = name.rstrip("]").split("[", maxsplit=1)
@@ -1079,7 +1096,7 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         return super().leave_ClassDef(node)
 
     @staticmethod
-    def return_types(return_type: str | None) -> list[str]:
+    def return_types(return_type: str | None, ignore: list[str] | None = None) -> list[str]:
         if return_type is None:
             return []
 
@@ -1096,7 +1113,14 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         if "|" in return_type and "[" not in return_type:
             types = return_type.split("|") + none
 
-        return [rt.strip().replace('"', "") for rt in types]
+        types = [rt.strip().replace('"', "") for rt in types]
+
+        # remove types that are annotated to be ignored, compare pure class names
+        if ignore:
+            ignored = {t.split(".")[-1] for t in ignore}
+            types = [rt for rt in types if rt.split(".")[-1] not in ignored]
+
+        return types
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> None:
         method_name = node.name.value
@@ -1104,7 +1128,10 @@ class IndexPythonClassesVisitor(CstVisitorBase):
         path_property = next(
             iter([decorator["schema_property"] for decorator in decorators if "schema_property" in decorator]), None
         )
-        returns = self.return_types(cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None)
+        returns = self.return_types(
+            cst.Module([]).code_for_node(node.returns.annotation) if node.returns else None,
+            ignore=self.get_ignored_return_types(node.decorators),
+        )
 
         if self.is_github_object_property(node):
             # collect schemas of this property

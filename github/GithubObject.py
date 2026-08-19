@@ -840,3 +840,11 @@ def openapi_parameter(
         return fn
 
     return openapi_parameter_decorator
+
+
+# decorator to annotate methods with OpenAPI mapping information
+def ignore_return_types(types: list[type]) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
+    def ignore_return_types_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+        return fn
+
+    return ignore_return_types_decorator
