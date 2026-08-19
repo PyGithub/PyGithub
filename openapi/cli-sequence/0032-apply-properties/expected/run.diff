@@ -33,7 +33,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -970,6 +970,22 @@
+@@ -981,6 +981,22 @@
              }
            }
          },

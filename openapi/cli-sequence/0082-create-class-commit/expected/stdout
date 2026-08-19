@@ -73,11 +73,11 @@ Test tests/Commit.py changed
 +
 +    def _initAttributes(self) -> None:
 +        super()._initAttributes()
-+        self._author: Attribute[NamedUser] = NotSet
++        self._author: Attribute[NamedUser | None] = NotSet
 +        self._comment_count: Attribute[int] = NotSet
 +        self._comments_url: Attribute[str] = NotSet
 +        self._commit: Attribute[GitCommit] = NotSet
-+        self._committer: Attribute[NamedUser] = NotSet
++        self._committer: Attribute[NamedUser | None] = NotSet
 +        self._html_url: Attribute[str] = NotSet
 +        self._message: Attribute[str] = NotSet
 +        self._node_id: Attribute[str] = NotSet
@@ -88,7 +88,7 @@ Test tests/Commit.py changed
 +        return self.get__repr__({"some_attribute": self._some_attribute.value})
 +
 +    @property
-+    def author(self) -> NamedUser:
++    def author(self) -> NamedUser | None:
 +        self._completeIfNotSet(self._author)
 +        return self._author.value
 +
@@ -108,7 +108,7 @@ Test tests/Commit.py changed
 +        return self._commit.value
 +
 +    @property
-+    def committer(self) -> NamedUser:
++    def committer(self) -> NamedUser | None:
 +        self._completeIfNotSet(self._committer)
 +        return self._committer.value
 +

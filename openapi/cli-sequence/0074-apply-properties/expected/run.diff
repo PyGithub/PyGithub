@@ -3,19 +3,19 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 +++ after/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
 @@ -111,16 +111,21 @@
          self._milestones_url: Attribute[str] = NotSet
-         self._mirror_url: Attribute[str] = NotSet
+         self._mirror_url: Attribute[str | None] = NotSet
          self._name: Attribute[str] = NotSet
 +        self._network_count: Attribute[int] = NotSet
          self._node_id: Attribute[str] = NotSet
          self._notifications_url: Attribute[str] = NotSet
          self._open_issues: Attribute[int] = NotSet
          self._open_issues_count: Attribute[int] = NotSet
-+        self._organization: Attribute[NamedUser] = NotSet
++        self._organization: Attribute[NamedUser | None] = NotSet
          self._owner: Attribute[NamedUser] = NotSet
 +        self._parent: Attribute[Repository] = NotSet
          self._private: Attribute[bool] = NotSet
          self._pulls_url: Attribute[str] = NotSet
-         self._pushed_at: Attribute[datetime] = NotSet
+         self._pushed_at: Attribute[datetime | None] = NotSet
          self._releases_url: Attribute[str] = NotSet
 +        self._role_name: Attribute[str] = NotSet
          self._size: Attribute[int] = NotSet
@@ -23,7 +23,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
          self._squash_merge_commit_message: Attribute[str] = NotSet
          self._squash_merge_commit_title: Attribute[str] = NotSet
          self._ssh_url: Attribute[str] = NotSet
-@@ -128,6 +133,7 @@
+@@ -128,12 +133,13 @@
          self._stargazers_url: Attribute[str] = NotSet
          self._starred_at: Attribute[str] = NotSet
          self._statuses_url: Attribute[str] = NotSet
@@ -31,6 +31,13 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
          self._subscribers_url: Attribute[str] = NotSet
          self._subscription_url: Attribute[str] = NotSet
          self._svn_url: Attribute[str] = NotSet
+         self._tags_url: Attribute[str] = NotSet
+         self._teams_url: Attribute[str] = NotSet
+-        self._temp_clone_token: Attribute[str] = NotSet
++        self._temp_clone_token: Attribute[str | None] = NotSet
+         self._topics: Attribute[list[str]] = NotSet
+         self._trees_url: Attribute[str] = NotSet
+         self._updated_at: Attribute[datetime | None] = NotSet
 @@ -453,6 +459,11 @@
          return self._name.value
  
@@ -47,7 +54,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
          return self._open_issues_count.value
  
      @property
-+    def organization(self) -> NamedUser:
++    def organization(self) -> NamedUser | None:
 +        self._completeIfNotSet(self._organization)
 +        return self._organization.value
 +
@@ -99,6 +106,15 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
      def subscribers_url(self) -> str:
          self._completeIfNotSet(self._subscribers_url)
          return self._subscribers_url.value
+@@ -563,7 +599,7 @@
+         return self._teams_url.value
+ 
+     @property
+-    def temp_clone_token(self) -> str:
++    def temp_clone_token(self) -> str | None:
+         self._completeIfNotSet(self._temp_clone_token)
+         return self._temp_clone_token.value
+ 
 @@ -731,6 +767,8 @@
              self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
          if "name" in attributes:  # pragma no branch
@@ -146,7 +162,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -2911,6 +2911,22 @@
+@@ -2930,6 +2930,22 @@
              }
            }
          },
@@ -169,14 +185,15 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "node_id": {
            "name": "node_id",
            "returns": [
-@@ -2998,6 +3014,20 @@
+@@ -3017,6 +3033,21 @@
              }
            }
          },
 +        "organization": {
 +          "name": "organization",
 +          "returns": [
-+            "NamedUser"
++            "NamedUser",
++            "None"
 +          ],
 +          "schema": {
 +            "$ref": "#/components/schemas/nullable-simple-user"
@@ -190,7 +207,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "owner": {
            "name": "owner",
            "returns": [
-@@ -3018,6 +3048,20 @@
+@@ -3037,6 +3068,20 @@
              }
            }
          },
@@ -211,7 +228,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "private": {
            "name": "private",
            "returns": [
-@@ -3112,6 +3156,22 @@
+@@ -3132,6 +3177,22 @@
              }
            }
          },
@@ -234,7 +251,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "size": {
            "name": "size",
            "returns": [
-@@ -3135,6 +3195,20 @@
+@@ -3155,6 +3216,20 @@
              }
            }
          },
@@ -255,7 +272,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "squash_merge_commit_message": {
            "name": "squash_merge_commit_message",
            "returns": [
-@@ -3297,6 +3371,22 @@
+@@ -3317,6 +3392,22 @@
              }
            }
          },
@@ -278,6 +295,16 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "subscribers_url": {
            "name": "subscribers_url",
            "returns": [
+@@ -3454,7 +3545,8 @@
+         "temp_clone_token": {
+           "name": "temp_clone_token",
+           "returns": [
+-            "str"
++            "str",
++            "None"
+           ],
+           "schema": null,
+           "schemas": {
 diff --unified --recursive --new-file before/tests/Repository.py after/tests/Repository.py
 --- before/tests/Repository.py	YYYY-MM-DD HH:MM:SS +0000
 +++ after/tests/Repository.py	YYYY-MM-DD HH:MM:SS +0000

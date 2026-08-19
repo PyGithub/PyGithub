@@ -15,11 +15,11 @@
  
  class IssueComment(CompletableGithubObject):
 @@ -58,7 +59,7 @@
-         self._performed_via_github_app: Attribute[dict[str, Any]] = NotSet
+         self._performed_via_github_app: Attribute[dict[str, Any] | None] = NotSet
          self._reactions: Attribute[dict[str, Any]] = NotSet
          self._updated_at: Attribute[datetime] = NotSet
--        self._user: Attribute[dict[str, Any]] = NotSet
-+        self._user: Attribute[NamedUser] = NotSet
+-        self._user: Attribute[dict[str, Any] | None] = NotSet
++        self._user: Attribute[NamedUser | None] = NotSet
  
      def __repr__(self) -> str:
          # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
@@ -27,8 +27,8 @@
          return self._updated_at.value
  
      @property
--    def user(self) -> dict[str, Any]:
-+    def user(self) -> NamedUser:
+-    def user(self) -> dict[str, Any] | None:
++    def user(self) -> NamedUser | None:
          self._completeIfNotSet(self._user)
          return self._user.value
  

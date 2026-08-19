@@ -59,11 +59,11 @@ diff --unified --recursive --new-file before/github/Commit.py after/github/Commi
 +
 +    def _initAttributes(self) -> None:
 +        super()._initAttributes()
-+        self._author: Attribute[NamedUser] = NotSet
++        self._author: Attribute[NamedUser | None] = NotSet
 +        self._comment_count: Attribute[int] = NotSet
 +        self._comments_url: Attribute[str] = NotSet
 +        self._commit: Attribute[GitCommit] = NotSet
-+        self._committer: Attribute[NamedUser] = NotSet
++        self._committer: Attribute[NamedUser | None] = NotSet
 +        self._html_url: Attribute[str] = NotSet
 +        self._message: Attribute[str] = NotSet
 +        self._node_id: Attribute[str] = NotSet
@@ -75,7 +75,7 @@ diff --unified --recursive --new-file before/github/Commit.py after/github/Commi
 +        return self.get__repr__({"some_attribute": self._some_attribute.value})
 +
 +    @property
-+    def author(self) -> NamedUser:
++    def author(self) -> NamedUser | None:
 +        self._completeIfNotSet(self._author)
 +        return self._author.value
 +
@@ -95,7 +95,7 @@ diff --unified --recursive --new-file before/github/Commit.py after/github/Commi
 +        return self._commit.value
 +
 +    @property
-+    def committer(self) -> NamedUser:
++    def committer(self) -> NamedUser | None:
 +        self._completeIfNotSet(self._committer)
 +        return self._committer.value
 +
@@ -150,7 +150,7 @@ diff --unified --recursive --new-file before/github/Commit.py after/github/Commi
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -28,6 +28,377 @@
+@@ -28,6 +28,379 @@
        "schemas": [],
        "test_filename": "tests/GithubObject.py"
      },
@@ -178,7 +178,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "author": {
 +          "name": "author",
 +          "returns": [
-+            "NamedUser"
++            "NamedUser",
++            "None"
 +          ],
 +          "schema": null,
 +          "schemas": {
@@ -364,7 +365,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "committer": {
 +          "name": "committer",
 +          "returns": [
-+            "NamedUser"
++            "NamedUser",
++            "None"
 +          ],
 +          "schema": null,
 +          "schemas": {
@@ -528,7 +530,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "CompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -4242,6 +4613,7 @@
+@@ -4267,6 +4640,7 @@
    "indices": {
      "class_to_descendants": {
        "ABC": [
@@ -536,7 +538,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
-@@ -4260,13 +4632,18 @@
+@@ -4285,13 +4659,18 @@
          "_ValuedAttribute"
        ],
        "CompletableGithubObject": [
@@ -555,7 +557,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
-@@ -4963,15 +5340,25 @@
+@@ -4988,15 +5367,25 @@
        ]
      },
      "schema_to_classes": {

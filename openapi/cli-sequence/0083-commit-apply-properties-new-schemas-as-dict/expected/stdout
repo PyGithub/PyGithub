@@ -9,7 +9,7 @@ Diff:
 @@ -60,11 +60,13 @@
          self._comments_url: Attribute[str] = NotSet
          self._commit: Attribute[GitCommit] = NotSet
-         self._committer: Attribute[NamedUser] = NotSet
+         self._committer: Attribute[NamedUser | None] = NotSet
 +        self._files: Attribute[list[dict[str, Any]]] = NotSet
          self._html_url: Attribute[str] = NotSet
          self._message: Attribute[str] = NotSet

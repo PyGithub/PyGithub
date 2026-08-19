@@ -47,7 +47,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "get_reactions": {
            "call": {
              "docs": "<https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment>`_",
-@@ -1468,6 +1479,9 @@
+@@ -1482,6 +1493,9 @@
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "IssueComment.get_reactions"
@@ -57,7 +57,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        }
      },
-@@ -1475,6 +1489,9 @@
+@@ -1489,6 +1503,9 @@
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "PaginatedList[Reaction]"
@@ -67,7 +67,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        }
      },
-@@ -2127,6 +2144,17 @@
+@@ -2141,6 +2158,17 @@
              ]
            }
          ]
