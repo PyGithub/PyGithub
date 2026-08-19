@@ -142,6 +142,56 @@ self._creator = self._makeUnionClassAttributeFromTypeKey(
 `_makeUnionClassAttributeFromTypeKeyAndValueKey` is the same but the discriminator and the payload live at different
 keys within the outer dict.
 
+### Nullable Attributes
+
+An attribute whose OpenAPI schema declares `"nullable": true` is typed `Attribute[T | None]`, and its `@property`
+accessor returns `T | None`. The `_makeXAttribute` helper is unchanged — nullability affects only the annotations:
+
+```python
+def _initAttributes(self) -> None:
+    self._updated_at: Attribute[datetime | None] = NotSet  # "nullable": true in the schema
+    self._user: Attribute[NamedUser | None] = NotSet  # $ref to /components/schemas/nullable-simple-user
+
+
+@property
+def updated_at(self) -> datetime | None:
+    return self._updated_at.value
+
+
+def _useAttributes(self, attributes: dict[str, Any]) -> None:
+    if "updated_at" in attributes:  # pragma no branch
+        self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+```
+
+The declaration may sit in the referenced schema rather than at the reference site — that is what schema names prefixed
+with `nullable-` (`/components/schemas/nullable-simple-user`, `/components/schemas/nullable-issue`, …) indicate. The
+`"nullable": true` entry inside the schema is the authority; follow `$ref`s and single-element `allOf` wrappers to find
+it. See [OPENAPI.md](OPENAPI.md) for how to look a schema up.
+
+Two rules keep this consistent:
+
+- **Nullability is additive.** A class that implements several schemas is nullable in an attribute as soon as one of
+  them says so, and an existing `| None` is never removed — it may record behaviour the spec does not declare.
+- **`url` on `CompletableGithubObject` is exempt.** `GithubObject` declares `_url: Attribute[str]` and
+  `CompletableGithubObject.url -> str`, because a completable object completes itself through that URL. Subclasses do
+  not widen it even where the schema marks `url` nullable (`CheckSuite`, `License`, `IssuePullRequest`).
+
+`scripts/openapi.py` applies all of this: it emits nullable annotations for new attributes and widens existing ones.
+A nullable attribute filled by one of the union-class helpers needs a trailing `# type: ignore`, because mypy cannot
+solve their `T_gh` type variable (bound to `GithubObject`) against a nullable type context:
+
+```python
+self._dismissed_by: Attribute[NamedUser | Organization | None] = NotSet
+...
+self._dismissed_by = self._makeUnionClassAttributeFromTypeKey(
+    "type",
+    "User",
+    attributes["dismissed_by"],
+    (github.NamedUser.NamedUser, "User"),
+    (github.Organization.Organization, "Organization"),
+)  # type: ignore
+```
+
 ---
 
 ## HTTP Layer — Requester

@@ -51,28 +51,28 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +    def _initAttributes(self) -> None:
 +        super()._initAttributes()
 +        self._avatar_url: Attribute[str] = NotSet
-+        self._bio: Attribute[str] = NotSet
-+        self._blog: Attribute[str] = NotSet
++        self._bio: Attribute[str | None] = NotSet
++        self._blog: Attribute[str | None] = NotSet
 +        self._collaborators: Attribute[int] = NotSet
-+        self._company: Attribute[str] = NotSet
++        self._company: Attribute[str | None] = NotSet
 +        self._created_at: Attribute[datetime] = NotSet
 +        self._disk_usage: Attribute[int] = NotSet
-+        self._email: Attribute[str] = NotSet
++        self._email: Attribute[str | None] = NotSet
 +        self._events_url: Attribute[str] = NotSet
 +        self._followers: Attribute[int] = NotSet
 +        self._followers_url: Attribute[str] = NotSet
 +        self._following: Attribute[int] = NotSet
 +        self._following_url: Attribute[str] = NotSet
 +        self._gists_url: Attribute[str] = NotSet
-+        self._gravatar_id: Attribute[str] = NotSet
-+        self._hireable: Attribute[bool] = NotSet
++        self._gravatar_id: Attribute[str | None] = NotSet
++        self._hireable: Attribute[bool | None] = NotSet
 +        self._html_url: Attribute[str] = NotSet
 +        self._id: Attribute[int] = NotSet
-+        self._location: Attribute[str] = NotSet
++        self._location: Attribute[str | None] = NotSet
 +        self._login: Attribute[str] = NotSet
-+        self._name: Attribute[str] = NotSet
++        self._name: Attribute[str | None] = NotSet
 +        self._node_id: Attribute[str] = NotSet
-+        self._notification_email: Attribute[str] = NotSet
++        self._notification_email: Attribute[str | None] = NotSet
 +        self._organizations_url: Attribute[str] = NotSet
 +        self._owned_private_repos: Attribute[int] = NotSet
 +        self._private_gists: Attribute[int] = NotSet
@@ -84,7 +84,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        self._starred_url: Attribute[str] = NotSet
 +        self._subscriptions_url: Attribute[str] = NotSet
 +        self._total_private_repos: Attribute[int] = NotSet
-+        self._twitter_username: Attribute[str] = NotSet
++        self._twitter_username: Attribute[str | None] = NotSet
 +        self._type: Attribute[str] = NotSet
 +        self._updated_at: Attribute[datetime] = NotSet
 +        self._user_view_type: Attribute[str] = NotSet
@@ -99,12 +99,12 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._avatar_url.value
 +
 +    @property
-+    def bio(self) -> str:
++    def bio(self) -> str | None:
 +        self._completeIfNotSet(self._bio)
 +        return self._bio.value
 +
 +    @property
-+    def blog(self) -> str:
++    def blog(self) -> str | None:
 +        self._completeIfNotSet(self._blog)
 +        return self._blog.value
 +
@@ -114,7 +114,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._collaborators.value
 +
 +    @property
-+    def company(self) -> str:
++    def company(self) -> str | None:
 +        self._completeIfNotSet(self._company)
 +        return self._company.value
 +
@@ -129,7 +129,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._disk_usage.value
 +
 +    @property
-+    def email(self) -> str:
++    def email(self) -> str | None:
 +        self._completeIfNotSet(self._email)
 +        return self._email.value
 +
@@ -164,12 +164,12 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._gists_url.value
 +
 +    @property
-+    def gravatar_id(self) -> str:
++    def gravatar_id(self) -> str | None:
 +        self._completeIfNotSet(self._gravatar_id)
 +        return self._gravatar_id.value
 +
 +    @property
-+    def hireable(self) -> bool:
++    def hireable(self) -> bool | None:
 +        self._completeIfNotSet(self._hireable)
 +        return self._hireable.value
 +
@@ -184,7 +184,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._id.value
 +
 +    @property
-+    def location(self) -> str:
++    def location(self) -> str | None:
 +        self._completeIfNotSet(self._location)
 +        return self._location.value
 +
@@ -194,7 +194,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._login.value
 +
 +    @property
-+    def name(self) -> str:
++    def name(self) -> str | None:
 +        self._completeIfNotSet(self._name)
 +        return self._name.value
 +
@@ -204,7 +204,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._node_id.value
 +
 +    @property
-+    def notification_email(self) -> str:
++    def notification_email(self) -> str | None:
 +        self._completeIfNotSet(self._notification_email)
 +        return self._notification_email.value
 +
@@ -264,7 +264,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._total_private_repos.value
 +
 +    @property
-+    def twitter_username(self) -> str:
++    def twitter_username(self) -> str | None:
 +        self._completeIfNotSet(self._twitter_username)
 +        return self._twitter_username.value
 +
@@ -365,7 +365,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -207,6 +207,618 @@
+@@ -207,6 +207,628 @@
        "schemas": [],
        "test_filename": "tests/GithubObject.py"
      },
@@ -408,7 +408,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "bio": {
 +          "name": "bio",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -424,7 +425,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "blog": {
 +          "name": "blog",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -456,7 +458,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "company": {
 +          "name": "company",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -504,7 +507,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "email": {
 +          "name": "email",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "format": "email",
@@ -608,7 +612,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "gravatar_id": {
 +          "name": "gravatar_id",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -624,7 +629,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "hireable": {
 +          "name": "hireable",
 +          "returns": [
-+            "bool"
++            "bool",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -672,7 +678,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "location": {
 +          "name": "location",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -702,7 +709,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "name": {
 +          "name": "name",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -732,7 +740,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "notification_email": {
 +          "name": "notification_email",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "format": "email",
@@ -918,7 +927,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "twitter_username": {
 +          "name": "twitter_username",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -984,7 +994,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NonCompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -323,6 +935,7 @@
+@@ -323,6 +945,7 @@
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GithubObject",
@@ -992,7 +1002,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NonCompletableGithubObject"
        ],
        "Attribute": [
-@@ -331,11 +944,13 @@
+@@ -331,11 +954,13 @@
          "_ValuedAttribute"
        ],
        "CompletableGithubObject": [
@@ -1007,7 +1017,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NonCompletableGithubObject"
        ],
        "Protocol": [
-@@ -966,7 +1581,11 @@
+@@ -966,7 +1591,11 @@
          "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"
        ]
      },

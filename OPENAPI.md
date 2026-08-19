@@ -120,7 +120,9 @@ Schemas reference each other with `"$ref": "#/components/schemas/schema-name"`. 
    ```json
    "user": { "$ref": "#/components/schemas/nullable-simple-user" }
    ```
-   → `_makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])`
+   → `_makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])`, typed
+   `Attribute[NamedUser | None]` because the referenced schema is nullable (see
+   [Nullability](#nullability) below)
 
 2. **Enum** — a string field whose allowed values are defined in a shared schema:
    ```json
@@ -134,6 +136,45 @@ Schemas reference each other with `"$ref": "#/components/schemas/schema-name"`. 
    { "allOf": [ { "$ref": "#/components/schemas/base-schema" }, { "type": "object", "properties": { ... } } ] }
    ```
    → In PyGithub, properties from all members are merged into one class.
+
+---
+
+## Nullability
+
+`"nullable": true` in a property's schema means the API may return `null` for it. The PyGithub attribute is then typed
+`Attribute[T | None]` and its `@property` accessor returns `T | None`.
+
+The declaration often lives in a **referenced** schema rather than at the reference site, which is what the `nullable-`
+prefix in schema names signals:
+
+```bash
+# the reference site says nothing about nullability …
+cat $JSON | scripts/get-openapi-schema.sh /components/schemas/gist-comment | jq '.properties.user'
+# {"$ref": "#/components/schemas/nullable-simple-user"}
+
+# … the referenced schema is where the proof is
+cat $JSON | scripts/get-openapi-schema.sh /components/schemas/nullable-simple-user | jq '.nullable'
+# true
+```
+
+So the name is only a hint — the `"nullable": true` entry is the authority. Resolve `$ref`s and single-element `allOf`
+wrappers before deciding; for `oneOf`, the property is nullable if any member is.
+
+```bash
+# list every nullable property of a schema
+cat $JSON | scripts/get-openapi-schema.sh /components/schemas/check-suite \
+  | jq -r '.properties | to_entries[] | select(.value.nullable == true) | .key'
+
+# list every nullable-* schema in the spec
+jq -r '.components.schemas | keys[] | select(startswith("nullable-"))' $JSON
+```
+
+A class implementing several schemas is nullable in an attribute as soon as one of them declares it, and an existing
+`| None` is never removed. `url` on `CompletableGithubObject` subclasses is the one exemption — see
+[ARCHITECTURE.md](ARCHITECTURE.md#nullable-attributes).
+
+For method parameters the same `"nullable": true` means "passing `None` clears the field", giving
+`Opt[T | None] = NotSet` with an `assert param is None or is_optional(param, T)` guard.
 
 ---
 

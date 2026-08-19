@@ -54,9 +54,9 @@ diff --unified --recursive --new-file before/github/GitCommit.py after/github/Gi
 +    """
 +
 +    def _initAttributes(self) -> None:
-+        self._author: Attribute[GitAuthor] = NotSet
++        self._author: Attribute[GitAuthor | None] = NotSet
 +        self._comment_count: Attribute[int] = NotSet
-+        self._committer: Attribute[GitAuthor] = NotSet
++        self._committer: Attribute[GitAuthor | None] = NotSet
 +        self._id: Attribute[str] = NotSet
 +        self._message: Attribute[str] = NotSet
 +        self._timestamp: Attribute[datetime] = NotSet
@@ -68,7 +68,7 @@ diff --unified --recursive --new-file before/github/GitCommit.py after/github/Gi
 +        return self.get__repr__({"some_attribute": self._some_attribute.value})
 +
 +    @property
-+    def author(self) -> GitAuthor:
++    def author(self) -> GitAuthor | None:
 +        return self._author.value
 +
 +    @property
@@ -76,7 +76,7 @@ diff --unified --recursive --new-file before/github/GitCommit.py after/github/Gi
 +        return self._comment_count.value
 +
 +    @property
-+    def committer(self) -> GitAuthor:
++    def committer(self) -> GitAuthor | None:
 +        return self._committer.value
 +
 +    @property
@@ -120,7 +120,7 @@ diff --unified --recursive --new-file before/github/GitCommit.py after/github/Gi
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -236,6 +236,299 @@
+@@ -236,6 +236,301 @@
        ],
        "test_filename": "tests/GitAuthor.py"
      },
@@ -147,7 +147,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "author": {
 +          "name": "author",
 +          "returns": [
-+            "GitAuthor"
++            "GitAuthor",
++            "None"
 +          ],
 +          "schema": null,
 +          "schemas": {
@@ -239,7 +240,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "committer": {
 +          "name": "committer",
 +          "returns": [
-+            "GitAuthor"
++            "GitAuthor",
++            "None"
 +          ],
 +          "schema": null,
 +          "schemas": {
@@ -420,7 +422,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "GithubObject": {
        "bases": [
          "ABC"
-@@ -3952,6 +4245,7 @@
+@@ -3975,6 +4270,7 @@
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
@@ -428,7 +430,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "GithubObject",
          "IssueComment",
          "NamedUser",
-@@ -3976,6 +4270,7 @@
+@@ -3999,6 +4295,7 @@
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
@@ -436,7 +438,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "IssueComment",
          "NamedUser",
          "NamedUserSearchResult",
-@@ -3988,6 +4283,7 @@
+@@ -4011,6 +4308,7 @@
        ],
        "NonCompletableGithubObject": [
          "GitAuthor",
@@ -444,7 +446,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Reaction"
        ],
        "Protocol": [
-@@ -4667,9 +4963,15 @@
+@@ -4690,9 +4988,15 @@
        ]
      },
      "schema_to_classes": {
@@ -460,7 +462,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/full-repository": [
          "Repository"
        ],
-@@ -4682,6 +4984,9 @@
+@@ -4705,6 +5009,9 @@
        "/components/schemas/nullable-git-user": [
          "GitAuthor"
        ],
@@ -470,7 +472,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/nullable-simple-commit/properties/author": [
          "GitAuthor"
        ],
-@@ -4700,6 +5005,9 @@
+@@ -4723,6 +5030,9 @@
        "/components/schemas/repository": [
          "Repository"
        ],

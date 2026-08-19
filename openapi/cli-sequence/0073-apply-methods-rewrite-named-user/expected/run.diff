@@ -22,7 +22,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -484,7 +484,7 @@
+@@ -486,7 +486,7 @@
            },
            "name": "get_repo",
            "returns": [
@@ -31,7 +31,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
            ]
          },
          "get_repos": {
-@@ -495,7 +495,7 @@
+@@ -497,7 +497,7 @@
            },
            "name": "get_repos",
            "returns": [
@@ -40,7 +40,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
            ]
          },
          "get_starred": {
-@@ -3808,7 +3808,7 @@
+@@ -3829,7 +3829,7 @@
      "path_to_return_classes": {
        "/repos/{owner}/{repo}": {
          "get": [
@@ -49,7 +49,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        },
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
-@@ -3821,7 +3821,7 @@
+@@ -3842,7 +3842,7 @@
        },
        "/users/{username}/repos": {
          "get": [
@@ -58,7 +58,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        },
        "/users/{username}/starred": {
-@@ -4487,7 +4487,7 @@
+@@ -4508,7 +4508,7 @@
              "class": "NamedUser",
              "name": "get_repo",
              "returns": [
@@ -67,7 +67,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              ]
            }
          ]
-@@ -4524,7 +4524,7 @@
+@@ -4545,7 +4545,7 @@
              "class": "NamedUser",
              "name": "get_repos",
              "returns": [

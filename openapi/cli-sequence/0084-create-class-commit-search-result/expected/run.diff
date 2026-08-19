@@ -124,7 +124,7 @@ diff --unified --recursive --new-file before/github/Items.py after/github/Items.
 +    def _initAttributes(self) -> None:
 +        self._fragment: Attribute[str] = NotSet
 +        self._matches: Attribute[list[dict[str, Any]]] = NotSet
-+        self._object_type: Attribute[str] = NotSet
++        self._object_type: Attribute[str | None] = NotSet
 +        self._object_url: Attribute[str] = NotSet
 +        self._property: Attribute[str] = NotSet
 +
@@ -141,7 +141,7 @@ diff --unified --recursive --new-file before/github/Items.py after/github/Items.
 +        return self._matches.value
 +
 +    @property
-+    def object_type(self) -> str:
++    def object_type(self) -> str | None:
 +        return self._object_type.value
 +
 +    @property
@@ -167,7 +167,7 @@ diff --unified --recursive --new-file before/github/Items.py after/github/Items.
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -509,6 +509,81 @@
+@@ -511,6 +511,81 @@
        ],
        "test_filename": "tests/Commit.py"
      },
@@ -249,7 +249,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "CompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -1358,6 +1433,132 @@
+@@ -1364,6 +1439,133 @@
        ],
        "test_filename": "tests/IssueComment.py"
      },
@@ -332,7 +332,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "object_type": {
 +          "name": "object_type",
 +          "returns": [
-+            "str"
++            "str",
++            "None"
 +          ],
 +          "schema": {
 +            "nullable": true,
@@ -382,7 +383,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NamedUser": {
        "bases": [
          "CompletableGithubObject"
-@@ -4724,12 +4925,14 @@
+@@ -4751,12 +4953,14 @@
      "class_to_descendants": {
        "ABC": [
          "Commit",
@@ -397,7 +398,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject",
-@@ -4741,8 +4944,12 @@
+@@ -4768,8 +4972,12 @@
          "_NotSetType",
          "_ValuedAttribute"
        ],
@@ -410,7 +411,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObjectWithPaginatedProperty",
          "IssueComment",
          "NamedUser",
-@@ -4750,15 +4957,18 @@
+@@ -4777,15 +4985,18 @@
          "Repository"
        ],
        "CompletableGithubObjectWithPaginatedProperty": [
@@ -430,7 +431,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject",
-@@ -4771,6 +4981,7 @@
+@@ -4798,6 +5009,7 @@
        "NonCompletableGithubObject": [
          "GitAuthor",
          "GitCommit",
@@ -438,7 +439,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Reaction"
        ],
        "Protocol": [
-@@ -5453,6 +5664,9 @@
+@@ -5480,6 +5692,9 @@
        "/components/schemas/commit": [
          "Commit"
        ],
@@ -448,7 +449,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/commit-search-result-item/properties/commit": [
          "Commit",
          "GitCommit"
-@@ -5502,6 +5716,9 @@
+@@ -5529,6 +5744,9 @@
        "/components/schemas/repository": [
          "Repository"
        ],

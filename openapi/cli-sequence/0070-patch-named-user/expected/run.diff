@@ -71,7 +71,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -476,6 +476,28 @@
+@@ -478,6 +478,28 @@
        ],
        "inherited_schemas": [],
        "methods": {
@@ -100,7 +100,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "get_starred": {
            "call": {
              "docs": "<https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user>`_",
-@@ -3231,6 +3253,11 @@
+@@ -3252,6 +3274,11 @@
        ]
      },
      "path_to_call_methods": {
@@ -112,7 +112,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "IssueComment.get_reactions"
-@@ -3239,6 +3266,11 @@
+@@ -3260,6 +3287,11 @@
            "IssueComment.create_reaction"
          ]
        },
@@ -124,7 +124,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/users/{username}/starred": {
          "get": [
            "NamedUser.get_starred"
-@@ -3246,6 +3278,11 @@
+@@ -3267,6 +3299,11 @@
        }
      },
      "path_to_return_classes": {
@@ -136,7 +136,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "PaginatedList[Reaction]"
-@@ -3254,6 +3291,11 @@
+@@ -3275,6 +3312,11 @@
            "Reaction"
          ]
        },
@@ -148,7 +148,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/users/{username}/starred": {
          "get": [
            "None"
-@@ -3904,6 +3946,19 @@
+@@ -3925,6 +3967,19 @@
      }
    },
    "paths": {
@@ -168,7 +168,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
        "GET": {
          "methods": [
-@@ -3926,6 +3981,19 @@
+@@ -3947,6 +4002,19 @@
              ]
            }
          ]

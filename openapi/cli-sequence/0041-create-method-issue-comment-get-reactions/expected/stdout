@@ -6,7 +6,7 @@ Diff:
 --- 
 +++ 
 @@ -129,6 +129,13 @@
-     def user(self) -> NamedUser:
+     def user(self) -> NamedUser | None:
          self._completeIfNotSet(self._user)
          return self._user.value
 +    

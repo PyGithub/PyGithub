@@ -4,7 +4,7 @@ diff --unified --recursive --new-file before/github/Commit.py after/github/Commi
 @@ -60,11 +60,15 @@
          self._comments_url: Attribute[str] = NotSet
          self._commit: Attribute[GitCommit] = NotSet
-         self._committer: Attribute[NamedUser] = NotSet
+         self._committer: Attribute[NamedUser | None] = NotSet
 +        self._files: Attribute[list[dict[str, Any]]] = NotSet
          self._html_url: Attribute[str] = NotSet
          self._message: Attribute[str] = NotSet
@@ -74,7 +74,7 @@ diff --unified --recursive --new-file before/github/Commit.py after/github/Commi
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -258,6 +258,26 @@
+@@ -260,6 +260,26 @@
              }
            }
          },
@@ -101,7 +101,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "html_url": {
            "name": "html_url",
            "returns": [
-@@ -389,6 +409,96 @@
+@@ -391,6 +411,96 @@
                "type": "string"
              }
            }

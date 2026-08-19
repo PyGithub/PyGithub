@@ -59,10 +59,10 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 +        self._id: Attribute[int] = NotSet
 +        self._issue_url: Attribute[str] = NotSet
 +        self._node_id: Attribute[str] = NotSet
-+        self._performed_via_github_app: Attribute[dict[str, Any]] = NotSet
++        self._performed_via_github_app: Attribute[dict[str, Any] | None] = NotSet
 +        self._reactions: Attribute[dict[str, Any]] = NotSet
 +        self._updated_at: Attribute[datetime] = NotSet
-+        self._user: Attribute[dict[str, Any]] = NotSet
++        self._user: Attribute[dict[str, Any] | None] = NotSet
 +
 +    def __repr__(self) -> str:
 +        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
@@ -114,7 +114,7 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 +        return self._node_id.value
 +
 +    @property
-+    def performed_via_github_app(self) -> dict[str, Any]:
++    def performed_via_github_app(self) -> dict[str, Any] | None:
 +        self._completeIfNotSet(self._performed_via_github_app)
 +        return self._performed_via_github_app.value
 +
@@ -129,7 +129,7 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 +        return self._updated_at.value
 +
 +    @property
-+    def user(self) -> dict[str, Any]:
++    def user(self) -> dict[str, Any] | None:
 +        self._completeIfNotSet(self._user)
 +        return self._user.value
 +
@@ -165,7 +165,7 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -207,6 +207,236 @@
+@@ -207,6 +207,238 @@
        "schemas": [],
        "test_filename": "tests/GithubObject.py"
      },
@@ -336,7 +336,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "performed_via_github_app": {
 +          "name": "performed_via_github_app",
 +          "returns": [
-+            "dict[str, Any]"
++            "dict[str, Any]",
++            "None"
 +          ],
 +          "schema": {
 +            "$ref": "#/components/schemas/nullable-integration"
@@ -382,7 +383,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "user": {
 +          "name": "user",
 +          "returns": [
-+            "dict[str, Any]"
++            "dict[str, Any]",
++            "None"
 +          ],
 +          "schema": {
 +            "$ref": "#/components/schemas/nullable-simple-user"
@@ -402,7 +404,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NamedUser": {
        "bases": [
          "CompletableGithubObject"
-@@ -996,6 +1226,7 @@
+@@ -1007,6 +1239,7 @@
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GithubObject",
@@ -410,7 +412,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject"
-@@ -1007,12 +1238,14 @@
+@@ -1018,12 +1251,14 @@
        ],
        "CompletableGithubObject": [
          "CompletableGithubObjectWithPaginatedProperty",
@@ -425,7 +427,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject"
-@@ -1649,6 +1882,9 @@
+@@ -1660,6 +1895,9 @@
        ]
      },
      "schema_to_classes": {

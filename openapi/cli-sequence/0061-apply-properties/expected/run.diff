@@ -19,7 +19,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 +        self._owner: Attribute[NamedUser] = NotSet
          self._private: Attribute[bool] = NotSet
          self._pulls_url: Attribute[str] = NotSet
-         self._pushed_at: Attribute[datetime] = NotSet
+         self._pushed_at: Attribute[datetime | None] = NotSet
 @@ -468,6 +471,11 @@
          return self._open_issues_count.value
  
@@ -44,7 +44,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -2607,6 +2607,20 @@
+@@ -2626,6 +2626,20 @@
              }
            }
          },

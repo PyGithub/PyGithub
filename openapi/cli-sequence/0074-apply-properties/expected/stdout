@@ -48,26 +48,26 @@ Diff:
 +++ 
 @@ -111,16 +111,20 @@
          self._milestones_url: Attribute[str] = NotSet
-         self._mirror_url: Attribute[str] = NotSet
+         self._mirror_url: Attribute[str | None] = NotSet
          self._name: Attribute[str] = NotSet
 +        self._network_count: Attribute[int] = NotSet
          self._node_id: Attribute[str] = NotSet
          self._notifications_url: Attribute[str] = NotSet
          self._open_issues: Attribute[int] = NotSet
          self._open_issues_count: Attribute[int] = NotSet
-+        self._organization: Attribute[NamedUser] = NotSet
++        self._organization: Attribute[NamedUser | None] = NotSet
          self._owner: Attribute[NamedUser] = NotSet
 +        self._parent: Attribute[Repository] = NotSet
          self._private: Attribute[bool] = NotSet
          self._pulls_url: Attribute[str] = NotSet
-         self._pushed_at: Attribute[datetime] = NotSet
+         self._pushed_at: Attribute[datetime | None] = NotSet
          self._releases_url: Attribute[str] = NotSet
          self._size: Attribute[int] = NotSet
 +        self._source: Attribute[Repository] = NotSet
          self._squash_merge_commit_message: Attribute[str] = NotSet
          self._squash_merge_commit_title: Attribute[str] = NotSet
          self._ssh_url: Attribute[str] = NotSet
-@@ -128,6 +132,7 @@
+@@ -128,12 +132,13 @@
          self._stargazers_url: Attribute[str] = NotSet
          self._starred_at: Attribute[str] = NotSet
          self._statuses_url: Attribute[str] = NotSet
@@ -75,6 +75,13 @@ Diff:
          self._subscribers_url: Attribute[str] = NotSet
          self._subscription_url: Attribute[str] = NotSet
          self._svn_url: Attribute[str] = NotSet
+         self._tags_url: Attribute[str] = NotSet
+         self._teams_url: Attribute[str] = NotSet
+-        self._temp_clone_token: Attribute[str] = NotSet
++        self._temp_clone_token: Attribute[str | None] = NotSet
+         self._topics: Attribute[list[str]] = NotSet
+         self._trees_url: Attribute[str] = NotSet
+         self._updated_at: Attribute[datetime | None] = NotSet
 @@ -453,6 +458,11 @@
          return self._name.value
  
@@ -91,7 +98,7 @@ Diff:
          return self._open_issues_count.value
  
      @property
-+    def organization(self) -> NamedUser:
++    def organization(self) -> NamedUser | None:
 +        self._completeIfNotSet(self._organization)
 +        return self._organization.value
 +
@@ -121,18 +128,27 @@ Diff:
      def squash_merge_commit_message(self) -> str:
          self._completeIfNotSet(self._squash_merge_commit_message)
          return self._squash_merge_commit_message.value
-@@ -536,6 +561,11 @@
-     def statuses_url(self) -> str:
-         self._completeIfNotSet(self._statuses_url)
+@@ -538,6 +563,11 @@
          return self._statuses_url.value
-+
-+    @property
+ 
+     @property
 +    def subscribers_count(self) -> int:
 +        self._completeIfNotSet(self._subscribers_count)
 +        return self._subscribers_count.value
++
++    @property
+     def subscribers_url(self) -> str:
+         self._completeIfNotSet(self._subscribers_url)
+         return self._subscribers_url.value
+@@ -563,7 +593,7 @@
+         return self._teams_url.value
  
      @property
-     def subscribers_url(self) -> str:
+-    def temp_clone_token(self) -> str:
++    def temp_clone_token(self) -> str | None:
+         self._completeIfNotSet(self._temp_clone_token)
+         return self._temp_clone_token.value
+ 
 @@ -731,6 +761,8 @@
              self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
          if "name" in attributes:  # pragma no branch
@@ -213,7 +229,7 @@ Diff:
 +++ 
 @@ -111,6 +111,7 @@
          self._milestones_url: Attribute[str] = NotSet
-         self._mirror_url: Attribute[str] = NotSet
+         self._mirror_url: Attribute[str | None] = NotSet
          self._name: Attribute[str] = NotSet
 +        self._network_count: Attribute[int] = NotSet
          self._node_id: Attribute[str] = NotSet
@@ -221,7 +237,7 @@ Diff:
          self._open_issues: Attribute[int] = NotSet
 @@ -120,6 +121,7 @@
          self._pulls_url: Attribute[str] = NotSet
-         self._pushed_at: Attribute[datetime] = NotSet
+         self._pushed_at: Attribute[datetime | None] = NotSet
          self._releases_url: Attribute[str] = NotSet
 +        self._role_name: Attribute[str] = NotSet
          self._size: Attribute[int] = NotSet
