@@ -56,7 +56,7 @@ import github.GithubObject
 import github.NamedUser
 import github.Tag
 import github.WorkflowRun
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, ignore_return_types
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, ignore_return_type
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -172,7 +172,7 @@ class Workflow(CompletableGithubObject):
         ...
 
     # v3: default throw to True
-    @ignore_return_types(types=[github.WorkflowRun.WorkflowRun])
+    @ignore_return_type(ignore_type="WorkflowRun")
     def create_dispatch(
         self,
         ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
