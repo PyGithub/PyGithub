@@ -95,7 +95,7 @@ class GitRelease(CompletableGithubObject):
         self._assets: Attribute[list[GitReleaseAsset]] = NotSet
         self._assets_url: Attribute[str] = NotSet
         self._author: Attribute[NamedUser] = NotSet
-        self._body: Attribute[str] = NotSet
+        self._body: Attribute[str | None] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -108,19 +108,19 @@ class GitRelease(CompletableGithubObject):
         self._immutable: Attribute[bool] = NotSet
         self._mentions_count: Attribute[int] = NotSet
         self._message: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
+        self._name: Attribute[str | None] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._prerelease: Attribute[bool] = NotSet
-        self._published_at: Attribute[datetime] = NotSet
+        self._published_at: Attribute[datetime | None] = NotSet
         self._reactions: Attribute[dict[str, Any]] = NotSet
         self._status: Attribute[str] = NotSet
         self._tag_name: Attribute[str] = NotSet
-        self._tarball_url: Attribute[str] = NotSet
+        self._tarball_url: Attribute[str | None] = NotSet
         self._target_commitish: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
         self._upload_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._zipball_url: Attribute[str] = NotSet
+        self._zipball_url: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -141,7 +141,7 @@ class GitRelease(CompletableGithubObject):
         return self._author.value
 
     @property
-    def body(self) -> str:
+    def body(self) -> str | None:
         self._completeIfNotSet(self._body)
         return self._body.value
 
@@ -201,7 +201,7 @@ class GitRelease(CompletableGithubObject):
         return self._message.value
 
     @property
-    def name(self) -> str:
+    def name(self) -> str | None:
         self._completeIfNotSet(self._name)
         return self._name.value
 
@@ -216,7 +216,7 @@ class GitRelease(CompletableGithubObject):
         return self._prerelease.value
 
     @property
-    def published_at(self) -> datetime:
+    def published_at(self) -> datetime | None:
         self._completeIfNotSet(self._published_at)
         return self._published_at.value
 
@@ -236,7 +236,7 @@ class GitRelease(CompletableGithubObject):
         return self._tag_name.value
 
     @property
-    def tarball_url(self) -> str:
+    def tarball_url(self) -> str | None:
         self._completeIfNotSet(self._tarball_url)
         return self._tarball_url.value
 
@@ -247,12 +247,12 @@ class GitRelease(CompletableGithubObject):
 
     @property
     @deprecated("Use name instead")
-    def title(self) -> str:
+    def title(self) -> str | None:
         # alias for name
         return self.name
 
     @property
-    def updated_at(self) -> datetime:
+    def updated_at(self) -> datetime | None:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
 
@@ -267,7 +267,7 @@ class GitRelease(CompletableGithubObject):
         return self._url.value
 
     @property
-    def zipball_url(self) -> str:
+    def zipball_url(self) -> str | None:
         self._completeIfNotSet(self._zipball_url)
         return self._zipball_url.value
 

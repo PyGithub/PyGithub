@@ -70,13 +70,13 @@ class Event(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._actor: Attribute[NamedUser] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
+        self._created_at: Attribute[datetime | None] = NotSet
         self._id: Attribute[str] = NotSet
         self._org: Attribute[Organization] = NotSet
         self._payload: Attribute[dict[str, Any]] = NotSet
         self._public: Attribute[bool] = NotSet
         self._repo: Attribute[Repository] = NotSet
-        self._type: Attribute[str] = NotSet
+        self._type: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "type": self._type.value})
@@ -86,7 +86,7 @@ class Event(NonCompletableGithubObject):
         return self._actor.value
 
     @property
-    def created_at(self) -> datetime:
+    def created_at(self) -> datetime | None:
         return self._created_at.value
 
     @property
@@ -110,7 +110,7 @@ class Event(NonCompletableGithubObject):
         return self._repo.value
 
     @property
-    def type(self) -> str:
+    def type(self) -> str | None:
         return self._type.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

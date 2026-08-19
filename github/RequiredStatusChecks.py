@@ -61,14 +61,14 @@ class Check(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._app_id: Attribute[int] = NotSet
+        self._app_id: Attribute[int | None] = NotSet
         self._context: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"app_id": self._app_id.value, "context": self._context.value})
 
     @property
-    def app_id(self) -> int:
+    def app_id(self) -> int | None:
         return self._app_id.value
 
     @property

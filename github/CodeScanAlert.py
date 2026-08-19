@@ -67,7 +67,7 @@ class CodeScanAlert(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._assignees: Attribute[list[NamedUser]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._dismissal_approved_by: Attribute[NamedUser | Organization] = NotSet
+        self._dismissal_approved_by: Attribute[NamedUser | Organization | None] = NotSet
         self._dismissed_at: Attribute[datetime | None] = NotSet
         self._dismissed_by: Attribute[NamedUser | None] = NotSet
         self._dismissed_comment: Attribute[str | None] = NotSet
@@ -78,7 +78,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         self._most_recent_instance: Attribute[CodeScanAlertInstance] = NotSet
         self._number: Attribute[int] = NotSet
         self._rule: Attribute[CodeScanRule] = NotSet
-        self._state: Attribute[str] = NotSet
+        self._state: Attribute[str | None] = NotSet
         self._tool: Attribute[CodeScanTool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -95,7 +95,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def dismissal_approved_by(self) -> NamedUser | Organization:
+    def dismissal_approved_by(self) -> NamedUser | Organization | None:
         return self._dismissal_approved_by.value
 
     @property
@@ -139,7 +139,7 @@ class CodeScanAlert(NonCompletableGithubObject):
         return self._rule.value
 
     @property
-    def state(self) -> str:
+    def state(self) -> str | None:
         return self._state.value
 
     @property
@@ -177,7 +177,7 @@ class CodeScanAlert(NonCompletableGithubObject):
                 attributes["dismissal_approved_by"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore
         if "dismissed_at" in attributes:  # pragma no branch
             self._dismissed_at = self._makeDatetimeAttribute(attributes["dismissed_at"])
         if "dismissed_by" in attributes:  # pragma no branch

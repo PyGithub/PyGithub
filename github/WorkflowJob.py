@@ -56,12 +56,12 @@ class WorkflowJob(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._check_run_url: Attribute[str] = NotSet
-        self._completed_at: Attribute[datetime] = NotSet
+        self._completed_at: Attribute[datetime | None] = NotSet
         self._conclusion: Attribute[str | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._head_branch: Attribute[str] = NotSet
+        self._head_branch: Attribute[str | None] = NotSet
         self._head_sha: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str | None] = NotSet
         self._id: Attribute[int] = NotSet
         self._labels: Attribute[list[str]] = NotSet
         self._name: Attribute[str] = NotSet
@@ -69,15 +69,15 @@ class WorkflowJob(CompletableGithubObject):
         self._run_attempt: Attribute[int] = NotSet
         self._run_id: Attribute[int] = NotSet
         self._run_url: Attribute[str] = NotSet
-        self._runner_group_id: Attribute[int] = NotSet
-        self._runner_group_name: Attribute[str] = NotSet
-        self._runner_id: Attribute[int] = NotSet
-        self._runner_name: Attribute[str] = NotSet
+        self._runner_group_id: Attribute[int | None] = NotSet
+        self._runner_group_name: Attribute[str | None] = NotSet
+        self._runner_id: Attribute[int | None] = NotSet
+        self._runner_name: Attribute[str | None] = NotSet
         self._started_at: Attribute[datetime] = NotSet
         self._status: Attribute[str] = NotSet
         self._steps: Attribute[list[WorkflowStep]] = NotSet
         self._url: Attribute[str] = NotSet
-        self._workflow_name: Attribute[str] = NotSet
+        self._workflow_name: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
@@ -88,7 +88,7 @@ class WorkflowJob(CompletableGithubObject):
         return self._check_run_url.value
 
     @property
-    def completed_at(self) -> datetime:
+    def completed_at(self) -> datetime | None:
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
 
@@ -103,7 +103,7 @@ class WorkflowJob(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def head_branch(self) -> str:
+    def head_branch(self) -> str | None:
         self._completeIfNotSet(self._head_branch)
         return self._head_branch.value
 
@@ -113,7 +113,7 @@ class WorkflowJob(CompletableGithubObject):
         return self._head_sha.value
 
     @property
-    def html_url(self) -> str:
+    def html_url(self) -> str | None:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
@@ -153,22 +153,22 @@ class WorkflowJob(CompletableGithubObject):
         return self._run_url.value
 
     @property
-    def runner_group_id(self) -> int:
+    def runner_group_id(self) -> int | None:
         self._completeIfNotSet(self._runner_group_id)
         return self._runner_group_id.value
 
     @property
-    def runner_group_name(self) -> str:
+    def runner_group_name(self) -> str | None:
         self._completeIfNotSet(self._runner_group_name)
         return self._runner_group_name.value
 
     @property
-    def runner_id(self) -> int:
+    def runner_id(self) -> int | None:
         self._completeIfNotSet(self._runner_id)
         return self._runner_id.value
 
     @property
-    def runner_name(self) -> str:
+    def runner_name(self) -> str | None:
         self._completeIfNotSet(self._runner_name)
         return self._runner_name.value
 
@@ -193,7 +193,7 @@ class WorkflowJob(CompletableGithubObject):
         return self._url.value
 
     @property
-    def workflow_name(self) -> str:
+    def workflow_name(self) -> str | None:
         self._completeIfNotSet(self._workflow_name)
         return self._workflow_name.value
 

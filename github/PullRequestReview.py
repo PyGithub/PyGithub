@@ -75,14 +75,14 @@ class PullRequestReview(NonCompletableGithubObject):
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
-        self._commit_id: Attribute[str] = NotSet
+        self._commit_id: Attribute[str | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._submitted_at: Attribute[datetime] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -104,7 +104,7 @@ class PullRequestReview(NonCompletableGithubObject):
         return self._body_text.value
 
     @property
-    def commit_id(self) -> str:
+    def commit_id(self) -> str | None:
         return self._commit_id.value
 
     @property
@@ -132,7 +132,7 @@ class PullRequestReview(NonCompletableGithubObject):
         return self._submitted_at.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         return self._user.value
 
     def dismiss(self, message: str) -> None:

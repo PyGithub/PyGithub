@@ -65,31 +65,31 @@ class CheckSuite(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._after: Attribute[str] = NotSet
-        self._app: Attribute[GithubApp] = NotSet
-        self._before: Attribute[str] = NotSet
+        self._after: Attribute[str | None] = NotSet
+        self._app: Attribute[GithubApp | None] = NotSet
+        self._before: Attribute[str | None] = NotSet
         self._check_runs_url: Attribute[str] = NotSet
-        self._conclusion: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._head_branch: Attribute[str] = NotSet
+        self._conclusion: Attribute[str | None] = NotSet
+        self._created_at: Attribute[datetime | None] = NotSet
+        self._head_branch: Attribute[str | None] = NotSet
         self._head_commit: Attribute[GitCommit] = NotSet
         self._head_sha: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._latest_check_runs_count: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._pull_requests: Attribute[list[PullRequest]] = NotSet
+        self._pull_requests: Attribute[list[PullRequest] | None] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._rerequestable: Attribute[bool] = NotSet
         self._runs_rerequestable: Attribute[bool] = NotSet
-        self._status: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._status: Attribute[str | None] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
 
     @property
-    def after(self) -> str:
+    def after(self) -> str | None:
         """
         :type: string
         """
@@ -97,7 +97,7 @@ class CheckSuite(CompletableGithubObject):
         return self._after.value
 
     @property
-    def app(self) -> GithubApp:
+    def app(self) -> GithubApp | None:
         """
         :type: :class:`github.GithubApp.GithubApp`
         """
@@ -105,7 +105,7 @@ class CheckSuite(CompletableGithubObject):
         return self._app.value
 
     @property
-    def before(self) -> str:
+    def before(self) -> str | None:
         """
         :type: string
         """
@@ -121,7 +121,7 @@ class CheckSuite(CompletableGithubObject):
         return self._check_runs_url.value
 
     @property
-    def conclusion(self) -> str:
+    def conclusion(self) -> str | None:
         """
         :type: string
         """
@@ -129,7 +129,7 @@ class CheckSuite(CompletableGithubObject):
         return self._conclusion.value
 
     @property
-    def created_at(self) -> datetime:
+    def created_at(self) -> datetime | None:
         """
         :type: datetime.datetime
         """
@@ -137,7 +137,7 @@ class CheckSuite(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def head_branch(self) -> str:
+    def head_branch(self) -> str | None:
         """
         :type: string
         """
@@ -182,7 +182,7 @@ class CheckSuite(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def pull_requests(self) -> list[PullRequest]:
+    def pull_requests(self) -> list[PullRequest] | None:
         """
         :type: list of :class:`github.PullRequest.PullRequest`
         """
@@ -208,7 +208,7 @@ class CheckSuite(CompletableGithubObject):
         return self._runs_rerequestable.value
 
     @property
-    def status(self) -> str:
+    def status(self) -> str | None:
         """
         :type: string
         """
@@ -216,7 +216,7 @@ class CheckSuite(CompletableGithubObject):
         return self._status.value
 
     @property
-    def updated_at(self) -> datetime:
+    def updated_at(self) -> datetime | None:
         """
         :type: datetime.datetime
         """

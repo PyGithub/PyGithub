@@ -67,9 +67,9 @@ class CheckRunOutput(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._annotations_count: Attribute[int] = NotSet
         self._annotations_url: Attribute[str] = NotSet
-        self._summary: Attribute[str] = NotSet
-        self._text: Attribute[str] = NotSet
-        self._title: Attribute[str] = NotSet
+        self._summary: Attribute[str | None] = NotSet
+        self._text: Attribute[str | None] = NotSet
+        self._title: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
@@ -83,15 +83,15 @@ class CheckRunOutput(NonCompletableGithubObject):
         return self._annotations_url.value
 
     @property
-    def summary(self) -> str:
+    def summary(self) -> str | None:
         return self._summary.value
 
     @property
-    def text(self) -> str:
+    def text(self) -> str | None:
         return self._text.value
 
     @property
-    def title(self) -> str:
+    def title(self) -> str | None:
         return self._title.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

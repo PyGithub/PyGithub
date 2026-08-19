@@ -74,12 +74,12 @@ class Milestone(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._closed_at: Attribute[datetime] = NotSet
+        self._closed_at: Attribute[datetime | None] = NotSet
         self._closed_issues: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[NamedUser] = NotSet
-        self._description: Attribute[str] = NotSet
-        self._due_on: Attribute[datetime] = NotSet
+        self._creator: Attribute[NamedUser | None] = NotSet
+        self._description: Attribute[str | None] = NotSet
+        self._due_on: Attribute[datetime | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._labels_url: Attribute[str] = NotSet
@@ -99,7 +99,7 @@ class Milestone(CompletableGithubObject):
         return self._number.value
 
     @property
-    def closed_at(self) -> datetime:
+    def closed_at(self) -> datetime | None:
         self._completeIfNotSet(self._closed_at)
         return self._closed_at.value
 
@@ -114,12 +114,12 @@ class Milestone(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> NamedUser:
+    def creator(self) -> NamedUser | None:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         self._completeIfNotSet(self._description)
         return self._description.value
 

@@ -90,23 +90,23 @@ class Gist(CompletableGithubObject):
         self._comments_url: Attribute[str] = NotSet
         self._commits_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._files: Attribute[dict[str, GistFile]] = NotSet
-        self._fork_of: Attribute[Gist] = NotSet
-        self._forks: Attribute[list[Gist]] = NotSet
+        self._fork_of: Attribute[Gist | None] = NotSet
+        self._forks: Attribute[list[Gist] | None] = NotSet
         self._forks_url: Attribute[str] = NotSet
         self._git_pull_url: Attribute[str] = NotSet
         self._git_push_url: Attribute[str] = NotSet
-        self._history: Attribute[list[GistHistoryState]] = NotSet
+        self._history: Attribute[list[GistHistoryState] | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._owner: Attribute[NamedUser] = NotSet
+        self._owner: Attribute[NamedUser | None] = NotSet
         self._public: Attribute[bool] = NotSet
         self._truncated: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -137,7 +137,7 @@ class Gist(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         self._completeIfNotSet(self._description)
         return self._description.value
 
@@ -147,12 +147,12 @@ class Gist(CompletableGithubObject):
         return self._files.value
 
     @property
-    def fork_of(self) -> Gist:
+    def fork_of(self) -> Gist | None:
         self._completeIfNotSet(self._fork_of)
         return self._fork_of.value
 
     @property
-    def forks(self) -> list[Gist]:
+    def forks(self) -> list[Gist] | None:
         self._completeIfNotSet(self._forks)
         return self._forks.value
 
@@ -172,7 +172,7 @@ class Gist(CompletableGithubObject):
         return self._git_push_url.value
 
     @property
-    def history(self) -> list[GistHistoryState]:
+    def history(self) -> list[GistHistoryState] | None:
         self._completeIfNotSet(self._history)
         return self._history.value
 
@@ -192,7 +192,7 @@ class Gist(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def owner(self) -> NamedUser:
+    def owner(self) -> NamedUser | None:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
@@ -217,7 +217,7 @@ class Gist(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 

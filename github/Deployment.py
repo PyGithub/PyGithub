@@ -79,14 +79,14 @@ class Deployment(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[NamedUser | Organization] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._creator: Attribute[NamedUser | Organization | None] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._environment: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._original_environment: Attribute[str] = NotSet
         self._payload: Attribute[dict[str, Any]] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp | None] = NotSet
         self._production_environment: Attribute[bool] = NotSet
         self._ref: Attribute[str] = NotSet
         self._repository_url: Attribute[str] = NotSet
@@ -106,12 +106,12 @@ class Deployment(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> NamedUser | Organization:
+    def creator(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         self._completeIfNotSet(self._description)
         return self._description.value
 
@@ -141,7 +141,7 @@ class Deployment(CompletableGithubObject):
         return self._payload.value
 
     @property
-    def performed_via_github_app(self) -> GithubApp:
+    def performed_via_github_app(self) -> GithubApp | None:
         self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
@@ -271,7 +271,7 @@ class Deployment(CompletableGithubObject):
                 attributes["creator"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "environment" in attributes:  # pragma no branch

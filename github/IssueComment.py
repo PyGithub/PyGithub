@@ -89,11 +89,11 @@ class IssueComment(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp | None] = NotSet
         self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser | Organization] = NotSet
+        self._user: Attribute[NamedUser | Organization | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -144,7 +144,7 @@ class IssueComment(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def performed_via_github_app(self) -> GithubApp:
+    def performed_via_github_app(self) -> GithubApp | None:
         self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
@@ -164,7 +164,7 @@ class IssueComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser | Organization:
+    def user(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -301,4 +301,4 @@ class IssueComment(CompletableGithubObject):
                 attributes["user"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore

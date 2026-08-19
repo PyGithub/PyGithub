@@ -160,30 +160,30 @@ class AuthenticatedUser(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._avatar_url: Attribute[str] = NotSet
-        self._bio: Attribute[str] = NotSet
-        self._blog: Attribute[str] = NotSet
+        self._bio: Attribute[str | None] = NotSet
+        self._blog: Attribute[str | None] = NotSet
         self._business_plus: Attribute[bool] = NotSet
         self._collaborators: Attribute[int] = NotSet
-        self._company: Attribute[str] = NotSet
+        self._company: Attribute[str | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._disk_usage: Attribute[int] = NotSet
-        self._email: Attribute[str] = NotSet
+        self._email: Attribute[str | None] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._followers: Attribute[int] = NotSet
         self._followers_url: Attribute[str] = NotSet
         self._following: Attribute[int] = NotSet
         self._following_url: Attribute[str] = NotSet
         self._gists_url: Attribute[str] = NotSet
-        self._gravatar_id: Attribute[str] = NotSet
-        self._hireable: Attribute[bool] = NotSet
+        self._gravatar_id: Attribute[str | None] = NotSet
+        self._hireable: Attribute[bool | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._ldap_dn: Attribute[str] = NotSet
-        self._location: Attribute[str] = NotSet
+        self._location: Attribute[str | None] = NotSet
         self._login: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
+        self._name: Attribute[str | None] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._notification_email: Attribute[str] = NotSet
+        self._notification_email: Attribute[str | None] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
         self._plan: Attribute[Plan] = NotSet
@@ -196,7 +196,7 @@ class AuthenticatedUser(CompletableGithubObject):
         self._starred_url: Attribute[str] = NotSet
         self._subscriptions_url: Attribute[str] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
-        self._twitter_username: Attribute[str] = NotSet
+        self._twitter_username: Attribute[str | None] = NotSet
         self._two_factor_authentication: Attribute[bool] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -212,12 +212,12 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._avatar_url.value
 
     @property
-    def bio(self) -> str:
+    def bio(self) -> str | None:
         self._completeIfNotSet(self._bio)
         return self._bio.value
 
     @property
-    def blog(self) -> str:
+    def blog(self) -> str | None:
         self._completeIfNotSet(self._blog)
         return self._blog.value
 
@@ -232,7 +232,7 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._collaborators.value
 
     @property
-    def company(self) -> str:
+    def company(self) -> str | None:
         self._completeIfNotSet(self._company)
         return self._company.value
 
@@ -247,7 +247,7 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._disk_usage.value
 
     @property
-    def email(self) -> str:
+    def email(self) -> str | None:
         self._completeIfNotSet(self._email)
         return self._email.value
 
@@ -282,12 +282,12 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._gists_url.value
 
     @property
-    def gravatar_id(self) -> str:
+    def gravatar_id(self) -> str | None:
         self._completeIfNotSet(self._gravatar_id)
         return self._gravatar_id.value
 
     @property
-    def hireable(self) -> bool:
+    def hireable(self) -> bool | None:
         self._completeIfNotSet(self._hireable)
         return self._hireable.value
 
@@ -307,7 +307,7 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._ldap_dn.value
 
     @property
-    def location(self) -> str:
+    def location(self) -> str | None:
         self._completeIfNotSet(self._location)
         return self._location.value
 
@@ -317,7 +317,7 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._login.value
 
     @property
-    def name(self) -> str:
+    def name(self) -> str | None:
         self._completeIfNotSet(self._name)
         return self._name.value
 
@@ -327,7 +327,7 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def notification_email(self) -> str:
+    def notification_email(self) -> str | None:
         self._completeIfNotSet(self._notification_email)
         return self._notification_email.value
 
@@ -392,7 +392,7 @@ class AuthenticatedUser(CompletableGithubObject):
         return self._total_private_repos.value
 
     @property
-    def twitter_username(self) -> str:
+    def twitter_username(self) -> str | None:
         self._completeIfNotSet(self._twitter_username)
         return self._twitter_username.value
 
@@ -782,7 +782,8 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(state):
             url_parameters["state"] = state
         if is_defined(labels):
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            assert all(label.name is not None for label in labels), labels
+            url_parameters["labels"] = ",".join(label.name for label in labels)  # type: ignore[misc]
         if is_defined(sort):
             url_parameters["sort"] = sort
         if is_defined(direction):
@@ -815,7 +816,8 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(state):
             url_parameters["state"] = state
         if is_defined(labels):
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            assert all(label.name is not None for label in labels), labels
+            url_parameters["labels"] = ",".join(label.name for label in labels)  # type: ignore[misc]
         if is_defined(sort):
             url_parameters["sort"] = sort
         if is_defined(direction):

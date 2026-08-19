@@ -56,8 +56,8 @@ class CopilotSeat(NonCompletableGithubObject):
         self._created_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_at: Attribute[datetime] | _NotSetType = NotSet
         self._last_activity_editor: Attribute[str] | _NotSetType = NotSet
-        self._last_authenticated_at: Attribute[datetime] = NotSet
-        self._organization: Attribute[Organization] = NotSet
+        self._last_authenticated_at: Attribute[datetime | None] = NotSet
+        self._organization: Attribute[Organization | None] = NotSet
         self._pending_cancellation_date: Attribute[datetime] | _NotSetType = NotSet
         self._plan_type: Attribute[str] | _NotSetType = NotSet
         self._updated_at: Attribute[datetime] | _NotSetType = NotSet
@@ -66,11 +66,11 @@ class CopilotSeat(NonCompletableGithubObject):
         return self.get__repr__({"assignee": self._assignee.value})
 
     @property
-    def assignee(self) -> NamedUser:
+    def assignee(self) -> NamedUser | None:
         return self._assignee.value
 
     @property
-    def assigning_team(self) -> Team:
+    def assigning_team(self) -> Team | None:
         return self._assigning_team.value
 
     @property
@@ -78,23 +78,23 @@ class CopilotSeat(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def last_activity_at(self) -> datetime:
+    def last_activity_at(self) -> datetime | None:
         return self._last_activity_at.value
 
     @property
-    def last_activity_editor(self) -> str:
+    def last_activity_editor(self) -> str | None:
         return self._last_activity_editor.value
 
     @property
-    def last_authenticated_at(self) -> datetime:
+    def last_authenticated_at(self) -> datetime | None:
         return self._last_authenticated_at.value
 
     @property
-    def organization(self) -> Organization:
+    def organization(self) -> Organization | None:
         return self._organization.value
 
     @property
-    def pending_cancellation_date(self) -> datetime:
+    def pending_cancellation_date(self) -> datetime | None:
         return self._pending_cancellation_date.value
 
     @property

@@ -77,13 +77,13 @@ class GitReleaseAsset(CompletableGithubObject):
         self._digest: Attribute[str | None] = NotSet
         self._download_count: Attribute[int] = NotSet
         self._id: Attribute[int] = NotSet
-        self._label: Attribute[str] = NotSet
+        self._label: Attribute[str | None] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-        self._uploader: Attribute[NamedUser] = NotSet
+        self._uploader: Attribute[NamedUser | None] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -120,7 +120,7 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._id.value
 
     @property
-    def label(self) -> str:
+    def label(self) -> str | None:
         self._completeIfNotSet(self._label)
         return self._label.value
 
@@ -150,7 +150,7 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def uploader(self) -> NamedUser:
+    def uploader(self) -> NamedUser | None:
         self._completeIfNotSet(self._uploader)
         return self._uploader.value
 
