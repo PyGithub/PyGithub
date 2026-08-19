@@ -391,12 +391,12 @@ class Repository(CompletableGithubObject):
         self._compare_url: Attribute[str] = NotSet
         self._contents_url: Attribute[str] = NotSet
         self._contributors_url: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
+        self._created_at: Attribute[datetime | None] = NotSet
         self._custom_properties: Attribute[dict[str, None | str | list]] = NotSet  # type: ignore
         self._default_branch: Attribute[str] = NotSet
         self._delete_branch_on_merge: Attribute[bool] = NotSet
         self._deployments_url: Attribute[str] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._disabled: Attribute[bool] = NotSet
         self._downloads_url: Attribute[str] = NotSet
         self._events_url: Attribute[str] = NotSet
@@ -415,7 +415,7 @@ class Repository(CompletableGithubObject):
         self._has_pages: Attribute[bool] = NotSet
         self._has_projects: Attribute[bool] = NotSet
         self._has_wiki: Attribute[bool] = NotSet
-        self._homepage: Attribute[str] = NotSet
+        self._homepage: Attribute[str | None] = NotSet
         self._hooks_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
@@ -425,31 +425,31 @@ class Repository(CompletableGithubObject):
         self._issues_url: Attribute[str] = NotSet
         self._keys_url: Attribute[str] = NotSet
         self._labels_url: Attribute[str] = NotSet
-        self._language: Attribute[str] = NotSet
+        self._language: Attribute[str | None] = NotSet
         self._languages_url: Attribute[str] = NotSet
-        self._license: Attribute[License] = NotSet
+        self._license: Attribute[License | None] = NotSet
         self._master_branch: Attribute[str] = NotSet
         self._merge_commit_message: Attribute[str] = NotSet
         self._merge_commit_title: Attribute[str] = NotSet
         self._merges_url: Attribute[str] = NotSet
         self._milestones_url: Attribute[str] = NotSet
-        self._mirror_url: Attribute[str] = NotSet
+        self._mirror_url: Attribute[str | None] = NotSet
         self._name: Attribute[str] = NotSet
         self._network_count: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._notifications_url: Attribute[str] = NotSet
         self._open_issues: Attribute[int] = NotSet
         self._open_issues_count: Attribute[int] = NotSet
-        self._organization: Attribute[Organization] = NotSet
+        self._organization: Attribute[Organization | None] = NotSet
         self._owner: Attribute[NamedUser] = NotSet
         self._parent: Attribute[Repository] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._private: Attribute[bool] = NotSet
         self._pulls_url: Attribute[str] = NotSet
-        self._pushed_at: Attribute[datetime] = NotSet
+        self._pushed_at: Attribute[datetime | None] = NotSet
         self._releases_url: Attribute[str] = NotSet
         self._role_name: Attribute[str] = NotSet
-        self._security_and_analysis: Attribute[SecurityAndAnalysis] = NotSet
+        self._security_and_analysis: Attribute[SecurityAndAnalysis | None] = NotSet
         self._size: Attribute[int] = NotSet
         self._source: Attribute[Repository] = NotSet
         self._squash_merge_commit_message: Attribute[str] = NotSet
@@ -465,11 +465,11 @@ class Repository(CompletableGithubObject):
         self._svn_url: Attribute[str] = NotSet
         self._tags_url: Attribute[str] = NotSet
         self._teams_url: Attribute[str] = NotSet
-        self._temp_clone_token: Attribute[str] = NotSet
-        self._template_repository: Attribute[Repository] = NotSet
+        self._temp_clone_token: Attribute[str | None] = NotSet
+        self._template_repository: Attribute[Repository | None] = NotSet
         self._topics: Attribute[list[str]] = NotSet
         self._trees_url: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
         self._use_squash_pr_title_as_default: Attribute[bool] = NotSet
         self._visibility: Attribute[str] = NotSet
@@ -645,7 +645,7 @@ class Repository(CompletableGithubObject):
         return self._contributors_url.value
 
     @property
-    def created_at(self) -> datetime:
+    def created_at(self) -> datetime | None:
         """
         :type: datetime
         """
@@ -685,7 +685,7 @@ class Repository(CompletableGithubObject):
         return self._deployments_url.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         """
         :type: string
         """
@@ -834,7 +834,7 @@ class Repository(CompletableGithubObject):
         return self._has_wiki.value
 
     @property
-    def homepage(self) -> str:
+    def homepage(self) -> str | None:
         """
         :type: string
         """
@@ -914,7 +914,7 @@ class Repository(CompletableGithubObject):
         return self._labels_url.value
 
     @property
-    def language(self) -> str:
+    def language(self) -> str | None:
         """
         :type: string
         """
@@ -930,7 +930,7 @@ class Repository(CompletableGithubObject):
         return self._languages_url.value
 
     @property
-    def license(self) -> License:
+    def license(self) -> License | None:
         self._completeIfNotSet(self._license)
         return self._license.value
 
@@ -972,7 +972,7 @@ class Repository(CompletableGithubObject):
         return self._milestones_url.value
 
     @property
-    def mirror_url(self) -> str:
+    def mirror_url(self) -> str | None:
         """
         :type: string
         """
@@ -1025,7 +1025,7 @@ class Repository(CompletableGithubObject):
         return self._open_issues_count.value
 
     @property
-    def organization(self) -> Organization:
+    def organization(self) -> Organization | None:
         """
         :type: :class:`github.Organization.Organization`
         """
@@ -1073,7 +1073,7 @@ class Repository(CompletableGithubObject):
         return self._pulls_url.value
 
     @property
-    def pushed_at(self) -> datetime:
+    def pushed_at(self) -> datetime | None:
         """
         :type: datetime
         """
@@ -1094,7 +1094,7 @@ class Repository(CompletableGithubObject):
         return self._role_name.value
 
     @property
-    def security_and_analysis(self) -> SecurityAndAnalysis:
+    def security_and_analysis(self) -> SecurityAndAnalysis | None:
         """
         :type: :class:`github.SecurityAndAnalysis.SecurityAndAnalysis`
         """
@@ -1219,12 +1219,12 @@ class Repository(CompletableGithubObject):
         return self._teams_url.value
 
     @property
-    def temp_clone_token(self) -> str:
+    def temp_clone_token(self) -> str | None:
         self._completeIfNotSet(self._temp_clone_token)
         return self._temp_clone_token.value
 
     @property
-    def template_repository(self) -> Repository:
+    def template_repository(self) -> Repository | None:
         self._completeIfNotSet(self._template_repository)
         return self._template_repository.value
 
@@ -1245,7 +1245,7 @@ class Repository(CompletableGithubObject):
         return self._trees_url.value
 
     @property
-    def updated_at(self) -> datetime:
+    def updated_at(self) -> datetime | None:
         """
         :type: datetime
         """
@@ -4664,15 +4664,17 @@ class Repository(CompletableGithubObject):
         """
         :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
         """
-        self.organization.attach_security_config_to_repositories(
-            id=id, scope="selected", selected_repository_ids=[self.id]
-        )
+        organization = self.organization
+        assert organization is not None, "organization is not set"
+        organization.attach_security_config_to_repositories(id=id, scope="selected", selected_repository_ids=[self.id])
 
     def detach_security_config(self) -> None:
         """
         :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
         """
-        self.organization.detach_security_config_from_repositories(selected_repository_ids=[self.id])
+        organization = self.organization
+        assert organization is not None, "organization is not set"
+        organization.detach_security_config_from_repositories(selected_repository_ids=[self.id])
 
     def get_security_config(self) -> RepoCodeSecurityConfig | None:
         """

@@ -75,7 +75,7 @@ class License(CompletableGithubObject):
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._permissions: Attribute[list[str]] = NotSet
-        self._spdx_id: Attribute[str] = NotSet
+        self._spdx_id: Attribute[str | None] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -132,7 +132,7 @@ class License(CompletableGithubObject):
         return self._permissions.value
 
     @property
-    def spdx_id(self) -> str:
+    def spdx_id(self) -> str | None:
         self._completeIfNotSet(self._spdx_id)
         return self._spdx_id.value
 

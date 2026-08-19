@@ -111,10 +111,10 @@ class Team(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._enterprise_id: Attribute[int] = NotSet
-        self._group_id: Attribute[int] = NotSet
-        self._group_name: Attribute[str] = NotSet
+        self._group_id: Attribute[int | None] = NotSet
+        self._group_name: Attribute[str | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._ldap_dn: Attribute[str] = NotSet
@@ -126,7 +126,7 @@ class Team(CompletableGithubObject):
         self._organization: Attribute[Organization] = NotSet
         self._organization_id: Attribute[int] = NotSet
         self._organization_selection_type: Attribute[str] = NotSet
-        self._parent: Attribute[Team] = NotSet
+        self._parent: Attribute[Team | None] = NotSet
         self._permission: Attribute[str] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._privacy: Attribute[str] = NotSet
@@ -151,7 +151,7 @@ class Team(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         self._completeIfNotSet(self._description)
         return self._description.value
 
@@ -161,12 +161,12 @@ class Team(CompletableGithubObject):
         return self._enterprise_id.value
 
     @property
-    def group_id(self) -> int:
+    def group_id(self) -> int | None:
         self._completeIfNotSet(self._group_id)
         return self._group_id.value
 
     @property
-    def group_name(self) -> str:
+    def group_name(self) -> str | None:
         self._completeIfNotSet(self._group_name)
         return self._group_name.value
 
@@ -226,7 +226,7 @@ class Team(CompletableGithubObject):
         return self._organization_selection_type.value
 
     @property
-    def parent(self) -> Team:
+    def parent(self) -> Team | None:
         self._completeIfNotSet(self._parent)
         return self._parent.value
 

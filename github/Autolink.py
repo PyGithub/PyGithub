@@ -64,7 +64,7 @@ class Autolink(NonCompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._is_alphanumeric: Attribute[bool] = NotSet
         self._key_prefix: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
         self._url_template: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -83,7 +83,7 @@ class Autolink(NonCompletableGithubObject):
         return self._key_prefix.value
 
     @property
-    def updated_at(self) -> datetime:
+    def updated_at(self) -> datetime | None:
         return self._updated_at.value
 
     @property

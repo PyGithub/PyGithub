@@ -59,9 +59,9 @@ class CodeScanTool(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._guid: Attribute[str] = NotSet
+        self._guid: Attribute[str | None] = NotSet
         self._name: Attribute[str] = NotSet
-        self._version: Attribute[str] = NotSet
+        self._version: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -73,7 +73,7 @@ class CodeScanTool(NonCompletableGithubObject):
         )
 
     @property
-    def guid(self) -> str:
+    def guid(self) -> str | None:
         return self._guid.value
 
     @property
@@ -81,7 +81,7 @@ class CodeScanTool(NonCompletableGithubObject):
         return self._name.value
 
     @property
-    def version(self) -> str:
+    def version(self) -> str | None:
         return self._version.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

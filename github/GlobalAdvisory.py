@@ -55,15 +55,15 @@ class GlobalAdvisory(AdvisoryBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._credits: Attribute[list[AdvisoryCreditDetailed]] = NotSet
-        self._epss: Attribute[dict[str, Any]] = NotSet
-        self._github_reviewed_at: Attribute[datetime] = NotSet
-        self._nvd_published_at: Attribute[datetime] = NotSet
-        self._references: Attribute[list[str]] = NotSet
-        self._repository_advisory_url: Attribute[str] = NotSet
-        self._source_code_location: Attribute[str] = NotSet
+        self._credits: Attribute[list[AdvisoryCreditDetailed] | None] = NotSet
+        self._epss: Attribute[dict[str, Any] | None] = NotSet
+        self._github_reviewed_at: Attribute[datetime | None] = NotSet
+        self._nvd_published_at: Attribute[datetime | None] = NotSet
+        self._references: Attribute[list[str] | None] = NotSet
+        self._repository_advisory_url: Attribute[str | None] = NotSet
+        self._source_code_location: Attribute[str | None] = NotSet
         self._type: Attribute[str] = NotSet
-        self._vulnerabilities: Attribute[list[AdvisoryVulnerability]] = NotSet
+        self._vulnerabilities: Attribute[list[AdvisoryVulnerability] | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"ghsa_id": self.ghsa_id, "summary": self.summary})
@@ -71,31 +71,31 @@ class GlobalAdvisory(AdvisoryBase):
     @property
     def credits(
         self,
-    ) -> list[AdvisoryCreditDetailed]:
+    ) -> list[AdvisoryCreditDetailed] | None:
         return self._credits.value
 
     @property
-    def epss(self) -> dict[str, Any]:
+    def epss(self) -> dict[str, Any] | None:
         return self._epss.value
 
     @property
-    def github_reviewed_at(self) -> datetime:
+    def github_reviewed_at(self) -> datetime | None:
         return self._github_reviewed_at.value
 
     @property
-    def nvd_published_at(self) -> datetime:
+    def nvd_published_at(self) -> datetime | None:
         return self._nvd_published_at.value
 
     @property
-    def references(self) -> list[str]:
+    def references(self) -> list[str] | None:
         return self._references.value
 
     @property
-    def repository_advisory_url(self) -> str:
+    def repository_advisory_url(self) -> str | None:
         return self._repository_advisory_url.value
 
     @property
-    def source_code_location(self) -> str:
+    def source_code_location(self) -> str | None:
         return self._source_code_location.value
 
     @property
@@ -103,7 +103,7 @@ class GlobalAdvisory(AdvisoryBase):
         return self._type.value
 
     @property
-    def vulnerabilities(self) -> list[AdvisoryVulnerability]:
+    def vulnerabilities(self) -> list[AdvisoryVulnerability] | None:
         return self._vulnerabilities.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
