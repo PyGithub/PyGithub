@@ -56,12 +56,13 @@ import email.utils
 import re
 import typing
 from abc import ABC
+from collections.abc import Callable
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Callable, Union, overload
+from typing import TYPE_CHECKING, Any, TypeGuard, Union, overload
 
-from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar
+from typing_extensions import ParamSpec, Protocol, Self, TypeVar
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -723,6 +724,16 @@ class CompletableGithubObject(GithubObject, ABC):
             return True
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        # populate url attribute with self-link
+        if "url" not in attributes:
+            self_link = attributes.get("_links", {}).get("self", {})
+            if self_link:
+                if isinstance(self_link, str):
+                    attributes["url"] = self_link
+                elif isinstance(self_link, dict):
+                    href = self_link.get("href")
+                    if href:
+                        attributes["url"] = href
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
 
@@ -829,3 +840,11 @@ def openapi_parameter(
         return fn
 
     return openapi_parameter_decorator
+
+
+# decorator to annotate methods with OpenAPI mapping information
+def ignore_return_type(*, ignore_type: str) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
+    def ignore_return_types_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+        return fn
+
+    return ignore_return_types_decorator
