@@ -455,6 +455,68 @@ class PullRequest(CompletableGithubObject):
         """
         return github.Issue.Issue(self._requester, url=self.issue_url)
 
+    def get_linked_issues(
+        self,
+        schema: str = "number",
+        *,
+        user_linked_only: bool = False,
+    ) -> PaginatedList[Issue]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>` for PullRequest.closingIssuesReferences
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+
+        schema_list = schema.split()
+        if "number" not in schema.split():
+            schema_list += ["number"]
+        schema = "\n".join(schema_list)
+
+        query = (
+            """
+            query($id: ID!, $user: Boolean, $first: Int, $last: Int, $before: String, $after: String) {
+              node(id: $id) {
+                ...on PullRequest {
+                  closingIssuesReferences(userLinkedOnly: $user, first: $first, last: $last, before: $before, after: $after) {
+                    totalCount
+                    pageInfo {
+                      startCursor
+                      endCursor
+                      hasNextPage
+                      hasPreviousPage
+                    }
+                    nodes {
+            """
+            + schema
+            + """
+                    }
+                  }
+                }
+              }
+            }
+            """
+        )
+
+        variables = {
+            "id": self.node_id,
+            "user": user_linked_only,
+        }
+
+        # GraphQL's `url` field is HTML, not REST API we need
+        def url_from_number(data: dict[str, Any]) -> dict[str, Any]:
+            if "url" in data:
+                data["html_url"] = data["url"]
+            data["url"] = f'{self._parentUrl(self.issue_url)}/{data["number"]}'
+            return data
+
+        return PaginatedList(
+            github.Issue.Issue,
+            self.requester,
+            graphql_query=query,
+            graphql_variables=variables,
+            list_item=["node", "closingIssuesReferences"],
+            attributesTransformer=url_from_number,
+        )
+
     def create_comment(self, body: str, commit: Commit, path: str, position: int) -> PullRequestComment:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_

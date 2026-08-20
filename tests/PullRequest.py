@@ -67,6 +67,7 @@ class PullRequest(Framework.TestCase):
         super().setUp()
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(31)
+        self.pull_with_links = self.repo.get_pull(3482)
 
         marco_repo = self.g.withLazy(True).get_repo("MarcoFalke/PyGithub")
         self.pullIssue256Closed = marco_repo.get_pull(1).complete()
@@ -677,3 +678,32 @@ class PullRequest(Framework.TestCase):
             },
             "clientMutationId": None,
         }
+
+    def testGetLinkedIssues(self):
+        issues = self.pull_with_links.get_linked_issues()
+        assert [issue.number for issue in issues] == [2567]
+
+    def testGetLinkedIssuesNone(self):
+        issues = self.pull.get_linked_issues()
+        assert [issue.number for issue in issues] == []
+
+    def testGetLinkedIssuesUser(self):
+        issues = self.pull_with_links.get_linked_issues(user_linked_only=True)
+        # TODO: Ask maintainer to add manual links
+        assert [issue.number for issue in issues] == []
+
+    def testGetLinkedIssuesComplete(self):
+        issues = self.pull_with_links.get_linked_issues()
+        # Triggers completion as title not fetched by default
+        # TODO: How to assert this?
+        assert [issue.title for issue in issues] == [
+            "Support GraphQL closingIssuesReferences",
+        ]
+
+    def testGetLinkedIssuesSchema(self):
+        issues = self.pull_with_links.get_linked_issues("title")
+        # No completion needed as custom schema fetches it in GraphQL query
+        # TODO: How to assert this?
+        assert [issue.title for issue in issues] == [
+            "Support GraphQL closingIssuesReferences",
+        ]

@@ -378,12 +378,80 @@ class Issue(CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    def _pull_url(self) -> str:
+        return "/pulls/".join(self.url.rsplit("/issues/", 1))
+
     def as_pull_request(self) -> PullRequest:
         """
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls>`_
         """
-        url = "/pulls/".join(self.url.rsplit("/issues/", 1))
-        return github.PullRequest.PullRequest(self._requester, url=url)
+        return github.PullRequest.PullRequest(self._requester, url=self._pull_url())
+
+    def get_linked_pull_requests(
+        self,
+        schema: str = "number",
+        *,
+        include_closed: bool = False,
+        user_linked_only: bool = False,
+        order_by_state: bool = False,
+    ) -> PaginatedList[PullRequest]:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>` for Issue.closedByPullRequestsReferences
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequest.PullRequest`
+        """
+
+        schema_list = schema.split()
+        if "number" not in schema.split():
+            schema_list += ["number"]
+        schema = "\n".join(schema_list)
+
+        query = (
+            """
+            query($id: ID!, $closed: Boolean, $user: Boolean, $order: Boolean, $first: Int, $last: Int, $before: String, $after: String) {
+              node(id: $id) {
+                ...on Issue {
+                  closedByPullRequestsReferences(includeClosedPrs: $closed, userLinkedOnly: $user, orderByState: $order, first: $first, last: $last, before: $before, after: $after) {
+                    totalCount
+                    pageInfo {
+                      startCursor
+                      endCursor
+                      hasNextPage
+                      hasPreviousPage
+                    }
+                    nodes {
+            """
+            + schema
+            + """
+                    }
+                  }
+                }
+              }
+            }
+            """
+        )
+
+        variables = {
+            "id": self.node_id,
+            "closed": include_closed,
+            "user": user_linked_only,
+            "order": order_by_state,
+        }
+
+        # GraphQL's `url` field is HTML, not REST API we need
+        def url_from_number(data: dict[str, Any]) -> dict[str, Any]:
+            if "url" in data:
+                data["html_url"] = data["url"]
+            data["url"] = f'{self._parentUrl(self._pull_url())}/{data["number"]}'
+            return data
+
+        return PaginatedList(
+            github.PullRequest.PullRequest,
+            self.requester,
+            graphql_query=query,
+            graphql_variables=variables,
+            list_item=["node", "closedByPullRequestsReferences"],
+            attributesTransformer=url_from_number,
+        )
 
     def add_to_assignees(self, *assignees: NamedUser | str) -> None:
         """
