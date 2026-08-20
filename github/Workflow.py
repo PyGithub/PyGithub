@@ -56,7 +56,7 @@ import github.GithubObject
 import github.NamedUser
 import github.Tag
 import github.WorkflowRun
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, ignore_return_type
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -77,7 +77,6 @@ class Workflow(CompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/workflow
-    - /components/schemas/workflow-dispatch-response
 
     """
 
@@ -158,7 +157,7 @@ class Workflow(CompletableGithubObject):
         ref: Branch | Tag | Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
-        return_run_details: Literal[False] = False,
+        return_run_details: Literal[False] = ...,
     ) -> bool:
         ...
 
@@ -168,18 +167,19 @@ class Workflow(CompletableGithubObject):
         ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
-        return_run_details: Literal[True] = True,
-    ) -> github.WorkflowRun.WorkflowRun:
+        return_run_details: Literal[True] = ...,
+    ) -> WorkflowRun:
         ...
 
     # v3: default throw to True
+    @ignore_return_type(ignore_type="WorkflowRun")
     def create_dispatch(
         self,
         ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
         return_run_details: bool = False,
-    ) -> bool | github.WorkflowRun.WorkflowRun:
+    ) -> bool | WorkflowRun:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
         Note: raises or return False without details on error, depending on the ``throw`` parameter.
