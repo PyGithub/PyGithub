@@ -70,7 +70,8 @@ class RequiredPullRequestReviews(Framework.TestCase):
 
     def testOrganizationOwnedTeam(self):
         required_pull_request_reviews = (
-            self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            self.g.withLazy(True)
+            .get_repo("PyGithub/PyGithub")
             .get_branch("integrations")
             .get_required_pull_request_reviews()
         )
