@@ -204,6 +204,15 @@ class Github(Framework.TestCase):
             ],
         )
 
+    def testGetGlobalAdvisoriesByEPSS(self):
+        self.assertListKeyEqual(
+            self.g.get_global_advisories(epss_percentage=">=0.5", epss_percentile=">=0.9"),
+            lambda a: a.ghsa_id,
+            [
+                "GHSA-gggm-66rh-pp98",
+            ],
+        )
+
     def testGetGlobalAdvisoriesManyFilters(self):
         cases = [
             {"cwes": [200, 900], "affects": ["directus", "made_up"], "modified": ">2023-07-01"},
