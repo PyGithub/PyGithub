@@ -3,6 +3,8 @@
 # Copyright 2021 Claire Johns <42869556+johnsc1@users.noreply.github.com>      #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 James Geiger <james-geiger@users.noreply.github.com>          #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -30,7 +32,7 @@ from . import Framework
 class IssueDependencies(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("EnricoMi/PyGithub", lazy=True)
+        self.repo = self.g.withLazy(True).get_repo("EnricoMi/PyGithub")
         self.issue = self.repo.get_issue(24).complete()
         self.blocking_issue = self.repo.get_issue(13).complete()
 

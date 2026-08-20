@@ -1,5 +1,6 @@
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2026 Matt Davis <35502728+matt-davis27@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #

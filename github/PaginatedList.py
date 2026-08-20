@@ -36,6 +36,8 @@
 # Copyright 2025 Sam <35731946+sam93210@users.noreply.github.com>              #
 # Copyright 2025 odedperezcodes <oded.perez.codes@gmail.com>                   #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

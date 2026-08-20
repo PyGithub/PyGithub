@@ -161,6 +161,38 @@ Delete a file in the repository
     >>> repo.delete_file(contents.path, "remove test", contents.sha, branch="test")
     {'commit': Commit(sha="0f40b0b4f31f62454f1758d7e6b384795e48fd96"), 'content': NotSet}
 
+Upload multiple files in a single commit
+----------------------------------------
+
+``create_file``/``update_file`` each create their own commit, so they are not
+suitable when several files need to change together atomically. Use the
+lower-level Git Data API (blobs, trees and commits) instead:
+
+.. code-block:: python
+
+    from github import InputGitTreeElement
+
+    repo = g.get_repo("me/my-repo")
+    branch = "main"
+
+    files_to_commit = {
+        "path/to/file_one.txt": "content of file one",
+        "path/to/file_two.txt": "content of file two",
+    }
+
+    ref = repo.get_git_ref(f"heads/{branch}")
+    base_tree = repo.get_git_tree(ref.object.sha)
+
+    element_list = [
+        InputGitTreeElement(path=path, mode="100644", type="blob", content=content)
+        for path, content in files_to_commit.items()
+    ]
+
+    tree = repo.create_git_tree(element_list, base_tree)
+    parent = repo.get_git_commit(ref.object.sha)
+    commit = repo.create_git_commit("Add multiple files in one commit", tree, [parent])
+    ref.edit(commit.sha)
+
 Get the top 10 referrers over the last 14 days
 ----------------------------------------------
 

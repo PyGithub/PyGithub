@@ -3,6 +3,8 @@
 # Copyright 2021 Claire Johns <42869556+johnsc1@users.noreply.github.com>      #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,7 +29,7 @@ from . import Framework
 
 class PullRequestReview1856(Framework.TestCase):
     def testDelete(self):
-        pumpkin_repo = self.g.get_repo("CS481-Team-Pumpkin/PyGithub", lazy=True)
+        pumpkin_repo = self.g.withLazy(True).get_repo("CS481-Team-Pumpkin/PyGithub")
         pumpkin_pull = pumpkin_repo.get_pull(4)
         pullreview = pumpkin_pull.get_review(631460061)
 

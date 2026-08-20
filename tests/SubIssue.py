@@ -3,6 +3,7 @@
 #                                                                              #
 # Copyright 2025 Changyong Um <e7217@naver.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -28,7 +29,7 @@ from . import Framework
 class SubIssue(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        self.repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
         self.issue = self.repo.get_issue(5)
 
     def testListSubIssues(self):

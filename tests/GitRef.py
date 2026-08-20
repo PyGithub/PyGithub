@@ -15,6 +15,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Cristiano Salerno <119511125+csalerno-asml@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Laura Lacort Zimmermann <81427562+laurazimrn@users.noreply.github.com>#
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,6 +36,8 @@
 ################################################################################
 
 from __future__ import annotations
+
+from github import InputGitTreeElement
 
 from . import Framework
 
@@ -75,6 +78,28 @@ class GitRef(Framework.TestCase):
 
     def testEditWithForce(self):
         self.ref.edit("4303c5b90e2216d927155e9609436ccb8984c495", force=True)
+
+    def testExample(self):
+        repo = self.g.get_repo("EnricoMi/PyGithub")
+        branch = "commit-with-multiple-files"
+
+        files_to_commit = {
+            "path/to/file_one.txt": "content of file one",
+            "path/to/file_two.txt": "content of file two",
+        }
+
+        ref = repo.get_git_ref(f"heads/{branch}")
+        base_tree = repo.get_git_tree(ref.object.sha)
+
+        element_list = [
+            InputGitTreeElement(path=path, mode="100644", type="blob", content=content)
+            for path, content in files_to_commit.items()
+        ]
+
+        tree = repo.create_git_tree(element_list, base_tree)
+        parent = repo.get_git_commit(ref.object.sha)
+        commit = repo.create_git_commit("Add multiple files in one commit", tree, [parent])
+        ref.edit(commit.sha)
 
     def testDelete(self):
         self.ref.delete()

@@ -12,6 +12,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -44,7 +45,7 @@ from . import Framework
 class GitReleaseAsset(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.release = self.g.get_repo("EnricoMi/PyGithub", lazy=True).get_release(197548596)
+        self.release = self.g.withLazy(True).get_repo("EnricoMi/PyGithub").get_release(197548596)
         self.asset = self.release.assets[0]
 
     def testAttributes(self):

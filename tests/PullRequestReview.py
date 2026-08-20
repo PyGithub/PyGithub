@@ -24,6 +24,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -54,7 +56,7 @@ class PullRequestReview(Framework.TestCase):
     def setUp(self):
         super().setUp()
 
-        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        self.repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(538)
 
         # Test ability to create a review

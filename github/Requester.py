@@ -65,6 +65,8 @@
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
+# Copyright 2026 Ville Skyttä <ville.skytta@iki.fi>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -91,7 +93,6 @@ import json
 import logging
 import mimetypes
 import os
-import re
 import threading
 import time
 import urllib
@@ -408,7 +409,7 @@ class Requester:
         else:
             self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})  # type: ignore
         self.__port = o.port
-        self.__prefix = o.path
+        self.__prefix = o.path.rstrip("/")
         self.__timeout = timeout
         self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__pool_size = pool_size
@@ -475,8 +476,8 @@ class Requester:
     def get_graphql_prefix(path: str | None) -> str:
         if path is None or path in ["", "/"]:
             path = ""
-        if path.endswith(("/v3", "/v3/")):
-            path = Requester.remove_suffix(path, "/")
+        path = path.rstrip("/")
+        if path.endswith("/v3"):
             path = Requester.remove_suffix(path, "/v3")
         return path + "/graphql"
 
@@ -959,7 +960,7 @@ class Requester:
         exc = GithubException.GithubException
         if status == 401 and lc_message == "bad credentials":
             exc = GithubException.BadCredentialsException
-        elif status == 401 and Consts.headerOTP in headers and re.match(r".*required.*", headers[Consts.headerOTP]):
+        elif status == 401 and Consts.headerOTP in headers and "required" in headers[Consts.headerOTP]:
             exc = GithubException.TwoFactorException
         elif status == 403 and lc_message.startswith("missing or invalid user agent string"):
             exc = GithubException.BadUserAgentException

@@ -25,6 +25,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Mathieu Parent <math.parent@etik.com>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -221,6 +223,11 @@ class GitRelease(Framework.TestCase):
 
     def testGetLatestRelease(self):
         latest_release = self.repo.get_latest_release()
+        self.assertEqual(latest_release.tag_name, tag)
+
+    def testGetLazyLatestRelease(self):
+        repo = self.g.get_user(user, lazy=True).get_repo(repo_name)
+        latest_release = repo.get_latest_release()
         self.assertEqual(latest_release.tag_name, tag)
 
     def testGetAssets(self):

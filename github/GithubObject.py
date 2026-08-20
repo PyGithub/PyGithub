@@ -31,6 +31,7 @@
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -840,3 +841,11 @@ def openapi_parameter(
         return fn
 
     return openapi_parameter_decorator
+
+
+# decorator to annotate methods with OpenAPI mapping information
+def ignore_return_type(*, ignore_type: str) -> Callable[[Callable[Param, RetType]], Callable[Param, RetType]]:
+    def ignore_return_types_decorator(fn: Callable[Param, RetType]) -> Callable[Param, RetType]:
+        return fn
+
+    return ignore_return_types_decorator
