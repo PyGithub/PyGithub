@@ -30,7 +30,7 @@ from . import Framework
 class IssueDependencies(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.repo = self.g.get_repo("EnricoMi/PyGithub", lazy=True)
+        self.repo = self.g.withLazy(True).get_repo("EnricoMi/PyGithub")
         self.issue = self.repo.get_issue(24).complete()
         self.blocking_issue = self.repo.get_issue(13).complete()
 
