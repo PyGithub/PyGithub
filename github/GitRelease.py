@@ -449,7 +449,8 @@ class GitRelease(CompletableGithubObject):
         elif "url" in attributes and attributes["url"] and isinstance(attributes["url"], str):
             quoted_tag_name = attributes["url"].split("/")[-1]
             tag_name = urllib.parse.unquote(quoted_tag_name)
-            self._tag_name = self._makeStringAttribute(tag_name)
+            if tag_name != "latest":
+                self._tag_name = self._makeStringAttribute(tag_name)
         if "tarball_url" in attributes:
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "target_commitish" in attributes:
