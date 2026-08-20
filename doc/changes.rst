@@ -4,6 +4,75 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.10.0 (August 20, 2026)
+--------------------------------
+
+Notable changes
+^^^^^^^^^^^^^^^
+
+Drop Python 3.9 support due to End-of-Life
+""""""""""""""""""""""""""""""""""""""""""
+Python 3.9 reached its end-of-life October 31, 2025. Support has been removed with this release.
+
+New Features
+^^^^^^^^^^^^
+* Allow to specify the Github API version (`#3480 <https://github.com/PyGithub/PyGithub/pull/3480>`_) (`546b0ee7e <https://github.com/PyGithub/PyGithub/commit/546b0ee7e>`_)
+* Add issue dependency endpoints (`#3477 <https://github.com/PyGithub/PyGithub/pull/3477>`_) (`b0ee6e0c7 <https://github.com/PyGithub/PyGithub/commit/b0ee6e0c7>`_)
+
+Improvements
+^^^^^^^^^^^^
+* Add ``incomplete_results`` property to ``PaginatedList`` (`#3396 <https://github.com/PyGithub/PyGithub/pull/3396>`_)
+* Add ``WorkflowRun.get_attempt`` and ``Repository.get_workflow_job`` functions (`#3401 <https://github.com/PyGithub/PyGithub/pull/3401>`_) (`fdf9ed869 <https://github.com/PyGithub/PyGithub/commit/fdf9ed869>`_)
+* Add support for ``head_repo`` when creating pull request (`#3479 <https://github.com/PyGithub/PyGithub/pull/3479>`_)
+* Add ``max_rate_limit_wait`` to ``GithubRetry`` to cap rate limit backoff (`#3540 <https://github.com/PyGithub/PyGithub/pull/3540>`_) (`8b50a098f <https://github.com/PyGithub/PyGithub/commit/8b50a098f>`_)
+* Add ``return_run_details`` parameter to ``Workflow.create_dispatch`` (`#3471 <https://github.com/PyGithub/PyGithub/pull/3471>`_) (`162ce9d0e <https://github.com/PyGithub/PyGithub/commit/162ce9d0e>`_)
+* Update ``SecurityAndAnalysis`` (`#3503 <https://github.com/PyGithub/PyGithub/pull/3503>`_)
+
+Bug Fixes
+^^^^^^^^^
+* Fix duplicated URL in ``OrganizationVariable.edit()`` and ``OrganizationSecret.edit()`` (`#3472 <https://github.com/PyGithub/PyGithub/pull/3472>`_)
+* Fix ``GithubException.__str__`` decoding bytes data (`#3494 <https://github.com/PyGithub/PyGithub/pull/3494>`_)
+* Fixing ``OrganizationVariable.value`` by properly using base class (`#3507 <https://github.com/PyGithub/PyGithub/pull/3507>`_)
+* Parse only the query string for ``PaginatedList.totalCount`` (`#3518 <https://github.com/PyGithub/PyGithub/pull/3518>`_)
+* Encode boolean query parameters as lowercase (`#3516 <https://github.com/PyGithub/PyGithub/pull/3516>`_) (`f4e29299e <https://github.com/PyGithub/PyGithub/commit/f4e29299e>`_)
+* Fix doubled slash in request path for ``base_url`` with trailing slash (`#3537 <https://github.com/PyGithub/PyGithub/pull/3537>`_) (`c15572f23 <https://github.com/PyGithub/PyGithub/commit/c15572f23>`_)
+* Fix ``WorkflowRun`` schema suggestion (`#3559 <https://github.com/PyGithub/PyGithub/pull/3559>`_) (`5f707d64b <https://github.com/PyGithub/PyGithub/commit/5f707d64b>`_)
+* Fix OAuth2 authorization ``state`` / ``code_verifier`` parameters (`#3440 <https://github.com/PyGithub/PyGithub/pull/3440>`_) (`4785224bc <https://github.com/PyGithub/PyGithub/commit/4785224bc>`_)
+* Allow creating custom property with ``values_editable_by`` param (`#3548 <https://github.com/PyGithub/PyGithub/pull/3548>`_)
+* Fix ``OrganizationSecret.edit()`` to seal the value and use ``PUT`` (`#3529 <https://github.com/PyGithub/PyGithub/pull/3529>`_)
+* Fix lazy retrieval of latest tag name (`#3487 <https://github.com/PyGithub/PyGithub/pull/3487>`_) (`33071b35d <https://github.com/PyGithub/PyGithub/commit/33071b35d>`_)
+* Fix typing and typos (`#3485 <https://github.com/PyGithub/PyGithub/pull/3485>`_) (`fd7abf6a7 <https://github.com/PyGithub/PyGithub/commit/fd7abf6a7>`_)
+
+Maintenance
+^^^^^^^^^^^
+* Add support for Python 3.15 and drop EOL 3.9 (`#3551 <https://github.com/PyGithub/PyGithub/pull/3551>`_) (`5e2de3144 <https://github.com/PyGithub/PyGithub/commit/5e2de3144>`_)
+* Move self-link awareness into ``CompletableGithubObject`` (`#3432 <https://github.com/PyGithub/PyGithub/pull/3432>`_)
+* Add documentation for agents, add Claude skills (`#3509 <https://github.com/PyGithub/PyGithub/pull/3509>`_) (`28f140d10 <https://github.com/PyGithub/PyGithub/commit/28f140d10>`_)
+* Add ``sphinx-copybutton`` for code blocks (`#3493 <https://github.com/PyGithub/PyGithub/pull/3493>`_)
+* Add support to OpenAPI script for applying schema to methods (`#3374 <https://github.com/PyGithub/PyGithub/pull/3374>`_) (`b7a6d2324 <https://github.com/PyGithub/PyGithub/commit/b7a6d2324>`_)
+* Improve OpenAPI apply properties and methods (`#3495 <https://github.com/PyGithub/PyGithub/pull/3495>`_)
+* Fix OpenAPI method verb detection (`#3496 <https://github.com/PyGithub/PyGithub/pull/3496>`_)
+* Add OpenAPI script tests (`#3489 <https://github.com/PyGithub/PyGithub/pull/3489>`_) (`09242d9b0 <https://github.com/PyGithub/PyGithub/commit/09242d9b0>`_)
+* Fix OpenAPI apply method (`#3498 <https://github.com/PyGithub/PyGithub/pull/3498>`_) (`8f8697235 <https://github.com/PyGithub/PyGithub/commit/8f8697235>`_)
+* Reordering OpenAPI test sequence (`#3500 <https://github.com/PyGithub/PyGithub/pull/3500>`_) (`ecd236fc5 <https://github.com/PyGithub/PyGithub/commit/ecd236fc5>`_)
+* Apply typing convention (`#3504 <https://github.com/PyGithub/PyGithub/pull/3504>`_) (`8d606e716 <https://github.com/PyGithub/PyGithub/commit/8d606e716>`_)
+* Bump ``mypy`` Python version to 3.12 (`#3505 <https://github.com/PyGithub/PyGithub/pull/3505>`_)
+* Use ``@overload`` to type ``get_user`` (`#3502 <https://github.com/PyGithub/PyGithub/pull/3502>`_)
+* Add overload type annotations (`#3506 <https://github.com/PyGithub/PyGithub/pull/3506>`_) (`42df05f5f <https://github.com/PyGithub/PyGithub/commit/42df05f5f>`_)
+* Simplify ``OrganizationVariable`` (`#3508 <https://github.com/PyGithub/PyGithub/pull/3508>`_)
+* Add OpenAPI script filename option to create class (`#3512 <https://github.com/PyGithub/PyGithub/pull/3512>`_)
+* OpenAPI script improvements (`#3511 <https://github.com/PyGithub/PyGithub/pull/3511>`_) (`a7ff0c0ad <https://github.com/PyGithub/PyGithub/commit/a7ff0c0ad>`_)
+* Make OpenAPI index file deterministic (`#3514 <https://github.com/PyGithub/PyGithub/pull/3514>`_)
+* Add more OpenAPI script tests (`#3501 <https://github.com/PyGithub/PyGithub/pull/3501>`_) (`8ab2a1f42 <https://github.com/PyGithub/PyGithub/commit/8ab2a1f42>`_)
+* Make unified diffs of run path (`#3515 <https://github.com/PyGithub/PyGithub/pull/3515>`_) (`e36ffcbb0 <https://github.com/PyGithub/PyGithub/commit/e36ffcbb0>`_)
+* CI: Upgrade Github actions, pin to commit SHAs by @EnricoMi with @Copilot in https://github.com/PyGithub/PyGithub/pull/3552 (`#CI: Upgrade Github actions, pin to commit SHAs by @EnricoMi with @Copilot in https://github.com/PyGithub/PyGithub/pull/3552 <https://github.com/PyGithub/PyGithub/pull/CI: Upgrade Github actions, pin to commit SHAs by @EnricoMi with @Copilot in https://github.com/PyGithub/PyGithub/pull/3552>`_)
+* Use simple str contains instead of re in requester 401 OTP check (`#3541 <https://github.com/PyGithub/PyGithub/pull/3541>`_) (`675468209 <https://github.com/PyGithub/PyGithub/commit/675468209>`_)
+* Remove deprecated usage of ``lazy`` argument in ``get_repo`` test calls (`#3555 <https://github.com/PyGithub/PyGithub/pull/3555>`_) (`b03e68366 <https://github.com/PyGithub/PyGithub/commit/b03e68366>`_)
+* docs: add exception handling example (`#3543 <https://github.com/PyGithub/PyGithub/pull/3543>`_) (`82809291e <https://github.com/PyGithub/PyGithub/commit/82809291e>`_)
+* docs: add example for uploading multiple files in a single commit (`#3545 <https://github.com/PyGithub/PyGithub/pull/3545>`_) (`c63d09e26 <https://github.com/PyGithub/PyGithub/commit/c63d09e26>`_)
+
+**Full Changelog**: https://github.com/PyGithub/PyGithub/compare/v2.9.1...v2.10.0
+
 Version 2.9.1 (April 14, 2026)
 ------------------------------
 
