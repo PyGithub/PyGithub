@@ -38,6 +38,7 @@ from github.PaginatedList import PaginatedList
 from github.Secret import Secret
 
 if TYPE_CHECKING:
+    from github.PublicKey import PublicKey
     from github.Repository import Repository
 
 
@@ -130,7 +131,7 @@ class OrganizationSecret(Secret):
         )
         return status in (201, 204)
 
-    def get_public_key(self, secret_type: str = "actions") -> github.PublicKey.PublicKey:
+    def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
         :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/actions/secrets#get-an-organization-public-key>`_
         :calls: `GET /orgs/{org}/dependabot/secrets/public-key <https://docs.github.com/en/rest/dependabot/secrets#get-an-organization-public-key>`_
