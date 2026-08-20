@@ -57,6 +57,7 @@
 # Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
 # Copyright 2025 Ryan Peach <github.essential257@passmail.net>                 #
 # Copyright 2025 a-sido <andrei.sidorenko.1993@gmail.com>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

@@ -50,6 +50,9 @@
 # Copyright 2025 Pavel Abramov <31950564+uncleDecart@users.noreply.github.com> #
 # Copyright 2025 Zachary <6599715+interifter@users.noreply.github.com>         #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Jay Chawla <92621202+chawlajay9@users.noreply.github.com>     #
+# Copyright 2026 Krishna Chaitanya <krishnabkc15@gmail.com>                    #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

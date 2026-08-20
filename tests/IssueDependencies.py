@@ -3,6 +3,8 @@
 # Copyright 2021 Claire Johns <42869556+johnsc1@users.noreply.github.com>      #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 James Geiger <james-geiger@users.noreply.github.com>          #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
