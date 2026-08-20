@@ -279,10 +279,16 @@ class PaginatedList(PaginatedListBase[T]):
             lastUrl = links.get("last")
 
             # update totalCount
-            if lastUrl:
+            # Prefer the count reported directly in the response body (e.g. "total_count" for search
+            # endpoints) over a count derived from the "last" page link: for endpoints such as search,
+            # which cap the number of items actually reachable via pagination (e.g. at 1000 results),
+            # the "last" link only reflects that reachable cap, while the body reports the true total.
+            # This also keeps totalCount consistent with the value _getPage() computes once a page has
+            # been fetched, which always trusts the body over the link header.
+            if data and self.__total_count_item in data:
+                self.__totalCount = data[self.__total_count_item]
+            elif lastUrl:
                 self.__totalCount = int(Requester.get_parameters_of_url(lastUrl)["page"][0])
-            elif data and "total_count" in data:
-                self.__totalCount = data["total_count"]
             elif data:
                 if isinstance(data, dict):
                     data = data[self.__list_item]

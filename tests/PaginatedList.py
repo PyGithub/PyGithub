@@ -336,6 +336,15 @@ class PaginatedList(Framework.TestCase):
         # Should return the actual count from JSON, not 0
         self.assertEqual(issues.totalCount, 1)
 
+    def testTotalCountWithSearchResultsCappedAtMax(self):
+        # Regression test for https://github.com/PyGithub/PyGithub/issues/1309:
+        # the Search API only lets you page through the first 1000 results of a
+        # search, so with per_page=1 the "last" page link caps out at page 1000
+        # even when the real total (reported in the body's total_count) is much
+        # higher. totalCount must reflect the real total, not the reachable cap.
+        issues = self.g.search_issues("commit:example_sha")
+        self.assertEqual(issues.totalCount, 3041)
+
     def doTestSearchCompleteness(self, incomplete_results: bool):
         self.g.per_page = 5
 
