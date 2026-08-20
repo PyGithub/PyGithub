@@ -6,7 +6,7 @@ runs:
   using: 'composite'
   steps:
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
       with:
         python-version: "3.x"
     - run: |
@@ -14,7 +14,7 @@ runs:
         pip install -e .
         pip install -r requirements/types.txt
       shell: bash
-    - uses: liskin/gh-problem-matcher-wrap@v2
+    - uses: liskin/gh-problem-matcher-wrap@d31bb388d13cf879e93f878cb2550299f0afb460  # v4.0.0
       with:
         action: add
         linters: mypy
