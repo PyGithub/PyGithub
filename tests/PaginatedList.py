@@ -24,6 +24,9 @@
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 odedperezcodes <oded.perez.codes@gmail.com>                   #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
