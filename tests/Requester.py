@@ -455,23 +455,33 @@ class Requester(Framework.TestCase):
             self.assertEqual(exc.exception.args, (arg,))
 
     def testMakeAbsoluteUrl(self):
-        # default github.com requester
+        # default github.com requester (empty prefix)
         requester = self.g.requester
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("/request")
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("/request?param=value")
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("https://github.com/api/v3/request")
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("https://github.com/api/v3/request?param=value")
-        assert "/request", requester.__makeAbsoluteUrl("https://github.com/request?param=value")
+        self.assertEqual("/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+        self.assertEqual("/request", requester.__makeAbsoluteUrl("https://github.com/request"))
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("https://github.com/request?param=value"))
 
-        # custom (Enterprise) requester with different prefix
+        # default base_url with a trailing slash must not produce a doubled slash
+        requester = github.Github(base_url="https://api.github.com/").requester
+        self.assertEqual("/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+
+        # GHE requester with /api/v3 prefix and a trailing slash
+        requester = github.Github(base_url="https://ghe.example.com/api/v3/").requester
+        self.assertEqual("/api/v3/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/api/v3/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+
+        # custom (Enterprise) requester with different prefix and a trailing slash
         requester = github.Github(base_url="https://api.enterprise.ghe.com/github-api/").requester
-        assert "/github-api/request", requester.__makeAbsoluteUrl("/request")
-        assert "/github-api/request", requester.__makeAbsoluteUrl("/request?param=value")
-        assert "/github-api/request", requester.__makeAbsoluteUrl("https://api.enterprise.ghe.com/github-api/request")
-        assert "/github-api/request", requester.__makeAbsoluteUrl(
-            "https://api.enterprise.ghe.com/github-api/request?param=value"
+        self.assertEqual("/github-api/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/github-api/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+        # absolute URLs returned by the server (pagination links) pass through unchanged
+        self.assertEqual(
+            "/github-api/request",
+            requester.__makeAbsoluteUrl("https://api.enterprise.ghe.com/github-api/request"),
         )
-        assert "/request", requester.__makeAbsoluteUrl("https://github.com/request?param=value")
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("https://github.com/request?param=value"))
 
     PrimaryRateLimitErrors = [
         "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
