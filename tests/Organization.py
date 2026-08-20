@@ -663,9 +663,32 @@ class Organization(Framework.TestCase):
         variable = self.org.get_variable("variable-name")
         self.assertTrue(variable.edit("variable-value-updated"))
 
-    def testEditSecret(self):
+    @mock.patch("github.PublicKey.encrypt")
+    def testEditSecret(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
         secret = self.org.get_secret("secret-name")
+        # The edit must seal the value via the org public key and PUT
+        # {key_id, encrypted_value, visibility}; it must never send the plaintext value.
         self.assertTrue(secret.edit("secret-value-updated"))
+        # the plaintext value is passed through the public key encryption, never sent raw
+        self.assertEqual(encrypt.call_count, 1)
+        self.assertIn("secret-value-updated", encrypt.call_args.args)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testEditSecretSelected(self, encrypt):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = self.org.get_secret("secret-name")
+        self.assertTrue(
+            secret.edit(
+                "secret-value-updated",
+                visibility="selected",
+                secret_type="actions",
+                selected_repositories=repos,
+            )
+        )
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateActionsSecret(self, encrypt):
