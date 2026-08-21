@@ -3848,7 +3848,9 @@ class Repository(CompletableGithubObject):
         else:
             assignee = urllib.parse.quote(assignee, safe="")
 
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/assignees/{assignee}")
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"{self.url}/assignees/{assignee}", valid_codes={204, 404}
+        )
         return status == 204
 
     def has_in_collaborators(self, collaborator: str | NamedUser) -> bool:
@@ -3864,7 +3866,9 @@ class Repository(CompletableGithubObject):
         else:
             collaborator = urllib.parse.quote(collaborator, safe="")
 
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/collaborators/{collaborator}")
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"{self.url}/collaborators/{collaborator}", valid_codes={204, 404}
+        )
         return status == 204
 
     def _legacy_convert_issue(self, attributes: dict[str, Any]) -> dict[str, Any]:

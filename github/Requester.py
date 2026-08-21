@@ -668,6 +668,48 @@ class Requester:
             ),
         )
 
+    def requestJsonAndValidateStatus(
+        self,
+        verb: str,
+        url: str,
+        parameters: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        input: Any | None = None,
+        valid_codes: set[int] = frozenset({200}),
+        follow_302_redirect: bool = False,
+    ) -> tuple[int, dict[str, Any], Any]:
+        """
+        Send a request with a JSON body, treating any status code in ``valid_codes`` as non-error.
+
+        This is similar to :meth:`requestJsonAndCheck`, but it also returns the response
+        status code and lets the caller decide which status codes count as valid, rather
+        than assuming only 2xx is valid. Any status code that is not listed in
+        ``valid_codes`` still raises :class:`GithubException`, so real errors (bad
+        credentials, forbidden, rate limiting, etc.) are never silently swallowed.
+
+        This is useful for endpoints where the API reuses a status code that would
+        normally mean "error" to instead mean something else, e.g.
+        ``GET .../pulls/{number}/merge`` returns 204 if the pull request is merged and
+        404 if it is not merged (rather than 404 meaning the pull request was not found).
+
+        :param valid_codes: status codes that should be treated as valid, non-error responses
+        :return: ``(status: int, headers: dict, JSON Response: Any)``
+        :raises: :class:`GithubException` for any status code not in ``valid_codes``
+        """
+        status, responseHeaders, output = self.requestJson(
+            verb,
+            url,
+            parameters,
+            headers,
+            input,
+            self.__customConnection(url),
+            follow_302_redirect=follow_302_redirect,
+        )
+        data = self.__structuredFromJson(output)
+        if status not in valid_codes:
+            raise self.createException(status, responseHeaders, data)
+        return status, responseHeaders, data
+
     def requestMultipartAndCheck(
         self,
         verb: str,
