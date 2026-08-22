@@ -189,7 +189,7 @@ class PullRequest(CompletableGithubObject):
         self._mergeable_state: Attribute[str] = NotSet
         self._merged: Attribute[bool] = NotSet
         self._merged_at: Attribute[datetime | None] = NotSet
-        self._merged_by: Attribute[NamedUser] = NotSet
+        self._merged_by: Attribute[NamedUser | None] = NotSet
         self._milestone: Attribute[Milestone] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
@@ -366,7 +366,7 @@ class PullRequest(CompletableGithubObject):
         return self._merged_at.value
 
     @property
-    def merged_by(self) -> NamedUser:
+    def merged_by(self) -> NamedUser | None:
         self._completeIfNotSet(self._merged_by)
         return self._merged_by.value
 
