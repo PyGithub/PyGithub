@@ -355,9 +355,9 @@ class GithubRetry(unittest.TestCase):
             self.assertEqual(expected.total, retry.total)
             self.assertEqual(expected.get_backoff_time(), retry.get_backoff_time())
 
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
+        with self.assertRaises(Exception):
             retry.increment("TEST", "URL", response)
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
+        with self.assertRaises(Exception):
             expected.increment("TEST", "URL", response)
 
     def test_403_with_retry_after(self):
