@@ -30,7 +30,7 @@ dynamic = ["version"]
 
 dependencies = [
   "pynacl>=1.4.0",
-  "niquests>=3,<4",
+  "niquests>=3.12,<4",
   "pyjwt[crypto]>=2.4.0",
   "typing-extensions>=4.5.0",
 ]
