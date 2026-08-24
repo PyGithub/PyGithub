@@ -38,11 +38,11 @@
 import time  # NOQA
 
 import requests  # NOQA
-from niquests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts
 from github.Auth import AppInstallationAuth, Login
+from github.requestlib import urllib3
 
 from . import Framework
 
@@ -176,7 +176,7 @@ class GithubIntegration(Framework.BasicTestCase):
     def testGetGithubForInstallation(self):
         # with verify=False, urllib3.connectionpool rightly may issue an InsecureRequestWarning
         # we ignore InsecureRequestWarning from urllib3.connectionpool
-        with self.ignoreWarning(category=InsecureRequestWarning, module="urllib3.connectionpool"):
+        with self.ignoreWarning(category=urllib3.exceptions.InsecureRequestWarning, module="urllib3.connectionpool"):
             kwargs = dict(
                 auth=github.Auth.AppAuth(APP_ID, PRIVATE_KEY),
                 # http protocol used to deviate from default base url, recording data might require https
