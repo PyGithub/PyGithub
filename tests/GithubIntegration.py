@@ -37,8 +37,6 @@
 
 import time  # NOQA
 
-import requests  # NOQA
-
 import github
 from github import Consts
 from github.Auth import AppInstallationAuth, Login
