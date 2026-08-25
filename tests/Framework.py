@@ -334,6 +334,12 @@ class BasicTestCase(unittest.TestCase):
         if path is None:
             return
         record_mode = "all" if self.recordMode else "none"
+        if self.recordMode and os.path.exists(path):
+            # vcrpy's "all" record mode never plays back existing interactions, but it still
+            # loads them from disk and keeps them in Cassette.data -- so without this, recording
+            # over an existing replay file would append the freshly recorded interactions after
+            # the stale ones instead of replacing them.
+            os.remove(path)
         cassetteCm = _vcr.use_cassette(path, record_mode=record_mode)
         self.__cassette = cassetteCm.__enter__()
         self.__cassetteCm = cassetteCm
