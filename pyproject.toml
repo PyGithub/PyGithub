@@ -41,10 +41,10 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 
 [project.optional-dependencies]
 integrations = []
-# requests and niquests are mutually exclusive HTTP backends (see github/requestlib): install
-# exactly one, e.g. `pip install PyGithub[requests]` (the default/recommended choice) or
-# `pip install PyGithub[niquests]`. pip has no notion of a default extra, so a bare
-# `pip install PyGithub` installs neither and PyGithub will fail to import until you pick one.
+# requests and niquests are mutually exclusive HTTP backends: install exactly one,
+# e.g. `pip install PyGithub[requests]` or `pip install PyGithub[niquests]`.
+# Note that pip has no notion of a default extra, so a bare `pip install PyGithub` installs neither
+# and PyGithub will fail to import until you pick one.
 requests = ["requests>=2.14.0"]
 niquests = ["niquests>=3.12,<4"]
 
