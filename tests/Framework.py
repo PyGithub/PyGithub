@@ -78,7 +78,7 @@ from vcr.matchers import requests_match
 
 import github
 from github import Consts
-from github.requestlib import CaseInsensitiveDict, Url
+from github.requestlib import CaseInsensitiveDict
 
 from . import VcrSerializer
 
