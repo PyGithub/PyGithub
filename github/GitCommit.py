@@ -76,9 +76,9 @@ class GitCommit(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[GitAuthor] = NotSet
+        self._author: Attribute[GitAuthor | None] = NotSet
         self._comment_count: Attribute[int] = NotSet
-        self._committer: Attribute[GitAuthor] = NotSet
+        self._committer: Attribute[GitAuthor | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._message: Attribute[str] = NotSet
@@ -99,7 +99,7 @@ class GitCommit(CompletableGithubObject):
         return self.sha
 
     @property
-    def author(self) -> GitAuthor:
+    def author(self) -> GitAuthor | None:
         self._completeIfNotSet(self._author)
         return self._author.value
 
@@ -109,7 +109,7 @@ class GitCommit(CompletableGithubObject):
         return self._comment_count.value
 
     @property
-    def committer(self) -> GitAuthor:
+    def committer(self) -> GitAuthor | None:
         self._completeIfNotSet(self._committer)
         return self._committer.value
 

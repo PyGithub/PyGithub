@@ -92,7 +92,7 @@ class Migration(CompletableGithubObject):
         self._lock_repositories: Attribute[bool] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._org_metadata_only: Attribute[bool] = NotSet
-        self._owner: Attribute[NamedUser | Organization] = NotSet
+        self._owner: Attribute[NamedUser | Organization | None] = NotSet
         self._repositories: Attribute[list[Repository]] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -166,7 +166,7 @@ class Migration(CompletableGithubObject):
         return self._org_metadata_only.value
 
     @property
-    def owner(self) -> NamedUser | Organization:
+    def owner(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
@@ -267,7 +267,7 @@ class Migration(CompletableGithubObject):
                 attributes["owner"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore
         if "repositories" in attributes:
             self._repositories = self._makeListOfClassesAttribute(
                 github.Repository.Repository, attributes["repositories"]

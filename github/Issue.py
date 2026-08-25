@@ -134,11 +134,11 @@ class Issue(CompletableGithubObject):
         self._assignee: Attribute[NamedUser | None] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
         self._author_association: Attribute[str] = NotSet
-        self._body: Attribute[str] = NotSet
+        self._body: Attribute[str | None] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
-        self._closed_at: Attribute[datetime] = NotSet
-        self._closed_by: Attribute[NamedUser] = NotSet
+        self._closed_at: Attribute[datetime | None] = NotSet
+        self._closed_by: Attribute[NamedUser | None] = NotSet
         self._comments: Attribute[int] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
@@ -150,11 +150,11 @@ class Issue(CompletableGithubObject):
         self._labels: Attribute[list[Label]] = NotSet
         self._labels_url: Attribute[str] = NotSet
         self._locked: Attribute[bool] = NotSet
-        self._milestone: Attribute[Milestone] = NotSet
+        self._milestone: Attribute[Milestone | None] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
-        self._parent_issue_url: Attribute[str] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._parent_issue_url: Attribute[str | None] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp | None] = NotSet
         self._pull_request: Attribute[IssuePullRequest] = NotSet
         self._reactions: Attribute[dict] = NotSet
         self._repository: Attribute[Repository] = NotSet
@@ -165,10 +165,10 @@ class Issue(CompletableGithubObject):
         self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._timeline_url: Attribute[str] = NotSet
         self._title: Attribute[str] = NotSet
-        self._type: Attribute[IssueType] = NotSet
+        self._type: Attribute[IssueType | None] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -199,7 +199,7 @@ class Issue(CompletableGithubObject):
         return self._author_association.value
 
     @property
-    def body(self) -> str:
+    def body(self) -> str | None:
         self._completeIfNotSet(self._body)
         return self._body.value
 
@@ -214,7 +214,7 @@ class Issue(CompletableGithubObject):
         return self._body_text.value
 
     @property
-    def closed_at(self) -> datetime:
+    def closed_at(self) -> datetime | None:
         self._completeIfNotSet(self._closed_at)
         return self._closed_at.value
 
@@ -279,7 +279,7 @@ class Issue(CompletableGithubObject):
         return self._locked.value
 
     @property
-    def milestone(self) -> Milestone:
+    def milestone(self) -> Milestone | None:
         self._completeIfNotSet(self._milestone)
         return self._milestone.value
 
@@ -294,12 +294,12 @@ class Issue(CompletableGithubObject):
         return self._number.value
 
     @property
-    def parent_issue_url(self) -> str:
+    def parent_issue_url(self) -> str | None:
         self._completeIfNotSet(self._parent_issue_url)
         return self._parent_issue_url.value
 
     @property
-    def performed_via_github_app(self) -> GithubApp:
+    def performed_via_github_app(self) -> GithubApp | None:
         self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
@@ -360,7 +360,7 @@ class Issue(CompletableGithubObject):
         return self._title.value
 
     @property
-    def type(self) -> IssueType:
+    def type(self) -> IssueType | None:
         self._completeIfNotSet(self._type)
         return self._type.value
 
@@ -375,7 +375,7 @@ class Issue(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 
