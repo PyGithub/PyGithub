@@ -14,20 +14,24 @@ try:
 
     active = "niquests"
 except ModuleNotFoundError:
-    import urllib3
-    from requests import Response, Session, adapters, exceptions, utils
-    from requests.models import PreparedRequest
-    from requests.structures import CaseInsensitiveDict
-    from requests.utils import get_encoding_from_headers
-    from urllib3 import Retry
-    from urllib3.util import Url
+    try:
+        from requests import Response, Session, adapters, exceptions, utils
+        from requests.models import PreparedRequest
+        from requests.structures import CaseInsensitiveDict
+        from requests.utils import get_encoding_from_headers
 
-    class netrc_auth_utils:
-        @staticmethod
-        def cache_clear():
-            pass
+        import urllib3
+        from urllib3 import Retry
+        from urllib3.util import Url
 
-    active = "requests"
+        class netrc_auth_utils:
+            @staticmethod
+            def cache_clear():
+                pass
+
+        active = "requests"
+    except ModuleNotFoundError as e:
+        raise ModuleNotFoundError("Neither requests nor niquests package found, please install one. Install them together with PyGithub via 'pip install PyGithub[requests]' or 'pip install PyGithub[niquests]'.")
 
 
 __all__ = [
