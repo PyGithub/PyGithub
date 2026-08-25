@@ -45,7 +45,7 @@ integrations = []
 # e.g. `pip install PyGithub[requests]` or `pip install PyGithub[niquests]`.
 # Note that pip has no notion of a default extra, so a bare `pip install PyGithub` installs neither
 # and PyGithub will fail to import until you pick one.
-requests = ["requests>=2.14.0"]
+requests = ["requests>=2.14.0", "urllib3>=1.26.0"]
 niquests = ["niquests>=3.12,<4"]
 
 [tool.setuptools_scm]
