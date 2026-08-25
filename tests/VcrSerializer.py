@@ -19,10 +19,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
-
-"""A vcrpy serializer that reads and writes PyGithub's pre-existing ``tests/ReplayData/*.txt``
-format unchanged, so switching the HTTP interception layer from ``responses`` to ``vcrpy``
-required no conversion of the ~1000 recorded fixtures already committed to the repo.
+"""
+A vcrpy serializer that reads and writes PyGithub's pre-existing ``tests/ReplayData/*.txt`` format unchanged, so
+switching the HTTP interception layer from ``responses`` to ``vcrpy`` required no conversion of the ~1000 recorded
+fixtures already committed to the repo.
 
 The on-disk format is a flat sequence of fixed-shape records, one per HTTP request/response
 pair, in the exact order they were originally issued:
@@ -48,6 +48,7 @@ trying ``base64.b64decode(line, validate=True)`` and falling back to UTF-8 text.
 practice: JSON/text response bodies always contain characters outside the base64 alphabet
 (``{``, ``"``, ``:``, spaces, ...), and this has been verified against every file currently in
 tests/ReplayData with zero ambiguous cases.
+
 """
 
 from __future__ import annotations
