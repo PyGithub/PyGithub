@@ -73,7 +73,6 @@ from urllib.parse import urlsplit
 
 import vcr
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url
 
 import github
 from github import Consts
@@ -147,7 +146,8 @@ _vcr.register_serializer("pygithub-replaydata", VcrSerializer)
 
 
 class CassetteConnection:
-    """Base for the classes injected via ``Requester.injectConnectionClasses``.
+    """
+    Base for the classes injected via ``Requester.injectConnectionClasses``.
 
     All the actual HTTP interception (matching, recording, replaying) is done by ``vcrpy``,
     patched in transparently underneath ``self._realConnection`` (an unmodified
@@ -157,6 +157,7 @@ class CassetteConnection:
     before the connection is used, mirroring how many real requests happen to reuse a
     single connection per test (``Requester.__persist`` is disabled while testing, so a new
     connection is created for every single HTTP request).
+
     """
 
     def __init__(self, host, port, *args, **kwds):
@@ -303,9 +304,11 @@ class BasicTestCase(unittest.TestCase):
 
     @classmethod
     def ensureCassette(cls) -> None:
-        """Called once per HTTP connection (i.e. once per request, connection reuse is disabled
-        while testing) to make sure the vcrpy cassette matching the currently running
-        setUp/test/tearDown method -- or a ``replayData()`` override -- is the active one."""
+        """
+        Called once per HTTP connection (i.e. once per request, connection reuse is disabled while testing) to make
+        sure the vcrpy cassette matching the currently running setUp/test/tearDown method -- or a ``replayData()``
+        override -- is the active one.
+        """
         self = cls.__activeInstance
         if self is not None:
             self.__ensureCassette()
@@ -387,7 +390,7 @@ class BasicTestCase(unittest.TestCase):
                 dict(request.headers),
                 request.body,
                 response["status"]["code"],
-                response_headers,
+                {k: v for k, v in response_headers.lower_items()},
                 response["body"]["string"],
             ),
         )
