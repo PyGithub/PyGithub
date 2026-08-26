@@ -55,8 +55,13 @@ from __future__ import annotations
 
 import base64
 import binascii
+from pathlib import Path
 from typing import Any
 from urllib.parse import SplitResult, urlsplit
+
+from vcr.persisters.filesystem import CassetteDecodeError, CassetteNotFoundError
+from vcr.serialize import deserialize as _vcr_deserialize
+from vcr.serialize import serialize as _vcr_serialize
 
 CASSETTE_FORMAT_VERSION = 1
 
@@ -232,3 +237,32 @@ def serialize(cassette_dict: dict[str, Any]) -> str:
         lines.append("")
 
     return "\n".join(lines) + ("\n" if lines else "")
+
+
+class Utf8FilesystemPersister:
+    """
+    Same as vcrpy's built-in ``FilesystemPersister``, but reads/writes cassette files with an
+    explicit ``encoding="utf-8"`` instead of the platform's locale-preferred encoding (``cp1252``
+    on Windows). Without this, non-ASCII cassette content is silently corrupted or, worse, made to
+    look entirely missing: a decode failure is treated by ``vcr.cassette.Cassette._load()`` as "no
+    cassette recorded yet" rather than being raised, so any fixture containing a byte sequence that
+    happens to be invalid cp1252 loads as if it had zero interactions.
+    """
+
+    @staticmethod
+    def load_cassette(cassette_path: str, serializer: Any) -> tuple[list[Any], list[Any]]:
+        path = Path(cassette_path)
+        if not path.is_file():
+            raise CassetteNotFoundError()
+        try:
+            data = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as error:
+            raise CassetteDecodeError("Can't read Cassette, Encoding is broken") from error
+        return _vcr_deserialize(data, serializer)
+
+    @staticmethod
+    def save_cassette(cassette_path: str, cassette_dict: dict[str, Any], serializer: Any) -> None:
+        data = _vcr_serialize(cassette_dict, serializer)
+        path = Path(cassette_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(data, encoding="utf-8")
