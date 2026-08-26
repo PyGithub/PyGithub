@@ -241,12 +241,14 @@ def serialize(cassette_dict: dict[str, Any]) -> str:
 
 class Utf8FilesystemPersister:
     """
-    Same as vcrpy's built-in ``FilesystemPersister``, but reads/writes cassette files with an
-    explicit ``encoding="utf-8"`` instead of the platform's locale-preferred encoding (``cp1252``
-    on Windows). Without this, non-ASCII cassette content is silently corrupted or, worse, made to
+    Same as vcrpy's built-in ``FilesystemPersister``, but reads/writes cassette files with an explicit
+    ``encoding="utf-8"`` instead of the platform's locale-preferred encoding (``cp1252`` on Windows).
+
+    Without this, non-ASCII cassette content is silently corrupted or, worse, made to
     look entirely missing: a decode failure is treated by ``vcr.cassette.Cassette._load()`` as "no
     cassette recorded yet" rather than being raised, so any fixture containing a byte sequence that
     happens to be invalid cp1252 loads as if it had zero interactions.
+
     """
 
     @staticmethod
