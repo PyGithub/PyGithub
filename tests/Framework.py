@@ -143,6 +143,7 @@ class RequestResponse(Request):
 # which required fooling it into believing niquests IS requests via sys.modules aliasing.
 _vcr = vcr.VCR(serializer="pygithub-replaydata", record_mode="none")
 _vcr.register_serializer("pygithub-replaydata", VcrSerializer)
+_vcr.register_persister(VcrSerializer.Utf8FilesystemPersister)
 
 
 class CassetteConnection:
