@@ -30,7 +30,6 @@ dynamic = ["version"]
 
 dependencies = [
   "pynacl>=1.4.0",
-  "niquests>=3.12,<4",
   "pyjwt[crypto]>=2.4.0",
   "typing-extensions>=4.5.0",
 ]
@@ -42,6 +41,12 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 
 [project.optional-dependencies]
 integrations = []
+# requests and niquests are mutually exclusive HTTP backends: install exactly one,
+# e.g. `pip install PyGithub[requests]` or `pip install PyGithub[niquests]`.
+# Note that pip has no notion of a default extra, so a bare `pip install PyGithub` installs neither
+# and PyGithub will fail to import until you pick one.
+requests = ["requests>=2.14.0", "urllib3>=1.26.0"]
+niquests = ["niquests>=3.12,<4"]
 
 [tool.setuptools_scm]
 
