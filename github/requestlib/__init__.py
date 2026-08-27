@@ -36,7 +36,9 @@ except ModuleNotFoundError:
         active = "requests"
     except ModuleNotFoundError:
         raise ModuleNotFoundError(
-            "Neither requests nor niquests package found, please install one. Install them together with PyGithub via 'pip install PyGithub[requests]' or 'pip install PyGithub[niquests]'."
+            "Neither requests nor niquests package found, please install one. "
+            "Install them together with PyGithub via 'pip install PyGithub[requests]' "
+            "or 'pip install PyGithub[niquests]'."
         )
 
 
