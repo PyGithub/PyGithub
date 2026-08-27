@@ -41,7 +41,7 @@ from typing import Any
 from github.compat import Self
 from github.GithubException import GithubException, RateLimitExceededExceedsMaxWait
 from github.Requester import Requester
-from github.requestlib import CaseInsensitiveDict, Response, Retry, get_encoding_from_headers, urllib3
+from github.requestlib import CaseInsensitiveDict, Response, Retry, urllib3, utils
 
 DEFAULT_SECONDARY_RATE_WAIT: int = 60
 
@@ -237,7 +237,7 @@ class GithubRetry(Retry):
         response.headers = CaseInsensitiveDict(getattr(resp, "headers", {}))
 
         # Set encoding.
-        response.encoding = get_encoding_from_headers(response.headers)
+        response.encoding = utils.get_encoding_from_headers(response.headers)
         response.raw = resp
         response.reason = response.raw.reason  # type: ignore
 
