@@ -62,6 +62,7 @@
 from __future__ import annotations
 
 import contextlib
+import functools
 import os
 import traceback
 import unittest
@@ -72,7 +73,9 @@ from typing import Any
 from urllib.parse import urlsplit
 
 import vcr
+import vcr.cassette
 from requests.structures import CaseInsensitiveDict
+from vcr.matchers import requests_match
 
 import github
 from github import Consts
@@ -137,11 +140,45 @@ class RequestResponse(Request):
     output: bytes
 
 
+class OrderedCassette(vcr.cassette.Cassette):
+    """
+    Same as vcrpy's ``Cassette``, but only ever considers the next not-yet-played interaction as a candidate match,
+    instead of searching the whole cassette for any not-yet-played interaction that matches.
+
+    vcrpy's default behavior replays same-shaped requests in recording order (since
+    it always returns the earliest unplayed match), but happily serves requests out of order
+    relative to *other*, differently-shaped requests -- e.g. cassette [A, B, C] replays fine as
+    [B, A, C] as long as each of A, B, C individually matches something unplayed. That would let a
+    refactor that accidentally reorders API calls pass silently. Requiring an exact match against
+    the next interaction turns that into a hard ``CannotOverwriteExistingCassetteException``.
+
+    """
+
+    def _responses(self, request):
+        request = self._before_record_request(request)
+        for index, (stored_request, response) in enumerate(self.data):
+            if self.play_counts[index] == 0:
+                if requests_match(request, stored_request, self._match_on):
+                    yield index, response
+                return
+
+
+class OrderedVCR(vcr.VCR):
+    def _use_cassette(self, with_current_defaults=False, **kwargs):
+        if with_current_defaults:
+            config = self.get_merged_config(**kwargs)
+            return OrderedCassette.use(**config)
+        args_getter = functools.partial(self.get_merged_config, **kwargs)
+        return OrderedCassette.use_arg_getter(args_getter)
+
+
 # A single VCR instance, shared across all tests: it patches http.client/urllib3 generically
 # enough that it transparently intercepts both "requests" and "niquests" traffic (see
 # https://niquests.readthedocs.io/en/latest/community/extensions.html), unlike "responses",
 # which required fooling it into believing niquests IS requests via sys.modules aliasing.
-_vcr = vcr.VCR(serializer="pygithub-replaydata", record_mode="none")
+# OrderedVCR additionally enforces that requests are replayed in exactly the order they were
+# recorded (see OrderedCassette above).
+_vcr = OrderedVCR(serializer="pygithub-replaydata", record_mode="none")
 _vcr.register_serializer("pygithub-replaydata", VcrSerializer)
 _vcr.register_persister(VcrSerializer.Utf8FilesystemPersister)
 
