@@ -402,7 +402,7 @@ class GithubRetry(unittest.TestCase):
             self.assertIsInstance(exp.exception.__cause__.__cause__, ValueError)
             expected_cause = None
             if github.requestlib.active == "requests":
-                expected_cause = 'Unable to determine whether fp is closed.'
+                expected_cause = "Unable to determine whether fp is closed."
             if github.requestlib.active == "niquests":
                 expected_cause = "Expecting value: line 1 column 1 (char 0)"
             self.assertEqual((expected_cause,), exp.exception.__cause__.__cause__.args)
