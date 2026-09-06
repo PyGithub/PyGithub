@@ -41,11 +41,13 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import pytest
+import responses
 from urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts
-from github.Auth import AppAuth, AppInstallationAuth
+from github.Auth import AppAuth, AppInstallationAuth, AppUserAuth, Token
 
 from . import Framework, GithubIntegration
 
@@ -139,3 +141,77 @@ class Installation(Framework.BasicTestCase):
         self.assertEqual(len(self.installations), 1)
         installation = self.installations[0]
         assert installation.requester is installation._requester
+
+
+@pytest.mark.parametrize(
+    ("base_url", "request_base_url"),
+    [
+        ("https://api.github.com", "https://api.github.com:443"),
+        ("https://github.example:8443/api/v3", "https://github.example:8443/api/v3"),
+    ],
+)
+@responses.activate
+def testGetReposWithAppUserAuth(base_url, request_base_url):
+    auth = AppUserAuth("client_id", "client_secret", "user_token")
+    installations_url = f"{request_base_url}/user/installations?per_page=1"
+    repositories_url = f"{request_base_url}/user/installations/123456/repositories"
+    first_page_url = f"{repositories_url}?per_page=1"
+    next_page_url = f"{repositories_url}?page=2&per_page=1"
+    next_page_link = f"{base_url}/user/installations/123456/repositories?page=2&per_page=1"
+    responses.get(
+        installations_url,
+        json={
+            "total_count": 1,
+            "installations": [{"id": 123456, "repositories_url": f"{base_url}/installation/repositories"}],
+        },
+    )
+    responses.get(
+        first_page_url,
+        json={
+            "total_count": 2,
+            "repositories": [{"id": 1, "full_name": "owner/first", "url": f"{base_url}/repos/owner/first"}],
+        },
+        headers={"Link": f'<{next_page_link}>; rel="next"'},
+    )
+    responses.get(
+        next_page_url,
+        json={
+            "total_count": 2,
+            "repositories": [{"id": 2, "full_name": "owner/second", "url": f"{base_url}/repos/owner/second"}],
+        },
+    )
+    responses.get(
+        f"{request_base_url}/installation/repositories?per_page=1",
+        status=403,
+        json={"message": "Resource not accessible by integration"},
+    )
+
+    with github.Github(
+        auth=auth, base_url=base_url, per_page=1, api_version="2022-11-28", seconds_between_requests=None
+    ) as client:
+        installation = client.get_user().get_installations()[0]
+        repositories = installation.get_repos()
+        assert len(responses.calls) == 1  # Repository retrieval remains lazy.
+        assert installation.requester.auth is auth
+        assert installation.repositories_url == f"{base_url}/installation/repositories"
+        assert [repo.full_name for repo in repositories] == ["owner/first", "owner/second"]
+        assert repositories.totalCount == 2
+
+    assert [call.request.url for call in responses.calls] == [installations_url, first_page_url, next_page_url]
+    for call in responses.calls:
+        assert call.request.headers["Authorization"] == "bearer user_token"
+        assert call.request.headers["Accept"] == Consts.mediaTypeIntegrationPreview
+        assert call.request.headers["X-GitHub-Api-Version"] == "2022-11-28"
+
+
+@responses.activate
+def testGetReposWithTokenAuth():
+    responses.get("https://api.github.com:443/installation/repositories", json={"total_count": 0, "repositories": []})
+    with github.Github(auth=Token("installation_token")) as client:
+        installation = github.Installation.Installation(client.requester, {}, {"id": 123456})
+        repositories = installation.get_repos()
+        assert list(repositories) == []
+        assert repositories.totalCount == 0
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.headers["Authorization"] == "token installation_token"
