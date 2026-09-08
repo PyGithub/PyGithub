@@ -80,44 +80,44 @@ class IssueEvent(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._actor: Attribute[NamedUser | Organization] = NotSet
-        self._assignee: Attribute[NamedUser | Organization] = NotSet
-        self._assigner: Attribute[NamedUser | Organization] = NotSet
+        self._actor: Attribute[NamedUser | Organization | None] = NotSet
+        self._assignee: Attribute[NamedUser | Organization | None] = NotSet
+        self._assigner: Attribute[NamedUser | Organization | None] = NotSet
         self._author_association: Attribute[dict[str, Any]] = NotSet
-        self._commit_id: Attribute[str] = NotSet
-        self._commit_url: Attribute[str] = NotSet
+        self._commit_id: Attribute[str | None] = NotSet
+        self._commit_url: Attribute[str | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._dismissed_review: Attribute[dict] = NotSet
         self._event: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._issue: Attribute[Issue] = NotSet
+        self._issue: Attribute[Issue | None] = NotSet
         self._label: Attribute[Label] = NotSet
-        self._lock_reason: Attribute[str] = NotSet
+        self._lock_reason: Attribute[str | None] = NotSet
         self._milestone: Attribute[Milestone] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp | None] = NotSet
         self._project_card: Attribute[dict[str, Any]] = NotSet
         self._rename: Attribute[dict] = NotSet
-        self._requested_reviewer: Attribute[NamedUser | Organization] = NotSet
+        self._requested_reviewer: Attribute[NamedUser | Organization | None] = NotSet
         self._requested_team: Attribute[Team] = NotSet
-        self._review_requester: Attribute[NamedUser | Organization] = NotSet
+        self._review_requester: Attribute[NamedUser | Organization | None] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def actor(self) -> NamedUser | Organization:
+    def actor(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._actor)
         return self._actor.value
 
     @property
-    def assignee(self) -> NamedUser | Organization:
+    def assignee(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
     @property
-    def assigner(self) -> NamedUser | Organization:
+    def assigner(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._assigner)
         return self._assigner.value
 
@@ -127,12 +127,12 @@ class IssueEvent(CompletableGithubObject):
         return self._author_association.value
 
     @property
-    def commit_id(self) -> str:
+    def commit_id(self) -> str | None:
         self._completeIfNotSet(self._commit_id)
         return self._commit_id.value
 
     @property
-    def commit_url(self) -> str:
+    def commit_url(self) -> str | None:
         self._completeIfNotSet(self._commit_url)
         return self._commit_url.value
 
@@ -157,7 +157,7 @@ class IssueEvent(CompletableGithubObject):
         return self._id.value
 
     @property
-    def issue(self) -> Issue:
+    def issue(self) -> Issue | None:
         self._completeIfNotSet(self._issue)
         return self._issue.value
 
@@ -167,7 +167,7 @@ class IssueEvent(CompletableGithubObject):
         return self._label.value
 
     @property
-    def lock_reason(self) -> str:
+    def lock_reason(self) -> str | None:
         self._completeIfNotSet(self._lock_reason)
         return self._lock_reason.value
 
@@ -182,7 +182,7 @@ class IssueEvent(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def performed_via_github_app(self) -> GithubApp:
+    def performed_via_github_app(self) -> GithubApp | None:
         self._completeIfNotSet(self._performed_via_github_app)
         return self._performed_via_github_app.value
 
@@ -197,7 +197,7 @@ class IssueEvent(CompletableGithubObject):
         return self._rename.value
 
     @property
-    def requested_reviewer(self) -> NamedUser | Organization:
+    def requested_reviewer(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._requested_reviewer)
         return self._requested_reviewer.value
 
@@ -207,7 +207,7 @@ class IssueEvent(CompletableGithubObject):
         return self._requested_team.value
 
     @property
-    def review_requester(self) -> NamedUser | Organization:
+    def review_requester(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._review_requester)
         return self._review_requester.value
 

@@ -69,63 +69,63 @@ class RepositoryAdvisory(AdvisoryBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._author: Attribute[NamedUser] = NotSet
-        self._closed_at: Attribute[datetime] = NotSet
-        self._collaborating_teams: Attribute[list[Team]] = NotSet
-        self._collaborating_users: Attribute[list[NamedUser]] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._credits: Attribute[list[AdvisoryCredit]] = NotSet
-        self._credits_detailed: Attribute[list[AdvisoryCreditDetailed]] = NotSet
-        self._cwe_ids: Attribute[list[str]] = NotSet
-        self._private_fork: Attribute[Repository] = NotSet
-        self._publisher: Attribute[NamedUser] = NotSet
+        self._author: Attribute[NamedUser | None] = NotSet
+        self._closed_at: Attribute[datetime | None] = NotSet
+        self._collaborating_teams: Attribute[list[Team] | None] = NotSet
+        self._collaborating_users: Attribute[list[NamedUser] | None] = NotSet
+        self._created_at: Attribute[datetime | None] = NotSet
+        self._credits: Attribute[list[AdvisoryCredit] | None] = NotSet
+        self._credits_detailed: Attribute[list[AdvisoryCreditDetailed] | None] = NotSet
+        self._cwe_ids: Attribute[list[str] | None] = NotSet
+        self._private_fork: Attribute[Repository | None] = NotSet
+        self._publisher: Attribute[NamedUser | None] = NotSet
         self._state: Attribute[str] = NotSet
-        self._submission: Attribute[dict[str, Any]] = NotSet
-        self._vulnerabilities: Attribute[list[AdvisoryVulnerability]] = NotSet
+        self._submission: Attribute[dict[str, Any] | None] = NotSet
+        self._vulnerabilities: Attribute[list[AdvisoryVulnerability] | None] = NotSet
         super()._initAttributes()
 
     @property
-    def author(self) -> NamedUser:
+    def author(self) -> NamedUser | None:
         return self._author.value
 
     @property
-    def closed_at(self) -> datetime:
+    def closed_at(self) -> datetime | None:
         return self._closed_at.value
 
     @property
-    def collaborating_teams(self) -> list[Team]:
+    def collaborating_teams(self) -> list[Team] | None:
         return self._collaborating_teams.value
 
     @property
-    def collaborating_users(self) -> list[NamedUser]:
+    def collaborating_users(self) -> list[NamedUser] | None:
         return self._collaborating_users.value
 
     @property
-    def created_at(self) -> datetime:
+    def created_at(self) -> datetime | None:
         return self._created_at.value
 
     @property
     def credits(
         self,
-    ) -> list[AdvisoryCredit]:
+    ) -> list[AdvisoryCredit] | None:
         return self._credits.value
 
     @property
     def credits_detailed(
         self,
-    ) -> list[AdvisoryCreditDetailed]:
+    ) -> list[AdvisoryCreditDetailed] | None:
         return self._credits_detailed.value
 
     @property
-    def cwe_ids(self) -> list[str]:
+    def cwe_ids(self) -> list[str] | None:
         return self._cwe_ids.value
 
     @property
-    def private_fork(self) -> Repository:
+    def private_fork(self) -> Repository | None:
         return self._private_fork.value
 
     @property
-    def publisher(self) -> NamedUser:
+    def publisher(self) -> NamedUser | None:
         return self._publisher.value
 
     @property
@@ -133,11 +133,11 @@ class RepositoryAdvisory(AdvisoryBase):
         return self._state.value
 
     @property
-    def submission(self) -> dict[str, Any]:
+    def submission(self) -> dict[str, Any] | None:
         return self._submission.value
 
     @property
-    def vulnerabilities(self) -> list[AdvisoryVulnerability]:
+    def vulnerabilities(self) -> list[AdvisoryVulnerability] | None:
         return self._vulnerabilities.value
 
     def add_vulnerability(

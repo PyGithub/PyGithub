@@ -56,22 +56,22 @@ class CheckRunAnnotation(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._annotation_level: Attribute[str] = NotSet
+        self._annotation_level: Attribute[str | None] = NotSet
         self._blob_href: Attribute[str] = NotSet
-        self._end_column: Attribute[int] = NotSet
+        self._end_column: Attribute[int | None] = NotSet
         self._end_line: Attribute[int] = NotSet
-        self._message: Attribute[str] = NotSet
+        self._message: Attribute[str | None] = NotSet
         self._path: Attribute[str] = NotSet
-        self._raw_details: Attribute[str] = NotSet
-        self._start_column: Attribute[int] = NotSet
+        self._raw_details: Attribute[str | None] = NotSet
+        self._start_column: Attribute[int | None] = NotSet
         self._start_line: Attribute[int] = NotSet
-        self._title: Attribute[str] = NotSet
+        self._title: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"title": self._title.value})
 
     @property
-    def annotation_level(self) -> str:
+    def annotation_level(self) -> str | None:
         return self._annotation_level.value
 
     @property
@@ -79,7 +79,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
         return self._blob_href.value
 
     @property
-    def end_column(self) -> int:
+    def end_column(self) -> int | None:
         return self._end_column.value
 
     @property
@@ -87,7 +87,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
         return self._end_line.value
 
     @property
-    def message(self) -> str:
+    def message(self) -> str | None:
         return self._message.value
 
     @property
@@ -95,11 +95,11 @@ class CheckRunAnnotation(NonCompletableGithubObject):
         return self._path.value
 
     @property
-    def raw_details(self) -> str:
+    def raw_details(self) -> str | None:
         return self._raw_details.value
 
     @property
-    def start_column(self) -> int:
+    def start_column(self) -> int | None:
         return self._start_column.value
 
     @property
@@ -107,7 +107,7 @@ class CheckRunAnnotation(NonCompletableGithubObject):
         return self._start_line.value
 
     @property
-    def title(self) -> str:
+    def title(self) -> str | None:
         return self._title.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

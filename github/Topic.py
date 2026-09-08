@@ -57,20 +57,20 @@ class Topic(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._aliases: Attribute[list[dict[str, Any]]] = NotSet
+        self._aliases: Attribute[list[dict[str, Any]] | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._created_by: Attribute[str] = NotSet
+        self._created_by: Attribute[str | None] = NotSet
         self._curated: Attribute[bool] = NotSet
-        self._description: Attribute[str] = NotSet
-        self._display_name: Attribute[str] = NotSet
+        self._description: Attribute[str | None] = NotSet
+        self._display_name: Attribute[str | None] = NotSet
         self._featured: Attribute[bool] = NotSet
-        self._logo_url: Attribute[str] = NotSet
+        self._logo_url: Attribute[str | None] = NotSet
         self._name: Attribute[str] = NotSet
-        self._related: Attribute[list[dict[str, Any]]] = NotSet
-        self._released: Attribute[str] = NotSet
-        self._repository_count: Attribute[int] = NotSet
+        self._related: Attribute[list[dict[str, Any]] | None] = NotSet
+        self._released: Attribute[str | None] = NotSet
+        self._repository_count: Attribute[int | None] = NotSet
         self._score: Attribute[float] = NotSet
-        self._short_description: Attribute[str] = NotSet
+        self._short_description: Attribute[str | None] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
 
@@ -78,7 +78,7 @@ class Topic(NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def aliases(self) -> list[dict[str, Any]]:
+    def aliases(self) -> list[dict[str, Any]] | None:
         return self._aliases.value
 
     @property
@@ -86,7 +86,7 @@ class Topic(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def created_by(self) -> str:
+    def created_by(self) -> str | None:
         return self._created_by.value
 
     @property
@@ -94,11 +94,11 @@ class Topic(NonCompletableGithubObject):
         return self._curated.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         return self._description.value
 
     @property
-    def display_name(self) -> str:
+    def display_name(self) -> str | None:
         return self._display_name.value
 
     @property
@@ -106,7 +106,7 @@ class Topic(NonCompletableGithubObject):
         return self._featured.value
 
     @property
-    def logo_url(self) -> str:
+    def logo_url(self) -> str | None:
         return self._logo_url.value
 
     @property
@@ -114,15 +114,15 @@ class Topic(NonCompletableGithubObject):
         return self._name.value
 
     @property
-    def related(self) -> list[dict[str, Any]]:
+    def related(self) -> list[dict[str, Any]] | None:
         return self._related.value
 
     @property
-    def released(self) -> str:
+    def released(self) -> str | None:
         return self._released.value
 
     @property
-    def repository_count(self) -> int:
+    def repository_count(self) -> int | None:
         return self._repository_count.value
 
     @property
@@ -130,7 +130,7 @@ class Topic(NonCompletableGithubObject):
         return self._score.value
 
     @property
-    def short_description(self) -> str:
+    def short_description(self) -> str | None:
         return self._short_description.value
 
     @property

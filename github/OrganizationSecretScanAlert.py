@@ -29,11 +29,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import github.NamedUser
+import github.Organization
 import github.Repository
 from github.GithubObject import Attribute, NotSet
 from github.SecretScanAlert import SecretScanAlert
 
 if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Repository import Repository
 
 
@@ -52,7 +56,12 @@ class OrganizationSecretScanAlert(SecretScanAlert):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._assigned_to: Attribute[NamedUser | Organization | None] = NotSet
         self._repository: Attribute[Repository] = NotSet
+
+    @property
+    def assigned_to(self) -> NamedUser | Organization | None:
+        return self._assigned_to.value
 
     @property
     def repository(self) -> Repository:
@@ -60,5 +69,13 @@ class OrganizationSecretScanAlert(SecretScanAlert):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "assigned_to" in attributes:  # pragma no branch
+            self._assigned_to = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "unknown",
+                attributes["assigned_to"],
+                (github.NamedUser.NamedUser, "NamedUser"),
+                (github.Organization.Organization, "Organization"),
+            )
         if "repository" in attributes:
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

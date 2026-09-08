@@ -74,8 +74,8 @@ class Invitation(CompletableGithubObject):
         self._expired: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._invitee: Attribute[NamedUser | Organization] = NotSet
-        self._inviter: Attribute[NamedUser | Organization] = NotSet
+        self._invitee: Attribute[NamedUser | Organization | None] = NotSet
+        self._inviter: Attribute[NamedUser | Organization | None] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._permissions: Attribute[str] = NotSet
         self._repository: Attribute[Repository] = NotSet
@@ -105,12 +105,12 @@ class Invitation(CompletableGithubObject):
         return self._id.value
 
     @property
-    def invitee(self) -> NamedUser | Organization:
+    def invitee(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._invitee)
         return self._invitee.value
 
     @property
-    def inviter(self) -> NamedUser | Organization:
+    def inviter(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._inviter)
         return self._inviter.value
 

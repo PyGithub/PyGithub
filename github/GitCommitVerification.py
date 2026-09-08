@@ -63,14 +63,14 @@ class GitCommitVerification(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._payload: Attribute[str] = NotSet
+        self._payload: Attribute[str | None] = NotSet
         self._reason: Attribute[str] = NotSet
-        self._signature: Attribute[str] = NotSet
+        self._signature: Attribute[str | None] = NotSet
         self._verified: Attribute[bool] = NotSet
-        self._verified_at: Attribute[datetime] = NotSet
+        self._verified_at: Attribute[datetime | None] = NotSet
 
     @property
-    def payload(self) -> str:
+    def payload(self) -> str | None:
         return self._payload.value
 
     @property
@@ -78,7 +78,7 @@ class GitCommitVerification(NonCompletableGithubObject):
         return self._reason.value
 
     @property
-    def signature(self) -> str:
+    def signature(self) -> str | None:
         return self._signature.value
 
     @property
@@ -86,7 +86,7 @@ class GitCommitVerification(NonCompletableGithubObject):
         return self._verified.value
 
     @property
-    def verified_at(self) -> datetime:
+    def verified_at(self) -> datetime | None:
         return self._verified_at.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

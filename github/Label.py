@@ -70,11 +70,11 @@ class Label(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._color: Attribute[str] = NotSet
+        self._color: Attribute[str | None] = NotSet
         self._default: Attribute[bool] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
+        self._name: Attribute[str | None] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -86,7 +86,7 @@ class Label(CompletableGithubObject):
         return urllib.parse.quote(self.name)
 
     @property
-    def color(self) -> str:
+    def color(self) -> str | None:
         self._completeIfNotSet(self._color)
         return self._color.value
 
@@ -96,7 +96,7 @@ class Label(CompletableGithubObject):
         return self._default.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         self._completeIfNotSet(self._description)
         return self._description.value
 
@@ -106,7 +106,7 @@ class Label(CompletableGithubObject):
         return self._id.value
 
     @property
-    def name(self) -> str:
+    def name(self) -> str | None:
         self._completeIfNotSet(self._name)
         return self._name.value
 
