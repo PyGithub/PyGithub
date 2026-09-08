@@ -16,6 +16,10 @@ Authentication
 Logging
 -------
 
+PyGithub uses the ``github`` logger and inherits the application's logging configuration.
+It does not write to the console by default. To enable console output for troubleshooting,
+call ``github.enable_console_debug_logging()``.
+
 .. autofunction:: github.enable_console_debug_logging
 
 Error Handling
