@@ -83,7 +83,7 @@ class Label(CompletableGithubObject):
 
     @property
     def _identity(self) -> str:
-        return urllib.parse.quote(self.name)
+        return urllib.parse.quote(self.name or "None")
 
     @property
     def color(self) -> str | None:

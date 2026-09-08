@@ -75,6 +75,8 @@ T = typing.TypeVar("T")
 K = typing.TypeVar("K")
 T_co = typing.TypeVar("T_co", covariant=True)
 T_gh = typing.TypeVar("T_gh", bound="GithubObject")
+T2_gh = typing.TypeVar("T2_gh", bound="GithubObject")
+T3_gh = typing.TypeVar("T3_gh", bound="GithubObject")
 
 
 class Attribute(Protocol[T_co]):
@@ -239,7 +241,7 @@ class GithubObject(ABC):
     A global debug flag to enable header validation by requester for all objects
     """
     CHECK_AFTER_INIT_FLAG = False
-    _url: Attribute[str]
+    _url: Attribute[str | None]
 
     @classmethod
     def is_rest(cls) -> bool:
@@ -410,6 +412,42 @@ class GithubObject(ABC):
 
         return _BadAttribute(value, type)  # type: ignore
 
+    @overload
+    def _makeUnionClassAttributeFromTypeKey(
+        self,
+        type_key: str,
+        default_and_fallback_type: str | tuple[str, str] | None,
+        value: object,
+        class_and_name: tuple[type[T_gh], str],
+        /,
+    ) -> Attribute[T_gh]:
+        ...
+
+    @overload
+    def _makeUnionClassAttributeFromTypeKey(
+        self,
+        type_key: str,
+        default_and_fallback_type: str | tuple[str, str] | None,
+        value: object,
+        class_and_name_1: tuple[type[T_gh], str],
+        class_and_name_2: tuple[type[T2_gh], str],
+        /,
+    ) -> Attribute[T_gh | T2_gh]:
+        ...
+
+    @overload
+    def _makeUnionClassAttributeFromTypeKey(
+        self,
+        type_key: str,
+        default_and_fallback_type: str | tuple[str, str] | None,
+        value: object,
+        class_and_name_1: tuple[type[T_gh], str],
+        class_and_name_2: tuple[type[T2_gh], str],
+        class_and_name_3: tuple[type[T3_gh], str],
+        /,
+    ) -> Attribute[T_gh | T2_gh | T3_gh]:
+        ...
+
     def _makeUnionClassAttributeFromTypeKey(
         self,
         type_key: str,
@@ -429,6 +467,45 @@ class GithubObject(ABC):
         return self._makeUnionClassAttributeFromTypeName(
             value.get(type_key, default_type), fallback_type, value, *class_and_names
         )
+
+    @overload
+    def _makeUnionClassAttributeFromTypeKeyAndValueKey(
+        self,
+        type_key: str,
+        value_key: str,
+        default_and_fallback_type: str | tuple[str, str] | None,
+        value: object,
+        class_and_name: tuple[type[T_gh], str],
+        /,
+    ) -> Attribute[T_gh]:
+        ...
+
+    @overload
+    def _makeUnionClassAttributeFromTypeKeyAndValueKey(
+        self,
+        type_key: str,
+        value_key: str,
+        default_and_fallback_type: str | tuple[str, str] | None,
+        value: object,
+        class_and_name_1: tuple[type[T_gh], str],
+        class_and_name_2: tuple[type[T2_gh], str],
+        /,
+    ) -> Attribute[T_gh | T2_gh]:
+        ...
+
+    @overload
+    def _makeUnionClassAttributeFromTypeKeyAndValueKey(
+        self,
+        type_key: str,
+        value_key: str,
+        default_and_fallback_type: str | tuple[str, str] | None,
+        value: object,
+        class_and_name_1: tuple[type[T_gh], str],
+        class_and_name_2: tuple[type[T2_gh], str],
+        class_and_name_3: tuple[type[T3_gh], str],
+        /,
+    ) -> Attribute[T_gh | T2_gh | T3_gh]:
+        ...
 
     def _makeUnionClassAttributeFromTypeKeyAndValueKey(
         self,

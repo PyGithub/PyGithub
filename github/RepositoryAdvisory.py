@@ -176,7 +176,9 @@ class RepositoryAdvisory(AdvisoryBase):
         post_parameters = {
             "vulnerabilities": [
                 github.AdvisoryVulnerability.AdvisoryVulnerability._to_github_dict(vulnerability)
-                for vulnerability in (self.vulnerabilities + list(vulnerabilities))
+                for vulnerability in (
+                    ([] if self.vulnerabilities is None else self.vulnerabilities) + list(vulnerabilities)
+                )
             ]
         }
         headers, data = self._requester.requestJsonAndCheck(
@@ -219,7 +221,7 @@ class RepositoryAdvisory(AdvisoryBase):
         patch_parameters = {
             "credits": [
                 github.AdvisoryCredit.AdvisoryCredit._to_github_dict(credit)
-                for credit in (self.credits + list(credited))
+                for credit in (([] if self.credits is None else self.credits) + list(credited))
             ]
         }
         headers, data = self._requester.requestJsonAndCheck(
@@ -238,7 +240,9 @@ class RepositoryAdvisory(AdvisoryBase):
             login_or_user = login_or_user.login
         patch_parameters = {
             "credits": [
-                dict(login=credit.login, type=credit.type) for credit in self.credits if credit.login != login_or_user
+                dict(login=credit.login, type=credit.type)
+                for credit in ([] if self.credits is None else self.credits)
+                if credit.login != login_or_user
             ]
         }
         headers, data = self._requester.requestJsonAndCheck(

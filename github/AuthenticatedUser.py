@@ -783,7 +783,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(state):
             url_parameters["state"] = state
         if is_defined(labels):
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            url_parameters["labels"] = ",".join(label.name for label in labels if label.name is not None)
         if is_defined(sort):
             url_parameters["sort"] = sort
         if is_defined(direction):
@@ -816,7 +816,7 @@ class AuthenticatedUser(CompletableGithubObject):
         if is_defined(state):
             url_parameters["state"] = state
         if is_defined(labels):
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            url_parameters["labels"] = ",".join(label.name for label in labels if label.name is not None)
         if is_defined(sort):
             url_parameters["sort"] = sort
         if is_defined(direction):

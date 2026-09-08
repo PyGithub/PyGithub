@@ -4664,6 +4664,8 @@ class Repository(CompletableGithubObject):
         """
         :calls: `POST /orgs/{org}/code-security/configurations/{configuration_id}/attach <https://docs.github.com/en/rest/code-security/configurations#attach-a-configuration-to-repositories>`_
         """
+        if self.organization is None:
+            raise RuntimeError("This repository has no organization")
         self.organization.attach_security_config_to_repositories(
             id=id, scope="selected", selected_repository_ids=[self.id]
         )
@@ -4672,6 +4674,8 @@ class Repository(CompletableGithubObject):
         """
         :calls: `DELETE /orgs/{org}/code-security/configurations/detach <https://docs.github.com/en/rest/code-security/configurations#detach-configurations-from-repositories>`_
         """
+        if self.organization is None:
+            raise RuntimeError("This repository has no organization")
         self.organization.detach_security_config_from_repositories(selected_repository_ids=[self.id])
 
     def get_security_config(self) -> RepoCodeSecurityConfig | None:

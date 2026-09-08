@@ -249,7 +249,7 @@ class GitRelease(CompletableGithubObject):
 
     @property
     @deprecated("Use name instead")
-    def title(self) -> str:
+    def title(self) -> str | None:
         # alias for name
         return self.name
 

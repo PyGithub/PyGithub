@@ -1246,7 +1246,7 @@ class Organization(CompletableGithubObject):
             {"filter": filter, "state": state, "sort": sort, "direction": direction}
         )
         if is_defined(labels):
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            url_parameters["labels"] = ",".join(label.name for label in labels if label.name is not None)
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return PaginatedList(github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters)

@@ -121,8 +121,10 @@ class ContentFile(CompletableGithubObject):
         return self._content.value
 
     @property
-    def decoded_content(self) -> bytes:
+    def decoded_content(self) -> bytes | None:
         assert self.encoding == "base64", f"unsupported encoding: {self.encoding}"
+        if self.content is None:
+            return None
         return base64.b64decode(bytearray(self.content, "utf-8"))
 
     @property
