@@ -1,0 +1,2 @@
+python scripts/openapi.py apply properties github openapi.spec.json openapi.index Repository
+python scripts/openapi.py index github openapi.spec.json openapi.index
