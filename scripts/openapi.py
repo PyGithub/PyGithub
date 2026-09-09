@@ -1631,15 +1631,16 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         # implements multiple schemas is nullable as soon as one of them says so, and an existing
         # '| None' may record real-world behaviour the spec does not declare.
         #
-        # 'new' may also carry additional, newly-discovered union members (e.g. the schema is
-        # shared with another PyGithub class as in NamedUser and Organization) - that's a separate
-        # decision from nullability, so we only require every existing member to still be present in
-        # 'new', not that they're equal. Adding those extra members automatically would silently
-        # change the property's type beyond what was asked for.
-        new_members = cls.union_members(new)
-        if "None" not in new_members:
+        # We deliberately don't require the base type to match between 'existing' and 'new': the
+        # spec-derived type may disagree with the hand-picked existing type (e.g. GitHub returns a
+        # 'datetime'-shaped string for a property the spec merely calls 'string', or the schema is
+        # shared with another PyGithub class as in NamedUser and Organization) - that disagreement is
+        # a separate concern from nullability, so we never adopt 'new' here, only ever add '| None' to
+        # 'existing' as-is. The only thing that must hold is that 'existing' isn't already nullable,
+        # so this stays a no-op once applied.
+        if "None" not in cls.union_members(new):
             return False
-        return cls.union_members(existing) <= (new_members - {"None"})
+        return "None" not in cls.union_members(existing)
 
     def widen_return_to_nullable(self, func: cst.FunctionDef, prop: Property) -> cst.FunctionDef:
         # updates the return annotation of an existing @property accessor to 'T | None'
