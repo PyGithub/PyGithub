@@ -3684,8 +3684,19 @@ class OpenApi:
                     k: (python_type, v.get("deprecated", False), is_nullable_schema(v, spec))
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
+                    # dict-shaped properties are otherwise skipped unless --new-schemas asks for them
+                    # (to avoid creating new dict-typed properties without review), but an already
+                    # implemented dict property still needs to flow through so its nullability can be
+                    # widened - ApplySchemaTransformer only ever widens existing properties in place,
+                    # it never uses this to fabricate a new one.
+                    for k_already_implemented in [k in cls_properties]
                     if is_supported_type(k, v, python_type, self.verbose)
-                    and (is_not_dict_type(python_type) or new_schemas_as_dict or new_schemas_create_class)
+                    and (
+                        is_not_dict_type(python_type)
+                        or new_schemas_as_dict
+                        or new_schemas_create_class
+                        or k_already_implemented
+                    )
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 
