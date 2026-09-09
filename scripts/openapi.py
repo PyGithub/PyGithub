@@ -1617,11 +1617,29 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         )
 
     @classmethod
+    def union_members(cls, node: cst.BaseExpression) -> frozenset[str]:
+        # Flattens a 'A | B | C' annotation into its top-level member strings, so union
+        # membership can be compared as sets regardless of nesting or ordering.
+        if isinstance(node, cst.BinaryOperation) and isinstance(node.operator, cst.BitOr):
+            return cls.union_members(node.left) | cls.union_members(node.right)
+        return frozenset({cls.code(node).strip()})
+
+    @classmethod
     def is_widened_to_nullable(cls, existing: cst.BaseExpression, new: cst.BaseExpression) -> bool:
-        # Tells whether 'new' is 'existing' widened by '| None'. Nullability is only ever added, never
-        # removed: a class that implements multiple schemas is nullable as soon as one of them says so,
-        # and an existing '| None' may record real-world behaviour the spec does not declare.
-        return cls.code(new).strip() == f"{cls.code(existing).strip()} | None"
+        # Tells whether 'existing' can be safely widened to nullable given what the spec says the
+        # type should be ('new'). Nullability is only ever added, never removed: a class that
+        # implements multiple schemas is nullable as soon as one of them says so, and an existing
+        # '| None' may record real-world behaviour the spec does not declare.
+        #
+        # 'new' may also carry additional, newly-discovered union members (e.g. the schema is
+        # shared with another PyGithub class as in NamedUser and Organization) - that's a separate
+        # decision from nullability, so we only require every existing member to still be present in
+        # 'new', not that they're equal. Adding those extra members automatically would silently
+        # change the property's type beyond what was asked for.
+        new_members = cls.union_members(new)
+        if "None" not in new_members:
+            return False
+        return cls.union_members(existing) <= (new_members - {"None"})
 
     def widen_return_to_nullable(self, func: cst.FunctionDef, prop: Property) -> cst.FunctionDef:
         # updates the return annotation of an existing @property accessor to 'T | None'
@@ -1630,7 +1648,8 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         new_annotation = self.create_type(prop.annotation_type, short_class_name=True)
         if not self.is_widened_to_nullable(func.returns.annotation, new_annotation):
             return func
-        return func.with_changes(returns=func.returns.with_changes(annotation=new_annotation))
+        widened = cst.BinaryOperation(func.returns.annotation, cst.BitOr(), cst.Name("None"))
+        return func.with_changes(returns=func.returns.with_changes(annotation=widened))
 
     def widen_init_attr_to_nullable(
         self, statement: cst.SimpleStatementLine, prop: Property
@@ -1648,8 +1667,10 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             and self.is_widened_to_nullable(existing.slice[0].slice.value, new.slice[0].slice.value)
         ):
             return statement
+        widened_inner = cst.BinaryOperation(existing.slice[0].slice.value, cst.BitOr(), cst.Name("None"))
+        widened = existing.with_changes(slice=[existing.slice[0].with_changes(slice=cst.Index(widened_inner))])
         return statement.with_changes(
-            body=[ann_assign.with_changes(annotation=ann_assign.annotation.with_changes(annotation=new))]
+            body=[ann_assign.with_changes(annotation=ann_assign.annotation.with_changes(annotation=widened))]
         )
 
     @classmethod
