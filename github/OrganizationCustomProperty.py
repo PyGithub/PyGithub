@@ -97,15 +97,15 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         self._values_editable_by: Attribute[str] = NotSet
 
     @property
-    def allowed_values(self) -> Opt[list[str] | None]:
+    def allowed_values(self) -> list[str] | None:
         return self._allowed_values.value
 
     @property
-    def default_value(self) -> Opt[str | list[str] | None]:
+    def default_value(self) -> str | list[str] | None:
         return self._default_value.value
 
     @property
-    def description(self) -> Opt[str | None]:
+    def description(self) -> str | None:
         return self._description.value
 
     @property
@@ -113,7 +113,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._property_name.value
 
     @property
-    def required(self) -> Opt[bool | None]:
+    def required(self) -> bool | None:
         return self._required.value
 
     @property
@@ -129,7 +129,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._value_type.value
 
     @property
-    def values_editable_by(self) -> Opt[str | None]:
+    def values_editable_by(self) -> str | None:
         return self._values_editable_by.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
