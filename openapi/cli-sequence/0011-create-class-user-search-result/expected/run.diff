@@ -23,7 +23,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +    def _initAttributes(self) -> None:
 +        super()._initAttributes()
 +        self._score: Attribute[float] = NotSet
-+        self._suspended_at: Attribute[datetime] = NotSet
++        self._suspended_at: Attribute[datetime | None] = NotSet
 +
 +    def __repr__(self) -> str:
 +        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
@@ -35,7 +35,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +        return self._score.value
 +
 +    @property
-+    def suspended_at(self) -> datetime:
++    def suspended_at(self) -> datetime | None:
 +        self._completeIfNotSet(self._suspended_at)
 +        return self._suspended_at.value
 +
@@ -49,7 +49,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -819,6 +819,67 @@
+@@ -829,6 +829,68 @@
        ],
        "test_filename": "tests/NamedUser.py"
      },
@@ -93,7 +93,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "suspended_at": {
 +          "name": "suspended_at",
 +          "returns": [
-+            "datetime"
++            "datetime",
++            "None"
 +          ],
 +          "schema": {
 +            "format": "date-time",
@@ -117,7 +118,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NonCompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -936,6 +997,7 @@
+@@ -946,6 +1008,7 @@
          "CompletableGithubObjectWithPaginatedProperty",
          "GithubObject",
          "NamedUser",
@@ -125,7 +126,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NonCompletableGithubObject"
        ],
        "Attribute": [
-@@ -945,14 +1007,19 @@
+@@ -955,14 +1018,19 @@
        ],
        "CompletableGithubObject": [
          "CompletableGithubObjectWithPaginatedProperty",
@@ -146,7 +147,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "Protocol": [
          "Attribute",
          "_BadAttribute",
-@@ -1584,6 +1651,9 @@
+@@ -1594,6 +1662,9 @@
      "schema_to_classes": {
        "/components/schemas/public-user": [
          "NamedUser"

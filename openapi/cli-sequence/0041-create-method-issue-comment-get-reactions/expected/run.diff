@@ -2,7 +2,7 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 --- before/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
 +++ after/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
 @@ -129,6 +129,24 @@
-     def user(self) -> NamedUser:
+     def user(self) -> NamedUser | None:
          self._completeIfNotSet(self._user)
          return self._user.value
 +    
@@ -83,7 +83,7 @@ diff --unified --recursive --new-file before/github/Reaction.py after/github/Rea
 +        self._created_at: Attribute[datetime] = NotSet
 +        self._id: Attribute[int] = NotSet
 +        self._node_id: Attribute[str] = NotSet
-+        self._user: Attribute[NamedUser] = NotSet
++        self._user: Attribute[NamedUser | None] = NotSet
 +
 +    def __repr__(self) -> str:
 +        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
@@ -106,7 +106,7 @@ diff --unified --recursive --new-file before/github/Reaction.py after/github/Rea
 +        return self._node_id.value
 +
 +    @property
-+    def user(self) -> NamedUser:
++    def user(self) -> NamedUser | None:
 +        return self._user.value
 +
 +    def _useAttributes(self, attributes: dict[str, Any]) -> None:
@@ -145,7 +145,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "module": "IssueComment",
        "name": "IssueComment",
        "package": "github",
-@@ -1190,6 +1202,134 @@
+@@ -1203,6 +1215,135 @@
        "schemas": [],
        "test_filename": "tests/GithubObject.py"
      },
@@ -260,7 +260,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "user": {
 +          "name": "user",
 +          "returns": [
-+            "NamedUser"
++            "NamedUser",
++            "None"
 +          ],
 +          "schema": {
 +            "$ref": "#/components/schemas/nullable-simple-user"
@@ -280,7 +281,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "_BadAttribute": {
        "bases": [
          "Attribute"
-@@ -1288,7 +1428,8 @@
+@@ -1301,7 +1442,8 @@
          "IssueComment",
          "NamedUser",
          "NamedUserSearchResult",
@@ -290,7 +291,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        ],
        "Attribute": [
          "_BadAttribute",
-@@ -1307,11 +1448,15 @@
+@@ -1320,11 +1462,15 @@
          "IssueComment",
          "NamedUser",
          "NamedUserSearchResult",
@@ -307,7 +308,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "Protocol": [
          "Attribute",
          "_BadAttribute",
-@@ -1319,8 +1464,20 @@
+@@ -1332,8 +1478,20 @@
          "_ValuedAttribute"
        ]
      },
@@ -330,7 +331,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "return_schema_to_paths": {
        "/components/schemas/actions-artifact-and-log-retention-response": [
          "/orgs/{org}/actions/permissions/artifact-and-log-retention",
-@@ -1950,11 +2107,28 @@
+@@ -1963,11 +2121,28 @@
        "/components/schemas/public-user": [
          "NamedUser"
        ],

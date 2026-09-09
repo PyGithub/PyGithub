@@ -35,7 +35,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -475,7 +475,19 @@
+@@ -477,7 +477,19 @@
          "GithubObject"
        ],
        "inherited_schemas": [],
@@ -56,7 +56,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "module": "NamedUser",
        "name": "NamedUser",
        "package": "github",
-@@ -1483,6 +1495,11 @@
+@@ -1497,6 +1509,11 @@
          "post": [
            "IssueComment.create_reaction"
          ]
@@ -68,7 +68,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        }
      },
      "path_to_return_classes": {
-@@ -1493,6 +1510,11 @@
+@@ -1507,6 +1524,11 @@
          "post": [
            "Reaction"
          ]
@@ -80,7 +80,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        }
      },
      "return_schema_to_paths": {
-@@ -2155,6 +2177,19 @@
+@@ -2169,6 +2191,19 @@
              ]
            }
          ]

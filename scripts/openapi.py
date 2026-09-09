@@ -61,6 +61,24 @@ def resolve_schema(schema_type: dict[str, Any], spec: dict[str, Any]) -> dict[st
     return schema_type
 
 
+def is_nullable_schema(schema_type: dict[str, Any], spec: dict[str, Any], seen: frozenset[str] = frozenset()) -> bool:
+    # A schema allows null values when it declares "nullable": true. That declaration can live in the
+    # referenced schema rather than at the reference site, which is what schema names like
+    # /components/schemas/nullable-simple-user indicate.
+    if schema_type.get("nullable") is True:
+        return True
+    if "$ref" in schema_type:
+        ref = str(schema_type.get("$ref"))
+        if ref in seen:
+            return False
+        return is_nullable_schema(resolve_schema(schema_type, spec), spec, seen | frozenset([ref]))
+    if "allOf" in schema_type and len(schema_type.get("allOf")) == 1:
+        return is_nullable_schema(schema_type.get("allOf")[0], spec, seen)
+    if "oneOf" in schema_type:
+        return any(is_nullable_schema(t, spec, seen) for t in schema_type.get("oneOf"))
+    return False
+
+
 def cst_to_python(value: cst.BaseExpression) -> Any:
     if isinstance(value, cst.List):
         return [cst_to_python(item.value) for item in value.elements]
@@ -369,7 +387,8 @@ class PythonType:
         return self.__repr__() < other.__repr__()
 
     def as_nullable(self) -> PythonType:
-        return self.union(self, None)
+        # PythonType("None") is the None type, a plain None means "unknown type" and would be dropped by union
+        return self.union(self, PythonType("None"))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -398,7 +417,8 @@ class GithubClass:
         return self.__repr__() < other.__repr__()
 
     def as_nullable(self) -> PythonType:
-        return PythonType.union(self, None)
+        # PythonType("None") is the None type, a plain None means "unknown type" and would be dropped by union
+        return PythonType.union(self, PythonType("None"))
 
     def with_filename(self, github_parent_path: str, filename: str | None) -> GithubClass:
         if filename:
@@ -495,6 +515,8 @@ class Property:
     name: str
     data_type: PythonType | GithubClass | None
     deprecated: bool
+    # whether the API may return null for this property, see is_nullable_schema
+    nullable: bool = False
     # the Python identifier for this property; defaults to a sanitized version of name
     python_name: str = None  # type: ignore[assignment]
 
@@ -502,9 +524,17 @@ class Property:
         if self.python_name is None:
             object.__setattr__(self, "python_name", to_python_name(self.name))
 
+    @property
+    def annotation_type(self) -> PythonType | GithubClass | None:
+        # The type to annotate the attribute and its property accessor with. A nullable property
+        # widens to 'T | None', while the _makeXAttribute helper is still picked from data_type.
+        if self.nullable and self.data_type is not None:
+            return self.data_type.as_nullable()
+        return self.data_type
+
     @staticmethod
-    def from_tuples(properties: dict[str, (PythonType | GithubClass | None, bool)]) -> list[Property]:
-        return [Property(name=n, data_type=t, deprecated=d) for n, (t, d) in properties.items()]
+    def from_tuples(properties: dict[str, (PythonType | GithubClass | None, bool, bool)]) -> list[Property]:
+        return [Property(name=n, data_type=t, deprecated=d, nullable=nb) for n, (t, d, nb) in properties.items()]
 
 
 class ParameterOrder(Enum):
@@ -672,9 +702,24 @@ def is_parameter_assertion(stmt: cst.BaseStatement, parameters: set[str]) -> boo
         return False
     stmt = stmt.body[0]
 
-    if not (isinstance(stmt, cst.Assert) and isinstance(stmt.test, cst.Call)):
+    if not isinstance(stmt, cst.Assert):
         return False
-    call = stmt.test
+    test = stmt.test
+    # a nullable parameter is asserted as 'param is None or is_optional(param, …)'
+    if (
+        isinstance(test, cst.BooleanOperation)
+        and isinstance(test.operator, cst.Or)
+        and isinstance(test.left, cst.Comparison)
+        and len(test.left.comparisons) == 1
+        and isinstance(test.left.comparisons[0].operator, cst.Is)
+        and isinstance(test.left.comparisons[0].comparator, cst.Name)
+        and test.left.comparisons[0].comparator.value == "None"
+    ):
+        test = test.right
+
+    if not isinstance(test, cst.Call):
+        return False
+    call = test
 
     if not (isinstance(call.func, cst.Name) and call.func.value in ["isinstance", "is_optional", "is_optional_list"]):
         return False
@@ -840,6 +885,19 @@ class CstMethods(abc.ABC):
             ]
             return cst.Subscript(cst.Name(data_type.type), slice=elems)
         return cst.Name(data_type.type)
+
+    @staticmethod
+    def split_none_type(
+        data_type: PythonType | GithubClass | None,
+    ) -> tuple[bool, PythonType | GithubClass | None]:
+        # Splits the None type off a nullable union: returns whether the type was nullable and the
+        # remaining type. Used where None cannot be expressed as a type, e.g. isinstance assertions.
+        if isinstance(data_type, PythonType) and data_type.type == "union":
+            none_type = PythonType("None")
+            inner_types = [inner for inner in data_type.inner_types if inner != none_type]
+            if len(inner_types) < len(data_type.inner_types):
+                return True, PythonType.union(*inner_types)
+        return False, data_type
 
     @classmethod
     def find_nodes(cls, node: cst.CSTNode, node_type: type[cst.CSTNode]) -> list[cst.CSTNode]:
@@ -1494,7 +1552,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         if updated_node.name.value == "_useAttributes":
             while self.current_property:
                 prop = self.properties.pop(0)
-                node = self.create_property_function(prop.python_name, prop.data_type, prop.deprecated)
+                node = self.create_property_function(prop.python_name, prop.annotation_type, prop.deprecated)
                 nodes.append(cst.EmptyLine(indent=False))
                 nodes.append(node)
             nodes.append(self.update_use_attrs(updated_node))
@@ -1508,20 +1566,23 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             or not updated_node_is_github_object_property
         ):
             prop = self.properties.pop(0)
-            node = self.create_property_function(prop.python_name, prop.data_type, prop.deprecated)
+            node = self.create_property_function(prop.python_name, prop.annotation_type, prop.deprecated)
             nodes.append(cst.EmptyLine(indent=False))
             nodes.append(node)
 
         if updated_node_is_github_object_property:
-            if (
-                not self.current_property
-                or updated_node.name.value != self.current_property.python_name
-                or self.current_property.deprecated
-            ):
+            matching_property = (
+                self.current_property
+                if self.current_property and updated_node.name.value == self.current_property.python_name
+                else None
+            )
+            if matching_property is not None:
+                updated_node = self.widen_return_to_nullable(updated_node, matching_property)
+            if matching_property is None or matching_property.deprecated:
                 nodes.append(self.deprecate_function(updated_node) if self.deprecate else updated_node)
             else:
                 nodes.append(updated_node)
-            if self.current_property and updated_node.name.value == self.current_property.python_name:
+            if matching_property is not None:
                 self.properties.pop(0)
         else:
             nodes.append(updated_node)
@@ -1556,6 +1617,64 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         )
 
     @classmethod
+    def union_members(cls, node: cst.BaseExpression) -> frozenset[str]:
+        # Flattens a 'A | B | C' annotation into its top-level member strings, so union
+        # membership can be compared as sets regardless of nesting or ordering.
+        if isinstance(node, cst.BinaryOperation) and isinstance(node.operator, cst.BitOr):
+            return cls.union_members(node.left) | cls.union_members(node.right)
+        return frozenset({cls.code(node).strip()})
+
+    @classmethod
+    def is_widened_to_nullable(cls, existing: cst.BaseExpression, new: cst.BaseExpression) -> bool:
+        # Tells whether 'existing' can be safely widened to nullable given what the spec says the
+        # type should be ('new'). Nullability is only ever added, never removed: a class that
+        # implements multiple schemas is nullable as soon as one of them says so, and an existing
+        # '| None' may record real-world behaviour the spec does not declare.
+        #
+        # We deliberately don't require the base type to match between 'existing' and 'new': the
+        # spec-derived type may disagree with the hand-picked existing type (e.g. GitHub returns a
+        # 'datetime'-shaped string for a property the spec merely calls 'string', or the schema is
+        # shared with another PyGithub class as in NamedUser and Organization) - that disagreement is
+        # a separate concern from nullability, so we never adopt 'new' here, only ever add '| None' to
+        # 'existing' as-is. The only thing that must hold is that 'existing' isn't already nullable,
+        # so this stays a no-op once applied.
+        if "None" not in cls.union_members(new):
+            return False
+        return "None" not in cls.union_members(existing)
+
+    def widen_return_to_nullable(self, func: cst.FunctionDef, prop: Property) -> cst.FunctionDef:
+        # updates the return annotation of an existing @property accessor to 'T | None'
+        if not prop.nullable or func.returns is None:
+            return func
+        new_annotation = self.create_type(prop.annotation_type, short_class_name=True)
+        if not self.is_widened_to_nullable(func.returns.annotation, new_annotation):
+            return func
+        widened = cst.BinaryOperation(func.returns.annotation, cst.BitOr(), cst.Name("None"))
+        return func.with_changes(returns=func.returns.with_changes(annotation=widened))
+
+    def widen_init_attr_to_nullable(
+        self, statement: cst.SimpleStatementLine, prop: Property
+    ) -> cst.SimpleStatementLine:
+        # updates an existing '_attr: Attribute[T] = NotSet' declaration to 'Attribute[T | None]'
+        if not prop.nullable:
+            return statement
+        ann_assign = statement.body[0]
+        existing = ann_assign.annotation.annotation
+        new = self.create_init_attr(prop).body[0].annotation.annotation
+        if not (
+            isinstance(existing, cst.Subscript)
+            and isinstance(new, cst.Subscript)
+            and len(existing.slice) == 1
+            and self.is_widened_to_nullable(existing.slice[0].slice.value, new.slice[0].slice.value)
+        ):
+            return statement
+        widened_inner = cst.BinaryOperation(existing.slice[0].slice.value, cst.BitOr(), cst.Name("None"))
+        widened = existing.with_changes(slice=[existing.slice[0].with_changes(slice=cst.Index(widened_inner))])
+        return statement.with_changes(
+            body=[ann_assign.with_changes(annotation=ann_assign.annotation.with_changes(annotation=widened))]
+        )
+
+    @classmethod
     def create_init_attr(cls, prop: Property) -> cst.SimpleStatementLine:
         # we need to make the 'headers' attribute truly private,
         # otherwise it conflicts with GithubObject._headers
@@ -1569,7 +1688,7 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
                             value=cst.Name("Attribute"),
                             slice=[
                                 cst.SubscriptElement(
-                                    slice=cst.Index(cls.create_type(prop.data_type, short_class_name=True))
+                                    slice=cst.Index(cls.create_type(prop.annotation_type, short_class_name=True))
                                 )
                             ],
                         )
@@ -1725,24 +1844,25 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
         )
 
     def update_init_attrs(self, func: cst.FunctionDef) -> cst.FunctionDef:
-        # adds only missing attributes, does not update existing ones
+        # adds missing attributes, of existing ones it only widens the annotation to nullable
         statements = func.body.body
-        new_statements = [self.create_init_attr(p) for p in self.all_properties]
+        new_properties = [(self.create_init_attr(p), p) for p in self.all_properties]
         updated_statements = []
 
         for statement in statements:
             if not isinstance(statement, cst.SimpleStatementLine) or not isinstance(statement.body[0], cst.AnnAssign):
                 updated_statements.append(statement)
                 continue
-            while new_statements and new_statements[0].body[0].target.attr.value < statement.body[0].target.attr.value:
-                updated_statements.append(new_statements.pop(0))
-            if new_statements and new_statements[0].body[0].target.attr.value == statement.body[0].target.attr.value:
-                updated_statements.append(statement)
-                new_statements.pop(0)
+            while (
+                new_properties and new_properties[0][0].body[0].target.attr.value < statement.body[0].target.attr.value
+            ):
+                updated_statements.append(new_properties.pop(0)[0])
+            if new_properties and new_properties[0][0].body[0].target.attr.value == statement.body[0].target.attr.value:
+                updated_statements.append(self.widen_init_attr_to_nullable(statement, new_properties.pop(0)[1]))
             else:
                 updated_statements.append(statement)
-        while new_statements:
-            updated_statements.append(new_statements.pop(0))
+        while new_properties:
+            updated_statements.append(new_properties.pop(0)[0])
 
         # remove dangling pass command
         if len(updated_statements) > 1 and self.code(updated_statements[0]).strip().strip() == "pass":
@@ -2701,34 +2821,40 @@ class UpdateMethodsTransformer(CstTransformerBase, abc.ABC):
         # generate parameter assertions
         parameters_sorted = self.required_first(parameters)
         assertion_stmts = [
-            cst.SimpleStatementLine(
-                body=[
-                    cst.Assert(
-                        test=cst.Call(
-                            func=(cst.Name("is_list") if is_list else cst.Name("isinstance"))
-                            if parameter.required
-                            else (
-                                (cst.Name("is_list") if is_star else cst.Name("is_optional_list"))
-                                if is_list
-                                else cst.Name("is_optional")
-                            ),
-                            args=[
-                                cst.Arg(cst.Name(parameter.python_name)),
-                                cst.Arg(
-                                    self.create_type(
-                                        parameter.data_type.inner_types[0] if is_list else parameter.data_type,
-                                        union_as_tuple=True,
-                                    )
-                                ),
-                            ],
-                        ),
-                        msg=cst.Name(parameter.python_name),
-                    )
-                ]
-            )
+            cst.SimpleStatementLine(body=[cst.Assert(test=test, msg=cst.Name(parameter.python_name))])
             for parameter in parameters_sorted
             for is_list in [isinstance(parameter.data_type, PythonType) and parameter.data_type.type == "list"]
             for is_star in [parameter.position == ParameterOrder.STAR]
+            for data_type in [parameter.data_type.inner_types[0] if is_list else parameter.data_type]
+            # None is not a type, it cannot be asserted with isinstance
+            for nullable, data_type in [self.split_none_type(data_type)]
+            for call in [
+                cst.Call(
+                    func=(cst.Name("is_list") if is_list else cst.Name("isinstance"))
+                    if parameter.required
+                    else (
+                        (cst.Name("is_list") if is_star else cst.Name("is_optional_list"))
+                        if is_list
+                        else cst.Name("is_optional")
+                    ),
+                    args=[
+                        cst.Arg(cst.Name(parameter.python_name)),
+                        cst.Arg(self.create_type(data_type, union_as_tuple=True)),
+                    ],
+                )
+            ]
+            for test in [
+                cst.BooleanOperation(
+                    left=cst.Comparison(
+                        left=cst.Name(parameter.python_name),
+                        comparisons=[cst.ComparisonTarget(operator=cst.Is(), comparator=cst.Name("None"))],
+                    ),
+                    operator=cst.Or(),
+                    right=call,
+                )
+                if nullable
+                else call
+            ]
         ]
 
         assertions_start_idx = (
@@ -3555,11 +3681,22 @@ class OpenApi:
                     return True
 
                 all_properties = {
-                    k: (python_type, v.get("deprecated", False))
+                    k: (python_type, v.get("deprecated", False), is_nullable_schema(v, spec))
                     for k, v in schema.get("properties", {}).items()
                     for python_type in [self.as_python_type(v, schema_path + ["properties", k])]
+                    # dict-shaped properties are otherwise skipped unless --new-schemas asks for them
+                    # (to avoid creating new dict-typed properties without review), but an already
+                    # implemented dict property still needs to flow through so its nullability can be
+                    # widened - ApplySchemaTransformer only ever widens existing properties in place,
+                    # it never uses this to fabricate a new one.
+                    for k_already_implemented in [k in cls_properties]
                     if is_supported_type(k, v, python_type, self.verbose)
-                    and (is_not_dict_type(python_type) or new_schemas_as_dict or new_schemas_create_class)
+                    and (
+                        is_not_dict_type(python_type)
+                        or new_schemas_as_dict
+                        or new_schemas_create_class
+                        or k_already_implemented
+                    )
                 }
                 genuine_properties = {k: v for k, v in all_properties.items() if k not in inherited_properties}
 

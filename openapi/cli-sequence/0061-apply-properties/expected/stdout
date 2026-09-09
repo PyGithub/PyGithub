@@ -64,7 +64,7 @@ Diff:
 +        self._owner: Attribute[NamedUser] = NotSet
          self._private: Attribute[bool] = NotSet
          self._pulls_url: Attribute[str] = NotSet
-         self._pushed_at: Attribute[datetime] = NotSet
+         self._pushed_at: Attribute[datetime | None] = NotSet
 @@ -466,6 +469,11 @@
      def open_issues_count(self) -> int:
          self._completeIfNotSet(self._open_issues_count)

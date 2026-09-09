@@ -1,0 +1,16 @@
+--- github/Repository.py	2026-09-09 20:00:16.424969425 +0200
++++ github/Repository.py	2026-09-09 20:36:07.485520348 +0200
+@@ -65,11 +65,11 @@
+         self._compare_url: Attribute[str] = NotSet
+         self._contents_url: Attribute[str] = NotSet
+         self._contributors_url: Attribute[str] = NotSet
+-        self._created_at: Attribute[datetime | None] = NotSet
++        self._created_at: Attribute[datetime] = NotSet
+         self._default_branch: Attribute[str] = NotSet
+         self._delete_branch_on_merge: Attribute[bool] = NotSet
+         self._deployments_url: Attribute[str] = NotSet
+-        self._description: Attribute[str | None] = NotSet
++        self._description: Attribute[str] = NotSet
+         self._disabled: Attribute[bool] = NotSet
+         self._downloads_url: Attribute[str] = NotSet
+         self._events_url: Attribute[str] = NotSet
