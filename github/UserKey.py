@@ -65,7 +65,7 @@ class UserKey(CompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._key: Attribute[str] = NotSet
-        self._last_used: Attribute[datetime] = NotSet
+        self._last_used: Attribute[datetime | None] = NotSet
         self._read_only: Attribute[bool] = NotSet
         self._title: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
@@ -90,7 +90,7 @@ class UserKey(CompletableGithubObject):
         return self._key.value
 
     @property
-    def last_used(self) -> datetime:
+    def last_used(self) -> datetime | None:
         self._completeIfNotSet(self._last_used)
         return self._last_used.value
 

@@ -51,21 +51,21 @@ class SecretScanAlert(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._assigned_to: Attribute[NamedUser | Organization] = NotSet
+        self._assigned_to: Attribute[NamedUser | Organization | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._first_location_detected: Attribute[SecretScanAlertInstance] = NotSet
+        self._first_location_detected: Attribute[SecretScanAlertInstance | None] = NotSet
         self._has_more_locations: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
-        self._is_base64_encoded: Attribute[bool] = NotSet
+        self._is_base64_encoded: Attribute[bool | None] = NotSet
         self._locations_url: Attribute[str] = NotSet
-        self._multi_repo: Attribute[bool] = NotSet
+        self._multi_repo: Attribute[bool | None] = NotSet
         self._number: Attribute[int] = NotSet
-        self._publicly_leaked: Attribute[bool] = NotSet
+        self._publicly_leaked: Attribute[bool | None] = NotSet
         self._push_protection_bypass_request_comment: Attribute[str | None] = NotSet
         self._push_protection_bypass_request_html_url: Attribute[str | None] = NotSet
         self._push_protection_bypass_request_reviewer: Attribute[NamedUser | None] = NotSet
         self._push_protection_bypass_request_reviewer_comment: Attribute[str | None] = NotSet
-        self._push_protection_bypassed: Attribute[bool] = NotSet
+        self._push_protection_bypassed: Attribute[bool | None] = NotSet
         self._push_protection_bypassed_at: Attribute[datetime | None] = NotSet
         self._push_protection_bypassed_by: Attribute[NamedUser | None] = NotSet
         self._resolution: Attribute[str | None] = NotSet
@@ -76,7 +76,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         self._secret_type: Attribute[str] = NotSet
         self._secret_type_display_name: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
         self._validity: Attribute[str] = NotSet
 
@@ -84,7 +84,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self.get__repr__({"number": self.number})
 
     @property
-    def assigned_to(self) -> NamedUser | Organization:
+    def assigned_to(self) -> NamedUser | Organization | None:
         return self._assigned_to.value
 
     @property
@@ -92,7 +92,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def first_location_detected(self) -> SecretScanAlertInstance:
+    def first_location_detected(self) -> SecretScanAlertInstance | None:
         return self._first_location_detected.value
 
     @property
@@ -104,7 +104,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._html_url.value
 
     @property
-    def is_base64_encoded(self) -> bool:
+    def is_base64_encoded(self) -> bool | None:
         return self._is_base64_encoded.value
 
     @property
@@ -112,7 +112,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._locations_url.value
 
     @property
-    def multi_repo(self) -> bool:
+    def multi_repo(self) -> bool | None:
         return self._multi_repo.value
 
     @property
@@ -120,7 +120,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._number.value
 
     @property
-    def publicly_leaked(self) -> bool:
+    def publicly_leaked(self) -> bool | None:
         return self._publicly_leaked.value
 
     @property
@@ -140,7 +140,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._push_protection_bypass_request_reviewer_comment.value
 
     @property
-    def push_protection_bypassed(self) -> bool:
+    def push_protection_bypassed(self) -> bool | None:
         return self._push_protection_bypassed.value
 
     @property
@@ -184,7 +184,7 @@ class SecretScanAlert(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def updated_at(self) -> datetime:
+    def updated_at(self) -> datetime | None:
         return self._updated_at.value
 
     @property

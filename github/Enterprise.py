@@ -70,16 +70,16 @@ class Enterprise(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._avatar_url: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime | None] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._slug: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
-        self._website_url: Attribute[str] = NotSet
+        self._website_url: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"slug": self._slug.value})
@@ -89,11 +89,11 @@ class Enterprise(NonCompletableGithubObject):
         return self._avatar_url.value
 
     @property
-    def created_at(self) -> datetime:
+    def created_at(self) -> datetime | None:
         return self._created_at.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         return self._description.value
 
     @property
@@ -123,7 +123,7 @@ class Enterprise(NonCompletableGithubObject):
         return self._slug.value
 
     @property
-    def updated_at(self) -> datetime:
+    def updated_at(self) -> datetime | None:
         return self._updated_at.value
 
     @property
@@ -133,7 +133,7 @@ class Enterprise(NonCompletableGithubObject):
         return self._url.value
 
     @property
-    def website_url(self) -> str:
+    def website_url(self) -> str | None:
         return self._website_url.value
 
     @staticmethod

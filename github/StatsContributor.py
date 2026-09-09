@@ -106,12 +106,12 @@ class StatsContributor(NonCompletableGithubObject):
                 self._w = self._makeTimestampAttribute(attributes["w"])
 
     def _initAttributes(self) -> None:
-        self._author: Attribute[NamedUser | Organization] = NotSet
+        self._author: Attribute[NamedUser | Organization | None] = NotSet
         self._total: Attribute[int] = NotSet
         self._weeks: Attribute[list[StatsContributor.Week]] = NotSet
 
     @property
-    def author(self) -> NamedUser | Organization:
+    def author(self) -> NamedUser | Organization | None:
         return self._author.value
 
     @property

@@ -78,7 +78,7 @@ class GithubApp(CompletableGithubObject):
         self._client_id: Attribute[str] = NotSet
         self._client_secret: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._events: Attribute[list[str]] = NotSet
         self._external_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
@@ -113,7 +113,7 @@ class GithubApp(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         self._completeIfNotSet(self._description)
         return self._description.value
 
