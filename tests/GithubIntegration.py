@@ -37,7 +37,8 @@
 
 import time  # NOQA
 
-from urllib3.exceptions import InsecureRequestWarning
+import requests  # NOQA
+from niquests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts

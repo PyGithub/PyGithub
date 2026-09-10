@@ -51,6 +51,7 @@ from unittest import mock
 from unittest.mock import Mock
 
 import jwt
+import niquests.utils
 
 import github
 from github.Auth import Auth, Login
@@ -268,6 +269,7 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(user.login, "EnricoMi")
 
     def testNetrcAuth(self):
+        niquests.utils.get_netrc_auth.cache_clear()
         with NamedTemporaryFile("wt", delete=False) as tmp:
             # write temporary netrc file
             tmp.write("machine api.github.com\n")
@@ -285,6 +287,7 @@ class Authentication(Framework.BasicTestCase):
             self.assertEqual(auth.token_type, "Basic")
 
     def testNetrcAuthFails(self):
+        niquests.utils.get_netrc_auth.cache_clear()
         # provide an empty netrc file to make sure this test does not find one
         with NamedTemporaryFile("wt", delete=False) as tmp:
             tmp.close()

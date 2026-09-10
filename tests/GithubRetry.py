@@ -33,8 +33,7 @@ from datetime import datetime
 from io import BytesIO
 from unittest import mock
 
-import urllib3.response
-from urllib3 import Retry
+import niquests.packages.urllib3.response
 
 import github
 from github.GithubRetry import DEFAULT_SECONDARY_RATE_WAIT
@@ -79,7 +78,7 @@ class GithubRetry(unittest.TestCase):
             orig_retry = retry
             with mock.patch.object(retry, "_GithubRetry__log") as log:
                 if expect_retry_error:
-                    with self.assertRaises(urllib3.exceptions.MaxRetryError):
+                    with self.assertRaises(niquests.packages.urllib3.exceptions.MaxRetryError):
                         retry.increment("TEST", "URL", response)
                     retry = None
                 else:
@@ -115,7 +114,7 @@ class GithubRetry(unittest.TestCase):
     def response_func(content, reset=None):
         def response():
             stream = BytesIO(content.encode("utf8"))
-            return urllib3.response.HTTPResponse(
+            return niquests.packages.urllib3.response.HTTPResponse(
                 body=stream,
                 preload_content=False,
                 headers={"X-RateLimit-Reset": f"{reset}"} if reset else {},
@@ -349,7 +348,7 @@ class GithubRetry(unittest.TestCase):
         test_increment(retry, response(), expect_retry_error=True)
 
     def do_test_default_behaviour(self, retry, response):
-        expected = Retry(total=retry.total, backoff_factor=retry.backoff_factor)
+        expected = niquests.RetryConfiguration(total=retry.total, backoff_factor=retry.backoff_factor)
         self.assertTrue(retry.total > 0)
         for _ in range(retry.total):
             retry = retry.increment("TEST", "URL", response)
@@ -357,14 +356,14 @@ class GithubRetry(unittest.TestCase):
             self.assertEqual(expected.total, retry.total)
             self.assertEqual(expected.get_backoff_time(), retry.get_backoff_time())
 
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
+        with self.assertRaises(niquests.packages.urllib3.exceptions.MaxRetryError):
             retry.increment("TEST", "URL", response)
-        with self.assertRaises(urllib3.exceptions.MaxRetryError):
+        with self.assertRaises(niquests.packages.urllib3.exceptions.MaxRetryError):
             expected.increment("TEST", "URL", response)
 
     def test_403_with_retry_after(self):
         retry = github.GithubRetry(total=3)
-        response = urllib3.response.HTTPResponse(status=403, headers={"Retry-After": "123"})
+        response = niquests.packages.urllib3.response.HTTPResponse(status=403, headers={"Retry-After": "123"})
         self.do_test_default_behaviour(retry, response)
 
     def test_403_with_non_retryable_error(self):
@@ -378,17 +377,17 @@ class GithubRetry(unittest.TestCase):
 
     def test_misc_response(self):
         retry = github.GithubRetry(total=3)
-        response = urllib3.response.HTTPResponse()
+        response = niquests.packages.urllib3.response.HTTPResponse()
         self.do_test_default_behaviour(retry, response)
 
     def test_misc_response_exponential_backoff(self):
         retry = github.GithubRetry(total=3, backoff_factor=10)
-        response = urllib3.response.HTTPResponse()
+        response = niquests.packages.urllib3.response.HTTPResponse()
         self.do_test_default_behaviour(retry, response)
 
-    def test_error_in_get_content(self):
+    def test_error_inspecting_response_body(self):
         retry = github.GithubRetry(total=3)
-        response = urllib3.response.HTTPResponse(status=403, reason="NOT GOOD")
+        response = niquests.packages.urllib3.response.HTTPResponse(status=403, reason="NOT GOOD")
 
         with mock.patch.object(retry, "_GithubRetry__log") as log:
             with self.assertRaises(github.GithubException) as exp:
@@ -403,7 +402,7 @@ class GithubRetry(unittest.TestCase):
 
             self.assertIsInstance(exp.exception.__cause__.__cause__, ValueError)
             self.assertEqual(
-                ("Unable to determine whether fp is closed.",),
+                ("Expecting value: line 1 column 1 (char 0)",),
                 exp.exception.__cause__.__cause__.args,
             )
 
