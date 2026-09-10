@@ -530,6 +530,20 @@ class Repository(Framework.TestCase):
         )
         self.assertEqual(commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea")
 
+    def testCreateGitCommitWithSignature(self):
+        tree = self.repo.get_git_tree("107139a922f33bab6fbeb9f9eb8787e7f19e0528")
+        signature = (
+            "-----BEGIN PGP SIGNATURE-----\n"
+            "\n"
+            "iQEcBAABAgAGBQJUxSb3AAoJEFdOFQKAcAilr+MH/1MYbYt4rZaEBiXqNKPhLzT2\n"
+            "-----END PGP SIGNATURE-----\n"
+        )
+        commit = self.repo.create_git_commit("Commit created by PyGithub", tree, [], signature=signature)
+        self.assertEqual(commit.sha, "0b820628236ab8bab3890860fc414fa757ca15f4")
+        self.assertTrue(commit.verification.verified)
+        self.assertEqual(commit.verification.reason, "valid")
+        self.assertEqual(commit.verification.signature, signature)
+
     def testCreateGitRelease(self):
         release = self.repo.create_git_release(
             "vX.Y.Z-by-PyGithub-acctest",
