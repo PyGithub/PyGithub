@@ -19,17 +19,20 @@ jobs:
 
   test:
     runs-on: ${{ matrix.os }}
-    name: test (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
+    name: test (${{ matrix.request-lib }} and Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
     strategy:
       fail-fast: false
       matrix:
-        # keep in sync with tox.ini [gh-actions] section
+        # keep in sync with tox.ini [gh-actions] / [gh-actions:env] sections
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
+        request-lib: ["requests", "niquests"]
         os: ["ubuntu-latest"]
         os-label: ["Ubuntu"]
         include:
-          - {python-version: "3.10", os: "windows-latest", os-label: "Windows"}
-          - {python-version: "3.10", os: "macos-latest", os-label: "macOS"}
+          - {python-version: "3.10", request-lib: "requests", os: "windows-latest", os-label: "Windows"}
+          - {python-version: "3.10", request-lib: "niquests", os: "windows-latest", os-label: "Windows"}
+          - {python-version: "3.10", request-lib: "requests", os: "macos-latest", os-label: "macOS"}
+          - {python-version: "3.10", request-lib: "niquests", os: "macos-latest", os-label: "macOS"}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Set up Python
@@ -43,11 +46,13 @@ jobs:
           pip install tox tox-gh-actions
       - name: Run tests
         run: tox
+        env:
+          REQUEST_LIB: ${{ matrix.request-lib }}
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
-          name: Test Results (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
+          name: Test Results (${{ matrix.request-lib }} and Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
           path: pytest.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0

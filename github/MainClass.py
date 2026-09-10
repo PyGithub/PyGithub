@@ -106,8 +106,6 @@ import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar, overload
 
-import niquests
-
 import github.ApplicationOAuth
 import github.Auth
 import github.AuthenticatedUser
@@ -142,6 +140,7 @@ from github.GithubObject import (
 from github.GithubRetry import GithubRetry
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
+from github.requestlib import Retry
 
 if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
@@ -200,7 +199,7 @@ class Github:
         user_agent: str = Consts.DEFAULT_USER_AGENT,
         per_page: int = Consts.DEFAULT_PER_PAGE,
         verify: bool | str = True,
-        retry: int | niquests.RetryConfiguration | None = default_retry,
+        retry: int | Retry | None = default_retry,
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
@@ -241,7 +240,7 @@ class Github:
         assert user_agent is None or isinstance(user_agent, str), user_agent
         assert isinstance(per_page, int), per_page
         assert isinstance(verify, (bool, str)), verify
-        assert retry is None or isinstance(retry, int) or isinstance(retry, niquests.RetryConfiguration), retry
+        assert retry is None or isinstance(retry, int) or isinstance(retry, Retry), retry
         assert pool_size is None or isinstance(pool_size, int), pool_size
         assert seconds_between_requests is None or seconds_between_requests >= 0
         assert seconds_between_writes is None or seconds_between_writes >= 0

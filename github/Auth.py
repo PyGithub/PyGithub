@@ -40,11 +40,11 @@ from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Union
 
 import jwt
-from niquests import utils
 
 from github import Consts
 from github.InstallationAuthorization import InstallationAuthorization
 from github.Requester import Requester, WithRequester
+from github.requestlib import utils
 
 if TYPE_CHECKING:
     from github.GithubIntegration import GithubIntegration

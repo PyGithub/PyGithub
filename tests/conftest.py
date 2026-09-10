@@ -34,21 +34,7 @@
 #                                                                              #
 ################################################################################
 
-from sys import modules
-
-import niquests
-from niquests.packages import urllib3
-
-# module 'responses' is tied to Requests, and Niquests is entirely compatible with it.
-# we can fool it without effort.
-modules["requests"] = niquests
-modules["requests.adapters"] = niquests.adapters
-modules["requests.models"] = niquests.models
-modules["requests.exceptions"] = niquests.exceptions
-modules["requests.packages.urllib3"] = urllib3
-
-
-from . import Framework  # noqa: E402
+from . import Framework
 
 
 def pytest_addoption(parser):

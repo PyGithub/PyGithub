@@ -31,10 +31,8 @@
 #                                                                              #
 ################################################################################
 
-import niquests
-import requests
-
 import github
+from github.requestlib import exceptions
 
 from . import Framework
 
@@ -45,7 +43,7 @@ class Retry(Framework.TestCase):
     def setUp(self):
         # status codes returned on random github server errors
         status_forcelist = (500, 502, 504)
-        retry = niquests.RetryConfiguration(total=3, read=3, connect=3, status_forcelist=status_forcelist)
+        retry = github.requestlib.Retry(total=3, read=3, connect=3, status_forcelist=status_forcelist)
         self.setRetry(retry)
         super().setUp()
 
@@ -75,7 +73,7 @@ class Retry(Framework.TestCase):
         self.assertEqual(repository.full_name, REPO_NAME)
 
     def testRaisesRetryErrorAfterMaxRetries(self):
-        with self.captureRequests() as calls, self.assertRaises(requests.exceptions.RetryError):
+        with self.captureRequests() as calls, self.assertRaises(exceptions.RetryError):
             self.g.get_repo("PyGithub/PyGithub")
         self.assertEqual(len(calls), 4)
         for call in calls:
