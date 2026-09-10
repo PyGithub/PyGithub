@@ -96,19 +96,19 @@ class PullRequestComment(CompletableGithubObject):
         self._original_commit_id: Attribute[str] = NotSet
         self._original_line: Attribute[int] = NotSet
         self._original_position: Attribute[int] = NotSet
-        self._original_start_line: Attribute[int] = NotSet
+        self._original_start_line: Attribute[int | None] = NotSet
         self._path: Attribute[str] = NotSet
-        self._position: Attribute[int] = NotSet
-        self._pull_request_review_id: Attribute[int] = NotSet
+        self._position: Attribute[int | None] = NotSet
+        self._pull_request_review_id: Attribute[int | None] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
         self._reactions: Attribute[dict[str, Any]] = NotSet
         self._side: Attribute[str] = NotSet
-        self._start_line: Attribute[int] = NotSet
-        self._start_side: Attribute[str] = NotSet
+        self._start_line: Attribute[int | None] = NotSet
+        self._start_side: Attribute[str | None] = NotSet
         self._subject_type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -194,7 +194,7 @@ class PullRequestComment(CompletableGithubObject):
         return self._original_position.value
 
     @property
-    def original_start_line(self) -> int:
+    def original_start_line(self) -> int | None:
         self._completeIfNotSet(self._original_start_line)
         return self._original_start_line.value
 
@@ -204,12 +204,12 @@ class PullRequestComment(CompletableGithubObject):
         return self._path.value
 
     @property
-    def position(self) -> int:
+    def position(self) -> int | None:
         self._completeIfNotSet(self._position)
         return self._position.value
 
     @property
-    def pull_request_review_id(self) -> int:
+    def pull_request_review_id(self) -> int | None:
         self._completeIfNotSet(self._pull_request_review_id)
         return self._pull_request_review_id.value
 
@@ -229,12 +229,12 @@ class PullRequestComment(CompletableGithubObject):
         return self._side.value
 
     @property
-    def start_line(self) -> int:
+    def start_line(self) -> int | None:
         self._completeIfNotSet(self._start_line)
         return self._start_line.value
 
     @property
-    def start_side(self) -> str:
+    def start_side(self) -> str | None:
         self._completeIfNotSet(self._start_side)
         return self._start_side.value
 
@@ -254,7 +254,7 @@ class PullRequestComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 

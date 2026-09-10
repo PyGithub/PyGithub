@@ -105,11 +105,11 @@ class Installation(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._access_tokens_url: Attribute[str] = NotSet
-        self._account: Attribute[NamedUser | Organization] = NotSet
+        self._account: Attribute[NamedUser | Organization | None] = NotSet
         self._app_id: Attribute[int] = NotSet
         self._app_slug: Attribute[str] = NotSet
         self._client_id: Attribute[str] = NotSet
-        self._contact_email: Attribute[str] = NotSet
+        self._contact_email: Attribute[str | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._events: Attribute[list[str]] = NotSet
         self._has_multiple_single_files: Attribute[bool] = NotSet
@@ -118,10 +118,10 @@ class Installation(NonCompletableGithubObject):
         self._permissions: Attribute[dict[str, Any]] = NotSet
         self._repositories_url: Attribute[str] = NotSet
         self._repository_selection: Attribute[str] = NotSet
-        self._single_file_name: Attribute[str] = NotSet
+        self._single_file_name: Attribute[str | None] = NotSet
         self._single_file_paths: Attribute[list[str]] = NotSet
-        self._suspended_at: Attribute[datetime] = NotSet
-        self._suspended_by: Attribute[NamedUser] = NotSet
+        self._suspended_at: Attribute[datetime | None] = NotSet
+        self._suspended_by: Attribute[NamedUser | None] = NotSet
         self._target_id: Attribute[int] = NotSet
         self._target_type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -134,7 +134,7 @@ class Installation(NonCompletableGithubObject):
         return self._access_tokens_url.value
 
     @property
-    def account(self) -> NamedUser | Organization:
+    def account(self) -> NamedUser | Organization | None:
         return self._account.value
 
     @property
@@ -150,7 +150,7 @@ class Installation(NonCompletableGithubObject):
         return self._client_id.value
 
     @property
-    def contact_email(self) -> str:
+    def contact_email(self) -> str | None:
         return self._contact_email.value
 
     @property
@@ -196,7 +196,7 @@ class Installation(NonCompletableGithubObject):
         return self._requester
 
     @property
-    def single_file_name(self) -> str:
+    def single_file_name(self) -> str | None:
         return self._single_file_name.value
 
     @property
@@ -204,11 +204,11 @@ class Installation(NonCompletableGithubObject):
         return self._single_file_paths.value
 
     @property
-    def suspended_at(self) -> datetime:
+    def suspended_at(self) -> datetime | None:
         return self._suspended_at.value
 
     @property
-    def suspended_by(self) -> NamedUser:
+    def suspended_by(self) -> NamedUser | None:
         return self._suspended_by.value
 
     @property
@@ -252,7 +252,7 @@ class Installation(NonCompletableGithubObject):
                 attributes,
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore
         if "app_id" in attributes:  # pragma no branch
             self._app_id = self._makeIntAttribute(attributes["app_id"])
         if "app_slug" in attributes:  # pragma no branch

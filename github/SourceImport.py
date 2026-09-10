@@ -55,28 +55,28 @@ class SourceImport(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._authors_count: Attribute[int] = NotSet
+        self._authors_count: Attribute[int | None] = NotSet
         self._authors_url: Attribute[str] = NotSet
-        self._commit_count: Attribute[int] = NotSet
-        self._error_message: Attribute[str] = NotSet
-        self._failed_step: Attribute[str] = NotSet
+        self._commit_count: Attribute[int | None] = NotSet
+        self._error_message: Attribute[str | None] = NotSet
+        self._failed_step: Attribute[str | None] = NotSet
         self._has_large_files: Attribute[bool] = NotSet
         self._html_url: Attribute[str] = NotSet
-        self._import_percent: Attribute[int] = NotSet
+        self._import_percent: Attribute[int | None] = NotSet
         self._large_files_count: Attribute[int] = NotSet
         self._large_files_size: Attribute[int] = NotSet
         self._message: Attribute[str] = NotSet
         self._project_choices: Attribute[list[dict[str, Any]]] = NotSet
-        self._push_percent: Attribute[int] = NotSet
+        self._push_percent: Attribute[int | None] = NotSet
         self._repository_url: Attribute[str] = NotSet
         self._status: Attribute[str] = NotSet
-        self._status_text: Attribute[str] = NotSet
+        self._status_text: Attribute[str | None] = NotSet
         self._svc_root: Attribute[str] = NotSet
         self._svn_root: Attribute[str] = NotSet
         self._tfvc_project: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._use_lfs: Attribute[str] = NotSet
-        self._vcs: Attribute[str] = NotSet
+        self._vcs: Attribute[str | None] = NotSet
         self._vcs_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -90,7 +90,7 @@ class SourceImport(CompletableGithubObject):
         )
 
     @property
-    def authors_count(self) -> int:
+    def authors_count(self) -> int | None:
         self._completeIfNotSet(self._authors_count)
         return self._authors_count.value
 
@@ -100,17 +100,17 @@ class SourceImport(CompletableGithubObject):
         return self._authors_url.value
 
     @property
-    def commit_count(self) -> int:
+    def commit_count(self) -> int | None:
         self._completeIfNotSet(self._commit_count)
         return self._commit_count.value
 
     @property
-    def error_message(self) -> str:
+    def error_message(self) -> str | None:
         self._completeIfNotSet(self._error_message)
         return self._error_message.value
 
     @property
-    def failed_step(self) -> str:
+    def failed_step(self) -> str | None:
         self._completeIfNotSet(self._failed_step)
         return self._failed_step.value
 
@@ -125,7 +125,7 @@ class SourceImport(CompletableGithubObject):
         return self._html_url.value
 
     @property
-    def import_percent(self) -> int:
+    def import_percent(self) -> int | None:
         self._completeIfNotSet(self._import_percent)
         return self._import_percent.value
 
@@ -150,7 +150,7 @@ class SourceImport(CompletableGithubObject):
         return self._project_choices.value
 
     @property
-    def push_percent(self) -> int:
+    def push_percent(self) -> int | None:
         self._completeIfNotSet(self._push_percent)
         return self._push_percent.value
 
@@ -165,7 +165,7 @@ class SourceImport(CompletableGithubObject):
         return self._status.value
 
     @property
-    def status_text(self) -> str:
+    def status_text(self) -> str | None:
         self._completeIfNotSet(self._status_text)
         return self._status_text.value
 
@@ -195,7 +195,7 @@ class SourceImport(CompletableGithubObject):
         return self._use_lfs.value
 
     @property
-    def vcs(self) -> str:
+    def vcs(self) -> str | None:
         self._completeIfNotSet(self._vcs)
         return self._vcs.value
 

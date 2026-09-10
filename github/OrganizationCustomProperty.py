@@ -86,26 +86,26 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._allowed_values: Attribute[list[str]] = NotSet
-        self._default_value: Attribute[str | list[str]] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._allowed_values: Attribute[list[str] | None] = NotSet
+        self._default_value: Attribute[str | list[str] | None] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._property_name: Attribute[str] = NotSet
         self._required: Attribute[bool] = NotSet
         self._source_type: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._value_type: Attribute[str] = NotSet
-        self._values_editable_by: Attribute[str] = NotSet
+        self._values_editable_by: Attribute[str | None] = NotSet
 
     @property
-    def allowed_values(self) -> Opt[list[str] | None]:
+    def allowed_values(self) -> Opt[list[str] | None] | None:
         return self._allowed_values.value
 
     @property
-    def default_value(self) -> Opt[str | list[str] | None]:
+    def default_value(self) -> Opt[str | list[str] | None] | None:
         return self._default_value.value
 
     @property
-    def description(self) -> Opt[str | None]:
+    def description(self) -> Opt[str | None] | None:
         return self._description.value
 
     @property
@@ -129,7 +129,7 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         return self._value_type.value
 
     @property
-    def values_editable_by(self) -> Opt[str | None]:
+    def values_editable_by(self) -> Opt[str | None] | None:
         return self._values_editable_by.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

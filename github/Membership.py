@@ -78,7 +78,7 @@ class Membership(CompletableGithubObject):
         self._role: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"url": self._url.value})
@@ -124,7 +124,7 @@ class Membership(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 

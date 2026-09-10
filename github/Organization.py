@@ -188,31 +188,31 @@ class Organization(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._advanced_security_enabled_for_new_repositories: Attribute[bool] = NotSet
-        self._archived_at: Attribute[datetime] = NotSet
+        self._archived_at: Attribute[datetime | None] = NotSet
         self._avatar_url: Attribute[str] = NotSet
-        self._billing_email: Attribute[str] = NotSet
+        self._billing_email: Attribute[str | None] = NotSet
         self._blog: Attribute[str | None] = NotSet
-        self._collaborators: Attribute[int] = NotSet
+        self._collaborators: Attribute[int | None] = NotSet
         self._company: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._default_repository_branch: Attribute[str] = NotSet
-        self._default_repository_permission: Attribute[str] = NotSet
+        self._default_repository_branch: Attribute[str | None] = NotSet
+        self._default_repository_permission: Attribute[str | None] = NotSet
         self._dependabot_alerts_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._dependabot_security_updates_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._dependency_graph_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._deploy_keys_enabled_for_repositories: Attribute[bool] = NotSet
-        self._description: Attribute[str] = NotSet
-        self._disk_usage: Attribute[int] = NotSet
+        self._description: Attribute[str | None] = NotSet
+        self._disk_usage: Attribute[int | None] = NotSet
         self._display_commenter_full_name_setting_enabled: Attribute[bool] = NotSet
         self._display_login: Attribute[str] = NotSet
-        self._email: Attribute[str] = NotSet
+        self._email: Attribute[str | None] = NotSet
         self._events_url: Attribute[str] = NotSet
         self._followers: Attribute[int] = NotSet
         self._followers_url: Attribute[str] = NotSet
         self._following: Attribute[int] = NotSet
         self._following_url: Attribute[str] = NotSet
         self._gists_url: Attribute[str] = NotSet
-        self._gravatar_id: Attribute[str] = NotSet
+        self._gravatar_id: Attribute[str | None] = NotSet
         self._has_organization_projects: Attribute[bool] = NotSet
         self._has_repository_projects: Attribute[bool] = NotSet
         self._hooks_url: Attribute[str] = NotSet
@@ -230,20 +230,20 @@ class Organization(CompletableGithubObject):
         self._members_can_create_private_repositories: Attribute[bool] = NotSet
         self._members_can_create_public_pages: Attribute[bool] = NotSet
         self._members_can_create_public_repositories: Attribute[bool] = NotSet
-        self._members_can_create_repositories: Attribute[bool] = NotSet
+        self._members_can_create_repositories: Attribute[bool | None] = NotSet
         self._members_can_create_teams: Attribute[bool] = NotSet
         self._members_can_delete_issues: Attribute[bool] = NotSet
         self._members_can_delete_repositories: Attribute[bool] = NotSet
-        self._members_can_fork_private_repositories: Attribute[bool] = NotSet
+        self._members_can_fork_private_repositories: Attribute[bool | None] = NotSet
         self._members_can_invite_outside_collaborators: Attribute[bool] = NotSet
         self._members_can_view_dependency_insights: Attribute[bool] = NotSet
         self._members_url: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
+        self._name: Attribute[str | None] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
         self._plan: Attribute[Plan] = NotSet
-        self._private_gists: Attribute[int] = NotSet
+        self._private_gists: Attribute[int | None] = NotSet
         self._public_gists: Attribute[int] = NotSet
         self._public_members_url: Attribute[str] = NotSet
         self._public_repos: Attribute[int] = NotSet
@@ -251,7 +251,7 @@ class Organization(CompletableGithubObject):
         self._received_events_url: Attribute[str] = NotSet
         self._repos_url: Attribute[str] = NotSet
         self._secret_scanning_enabled_for_new_repositories: Attribute[bool] = NotSet
-        self._secret_scanning_push_protection_custom_link: Attribute[str] = NotSet
+        self._secret_scanning_push_protection_custom_link: Attribute[str | None] = NotSet
         self._secret_scanning_push_protection_custom_link_enabled: Attribute[bool] = NotSet
         self._secret_scanning_push_protection_enabled_for_new_repositories: Attribute[bool] = NotSet
         self._site_admin: Attribute[bool] = NotSet
@@ -259,8 +259,8 @@ class Organization(CompletableGithubObject):
         self._starred_url: Attribute[str] = NotSet
         self._subscriptions_url: Attribute[str] = NotSet
         self._total_private_repos: Attribute[int] = NotSet
-        self._twitter_username: Attribute[str] = NotSet
-        self._two_factor_requirement_enabled: Attribute[bool] = NotSet
+        self._twitter_username: Attribute[str | None] = NotSet
+        self._two_factor_requirement_enabled: Attribute[bool | None] = NotSet
         self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -276,7 +276,7 @@ class Organization(CompletableGithubObject):
         return self._advanced_security_enabled_for_new_repositories.value
 
     @property
-    def archived_at(self) -> datetime:
+    def archived_at(self) -> datetime | None:
         self._completeIfNotSet(self._archived_at)
         return self._archived_at.value
 
@@ -286,7 +286,7 @@ class Organization(CompletableGithubObject):
         return self._avatar_url.value
 
     @property
-    def billing_email(self) -> str:
+    def billing_email(self) -> str | None:
         self._completeIfNotSet(self._billing_email)
         return self._billing_email.value
 
@@ -296,7 +296,7 @@ class Organization(CompletableGithubObject):
         return self._blog.value
 
     @property
-    def collaborators(self) -> int:
+    def collaborators(self) -> int | None:
         self._completeIfNotSet(self._collaborators)
         return self._collaborators.value
 
@@ -311,12 +311,12 @@ class Organization(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def default_repository_branch(self) -> str:
+    def default_repository_branch(self) -> str | None:
         self._completeIfNotSet(self._default_repository_branch)
         return self._default_repository_branch.value
 
     @property
-    def default_repository_permission(self) -> str:
+    def default_repository_permission(self) -> str | None:
         self._completeIfNotSet(self._default_repository_permission)
         return self._default_repository_permission.value
 
@@ -341,12 +341,12 @@ class Organization(CompletableGithubObject):
         return self._deploy_keys_enabled_for_repositories.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
-    def disk_usage(self) -> int:
+    def disk_usage(self) -> int | None:
         self._completeIfNotSet(self._disk_usage)
         return self._disk_usage.value
 
@@ -396,7 +396,7 @@ class Organization(CompletableGithubObject):
         return self._gists_url.value
 
     @property
-    def gravatar_id(self) -> str:
+    def gravatar_id(self) -> str | None:
         self._completeIfNotSet(self._gravatar_id)
         return self._gravatar_id.value
 
@@ -486,7 +486,7 @@ class Organization(CompletableGithubObject):
         return self._members_can_create_public_repositories.value
 
     @property
-    def members_can_create_repositories(self) -> bool:
+    def members_can_create_repositories(self) -> bool | None:
         self._completeIfNotSet(self._members_can_create_repositories)
         return self._members_can_create_repositories.value
 
@@ -506,7 +506,7 @@ class Organization(CompletableGithubObject):
         return self._members_can_delete_repositories.value
 
     @property
-    def members_can_fork_private_repositories(self) -> bool:
+    def members_can_fork_private_repositories(self) -> bool | None:
         self._completeIfNotSet(self._members_can_fork_private_repositories)
         return self._members_can_fork_private_repositories.value
 
@@ -551,7 +551,7 @@ class Organization(CompletableGithubObject):
         return self._plan.value
 
     @property
-    def private_gists(self) -> int:
+    def private_gists(self) -> int | None:
         self._completeIfNotSet(self._private_gists)
         return self._private_gists.value
 
@@ -591,7 +591,7 @@ class Organization(CompletableGithubObject):
         return self._secret_scanning_enabled_for_new_repositories.value
 
     @property
-    def secret_scanning_push_protection_custom_link(self) -> str:
+    def secret_scanning_push_protection_custom_link(self) -> str | None:
         self._completeIfNotSet(self._secret_scanning_push_protection_custom_link)
         return self._secret_scanning_push_protection_custom_link.value
 
@@ -631,12 +631,12 @@ class Organization(CompletableGithubObject):
         return self._total_private_repos.value
 
     @property
-    def twitter_username(self) -> str:
+    def twitter_username(self) -> str | None:
         self._completeIfNotSet(self._twitter_username)
         return self._twitter_username.value
 
     @property
-    def two_factor_requirement_enabled(self) -> bool:
+    def two_factor_requirement_enabled(self) -> bool | None:
         self._completeIfNotSet(self._two_factor_requirement_enabled)
         return self._two_factor_requirement_enabled.value
 
@@ -1246,7 +1246,8 @@ class Organization(CompletableGithubObject):
             {"filter": filter, "state": state, "sort": sort, "direction": direction}
         )
         if is_defined(labels):
-            url_parameters["labels"] = ",".join(label.name for label in labels)
+            assert all(label.name is not None for label in labels), labels
+            url_parameters["labels"] = ",".join(label.name for label in labels)  # type: ignore[misc]
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return PaginatedList(github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters)
