@@ -1,0 +1,10 @@
+https
+PUT
+api.github.com
+None
+/repos/PyGithub/PyGithub/immutable-releases
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('status', '204 No Content'), ('content-length', '0')]
+
