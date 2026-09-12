@@ -1399,6 +1399,22 @@ class Repository(Framework.TestCase):
             ],
         )
 
+    def testGetImmutableReleasesConfiguration(self) -> None:
+        self.assertEqual(
+            self.repo.get_immutable_releases_configuration(),
+            {
+                "enabled": False,
+                "enforced_by_owner": False,
+                "url": "https://api.github.com/repos/PyGithub/PyGithub/immutable-releases",
+            },
+        )
+
+    def testEnableImmutableReleases(self) -> None:
+        self.repo.enable_immutable_releases()
+
+    def testDisableImmutableReleases(self) -> None:
+        self.repo.disable_immutable_releases()
+
     def testGetLanguages(self):
         self.assertEqual(
             self.repo.get_languages(),

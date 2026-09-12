@@ -3700,6 +3700,28 @@ class Repository(CompletableGithubObject):
         url = f"{self.url}/releases/latest"
         return github.GitRelease.GitRelease(self._requester, url=url)
 
+    def get_immutable_releases_configuration(self) -> dict[str, bool]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#get-immutable-releases-configuration>`_
+        :rtype: dict of string to bool
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/immutable-releases")
+        return data
+
+    def enable_immutable_releases(self) -> None:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#enable-immutable-releases>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/immutable-releases")
+
+    def disable_immutable_releases(self) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#disable-immutable-releases>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/immutable-releases")
+
     def get_teams(self) -> PaginatedList[Team]:
         """
         :calls: `GET /repos/{owner}/{repo}/teams <https://docs.github.com/en/rest/reference/repos>`_
