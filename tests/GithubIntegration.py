@@ -343,6 +343,14 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.message, "The permissions requested are not granted to this installation.")
         self.assertEqual(raisedexp.exception.status, 422)
 
+    def testGetAccessTokenWithInvalidRepositories(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(self.repo_installation_id, repositories="invalid_data")
+        self.assertIsNone(raisedexp.exception.message)
+        self.assertEqual(raisedexp.exception.status, 400)
+        
     def testGetAccessTokenWithInvalidData(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         github_integration = github.GithubIntegration(auth=auth)
