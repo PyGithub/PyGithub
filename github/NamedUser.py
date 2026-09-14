@@ -68,7 +68,7 @@ import github.Permissions
 import github.Plan
 import github.Repository
 from github import Consts
-from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
+from github.GithubObject import Attribute, NotSet, Opt, _format_query_datetime, is_defined, is_undefined
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -457,7 +457,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         assert since is NotSet or isinstance(since, datetime), since
         url_parameters = dict()
         if is_defined(since):
-            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+            url_parameters["since"] = _format_query_datetime(since)
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist, self._requester, f"{self.url}/gists", url_parameters
         )
