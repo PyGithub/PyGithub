@@ -37,6 +37,10 @@
 
 from __future__ import annotations
 
+from unittest import mock
+
+import github.BranchProtection
+
 from . import Framework
 
 
@@ -79,3 +83,25 @@ class BranchProtection(Framework.TestCase):
         self.assertFalse(self.branch_protection.required_conversation_resolution)
         self.assertFalse(self.branch_protection.lock_branch)
         self.assertFalse(self.branch_protection.allow_fork_syncing)
+
+    def testRestrictionsPopulated(self):
+        # restrictions must be wrapped like every other attribute so that the
+        # restrictions property (which returns self._restrictions.value) works.
+        requester = mock.Mock(is_not_lazy=False)
+        restrictions = {
+            "url": "https://api.github.com/repos/owner/repo/branches/master/protection/restrictions",
+            "users_url": "https://api.github.com/repos/owner/repo/branches/master/protection/restrictions/users",
+            "teams_url": "https://api.github.com/repos/owner/repo/branches/master/protection/restrictions/teams",
+            "apps_url": "https://api.github.com/repos/owner/repo/branches/master/protection/restrictions/apps",
+            "users": [{"login": "octocat"}],
+            "teams": [{"slug": "justice-league"}],
+            "apps": [{"slug": "octoapp"}],
+        }
+        bp = github.BranchProtection.BranchProtection(requester, {}, {"restrictions": restrictions})
+        self.assertEqual(bp.restrictions["users"], [{"login": "octocat"}])
+        self.assertEqual(bp.restrictions["teams"], [{"slug": "justice-league"}])
+
+    def testRestrictionsAbsent(self):
+        requester = mock.Mock(is_not_lazy=False)
+        bp = github.BranchProtection.BranchProtection(requester, {}, {})
+        self.assertIsNone(bp.restrictions)
