@@ -285,8 +285,14 @@ PATCHES: dict[str, list[Patch]] = {
             replace=r"\1import github.GithubObject as _sync_gho\n",
         ),
         Patch(
+            reason="TypeGuard now imported from typing, not typing_extensions; drop it here since "
+            "is_defined/is_undefined switch to TypeIs (typing_extensions-only)",
+            match="from typing import TYPE_CHECKING, Any, TypeGuard, Union, overload",
+            replace="from typing import TYPE_CHECKING, Any, Union, overload",
+        ),
+        Patch(
             reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
-            match="from typing_extensions import ParamSpec, Protocol, Self, TypeGuard, TypeVar",
+            match="from typing_extensions import ParamSpec, Protocol, Self, TypeVar",
             replace="from typing_extensions import ParamSpec, Protocol, Self, TypeIs, TypeVar",
         ),
         Patch(
