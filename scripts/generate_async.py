@@ -416,6 +416,25 @@ PATCHES: dict[str, list[Patch]] = {
             replace="from collections.abc import AsyncIterator, ",
         ),
     ],
+    "Requester": [
+        Patch(
+            reason="async I/O requires niquests's AsyncSession/AsyncHTTPAdapter, regardless of "
+            "which backend (requests or niquests) github.requestlib resolved to for sync use",
+            match="from github.requestlib import PreparedRequest, Response, Retry, Session, adapters",
+            replace=(
+                "from github.requestlib import PreparedRequest, Response, Retry\n"
+                "from niquests import AsyncSession as Session\n"
+                "from niquests import adapters"
+            ),
+        ),
+        Patch(
+            reason="mount the async adapter on the async session (adapters.HTTPAdapter is sync-only)",
+            regex=True,
+            count=2,
+            match=r"adapters\.HTTPAdapter\(",
+            replace="adapters.AsyncHTTPAdapter(",
+        ),
+    ],
 }
 
 
