@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -euo pipefail
+
+base=$(cd "$(dirname "$0")/.."; pwd)
+async_dir="$base/async"
+
+if [[ "$async_dir" != "/"* ]]
+then
+  async_dir="$PWD/$async_dir"
+fi
+echo "Syncing PyGithub project with PyGithub-async in $async_dir"
+
+(cd "$base"; tar -cf - $(git ls-files | grep -v -e "^\." -e "^async" -e "^github" -e "^openapi" -e "^tests/") | tar -xvf - -C "$async_dir/")
+python "$async_dir/scripts/generate_async.py"
