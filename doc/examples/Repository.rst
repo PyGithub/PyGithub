@@ -19,6 +19,20 @@ Get count of stars
     >>> repo.stargazers_count
     2086
 
+Get list of stargazers
+----------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> for stargazer in repo.get_stargazers():
+    ...     print(stargazer)
+    ...
+    NamedUser(login="someuser1")
+    NamedUser(login="someuser2")
+
+
+
 Get list of open issues
 --------------------------
 
