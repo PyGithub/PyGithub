@@ -33,38 +33,40 @@ def _is_completable(obj):
         return False
 
 
-class AsyncReplayingConnection(Framework.ReplayingConnection):
+class AsyncCassetteConnection:
     """
-    Async-aware replaying connection.
+    Async-aware bridge to Framework.CassetteConnection.
 
-    Inherits the replay file logic from ReplayingConnection. Overrides getresponse() and close() to be async, since the
-    async Requester awaits these methods.
+    vcrpy only patches *synchronous* HTTP transports (http.client/urllib3), so niquests's AsyncSession is invisible to
+    it and would otherwise hit the real network. Each request is instead performed through a real (sync)
+    CassetteConnection -- which vcrpy does intercept -- and the result is exposed through the awaitable
+    getresponse()/close() interface the async Requester expects.
 
     """
+
+    def __init__(self, host, port, *args, **kwds):
+        self._cnx = self._realConnection(host, port, *args, **kwds)
+
+    @property
+    def host(self):
+        return self._cnx.host
+
+    def request(self, verb, url, input, headers, stream=False):
+        self._cnx.request(verb, url, input, headers, stream=stream)
 
     async def getresponse(self):
-        # The real connection's getresponse is async
-        response = await self._ReplayingConnection__cnx.getresponse()
-        # Restore original headers to the response
-        response.headers = self.response_headers
-        return response
+        return self._cnx.getresponse()
 
     async def close(self):
-        await self._ReplayingConnection__cnx.close()
+        self._cnx.close()
 
 
-class AsyncReplayingHttpConnection(AsyncReplayingConnection):
-    _realConnection = github.asyncio.Requester.HTTPRequestsConnectionClass
-
-    def __init__(self, *args, **kwds):
-        super().__init__("http", *args, **kwds)
+class AsyncCassetteHttpConnection(AsyncCassetteConnection):
+    _realConnection = Framework.CassetteHttpConnection
 
 
-class AsyncReplayingHttpsConnection(AsyncReplayingConnection):
-    _realConnection = github.asyncio.Requester.HTTPSRequestsConnectionClass
-
-    def __init__(self, *args, **kwds):
-        super().__init__("https", *args, **kwds)
+class AsyncCassetteHttpsConnection(AsyncCassetteConnection):
+    _realConnection = Framework.CassetteHttpsConnection
 
 
 class SyncProxy:
@@ -437,17 +439,10 @@ class TestCase(Framework.BasicTestCase):
         github.asyncio.Requester.Requester.setDebugFlag(True)
         github.asyncio.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
-        # super().setUp() calls setOpenFile on the SYNC ReplayingHttp(s)Connection
-        # classes. Due to Python's name mangling of __openFile, the async subclasses
-        # (AsyncReplayingHttp(s)Connection) don't inherit that class-level attribute.
-        # We must explicitly propagate it to the async connection classes.
-        AsyncReplayingHttpConnection.setOpenFile(Framework.ReplayingHttpConnection._Connection__openFile)
-        AsyncReplayingHttpsConnection.setOpenFile(Framework.ReplayingHttpsConnection._Connection__openFile)
-
-        # Inject async replaying connection classes into the async Requester
+        # Inject async cassette connection classes into the async Requester
         github.asyncio.Requester.Requester.injectConnectionClasses(
-            AsyncReplayingHttpConnection,
-            AsyncReplayingHttpsConnection,
+            AsyncCassetteHttpConnection,
+            AsyncCassetteHttpsConnection,
         )
 
         self.g = self.get_github(self.authMode, self.retry, self.pool_size)
