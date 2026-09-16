@@ -9,14 +9,36 @@ This allows test method bodies to remain identical to sync tests.
 from __future__ import annotations
 
 import asyncio
+import importlib
+import importlib.util
+import sys
+from pathlib import Path
 
-import github.asyncio.GithubObject
-import github.asyncio.Requester
 import github.GithubObject
 import github.Requester
-from github.asyncio.MainClass import Github
 from github.GithubException import IncompletableObject
-from tests import Framework
+
+import githubasyncio.GithubObject
+import githubasyncio.Requester
+from githubasyncio.MainClass import Github
+
+# This module lives at tests/Framework.py *in this project*, so `from tests import Framework`
+# would just re-import itself (this project's own tests/ package already owns that name) instead
+# of reaching the classic PyGithub project's tests/Framework.py, which is what actually defines
+# BasicTestCase/CassetteConnection. sync_async.sh deliberately doesn't copy tests/ here, so we
+# load it straight from the sibling checkout, under a private sys.modules name to avoid colliding
+# with this project's own "tests" package.
+_SYNC_TESTS_DIR = Path(__file__).resolve().parents[2] / "tests"
+if "_pygithub_sync_tests" not in sys.modules:
+    _spec = importlib.util.spec_from_file_location(
+        "_pygithub_sync_tests",
+        _SYNC_TESTS_DIR / "__init__.py",
+        submodule_search_locations=[str(_SYNC_TESTS_DIR)],
+    )
+    _pkg = importlib.util.module_from_spec(_spec)
+    sys.modules["_pygithub_sync_tests"] = _pkg
+    _spec.loader.exec_module(_pkg)
+Framework = importlib.import_module("_pygithub_sync_tests.Framework")
 
 # Re-export BasicTestCase so that async test files referencing
 # Framework.BasicTestCase find it here.
@@ -28,7 +50,7 @@ def _is_completable(obj):
     Check if an object is a CompletableGithubObject that may need completion.
     """
     try:
-        return isinstance(obj, github.asyncio.GithubObject.CompletableGithubObject)
+        return isinstance(obj, githubasyncio.GithubObject.CompletableGithubObject)
     except Exception:
         return False
 
@@ -130,7 +152,7 @@ class SyncProxy:
             result,
             (
                 github.GithubObject._NotSetType,
-                github.asyncio.GithubObject._NotSetType,
+                githubasyncio.GithubObject._NotSetType,
             ),
         ):
             return result
@@ -140,9 +162,9 @@ class SyncProxy:
             result,
             (
                 github.GithubObject._ValuedAttribute,
-                github.asyncio.GithubObject._ValuedAttribute,
+                githubasyncio.GithubObject._ValuedAttribute,
                 github.GithubObject._BadAttribute,
-                github.asyncio.GithubObject._BadAttribute,
+                githubasyncio.GithubObject._BadAttribute,
             ),
         ):
             return result
@@ -376,12 +398,12 @@ class TestCase(Framework.BasicTestCase):
         """
         Try to find the async equivalent of a sync class.
 
-        For example, github.Repository.Repository -> github.asyncio.Repository.Repository
+        For example, github.Repository.Repository -> githubasyncio.Repository.Repository
 
         """
         mod = getattr(cls, "__module__", "") or ""
-        if mod.startswith("github.") and not mod.startswith("github.asyncio."):
-            async_mod_name = mod.replace("github.", "github.asyncio.", 1)
+        if mod.startswith("github.") and not mod.startswith("githubasyncio."):
+            async_mod_name = "githubasyncio." + mod[len("github.") :]
             try:
                 import importlib
 
@@ -435,12 +457,12 @@ class TestCase(Framework.BasicTestCase):
         github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
-        github.asyncio.GithubObject.GithubObject.setCheckAfterInitFlag(True)
-        github.asyncio.Requester.Requester.setDebugFlag(True)
-        github.asyncio.Requester.Requester.setOnCheckMe(self.getFrameChecker())
+        githubasyncio.GithubObject.GithubObject.setCheckAfterInitFlag(True)
+        githubasyncio.Requester.Requester.setDebugFlag(True)
+        githubasyncio.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
         # Inject async cassette connection classes into the async Requester
-        github.asyncio.Requester.Requester.injectConnectionClasses(
+        githubasyncio.Requester.Requester.injectConnectionClasses(
             AsyncCassetteHttpConnection,
             AsyncCassetteHttpsConnection,
         )
@@ -459,7 +481,7 @@ class TestCase(Framework.BasicTestCase):
         # hold (and their event loops/connections) can be garbage collected.
         SyncProxy._cache.clear()
         super().tearDown()
-        github.asyncio.Requester.Requester.resetConnectionClasses()
+        githubasyncio.Requester.Requester.resetConnectionClasses()
 
     def get_github(self, authMode, retry=None, pool_size=None):
         if authMode == "token":

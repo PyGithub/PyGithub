@@ -23,9 +23,10 @@
 """
 Analysis-driven async code generator for PyGithub.
 
-Introspects the PyGithub package to discover which classes and methods perform I/O (directly or transitively), then
-copies source files into `github/asyncio/` with async/await transformations applied.  Also generates async test files in
-`tests/asyncio/`.
+Run from within the `async/` project (a standalone sibling of the classic PyGithub project, kept in sync via
+`scripts/sync_async.sh`). Introspects the classic PyGithub package (`../github`) to discover which classes and methods
+perform I/O (directly or transitively), then generates async/await source into the `githubasyncio/` root module here.
+Also generates async test files into `tests/`.
 
 Adapted from the PRAW async-generator that I (Ahmed Tahri) made. Previously also made a sync to async generator for
 grafana-client but wasn't based on AST parsing.
@@ -55,10 +56,14 @@ def _compile(pattern: str) -> re.Pattern[str]:
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SRC_PKG = REPO_ROOT / "github"
-DST_PKG = REPO_ROOT / "github" / "asyncio"
-TEST_SRC = REPO_ROOT / "tests"
-TEST_DST = REPO_ROOT / "tests" / "asyncio"
+# The classic (sync) PyGithub project this async project is generated from — a sibling
+# directory, not a subdirectory: `sync_async.sh` deliberately does not copy `github/` or
+# `tests/` into here, so the generator reads them straight from the sync checkout.
+SYNC_ROOT = REPO_ROOT.parent
+SRC_PKG = SYNC_ROOT / "github"
+DST_PKG = REPO_ROOT / "githubasyncio"
+TEST_SRC = SYNC_ROOT / "tests"
+TEST_DST = REPO_ROOT / "tests"
 
 AUTO_HEADER = "# FILE AUTO GENERATED DO NOT TOUCH\n"
 
@@ -195,12 +200,12 @@ SESSION_REWRITES = {"niquests.Session(": "niquests.AsyncSession("}
 TEST_MOCK_REWRITES: tuple[tuple[str, str, frozenset[str]], ...] = (
     (
         'mock.patch("github.Requester.time.sleep"',
-        'mock.patch("github.asyncio.Requester.asyncio.sleep"',
+        'mock.patch("githubasyncio.Requester.asyncio.sleep"',
         frozenset(),
     ),
-    ('"github.Requester.datetime"', '"github.asyncio.Requester.datetime"', frozenset()),
-    ('mock.patch("github.PublicKey.encrypt")', 'mock.patch("github.asyncio.PublicKey.encrypt")', frozenset()),
-    ('"github.AccessToken.datetime"', '"github.asyncio.AccessToken.datetime"', frozenset({"Authentication"})),
+    ('"github.Requester.datetime"', '"githubasyncio.Requester.datetime"', frozenset()),
+    ('mock.patch("github.PublicKey.encrypt")', 'mock.patch("githubasyncio.PublicKey.encrypt")', frozenset()),
+    ('"github.AccessToken.datetime"', '"githubasyncio.AccessToken.datetime"', frozenset({"Authentication"})),
 )
 
 # Sync-stack classmethod calls that generated tests must ALSO invoke on the
@@ -210,11 +215,11 @@ TEST_DUAL_STACK_CALLS: tuple[tuple[str, str], ...] = (
     (
         "github.Requester.Requester.injectLogger(self.logger)",
         "github.Requester.Requester.injectLogger(self.logger)\n"
-        "        github.asyncio.Requester.Requester.injectLogger(self.logger)",
+        "        githubasyncio.Requester.Requester.injectLogger(self.logger)",
     ),
     (
         "github.Requester.Requester.resetLogger()",
-        "github.Requester.Requester.resetLogger()\n        github.asyncio.Requester.Requester.resetLogger()",
+        "github.Requester.Requester.resetLogger()\n        githubasyncio.Requester.Requester.resetLogger()",
     ),
 )
 
@@ -222,8 +227,8 @@ TEST_DUAL_STACK_CALLS: tuple[tuple[str, str], ...] = (
 # must be imported by tests instead of the sync originals (the async versions
 # accept both sync and async NotSet).
 TEST_HELPER_IMPORT_REWRITES: tuple[tuple[str, str], ...] = (
-    ("from github.GithubObject import is_undefined", "from github.asyncio.GithubObject import is_undefined"),
-    ("from github.GithubObject import is_defined", "from github.asyncio.GithubObject import is_defined"),
+    ("from github.GithubObject import is_undefined", "from githubasyncio.GithubObject import is_undefined"),
+    ("from github.GithubObject import is_defined", "from githubasyncio.GithubObject import is_defined"),
 )
 
 # Markers identifying transformable test files, and hand-maintained files that
@@ -231,7 +236,7 @@ TEST_HELPER_IMPORT_REWRITES: tuple[tuple[str, str], ...] = (
 TEST_BASE_CLASS_MARKERS = ("Framework.TestCase", "BasicTestCase")
 PRESERVE_TEST_FILES = frozenset({"Framework.py"})
 
-# Public exports of the generated github/asyncio/__init__.py: {module: (name, ...)}.
+# Public exports of the generated githubasyncio/__init__.py: {module: (name, ...)}.
 ASYNC_INIT_EXPORTS: dict[str, tuple[str, ...]] = {"MainClass": ("Github",)}
 
 
@@ -1982,7 +1987,7 @@ class AsyncTransformer:
         lines = AUTO_HEADER + lines
         logger.debug("transform[%s]: step 1 — added auto-generated header", stem)
 
-        # 2) Fix imports: github.X -> github.asyncio.X for local modules
+        # 2) Fix imports: github.X -> githubasyncio.X for local modules
         lines = self._fix_imports(lines, stem)
         logger.debug("transform[%s]: step 2 — fixed imports", stem)
 
@@ -2060,7 +2065,7 @@ class AsyncTransformer:
 
         # 12) Fix isinstance checks against async-only classes to also accept sync classes.
         # When tests create sync objects (e.g. github.X.Y(...)) and pass them to async code,
-        # isinstance(obj, github.asyncio.X.Y) fails. Accept both.
+        # isinstance(obj, githubasyncio.X.Y) fails. Accept both.
         lines = self._fix_isinstance_dual_class(lines)
         logger.debug("transform[%s]: step 12 — fixed isinstance dual class checks", stem)
 
@@ -2361,12 +2366,12 @@ class AsyncTransformer:
             if fn_name + "(" not in src:
                 continue
             # Check if already imported (either in a parenthesized block or standalone)
-            # Match both relative (.GithubObject) and absolute (github.asyncio.GithubObject) forms
-            if re.search(rf"from (?:\.|\bgithub\.asyncio\.)GithubObject import[^)]*\b{fn_name}\b", src, re.DOTALL):
+            # Match both relative (.GithubObject) and absolute (githubasyncio.GithubObject) forms
+            if re.search(rf"from (?:\.|\bgithubasyncio\.)GithubObject import[^)]*\b{fn_name}\b", src, re.DOTALL):
                 continue
             # Try to add to existing parenthesized import from .GithubObject:
             paren_import = re.search(
-                r"(from (?:\.|\bgithub\.asyncio\.)GithubObject import \([^)]*)(\))",
+                r"(from (?:\.|\bgithubasyncio\.)GithubObject import \([^)]*)(\))",
                 src,
                 re.DOTALL,
             )
@@ -2380,8 +2385,9 @@ class AsyncTransformer:
                     + src[paren_import.end() :]
                 )
             else:
-                # No parenthesized import; add a standalone import.
-                src = AsyncTransformer._prepend_import(src, f"from .GithubObject import {fn_name}\n")
+                # No existing import to extend; add a new standalone one. Absolute, since this
+                # introduces a new import rather than extending one already there.
+                src = AsyncTransformer._prepend_import(src, f"from githubasyncio.GithubObject import {fn_name}\n")
 
         return src
 
@@ -3040,13 +3046,19 @@ class AsyncTransformer:
 
     def _fix_imports(self, src: str, stem: str) -> str:
         """
-        Fix import statements to use relative imports within github.asyncio.
+        Fix import statements to reference the async package (githubasyncio) internally.
+
+        Only ever introduces *absolute* `from githubasyncio import ...` / `from githubasyncio.X
+        import ...` references. Relative imports already present in the sync source (a handful of
+        `github/*.py` files use `from .X import Y` internally) are left completely alone — they
+        still resolve correctly here since githubasyncio mirrors github's flat, single-level
+        layout, and this generator does not "clean them up".
 
         Transforms:
-          import github.X            → from . import X   (for async modules)
-          github.X.ClassName         → X.ClassName        (after above import)
-          from github.X import Y     → from .X import Y   (for async modules)
-          from .X import Y           → from .X import Y   (already relative — keep)
+          import github.X            → from githubasyncio import X   (for async modules)
+          github.X.ClassName         → X.ClassName                   (after above import)
+          from github.X import Y     → from githubasyncio.X import Y (for async modules)
+          from .X import Y           → from .X import Y              (untouched — see above)
           from github.X import Y     → from github.X import Y  (for non-async SKIP_FILES)
 
         """
@@ -3064,18 +3076,19 @@ class AsyncTransformer:
             if s not in SKIP_STEMS and not s.startswith("_"):
                 async_files.add(s)
 
-        # Step 1: Convert bare `import github.X` → `from . import X as _async_X` (for async
-        # modules). The alias is essential: a plain `from . import X` binds the bare name `X`,
-        # which collides with the bare-name class import that annotations need under
-        # `if TYPE_CHECKING:` (ARCHITECTURE.md's two-import pattern — runtime references use
-        # `github.<File>.<Class>`, annotations use the bare `<Class>` via TYPE_CHECKING). An
-        # absolute `import github.asyncio.X` would avoid that collision too, but it's unsafe
-        # here: `github/asyncio/__init__.py` eagerly imports the whole object graph, so any
-        # module loaded as part of that chain that accesses `github.asyncio.X` by attribute
-        # hits "cannot access submodule 'asyncio' of module 'github' (circular import)",
-        # since Python doesn't bind `github.asyncio` onto `github` until its own __init__
-        # finishes executing. A relative import sidesteps that entirely (it resolves via
-        # sys.modules by name, not by attribute traversal through the parent package).
+        # Step 1: Convert bare `import github.X` → `from githubasyncio import X as _async_X` (for
+        # async modules). The alias is essential: a plain `from githubasyncio import X` binds the
+        # bare name `X`, which collides with the bare-name class import that annotations need
+        # under `if TYPE_CHECKING:` (ARCHITECTURE.md's two-import pattern — runtime references
+        # use `github.<File>.<Class>`, annotations use the bare `<Class>` via TYPE_CHECKING). A
+        # dotted-attribute import — `import githubasyncio.X` then `githubasyncio.X.ClassName` —
+        # would avoid that collision too, but it's unsafe here: `githubasyncio/__init__.py`
+        # eagerly imports the whole object graph, so any module loaded as part of that chain
+        # that accesses `githubasyncio.X` by attribute hits "cannot access submodule 'X' of
+        # module 'githubasyncio' (circular import)", since Python only binds a submodule onto
+        # its parent package once the submodule has *finished* importing. A `from X import Y`
+        # style import sidesteps that entirely — it resolves via sys.modules by name, not by
+        # attribute traversal through the parent package.
         def _alias(mod: str) -> str:
             return f"_async_{mod}"
 
@@ -3085,22 +3098,27 @@ class AsyncTransformer:
             if mod in async_files:
                 result = re.sub(
                     rf"^import github\.{re.escape(mod)}\s*$",
-                    f"from . import {mod} as {_alias(mod)}",
+                    f"from githubasyncio import {mod} as {_alias(mod)}",
                     result,
                     flags=re.MULTILINE,
                 )
                 already_imported.add(mod)
                 logger.debug(
-                    "fix_imports[%s]: step 1 — import github.%s → from . import %s as %s", stem, mod, mod, _alias(mod)
+                    "fix_imports[%s]: step 1 — import github.%s → from githubasyncio import %s as %s",
+                    stem,
+                    mod,
+                    mod,
+                    _alias(mod),
                 )
 
-        # Also track modules already imported via `from . import X as _async_X` or a legacy
-        # `from . import X` block (kept for modules that still use the older style).
-        for m in re.findall(r"^from \. import \w+ as _async_(\w+)\s*$", result, re.MULTILINE):
+        # Also track modules already imported via `from githubasyncio import X as _async_X` or a
+        # legacy `from githubasyncio import X` block (kept for modules that still use the older
+        # style).
+        for m in re.findall(r"^from githubasyncio import \w+ as _async_(\w+)\s*$", result, re.MULTILINE):
             if m in async_files:
                 already_imported.add(m)
-        for m in re.findall(r"from \. import .*", result):
-            for name in re.findall(r"\b(\w+)\b", m.replace("from . import ", "")):
+        for m in re.findall(r"from githubasyncio import .*", result):
+            for name in re.findall(r"\b(\w+)\b", m.replace("from githubasyncio import ", "")):
                 if name in async_files:
                     already_imported.add(name)
 
@@ -3111,7 +3129,7 @@ class AsyncTransformer:
         for mod in sorted(async_files, key=len, reverse=True):
             # Check if this module is actually referenced in the body
             pattern_bare = rf"(?<!asyncio\.)github\.{re.escape(mod)}\."
-            pattern_async = rf"github\.asyncio\.{re.escape(mod)}\."
+            pattern_async = rf"githubasyncio\.{re.escape(mod)}\."
             has_ref = bool(re.search(pattern_bare, result)) or bool(re.search(pattern_async, result))
 
             if has_ref and mod == stem:
@@ -3126,7 +3144,7 @@ class AsyncTransformer:
                     result,
                 )
                 result = re.sub(
-                    rf"github\.asyncio\.{re.escape(mod)}\.{re.escape(mod)}\b",
+                    rf"githubasyncio\.{re.escape(mod)}\.{re.escape(mod)}\b",
                     mod,
                     result,
                 )
@@ -3137,7 +3155,7 @@ class AsyncTransformer:
                     result,
                 )
                 result = re.sub(
-                    rf"github\.asyncio\.{re.escape(mod)}\.",
+                    rf"githubasyncio\.{re.escape(mod)}\.",
                     f"{mod}.",
                     result,
                 )
@@ -3155,18 +3173,21 @@ class AsyncTransformer:
                 if has_ref and mod not in already_imported:
                     needed_imports.add(mod)
 
-        # Add missing `from . import X as _async_X` for modules referenced but never imported
+        # Add missing `from githubasyncio import X as _async_X` for modules referenced but never
+        # imported
         if needed_imports:
             logger.debug("fix_imports[%s]: step 2 — adding missing imports: %s", stem, sorted(needed_imports))
             # Find last TOP-LEVEL import line (handling multi-line parenthesized
             # imports and skipping indented TYPE_CHECKING block imports) and add after it.
             last_import_end = self._last_toplevel_import_end(result)
-            import_line = "\n" + "".join(f"from . import {mod} as {_alias(mod)}\n" for mod in sorted(needed_imports))
+            import_line = "\n" + "".join(
+                f"from githubasyncio import {mod} as {_alias(mod)}\n" for mod in sorted(needed_imports)
+            )
             result = result[: last_import_end + 1] + import_line + result[last_import_end + 1 :]
 
-        # Step 3: from github.X import Y -> from .X import Y (for async modules)
+        # Step 3: from github.X import Y -> from githubasyncio.X import Y (for async modules)
         for mod in sorted(async_files, key=len, reverse=True):
-            result = result.replace(f"from github.{mod} import ", f"from .{mod} import ")
+            result = result.replace(f"from github.{mod} import ", f"from githubasyncio.{mod} import ")
         logger.debug("fix_imports[%s]: step 3 — converted from-imports for async modules", stem)
 
         # Step 3b: Rewrite package-level class references: `github.ClassName`
@@ -3231,11 +3252,11 @@ class AsyncTransformer:
             result, _matched = self._sub_outside_docstrings(pattern, cls_name, result)
             if _matched:
                 # Ensure there's a runtime import of the class from the async module
-                import_line = f"from .{mod_name} import {cls_name}"
+                import_line = f"from githubasyncio.{mod_name} import {cls_name}"
                 if import_line not in result:
                     # Check if there's a TYPE_CHECKING-only import — need to add runtime one too
-                    # Find insertion point: after existing `from .` imports
-                    insert_pattern = re.search(r"^from \. import .+$", result, re.MULTILINE)
+                    # Find insertion point: after existing `from githubasyncio import` imports
+                    insert_pattern = re.search(r"^from githubasyncio import .+$", result, re.MULTILINE)
                     if insert_pattern:
                         result = result[: insert_pattern.end()] + "\n" + import_line + result[insert_pattern.end() :]
                     else:
@@ -3246,7 +3267,7 @@ class AsyncTransformer:
                         if insert_m:
                             result = result[: insert_m.end()] + "\n" + import_line + result[insert_m.end() :]
                 logger.debug(
-                    "fix_imports[%s]: step 3b — github.%s → %s (from .%s)",
+                    "fix_imports[%s]: step 3b — github.%s → %s (from githubasyncio.%s)",
                     stem,
                     cls_name,
                     cls_name,
@@ -4834,7 +4855,7 @@ class AsyncTransformer:
             type_arg_stripped = type_arg.rstrip().rstrip(",").rstrip()
 
             # A match always means "async-only, needs the sync variant added": the pattern
-            # requires the `github.asyncio.` prefix, which never appears in the sync half
+            # requires the `githubasyncio.` prefix, which never appears in the sync half
             # of an already-dual-wrapped check.
             if not async_class_pat.search(type_arg_stripped):
                 result.append(full_call)
@@ -4889,7 +4910,7 @@ def _generate_reexport_stub(module_name: str) -> str:
     """
     Generate a stub module that re-exports everything from the sync counterpart.
 
-    This ensures that e.g. ``github.asyncio.Auth.Auth``
+    This ensures that e.g. ``githubasyncio.Auth.Auth``
     IS ``github.Auth.Auth`` (same object), avoiding isinstance mismatches.
 
     """
@@ -4903,7 +4924,7 @@ def _generate_reexport_stub(module_name: str) -> str:
 
 def generate_async_init() -> str:
     """
-    Generate the __init__.py for github.asyncio.
+    Generate the __init__.py for githubasyncio.
     """
     lines = [AUTO_HEADER.rstrip()]
     lines.append('"""')
@@ -4914,7 +4935,7 @@ def generate_async_init() -> str:
     exported: list[str] = []
     for mod, names in sorted(ASYNC_INIT_EXPORTS.items()):
         for name in names:
-            lines.append(f"from github.asyncio.{mod} import {name}")
+            lines.append(f"from githubasyncio.{mod} import {name}")
             exported.append(name)
     lines.append("")
     lines.append("")
@@ -4937,9 +4958,10 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     logger.debug("transform_test[%s]: begin", test_stem)
     result = AUTO_HEADER + src
 
-    # Change Framework import to use async Framework
-    result = result.replace("from . import Framework", "from tests.asyncio import Framework")
-    result = re.sub(r"from tests import Framework", "from tests.asyncio import Framework", result)
+    # Change Framework import to use the async Framework (both sit directly in tests/ here,
+    # unlike the classic project's tests/ vs tests/asyncio/ split, so both sync source forms
+    # collapse onto the same absolute import).
+    result = result.replace("from . import Framework", "from tests import Framework")
     logger.debug("transform_test[%s]: changed Framework import to async", test_stem)
 
     # Entry-point classes (those that construct their own Requester, e.g. Github,
@@ -4948,7 +4970,7 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     for mod, cls_name in analyzer.entry_point_classes():
         result = result.replace(
             f"from github.{mod} import {cls_name}",
-            f"from github.asyncio.{mod} import {cls_name}",
+            f"from githubasyncio.{mod} import {cls_name}",
         )
 
     # Note: test methods are NOT made async. SyncProxy handles the bridging.
@@ -4971,11 +4993,11 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
         result = result.replace(match, replacement)
 
     # Ensure modules referenced by the injected async twin calls are importable
-    if "github.asyncio.Requester.Requester." in result:
-        if "import github.asyncio.Requester" not in result:
+    if "githubasyncio.Requester.Requester." in result:
+        if "import githubasyncio.Requester" not in result:
             result = result.replace(
                 "import github\n",
-                "import github\nimport github.asyncio.Requester\n",
+                "import github\nimport githubasyncio.Requester\n",
                 1,
             )
 
@@ -4993,9 +5015,16 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
         sync_path = f"github.{mod}.{cls_name}.{meth}"
         if sync_path not in result:
             continue
-        async_path = f"github.asyncio.{mod}.{cls_name}.{meth}"
+        async_path = f"githubasyncio.{mod}.{cls_name}.{meth}"
         logger.debug("transform_test[%s]: bridging async static %s", test_stem, sync_path)
         result = result.replace(sync_path, async_path)
+
+        # Unlike `github.X` (used throughout every test file already), the bare name
+        # `githubasyncio` used by async_path above isn't otherwise bound in the test file — make
+        # sure it is.
+        import_stmt = f"import githubasyncio.{mod}"
+        if import_stmt not in result:
+            result = result.replace("import github\n", f"import github\n{import_stmt}\n", 1)
 
         def _bridge_async_static(m: re.Match, _path: str = async_path) -> str:
             arg = m.group(1)
@@ -5011,13 +5040,13 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
             result,
         )
     # Ensure SyncProxy is importable in the test
-    if "SyncProxy._deep_unwrap" in result and "from tests.asyncio.Framework import SyncProxy" not in result:
+    if "SyncProxy._deep_unwrap" in result and "from tests.Framework import SyncProxy" not in result:
         # SyncProxy is defined in Framework.py which is already imported
         # but may not be explicitly imported. Add import if needed.
         if "SyncProxy" not in result.split("class ")[0]:
             result = result.replace(
-                "from tests.asyncio import Framework",
-                "from tests.asyncio import Framework\nfrom tests.asyncio.Framework import SyncProxy",
+                "from tests import Framework",
+                "from tests import Framework\nfrom tests.Framework import SyncProxy",
             )
 
     # Convert assertTrue(isinstance(X, Y)) -> assertIsInstance(X, Y)
@@ -5217,7 +5246,7 @@ def main():
                 transformed = transformer.transform_file(stem, src)
             else:
                 # Non-async module: generate a re-export stub so that
-                # github.asyncio.X.Y IS github.X.Y (same object).
+                # githubasyncio.X.Y IS github.X.Y (same object).
                 # This avoids isinstance mismatches between sync/async.
                 logger.debug("main: re-export stub for %s (no async classes)", stem)
                 transformed = _generate_reexport_stub(stem)
