@@ -1,0 +1,8 @@
+# tests/ isn't a Python package (see [tool.setuptools] packages in pyproject.toml), and most of
+# its contents -- the generated test modules and the VCR cassette fixtures they replay -- aren't
+# git-tracked here (they're generated/synced by scripts/generate_async.py, not committed), so
+# neither the default sdist package-file discovery nor setuptools_scm's git-tracked-file list
+# picks them up on their own. Include them explicitly.
+recursive-include doc *
+recursive-include tests *.py
+recursive-include tests/ReplayData *
