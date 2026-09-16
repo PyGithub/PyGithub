@@ -8,6 +8,7 @@
 [![Open Source Helpers](https://www.codetriage.com/pygithub/pygithub/badges/users.svg)](https://www.codetriage.com/pygithub/pygithub)
 [![codecov](https://codecov.io/gh/PyGithub/PyGithub/branch/master/graph/badge.svg)](https://codecov.io/gh/PyGithub/PyGithub)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20PyGitHub%20Guru-006BFF)](https://gurubase.io/g/pygithub)
 
 PyGitHub is a Python library to access the [GitHub REST API].
 This library enables you to manage [GitHub] resources such as repositories, user profiles, and organizations in your Python applications.
