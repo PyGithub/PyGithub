@@ -9,10 +9,6 @@ This allows test method bodies to remain identical to sync tests.
 from __future__ import annotations
 
 import asyncio
-import importlib
-import importlib.util
-import sys
-from pathlib import Path
 
 import github.GithubObject
 import github.Requester
@@ -22,23 +18,10 @@ import githubasyncio.GithubObject
 import githubasyncio.Requester
 from githubasyncio.MainClass import Github
 
-# This module lives at tests/Framework.py *in this project*, so `from tests import Framework`
-# would just re-import itself (this project's own tests/ package already owns that name) instead
-# of reaching the classic PyGithub project's tests/Framework.py, which is what actually defines
-# BasicTestCase/CassetteConnection. sync_async.sh deliberately doesn't copy tests/ here, so we
-# load it straight from the sibling checkout, under a private sys.modules name to avoid colliding
-# with this project's own "tests" package.
-_SYNC_TESTS_DIR = Path(__file__).resolve().parents[2] / "tests"
-if "_pygithub_sync_tests" not in sys.modules:
-    _spec = importlib.util.spec_from_file_location(
-        "_pygithub_sync_tests",
-        _SYNC_TESTS_DIR / "__init__.py",
-        submodule_search_locations=[str(_SYNC_TESTS_DIR)],
-    )
-    _pkg = importlib.util.module_from_spec(_spec)
-    sys.modules["_pygithub_sync_tests"] = _pkg
-    _spec.loader.exec_module(_pkg)
-Framework = importlib.import_module("_pygithub_sync_tests.Framework")
+# tests/Framework.py is a byte-for-byte copy of the classic project's tests/Framework.py (see
+# COPY_TEST_FILES in scripts/generate_async.py) -- kept alongside this file, under its own name,
+# specifically so this import works without the classic checkout present.
+from tests import Framework
 
 # Re-export BasicTestCase so that async test files referencing
 # Framework.BasicTestCase find it here.
