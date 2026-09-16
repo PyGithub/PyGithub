@@ -84,6 +84,7 @@ SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
 SKIP_TEST_FILES = {
     "__init__.py",
     "Framework.py",
+    "VcrSerializer.py",
     "__pycache__",
     # ExposeAllAttributes: request ordering differs in async due to eager completion timing
     "ExposeAllAttributes.py",
@@ -231,10 +232,16 @@ TEST_HELPER_IMPORT_REWRITES: tuple[tuple[str, str], ...] = (
     ("from github.GithubObject import is_defined", "from githubasyncio.GithubObject import is_defined"),
 )
 
-# Markers identifying transformable test files, and hand-maintained files that
-# must survive regeneration.
+# Markers identifying transformable test files, and paths under TEST_DST this generator doesn't
+# own and must never delete: AsyncFramework.py is hand-maintained, and ReplayData/ (the VCR
+# cassette fixtures) is synced in by scripts/sync_async.sh, not generated here.
 TEST_BASE_CLASS_MARKERS = ("Framework.TestCase", "BasicTestCase")
-PRESERVE_TEST_FILES = frozenset({"Framework.py"})
+PRESERVE_TEST_FILES = frozenset({"AsyncFramework.py", "ReplayData"})
+
+# Sync test infrastructure copied byte-for-byte into TEST_DST (no async transformation) so the
+# async project can import tests.Framework without the classic checkout present. Keeps
+# AsyncFramework.py's `from tests import Framework` working standalone.
+COPY_TEST_FILES = ("Framework.py", "VcrSerializer.py")
 
 # Public exports of the generated githubasyncio/__init__.py: {module: (name, ...)}.
 ASYNC_INIT_EXPORTS: dict[str, tuple[str, ...]] = {"MainClass": ("Github",)}
@@ -4958,10 +4965,11 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     logger.debug("transform_test[%s]: begin", test_stem)
     result = AUTO_HEADER + src
 
-    # Change Framework import to use the async Framework (both sit directly in tests/ here,
-    # unlike the classic project's tests/ vs tests/asyncio/ split, so both sync source forms
-    # collapse onto the same absolute import).
-    result = result.replace("from . import Framework", "from tests import Framework")
+    # Change Framework import to use the async Framework wrapper. It lives in
+    # tests/AsyncFramework.py here (not tests/Framework.py, which this project copies in
+    # verbatim from the classic one — see COPY_TEST_FILES), aliased back to the bare name
+    # `Framework` so the rest of the test body (`Framework.TestCase`, etc.) is unchanged.
+    result = result.replace("from . import Framework", "from tests import AsyncFramework as Framework")
     logger.debug("transform_test[%s]: changed Framework import to async", test_stem)
 
     # Entry-point classes (those that construct their own Requester, e.g. Github,
@@ -5040,13 +5048,13 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
             result,
         )
     # Ensure SyncProxy is importable in the test
-    if "SyncProxy._deep_unwrap" in result and "from tests.Framework import SyncProxy" not in result:
-        # SyncProxy is defined in Framework.py which is already imported
+    if "SyncProxy._deep_unwrap" in result and "from tests.AsyncFramework import SyncProxy" not in result:
+        # SyncProxy is defined in AsyncFramework.py which is already imported
         # but may not be explicitly imported. Add import if needed.
         if "SyncProxy" not in result.split("class ")[0]:
             result = result.replace(
-                "from tests import Framework",
-                "from tests import Framework\nfrom tests.Framework import SyncProxy",
+                "from tests import AsyncFramework as Framework",
+                "from tests import AsyncFramework as Framework\nfrom tests.AsyncFramework import SyncProxy",
             )
 
     # Convert assertTrue(isinstance(X, Y)) -> assertIsInstance(X, Y)
@@ -5276,6 +5284,15 @@ def main():
         TEST_DST.mkdir(parents=True)
 
     write_file(TEST_DST / "__init__.py", AUTO_HEADER)
+
+    # Copy sync test infrastructure byte-for-byte (see COPY_TEST_FILES) so the async project
+    # doesn't need the classic checkout at import time — only AsyncFramework.py's own async
+    # bits are hand-maintained; the sync Framework/VcrSerializer it builds on are just synced in.
+    for name in COPY_TEST_FILES:
+        src_file = TEST_SRC / name
+        if src_file.exists():
+            write_file(TEST_DST / name, AUTO_HEADER + src_file.read_text(encoding="utf-8"))
+            logger.debug("main: copied sync test infrastructure %s", name)
 
     test_count = 0
     for p in sorted(TEST_SRC.glob("*.py")):
