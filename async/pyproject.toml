@@ -22,7 +22,7 @@ classifiers = [
 ]
 description = "Use the full Github API v3"
 keywords = ["github"]
-name = "PyGithub"
+name = "PyGithub-asyncio"
 readme = "README.md"
 requires-python = ">=3.10"
 
@@ -44,12 +44,13 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 integrations = []
 
 [tool.setuptools_scm]
+root = ".."
 
 [tool.setuptools]
-packages = ["github"]
+packages = ["githubasyncio"]
 
 [tool.setuptools.package-data]
-github = ["py.typed", '*.pyi']
+githubasyncio = ["py.typed", '*.pyi']
 
 [tool.mypy]
 python_version = '3.12'
@@ -57,7 +58,7 @@ ignore_missing_imports = true
 namespace_packages = true
 
 [[tool.mypy.overrides]]
-module = ["github.*"]
+module = ["githubasyncio.*"]
 check_untyped_defs = true
 disallow_untyped_defs = true
 warn_no_return = false
