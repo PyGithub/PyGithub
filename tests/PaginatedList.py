@@ -667,6 +667,27 @@ class PaginatedList(Framework.TestCase):
             {"a": 1, "b": 2, "c": 4, "d": 5, "e": 6},
         )
 
+    def testMergeDictsRecursesWhenBothSidesAreDicts(self):
+        self.assertDictEqual(
+            PaginatedListImpl.merge_dicts(
+                {"a": {"x": 1, "y": 2}},
+                {"a": {"y": 3, "z": 4}},
+            ),
+            {"a": {"x": 1, "y": 3, "z": 4}},
+        )
+
+    def testMergeDictsOverridesRatherThanCrashesWhenExistingValueIsNotADict(self):
+        # d1's "license" is a plain string (as returned by some GitHub API responses);
+        # overriding it with a dict must replace it outright, not attempt to recurse
+        # into a string and crash with AttributeError: 'str' object has no attribute 'copy'
+        self.assertDictEqual(
+            PaginatedListImpl.merge_dicts(
+                {"license": "MIT"},
+                {"license": {"key": "mit", "name": "MIT License"}},
+            ),
+            {"license": {"key": "mit", "name": "MIT License"}},
+        )
+
     def testOverrideAttributes(self):
         input_dict = {"a": 1, "b": 2, "c": 3}
         overrides_dict = {"c": 4, "d": 5, "e": 6}
