@@ -517,8 +517,10 @@ class PaginatedList(PaginatedListBase[T]):
         # clone d1
         d1 = d1.copy()
         for k, v in d2.items():
-            if isinstance(v, dict):
-                d1[k] = cls.merge_dicts(d1.get(k, {}), v)
+            # only recurse if the value being overridden is itself a dict;
+            # otherwise d1[k].copy() below would fail for a non-dict existing value
+            if isinstance(v, dict) and isinstance(d1.get(k), dict):
+                d1[k] = cls.merge_dicts(d1[k], v)
             else:
                 d1[k] = v
         return d1
