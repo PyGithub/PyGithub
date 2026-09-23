@@ -40,7 +40,6 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-
 from urllib3.exceptions import InsecureRequestWarning
 
 import github
@@ -182,8 +181,8 @@ class InstallationGetRepos(Framework.BasicTestCase):
             "https://api.github.com",
             [
                 "/user/installations?per_page=1",
-                "/installation/repositories?per_page=1",
-                "/installation/repositories?page=2&per_page=1",
+                "/user/installations/123456/repositories?per_page=1",
+                "/user/installations/123456/repositories?page=2&per_page=1",
             ],
         )
 
@@ -192,8 +191,8 @@ class InstallationGetRepos(Framework.BasicTestCase):
             "https://github.example:8443/api/v3",
             [
                 "/api/v3/user/installations?per_page=1",
-                "/api/v3/installation/repositories?per_page=1",
-                "/api/v3/installation/repositories?page=2&per_page=1",
+                "/api/v3/user/installations/123456/repositories?per_page=1",
+                "/api/v3/user/installations/123456/repositories?page=2&per_page=1",
             ],
         )
 
