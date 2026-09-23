@@ -108,6 +108,7 @@
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
+from typing import cast
 from unittest import mock
 
 import github
@@ -1406,8 +1407,9 @@ class Repository(Framework.TestCase):
 
     def testEnableImmutableReleases(self) -> None:
         with self.captureRequests() as requests:
-            self.repo.enable_immutable_releases()
+            result = cast(None, self.repo.enable_immutable_releases())
 
+        self.assertIsNone(result)
         self.assertListKeyEqual(requests, lambda r: r.verb, ["PUT"])
         self.assertListKeyEqual(
             requests,
@@ -1417,8 +1419,9 @@ class Repository(Framework.TestCase):
 
     def testDisableImmutableReleases(self) -> None:
         with self.captureRequests() as requests:
-            self.repo.disable_immutable_releases()
+            result = cast(None, self.repo.disable_immutable_releases())
 
+        self.assertIsNone(result)
         self.assertListKeyEqual(requests, lambda r: r.verb, ["DELETE"])
         self.assertListKeyEqual(
             requests,
