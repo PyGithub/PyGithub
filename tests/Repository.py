@@ -108,7 +108,6 @@
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
-from typing import cast
 from unittest import mock
 
 import github
@@ -1406,35 +1405,25 @@ class Repository(Framework.TestCase):
         self.assertFalse(configuration.enforced_by_owner)
 
     def testEnableImmutableReleases(self) -> None:
-        requester = mock.Mock(
-            github.Requester.Requester,
-            base_url="https://api.github.com",
-            is_not_lazy=False,
-        )
-        requester.requestJsonAndCheck.return_value = ({}, None)
-        repo = github.Repository.Repository(requester, url="https://api.github.com/repos/PyGithub/PyGithub")
+        with self.captureRequests() as requests:
+            self.repo.enable_immutable_releases()
 
-        result = cast(None, repo.enable_immutable_releases())
-        self.assertIsNone(result)
-        requester.requestJsonAndCheck.assert_called_once_with(
-            "PUT",
-            "https://api.github.com/repos/PyGithub/PyGithub/immutable-releases",
+        self.assertListKeyEqual(requests, lambda r: r.verb, ["PUT"])
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repos/PyGithub/PyGithub/immutable-releases"],
         )
 
     def testDisableImmutableReleases(self) -> None:
-        requester = mock.Mock(
-            github.Requester.Requester,
-            base_url="https://api.github.com",
-            is_not_lazy=False,
-        )
-        requester.requestJsonAndCheck.return_value = ({}, None)
-        repo = github.Repository.Repository(requester, url="https://api.github.com/repos/PyGithub/PyGithub")
+        with self.captureRequests() as requests:
+            self.repo.disable_immutable_releases()
 
-        result = cast(None, repo.disable_immutable_releases())
-        self.assertIsNone(result)
-        requester.requestJsonAndCheck.assert_called_once_with(
-            "DELETE",
-            "https://api.github.com/repos/PyGithub/PyGithub/immutable-releases",
+        self.assertListKeyEqual(requests, lambda r: r.verb, ["DELETE"])
+        self.assertListKeyEqual(
+            requests,
+            lambda r: r.url,
+            ["/repos/PyGithub/PyGithub/immutable-releases"],
         )
 
     def testGetLanguages(self):
