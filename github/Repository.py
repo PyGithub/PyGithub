@@ -1360,6 +1360,7 @@ class Repository(CompletableGithubObject):
             f"{self.url}/collaborators/{collaborator}/permission",
         )
         return data["role_name"]
+
     def get_immutable_releases_configuration(self) -> CheckImmutableReleases:
         """
         Check if immutable releases are enabled for a repository.
@@ -1369,6 +1370,7 @@ class Repository(CompletableGithubObject):
 
         :calls: `GET /repos/{owner}/{repo}/immutable-releases`
             `<https://docs.github.com/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository>`_
+
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/immutable-releases")
         return github.CheckImmutableReleases.CheckImmutableReleases(self._requester, headers, data)
@@ -3713,6 +3715,20 @@ class Repository(CompletableGithubObject):
         """
         url = f"{self.url}/releases/latest"
         return github.GitRelease.GitRelease(self._requester, url=url)
+
+    def enable_immutable_releases(self) -> None:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#enable-immutable-releases>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck("PUT", f"{self.url}/immutable-releases")
+
+    def disable_immutable_releases(self) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/immutable-releases <https://docs.github.com/en/rest/repos/repos#disable-immutable-releases>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck("DELETE", f"{self.url}/immutable-releases")
 
     def get_teams(self) -> PaginatedList[Team]:
         """
