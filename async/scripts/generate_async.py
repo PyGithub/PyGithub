@@ -84,26 +84,20 @@ SHADOWED_MODULE_NAMES = frozenset(
 
 # Modules that, if given a real (import-fixed) copy, would produce a circular import
 # `_fix_imports` can't resolve on its own: it always rewrites cross-references eagerly (`from
-# githubasyncio.X import Y`, or `from githubasyncio import X as _async_X` for a bare `github.X.`
+# githubasyncio.X import Y`, or `import githubasyncio.X` for a bare `github.X.`
 # reference anywhere in the file -- even one the sync source only reaches lazily, behind `if
 # TYPE_CHECKING:` + a same-method dotted access). The sync package tolerates this because such a
 # reference never actually triggers loading the target module as a side effect of an unrelated
-# import; eagerly resolving it here can. This actually bit once: Auth.py -> InstallationAuthorization
-# -> NamedUser -> Event -> Organization -> CodeSecurityConfigRepository -> Repository ->
-# AuthenticatedUser used to stop there (Installation is TYPE_CHECKING-only in sync
-# AuthenticatedUser.py), but the eager rewrite pulled Installation.py in too, and Installation.py's
-# `from github.Auth import AppAuth` -- eager name-extraction, unlike every other cross-module
-# reference in that file, which already used the lazy `import github.X` + `github.X.Y` form -- hit
-# Auth.py while it was still mid-import. Fixed at the root instead of here: github/Installation.py
-# now uses that same lazy form for AppAuth too (matching ARCHITECTURE.md's documented convention
-# for runtime references), so _fix_imports' normal handling produces the safe, module-only
-# githubasyncio rewrite on its own -- no per-file patch needed. (A second case looked similar --
-# github/GithubIntegration.py constructing `github.Github(...)` -- but its `import github` turned
-# out to be a deliberate workaround for a genuine mutual sync dependency (MainClass imports GithubIntegration by
-# name too), not a style slip; making it `import github.MainClass` broke the *classic* import
-# graph, not just this generator's. Reverted; PATCHES["GithubIntegration"] handles that one instead.)
+# import; eagerly resolving it here can. ARCHITECTURE.md's documented convention for sync-side
+# runtime references -- bare `import github.X` + `github.X.Y` dotted access, never eager
+# `from github.X import Y` name-extraction across modules -- is what keeps _fix_imports' normal
+# handling safe: it produces a module-only `import githubasyncio.X` rewrite, which tolerates the
+# target module still being mid-import. `github/GithubIntegration.py`'s `github.Github(...)`
+# construction is the one place that pattern doesn't apply cleanly on its own (MainClass.py
+# imports back from GithubIntegration.py, a genuine mutual dependency); PATCHES["GithubIntegration"]
+# handles that one directly instead of relying on this set.
 # Left empty, not deleted: a named escape hatch for the next module that hits the general problem
-# somewhere upstream can't be fixed the same way (`_fix_imports` still doesn't understand
+# in a way that can't be fixed at the sync source (`_fix_imports` still doesn't understand
 # TYPE_CHECKING-only laziness in general).
 CIRCULAR_IMPORT_REEXPORT: frozenset[str] = frozenset()
 
@@ -473,22 +467,23 @@ PATCHES: dict[str, list[Patch]] = {
             "normally rewrite this to the bare async class name) deliberately skips it, since "
             "MainClass.py imports back from GithubIntegration.py (a real, mutual dependency, not "
             "just this generator's eagerness), so 'bare Github' isn't safely in scope here either "
-            "way. Import the module instead -- safe regardless of load order, see the step 1 "
-            "docstring in _fix_imports -- and qualify the one usage below.",
+            "way. Import the module instead -- safe regardless of load order -- and qualify the "
+            "one usage below, matching Step 1's own `import githubasyncio.X` + `githubasyncio.X.Y` "
+            "convention.",
             match="return github.Github(**self.__requester.withAuth(auth).kwargs)",
-            replace="return _async_MainClass.Github(**self.__requester.withAuth(auth).kwargs)",
+            replace="return MainClass.Github(**self.__requester.withAuth(auth).kwargs)",
         ),
         Patch(
             reason="module-only import backing the qualified usage above (replaces the now-unused "
             "bare `import github`)",
             match="import github\n",
-            replace="from githubasyncio import MainClass as _async_MainClass\n",
+            replace="from githubasyncio import MainClass\n",
         ),
         Patch(
             reason="qualify the return type annotation to match (lazy string either way, thanks "
             "to `from __future__ import annotations`, but keep it consistent for type checkers)",
             match=") -> github.Github:",
-            replace=") -> _async_MainClass.Github:",
+            replace=") -> MainClass.Github:",
         ),
         Patch(
             reason="a docstring mention of `github.GithubIntegration` (not real code) is enough "
@@ -499,11 +494,14 @@ PATCHES: dict[str, list[Patch]] = {
         ),
         Patch(
             reason="likewise, this deprecation message's `github.Github` mention (also not real "
-            "code) would otherwise fool _ensure_import_github the same way",
-            match="Use github.Github(auth=_async_Auth.AppAuth), _async_Auth.AppAuth.token or "
-            "_async_Auth.AppAuth.create_jwt(expiration) instead",
-            replace="Use githubasyncio.Github(auth=_async_Auth.AppAuth), _async_Auth.AppAuth.token or "
-            "_async_Auth.AppAuth.create_jwt(expiration) instead",
+            "code) would otherwise fool _ensure_import_github the same way. Step 2 already "
+            "rewrote the two `github.Auth.AppAuth` mentions to `githubasyncio.Auth.AppAuth` "
+            "(they're plain `github.X.` text, same as real code), so only `github.Github` needs "
+            "fixing here.",
+            match="Use github.Github(auth=githubasyncio.Auth.AppAuth), githubasyncio.Auth.AppAuth.token or "
+            "githubasyncio.Auth.AppAuth.create_jwt(expiration) instead",
+            replace="Use githubasyncio.Github(auth=githubasyncio.Auth.AppAuth), githubasyncio.Auth.AppAuth.token or "
+            "githubasyncio.Auth.AppAuth.create_jwt(expiration) instead",
         ),
     ],
 }
@@ -2184,14 +2182,14 @@ class AsyncTransformer:
         lines = self._add_close_awaits(lines, stem)
         logger.debug("transform[%s]: step 11 — added close() awaits", stem)
 
-        # 12/13) Steps _fix_isinstance_dual_class/_fix_issubclass_dual_class used to widen
-        # isinstance/issubclass checks against async-only classes to also accept the classic
-        # sync class (e.g. `isinstance(auth, (_async_Auth.Auth, github.Auth.Auth))`), so a
-        # classic PyGithub object could be passed into the async client. Deliberately disabled:
-        # githubasyncio is meant to be self-contained (no runtime dependency on the classic
-        # PyGithub package), and that `github.X.Y` half was the last thing pulling it in
-        # (MainClass.py's `import github.GithubObject`). Callers now need githubasyncio's own
-        # Auth/Repository/GithubObject instances, not classic PyGithub ones.
+        # 12/13) _fix_isinstance_dual_class/_fix_issubclass_dual_class exist but are never called
+        # here: calling them would widen isinstance/issubclass checks against async-only classes
+        # to also accept the classic sync class (e.g. `isinstance(auth, (githubasyncio.Auth.Auth,
+        # github.Auth.Auth))`), letting a classic PyGithub object pass into the async client. Left
+        # disabled: githubasyncio is meant to be self-contained (no runtime dependency on the
+        # classic PyGithub package), and that `github.X.Y` half would be the only thing pulling it
+        # back in. Callers need githubasyncio's own Auth/Repository/GithubObject instances, not
+        # classic PyGithub ones.
         logger.debug("transform[%s]: steps 12/13 — dual sync/async isinstance/issubclass checks disabled", stem)
 
         # 14) Replace `X is NotSet` / `X is not NotSet` with is_undefined(X) / is_defined(X).
@@ -3167,15 +3165,15 @@ class AsyncTransformer:
         """
         Fix import statements to reference the async package (githubasyncio) internally.
 
-        Only ever introduces *absolute* `from githubasyncio import ...` / `from githubasyncio.X
-        import ...` references. Relative imports already present in the sync source (a handful of
-        `github/*.py` files use `from .X import Y` internally) are left completely alone — they
-        still resolve correctly here since githubasyncio mirrors github's flat, single-level
-        layout, and this generator does not "clean them up".
+        Only ever introduces *absolute* `import githubasyncio.X` / `from githubasyncio import ...`
+        / `from githubasyncio.X import ...` references. Relative imports already present in the
+        sync source (a handful of `github/*.py` files use `from .X import Y` internally) are left
+        completely alone — they still resolve correctly here since githubasyncio mirrors github's
+        flat, single-level layout, and this generator does not "clean them up".
 
         Transforms:
-          import github.X            → from githubasyncio import X   (for async modules)
-          github.X.ClassName         → X.ClassName                   (after above import)
+          import github.X            → import githubasyncio.X        (for async modules)
+          github.X.ClassName         → githubasyncio.X.ClassName      (after above import)
           from github.X import Y     → from githubasyncio.X import Y (for async modules)
           from .X import Y           → from .X import Y              (untouched — see above)
           from github.X import Y     → from github.X import Y  (for non-async SKIP_FILES)
@@ -3183,12 +3181,17 @@ class AsyncTransformer:
         KNOWN BUG (noted, not yet fixed): this operates on raw text, not just live code, so a
         plain string *literal* that happens to mention `github.X(...)` as human-readable
         guidance (e.g. a deprecation warning: `"please use auth=github.Auth.Login(...) instead"`)
-        gets the same rewrite as real code and ends up saying the meaningless internal alias
-        (`_async_Auth.Login(...)`) instead of `githubasyncio.Auth.Login(...)`. Confirmed present
-        in at least MainClass.py, GithubIntegration.py, AppAuthentication.py, AdvisoryCredit.py,
-        and EnvironmentProtectionRuleReviewer.py's generated output — real user-facing messages,
-        not just test fallout. Needs the generator to actually distinguish string-literal spans
-        from code before rewriting (e.g. via tokenize/ast) rather than blind text substitution.
+        gets the same rewrite as real code. Since the alias now equals the real module path
+        (`githubasyncio.Auth.Login(...)`, not a meaningless internal `_async_Auth.Login(...)`
+        name — see the `_alias()` comment below), this half of the bug is now mostly harmless:
+        a `github.<module>.<name>` mention in a string literal comes out *correct*. What's still
+        wrong is any bare `github.<ClassName>` mention (a class, not a module, e.g.
+        `github.Github(...)` or `github.GithubIntegration(...)`), since Step 2's regex only
+        matches `github.<module>.`, not the bare class form — those are left saying `github.`
+        instead of `githubasyncio.` (confirmed still present, e.g. MainClass.py's
+        get_app()/get_access_token() deprecation messages). Needs the generator to actually
+        distinguish string-literal spans from code before rewriting (e.g. via tokenize/ast)
+        rather than blind text substitution.
 
         """
         logger.debug("fix_imports[%s]: begin", stem)
@@ -3205,21 +3208,16 @@ class AsyncTransformer:
             if s not in SKIP_STEMS and not s.startswith("_"):
                 async_files.add(s)
 
-        # Step 1: Convert bare `import github.X` → `from githubasyncio import X as _async_X` (for
-        # async modules). The alias is essential: a plain `from githubasyncio import X` binds the
-        # bare name `X`, which collides with the bare-name class import that annotations need
-        # under `if TYPE_CHECKING:` (ARCHITECTURE.md's two-import pattern — runtime references
-        # use `github.<File>.<Class>`, annotations use the bare `<Class>` via TYPE_CHECKING). A
-        # dotted-attribute import — `import githubasyncio.X` then `githubasyncio.X.ClassName` —
-        # would avoid that collision too, but it's unsafe here: `githubasyncio/__init__.py`
-        # eagerly imports the whole object graph, so any module loaded as part of that chain
-        # that accesses `githubasyncio.X` by attribute hits "cannot access submodule 'X' of
-        # module 'githubasyncio' (circular import)", since Python only binds a submodule onto
-        # its parent package once the submodule has *finished* importing. A `from X import Y`
-        # style import sidesteps that entirely — it resolves via sys.modules by name, not by
-        # attribute traversal through the parent package.
+        # Step 1: Convert bare `import github.X` → `import githubasyncio.X` (for async modules).
+        # No alias, matching the sync source's own convention exactly: `import github.X` (no `as`
+        # clause) only ever binds the top-level name `github` in Python -- never the bare
+        # submodule name `X` -- so it can never collide with the bare-name class import
+        # annotations need under `if TYPE_CHECKING:` (ARCHITECTURE.md's two-import pattern:
+        # runtime references use `github.<File>.<Class>`, annotations use the bare `<Class>`).
+        # `import githubasyncio.X` has that exact same property, for the exact same reason:
+        # githubasyncio is root-level, structurally identical to github.
         def _alias(mod: str) -> str:
-            return f"_async_{mod}"
+            return f"githubasyncio.{mod}"
 
         bare_imports = re.findall(r"^import github\.(\w+)\s*$", result, re.MULTILINE)
         already_imported: set[str] = set()
@@ -3227,17 +3225,16 @@ class AsyncTransformer:
             if mod in async_files:
                 result = re.sub(
                     rf"^import github\.{re.escape(mod)}\s*$",
-                    f"from githubasyncio import {mod} as {_alias(mod)}",
+                    f"import githubasyncio.{mod}",
                     result,
                     flags=re.MULTILINE,
                 )
                 already_imported.add(mod)
                 logger.debug(
-                    "fix_imports[%s]: step 1 — import github.%s → from githubasyncio import %s as %s",
+                    "fix_imports[%s]: step 1 — import github.%s → import githubasyncio.%s",
                     stem,
                     mod,
                     mod,
-                    _alias(mod),
                 )
 
         # Step 1b: Convert self-aliased `import github.X as X` -> `from githubasyncio import X`.
@@ -3262,10 +3259,11 @@ class AsyncTransformer:
                     mod,
                 )
 
-        # Also track modules already imported via `from githubasyncio import X as _async_X` or a
-        # legacy `from githubasyncio import X` block (kept for modules that still use the older
-        # style).
-        for m in re.findall(r"^from githubasyncio import \w+ as _async_(\w+)\s*$", result, re.MULTILINE):
+        # Also track modules already imported via `import githubasyncio.X` (Step 1's own form,
+        # picked up here too since a module can appear via `bare_imports` in one place and get
+        # referenced again elsewhere) or a bare `from githubasyncio import X` (Step 1b's form, for
+        # modules the sync source itself imports under a bare alias).
+        for m in re.findall(r"^import githubasyncio\.(\w+)\s*$", result, re.MULTILINE):
             if m in async_files:
                 already_imported.add(m)
         for m in re.findall(r"from githubasyncio import .*", result):
@@ -3273,7 +3271,7 @@ class AsyncTransformer:
                 if name in async_files:
                     already_imported.add(name)
 
-        # Step 2: Convert bare `github.X.` references → `_async_X.` (the aliased runtime
+        # Step 2: Convert bare `github.X.` references → `githubasyncio.X.` (matching the runtime
         # import from Step 1). Only for modules that have async versions.
         # Also track which modules are referenced in the code body but not yet imported
         needed_imports: set[str] = set()
@@ -3324,16 +3322,13 @@ class AsyncTransformer:
                 if has_ref and mod not in already_imported:
                     needed_imports.add(mod)
 
-        # Add missing `from githubasyncio import X as _async_X` for modules referenced but never
-        # imported
+        # Add missing `import githubasyncio.X` for modules referenced but never imported
         if needed_imports:
             logger.debug("fix_imports[%s]: step 2 — adding missing imports: %s", stem, sorted(needed_imports))
             # Find last TOP-LEVEL import line (handling multi-line parenthesized
             # imports and skipping indented TYPE_CHECKING block imports) and add after it.
             last_import_end = self._last_toplevel_import_end(result)
-            import_line = "\n" + "".join(
-                f"from githubasyncio import {mod} as {_alias(mod)}\n" for mod in sorted(needed_imports)
-            )
+            import_line = "\n" + "".join(f"import githubasyncio.{mod}\n" for mod in sorted(needed_imports))
             result = result[: last_import_end + 1] + import_line + result[last_import_end + 1 :]
 
         # Step 3: from github.X import Y -> from githubasyncio.X import Y (for async modules)
@@ -3362,17 +3357,19 @@ class AsyncTransformer:
         # github.InputFileContent)`) where mod is a module whose name is shadowed by a same-named
         # re-exported class (SHADOWED_MODULE_NAMES) — relying on that shadowing (`github.X`
         # resolves to the CLASS via github/__init__.py's re-export, not the module). Rewrite to
-        # `_async_mod.mod` (the same _async_ alias Step 1 uses for module references) rather than
-        # the sync source's own bare `mod.mod` form: the bare module name is commonly ALSO bound
-        # to the bare CLASS elsewhere in the same file, under `if TYPE_CHECKING:`, for annotations
-        # (e.g. `Opt[dict[str, InputFileContent | None]]`) — reusing it here for the module would
-        # collide (F811, plus real ambiguity for any type checker not narrowing on TYPE_CHECKING
-        # the way this specific double-duty pattern needs). And unlike Step 2 above, don't assume
-        # `mod` is already imported: this pattern is commonly the *only runtime* reference to it in
-        # the file (that TYPE_CHECKING import is annotations-only). Only for OTHER files: mod's own
-        # file handles this itself via the mod == stem branch in Step 2 above. Runs after Step 3
-        # specifically so the `from github.{mod} import` line is already converted by then —
-        # otherwise this would corrupt it too (it has no dot between "github" and mod either).
+        # `githubasyncio.mod.mod` rather than the sync source's own bare `mod.mod` form: the bare
+        # module name is commonly ALSO bound to the bare CLASS elsewhere in the same file, under
+        # `if TYPE_CHECKING:`, for annotations (e.g. `Opt[dict[str, InputFileContent | None]]`) —
+        # reusing it here for the module would collide (F811, plus real ambiguity for any type
+        # checker not narrowing on TYPE_CHECKING the way this specific double-duty pattern needs).
+        # `githubasyncio.mod` sidesteps that the same way Step 1 does: `import githubasyncio.mod`
+        # only binds the name `githubasyncio`, never the bare `mod`. And unlike Step 2 above,
+        # don't assume `mod` is already imported: this pattern is commonly the *only runtime*
+        # reference to it in the file (that TYPE_CHECKING import is annotations-only). Only for
+        # OTHER files: mod's own file handles this itself via the mod == stem branch in Step 2
+        # above. Runs after Step 3 specifically so the `from github.{mod} import` line is already
+        # converted by then — otherwise this would corrupt it too (it has no dot between "github"
+        # and mod either).
         step2d_needed: set[str] = set()
         for mod in sorted(SHADOWED_MODULE_NAMES & async_files, key=len, reverse=True):
             if mod == stem:
@@ -3386,9 +3383,7 @@ class AsyncTransformer:
                     already_imported.add(mod)
         if step2d_needed:
             last_import_end = self._last_toplevel_import_end(result)
-            import_line = "\n" + "".join(
-                f"from githubasyncio import {mod} as {_alias(mod)}\n" for mod in sorted(step2d_needed)
-            )
+            import_line = "\n" + "".join(f"import githubasyncio.{mod}\n" for mod in sorted(step2d_needed))
             result = result[: last_import_end + 1] + import_line + result[last_import_end + 1 :]
 
         # Step 3b: Rewrite package-level class references: `github.ClassName`
@@ -3438,10 +3433,10 @@ class AsyncTransformer:
             # already handled by step 2 via the module pattern). Skip docstrings: a class
             # mentioned only in prose (e.g. a Sphinx `:meth:` cross-reference) is not real
             # usage, and treating it as such would add a needless import — which, for a
-            # tightly-coupled module graph, can create a genuine circular import (this is
-            # exactly how a stray `:meth:`github.Github`` docstring mention on an unrelated
-            # class previously produced `from .MainClass import Github` and broke the import
-            # chain, since Github is defined in MainClass itself).
+            # tightly-coupled module graph, can create a genuine circular import (e.g. a stray
+            # `:meth:`github.Github`` docstring mention on an unrelated class would otherwise add
+            # `from .MainClass import Github`, breaking the import chain since Github is defined
+            # in MainClass itself).
             # Use word boundary to avoid partial matches.
             pattern = rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)"
             result, _matched = self._sub_outside_docstrings(pattern, cls_name, result)
@@ -3862,12 +3857,12 @@ class AsyncTransformer:
             if not async_statics:
                 continue
             alt = "|".join(re.escape(m) for m in sorted(async_statics, key=len, reverse=True))
-            # Match the aliased runtime form `_async_Module.ClassName.method(` (see
+            # Match the qualified runtime form `githubasyncio.Module.ClassName.method(` (see
             # _fix_imports) or the bare same-file self-reference `ClassName.method(`.
             mod_name = self.analyzer.class_to_file.get(cls_name, cls_name)
             src = self._safe_add_await(
                 src,
-                rf"(?<!\w)_async_{re.escape(mod_name)}\.{re.escape(cls_name)}\.(?:{alt})\s*\(",
+                rf"(?<!\w)githubasyncio\.{re.escape(mod_name)}\.{re.escape(cls_name)}\.(?:{alt})\s*\(",
             )
             src = self._safe_add_await(
                 src,
@@ -5319,8 +5314,9 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     if _shadowed_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
         result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
 
-    # `Framework.github.X`: the classic sync Framework used to `import github` at module level,
-    # so old test bodies reach modules through it (e.g. `Framework.github.GithubObject`,
+    # `Framework.github.X`: the classic sync Framework imports `github` at module level, so
+    # test bodies copied from the classic suite reach modules through it (e.g.
+    # `Framework.github.GithubObject`,
     # `Framework.github.NamedUser`) -- AsyncFramework.py is self-contained and has no `.github`
     # attribute at all, only `.githubasyncio` (it imports `githubasyncio.X` submodules directly).
     # The PURE_DATA_MODULES rewrite above already turned any *class* reference reached this way
