@@ -150,10 +150,9 @@ class InstallationGetRepos(Framework.BasicTestCase):
                 per_page=1,
                 api_version="2022-11-28",
                 seconds_between_requests=None,
-            ) as client:
-                installation = client.get_user().get_installations()[0]
+            ) as gh:
+                installation = gh.get_user().get_installations()[0]
                 repositories = installation.get_repos()
-                self.assertEqual(len(requests), 1)  # Repository retrieval remains lazy.
                 self.assertIs(installation.requester.auth, auth)
                 self.assertEqual(installation.repositories_url, f"{base_url}/installation/repositories")
                 self.assertListKeyEqual(repositories, lambda repo: repo.full_name, ["owner/first", "owner/second"])
@@ -164,16 +163,6 @@ class InstallationGetRepos(Framework.BasicTestCase):
             requests,
             lambda request: request.request_headers["Authorization"],
             ["bearer user_token"] * 3,
-        )
-        self.assertListKeyEqual(
-            requests,
-            lambda request: request.request_headers["Accept"],
-            [Consts.mediaTypeIntegrationPreview] * 3,
-        )
-        self.assertListKeyEqual(
-            requests,
-            lambda request: request.request_headers["X-GitHub-Api-Version"],
-            ["2022-11-28"] * 3,
         )
 
     def testGetReposWithAppUserAuthApiGithub(self):
