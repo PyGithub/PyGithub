@@ -5265,6 +5265,84 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
         if _ctor_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
             result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
 
+    # A handful of tests build a `mock.Mock(github.Requester.Requester, ...)` /
+    # `mock.MagicMock(github.Requester.Requester, ...)` purely as a spec for a Requester double
+    # (not a bare connection-object mock), then construct an I/O-bearing class directly with it
+    # (e.g. `github.Repository.Repository(requester, url=...)`) to test attribute-parsing from a
+    # url/attributes dict, bypassing self.g entirely. This trips ENTRY_POINT_CTOR_SKIP_MARKERS'
+    # `mock.Mock(`/`mock.MagicMock(` markers above, but a *spec'd* mock is safe to redirect to the
+    # async class where a bare connection double isn't: unittest.mock auto-detects async methods
+    # on the spec class and wraps the corresponding attribute as an AsyncMock, so an async
+    # Requester spec just works as-is. The constructed class still needs Framework.make_async()
+    # wrapping (same as the entry-point rewrite above), since its properties are `async def` and
+    # would otherwise hand back raw, unawaited coroutines instead of values. Scoped narrowly to
+    # methods where the Requester-spec mock is the *sole* mock.Mock/MagicMock usage (no bare
+    # connection double, no pickle) — those keep the classic (unrewritten) construction above.
+    _requester_spec_mock_re = re.compile(r"\bmock\.(?:Mock|MagicMock)\(github\.Requester\.Requester\b")
+    _other_mock_re = re.compile(r"\bmock\.(?:Mock|MagicMock)\((?!github\.Requester\.Requester\b)")
+    _rs_all_lines = result.split("\n")
+    _rs_method_starts = [i for i, line in enumerate(_rs_all_lines) if re.match(r"^    def \w+\(", line)]
+    _requester_spec_ranges: list[tuple[int, int]] = []
+    if _rs_method_starts:
+        _rs_bounds = _rs_method_starts + [len(_rs_all_lines)]
+        for start, end in zip(_rs_bounds, _rs_bounds[1:]):
+            body = "\n".join(_rs_all_lines[start:end])
+            if (
+                _requester_spec_mock_re.search(body)
+                and not _other_mock_re.search(body)
+                and not re.search(r"\bpickle\.", body)
+            ):
+                _requester_spec_ranges.append((start, end))
+
+    if _requester_spec_ranges:
+        _entry_point_cls_names = {cls_name for _, cls_name in _entry_point_pairs}
+        _makeasync_candidates = {
+            cls_name: mod_name
+            for cls_name, mod_name in analyzer.class_to_file.items()
+            if cls_name in analyzer.async_classes
+            and mod_name not in PURE_DATA_MODULES
+            and cls_name != "Requester"
+            and cls_name not in _entry_point_cls_names
+        }
+        _rs_mods_needed: set[str] = {"Requester"}
+        for _i, _line in enumerate(_rs_all_lines):
+            if not any(start <= _i < end for start, end in _requester_spec_ranges):
+                continue
+            new_line = _line.replace(
+                "mock.Mock(github.Requester.Requester", "mock.Mock(githubasyncio.Requester.Requester"
+            ).replace("mock.MagicMock(github.Requester.Requester", "mock.MagicMock(githubasyncio.Requester.Requester")
+            for cls_name, mod_name in sorted(_makeasync_candidates.items(), key=lambda kv: len(kv[0]), reverse=True):
+                new_line, _n = re.subn(
+                    rf"(?<!\w)github\.{re.escape(mod_name)}\.{re.escape(cls_name)}\(",
+                    f"Framework.make_async(githubasyncio.{mod_name}.{cls_name}, ",
+                    new_line,
+                )
+                if _n:
+                    _rs_mods_needed.add(mod_name)
+            _rs_all_lines[_i] = new_line
+        result = "\n".join(_rs_all_lines)
+
+        # Ensure every githubasyncio.<mod> touched above is importable (unlike bare `githubasyncio`,
+        # used throughout every test file already, submodules need their own explicit import).
+        _missing_mods = [
+            mod
+            for mod in sorted(_rs_mods_needed)
+            if not re.search(rf"^import githubasyncio\.{re.escape(mod)}\s*$", result, re.MULTILINE)
+        ]
+        if _missing_mods:
+            _last_github_import = None
+            for _gm in re.finditer(r"^import github(?:\.\w+)?\s*$", result, re.MULTILINE):
+                _last_github_import = _gm
+            if _last_github_import:
+                _insert_pos = _last_github_import.end()
+                _import_block = "\n" + "\n".join(f"import githubasyncio.{mod}" for mod in _missing_mods)
+                result = result[:_insert_pos] + _import_block + result[_insert_pos:]
+        logger.debug(
+            "transform_test[%s]: redirected %d requester-spec-mock method(s) to async",
+            test_stem,
+            len(_requester_spec_ranges),
+        )
+
     # Package-level class references (`github.ClassName`, e.g. `github.InputFileContent(...)`,
     # `self.assertRaises(github.BadCredentialsException)`) into PURE_DATA_MODULES must use the
     # async twin instead: githubasyncio now has its own genuine (non-identical) copy of every
