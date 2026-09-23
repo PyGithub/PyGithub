@@ -67,18 +67,61 @@ TEST_DST = REPO_ROOT / "tests"
 
 AUTO_HEADER = "# FILE AUTO GENERATED DO NOT TOUCH\n"
 
-# Files that should NEVER be copied to async (pure data / no I/O)
-SKIP_FILES = {
-    "__init__.py",  # we generate our own
-    "Consts.py",
-    "GithubException.py",
-    "GithubRetry.py",
-    "InputFileContent.py",
-    "InputGitAuthor.py",
-    "InputGitTreeElement.py",
-}
+# Files that should NEVER be copied to async: __init__.py is custom-generated (see
+# generate_async_init()), not derived 1:1 from the sync module of the same name.
+SKIP_FILES = {"__init__.py"}
 # Stems (without .py) for membership tests against Path.stem or bare module names.
 SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
+
+# Names github/__init__.py re-exports as a class of the same name, shadowing the module itself at
+# the package-attribute level (`github.X` becomes the class, not the module, once
+# github/__init__.py finishes running -- see _find_shadowed_module_aliases()). This is about how
+# code that does `import github.X as X` (bare dotted-attribute access) must special-case these,
+# not about whether X gets its own githubasyncio/X.py (every module does now -- see main()).
+SHADOWED_MODULE_NAMES = frozenset(
+    {"GithubException", "GithubRetry", "InputFileContent", "InputGitAuthor", "InputGitTreeElement"}
+)
+
+# Modules that, if given a real (import-fixed) copy, would produce a circular import
+# `_fix_imports` can't resolve on its own: it always rewrites cross-references eagerly (`from
+# githubasyncio.X import Y`, or `from githubasyncio import X as _async_X` for a bare `github.X.`
+# reference anywhere in the file -- even one the sync source only reaches lazily, behind `if
+# TYPE_CHECKING:` + a same-method dotted access). The sync package tolerates this because such a
+# reference never actually triggers loading the target module as a side effect of an unrelated
+# import; eagerly resolving it here can. This actually bit once: Auth.py -> InstallationAuthorization
+# -> NamedUser -> Event -> Organization -> CodeSecurityConfigRepository -> Repository ->
+# AuthenticatedUser used to stop there (Installation is TYPE_CHECKING-only in sync
+# AuthenticatedUser.py), but the eager rewrite pulled Installation.py in too, and Installation.py's
+# `from github.Auth import AppAuth` -- eager name-extraction, unlike every other cross-module
+# reference in that file, which already used the lazy `import github.X` + `github.X.Y` form -- hit
+# Auth.py while it was still mid-import. Fixed at the root instead of here: github/Installation.py
+# now uses that same lazy form for AppAuth too (matching ARCHITECTURE.md's documented convention
+# for runtime references), so _fix_imports' normal handling produces the safe, module-only
+# githubasyncio rewrite on its own -- no per-file patch needed. (A second case looked similar --
+# github/GithubIntegration.py constructing `github.Github(...)` -- but its `import github` turned
+# out to be a deliberate workaround for a genuine mutual sync dependency (MainClass imports GithubIntegration by
+# name too), not a style slip; making it `import github.MainClass` broke the *classic* import
+# graph, not just this generator's. Reverted; PATCHES["GithubIntegration"] handles that one instead.)
+# Left empty, not deleted: a named escape hatch for the next module that hits the general problem
+# somewhere upstream can't be fixed the same way (`_fix_imports` still doesn't understand
+# TYPE_CHECKING-only laziness in general).
+CIRCULAR_IMPORT_REEXPORT: frozenset[str] = frozenset()
+
+# Pure-data modules (no I/O, no SyncProxy bridging needed): Consts has no classes at all, and the
+# rest define only plain data/exception classes with no async methods of their own. Used to scope
+# transform_test_file's package-level class rewrite (below) to classes that are safe to construct
+# directly -- unlike e.g. Github (MainClass), which has async methods and would return raw,
+# unbridged coroutines if a test constructed `githubasyncio.MainClass.Github(...)` directly
+# instead of going through the framework's SyncProxy-wrapped self.g.
+PURE_DATA_MODULES = frozenset(
+    {"Consts", "GithubException", "GithubRetry", "InputFileContent", "InputGitAuthor", "InputGitTreeElement"}
+)
+
+# Regex patterns: a test *method* containing any of these keeps constructing entry-point classes
+# (Github, GithubIntegration) the classic (sync) way, even though transform_test_file otherwise
+# routes such construction through Framework.make_async() for SyncProxy bridging. See the call
+# site (in transform_test_file) for why each needs the escape hatch.
+ENTRY_POINT_CTOR_SKIP_MARKERS = (r"\bpickle\.", r"\bmock\.MagicMock\(", r"\bmock\.Mock\(")
 
 # Test files to skip (not test modules, or infrastructure)
 SKIP_TEST_FILES = {
@@ -233,15 +276,19 @@ TEST_HELPER_IMPORT_REWRITES: tuple[tuple[str, str], ...] = (
 )
 
 # Markers identifying transformable test files, and paths under TEST_DST this generator doesn't
-# own and must never delete: AsyncFramework.py is hand-maintained, and ReplayData/ (the VCR
-# cassette fixtures) is synced in by scripts/sync_async.sh, not generated here.
+# own and must never delete: ReplayData/ (the VCR cassette fixtures) is synced in by
+# scripts/sync_async.sh, not generated here.
 TEST_BASE_CLASS_MARKERS = ("Framework.TestCase", "BasicTestCase")
-PRESERVE_TEST_FILES = frozenset({"AsyncFramework.py", "ReplayData"})
+PRESERVE_TEST_FILES = frozenset({"ReplayData"})
 
-# Sync test infrastructure copied byte-for-byte into TEST_DST (no async transformation) so the
-# async project can import tests.Framework without the classic checkout present. Keeps
-# AsyncFramework.py's `from tests import Framework` working standalone.
-COPY_TEST_FILES = ("Framework.py", "VcrSerializer.py")
+# Sync test infrastructure copied byte-for-byte into TEST_DST (no async transformation): just
+# VcrSerializer.py, a vcrpy serializer format with no dependency on the classic package at all.
+COPY_TEST_FILES = ("VcrSerializer.py",)
+
+# tests/AsyncFramework.py (self-contained: see the file's own docstring for why) is copied in
+# from this hand-maintained template, same idea as COPY_TEST_FILES but sourced from scripts/
+# (which sync_async.sh doesn't touch) instead of the classic tests/ dir.
+TEMPLATE_TEST_FILES = {"AsyncFramework.py": REPO_ROOT / "scripts" / "async_framework_template.py"}
 
 # Public exports of the generated githubasyncio/__init__.py: {module: (name, ...)}.
 ASYNC_INIT_EXPORTS: dict[str, tuple[str, ...]] = {"MainClass": ("Github",)}
@@ -291,12 +338,6 @@ PATCHES: dict[str, list[Patch]] = {
             replace="other.__class__.__name__ == self.__class__.__name__",
         ),
         Patch(
-            reason="import the sync GithubObject module so NotSet checks can accept both sync and async _NotSetType",
-            regex=True,
-            match=r"(from github\.GithubException import [^\n]+\n)",
-            replace=r"\1import github.GithubObject as _sync_gho\n",
-        ),
-        Patch(
             reason="TypeGuard now imported from typing, not typing_extensions; drop it here since "
             "is_defined/is_undefined switch to TypeIs (typing_extensions-only)",
             match="from typing import TYPE_CHECKING, Any, TypeGuard, Union, overload",
@@ -308,41 +349,18 @@ PATCHES: dict[str, list[Patch]] = {
             replace="from typing_extensions import ParamSpec, Protocol, Self, TypeIs, TypeVar",
         ),
         Patch(
-            reason="is_defined must accept sync _NotSetType too (tests pass sync NotSet through SyncProxy)",
+            reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
             match=("def is_defined(v: T | _NotSetType) -> TypeGuard[T]:\n" "    return not isinstance(v, _NotSetType)"),
-            replace=(
-                "def is_defined(v: T | _NotSetType) -> TypeIs[T]:\n"
-                "    return not isinstance(v, (_NotSetType, _sync_gho._NotSetType))"
-            ),
+            replace=("def is_defined(v: T | _NotSetType) -> TypeIs[T]:\n" "    return not isinstance(v, _NotSetType)"),
         ),
         Patch(
-            reason="is_undefined must accept sync _NotSetType too",
+            reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
             match=(
                 "def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:\n"
                 "    return isinstance(v, _NotSetType)"
             ),
             replace=(
-                "def is_undefined(v: T | _NotSetType) -> TypeIs[_NotSetType]:\n"
-                "    return isinstance(v, (_NotSetType, _sync_gho._NotSetType))"
-            ),
-        ),
-        Patch(
-            reason="is_optional must accept sync _NotSetType too",
-            match=(
-                "def is_optional(v: Any, type: type | tuple[type, ...]) -> bool:\n"
-                "    return isinstance(v, _NotSetType) or isinstance(v, type)"
-            ),
-            replace=(
-                "def is_optional(v: Any, type: type | tuple[type, ...]) -> bool:\n"
-                "    return isinstance(v, (_NotSetType, _sync_gho._NotSetType)) or isinstance(v, type)"
-            ),
-        ),
-        Patch(
-            reason="remove_unset_items must accept sync _NotSetType too",
-            match="return {key: value for key, value in data.items() if not isinstance(value, _NotSetType)}",
-            replace=(
-                "return {key: value for key, value in data.items() "
-                "if not isinstance(value, (_NotSetType, _sync_gho._NotSetType))}"
+                "def is_undefined(v: T | _NotSetType) -> TypeIs[_NotSetType]:\n    return isinstance(v, _NotSetType)"
             ),
         ),
     ],
@@ -430,13 +448,14 @@ PATCHES: dict[str, list[Patch]] = {
     ],
     "Requester": [
         Patch(
-            reason="async I/O requires niquests's AsyncSession/AsyncHTTPAdapter, regardless of "
-            "which backend (requests or niquests) github.requestlib resolved to for sync use",
-            match="from github.requestlib import PreparedRequest, Response, Retry, Session, adapters",
+            reason="async I/O requires niquests's AsyncSession, which githubasyncio.requestlib "
+            "intentionally doesn't export (it covers the symbols async code needs as plain "
+            "values -- PreparedRequest/Response/Retry/adapters -- not a sync-vs-async Session "
+            "choice, so the async Session comes straight from niquests instead)",
+            match="from githubasyncio.requestlib import PreparedRequest, Response, Retry, Session, adapters",
             replace=(
-                "from github.requestlib import PreparedRequest, Response, Retry\n"
-                "from niquests import AsyncSession as Session\n"
-                "from niquests import adapters"
+                "from githubasyncio.requestlib import PreparedRequest, Response, Retry, adapters\n"
+                "from niquests import AsyncSession as Session"
             ),
         ),
         Patch(
@@ -445,6 +464,46 @@ PATCHES: dict[str, list[Patch]] = {
             count=2,
             match=r"adapters\.HTTPAdapter\(",
             replace="adapters.AsyncHTTPAdapter(",
+        ),
+    ],
+    "GithubIntegration": [
+        Patch(
+            reason="get_github_for_installation() constructs a Github client via the classic "
+            "package's bare `import github` + `github.Github(...)` -- Step 3b (which would "
+            "normally rewrite this to the bare async class name) deliberately skips it, since "
+            "MainClass.py imports back from GithubIntegration.py (a real, mutual dependency, not "
+            "just this generator's eagerness), so 'bare Github' isn't safely in scope here either "
+            "way. Import the module instead -- safe regardless of load order, see the step 1 "
+            "docstring in _fix_imports -- and qualify the one usage below.",
+            match="return github.Github(**self.__requester.withAuth(auth).kwargs)",
+            replace="return _async_MainClass.Github(**self.__requester.withAuth(auth).kwargs)",
+        ),
+        Patch(
+            reason="module-only import backing the qualified usage above (replaces the now-unused "
+            "bare `import github`)",
+            match="import github\n",
+            replace="from githubasyncio import MainClass as _async_MainClass\n",
+        ),
+        Patch(
+            reason="qualify the return type annotation to match (lazy string either way, thanks "
+            "to `from __future__ import annotations`, but keep it consistent for type checkers)",
+            match=") -> github.Github:",
+            replace=") -> _async_MainClass.Github:",
+        ),
+        Patch(
+            reason="a docstring mention of `github.GithubIntegration` (not real code) is enough "
+            "to fool _ensure_import_github's textual github.X scan into re-adding the `import "
+            "github` the patches above just removed -- drop the now-stale sync-package prefix",
+            match="          with github.GithubIntegration(...) as gi:",
+            replace="          with GithubIntegration(...) as gi:",
+        ),
+        Patch(
+            reason="likewise, this deprecation message's `github.Github` mention (also not real "
+            "code) would otherwise fool _ensure_import_github the same way",
+            match="Use github.Github(auth=_async_Auth.AppAuth), _async_Auth.AppAuth.token or "
+            "_async_Auth.AppAuth.create_jwt(expiration) instead",
+            replace="Use githubasyncio.Github(auth=_async_Auth.AppAuth), _async_Auth.AppAuth.token or "
+            "_async_Auth.AppAuth.create_jwt(expiration) instead",
         ),
     ],
 }
@@ -483,11 +542,66 @@ def _shadowed_skip_modules() -> tuple[str, ...]:
         return ()
     shadowed = set()
     for node in ast.walk(tree):
-        if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module in SKIP_STEMS:
+        if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module in SHADOWED_MODULE_NAMES:
             for alias in node.names:
                 if (alias.asname or alias.name) == node.module:
                     shadowed.add(node.module)
     return tuple(sorted(shadowed))
+
+
+@functools.lru_cache(maxsize=1)
+def _init_reexports_map() -> dict[str, str]:
+    """
+    Map class_name -> module_name for every class github/__init__.py re-exports under a name different from its own
+    defining module (e.g. Github -> MainClass, UnknownObjectException -> GithubException).
+
+    Used to rewrite `github.ClassName` (package-level access relying on this re-export) to the
+    async equivalent, both in AsyncTransformer._fix_imports (source files, step 3b) and
+    transform_test_file (test files).
+
+    """
+    init_file = SRC_PKG / "__init__.py"
+    reexports: dict[str, str] = {}
+    if not init_file.exists():
+        return reexports
+    init_src = init_file.read_text()
+    # Multi-line parenthesized imports, e.g.
+    #   from .GithubException import (
+    #       BadAttributeException,
+    #       ...
+    #   )
+    import_patterns = [
+        re.compile(r"^from \.(\w+) import \(([^)]*)\)", re.MULTILINE | re.DOTALL),
+        # Single-line imports, e.g. `from .MainClass import Github`
+        re.compile(r"^from \.(\w+) import ([^(\n]+)$", re.MULTILINE),
+    ]
+    for pattern in import_patterns:
+        for m in pattern.finditer(init_src):
+            mod_name, names_blob = m.group(1), m.group(2)
+            for cls_name in re.findall(r"\w+", names_blob):
+                if cls_name != mod_name:
+                    reexports.setdefault(cls_name, mod_name)
+    return reexports
+
+
+def _sync_dotted_ref(mod: str, cls_name: str) -> str:
+    """
+    The sync-package reference for cls_name, defined in module mod, for dual sync/async isinstance/issubclass checks.
+
+    Normally `github.{mod}.{cls_name}` (module, then class). But when mod is itself shadowed by a
+    same-named class re-export (SHADOWED_MODULE_NAMES), `github.{mod}` is already a CLASS, not the
+    module (github/__init__.py's re-export shadows the module at the package-attribute level) --
+    for *every* class cls_name defined in that module, not just the one sharing its name (e.g.
+    `github.GithubException` is the GithubException class, so `github.GithubException.
+    BadCredentialsException` is also broken, not just `github.GithubException.GithubException`).
+    Every such class is, however, also re-exported bare at the package level in the same
+    __init__.py block (that's how the shadowing itself happens), so `github.{cls_name}` reaches it
+    directly there instead.
+
+    """
+    if mod in SHADOWED_MODULE_NAMES:
+        return f"github.{cls_name}"
+    return f"github.{mod}.{cls_name}"
 
 
 class IOAnalyzer:
@@ -2070,17 +2184,15 @@ class AsyncTransformer:
         lines = self._add_close_awaits(lines, stem)
         logger.debug("transform[%s]: step 11 — added close() awaits", stem)
 
-        # 12) Fix isinstance checks against async-only classes to also accept sync classes.
-        # When tests create sync objects (e.g. github.X.Y(...)) and pass them to async code,
-        # isinstance(obj, githubasyncio.X.Y) fails. Accept both.
-        lines = self._fix_isinstance_dual_class(lines)
-        logger.debug("transform[%s]: step 12 — fixed isinstance dual class checks", stem)
-
-        # 13) Fix issubclass checks against async classes to also accept the sync class.
-        # Tests may pass sync classes (github.X.Y) to e.g. create_from_raw_data, and an
-        # issubclass check against the async class alone would reject them.
-        lines = self._fix_issubclass_dual_class(lines)
-        logger.debug("transform[%s]: step 13 — fixed issubclass dual class checks", stem)
+        # 12/13) Steps _fix_isinstance_dual_class/_fix_issubclass_dual_class used to widen
+        # isinstance/issubclass checks against async-only classes to also accept the classic
+        # sync class (e.g. `isinstance(auth, (_async_Auth.Auth, github.Auth.Auth))`), so a
+        # classic PyGithub object could be passed into the async client. Deliberately disabled:
+        # githubasyncio is meant to be self-contained (no runtime dependency on the classic
+        # PyGithub package), and that `github.X.Y` half was the last thing pulling it in
+        # (MainClass.py's `import github.GithubObject`). Callers now need githubasyncio's own
+        # Auth/Repository/GithubObject instances, not classic PyGithub ones.
+        logger.debug("transform[%s]: steps 12/13 — dual sync/async isinstance/issubclass checks disabled", stem)
 
         # 14) Replace `X is NotSet` / `X is not NotSet` with is_undefined(X) / is_defined(X).
         # This handles cases where sync objects (with sync _NotSetType attributes) are
@@ -2651,15 +2763,15 @@ class AsyncTransformer:
                     runtime_class_imports.add(mod_name)
 
             # Collect `from github import X, Y` names (absolute module imports that bind names)
-            # BUT: skip names whose module is in SKIP_FILES (SKIP_STEMS) — those are direct
-            # class re-exports from github/__init__.py (e.g. InputGitAuthor, InputGitTreeElement,
-            # GithubException, Consts) and the bare name already refers to the class, not
-            # a module.  Adding them to runtime_module_names would cause Pass 2b to
-            # incorrectly rewrite `InputGitAuthor` → `InputGitAuthor.InputGitAuthor`.
+            # BUT: skip names in SHADOWED_MODULE_NAMES — those are direct class re-exports from
+            # github/__init__.py (e.g. InputGitAuthor, InputGitTreeElement, GithubException) and
+            # the bare name already refers to the class, not a module. Adding them to
+            # runtime_module_names would cause Pass 2b to incorrectly rewrite `InputGitAuthor` →
+            # `InputGitAuthor.InputGitAuthor`.
             m = re.match(r"^from github import (.+)$", stripped)
             if m:
                 for n in cls._split_import_names(m.group(1), identifiers_only=True):
-                    if n not in SKIP_STEMS:
+                    if n not in SHADOWED_MODULE_NAMES:
                         runtime_module_names.add(n)
 
             # Collect `from github.X import X` (absolute runtime class imports)
@@ -3068,6 +3180,16 @@ class AsyncTransformer:
           from .X import Y           → from .X import Y              (untouched — see above)
           from github.X import Y     → from github.X import Y  (for non-async SKIP_FILES)
 
+        KNOWN BUG (noted, not yet fixed): this operates on raw text, not just live code, so a
+        plain string *literal* that happens to mention `github.X(...)` as human-readable
+        guidance (e.g. a deprecation warning: `"please use auth=github.Auth.Login(...) instead"`)
+        gets the same rewrite as real code and ends up saying the meaningless internal alias
+        (`_async_Auth.Login(...)`) instead of `githubasyncio.Auth.Login(...)`. Confirmed present
+        in at least MainClass.py, GithubIntegration.py, AppAuthentication.py, AdvisoryCredit.py,
+        and EnvironmentProtectionRuleReviewer.py's generated output — real user-facing messages,
+        not just test fallout. Needs the generator to actually distinguish string-literal spans
+        from code before rewriting (e.g. via tokenize/ast) rather than blind text substitution.
+
         """
         logger.debug("fix_imports[%s]: begin", stem)
         result = src
@@ -3116,6 +3238,28 @@ class AsyncTransformer:
                     mod,
                     mod,
                     _alias(mod),
+                )
+
+        # Step 1b: Convert self-aliased `import github.X as X` -> `from githubasyncio import X`.
+        # No `_async_` prefix needed here: the alias already equals the module name, so there's
+        # no bare-name collision with a TYPE_CHECKING class import to avoid (unlike Step 1 above)
+        # -- repointing the import is enough, every body reference already uses the bare name.
+        self_aliased = re.findall(r"^import github\.(\w+) as \1\s*$", result, re.MULTILINE)
+        for mod in self_aliased:
+            if mod in async_files:
+                result = re.sub(
+                    rf"^import github\.{re.escape(mod)} as {re.escape(mod)}\s*$",
+                    f"from githubasyncio import {mod}",
+                    result,
+                    flags=re.MULTILINE,
+                )
+                already_imported.add(mod)
+                logger.debug(
+                    "fix_imports[%s]: step 1b — import github.%s as %s → from githubasyncio import %s",
+                    stem,
+                    mod,
+                    mod,
+                    mod,
                 )
 
         # Also track modules already imported via `from githubasyncio import X as _async_X` or a
@@ -3195,21 +3339,65 @@ class AsyncTransformer:
         # Step 3: from github.X import Y -> from githubasyncio.X import Y (for async modules)
         for mod in sorted(async_files, key=len, reverse=True):
             result = result.replace(f"from github.{mod} import ", f"from githubasyncio.{mod} import ")
+        # requestlib isn't a flat github/*.py module (it's a subpackage), so it's never in
+        # async_files -- redirect it separately to the async project's own niquests-only shim
+        # (see generate_async_requestlib()), keeping githubasyncio self-contained.
+        result = result.replace("from github.requestlib import ", "from githubasyncio.requestlib import ")
         logger.debug("fix_imports[%s]: step 3 — converted from-imports for async modules", stem)
+
+        # Step 3a: `from github import X` (bare package-level import, e.g. `from github import
+        # Consts`) -> `from githubasyncio import X`, for modules that AREN'T shadowed by a
+        # same-named class re-export (SHADOWED_MODULE_NAMES) -- for those the bare name already
+        # refers to the class via github/__init__.py's re-export, not the module, so redirecting
+        # here would be wrong (Step 3b below handles class re-exports instead).
+        for mod in sorted(async_files - SHADOWED_MODULE_NAMES, key=len, reverse=True):
+            result = re.sub(
+                rf"^from github import {re.escape(mod)}\s*$",
+                f"from githubasyncio import {mod}",
+                result,
+                flags=re.MULTILINE,
+            )
+
+        # Step 2d: `github.{mod}` (e.g. `github.InputFileContent(...)`, `isinstance(x,
+        # github.InputFileContent)`) where mod is a module whose name is shadowed by a same-named
+        # re-exported class (SHADOWED_MODULE_NAMES) — relying on that shadowing (`github.X`
+        # resolves to the CLASS via github/__init__.py's re-export, not the module). Rewrite to
+        # `_async_mod.mod` (the same _async_ alias Step 1 uses for module references) rather than
+        # the sync source's own bare `mod.mod` form: the bare module name is commonly ALSO bound
+        # to the bare CLASS elsewhere in the same file, under `if TYPE_CHECKING:`, for annotations
+        # (e.g. `Opt[dict[str, InputFileContent | None]]`) — reusing it here for the module would
+        # collide (F811, plus real ambiguity for any type checker not narrowing on TYPE_CHECKING
+        # the way this specific double-duty pattern needs). And unlike Step 2 above, don't assume
+        # `mod` is already imported: this pattern is commonly the *only runtime* reference to it in
+        # the file (that TYPE_CHECKING import is annotations-only). Only for OTHER files: mod's own
+        # file handles this itself via the mod == stem branch in Step 2 above. Runs after Step 3
+        # specifically so the `from github.{mod} import` line is already converted by then —
+        # otherwise this would corrupt it too (it has no dot between "github" and mod either).
+        step2d_needed: set[str] = set()
+        for mod in sorted(SHADOWED_MODULE_NAMES & async_files, key=len, reverse=True):
+            if mod == stem:
+                continue
+            pattern = rf"(?<!asyncio\.)\bgithub\.{re.escape(mod)}\b(?!\.)"
+            result, _matched = self._sub_outside_docstrings(pattern, f"{_alias(mod)}.{mod}", result)
+            if _matched:
+                logger.debug("fix_imports[%s]: step 2d — github.%s → %s.%s", stem, mod, _alias(mod), mod)
+                if mod not in already_imported:
+                    step2d_needed.add(mod)
+                    already_imported.add(mod)
+        if step2d_needed:
+            last_import_end = self._last_toplevel_import_end(result)
+            import_line = "\n" + "".join(
+                f"from githubasyncio import {mod} as {_alias(mod)}\n" for mod in sorted(step2d_needed)
+            )
+            result = result[: last_import_end + 1] + import_line + result[last_import_end + 1 :]
 
         # Step 3b: Rewrite package-level class references: `github.ClassName`
         # where ClassName is re-exported from github/__init__.py and the underlying
         # module has an async version.  e.g. `github.Github(...)` → `Github(...)`
-        # (using async class from .MainClass).
-        # Build a map: ClassName → ModuleName for classes re-exported from __init__.py
-        _init_file = SRC_PKG / "__init__.py"
-        _init_reexports: dict[str, str] = {}  # class_name → module_name
-        if _init_file.exists():
-            for m in re.finditer(r"^from \.(\w+) import (\w+)", _init_file.read_text(), re.MULTILINE):
-                mod_name, cls_name = m.group(1), m.group(2)
-                if mod_name in async_files and cls_name != mod_name:
-                    # Class re-exported from a different-named module (e.g. Github from MainClass)
-                    _init_reexports[cls_name] = mod_name
+        # (using async class from .MainClass). See _init_reexports_map().
+        _init_reexports = {
+            cls_name: mod_name for cls_name, mod_name in _init_reexports_map().items() if mod_name in async_files
+        }
         for cls_name, mod_name in _init_reexports.items():
             # Skip if we're processing the file that defines this class
             # (e.g. don't add `from .MainClass import Github` when transforming MainClass.py)
@@ -4750,7 +4938,7 @@ class AsyncTransformer:
                 return m.group(0)
             needed_imports.add(mod)
             logger.debug("fix_issubclass_dual_class: %s → dual sync/async check", m.group(0))
-            return f"issubclass({var}, {cls_name}) or issubclass({var}, github.{mod}.{cls_name})"
+            return f"issubclass({var}, {cls_name}) or issubclass({var}, {_sync_dotted_ref(mod, cls_name)})"
 
         src = re.sub(r"issubclass\((\w+),\s*(\w+)\)(?!\s+or\s+issubclass)", _dual, src)
 
@@ -4883,7 +5071,7 @@ class AsyncTransformer:
             if is_tuple:
 
                 def _add_sync_in_tuple(m: re.Match) -> str:
-                    return f"{m.group(0)}, github.{m.group(1)}.{m.group(2)}"
+                    return f"{m.group(0)}, {_sync_dotted_ref(m.group(1), m.group(2))}"
 
                 new_type_arg = async_class_pat.sub(_add_sync_in_tuple, type_arg)
                 logger.debug("fix_isinstance_dual_class: tuple — %s → %s", type_arg.strip(), new_type_arg.strip())
@@ -4899,11 +5087,11 @@ class AsyncTransformer:
                         mod,
                         cls,
                     )
-                    result.append(f"isinstance({first_arg}, ({m.group(0)}, github.{mod}.{cls}))")
+                    result.append(f"isinstance({first_arg}, ({m.group(0)}, {_sync_dotted_ref(mod, cls)}))")
                 else:
 
                     def _wrap_async_class(m2: re.Match) -> str:
-                        return f"({m2.group(0)}, github.{m2.group(1)}.{m2.group(2)})"
+                        return f"({m2.group(0)}, {_sync_dotted_ref(m2.group(1), m2.group(2))})"
 
                     new_type_arg = async_class_pat.sub(_wrap_async_class, type_arg)
                     result.append(f"isinstance({first_arg}, {new_type_arg})")
@@ -4926,6 +5114,49 @@ def _generate_reexport_stub(module_name: str) -> str:
         f"# Re-export everything from the sync module so that\n"
         f"# isinstance checks work with both sync and async code.\n"
         f"from github.{module_name} import *  # noqa: F401,F403\n"
+    )
+
+
+def generate_async_requestlib() -> str:
+    """
+    Generate githubasyncio/requestlib.py: the async project's HTTP-backend shim.
+
+    Mirrors the niquests branch of the classic project's github/requestlib/__init__.py, but
+    unconditionally -- the async project mandates niquests (see async/pyproject.toml), so there's
+    no requests-vs-niquests choice to make here, and no need to reach into the classic package's
+    own requestlib for it.
+
+    """
+    return (
+        f"{AUTO_HEADER}"
+        '"""\n'
+        "HTTP backend shim, always niquests: unlike the classic project's github.requestlib,\n"
+        "there's no requests-vs-niquests choice here (see the niquests dependency in pyproject.toml).\n"
+        '"""\n'
+        "\n"
+        "from niquests import Response, adapters, exceptions, utils\n"
+        "from niquests import RetryConfiguration as Retry\n"
+        "from niquests.models import CaseInsensitiveDict, PreparedRequest\n"
+        "from niquests.packages import urllib3\n"
+        "from niquests.packages.urllib3.util import Url\n"
+        "\n"
+        "netrc_auth_utils = utils.get_netrc_auth\n"
+        "\n"
+        'active = "niquests"\n'
+        "\n"
+        "__all__ = [\n"
+        '    "active",\n'
+        '    "adapters",\n'
+        '    "exceptions",\n'
+        '    "utils",\n'
+        '    "Response",\n'
+        '    "PreparedRequest",\n'
+        '    "CaseInsensitiveDict",\n'
+        '    "Retry",\n'
+        '    "Url",\n'
+        '    "urllib3",\n'
+        '    "netrc_auth_utils",\n'
+        "]\n"
     )
 
 
@@ -4954,6 +5185,28 @@ def generate_async_init() -> str:
     return "\n".join(lines)
 
 
+def _method_ranges_matching(src: str, patterns: tuple[str, ...]) -> list[tuple[int, int]]:
+    """
+    Line-index ranges [start, end) of every method (``    def name(...`` at one level of indentation) whose body
+    matches any of `patterns`.
+
+    Used to scope a rewrite to everything *except* particular test methods, by having the caller skip lines falling
+    inside a returned range.
+
+    """
+    lines = src.split("\n")
+    starts = [i for i, line in enumerate(lines) if re.match(r"^    def \w+\(", line)]
+    if not starts:
+        return []
+    starts.append(len(lines))  # sentinel: end of the last method
+    combined = _compile("|".join(patterns))
+    ranges = []
+    for start, end in zip(starts, starts[1:]):
+        if combined.search("\n".join(lines[start:end])):
+            ranges.append((start, end))
+    return ranges
+
+
 def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     """
     Transform a sync test file into an async version.
@@ -4965,21 +5218,181 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     logger.debug("transform_test[%s]: begin", test_stem)
     result = AUTO_HEADER + src
 
-    # Change Framework import to use the async Framework wrapper. It lives in
-    # tests/AsyncFramework.py here (not tests/Framework.py, which this project copies in
-    # verbatim from the classic one — see COPY_TEST_FILES), aliased back to the bare name
-    # `Framework` so the rest of the test body (`Framework.TestCase`, etc.) is unchanged.
+    # Change Framework import to use the self-contained async Framework (tests/AsyncFramework.py
+    # — see TEMPLATE_TEST_FILES), aliased back to the bare name `Framework` so the rest of the
+    # test body (`Framework.TestCase`, etc.) is unchanged. Sync sources use either import form
+    # depending on whether the test file sits directly in tests/ or not; both collapse onto the
+    # same target here since tests/ is flat.
     result = result.replace("from . import Framework", "from tests import AsyncFramework as Framework")
+    result = result.replace("from tests import Framework", "from tests import AsyncFramework as Framework")
     logger.debug("transform_test[%s]: changed Framework import to async", test_stem)
 
     # Entry-point classes (those that construct their own Requester, e.g. Github,
     # GithubIntegration) must come from the async package so that tests exercise
     # the async stack.  Derived from the analyzer, not hardcoded.
-    for mod, cls_name in analyzer.entry_point_classes():
+    _entry_point_pairs = analyzer.entry_point_classes()
+    for mod, cls_name in _entry_point_pairs:
         result = result.replace(
             f"from github.{mod} import {cls_name}",
             f"from githubasyncio.{mod} import {cls_name}",
         )
+
+    # A number of tests construct their own entry-point client inline instead of using self.g
+    # (e.g. to exercise an auth-failure path, or a non-default base_url), via the package-level
+    # `github.Github(...)` / `github.GithubIntegration(...)` form specifically (the `from
+    # github.X import Y` form above already binds the bare name to the *async* class -- but then
+    # it's unwrapped, so calling e.g. .get_user() on it would just hand back a coroutine). Route
+    # the construction through Framework.make_async() so it's SyncProxy-wrapped like self.g,
+    # *except* in methods matching ENTRY_POINT_CTOR_SKIP_MARKERS: SyncProxy's __class__ spoofing
+    # breaks pickle's protocol outright, and a test that hands a plain mock.MagicMock() to a
+    # connection slot and expects close() to be called on it synchronously will fail differently
+    # (not incorrectly, just differently -- close() is `await self.__connection.close()` on the
+    # async side, which can't await a MagicMock) if that connection now belongs to a real async
+    # Requester. Left constructing the classic class in those methods instead -- cassette replay
+    # still works there (BasicTestCase.setUp() patches github.Requester too), they just exercise
+    # the sync stack for this one call, same as before this rewrite existed.
+    _protected_ranges = _method_ranges_matching(result, ENTRY_POINT_CTOR_SKIP_MARKERS)
+    if _entry_point_pairs:
+        _lines = result.split("\n")
+        _ctor_rewritten = False
+        for _i, _line in enumerate(_lines):
+            if any(start <= _i < end for start, end in _protected_ranges):
+                continue
+            for mod, cls_name in _entry_point_pairs:
+                _line, _n = re.subn(
+                    rf"(?<!\w)github\.{re.escape(cls_name)}\(",
+                    f"Framework.make_async(githubasyncio.{mod}.{cls_name}, ",
+                    _line,
+                )
+                _ctor_rewritten = _ctor_rewritten or _n > 0
+            _lines[_i] = _line
+        result = "\n".join(_lines)
+        if _ctor_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
+            result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
+
+    # Package-level class references (`github.ClassName`, e.g. `github.InputFileContent(...)`,
+    # `self.assertRaises(github.BadCredentialsException)`) into PURE_DATA_MODULES must use the
+    # async twin instead: githubasyncio now has its own genuine (non-identical) copy of every
+    # class github/__init__.py re-exports from one of those modules, whether same-named as its
+    # module (SHADOWED_MODULE_NAMES: GithubException, GithubRetry, InputFileContent,
+    # InputGitAuthor, InputGitTreeElement) or not (e.g. BadCredentialsException, from
+    # GithubException.py — see _init_reexports_map()). A sync-constructed InputFileContent isn't a
+    # githubasyncio.InputFileContent.InputFileContent, and the async Requester never raises a sync
+    # exception. Scoped to PURE_DATA_MODULES specifically (not every re-export) because unlike
+    # those, e.g. Github (MainClass) has async methods: constructing
+    # `githubasyncio.MainClass.Github(...)` directly, instead of through the framework's
+    # SyncProxy-wrapped self.g, would return raw, unbridged coroutines from every method call.
+    # `githubasyncio` is already fully imported by every generated test file's own top-level
+    # import by the time any test method runs, so this fully-qualified form needs no import of
+    # its own.
+    _test_reexports = {
+        cls_name: mod_name for cls_name, mod_name in _init_reexports_map().items() if mod_name in PURE_DATA_MODULES
+    }
+    for _mod in SHADOWED_MODULE_NAMES:
+        _test_reexports.setdefault(_mod, _mod)
+    # Auth classes (Login, Token, AppAuth, ...): constructed directly in test bodies via
+    # `from github.Auth import X` / `github.Auth.X(...)` and then handed as `auth=` to an
+    # entry-point class -- since entry-point construction above now builds the *async* class,
+    # the auth object needs to match (an async entry point rejects a sync-flavored auth instance
+    # with a type/isinstance error; see the Auth branch below for the `github.Auth.X` form these
+    # don't cover on their own). Unlike MainClass/GithubIntegration, Auth classes don't need
+    # SyncProxy wrapping here even though a couple of them (AppAuth and friends) do have real
+    # async methods -- tests only construct and hand them off, they don't call those methods
+    # directly on the object built here.
+    for _cls_name, _mod_name in analyzer.class_to_file.items():
+        if _mod_name == "Auth":
+            _test_reexports.setdefault(_cls_name, "Auth")
+    _shadowed_rewritten = False
+    _shadowed_lines = result.split("\n")
+    for _i, _line in enumerate(_shadowed_lines):
+        stripped = _line.lstrip()
+        if stripped.startswith("import ") or stripped.startswith("from "):
+            continue  # leave import statements alone -- only rewrite expression usages
+        new_line = _line
+        for cls_name, mod_name in sorted(_test_reexports.items(), key=lambda kv: len(kv[0]), reverse=True):
+            new_line, _n = re.subn(
+                rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)", f"githubasyncio.{mod_name}.{cls_name}", new_line
+            )
+            _shadowed_rewritten = _shadowed_rewritten or _n > 0
+        _shadowed_lines[_i] = new_line
+    result = "\n".join(_shadowed_lines)
+    if _shadowed_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
+        result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
+
+    # `Framework.github.X`: the classic sync Framework used to `import github` at module level,
+    # so old test bodies reach modules through it (e.g. `Framework.github.GithubObject`,
+    # `Framework.github.NamedUser`) -- AsyncFramework.py is self-contained and has no `.github`
+    # attribute at all, only `.githubasyncio` (it imports `githubasyncio.X` submodules directly).
+    # The PURE_DATA_MODULES rewrite above already turned any *class* reference reached this way
+    # (e.g. `Framework.github.BadAttributeException`) into its fully-qualified
+    # `Framework.githubasyncio.<mod>.<cls>` form; only plain module references are left, and those
+    # just need github -> githubasyncio.
+    result = result.replace("Framework.github.", "Framework.githubasyncio.")
+
+    # `github.Auth.X(...)` / `github.Requester.Requester(...)`: module-qualified (unlike the bare
+    # `github.ClassName` shadow rewrite above), since neither is re-exported at the package level
+    # -- only the modules themselves are (`from . import Auth` in github/__init__.py; Requester
+    # isn't even re-exported there, but a test can still reach it via `import github.Requester`).
+    # Like Auth, constructing a Requester directly doesn't need SyncProxy wrapping (__init__ and
+    # the handful of methods tests call directly on one here -- .kwargs, .withAuth() -- are all
+    # sync on both sides). Only the dot-continued form; import lines (`from github.Auth import
+    # X`) don't match (no trailing dot after "Auth") and are handled below by the _test_reexports
+    # machinery instead. Respects the same ENTRY_POINT_CTOR_SKIP_MARKERS protected ranges as the
+    # entry-point rewrite above: a method left constructing e.g. `github.GithubIntegration(...)`
+    # (because it mocks a connection) needs the `auth=` it's given to stay classic too, or the
+    # two won't match types.
+    _auth_rewritten = False
+    _auth_lines = result.split("\n")
+    for _i, _line in enumerate(_auth_lines):
+        if any(start <= _i < end for start, end in _protected_ranges):
+            continue
+        new_line = _line.replace("github.Auth.", "githubasyncio.Auth.").replace(
+            "github.Requester.Requester(", "githubasyncio.Requester.Requester("
+        )
+        _auth_rewritten = _auth_rewritten or new_line != _line
+        _auth_lines[_i] = new_line
+    result = "\n".join(_auth_lines)
+    if _auth_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
+        result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
+    # these classes by name (`from github.X import Y` or `from github import Y`) and then uses
+    # the bare name directly never gets touched, and still binds the sync class. Replace that
+    # classic import with the async twin (dropping the name from its original `from github[.X]
+    # import ...` line, and the whole line if it becomes empty) so no classic `github` import
+    # survives in the generated test file, then re-import the async twin after the existing
+    # import block so it wins the name binding.
+    _needed_reimport_names = [
+        cls_name
+        for cls_name, mod_name in _test_reexports.items()
+        if re.search(rf"^from github\.{re.escape(mod_name)} import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE)
+        or re.search(rf"^from github import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE)
+    ]
+    _needed_reimports = [
+        f"from githubasyncio.{_test_reexports[cls_name]} import {cls_name}" for cls_name in _needed_reimport_names
+    ]
+    if _needed_reimports:
+        _names_to_drop = set(_needed_reimport_names)
+        _stripped_lines = []
+        for _line in result.split("\n"):
+            _m = re.match(r"^(\s*)from github(?:\.\w+)? import (.+)$", _line)
+            if _m and "(" not in _m.group(2):
+                _indent, _names_part = _m.group(1), _m.group(2)
+                _names = AsyncTransformer._split_import_names(_names_part)
+                _filtered = [n for n in _names if n not in _names_to_drop]
+                if not _filtered:
+                    continue  # drop the now-empty import line entirely
+                if len(_filtered) != len(_names):
+                    _prefix = _line[: _m.start(2)]
+                    _line = f"{_prefix}{', '.join(_filtered)}"
+            _stripped_lines.append(_line)
+        result = "\n".join(_stripped_lines)
+
+        _last_import_m = None
+        for _last_import_m in re.finditer(r"^(?:from|import) .+$", result, re.MULTILINE):
+            pass
+        if _last_import_m:
+            _insert_at = _last_import_m.end()
+            result = result[:_insert_at] + "\n" + "\n".join(_needed_reimports) + result[_insert_at:]
+            logger.debug("transform_test[%s]: re-imported async twins: %s", test_stem, _needed_reimports)
 
     # Note: test methods are NOT made async. SyncProxy handles the bridging.
     # No @pytest.mark.asyncio needed either.
@@ -5231,6 +5644,10 @@ def main():
     write_file(DST_PKG / "__init__.py", generate_async_init())
     generated_count += 1
 
+    # Generate requestlib.py (niquests-only shim; see generate_async_requestlib())
+    write_file(DST_PKG / "requestlib.py", generate_async_requestlib())
+    generated_count += 1
+
     # Generate transformed source files
     reexport_count = 0
     for p in sorted(SRC_PKG.glob("*.py")):
@@ -5241,26 +5658,23 @@ def main():
 
         src = p.read_text(encoding="utf-8")
 
-        if stem in analyzer.trees:
-            # Check if this file has any async classes
-            has_async = any(
-                cls_name in analyzer.async_classes
-                for cls_name in analyzer.class_to_file
-                if analyzer.class_to_file[cls_name] == stem
-            )
-
-            if has_async:
-                logger.debug("main: full transform for %s", stem)
-                transformed = transformer.transform_file(stem, src)
-            else:
-                # Non-async module: generate a re-export stub so that
-                # githubasyncio.X.Y IS github.X.Y (same object).
-                # This avoids isinstance mismatches between sync/async.
-                logger.debug("main: re-export stub for %s (no async classes)", stem)
-                transformed = _generate_reexport_stub(stem)
-                reexport_count += 1
+        if stem in analyzer.trees and stem not in CIRCULAR_IMPORT_REEXPORT:
+            # Full transform: whether or not this module has classes needing actual async
+            # rewriting, the pass still fixes up its imports (github.X -> githubasyncio.X) so the
+            # result is a genuine, self-contained copy rather than a stub re-exporting from the
+            # classic package (`from github.X import *`) -- githubasyncio must not need the
+            # classic PyGithub package installed. transform_file() is a safe no-op for any classes
+            # it finds with nothing to make async.
+            logger.debug("main: full transform for %s", stem)
+            transformed = transformer.transform_file(stem, src)
+        elif stem in CIRCULAR_IMPORT_REEXPORT:
+            logger.debug("main: re-export stub for %s (CIRCULAR_IMPORT_REEXPORT)", stem)
+            transformed = _generate_reexport_stub(stem)
+            reexport_count += 1
         else:
-            # Module not in parsed trees — still generate re-export stub
+            # Module not in parsed trees (e.g. a SyntaxError) — can't be transformed at all.
+            # Falls back to a re-export stub, the one case where githubasyncio still ends up
+            # needing the classic package.
             logger.debug("main: re-export stub for %s (not in parsed trees)", stem)
             transformed = _generate_reexport_stub(stem)
             reexport_count += 1
@@ -5286,13 +5700,18 @@ def main():
     write_file(TEST_DST / "__init__.py", AUTO_HEADER)
 
     # Copy sync test infrastructure byte-for-byte (see COPY_TEST_FILES) so the async project
-    # doesn't need the classic checkout at import time — only AsyncFramework.py's own async
-    # bits are hand-maintained; the sync Framework/VcrSerializer it builds on are just synced in.
+    # doesn't need the classic checkout at import time.
     for name in COPY_TEST_FILES:
         src_file = TEST_SRC / name
         if src_file.exists():
             write_file(TEST_DST / name, AUTO_HEADER + src_file.read_text(encoding="utf-8"))
             logger.debug("main: copied sync test infrastructure %s", name)
+
+    # Copy the hand-maintained async test framework in from its template (see
+    # TEMPLATE_TEST_FILES) -- self-contained, no classic package dependency at all.
+    for name, template_file in TEMPLATE_TEST_FILES.items():
+        write_file(TEST_DST / name, AUTO_HEADER + template_file.read_text(encoding="utf-8"))
+        logger.debug("main: copied async test framework template %s", name)
 
     test_count = 0
     for p in sorted(TEST_SRC.glob("*.py")):
