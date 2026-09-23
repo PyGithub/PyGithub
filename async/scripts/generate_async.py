@@ -115,7 +115,15 @@ PURE_DATA_MODULES = frozenset(
 # (Github, GithubIntegration) the classic (sync) way, even though transform_test_file otherwise
 # routes such construction through Framework.make_async() for SyncProxy bridging. See the call
 # site (in transform_test_file) for why each needs the escape hatch.
-ENTRY_POINT_CTOR_SKIP_MARKERS = (r"\bpickle\.", r"\bmock\.MagicMock\(", r"\bmock\.Mock\(")
+ENTRY_POINT_CTOR_SKIP_MARKERS = (r"\bmock\.MagicMock\(", r"\bmock\.Mock\((?!return_value=|side_effect=)")
+
+# `mock.Mock(return_value=...)` / `side_effect=` are plain function stubs (e.g. a frozen
+# `datetime.now`) and behave the same against either stack -- unless the method also drives an
+# Auth whose `token`/`authentication()` does I/O (installation / user tokens): the async Auth
+# classes can't refresh those yet (their `token` property calls an async method without awaiting
+# it), so such a method has to stay on the classic stack even when its only mocks are stubs.
+STUB_MOCK_MARKER = r"\bmock\.Mock\("
+IO_TOKEN_AUTH_MARKER = r"\b(?:AppInstallationAuth|AppUserAuth|get_installation_auth|get_app_user_auth)\b"
 
 # Test files to skip (not test modules, or infrastructure)
 SKIP_TEST_FILES = {
@@ -244,20 +252,44 @@ TEST_MOCK_REWRITES: tuple[tuple[str, str, frozenset[str]], ...] = (
     ('"github.Requester.datetime"', '"githubasyncio.Requester.datetime"', frozenset()),
     ('mock.patch("github.PublicKey.encrypt")', 'mock.patch("githubasyncio.PublicKey.encrypt")', frozenset()),
     ('"github.AccessToken.datetime"', '"githubasyncio.AccessToken.datetime"', frozenset({"Authentication"})),
+    ("github.GithubObject.NotSet", "githubasyncio.GithubObject.NotSet", frozenset()),
+    # The async stack reads its own Consts / requestlib, so patch and use those.
+    ('"github.Requester.Consts.', '"githubasyncio.Requester.Consts.', frozenset()),
+    ("from github.requestlib import ", "from githubasyncio.requestlib import ", frozenset()),
+    ("github.requestlib.", "githubasyncio.requestlib.", frozenset()),
+    # `gr` alias of the Requester module: a Requester built here is called directly (requestJson),
+    # so it needs the same SyncProxy wrapping as a directly-built entry point.
+    ("from github import Requester as gr", "from githubasyncio import Requester as gr", frozenset()),
+    ("return gr.Requester(", "return Framework.make_async(gr.Requester, ", frozenset()),
+    ("r = gr.Requester(", "r = Framework.make_async(gr.Requester, ", frozenset()),
+    # A test stub replacing Requester.__requestRaw must be awaitable, since the async
+    # __requestEncode does `await self.__requestRaw(...)`.
+    ("def requestRaw(cnx, verb,", "async def requestRaw(cnx, verb,", frozenset()),
+    # An incomplete object built on a bare mock requester: the async class, SyncProxy-wrapped so
+    # `_completeIfNeeded` (async) raises synchronously through assertRaises. It raises before
+    # touching the requester, so the plain mock is enough.
+    (
+        "github.UserKey.UserKey.setCheckAfterInitFlag(False)",
+        "githubasyncio.UserKey.UserKey.setCheckAfterInitFlag(False)",
+        frozenset(),
+    ),
+    (
+        "github.UserKey.UserKey(mock.MagicMock(), {}, {}, False)",
+        "Framework.make_async(githubasyncio.UserKey.UserKey, mock.MagicMock(), {}, {}, False)",
+        frozenset(),
+    ),
 )
 
-# Sync-stack classmethod calls that generated tests must ALSO invoke on the
-# async twin (test observability plumbing; these methods stay sync, so this is
-# a decision — not derivable from the analysis).
-TEST_DUAL_STACK_CALLS: tuple[tuple[str, str], ...] = (
+# Logger injection: the tests' logger plumbing targets the async Requester (these classmethods stay
+# sync, so this is a decision -- not derivable from the analysis).
+TEST_LOGGER_CALLS: tuple[tuple[str, str], ...] = (
     (
         "github.Requester.Requester.injectLogger(self.logger)",
-        "github.Requester.Requester.injectLogger(self.logger)\n"
-        "        githubasyncio.Requester.Requester.injectLogger(self.logger)",
+        "githubasyncio.Requester.Requester.injectLogger(self.logger)",
     ),
     (
         "github.Requester.Requester.resetLogger()",
-        "github.Requester.Requester.resetLogger()\n        githubasyncio.Requester.Requester.resetLogger()",
+        "githubasyncio.Requester.Requester.resetLogger()",
     ),
 )
 
@@ -3219,13 +3251,14 @@ class AsyncTransformer:
         def _alias(mod: str) -> str:
             return f"githubasyncio.{mod}"
 
-        bare_imports = re.findall(r"^import github\.(\w+)\s*$", result, re.MULTILINE)
+        # (a trailing `# comment` is allowed and kept, e.g. `import github.NamedUser  # TODO ...`)
+        bare_imports = re.findall(r"^import github\.(\w+)[ \t]*(?:#[^\n]*)?$", result, re.MULTILINE)
         already_imported: set[str] = set()
         for mod in bare_imports:
             if mod in async_files:
                 result = re.sub(
-                    rf"^import github\.{re.escape(mod)}\s*$",
-                    f"import githubasyncio.{mod}",
+                    rf"^import github\.{re.escape(mod)}([ \t]*(?:#[^\n]*)?)$",
+                    rf"import githubasyncio.{mod}\1",
                     result,
                     flags=re.MULTILINE,
                 )
@@ -5262,15 +5295,47 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     # github.X import Y` form above already binds the bare name to the *async* class -- but then
     # it's unwrapped, so calling e.g. .get_user() on it would just hand back a coroutine). Route
     # the construction through Framework.make_async() so it's SyncProxy-wrapped like self.g,
-    # *except* in methods matching ENTRY_POINT_CTOR_SKIP_MARKERS: SyncProxy's __class__ spoofing
-    # breaks pickle's protocol outright, and a test that hands a plain mock.MagicMock() to a
-    # connection slot and expects close() to be called on it synchronously will fail differently
-    # (not incorrectly, just differently -- close() is `await self.__connection.close()` on the
-    # async side, which can't await a MagicMock) if that connection now belongs to a real async
-    # Requester. Left constructing the classic class in those methods instead -- cassette replay
-    # still works there (BasicTestCase.setUp() patches github.Requester too), they just exercise
-    # the sync stack for this one call, same as before this rewrite existed.
+    # *except* in methods matching ENTRY_POINT_CTOR_SKIP_MARKERS: a test that hands a plain
+    # mock.MagicMock() to a connection slot and expects close() to be called on it synchronously
+    # will fail differently (not incorrectly, just differently -- close() is
+    # `await self.__connection.close()` on the async side, which can't await a MagicMock) if that
+    # connection now belongs to a real async Requester. Left constructing the classic class in
+    # those methods instead -- cassette replay still works there (BasicTestCase.setUp() patches
+    # github.Requester too), they just exercise the sync stack for this one call.
+    # (pickle round-trips are not skipped: `pickle.dumps(X)` arguments get unwrapped from their
+    # SyncProxy instead -- see the pickle pass below -- and the raw async objects pickle fine.)
     _protected_ranges = _method_ranges_matching(result, ENTRY_POINT_CTOR_SKIP_MARKERS)
+    for _rng in _method_ranges_matching(result, (STUB_MOCK_MARKER,)):
+        if _rng not in _protected_ranges and re.search(
+            IO_TOKEN_AUTH_MARKER, "\n".join(result.split("\n")[_rng[0] : _rng[1]])
+        ):
+            _protected_ranges.append(_rng)
+
+    # Bare connection doubles: a method that assigns a plain `mock.MagicMock()` to a Requester's
+    # connection slot (`_Requester__connection`, `__custom_connections`) only to check that
+    # close() reaches it. That marker guard exists because the async close() is
+    # `await connection.close()`, which a MagicMock's plain return value can't satisfy -- but
+    # `mock.AsyncMock()` does, and records `close.assert_called_once_with()` the same way. Swapping
+    # it in lets these methods run against the async stack like everything else, so they leave the
+    # protected set. Only for methods whose *sole* mock use is that bare, argument-less form (a
+    # spec'd or argument-carrying mock means something else, handled -- or not -- elsewhere).
+    _bare_magic_re = re.compile(r"\bmock\.MagicMock\(\)")
+    _arg_mock_re = re.compile(r"\bmock\.(?:Mock|MagicMock)\((?!\))")
+    _connection_double_ranges = [
+        (start, end)
+        for start, end in _protected_ranges
+        if "_Requester__connection" in "\n".join(result.split("\n")[start:end])
+        and _bare_magic_re.search("\n".join(result.split("\n")[start:end]))
+        and not _arg_mock_re.search("\n".join(result.split("\n")[start:end]))
+    ]
+    if _connection_double_ranges:
+        _cd_lines = result.split("\n")
+        for start, end in _connection_double_ranges:
+            for _i in range(start, end):
+                _cd_lines[_i] = _bare_magic_re.sub("mock.AsyncMock()", _cd_lines[_i])
+        result = "\n".join(_cd_lines)
+        _protected_ranges = [r for r in _protected_ranges if r not in _connection_double_ranges]
+
     if _entry_point_pairs:
         _lines = result.split("\n")
         _ctor_rewritten = False
@@ -5283,11 +5348,46 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
                     f"Framework.make_async(githubasyncio.{mod}.{cls_name}, ",
                     _line,
                 )
+                _line = _line.replace(f"githubasyncio.{mod}.{cls_name}, )", f"githubasyncio.{mod}.{cls_name})")
+                _ctor_rewritten = _ctor_rewritten or _n > 0
+                # reference-only use of the bare package-level name (e.g. an assertIsInstance target)
+                _line, _n = re.subn(
+                    rf"(?<![\w.])github\.{re.escape(cls_name)}\b(?!\()",
+                    f"githubasyncio.{mod}.{cls_name}",
+                    _line,
+                )
                 _ctor_rewritten = _ctor_rewritten or _n > 0
             _lines[_i] = _line
         result = "\n".join(_lines)
         if _ctor_rewritten:
             result = _ensure_bare_githubasyncio_import(result)
+
+    # An entry-point class imported by bare name (`from github import Github`, then `Github(...)`)
+    # is constructed without the `github.` prefix the loop above matches. Same wrapping applies:
+    # rewrite the bare construction outside protected ranges and drop the name from the classic
+    # import (the qualified `githubasyncio.<mod>.<cls>` form needs no import of its own beyond the
+    # submodule sweep further down).
+    for _mod, _cls_name in _entry_point_pairs:
+        if not re.search(rf"^\s*from github import\b[^\n]*\b{re.escape(_cls_name)}\b", result, re.MULTILINE):
+            continue
+        _protected_body = "\n".join("\n".join(result.split("\n")[start:end]) for start, end in _protected_ranges)
+        if re.search(rf"(?<![\w.]){re.escape(_cls_name)}\(", _protected_body):
+            continue  # a protected method still constructs it the classic way: keep the import
+        _bare_lines = result.split("\n")
+        for _i, _line in enumerate(_bare_lines):
+            if _line.lstrip().startswith(("from ", "import ")):
+                m = re.match(r"^(\s*)from github import (.+)$", _line)
+                if m and "(" not in m.group(2):
+                    names = [n for n in AsyncTransformer._split_import_names(m.group(2)) if n != _cls_name]
+                    _bare_lines[_i] = f"{m.group(1)}from github import {', '.join(names)}" if names else "\0"
+                continue
+            _bare_lines[_i] = re.sub(
+                rf"(?<![\w.]){re.escape(_cls_name)}\(",
+                f"Framework.make_async(githubasyncio.{_mod}.{_cls_name}, ",
+                _line,
+            ).replace(f"githubasyncio.{_mod}.{_cls_name}, )", f"githubasyncio.{_mod}.{_cls_name})")
+        result = "\n".join(line for line in _bare_lines if line != "\0")
+        result = _ensure_bare_githubasyncio_import(result)
 
     # A handful of tests build a `mock.Mock(github.Requester.Requester, ...)` /
     # `mock.MagicMock(github.Requester.Requester, ...)` purely as a spec for a Requester double
@@ -5301,7 +5401,7 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     # wrapping (same as the entry-point rewrite above), since its properties are `async def` and
     # would otherwise hand back raw, unawaited coroutines instead of values. Scoped narrowly to
     # methods where the Requester-spec mock is the *sole* mock.Mock/MagicMock usage (no bare
-    # connection double, no pickle) — those keep the classic (unrewritten) construction above.
+    # connection double) — those keep the classic (unrewritten) construction above.
     _requester_spec_mock_re = re.compile(r"\bmock\.(?:Mock|MagicMock)\(github\.Requester\.Requester\b")
     _other_mock_re = re.compile(r"\bmock\.(?:Mock|MagicMock)\((?!github\.Requester\.Requester\b)")
     _rs_all_lines = result.split("\n")
@@ -5311,11 +5411,7 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
         _rs_bounds = _rs_method_starts + [len(_rs_all_lines)]
         for start, end in zip(_rs_bounds, _rs_bounds[1:]):
             body = "\n".join(_rs_all_lines[start:end])
-            if (
-                _requester_spec_mock_re.search(body)
-                and not _other_mock_re.search(body)
-                and not re.search(r"\bpickle\.", body)
-            ):
+            if _requester_spec_mock_re.search(body) and not _other_mock_re.search(body):
                 _requester_spec_ranges.append((start, end))
 
     if _requester_spec_ranges:
@@ -5459,6 +5555,13 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
         new_line = _line.replace("github.Auth.", "githubasyncio.Auth.").replace(
             "github.Requester.Requester(", "githubasyncio.Requester.Requester("
         )
+        # static / attribute references (isRateLimitError, get_graphql_prefix, __init__ annotations,
+        # ...) -- but not injectLogger/resetLogger, which TEST_LOGGER_CALLS handles explicitly
+        new_line = re.sub(
+            r"\bgithub\.Requester\.Requester\.(?!injectLogger|resetLogger)",
+            "githubasyncio.Requester.Requester.",
+            new_line,
+        )
         _auth_rewritten = _auth_rewritten or new_line != _line
         _auth_lines[_i] = new_line
     result = "\n".join(_auth_lines)
@@ -5532,16 +5635,41 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     # import ...` line, and the whole line if it becomes empty) so no classic `github` import
     # survives in the generated test file, then re-import the async twin after the existing
     # import block so it wins the name binding.
+    # I/O-bearing classes (in analyzer.async_classes) imported by bare name get the same treatment,
+    # but only if no protected method uses the class: an import binds one name for the whole
+    # file, so it can't stay classic for a protected method and become async for the rest. (A
+    # bare-name class *construction* still needs the make_async wrapping decisions described
+    # above -- this only redirects the import, so it's meant for reference-only uses such as
+    # assertIsInstance targets and static utility calls.)
+    _protected_text = "\n".join("\n".join(result.split("\n")[start:end]) for start, end in _protected_ranges)
+    _reimport_candidates = dict(_test_reexports)
+    for _cls_name, _mod_name in analyzer.class_to_file.items():
+        if _mod_name in {"Auth", "Requester"} | {m for m, _ in _entry_point_pairs}:
+            continue
+        # skip a class any protected method still uses under its classic name
+        if re.search(rf"\b{re.escape(_cls_name)}\b", _protected_text):
+            continue
+        _reimport_candidates.setdefault(_cls_name, _mod_name)
+
+    # Single aliased imports (`from github.X import Cls as Alias`): repoint in place, keeping the
+    # alias so every body reference stays valid. Same per-class protected-method gate as above.
+    def _repoint_alias(m: re.Match) -> str:
+        indent, mod, cls_name, alias = m.group(1), m.group(2), m.group(3), m.group(4)
+        if _reimport_candidates.get(cls_name) != mod or re.search(rf"\b{re.escape(alias)}\b", _protected_text):
+            return m.group(0)
+        return f"{indent}from githubasyncio.{mod} import {cls_name} as {alias}"
+
+    result = re.sub(r"^(\s*)from github\.(\w+) import (\w+) as (\w+)\s*$", _repoint_alias, result, flags=re.MULTILINE)
     _needed_reimport_names = [
         cls_name
-        for cls_name, mod_name in _test_reexports.items()
+        for cls_name, mod_name in _reimport_candidates.items()
         if re.search(
             rf"^\s*from github\.{re.escape(mod_name)} import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE
         )
         or re.search(rf"^\s*from github import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE)
     ]
     _needed_reimports = [
-        f"from githubasyncio.{_test_reexports[cls_name]} import {cls_name}" for cls_name in _needed_reimport_names
+        f"from githubasyncio.{_reimport_candidates[cls_name]} import {cls_name}" for cls_name in _needed_reimport_names
     ]
     if _needed_reimports:
         _names_to_drop = set(_needed_reimport_names)
@@ -5580,11 +5708,10 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
             logger.debug("transform_test[%s]: mock rewrite %s", test_stem, match)
         result = result.replace(match, replacement)
 
-    # Dual-stack calls (TEST_DUAL_STACK_CALLS): sync classmethod calls that must
-    # also reach the async twin (e.g. logger injection into both Requesters).
-    for match, replacement in TEST_DUAL_STACK_CALLS:
+    # Logger injection (TEST_LOGGER_CALLS): point it at the async Requester.
+    for match, replacement in TEST_LOGGER_CALLS:
         if match in result:
-            logger.debug("transform_test[%s]: dual-stack call %s", test_stem, match)
+            logger.debug("transform_test[%s]: logger call %s", test_stem, match)
         result = result.replace(match, replacement)
 
     # Ensure modules referenced by the injected async twin calls are importable
@@ -5693,6 +5820,44 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     result = "\n".join(_general_lines)
     if _general_rewritten:
         result = _ensure_bare_githubasyncio_import(result)
+
+    # `pickle.dumps(X)`: X is typically a SyncProxy-wrapped async object (self.g / make_async()
+    # results), whose __class__ spoofing breaks pickle's protocol. The raw async object underneath
+    # pickles fine (Requester drops its lock/connection in __getstate__ and recreates them in
+    # __setstate__), so unwrap it first; what pickle.loads() returns is then a raw async object,
+    # which is all the (attribute-inspecting) assertions after it need.
+    _pickle_re = re.compile(r"\bpickle\.dumps\(([^()]*)\)")
+    if _pickle_re.search(result):
+        result = _pickle_re.sub(r"pickle.dumps(SyncProxy._deep_unwrap(\1))", result)
+        if "from tests.AsyncFramework import SyncProxy" not in result:
+            result = result.replace(
+                "from tests import AsyncFramework as Framework",
+                "from tests import AsyncFramework as Framework\nfrom tests.AsyncFramework import SyncProxy",
+            )
+
+    # Every `githubasyncio.<Module>.` reference must have its submodule imported: a bare
+    # `import githubasyncio` doesn't bind `githubasyncio.<Module>` unless something already loaded
+    # it (which the classic `github.<Module>` form got for free from the file's own `import
+    # github.<Module>` lines, now redirected or removed). One sweep after all rewrite passes,
+    # instead of each pass tracking the modules it introduced.
+    _used_async_mods = sorted(
+        {m for m in re.findall(r"\bgithubasyncio\.(\w+)\.", result) if (DST_PKG / f"{m}.py").exists()}
+    )
+    _missing_async_mods = [
+        m for m in _used_async_mods if not re.search(rf"^import githubasyncio\.{m}\s*$", result, re.MULTILINE)
+    ]
+    if _missing_async_mods:
+        _anchor = None
+        for _anchor in re.finditer(
+            r"^import githubasyncio(?:\.\w+)?\s*$|^import github(?:\.\w+)?\s*$", result, re.MULTILINE
+        ):
+            pass
+        if _anchor is not None:
+            result = (
+                result[: _anchor.end()]
+                + "".join(f"\nimport githubasyncio.{m}" for m in _missing_async_mods)
+                + result[_anchor.end() :]
+            )
 
     # Convert assertTrue(isinstance(X, Y)) -> assertIsInstance(X, Y)
     # This is needed because SyncProxy wraps objects, so isinstance() fails
