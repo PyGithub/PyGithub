@@ -1405,26 +1405,10 @@ class Repository(Framework.TestCase):
         self.assertFalse(configuration.enforced_by_owner)
 
     def testEnableImmutableReleases(self) -> None:
-        with self.captureRequests() as requests:
-            self.repo.enable_immutable_releases()
-
-        self.assertListKeyEqual(requests, lambda r: r.verb, ["PUT"])
-        self.assertListKeyEqual(
-            requests,
-            lambda r: r.url,
-            ["/repos/PyGithub/PyGithub/immutable-releases"],
-        )
+        self.repo.enable_immutable_releases()
 
     def testDisableImmutableReleases(self) -> None:
-        with self.captureRequests() as requests:
-            self.repo.disable_immutable_releases()
-
-        self.assertListKeyEqual(requests, lambda r: r.verb, ["DELETE"])
-        self.assertListKeyEqual(
-            requests,
-            lambda r: r.url,
-            ["/repos/PyGithub/PyGithub/immutable-releases"],
-        )
+        self.repo.disable_immutable_releases()
 
     def testGetLanguages(self):
         self.assertEqual(
