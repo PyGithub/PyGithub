@@ -1400,12 +1400,6 @@ class Repository(Framework.TestCase):
             ],
         )
 
-    def testGetLanguages(self):
-        self.assertEqual(
-            self.repo.get_languages(),
-            {"Python": 127266, "Shell": 673, "url": "https://api.github.com/repos/PyGithub/PyGithub/languages"},
-        )
-
     def testGetImmutableReleasesConfiguration(self) -> None:
         configuration = self.repo.get_immutable_releases_configuration()
         self.assertFalse(configuration.enabled)
@@ -1441,6 +1435,12 @@ class Repository(Framework.TestCase):
         requester.requestJsonAndCheck.assert_called_once_with(
             "DELETE",
             "https://api.github.com/repos/PyGithub/PyGithub/immutable-releases",
+        )
+
+    def testGetLanguages(self):
+        self.assertEqual(
+            self.repo.get_languages(),
+            {"Python": 127266, "Shell": 673, "url": "https://api.github.com/repos/PyGithub/PyGithub/languages"},
         )
 
     def testGetMilestones(self):

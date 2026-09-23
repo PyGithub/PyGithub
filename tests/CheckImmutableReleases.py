@@ -21,41 +21,22 @@
 
 from __future__ import annotations
 
-import github.CheckImmutableReleases
-
 from . import Framework
 
 
 class CheckImmutableReleases(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.cir = github.CheckImmutableReleases.CheckImmutableReleases(
-            self.g._Github__requester,
-            {},
-            {"enabled": False, "enforced_by_owner": False},
-        )
-        self.enabled_cir = github.CheckImmutableReleases.CheckImmutableReleases(
-            self.g._Github__requester,
-            {},
-            {"enabled": True, "enforced_by_owner": True},
-        )
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.configuration = self.repo.get_immutable_releases_configuration()
 
     def testAttributes(self):
-        cir = self.cir
-        self.assertFalse(cir.enabled)
-        self.assertFalse(cir.enforced_by_owner)
-
-    def testAttributesEnabled(self):
-        cir = self.enabled_cir
-        self.assertTrue(cir.enabled)
-        self.assertTrue(cir.enforced_by_owner)
+        configuration = self.configuration
+        self.assertTrue(configuration.enabled)
+        self.assertTrue(configuration.enforced_by_owner)
 
     def testRepresentation(self):
         self.assertEqual(
-            repr(self.cir),
-            "CheckImmutableReleases(enforced_by_owner=False, enabled=False)",
-        )
-        self.assertEqual(
-            repr(self.enabled_cir),
+            repr(self.configuration),
             "CheckImmutableReleases(enforced_by_owner=True, enabled=True)",
         )

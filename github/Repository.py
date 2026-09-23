@@ -1361,20 +1361,6 @@ class Repository(CompletableGithubObject):
         )
         return data["role_name"]
 
-    def get_immutable_releases_configuration(self) -> CheckImmutableReleases:
-        """
-        Check if immutable releases are enabled for a repository.
-
-        Shows whether immutable releases are enabled or disabled. Also identifies whether immutability is being enforced
-        by the repository owner.  The authenticated user must have admin read access to the repository.
-
-        :calls: `GET /repos/{owner}/{repo}/immutable-releases`
-            `<https://docs.github.com/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository>`_
-
-        """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/immutable-releases")
-        return github.CheckImmutableReleases.CheckImmutableReleases(self._requester, headers, data)
-
     def get_pending_invitations(self) -> PaginatedList[Invitation]:
         """
         :calls: `GET /repos/{owner}/{repo}/invitations <https://docs.github.com/en/rest/reference/repos#invitations>`_
@@ -3715,6 +3701,20 @@ class Repository(CompletableGithubObject):
         """
         url = f"{self.url}/releases/latest"
         return github.GitRelease.GitRelease(self._requester, url=url)
+
+    def get_immutable_releases_configuration(self) -> CheckImmutableReleases:
+        """
+        Check if immutable releases are enabled for a repository.
+
+        Shows whether immutable releases are enabled or disabled. Also identifies whether immutability is being enforced
+        by the repository owner.  The authenticated user must have admin read access to the repository.
+
+        :calls: `GET /repos/{owner}/{repo}/immutable-releases`
+            `<https://docs.github.com/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository>`_
+
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/immutable-releases")
+        return github.CheckImmutableReleases.CheckImmutableReleases(self._requester, headers, data)
 
     def enable_immutable_releases(self) -> None:
         """
