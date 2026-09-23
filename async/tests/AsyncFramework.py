@@ -4,23 +4,21 @@ Async test framework.
 
 Doesn't need the classic checkout's tests/Framework.py (this replaces it -- see
 TEMPLATE_TEST_FILES) or its tests/ReplayData (scripts/sync_async.sh copies that in directly). It
-does still need the classic PyGithub *package* importable: `import github.Requester` below, and
-plenty of generated test bodies -- copied verbatim from the classic project's sync tests -- import
-and use `github.*` themselves (constructing a plain `github.Github(...)` instead of using self.g,
-comparing against `github.SomeException`, etc.). Copied byte-for-byte into tests/AsyncFramework.py
-by scripts/generate_async.py -- edit this file, not the generated one.
+still needs the classic PyGithub *package* importable, but only for the few generated test methods
+that exercise I/O-backed token auth (AppInstallationAuth / AppUserAuth): the async Auth classes
+can't refresh those tokens yet, so those methods stay on the classic stack (`import
+github.Requester` below serves them). Copied byte-for-byte into tests/AsyncFramework.py by
+scripts/generate_async.py -- edit this file, not the generated one.
 
-Two things are merged here that used to live in two separate files (a byte-for-byte copy of the
-classic project's tests/Framework.py, plus a hand-maintained tests/AsyncFramework.py layered on
-top of it):
+This module provides:
 
 - Cassette replay (BasicTestCase and friends): reimplemented against niquests directly instead of
   wrapping the classic package's github.Requester connection classes -- vcrpy only patches
   *synchronous* HTTP transports, so it can't see niquests's AsyncSession either way, sync or
-  async. BasicTestCase.setUp() still calls the classic Requester's own
-  `injectConnectionClasses()` too, though (with the plain sync CassetteHttpConnection below, not
-  an async wrapper) -- it's a *class*-level patch, so it's the only way test bodies that construct
-  `github.Github(...)` directly also get cassette replay instead of hitting the real network.
+  async. BasicTestCase.setUp() also calls the classic Requester's own
+  `injectConnectionClasses()` (with the plain sync CassetteHttpConnection below, not an async
+  wrapper) -- a *class*-level patch, so the classic-stack methods above replay from the cassette
+  instead of hitting the real network.
 - Sync-to-async bridging (SyncProxy, TestCase): a proxy that wraps the async Github object (and
   everything it returns) so generated test method bodies -- copied verbatim from the classic
   project's sync test files -- can call async methods without themselves being async.
@@ -278,11 +276,10 @@ class BasicTestCase(unittest.TestCase):
             AsyncCassetteHttpsConnection,
         )
         # injectConnectionClasses() patches the *class*, not an instance: every Requester built
-        # afterward -- including deep inside a directly-constructed `github.Github(...)` /
-        # `github.GithubIntegration(...)`, which a number of generated tests still do instead of
-        # going through self.g -- picks up these connection classes too, so it replays from the
-        # cassette instead of hitting the real network. CassetteHttpConnection is plain sync (see
-        # its docstring above), which is exactly what the classic Requester expects.
+        # afterward -- including deep inside a directly-constructed classic `github.Github(...)`
+        # -- picks up these connection classes too, so it replays from the cassette instead of
+        # hitting the real network. CassetteHttpConnection is plain sync (see its docstring
+        # above), which is exactly what the classic Requester expects.
         github.Requester.Requester.injectConnectionClasses(
             CassetteHttpConnection,
             CassetteHttpsConnection,
