@@ -188,6 +188,7 @@ import github.Artifact
 import github.AuthenticatedUser
 import github.Autolink
 import github.Branch
+import github.CheckImmutableReleases
 import github.CheckRun
 import github.CheckSuite
 import github.Clones
@@ -278,6 +279,7 @@ if TYPE_CHECKING:
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Autolink import Autolink
     from github.Branch import Branch
+    from github.CheckImmutableReleases import CheckImmutableReleases
     from github.CheckRun import CheckRun
     from github.CheckSuite import CheckSuite
     from github.Clones import Clones
@@ -1358,6 +1360,18 @@ class Repository(CompletableGithubObject):
             f"{self.url}/collaborators/{collaborator}/permission",
         )
         return data["role_name"]
+    def get_immutable_releases_configuration(self) -> CheckImmutableReleases:
+        """
+        Check if immutable releases are enabled for a repository.
+
+        Shows whether immutable releases are enabled or disabled. Also identifies whether immutability is being enforced
+        by the repository owner.  The authenticated user must have admin read access to the repository.
+
+        :calls: `GET /repos/{owner}/{repo}/immutable-releases`
+            `<https://docs.github.com/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/immutable-releases")
+        return github.CheckImmutableReleases.CheckImmutableReleases(self._requester, headers, data)
 
     def get_pending_invitations(self) -> PaginatedList[Invitation]:
         """

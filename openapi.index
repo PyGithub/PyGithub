@@ -4379,6 +4379,69 @@
       ],
       "test_filename": "tests/RequiredStatusChecks.py"
     },
+    "CheckImmutableReleases": {
+      "bases": [
+        "NonCompletableGithubObject"
+      ],
+      "docstring": "This class represents CheckImmutableReleases.\n\n    The reference can be found here\n    https://docs.github.com/en/rest\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/check-immutable-releases",
+      "filename": "github/CheckImmutableReleases.py",
+      "ids": [
+        "enabled",
+        "enforced_by_owner"
+      ],
+      "inheritance": [
+        "ABC",
+        "GithubObject",
+        "NonCompletableGithubObject"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "CheckImmutableReleases",
+      "name": "CheckImmutableReleases",
+      "package": "github",
+      "properties": {
+        "enabled": {
+          "name": "enabled",
+          "returns": [
+            "bool"
+          ],
+          "schema": {
+            "description": "Whether immutable releases are enabled for the repository.",
+            "example": true,
+            "type": "boolean"
+          },
+          "schemas": {
+            "/components/schemas/check-immutable-releases": {
+              "description": "Whether immutable releases are enabled for the repository.",
+              "example": true,
+              "type": "boolean"
+            }
+          }
+        },
+        "enforced_by_owner": {
+          "name": "enforced_by_owner",
+          "returns": [
+            "bool"
+          ],
+          "schema": {
+            "description": "Whether immutable releases are enforced by the repository owner.",
+            "example": false,
+            "type": "boolean"
+          },
+          "schemas": {
+            "/components/schemas/check-immutable-releases": {
+              "description": "Whether immutable releases are enforced by the repository owner.",
+              "example": false,
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "schemas": [
+        "/components/schemas/check-immutable-releases"
+      ],
+      "test_filename": "tests/CheckImmutableReleases.py"
+    },
     "CheckRun": {
       "bases": [
         "CompletableGithubObject"
@@ -37043,6 +37106,17 @@
             "PaginatedList[Hook]"
           ]
         },
+        "get_immutable_releases_configuration": {
+          "call": {
+            "docs": null,
+            "path": "/repos/{owner}/{repo}/immutable-releases",
+            "verb": "GET"
+          },
+          "name": "get_immutable_releases_configuration",
+          "returns": [
+            "CheckImmutableReleases"
+          ]
+        },
         "get_issue": {
           "call": {
             "docs": "<https://docs.github.com/en/rest/reference/issues>`_",
@@ -49764,6 +49838,7 @@
         "CVSS",
         "CWE",
         "Check",
+        "CheckImmutableReleases",
         "CheckRun",
         "CheckRunAnnotation",
         "CheckRunOutput",
@@ -50097,6 +50172,7 @@
         "CVSS",
         "CWE",
         "Check",
+        "CheckImmutableReleases",
         "CheckRun",
         "CheckRunAnnotation",
         "CheckRunOutput",
@@ -50302,6 +50378,7 @@
         "BypassPullRequestAllowances",
         "CVSS",
         "Check",
+        "CheckImmutableReleases",
         "CheckRunAnnotation",
         "CheckRunOutput",
         "Clones",
@@ -51814,6 +51891,11 @@
       "/repos/{owner}/{repo}/hooks/{hook_id}/tests": {
         "post": [
           "Hook.test"
+        ]
+      },
+      "/repos/{owner}/{repo}/immutable-releases": {
+        "get": [
+          "Repository.get_immutable_releases_configuration"
         ]
       },
       "/repos/{owner}/{repo}/import": {
@@ -54173,6 +54255,11 @@
           "None"
         ]
       },
+      "/repos/{owner}/{repo}/immutable-releases": {
+        "get": [
+          "CheckImmutableReleases"
+        ]
+      },
       "/repos/{owner}/{repo}/import": {
         "get": [
           "None",
@@ -55870,6 +55957,9 @@
       ],
       "/components/schemas/check-annotation": [
         "CheckRunAnnotation"
+      ],
+      "/components/schemas/check-immutable-releases": [
+        "CheckImmutableReleases"
       ],
       "/components/schemas/check-run": [
         "CheckRun"
@@ -60661,6 +60751,19 @@
         ]
       }
     },
+    "/repos/{owner}/{repo}/immutable-releases": {
+      "GET": {
+        "methods": [
+          {
+            "class": "Repository",
+            "name": "get_immutable_releases_configuration",
+            "returns": [
+              "CheckImmutableReleases"
+            ]
+          }
+        ]
+      }
+    },
     "/repos/{owner}/{repo}/import": {
       "GET": {
         "methods": [
@@ -61707,19 +61810,19 @@
             ]
           },
           {
+            "class": "Repository",
+            "name": "get_pull",
+            "returns": [
+              "PullRequest"
+            ]
+          },
+          {
             "class": "ProjectCard",
             "name": "get_content",
             "returns": [
               "PullRequest",
               "Issue",
               "None"
-            ]
-          },
-          {
-            "class": "Repository",
-            "name": "get_pull",
-            "returns": [
-              "PullRequest"
             ]
           }
         ]
