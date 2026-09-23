@@ -5202,6 +5202,30 @@ def _method_ranges_matching(src: str, patterns: tuple[str, ...]) -> list[tuple[i
     return ranges
 
 
+def _ensure_bare_githubasyncio_import(src: str) -> str:
+    """
+    Ensure a bare ``import githubasyncio`` line exists, inserted right after the last top-level ``import github`` /
+    ``import github.X`` line.
+
+    Several transform_test_file passes rewrite `github.X` text to `githubasyncio.X` and need the
+    bare name bound as a result. A plain `src.replace("import github\n", ...)` -- this function's
+    predecessor -- silently no-ops in any file whose only classic import is dotted (`import
+    github.Foo`, no bare `import github` line), which is common once such a file's *other* dotted
+    imports (`import github.Foo`) get fully redirected/removed by earlier passes or ruff's
+    unused-import cleanup: exactly the files this function's callers run on.
+
+    """
+    if re.search(r"^import githubasyncio\s*$", src, re.MULTILINE):
+        return src
+    last_github_import = None
+    for m in re.finditer(r"^import github(?:\.\w+)?\s*$", src, re.MULTILINE):
+        last_github_import = m
+    if last_github_import is None:
+        return src
+    insert_at = last_github_import.end()
+    return src[:insert_at] + "\nimport githubasyncio" + src[insert_at:]
+
+
 def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     """
     Transform a sync test file into an async version.
@@ -5262,8 +5286,8 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
                 _ctor_rewritten = _ctor_rewritten or _n > 0
             _lines[_i] = _line
         result = "\n".join(_lines)
-        if _ctor_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
-            result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
+        if _ctor_rewritten:
+            result = _ensure_bare_githubasyncio_import(result)
 
     # A handful of tests build a `mock.Mock(github.Requester.Requester, ...)` /
     # `mock.MagicMock(github.Requester.Requester, ...)` purely as a spec for a Requester double
@@ -5375,6 +5399,18 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     for _cls_name, _mod_name in analyzer.class_to_file.items():
         if _mod_name == "Auth":
             _test_reexports.setdefault(_cls_name, "Auth")
+    # Any other class with no I/O of its own (not in analyzer.async_classes) -- e.g. CustomProperty,
+    # a plain parameter container living in an otherwise I/O-bearing module
+    # (OrganizationCustomProperty.py), reached via `from github.OrganizationCustomProperty import
+    # CustomProperty` rather than a package-level re-export. Same reasoning as PURE_DATA_MODULES
+    # above: there's no behavioral difference between the sync and async twin to preserve, so this
+    # is safe regardless of which entry point (if any) a given test method otherwise stays classic
+    # for. Only feeds the reimport machinery below (`from github.X import Y` -> `from
+    # githubasyncio.X import Y`); the module-qualified in-body form (`github.X.Y(...)`) for classes
+    # not reached via such an import is handled by the general pass further below instead.
+    for _cls_name, _mod_name in analyzer.class_to_file.items():
+        if _cls_name not in analyzer.async_classes:
+            _test_reexports.setdefault(_cls_name, _mod_name)
     _shadowed_rewritten = False
     _shadowed_lines = result.split("\n")
     for _i, _line in enumerate(_shadowed_lines):
@@ -5389,8 +5425,8 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
             _shadowed_rewritten = _shadowed_rewritten or _n > 0
         _shadowed_lines[_i] = new_line
     result = "\n".join(_shadowed_lines)
-    if _shadowed_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
-        result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
+    if _shadowed_rewritten:
+        result = _ensure_bare_githubasyncio_import(result)
 
     # `Framework.github.X`: the classic sync Framework imports `github` at module level, so
     # test bodies copied from the classic suite reach modules through it (e.g.
@@ -5426,8 +5462,70 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
         _auth_rewritten = _auth_rewritten or new_line != _line
         _auth_lines[_i] = new_line
     result = "\n".join(_auth_lines)
-    if _auth_rewritten and not re.search(r"^import githubasyncio\s*$", result, re.MULTILINE):
-        result = result.replace("import github\n", "import github\nimport githubasyncio\n", 1)
+    if _auth_rewritten:
+        result = _ensure_bare_githubasyncio_import(result)
+
+    # `if TYPE_CHECKING:` imports carry no runtime behavior at all (never executed -- the whole
+    # point of the guard), so a classic reference there is always safe to redirect regardless of
+    # everything the rest of this function is careful about (protected ranges, async_classes
+    # membership, ...): there's no "the compared/constructed object is classic in this method" to
+    # stay consistent with, because nothing is compared or constructed here, ever. Handles e.g.
+    # `if TYPE_CHECKING:\n    from github.Repository import Repository` even though Repository is
+    # a full I/O class the general pass elsewhere deliberately leaves alone at runtime.
+    _tc_lines = result.split("\n")
+    _in_type_checking = False
+    _tc_indent = 0
+    for _i, _line in enumerate(_tc_lines):
+        stripped = _line.strip()
+        if stripped == "if TYPE_CHECKING:":
+            _in_type_checking = True
+            _tc_indent = len(_line) - len(_line.lstrip())
+            continue
+        if _in_type_checking:
+            if stripped and (len(_line) - len(_line.lstrip())) <= _tc_indent:
+                _in_type_checking = False
+            else:
+                _tc_lines[_i] = re.sub(r"\bgithub\b(?!asyncio)", "githubasyncio", _line)
+    result = "\n".join(_tc_lines)
+
+    # Bare `from github import Consts` (a pure-data module, not a class) isn't covered above: the
+    # entry-point rewrite only matches the module-qualified `from github.<mod> import <cls>` form,
+    # and Consts is a module, not a class, so no class-keyed mechanism reaches it either. Safe to
+    # redirect unconditionally -- pure data, identical behavior either side. Deliberately excludes
+    # entry-point classes (Github/GithubIntegration) even though they're also bare package-level
+    # re-exports: a `from github import Github` + bare `Github(...)` construction (confirmed in
+    # GraphQl.py) needs the same Framework.make_async() wrapping the module-qualified
+    # `github.Github(...)` form gets above, which this pass doesn't apply -- redirecting just the
+    # import here would leave the bare construction returning raw, unbridged coroutines.
+    _bare_module_names = {"Consts"}
+    _bare_found = [
+        n
+        for n in _bare_module_names
+        if re.search(rf"^\s*from github import\b.*\b{re.escape(n)}\b", result, re.MULTILINE)
+    ]
+    if _bare_found:
+        _bm_lines = []
+        for _line in result.split("\n"):
+            _m = re.match(r"^(\s*)from github import (.+)$", _line)
+            if _m and "(" not in _m.group(2):
+                _indent, _names_part = _m.group(1), _m.group(2)
+                _names = AsyncTransformer._split_import_names(_names_part)
+                _filtered = [n for n in _names if n not in _bare_found]
+                if not _filtered:
+                    continue
+                if len(_filtered) != len(_names):
+                    _line = f"{_indent}from github import {', '.join(_filtered)}"
+            _bm_lines.append(_line)
+        result = "\n".join(_bm_lines)
+        _last_import_bm = None
+        for _last_import_bm in re.finditer(r"^(?:from|import) .+$", result, re.MULTILINE):
+            pass
+        if _last_import_bm:
+            _insert_at_bm = _last_import_bm.end()
+            _new_bm_imports = "\n".join(f"from githubasyncio import {n}" for n in _bare_found)
+            result = result[:_insert_at_bm] + "\n" + _new_bm_imports + result[_insert_at_bm:]
+            logger.debug("transform_test[%s]: redirected bare module import(s): %s", test_stem, _bare_found)
+
     # these classes by name (`from github.X import Y` or `from github import Y`) and then uses
     # the bare name directly never gets touched, and still binds the sync class. Replace that
     # classic import with the async twin (dropping the name from its original `from github[.X]
@@ -5437,8 +5535,10 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     _needed_reimport_names = [
         cls_name
         for cls_name, mod_name in _test_reexports.items()
-        if re.search(rf"^from github\.{re.escape(mod_name)} import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE)
-        or re.search(rf"^from github import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE)
+        if re.search(
+            rf"^\s*from github\.{re.escape(mod_name)} import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE
+        )
+        or re.search(rf"^\s*from github import\b.*\b{re.escape(cls_name)}\b", result, re.MULTILINE)
     ]
     _needed_reimports = [
         f"from githubasyncio.{_test_reexports[cls_name]} import {cls_name}" for cls_name in _needed_reimport_names
@@ -5543,6 +5643,56 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
                 "from tests import AsyncFramework as Framework",
                 "from tests import AsyncFramework as Framework\nfrom tests.AsyncFramework import SyncProxy",
             )
+
+    # General module-qualified redirect (`github.<Module>.<ClassName>`) for every other class with
+    # a generated async twin, covering two distinct cases with two different safety rules:
+    #  - A class outside `analyzer.async_classes` (no I/O, no async methods -- e.g. ReviewerParams,
+    #    EnvironmentDeploymentBranchPolicyParams: plain parameter containers living in an otherwise
+    #    I/O-bearing module, so they don't qualify for whole-module PURE_DATA_MODULES treatment)
+    #    behaves exactly like Auth above: redirecting it, constructor call included, is always
+    #    correct regardless of protected ranges, since there's no behavioral difference between the
+    #    sync and async twin to begin with.
+    #  - A class inside `analyzer.async_classes` (Repository, NamedUser, PaginatedList, HookDelivery,
+    #    Migration, ...) is only touched when the reference is NOT an actual construction (i.e. not
+    #    immediately followed by `(`) -- e.g. an assertIsInstance/assertRaises target, a bound
+    #    staticmethod/classmethod access (`Cls.method(...)`), or a class object passed as a plain
+    #    argument (`self.g.create_from_raw_data(github.NamedUser.NamedUser, ...)`, where the actual
+    #    construction happens inside already-async code, not in the test body). An actual
+    #    construction site needs case-by-case Framework.make_async() wrapping instead (see the
+    #    requester-spec-mock pass above for the one general pattern already covered); left alone
+    #    here. Respects the same protected ranges as the entry-point/Auth/Requester rewrites above,
+    #    for the same reason: a reference compared against an object a protected method deliberately
+    #    kept classic must stay classic too, or the comparison silently changes meaning. Runs after
+    #    the async-static-method bridging pass above (not before it): that pass looks for the exact
+    #    sync-qualified text `github.{mod}.{cls}.{meth}` to know which calls need event-loop
+    #    bridging, so this pass must not have already rewritten it to `githubasyncio.{mod}.{cls}`
+    #    first, or the bridging pass would silently skip it, leaving a raw unawaited coroutine
+    #    (verified empirically: Repository.py's `as_url_param` static-method test regressed exactly
+    #    this way when this pass ran before the bridging pass instead).
+    _excluded_mods = {"Auth", "Requester"} | {mod for mod, _ in _entry_point_pairs}
+    _general_candidates = {
+        cls_name: mod_name for cls_name, mod_name in analyzer.class_to_file.items() if mod_name not in _excluded_mods
+    }
+    _general_rewritten = False
+    _general_lines = result.split("\n")
+    for _i, _line in enumerate(_general_lines):
+        stripped = _line.lstrip()
+        if stripped.startswith("import ") or stripped.startswith("from "):
+            continue  # import lines are handled separately (reimport machinery / Step 1 equivalents)
+        _in_protected = any(start <= _i < end for start, end in _protected_ranges)
+        new_line = _line
+        for cls_name, mod_name in sorted(_general_candidates.items(), key=lambda kv: len(kv[0]), reverse=True):
+            pattern = rf"\bgithub\.{re.escape(mod_name)}\.{re.escape(cls_name)}\b"
+            if cls_name in analyzer.async_classes:
+                if _in_protected:
+                    continue
+                pattern += r"(?!\()"
+            new_line, _n = re.subn(pattern, f"githubasyncio.{mod_name}.{cls_name}", new_line)
+            _general_rewritten = _general_rewritten or _n > 0
+        _general_lines[_i] = new_line
+    result = "\n".join(_general_lines)
+    if _general_rewritten:
+        result = _ensure_bare_githubasyncio_import(result)
 
     # Convert assertTrue(isinstance(X, Y)) -> assertIsInstance(X, Y)
     # This is needed because SyncProxy wraps objects, so isinstance() fails
