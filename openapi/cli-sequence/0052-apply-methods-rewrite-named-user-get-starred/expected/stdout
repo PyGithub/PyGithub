@@ -1,0 +1,26 @@
++ python scripts/openapi.py --dry-run apply methods openapi.spec.json openapi.index NamedUser
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class NamedUser
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+- Updating method get_starred
+Diff:
+
++ python scripts/openapi.py --dry-run apply methods --rewrite openapi.spec.json openapi.index NamedUser
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class NamedUser
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+- Updating method get_starred
+Diff:
+
++ python scripts/openapi.py apply methods --rewrite openapi.spec.json openapi.index NamedUser
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class NamedUser
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+- Updating method get_starred
+Class NamedUser changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 5 Python files
+Indexed 14 classes
+Indexed 2 paths
+Indexed 6 schemas
+Indexing OpenAPI spec

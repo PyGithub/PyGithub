@@ -28,6 +28,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,7 +51,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.Project
@@ -59,6 +60,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, O
 from github.PaginatedList import PaginatedList
 
 from . import Consts
+
+if TYPE_CHECKING:
+    from github.ProjectCard import ProjectCard
 
 
 class ProjectColumn(NonCompletableGithubObject):
@@ -119,7 +123,7 @@ class ProjectColumn(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def get_cards(self, archived_state: Opt[str] = NotSet) -> PaginatedList[github.ProjectCard.ProjectCard]:
+    def get_cards(self, archived_state: Opt[str] = NotSet) -> PaginatedList[ProjectCard]:
         """
         :calls: `GET /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#list-project-cards>`_
         """
@@ -142,7 +146,7 @@ class ProjectColumn(NonCompletableGithubObject):
         note: Opt[str] = NotSet,
         content_id: Opt[int] = NotSet,
         content_type: Opt[str] = NotSet,
-    ) -> github.ProjectCard.ProjectCard:
+    ) -> ProjectCard:
         """
         :calls: `POST /projects/columns/{column_id}/cards <https://docs.github.com/en/rest/reference/projects#create-a-project-card>`_
         """
@@ -164,7 +168,7 @@ class ProjectColumn(NonCompletableGithubObject):
 
     def move(self, position: str) -> bool:
         """
-        :calls: `POST POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects#move-a-project-column>`_
+        :calls: `POST /projects/columns/{column_id}/moves <https://docs.github.com/en/rest/reference/projects#move-a-project-column>`_
         """
         assert isinstance(position, str), position
         post_parameters = {"position": position}

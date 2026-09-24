@@ -20,6 +20,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -138,7 +139,7 @@ class RateLimit(NonCompletableGithubObject):
         return self._integration_manifest.value
 
     @property
-    def scim(self) -> github.Rate.Rate:
+    def scim(self) -> Rate:
         return self._scim.value
 
     @property
@@ -149,7 +150,7 @@ class RateLimit(NonCompletableGithubObject):
         return self._search.value
 
     @property
-    def source_import(self) -> github.Rate.Rate:
+    def source_import(self) -> Rate:
         return self._source_import.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

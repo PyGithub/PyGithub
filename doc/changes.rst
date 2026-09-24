@@ -4,6 +4,279 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 2.10.0 (August 20, 2026)
+--------------------------------
+
+Notable changes
+^^^^^^^^^^^^^^^
+
+Drop Python 3.9 support due to End-of-Life
+""""""""""""""""""""""""""""""""""""""""""
+Python 3.9 reached its end-of-life October 31, 2025. Support has been removed with this release.
+
+New Features
+^^^^^^^^^^^^
+* Allow to specify the Github API version (`#3480 <https://github.com/PyGithub/PyGithub/pull/3480>`_) (`546b0ee7e <https://github.com/PyGithub/PyGithub/commit/546b0ee7e>`_)
+* Add issue dependency endpoints (`#3477 <https://github.com/PyGithub/PyGithub/pull/3477>`_) (`b0ee6e0c7 <https://github.com/PyGithub/PyGithub/commit/b0ee6e0c7>`_)
+
+Improvements
+^^^^^^^^^^^^
+* Add ``incomplete_results`` property to ``PaginatedList`` (`#3396 <https://github.com/PyGithub/PyGithub/pull/3396>`_) (`7806e7dcc <https://github.com/PyGithub/PyGithub/commit/7806e7dcc>`_)
+* Add ``WorkflowRun.get_attempt`` and ``Repository.get_workflow_job`` functions (`#3401 <https://github.com/PyGithub/PyGithub/pull/3401>`_) (`fdf9ed869 <https://github.com/PyGithub/PyGithub/commit/fdf9ed869>`_)
+* Add support for ``head_repo`` when creating pull request (`#3479 <https://github.com/PyGithub/PyGithub/pull/3479>`_) (`8ddfd6b11 <https://github.com/PyGithub/PyGithub/commit/8ddfd6b11>`_)
+* Add ``max_rate_limit_wait`` to ``GithubRetry`` to cap rate limit backoff (`#3540 <https://github.com/PyGithub/PyGithub/pull/3540>`_) (`8b50a098f <https://github.com/PyGithub/PyGithub/commit/8b50a098f>`_)
+* Add ``return_run_details`` parameter to ``Workflow.create_dispatch`` (`#3471 <https://github.com/PyGithub/PyGithub/pull/3471>`_) (`162ce9d0e <https://github.com/PyGithub/PyGithub/commit/162ce9d0e>`_)
+* Update ``SecurityAndAnalysis`` (`#3503 <https://github.com/PyGithub/PyGithub/pull/3503>`_) (`9674c5799 <https://github.com/PyGithub/PyGithub/commit/9674c5799>`_)
+
+Bug Fixes
+^^^^^^^^^
+* Fix duplicated URL in ``OrganizationVariable.edit()`` and ``OrganizationSecret.edit()`` (`#3472 <https://github.com/PyGithub/PyGithub/pull/3472>`_) (`a2e76eb8e <https://github.com/PyGithub/PyGithub/commit/a2e76eb8e>`_)
+* Fix ``GithubException.__str__`` decoding bytes data (`#3494 <https://github.com/PyGithub/PyGithub/pull/3494>`_) (`7a3b22ed6 <https://github.com/PyGithub/PyGithub/commit/7a3b22ed6>`_)
+* Fixing ``OrganizationVariable.value`` by properly using base class (`#3507 <https://github.com/PyGithub/PyGithub/pull/3507>`_) (`39a7464ff <https://github.com/PyGithub/PyGithub/commit/39a7464ff>`_)
+* Parse only the query string for ``PaginatedList.totalCount`` (`#3518 <https://github.com/PyGithub/PyGithub/pull/3518>`_) (`645d2a2e8 <https://github.com/PyGithub/PyGithub/commit/645d2a2e8>`_)
+* Encode boolean query parameters as lowercase (`#3516 <https://github.com/PyGithub/PyGithub/pull/3516>`_) (`f4e29299e <https://github.com/PyGithub/PyGithub/commit/f4e29299e>`_)
+* Fix doubled slash in request path for ``base_url`` with trailing slash (`#3537 <https://github.com/PyGithub/PyGithub/pull/3537>`_) (`c15572f23 <https://github.com/PyGithub/PyGithub/commit/c15572f23>`_)
+* Fix ``WorkflowRun`` schema suggestion (`#3559 <https://github.com/PyGithub/PyGithub/pull/3559>`_) (`5f707d64b <https://github.com/PyGithub/PyGithub/commit/5f707d64b>`_)
+* Fix OAuth2 authorization ``state`` / ``code_verifier`` parameters (`#3440 <https://github.com/PyGithub/PyGithub/pull/3440>`_) (`4785224bc <https://github.com/PyGithub/PyGithub/commit/4785224bc>`_)
+* Allow creating custom property with ``values_editable_by`` param (`#3548 <https://github.com/PyGithub/PyGithub/pull/3548>`_) (`134f38a63 <https://github.com/PyGithub/PyGithub/commit/134f38a63>`_)
+* Fix ``OrganizationSecret.edit()`` to seal the value and use ``PUT`` (`#3529 <https://github.com/PyGithub/PyGithub/pull/3529>`_) (`4f8674b72 <https://github.com/PyGithub/PyGithub/commit/4f8674b72>`_)
+* Fix lazy retrieval of latest tag name (`#3487 <https://github.com/PyGithub/PyGithub/pull/3487>`_) (`33071b35d <https://github.com/PyGithub/PyGithub/commit/33071b35d>`_)
+* Fix typing and typos (`#3485 <https://github.com/PyGithub/PyGithub/pull/3485>`_) (`fd7abf6a7 <https://github.com/PyGithub/PyGithub/commit/fd7abf6a7>`_)
+
+Maintenance
+^^^^^^^^^^^
+* Add support for Python 3.15 and drop EOL 3.9 (`#3551 <https://github.com/PyGithub/PyGithub/pull/3551>`_) (`5e2de3144 <https://github.com/PyGithub/PyGithub/commit/5e2de3144>`_)
+* Move self-link awareness into ``CompletableGithubObject`` (`#3432 <https://github.com/PyGithub/PyGithub/pull/3432>`_) (`92ec3fab0 <https://github.com/PyGithub/PyGithub/commit/92ec3fab0>`_)
+* Add documentation for agents, add Claude skills (`#3509 <https://github.com/PyGithub/PyGithub/pull/3509>`_) (`28f140d10 <https://github.com/PyGithub/PyGithub/commit/28f140d10>`_)
+* Add ``sphinx-copybutton`` for code blocks (`#3493 <https://github.com/PyGithub/PyGithub/pull/3493>`_)
+* Add support to OpenAPI script for applying schema to methods (`#3374 <https://github.com/PyGithub/PyGithub/pull/3374>`_) (`b7a6d2324 <https://github.com/PyGithub/PyGithub/commit/b7a6d2324>`_)
+* Improve OpenAPI apply properties and methods (`#3495 <https://github.com/PyGithub/PyGithub/pull/3495>`_)
+* Fix OpenAPI method verb detection (`#3496 <https://github.com/PyGithub/PyGithub/pull/3496>`_)
+* Add OpenAPI script tests (`#3489 <https://github.com/PyGithub/PyGithub/pull/3489>`_) (`09242d9b0 <https://github.com/PyGithub/PyGithub/commit/09242d9b0>`_)
+* Fix OpenAPI apply method (`#3498 <https://github.com/PyGithub/PyGithub/pull/3498>`_) (`8f8697235 <https://github.com/PyGithub/PyGithub/commit/8f8697235>`_)
+* Reordering OpenAPI test sequence (`#3500 <https://github.com/PyGithub/PyGithub/pull/3500>`_) (`ecd236fc5 <https://github.com/PyGithub/PyGithub/commit/ecd236fc5>`_)
+* Apply typing convention (`#3504 <https://github.com/PyGithub/PyGithub/pull/3504>`_) (`8d606e716 <https://github.com/PyGithub/PyGithub/commit/8d606e716>`_)
+* Bump ``mypy`` Python version to 3.12 (`#3505 <https://github.com/PyGithub/PyGithub/pull/3505>`_)
+* Use ``@overload`` to type ``get_user`` (`#3502 <https://github.com/PyGithub/PyGithub/pull/3502>`_) (`c8231b842 <https://github.com/PyGithub/PyGithub/commit/c8231b842>`_)
+* Add overload type annotations (`#3506 <https://github.com/PyGithub/PyGithub/pull/3506>`_) (`42df05f5f <https://github.com/PyGithub/PyGithub/commit/42df05f5f>`_)
+* Simplify ``OrganizationVariable`` (`#3508 <https://github.com/PyGithub/PyGithub/pull/3508>`_) (`672d9d24b <https://github.com/PyGithub/PyGithub/commit/672d9d24b>`_)
+* Add OpenAPI script filename option to create class (`#3512 <https://github.com/PyGithub/PyGithub/pull/3512>`_)
+* OpenAPI script improvements (`#3511 <https://github.com/PyGithub/PyGithub/pull/3511>`_) (`a7ff0c0ad <https://github.com/PyGithub/PyGithub/commit/a7ff0c0ad>`_)
+* Make OpenAPI index file deterministic (`#3514 <https://github.com/PyGithub/PyGithub/pull/3514>`_)
+* Add more OpenAPI script tests (`#3501 <https://github.com/PyGithub/PyGithub/pull/3501>`_) (`8ab2a1f42 <https://github.com/PyGithub/PyGithub/commit/8ab2a1f42>`_)
+* Make unified diffs of run path (`#3515 <https://github.com/PyGithub/PyGithub/pull/3515>`_) (`e36ffcbb0 <https://github.com/PyGithub/PyGithub/commit/e36ffcbb0>`_)
+* CI: Upgrade Github actions, pin to commit SHAs by @EnricoMi with @Copilot in https://github.com/PyGithub/PyGithub/pull/3552 (`#CI: Upgrade Github actions, pin to commit SHAs by @EnricoMi with @Copilot in https://github.com/PyGithub/PyGithub/pull/3552 <https://github.com/PyGithub/PyGithub/pull/CI: Upgrade Github actions, pin to commit SHAs by @EnricoMi with @Copilot in https://github.com/PyGithub/PyGithub/pull/3552>`_)
+* Use simple str contains instead of re in requester 401 OTP check (`#3541 <https://github.com/PyGithub/PyGithub/pull/3541>`_) (`675468209 <https://github.com/PyGithub/PyGithub/commit/675468209>`_)
+* Remove deprecated usage of ``lazy`` argument in ``get_repo`` test calls (`#3555 <https://github.com/PyGithub/PyGithub/pull/3555>`_) (`b03e68366 <https://github.com/PyGithub/PyGithub/commit/b03e68366>`_)
+* docs: add exception handling example (`#3543 <https://github.com/PyGithub/PyGithub/pull/3543>`_) (`82809291e <https://github.com/PyGithub/PyGithub/commit/82809291e>`_)
+* docs: add example for uploading multiple files in a single commit (`#3545 <https://github.com/PyGithub/PyGithub/pull/3545>`_) (`c63d09e26 <https://github.com/PyGithub/PyGithub/commit/c63d09e26>`_)
+
+**Full Changelog**: https://github.com/PyGithub/PyGithub/compare/v2.9.1...v2.10.0
+
+Version 2.9.1 (April 14, 2026)
+------------------------------
+
+Bug Fixes
+^^^^^^^^^
+* Fix getting release by tag in lazy mode (`#3469 <https://github.com/PyGithub/PyGithub/pull/3469>`_) (`7d1ba281e <https://github.com/PyGithub/PyGithub/commit/7d1ba281e>`_)
+
+Version 2.9.0 (March 22, 2026)
+------------------------------
+
+Notable changes
+^^^^^^^^^^^^^^^
+
+Lazy PyGithub objects
+"""""""""""""""""""""
+
+The notion of lazy objects has been added to some PyGithub classes in version 2.6.0.
+This release now makes all ``CompletableGithubObject``\s optionally lazy (if useful).
+See `#3403 <https://github.com/PyGithub/PyGithub/pull/3403>`_ for a complete list.
+
+In lazy mode, getting a PyGithub object does not send a request to the GitHub API.
+Only accessing methods and properties sends the necessary requests to the GitHub API:
+
+.. code-block:: python
+
+    # Use lazy mode
+    g = Github(auth=auth, lazy=True)
+
+    # these method calls do not send requests to the GitHub API
+    user = g.get_user("PyGithub")    # get the user
+    repo = user.get_repo("PyGithub") # get the user's repo
+    pull = repo.get_pull(3403)       # get a known pull request
+    issue = pull.as_issue()          # turn the pull request into an issue
+
+    # these method and property calls send requests to Github API
+    issue.create_reaction("rocket")  # create a reaction
+    created = repo.created_at        # get property of lazy object repo
+
+    # once a lazy object has been fetched, all properties are available (no more requests)
+    licence = repo.license
+
+All PyGithub classes that implement ``CompletableGithubObject`` support lazy mode (if useful).
+This is only useful for classes that have methods creating, changing, or getting objects.
+
+By default, PyGithub objects are not lazy.
+
+PyGithub objects with a paginated property
+""""""""""""""""""""""""""""""""""""""""""
+
+The GitHub API has the "feature" of paginated properties.
+Some objects returned by the API have a property that allows for pagination.
+Fetching subsequent pages of that property means fetching the entire object (with all other properties)
+and the specified page of the paginated property. Iterating over the paginated property means fetching
+all other properties multiple times. Fortunately, the allowed size of each page (``per_page`` is usually 300,
+in contrast to the "usual" ``per_page`` maximum of 100).
+
+Objects with paginated properties:
+
+- Commit.files
+- Comparison.commits
+- EnterpriseConsumedLicenses.users
+
+This PR makes iterating those paginated properties use the configured ``per_page`` setting.
+
+It further allows to specify an individual ``per_page`` when either retrieving such objects,
+or fetching paginated properties.
+
+See :ref:`Classes with paginated properties <utilities-classes-with-paginated-properties>` for details.
+
+Drop Python 3.8 support due to End-of-Life
+""""""""""""""""""""""""""""""""""""""""""
+
+Python 3.8 reached its end-of-life September 6, 2024. Support has been removed with this release.
+
+Deprecations
+^^^^^^^^^^^^
+
+* Method ``delete`` of ``Reaction`` is deprecated, use ``IssueComment.delete_reaction``,
+  ``PullRequestComment.delete_reaction``, ``CommitComment.delete_reaction`` or ``Issue.delete_reaction`` instead.
+* Method ``Issue.assignee`` and parameter ``Issue.edit(assignee=…)`` are deprecated,
+  use ``Issue.assignees`` and ``Issue.edit(assignees=…)`` instead.
+* Method ``Organization.edit_hook`` is deprecated, use ``Organization.get_hook(id).edit(…)`` instead.
+  If you need to avoid ``Organization.get_hook(id)`` to fetch the ``Hook`` object from Github API,
+  use a lazy Github instance:
+
+.. code-block:: python
+
+      Github(…, lazy=True).get_organization(…).get_hook(id).edit(…)
+
+* Methods ``Team.add_to_members`` and ``Team.remove_from_members`` are deprecated,
+  use ``Team.add_membership`` or ``Team.remove_membership`` instead.
+
+New Features
+^^^^^^^^^^^^
+* Consider per-page settings when iterating paginated properties (`#3377 <https://github.com/PyGithub/PyGithub/pull/3377>`_) (`b1a9b7e2a <https://github.com/PyGithub/PyGithub/commit/b1a9b7e2a>`_)
+* Add Secret Scanning Alerts and Improve Code Scan Alerts (`#3307 <https://github.com/PyGithub/PyGithub/pull/3307>`_) (`646190988 <https://github.com/PyGithub/PyGithub/commit/646190988>`_)
+
+Improvements
+^^^^^^^^^^^^
+* Make more objects lazy (`#3403 <https://github.com/PyGithub/PyGithub/pull/3403>`_) (`e79d9bc1e <https://github.com/PyGithub/PyGithub/commit/e79d9bc1e>`_)
+* Allow for enterprise base url prefixed with ``api.`` (`#3419 <https://github.com/PyGithub/PyGithub/pull/3419>`_) (`61dcf49d3 <https://github.com/PyGithub/PyGithub/commit/61dcf49d3>`_)
+* Add ``throw`` option to ``Workflow.create_dispatch`` to raise exceptions (`#2966 <https://github.com/PyGithub/PyGithub/pull/2966>`_) (`19e1c5032 <https://github.com/PyGithub/PyGithub/commit/19e1c5032>`_)
+* Use ``GET`` url or ``_links.self`` as object url (`#3421 <https://github.com/PyGithub/PyGithub/pull/3421>`_) (`3716bab10 <https://github.com/PyGithub/PyGithub/commit/3716bab10>`_)
+* Add support for ``type`` parameter to get_issues (`#3381 <https://github.com/PyGithub/PyGithub/pull/3381>`_) (`22263b72f <https://github.com/PyGithub/PyGithub/commit/22263b72f>`_)
+* Align implemented paths with OpenAPI spec (`#3413 <https://github.com/PyGithub/PyGithub/pull/3413>`_) (`0ede65793 <https://github.com/PyGithub/PyGithub/commit/0ede65793>`_)
+* Add suggested OpenAPI schemas (`#3411 <https://github.com/PyGithub/PyGithub/pull/3411>`_) (`a0a9f0172 <https://github.com/PyGithub/PyGithub/commit/a0a9f0172>`_)
+* Apply OpenAPI schemas (`#3412 <https://github.com/PyGithub/PyGithub/pull/3412>`_) (`c92f5552c <https://github.com/PyGithub/PyGithub/commit/c92f5552c>`_)
+
+Bug Fixes
+^^^^^^^^^
+* Fix ``PaginatedList.totalCount`` returning 0 with GitHub deprecation notices (`#3382 <https://github.com/PyGithub/PyGithub/pull/3382>`_) (`c4ec16a18 <https://github.com/PyGithub/PyGithub/commit/c4ec16a18>`_)
+* Use default type if known type is not supported (`#3365 <https://github.com/PyGithub/PyGithub/pull/3365>`_) (`f5f9756a1 <https://github.com/PyGithub/PyGithub/commit/f5f9756a1>`_)
+
+Maintenance
+^^^^^^^^^^^
+
+* Deprecate ``Reaction.delete`` (`#3435 <https://github.com/PyGithub/PyGithub/pull/3435>`_) (`f2540db50 <https://github.com/PyGithub/PyGithub/commit/f2540db50>`_)
+* Deprecate ``Issue.assignee`` (`#3366 <https://github.com/PyGithub/PyGithub/pull/3366>`_) (`8a0fa32de <https://github.com/PyGithub/PyGithub/commit/8a0fa32de>`_)
+* Deprecate ``Organization.edit_hook`` (`#3404 <https://github.com/PyGithub/PyGithub/pull/3404>`_) (`d7395df9c <https://github.com/PyGithub/PyGithub/commit/d7395df9c>`_)
+* Deprecate ``Team.add_to_members`` and ``Team.remove_from_members`` (`#3368 <https://github.com/PyGithub/PyGithub/pull/3368>`_) (`78050d397 <https://github.com/PyGithub/PyGithub/commit/78050d397>`_)
+
+* Various minor OpenAPI fixes (`#3375 <https://github.com/PyGithub/PyGithub/pull/3375>`_) (`7de26441c <https://github.com/PyGithub/PyGithub/commit/7de26441c>`_)
+
+* Update test key pair (`#3453 <https://github.com/PyGithub/PyGithub/pull/3453>`_) (`24305f6d6 <https://github.com/PyGithub/PyGithub/commit/24305f6d6>`_)
+* Pin CI lint Python version to 3.13 (`#3406 <https://github.com/PyGithub/PyGithub/pull/3406>`_) (`786c37c53 <https://github.com/PyGithub/PyGithub/commit/786c37c53>`_)
+* Improve error message on replay data mismatch (`#3385 <https://github.com/PyGithub/PyGithub/pull/3385>`_) (`#3386 <https://github.com/PyGithub/PyGithub/pull/3386>`_) (`8be9c5cb9 <https://github.com/PyGithub/PyGithub/commit/8be9c5cb9>`_) (`927cf227a <https://github.com/PyGithub/PyGithub/commit/927cf227a>`_)
+* Disable sleeps in tests (`#3383 <https://github.com/PyGithub/PyGithub/pull/3383>`_) (`4294a652e <https://github.com/PyGithub/PyGithub/commit/4294a652e>`_)
+
+* Update autodoc defaults (`#3369 <https://github.com/PyGithub/PyGithub/pull/3369>`_) (`0b4503cb6 <https://github.com/PyGithub/PyGithub/commit/0b4503cb6>`_)
+
+* Add Python 3.14 to CI and tox (`#3429 <https://github.com/PyGithub/PyGithub/pull/3429>`_) (`95648db47 <https://github.com/PyGithub/PyGithub/commit/95648db47>`_)
+* Restrict PyPi release workflow permissions (`#3418 <https://github.com/PyGithub/PyGithub/pull/3418>`_) (`ae23d6075 <https://github.com/PyGithub/PyGithub/commit/ae23d6075>`_)
+* Fix OpenApi workflow (`#3389 <https://github.com/PyGithub/PyGithub/pull/3389>`_) (`9e1c2bfe5 <https://github.com/PyGithub/PyGithub/commit/9e1c2bfe5>`_)
+* Bump codecov/codecov-action from 3 to 5 (`#3284 <https://github.com/PyGithub/PyGithub/pull/3284>`_) (`5752d52e7 <https://github.com/PyGithub/PyGithub/commit/5752d52e7>`_)
+* Bump actions/setup-python from 5 to 6 (`#3370 <https://github.com/PyGithub/PyGithub/pull/3370>`_) (`1f5f434b3 <https://github.com/PyGithub/PyGithub/commit/1f5f434b3>`_)
+* Bump dawidd6/action-download-artifact from 3.0.0 to 3.1.4 (`#3282 <https://github.com/PyGithub/PyGithub/pull/3282>`_) (`5db532b87 <https://github.com/PyGithub/PyGithub/commit/5db532b87>`_)
+* Bump github/codeql-action from 3 to 4 (`#3391 <https://github.com/PyGithub/PyGithub/pull/3391>`_) (`47478b002 <https://github.com/PyGithub/PyGithub/commit/47478b002>`_)
+* Bump actions/upload-artifact from 4 to 5 (`#3394 <https://github.com/PyGithub/PyGithub/pull/3394>`_) (`8b87fd1c8 <https://github.com/PyGithub/PyGithub/commit/8b87fd1c8>`_)
+* Bump actions/download-artifact from 5 to 6 (`#3393 <https://github.com/PyGithub/PyGithub/pull/3393>`_) (`511f3b3f4 <https://github.com/PyGithub/PyGithub/commit/511f3b3f4>`_)
+
+* Drop Python 3.8 support due to EOL (`#3191 <https://github.com/PyGithub/PyGithub/pull/3191>`_) (`3ccecbb99 <https://github.com/PyGithub/PyGithub/commit/3ccecbb99>`_)
+* Merge changelog updates from v2.8 release branch (`#3367 <https://github.com/PyGithub/PyGithub/pull/3367>`_) (`4a353f730 <https://github.com/PyGithub/PyGithub/commit/4a353f730>`_)
+
+Version 2.8.1 (September 02, 2025)
+----------------------------------
+
+Bug Fixes
+^^^^^^^^^
+* Use default type if known type is not supported (`#3365 <https://github.com/PyGithub/PyGithub/pull/3365>`_) (`40506415 <https://github.com/PyGithub/PyGithub/commit/40506415>`_)
+
+Version 2.8.0 (September 02, 2025)
+----------------------------------
+
+New Features
+^^^^^^^^^^^^
+* Add self hosted runner management to Organization (`#3203 <https://github.com/PyGithub/PyGithub/pull/3203>`_) (`4ea1c4e2 <https://github.com/PyGithub/PyGithub/commit/4ea1c4e2>`_)
+* Add support to generate release notes (`#3022 <https://github.com/PyGithub/PyGithub/pull/3022>`_) (`e359b83a <https://github.com/PyGithub/PyGithub/commit/e359b83a>`_)
+
+Improvements
+^^^^^^^^^^^^
+* Fix connection pooling to improve connection performance (`#3289 <https://github.com/PyGithub/PyGithub/pull/3289>`_)
+* Add ``Repository.get_automated_security_fixes`` method (`#3303 <https://github.com/PyGithub/PyGithub/pull/3303>`_) (`22048d83 <https://github.com/PyGithub/PyGithub/commit/22048d83>`_)
+* Sync ``Issue`` class with API spec (`#3338 <https://github.com/PyGithub/PyGithub/pull/3338>`_) (`62da467a <https://github.com/PyGithub/PyGithub/commit/62da467a>`_)
+* Return more union classes like ``NamedUser | Organization | Enterprise`` (`#3224 <https://github.com/PyGithub/PyGithub/pull/3224>`_) (`aea64148 <https://github.com/PyGithub/PyGithub/commit/aea64148>`_)
+* Sync ``Enterprise`` class with API spec (`#3342 <https://github.com/PyGithub/PyGithub/pull/3342>`_) (`01bb5ab1 <https://github.com/PyGithub/PyGithub/commit/01bb5ab1>`_)
+* Sync ``GitReleaseAsset`` class with API spec (`#3343 <https://github.com/PyGithub/PyGithub/pull/3343>`_) (`74449fed <https://github.com/PyGithub/PyGithub/commit/74449fed>`_)
+* Sync many class with OpenAPI spec (`#3344 <https://github.com/PyGithub/PyGithub/pull/3344>`_)
+* Point deprecation warnings to the caller code rather than inner class (`#3275 <https://github.com/PyGithub/PyGithub/pull/3275>`_) (`99bb5270 <https://github.com/PyGithub/PyGithub/commit/99bb5270>`_)
+* Allow for repo strings in all ``Team`` repo methods (`#3356 <https://github.com/PyGithub/PyGithub/pull/3356>`_) (`3234a21f <https://github.com/PyGithub/PyGithub/commit/3234a21f>`_)
+
+Bug Fixes
+^^^^^^^^^
+* Fix  API path of ``Repository.get_git_ref`` (`#2992 <https://github.com/PyGithub/PyGithub/pull/2992>`_) (`a6965031 <https://github.com/PyGithub/PyGithub/commit/a6965031>`_)
+* Rework redirection URL allowance check (`#3329 <https://github.com/PyGithub/PyGithub/pull/3329>`_) (`065b1319 <https://github.com/PyGithub/PyGithub/commit/065b1319>`_)
+* Fix ``GitRelease.name``, deprecate ``GitRelease.title`` (`#3346 <https://github.com/PyGithub/PyGithub/pull/3346>`_) (`fb51957f <https://github.com/PyGithub/PyGithub/commit/fb51957f>`_)
+* Remove ``"COMMENT"`` as the default event for ``create_review`` (`#3078 <https://github.com/PyGithub/PyGithub/pull/3078>`_) (`8494da5c <https://github.com/PyGithub/PyGithub/commit/8494da5c>`_)
+* Add support for public release assets (`#3339 <https://github.com/PyGithub/PyGithub/pull/3339>`_) (`abad296e <https://github.com/PyGithub/PyGithub/commit/abad296e>`_)
+* Fix GitHub breaking API change of ``maintainers`` in ``Organization.create_team`` (`#3291 <https://github.com/PyGithub/PyGithub/pull/3291>`_) (`17bc4df4 <https://github.com/PyGithub/PyGithub/commit/17bc4df4>`_)
+
+Maintenance
+^^^^^^^^^^^
+* Minor fix to release.yml (`#3201 <https://github.com/PyGithub/PyGithub/pull/3201>`_) (`f1fc6e7c <https://github.com/PyGithub/PyGithub/commit/f1fc6e7c>`_)
+* Reduce test replay data (`#3243 <https://github.com/PyGithub/PyGithub/pull/3243>`_) (`19426454 <https://github.com/PyGithub/PyGithub/commit/19426454>`_)
+* Add check to OpenAPI script to check doc-string verbs (`#3332 <https://github.com/PyGithub/PyGithub/pull/3332>`_) (`3efde77d <https://github.com/PyGithub/PyGithub/commit/3efde77d>`_)
+* Improve apply OpenAPI schemas (`#3333 <https://github.com/PyGithub/PyGithub/pull/3333>`_) (`ec189dd6 <https://github.com/PyGithub/PyGithub/commit/ec189dd6>`_)
+* Add config to OpenAPI script to ignore schemas (`#3334 <https://github.com/PyGithub/PyGithub/pull/3334>`_) (`0478d33b <https://github.com/PyGithub/PyGithub/commit/0478d33b>`_)
+* Add suggest and create method feature to OpenAPI script (`#3318 <https://github.com/PyGithub/PyGithub/pull/3318>`_)
+* Fix CI OpenApi apply command (`#3341 <https://github.com/PyGithub/PyGithub/pull/3341>`_) (`cdc10a27 <https://github.com/PyGithub/PyGithub/commit/cdc10a27>`_)
+* Improve OpenAPI scripts (`#3340 <https://github.com/PyGithub/PyGithub/pull/3340>`_) (`ad278c5f <https://github.com/PyGithub/PyGithub/commit/ad278c5f>`_)
+* Improve OpenAPI CI (`#3347 <https://github.com/PyGithub/PyGithub/pull/3347>`_) (`8165bbc9 <https://github.com/PyGithub/PyGithub/commit/8165bbc9>`_)
+* Rework test framework (`#3271 <https://github.com/PyGithub/PyGithub/pull/3271>`_) (`1b700187 <https://github.com/PyGithub/PyGithub/commit/1b700187>`_)
+* Some minor fixes to OpenAPI scripts (`#3350 <https://github.com/PyGithub/PyGithub/pull/3350>`_) (`a813a945 <https://github.com/PyGithub/PyGithub/commit/a813a945>`_)
+* Add manual workflow to fix auto-fixable issues (`#3351 <https://github.com/PyGithub/PyGithub/pull/3351>`_) (`0e6317d9 <https://github.com/PyGithub/PyGithub/commit/0e6317d9>`_)
+* Bump actions/download-artifact from 4 to 5 (`#3330 <https://github.com/PyGithub/PyGithub/pull/3330>`_) (`5206d231 <https://github.com/PyGithub/PyGithub/commit/5206d231>`_)
+* Use default per-page const in ``PaginatedList`` (`#3039 <https://github.com/PyGithub/PyGithub/pull/3039>`_) (`cffda3d7 <https://github.com/PyGithub/PyGithub/commit/cffda3d7>`_)
+* Bump actions/setup-python from 4 to 5 (`#3283 <https://github.com/PyGithub/PyGithub/pull/3283>`_) (`f742be03 <https://github.com/PyGithub/PyGithub/commit/f742be03>`_)
+* Bump actions/checkout from 3 to 5 (`#3348 <https://github.com/PyGithub/PyGithub/pull/3348>`_) (`2a1fd58d <https://github.com/PyGithub/PyGithub/commit/2a1fd58d>`_)
+* Various minor OpenAPI scripts fixes (`#3353 <https://github.com/PyGithub/PyGithub/pull/3353>`_) (`8e40043e <https://github.com/PyGithub/PyGithub/commit/8e40043e>`_)
+* Add union class support to OpenAPI script (`#3354 <https://github.com/PyGithub/PyGithub/pull/3354>`_) (`4a6bba93 <https://github.com/PyGithub/PyGithub/commit/4a6bba93>`_)
+* Add ``github_actions`` label to Maintenance section (`#3357 <https://github.com/PyGithub/PyGithub/pull/3357>`_) (`0c31f848 <https://github.com/PyGithub/PyGithub/commit/0c31f848>`_)
+* Upgrade docformatter pre-commit hook (`#3359 <https://github.com/PyGithub/PyGithub/pull/3359>`_) (`6ec3ca24 <https://github.com/PyGithub/PyGithub/commit/6ec3ca24>`_)
+* Add warning about Checks API in doc-strings (`#3229 <https://github.com/PyGithub/PyGithub/pull/3229>`_) (`12d8d10c <https://github.com/PyGithub/PyGithub/commit/12d8d10c>`_)
+* Update docs on development (`#3352 <https://github.com/PyGithub/PyGithub/pull/3352>`_) (`6f0d6efa <https://github.com/PyGithub/PyGithub/commit/6f0d6efa>`_)
+
 Version 2.7.0 (July 31, 2025)
 -----------------------------
 
@@ -791,7 +1064,7 @@ Bug Fixes & Improvements
 * Add support for repository autolink references (`#2016 <https://github.com/PyGithub/PyGithub/pull/2016>`_) (`0fadd6be <https://github.com/PyGithub/PyGithub/commit/0fadd6be>`_)
 * Add retry and pool_size to typing (`#2151 <https://github.com/PyGithub/PyGithub/pull/2151>`_) (`784a3efd <https://github.com/PyGithub/PyGithub/commit/784a3efd>`_)
 * Fix/types for repo topic team (`#2341 <https://github.com/PyGithub/PyGithub/pull/2341>`_) (`db9337a4 <https://github.com/PyGithub/PyGithub/commit/db9337a4>`_)
-* Add class Artifact (`#2313 <https://github.com/PyGithub/PyGithub/pull/2313>`_) (#2319) (`437ff845 <https://github.com/PyGithub/PyGithub/commit/437ff845>`_)
+* Add class Artifact (`#2313 <https://github.com/PyGithub/PyGithub/pull/2313>`_) (`#2319 <https://github.com/PyGithub/PyGithub/pull/2319>`_) (`437ff845 <https://github.com/PyGithub/PyGithub/commit/437ff845>`_)
 
 Version 1.56 (October 13, 2022)
 -----------------------------------
@@ -874,7 +1147,7 @@ Version 1.54.1 (December 24, 2020)
 * Add pyupgrade to pre-commit configuration (`#1783 <https://github.com/PyGithub/PyGithub/pull/1783>`_) (`e113e37d <https://github.com/PyGithub/PyGithub/commit/e113e37d>`_)
 * Fix #1731: Incorrect annotation (`82c349ce <https://github.com/PyGithub/PyGithub/commit/82c349ce>`_)
 * Drop support for Python 3.5 (`#1770 <https://github.com/PyGithub/PyGithub/pull/1770>`_) (`63e4fae9 <https://github.com/PyGithub/PyGithub/commit/63e4fae9>`_)
-* Revert "Pin requests to <2.25 as well (`#1757 <https://github.com/PyGithub/PyGithub/pull/1757>`_)" (#1763) (`a806b523 <https://github.com/PyGithub/PyGithub/commit/a806b523>`_)
+* Revert "Pin requests to <2.25 as well (`#1757 <https://github.com/PyGithub/PyGithub/pull/1757>`_)" (`#1763 <https://github.com/PyGithub/PyGithub/pull/1763>`_) (`a806b523 <https://github.com/PyGithub/PyGithub/commit/a806b523>`_)
 * Fix stubs file for Repository (`fab682a5 <https://github.com/PyGithub/PyGithub/commit/fab682a5>`_)
 
 Version 1.54 (November 30, 2020)
@@ -1117,12 +1390,12 @@ Version 1.44.1 (November 07, 2019)
 
 * Add Python 3.8 to classifiers list (`#1280 <https://github.com/PyGithub/PyGithub/pull/1280>`_) (`fec6034a <https://github.com/PyGithub/PyGithub/commit/fec6034a>`_)
 * Expand Topic class and add test coverage (`#1252 <https://github.com/PyGithub/PyGithub/pull/1252>`_) (`ac682742 <https://github.com/PyGithub/PyGithub/commit/ac682742>`_)
-* Add support for team discussions (`#1246 <https://github.com/PyGithub/PyGithub/pull/1246>`_) (#1249) (`ec3c8d7b <https://github.com/PyGithub/PyGithub/commit/ec3c8d7b>`_)
+* Add support for team discussions (`#1246 <https://github.com/PyGithub/PyGithub/pull/1246>`_) (`#1249 <https://github.com/PyGithub/PyGithub/pull/1249>`_) (`ec3c8d7b <https://github.com/PyGithub/PyGithub/commit/ec3c8d7b>`_)
 * Correct API for NamedUser.get_organization_membership (`#1277 <https://github.com/PyGithub/PyGithub/pull/1277>`_) (`077c80ba <https://github.com/PyGithub/PyGithub/commit/077c80ba>`_)
 * Correct header check for 2FA required (`#1274 <https://github.com/PyGithub/PyGithub/pull/1274>`_) (`6ad592b1 <https://github.com/PyGithub/PyGithub/commit/6ad592b1>`_)
 * Use replay framework for Issue142 test (`#1271 <https://github.com/PyGithub/PyGithub/pull/1271>`_) (`4d258d93 <https://github.com/PyGithub/PyGithub/commit/4d258d93>`_)
 * Sync httpretty version requirement with setup.py (`#1265 <https://github.com/PyGithub/PyGithub/pull/1265>`_) (`99d38468 <https://github.com/PyGithub/PyGithub/commit/99d38468>`_)
-* Handle unicode strings when recording responses (`#1253 <https://github.com/PyGithub/PyGithub/pull/1253>`_) (#1254) (`faa1bbd6 <https://github.com/PyGithub/PyGithub/commit/faa1bbd6>`_)
+* Handle unicode strings when recording responses (`#1253 <https://github.com/PyGithub/PyGithub/pull/1253>`_) (`#1254 <https://github.com/PyGithub/PyGithub/pull/1254>`_) (`faa1bbd6 <https://github.com/PyGithub/PyGithub/commit/faa1bbd6>`_)
 * Add assignee removal/addition support to PRs (`#1241 <https://github.com/PyGithub/PyGithub/pull/1241>`_) (`a163ba15 <https://github.com/PyGithub/PyGithub/commit/a163ba15>`_)
 * Check if the version is empty in manage.sh (`#1268 <https://github.com/PyGithub/PyGithub/pull/1268>`_) (`db294837 <https://github.com/PyGithub/PyGithub/commit/db294837>`_)
 * Encode content for {create,update}_file (`#1267 <https://github.com/PyGithub/PyGithub/pull/1267>`_) (`bc225f9d <https://github.com/PyGithub/PyGithub/commit/bc225f9d>`_)

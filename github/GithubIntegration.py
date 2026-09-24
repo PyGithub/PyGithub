@@ -10,8 +10,11 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -87,6 +90,7 @@ class GithubIntegration:
         auth: AppAuth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
+        api_version: str | None = None,
     ) -> None:
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -106,6 +110,9 @@ class GithubIntegration:
         :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-api/api-versions).
+                            Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
+                            Set to None to not specify any version
         """
         if integration_id is not None:
             assert isinstance(integration_id, (int, str)), integration_id
@@ -124,6 +131,7 @@ class GithubIntegration:
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
         assert isinstance(jwt_issued_at, int)
         assert isinstance(lazy, bool), lazy
+        assert api_version is None or isinstance(api_version, str), api_version
 
         self.base_url = base_url
 
@@ -174,6 +182,7 @@ class GithubIntegration:
             seconds_between_requests=seconds_between_requests,
             seconds_between_writes=seconds_between_writes,
             lazy=lazy,
+            api_version=api_version,
         )
 
     def withLazy(self, lazy: bool) -> GithubIntegration:
@@ -284,9 +293,7 @@ class GithubIntegration:
         """
         Deprecated by get_repo_installation.
 
-        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
-        installation-for-the-authenticated-app>`
-        :calls:`GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
+        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
         installation-for-the-authenticated-app>`
 
         """
@@ -311,7 +318,7 @@ class GithubIntegration:
         """
         :calls: `GET /orgs/{org}/installation <https://docs.github.com/en/rest/apps/apps#get-an-organization-installation-for-the-authenticated-app>`
         """
-        org = urllib.parse.quote(org)
+        org = urllib.parse.quote(org, safe="")
         return self._get_installed_app(url=f"/orgs/{org}/installation")
 
     def get_repo_installation(self, owner: str, repo: str) -> Installation:

@@ -24,6 +24,9 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Nick McClorey <32378821+nickrmcclorey@users.noreply.github.com>#
+# Copyright 2026 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Sebastien NICOT <sebastien.nicot@enterprisedb.com>            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,8 +48,9 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 import github.Branch
 import github.Commit
@@ -54,8 +58,15 @@ import github.GithubObject
 import github.NamedUser
 import github.Tag
 import github.WorkflowRun
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, ignore_return_type
 from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.Branch import Branch
+    from github.Commit import Commit
+    from github.NamedUser import NamedUser
+    from github.Tag import Tag
+    from github.WorkflowRun import WorkflowRun
 
 
 class Workflow(CompletableGithubObject):
@@ -142,11 +153,38 @@ class Workflow(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @overload
     def create_dispatch(
-        self, ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str, inputs: Opt[dict] = NotSet
+        self,
+        ref: Branch | Tag | Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+        return_run_details: Literal[False] = ...,
     ) -> bool:
+        ...
+
+    @overload
+    def create_dispatch(
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+        return_run_details: Literal[True] = ...,
+    ) -> WorkflowRun:
+        ...
+
+    # v3: default throw to True
+    @ignore_return_type(ignore_type="WorkflowRun")
+    def create_dispatch(
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+        return_run_details: bool = False,
+    ) -> bool | WorkflowRun:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
+        Note: raises or return False without details on error, depending on the ``throw`` parameter.
         """
         assert (
             isinstance(ref, github.Branch.Branch)
@@ -163,22 +201,52 @@ class Workflow(CompletableGithubObject):
             ref = ref.name
         if inputs is NotSet:
             inputs = {}
-        status, _, _ = self._requester.requestJson(
-            "POST", f"{self.url}/dispatches", input={"ref": ref, "inputs": inputs}
-        )
-        return status == 204
+        url = f"{self.url}/dispatches"
+        input: dict[str, str | bool | dict] = NotSet.remove_unset_items({"ref": ref, "inputs": inputs})
+
+        # Add return_run_details to the request body if requested
+        if return_run_details:
+            input["return_run_details"] = True
+
+        if throw:
+            _, data = self._requester.requestJsonAndCheck("POST", url, input=input)
+            if return_run_details and data:
+                # Map API response to WorkflowRun attributes
+                workflow_run_data = {
+                    "id": data["workflow_run_id"],
+                    "url": data["run_url"],
+                    "html_url": data["html_url"],
+                }
+                return github.WorkflowRun.WorkflowRun(
+                    self._requester, headers={}, attributes=workflow_run_data, completed=False
+                )
+            return True
+        else:
+            status, _, data = self._requester.requestJson("POST", url, input=input)
+            if return_run_details and status == 200 and data:
+                # Parse JSON and map API response to WorkflowRun attributes
+                run_data = json.loads(data)
+                workflow_run_data = {
+                    "id": run_data["workflow_run_id"],
+                    "url": run_data["run_url"],
+                    "html_url": run_data["html_url"],
+                }
+                return github.WorkflowRun.WorkflowRun(
+                    self._requester, headers={}, attributes=workflow_run_data, completed=False
+                )
+            return status in (200, 204)
 
     def get_runs(
         self,
-        actor: Opt[github.NamedUser.NamedUser | str] = NotSet,
-        branch: Opt[github.Branch.Branch | str] = NotSet,
+        actor: Opt[NamedUser | str] = NotSet,
+        branch: Opt[Branch | str] = NotSet,
         event: Opt[str] = NotSet,
         status: Opt[str] = NotSet,
         created: Opt[str] = NotSet,
         exclude_pull_requests: Opt[bool] = NotSet,
         check_suite_id: Opt[int] = NotSet,
         head_sha: Opt[str] = NotSet,
-    ) -> PaginatedList[github.WorkflowRun.WorkflowRun]:
+    ) -> PaginatedList[WorkflowRun]:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs <https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-workflow>`_
         """
@@ -244,6 +312,10 @@ class Workflow(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "node_id" in attributes:  # pragma no branch

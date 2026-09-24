@@ -4,6 +4,8 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Patryk Szulczyk <therealsoulcheck@gmail.com>                  #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
+# Copyright 2026 Tanishk <tanishk7531@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -124,7 +126,7 @@ class GithubRetry(unittest.TestCase):
 
     @contextlib.contextmanager
     def mock_retry_now(self, now):
-        if sys.version_info[0] > 3 or sys.version_info[0] == 3 and sys.version_info[1] >= 11:
+        if sys.version_info >= (3, 11):
             attr = "github.GithubRetry.GithubRetry._GithubRetry__datetime"
         else:
             attr = "github.GithubRetry._GithubRetry__datetime"
@@ -406,3 +408,39 @@ class GithubRetry(unittest.TestCase):
             )
 
         log.assert_called_once_with(logging.INFO, "Request TEST URL failed with 403: NOT GOOD")
+
+    def test_primary_rate_error_exceeds_max_wait(self):
+        retry = github.GithubRetry(total=3, max_rate_limit_wait=10)
+        response = self.response_func(PrimaryRateLimitJson, 1644768012)
+
+        with self.mock_retry_now(1644768000):
+            # reset is 12 seconds away, +1s = 13s backoff, which exceeds max_rate_limit_wait=10
+            with self.assertRaises(github.RateLimitExceededExceedsMaxWait) as exp:
+                retry.increment("TEST", "URL", response())
+
+            self.assertEqual(13, exp.exception.wait)
+            self.assertEqual(403, exp.exception.status)
+            self.assertEqual(PrimaryRateLimitMessage, exp.exception.data.get("message"))
+
+    def test_primary_rate_error_within_max_wait(self):
+        retry = github.GithubRetry(total=3, max_rate_limit_wait=20)
+        response = self.response_func(PrimaryRateLimitJson, 1644768012)
+
+        with self.mock_retry_now(1644768000):
+            # reset is 12 seconds away, +1s = 13s backoff, under max_rate_limit_wait=20
+            retry = retry.increment("TEST", "URL", response())
+
+            self.assertEqual(2, retry.total)
+            self.assertEqual(13, retry.get_backoff_time())
+
+    def test_secondary_rate_error_exceeds_max_wait(self):
+        retry = github.GithubRetry(total=3, secondary_rate_wait=60, max_rate_limit_wait=10)
+        response = self.response_func(SecondaryRateLimitJson, reset=None)
+
+        # secondary backoff is fixed at secondary_rate_wait=60, which exceeds max_rate_limit_wait=10
+        with self.assertRaises(github.RateLimitExceededExceedsMaxWait) as exp:
+            retry.increment("TEST", "URL", response())
+
+        self.assertEqual(60, exp.exception.wait)
+        self.assertEqual(403, exp.exception.status)
+        self.assertEqual(SecondaryRateLimitMessage, exp.exception.data.get("message"))

@@ -4,6 +4,8 @@ Examples
 
 .. toctree::
   examples/Authentication
+  examples/LazyMode
+  examples/Exceptions
   examples/MainClass
   examples/Repository
   examples/Branch

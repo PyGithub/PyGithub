@@ -42,6 +42,7 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
@@ -67,6 +68,10 @@ class Environment(CompletableGithubObject):
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/environment
 
     """
 
@@ -148,7 +153,7 @@ class Environment(CompletableGithubObject):
 
     def get_public_key(self) -> PublicKey:
         """
-        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
         :rtype: :class:`PublicKey`
         """
         # https://stackoverflow.com/a/76474814
@@ -158,7 +163,7 @@ class Environment(CompletableGithubObject):
 
     def create_secret(self, secret_name: str, unencrypted_value: str) -> Secret:
         """
-        :calls: `PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -168,20 +173,22 @@ class Environment(CompletableGithubObject):
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/secrets/{secret_name}", input=put_parameters)
+        quoted_secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/secrets/{quoted_secret_name}"
+        self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
         return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={
-                "name": secret_name,
-                "url": f"{self.url}/secrets/{secret_name}",
-            },
+            self._requester,
+            url=url,
+            attributes={"name": secret_name},
             completed=False,
         )
 
     def get_secrets(self) -> PaginatedList[Secret]:
         """
         Gets all repository secrets.
+
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets </repos/{owner}/{repo}/environments/{environment_name}/secrets>`_
+
         """
         return PaginatedList(
             github.Secret.Secret,
@@ -194,19 +201,15 @@ class Environment(CompletableGithubObject):
 
     def get_secret(self, secret_name: str) -> Secret:
         """
-        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
-        return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/secrets/{secret_name}"},
-            completed=False,
-        )
+        secret_name = urllib.parse.quote(secret_name, safe="")
+        return github.Secret.Secret(self._requester, url=f"{self.url}/secrets/{secret_name}")
 
     def create_variable(self, variable_name: str, value: str) -> Variable:
         """
-        :calls: `POST /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
+        :calls: `POST /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -215,13 +218,15 @@ class Environment(CompletableGithubObject):
             "value": value,
         }
         self._requester.requestJsonAndCheck("POST", f"{self.url}/variables", input=post_parameters)
+
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/variables/{quoted_variable_name}"
         return github.Variable.Variable(
             self._requester,
-            headers={},
+            url=url,
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": f"{self.url}/variables/{variable_name}",
             },
             completed=False,
         )
@@ -241,21 +246,18 @@ class Environment(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> Variable:
         """
-        :calls: `GET /orgs/{org}/variables/{variable_name} <https://docs.github.com/en/rest/variables#get-an-organization-variable>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/rest/actions/variables#get-an-environment-variable>`_
         :param variable_name: string
         :rtype: Variable
         """
         assert isinstance(variable_name, str), variable_name
-        return github.Variable.Variable(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/variables/{variable_name}"},
-            completed=False,
-        )
+        variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/variables/{variable_name}"
+        return github.Variable.Variable(self._requester, url=url)
 
     def delete_secret(self, secret_name: str) -> bool:
         """
-        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/reference#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/reference#delete-a-repository-secret>`_
         :param secret_name: string
         :rtype: bool
         """
@@ -265,7 +267,7 @@ class Environment(CompletableGithubObject):
 
     def delete_variable(self, variable_name: str) -> bool:
         """
-        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/reference#delete-a-repository-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/en/rest/reference#delete-a-repository-variable>`_
         :param variable_name: string
         :rtype: bool
         """
@@ -289,6 +291,10 @@ class Environment(CompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "protection_rules" in attributes:  # pragma no branch

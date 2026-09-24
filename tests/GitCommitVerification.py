@@ -4,6 +4,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Tim Gates <tim.gates@iress.com>                               #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -31,8 +32,11 @@ from . import Framework
 class GitCommitVerification(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.commit = self.g.get_repo("PyGithub/PyGithub", lazy=True).get_commit(
-            "801d64a4c5c0fcb63f695e0f6799117e76e5fe67"
+        self.commit = (
+            self.g.withLazy(True)
+            .get_repo("PyGithub/PyGithub")
+            .get_commit("801d64a4c5c0fcb63f695e0f6799117e76e5fe67")
+            .complete()
         )
 
     def testAttributes(self):

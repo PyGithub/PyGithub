@@ -17,6 +17,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -111,13 +112,14 @@ class Installation(Framework.BasicTestCase):
                 # v3: this should not be the default value, so if this has been changed in v3,
                 # change it here is well
                 lazy=True,
+                api_version="version",
             )
 
             # assert kwargs consists of ALL requester constructor arguments
             self.assertEqual(kwargs.keys(), github.Requester.Requester.__init__.__annotations__.keys())
 
-            self.integration = github.GithubIntegration(**kwargs)
-            installations = list(self.integration.get_installations())
+            integration = github.GithubIntegration(**kwargs)
+            installations = list(integration.get_installations())
             installation = installations[0]
 
             g = installation.get_github_for_installation()
@@ -130,6 +132,7 @@ class Installation(Framework.BasicTestCase):
             self.assertDictEqual(kwargs, actual)
 
             repo = g.get_repo("PyGithub/PyGithub")
+            self.assertEqual(repo.id, 3544490)
             self.assertEqual(repo.full_name, "PyGithub/PyGithub")
 
     def testRequester(self):

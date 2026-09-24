@@ -21,6 +21,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Sai Asish Y <say.apm35@gmail.com>                             #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -114,6 +115,10 @@ class Exceptions(Framework.TestCase):
 
     def testExceptionPickling(self):
         pickle.loads(pickle.dumps(github.GithubException("foo", "bar", None)))
+
+    def testBytesData(self):
+        exc = github.GithubException(403, b"<html>rate limit</html>", message="rate limit")
+        self.assertEqual(str(exc), 'rate limit: 403 "<html>rate limit</html>"')
 
     def testJSONParseError(self):
         # Replay data was forged to force a JSON error

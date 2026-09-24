@@ -31,6 +31,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -104,6 +105,7 @@ class Branch(NonCompletableGithubObject):
         self._protection: Attribute[BranchProtection] = NotSet
         self._protection_url: Attribute[str] = github.GithubObject.NotSet
         self._required_approving_review_count: Attribute[int] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -141,6 +143,10 @@ class Branch(NonCompletableGithubObject):
     @property
     def required_approving_review_count(self) -> int:
         return self._required_approving_review_count.value
+
+    @property
+    def url(self) -> str:
+        return self._url.value
 
     def get_protection(self) -> BranchProtection:
         """
@@ -658,3 +664,5 @@ class Branch(NonCompletableGithubObject):
             self._required_approving_review_count = self._makeIntAttribute(
                 attributes["required_approving_review_count"]
             )
+        if "url" in attributes:
+            self._url = self._makeStringAttribute(attributes["url"])

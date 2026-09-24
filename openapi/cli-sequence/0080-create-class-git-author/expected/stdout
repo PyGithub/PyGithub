@@ -1,0 +1,171 @@
++ python scripts/openapi.py --dry-run create class --tests github openapi.spec.json openapi.index GitAuthor https://docs.github.com/en/rest/ /components/schemas/nullable-git-user /components/schemas/commit-search-result-item/properties/commit/properties/author /components/schemas/nullable-simple-commit/properties/author /components/schemas/nullable-simple-commit/properties/committer /components/schemas/simple-commit/properties/author /components/schemas/simple-commit/properties/committer
+Creating class github.GitAuthor.GitAuthor with parent github.GithubObject.NonCompletableGithubObject in ./github/GitAuthor.py
+Updating temporary index
+Indexing 6 Python files
+Indexed 15 classes
+Indexed 4 paths
+Indexed 15 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class GitAuthor
+Applying spec openapi.spec.json to github.GitAuthor.GitAuthor (github/GitAuthor.py)
+Applying schema /components/schemas/nullable-git-user
+Applying schema /components/schemas/commit-search-result-item/properties/commit/properties/author
+Applying schema /components/schemas/nullable-simple-commit/properties/author
+Applying schema /components/schemas/nullable-simple-commit/properties/committer
+Applying schema /components/schemas/simple-commit/properties/author
+Applying schema /components/schemas/simple-commit/properties/committer
+Class GitAuthor changed
+Test tests/GitAuthor.py changed
+
+./github/GitAuthor.py:
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class GitAuthor(NonCompletableGithubObject):
++    """
++    This class represents GitAuthor.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/nullable-git-user
++    - /components/schemas/commit-search-result-item/properties/commit/properties/author
++    - /components/schemas/nullable-simple-commit/properties/author
++    - /components/schemas/nullable-simple-commit/properties/committer
++    - /components/schemas/simple-commit/properties/author
++    - /components/schemas/simple-commit/properties/committer
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._date: Attribute[str] = NotSet
++        self._email: Attribute[str] = NotSet
++        self._name: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def date(self) -> str:
++        return self._date.value
++
++    @property
++    def email(self) -> str:
++        return self._email.value
++
++    @property
++    def name(self) -> str:
++        return self._name.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "date" in attributes:  # pragma no branch
++            self._date = self._makeStringAttribute(attributes["date"])
++        if "email" in attributes:  # pragma no branch
++            self._email = self._makeStringAttribute(attributes["email"])
++        if "name" in attributes:  # pragma no branch
++            self._name = self._makeStringAttribute(attributes["name"])
++
+
+./tests/GitAuthor.py:
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class GitAuthor(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type GitAuthor and assign to self.ga, then run:
++        #   pytest ./tests/GitAuthor.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/GitAuthor.py testAttributes
++        #   pre-commit run --all-files
++        self.ga = None
++
++    def testAttributes(self):
++        ga = self.ga
++        self.assertEqual(ga.__repr__(), "")
++        self.assertEqual(ga.date, "")
++        self.assertEqual(ga.email, "")
++        self.assertEqual(ga.name, "")
++ python scripts/openapi.py create class --tests github openapi.spec.json openapi.index GitAuthor https://docs.github.com/en/rest/ /components/schemas/nullable-git-user /components/schemas/commit-search-result-item/properties/commit/properties/author /components/schemas/nullable-simple-commit/properties/author /components/schemas/nullable-simple-commit/properties/committer /components/schemas/simple-commit/properties/author /components/schemas/simple-commit/properties/committer
+Creating class github.GitAuthor.GitAuthor with parent github.GithubObject.NonCompletableGithubObject in ./github/GitAuthor.py
+Updating index
+Indexing 6 Python files
+Indexed 15 classes
+Indexed 4 paths
+Indexed 15 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class GitAuthor
+Applying spec openapi.spec.json to github.GitAuthor.GitAuthor (github/GitAuthor.py)
+Applying schema /components/schemas/nullable-git-user
+Applying schema /components/schemas/commit-search-result-item/properties/commit/properties/author
+Applying schema /components/schemas/nullable-simple-commit/properties/author
+Applying schema /components/schemas/nullable-simple-commit/properties/committer
+Applying schema /components/schemas/simple-commit/properties/author
+Applying schema /components/schemas/simple-commit/properties/committer
+Class GitAuthor changed
+Test tests/GitAuthor.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 6 Python files
+Indexed 15 classes
+Indexed 4 paths
+Indexed 15 schemas
+Indexing OpenAPI spec

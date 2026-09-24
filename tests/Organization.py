@@ -47,6 +47,12 @@
 # Copyright 2025 Dom Heinzeller <dom.heinzeller@icloud.com>                    #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Greg Fogelberg <52933995+gfog-floqast@users.noreply.github.com>#
+# Copyright 2025 Pavel Abramov <31950564+uncleDecart@users.noreply.github.com> #
+# Copyright 2025 Zachary <6599715+interifter@users.noreply.github.com>         #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Jay Chawla <92621202+chawlajay9@users.noreply.github.com>     #
+# Copyright 2026 Krishna Chaitanya <krishnabkc15@gmail.com>                    #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -169,6 +175,11 @@ class Organization(Framework.TestCase):
         self.assertEqual(repr(self.org), 'Organization(login="BeaverSoftware")')
         self.assertIsNone(self.org.user_view_type)
         self.assertEqual(self.org.web_commit_signoff_required, False)
+
+    def testLazyAttributes(self):
+        org = self.g.withLazy(True).get_organization("org")
+        self.assertEqual(org.login, "org")
+        self.assertEqual(org.url, "/orgs/org")
 
     def testAddMembersDefaultRole(self):
         lyloa = self.g.get_user("lyloa")
@@ -514,6 +525,12 @@ class Organization(Framework.TestCase):
         self.assertEqual(list(secret.selected_repositories), repos)
         self.assertEqual(secret.url, "https://api.github.com/orgs/BeaverSoftware/actions/secrets/secret-name")
 
+    def testLazySecret(self):
+        secret = self.g.withLazy(True).get_organization("org").get_secret("secret name")
+        self.assertEqual(str(secret), 'OrganizationSecret(name="secret name")')
+        self.assertEqual(secret.name, "secret name")
+        self.assertEqual(secret.url, "/orgs/org/actions/secrets/secret%20name")
+
     def testGetSecrets(self):
         secrets = self.org.get_secrets()
         self.assertEqual(len(list(secrets)), 1)
@@ -611,6 +628,13 @@ class Organization(Framework.TestCase):
         variable = self.org.create_variable("variable-name", "variable-value", "all")
         self.assertIsNotNone(variable)
 
+    def testCreateVariableUrl(self):
+        variable = self.org.create_variable("variable-name", "variable-value", "all")
+        self.assertEqual(
+            variable.url,
+            "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name",
+        )
+
     def testCreateVariableSelected(self):
         repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
         variable = self.org.create_variable("variable-name", "variable-value", "selected", repos)
@@ -624,12 +648,50 @@ class Organization(Framework.TestCase):
         self.assertEqual(variable.created_at, datetime(2019, 8, 10, 14, 59, 22, tzinfo=timezone.utc))
         self.assertEqual(variable.updated_at, datetime(2020, 1, 10, 14, 59, 22, tzinfo=timezone.utc))
         self.assertEqual(variable.visibility, "selected")
+        self.assertEqual(variable.value, "variable-value123")
         self.assertEqual(list(variable.selected_repositories), repos)
         self.assertEqual(variable.url, "https://api.github.com/orgs/BeaverSoftware/actions/variables/variable-name")
+
+    def testGetLazyVariable(self):
+        var = self.g.withLazy(True).get_organization("org").get_variable("var name")
+        self.assertEqual(str(var), 'OrganizationVariable(name="var name")')
+        self.assertEqual(var.name, "var name")
+        self.assertEqual(var.url, "/orgs/org/actions/variables/var%20name")
 
     def testGetVariables(self):
         variables = self.org.get_variables()
         self.assertEqual(len(list(variables)), 1)
+
+    def testEditVariable(self):
+        variable = self.org.get_variable("variable-name")
+        self.assertTrue(variable.edit("variable-value-updated"))
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testEditSecret(self, encrypt):
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = self.org.get_secret("secret-name")
+        # The edit must seal the value via the org public key and PUT
+        # {key_id, encrypted_value, visibility}; it must never send the plaintext value.
+        self.assertTrue(secret.edit("secret-value-updated"))
+        # the plaintext value is passed through the public key encryption, never sent raw
+        self.assertEqual(encrypt.call_count, 1)
+        self.assertIn("secret-value-updated", encrypt.call_args.args)
+
+    @mock.patch("github.PublicKey.encrypt")
+    def testEditSecretSelected(self, encrypt):
+        repos = [self.org.get_repo("TestPyGithub"), self.org.get_repo("FatherBeaver")]
+        # encrypt returns a non-deterministic value, we need to mock it so the replay data matches
+        encrypt.return_value = "M+5Fm/BqTfB90h3nC7F3BoZuu3nXs+/KtpXwxm9gG211tbRo0F5UiN0OIfYT83CKcx9oKES9Va4E96/b"
+        secret = self.org.get_secret("secret-name")
+        self.assertTrue(
+            secret.edit(
+                "secret-value-updated",
+                visibility="selected",
+                secret_type="actions",
+                selected_repositories=repos,
+            )
+        )
 
     @mock.patch("github.PublicKey.encrypt")
     def testCreateActionsSecret(self, encrypt):
@@ -742,6 +804,7 @@ class Organization(Framework.TestCase):
             required=True,
             default_value="foo",
             description="description",
+            values_editable_by="org_actors",
         )
         created_property = self.org.create_custom_property(custom_property)
         self.assertEqual(created_property.property_name, "property_1")
@@ -765,7 +828,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(custom_property.required, True)
         self.assertEqual(custom_property.default_value, "foo")
         self.assertEqual(custom_property.description, "description")
-        self.assertIsNone(custom_property.url)
+        self.assertEqual(custom_property.url, "https://api.github.com/orgs/BeaverSoftware/properties/schema/property_1")
         self.assertEqual(custom_property.values_editable_by, "org_actors")
 
     def testCreateCustomPropertyValues(self):

@@ -16,6 +16,8 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Alejandro Perez Gancedo <37455131+LifeLex@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Chinedum Echeta <60179183+cecheta@users.noreply.github.com>   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -291,7 +293,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._status.value
 
     @property
-    def triggering_actor(self) -> github.NamedUser.NamedUser:
+    def triggering_actor(self) -> NamedUser:
         self._completeIfNotSet(self._triggering_actor)
         return self._triggering_actor.value
 
@@ -315,11 +317,21 @@ class WorkflowRun(CompletableGithubObject):
         self._completeIfNotSet(self._workflow_url)
         return self._workflow_url.value
 
+    def get_attempt(self, attempt_number: int) -> WorkflowRun:
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number} <https://docs.github.com/en/rest/actions/workflow-runs#get-a-workflow-run-attempt>`_
+        :param attempt_number: int
+        :rtype: :class:`github.WorkflowRun.WorkflowRun`
+        """
+        assert isinstance(attempt_number, int)
+        url = f"{self.url}/attempts/{attempt_number}"
+        return github.WorkflowRun.WorkflowRun(self._requester, url=url)
+
     def get_artifacts(self) -> PaginatedList[Artifact]:
         return PaginatedList(
             github.Artifact.Artifact,
             self._requester,
-            self._artifacts_url.value,
+            self.artifacts_url,
             None,
             list_item="artifacts",
         )
@@ -413,6 +425,10 @@ class WorkflowRun(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "jobs_url" in attributes:  # pragma no branch
             self._jobs_url = self._makeStringAttribute(attributes["jobs_url"])
         if "logs_url" in attributes:  # pragma no branch

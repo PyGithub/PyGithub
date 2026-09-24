@@ -103,7 +103,7 @@ commit() {
   if "$git" diff --exit-code 1>&2; then return 0; fi
 
   # commit
-  "$git" commit -a -m "$message" "$@" 1>&2
+  "$git" commit --no-verify -a -m "$message" "$@" 1>&2
   echo 1>&2
   return 255
 }
@@ -213,13 +213,13 @@ update() {
   commit "Sort attributes and methods in $class" && unchanged "sort" || changed "sort" "sort" || return 0
 
   # apply schemas to class
-  ("$python" "$openapi" apply ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes[@]}" && echo) 1>&2 || failed "$class" || return 0
+  ("$python" "$openapi" apply properties ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes[@]}" && echo) 1>&2 || failed "$class" || return 0
   if [ -n "$create_classes" ]; then git add github/; fi
   commit "Updated $class according to API spec" && unchanged "$class" || changed "$class" "$class" || return 0
 
   # apply schemas to test class
   if [ ${#classes_with_tests[@]} -gt 0 ]; then
-    ("$python" "$openapi" apply --tests ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes_with_tests[@]}" && if [ -n "$create_classes" ]; then git add tests/; fi; echo) 1>&2 || failed "tests" || return 0
+    ("$python" "$openapi" apply properties --tests ${create_classes:+--new-schemas create-class} "$source_path" "$spec" "$index" "${classes_with_tests[@]}" && if [ -n "$create_classes" ]; then git add tests/; fi; echo) 1>&2 || failed "tests" || return 0
   fi
   # do not perform linting as part of the commit as this step
   # introduces imports that might be needed by assertions

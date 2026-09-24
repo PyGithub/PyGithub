@@ -97,3 +97,9 @@ class Deployment(Framework.TestCase):
             repr(self.deployment),
             'Deployment(url="https://api.github.com/repos/jacquev6/PyGithub/deployments/263877258", id=263877258)',
         )
+
+    def testLazyAttributes(self):
+        deploy = self.g.withLazy(True).get_repo("lazy/repo").get_deployment(42)
+        self.assertEqual(str(deploy), 'Deployment(url="/repos/lazy/repo/deployments/42", id=42)')
+        self.assertEqual(deploy.id, 42)
+        self.assertEqual(deploy.url, "/repos/lazy/repo/deployments/42")

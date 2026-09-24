@@ -23,6 +23,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,12 +46,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.TimelineEventSource import TimelineEventSource
 
 
 class TimelineEvent(NonCompletableGithubObject):
@@ -60,24 +65,28 @@ class TimelineEvent(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#timeline
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/timeline-issue-events
+
     """
 
     def _initAttributes(self) -> None:
-        self._actor: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._actor: Attribute[NamedUser] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._commit_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._event: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._source: Attribute[github.TimelineEventSource.TimelineEventSource] = NotSet
+        self._source: Attribute[TimelineEventSource] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def actor(self) -> github.NamedUser.NamedUser:
+    def actor(self) -> NamedUser:
         return self._actor.value
 
     @property
@@ -117,7 +126,7 @@ class TimelineEvent(NonCompletableGithubObject):
         return self._node_id.value
 
     @property
-    def source(self) -> github.TimelineEventSource.TimelineEventSource | None:
+    def source(self) -> TimelineEventSource | None:
         # only available on `cross-referenced` events.
         if self.event == "cross-referenced" and self._source is not NotSet:
             return self._source.value

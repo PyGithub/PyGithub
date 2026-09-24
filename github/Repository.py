@@ -135,15 +135,23 @@
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
 # Copyright 2024 jodelasur <34933233+jodelasur@users.noreply.github.com>       #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
 # Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2025 Cristiano Salerno <119511125+csalerno-asml@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 GPK <gopidesupavan@gmail.com>                                 #
 # Copyright 2025 Jason M. Gates <jmgate@sandia.gov>                            #
+# Copyright 2025 Matt Ball <96152357+mball-agathos@users.noreply.github.com>   #
 # Copyright 2025 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
 # Copyright 2025 Oscar van Leusen <oscarvanleusen@gmail.com>                   #
+# Copyright 2025 Ryosuke <88011751+nrysk@users.noreply.github.com>             #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
-# Copyright 2025 Zdenek Styblik <stybla@turnovfree.net>                        #
+# Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
+# Copyright 2026 Chinedum Echeta <60179183+cecheta@users.noreply.github.com>   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Matt Davis <35502728+matt-davis27@users.noreply.github.com>   #
+# Copyright 2026 Shannon Poole <1154610+shannon@users.noreply.github.com>      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -196,6 +204,7 @@ import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
 import github.EnvironmentProtectionRuleReviewer
 import github.Event
+import github.GeneratedReleaseNotes
 import github.GitBlob
 import github.GitCommit
 import github.GithubObject
@@ -231,6 +240,7 @@ import github.RepositoryDiscussion
 import github.RepositoryKey
 import github.RepositoryPreferences
 import github.Secret
+import github.SecretScanAlert
 import github.SecurityAndAnalysis
 import github.SelfHostedActionsRunner
 import github.SourceImport
@@ -245,10 +255,9 @@ import github.Team
 import github.Variable
 import github.View
 import github.Workflow
+import github.WorkflowJob
 import github.WorkflowRun
 from github import Consts
-from github.Environment import Environment
-from github.GeneratedReleaseNotes import GeneratedReleaseNotes
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
@@ -263,6 +272,8 @@ from github.GithubObject import (
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.AdvisoryCredit import AdvisoryCredit
+    from github.AdvisoryVulnerability import AdvisoryVulnerabilityInput
     from github.Artifact import Artifact
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Autolink import Autolink
@@ -278,11 +289,13 @@ if TYPE_CHECKING:
     from github.DependabotAlert import DependabotAlert
     from github.Deployment import Deployment
     from github.Download import Download
+    from github.Environment import Environment
     from github.EnvironmentDeploymentBranchPolicy import (
         EnvironmentDeploymentBranchPolicyParams,
     )
     from github.EnvironmentProtectionRuleReviewer import ReviewerParams
     from github.Event import Event
+    from github.GeneratedReleaseNotes import GeneratedReleaseNotes
     from github.GitBlob import GitBlob
     from github.GitCommit import GitCommit
     from github.GitRef import GitRef
@@ -291,6 +304,7 @@ if TYPE_CHECKING:
     from github.GitTag import GitTag
     from github.GitTree import GitTree
     from github.Hook import Hook
+    from github.HookDelivery import HookDelivery, HookDeliverySummary
     from github.InputGitAuthor import InputGitAuthor
     from github.InputGitTreeElement import InputGitTreeElement
     from github.Invitation import Invitation
@@ -312,9 +326,12 @@ if TYPE_CHECKING:
     from github.PullRequestComment import PullRequestComment
     from github.Referrer import Referrer
     from github.RepoCodeSecurityConfig import RepoCodeSecurityConfig
+    from github.RepositoryAdvisory import RepositoryAdvisory
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
+    from github.Secret import Secret
+    from github.SecretScanAlert import SecretScanAlert
     from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner
     from github.SourceImport import SourceImport
@@ -326,8 +343,10 @@ if TYPE_CHECKING:
     from github.StatsPunchCard import StatsPunchCard
     from github.Tag import Tag
     from github.Team import Team
+    from github.Variable import Variable
     from github.View import View
     from github.Workflow import Workflow
+    from github.WorkflowJob import WorkflowJob
     from github.WorkflowRun import WorkflowRun
 
 
@@ -459,10 +478,16 @@ class Repository(CompletableGithubObject):
         self._web_commit_signoff_required: Attribute[bool] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"full_name": self._full_name.value})
+        if is_defined(self._full_name) or is_undefined(self._id):
+            return self.get__repr__({"full_name": self._full_name.value})
+        return self.get__repr__({"id": self._id.value})
 
     @property
     def _identity(self) -> str:
+        if is_undefined(self._owner) or is_undefined(self._name):
+            if is_undefined(self._full_name):
+                return str(self._id.value)
+            return self.full_name
         return f"{self.owner.login}/{self.name}"
 
     @property
@@ -1199,7 +1224,7 @@ class Repository(CompletableGithubObject):
         return self._temp_clone_token.value
 
     @property
-    def template_repository(self) -> github.Repository.Repository:
+    def template_repository(self) -> Repository:
         self._completeIfNotSet(self._template_repository)
         return self._template_repository.value
 
@@ -1229,8 +1254,6 @@ class Repository(CompletableGithubObject):
 
     @property
     def url(self) -> str:
-        if is_undefined(self._url) and is_defined(self._owner) and is_defined(self._name):
-            self._url = self._makeStringAttribute(self._requester.base_url + f"/repos/{self.owner.login}/{self.name}")
         self._completeIfNotSet(self._url)
         return self._url.value
 
@@ -1275,7 +1298,7 @@ class Repository(CompletableGithubObject):
 
     def add_to_collaborators(self, collaborator: str | NamedUser, permission: Opt[str] = NotSet) -> Invitation | None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
+        :calls: `PUT /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/collaborators/collaborators#add-a-repository-collaborator>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :param permission: string 'pull', 'push', 'admin', 'maintain', 'triage', or a custom repository role name, if the owning organization has defined any
         :rtype: None
@@ -1357,27 +1380,24 @@ class Repository(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/invitations/{invite_id}")
 
-    def compare(self, base: str, head: str) -> Comparison:
+    def compare(self, base: str, head: str, *, comparison_commits_per_page: int | None = None) -> Comparison:
         """
-        :calls: `GET /repos/{owner}/{repo}/compare/{base...:head} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
+        :calls: `GET /repos/{owner}/{repo}/compare/{basehead} <https://docs.github.com/en/rest/commits/commits#compare-two-commits>`_
         :param base: string
         :param head: string
+        :param comparison_commits_per_page: int Number of commits retrieved with the comparison. Iterating over the commits property will fetch pages of this size. The default page size is 250, the maximum is 1000. At most 10000 commits can be retrieved.
         :rtype: :class:`github.Comparison.Comparison`
         """
         assert isinstance(base, str), base
         assert isinstance(head, str), head
+        # comparison_commits_per_page asserted in Commit(CompletableGithubObjectWithPaginatedProperty)
         base = urllib.parse.quote(base)
         head = urllib.parse.quote(head)
-        # the compare API has a per_page default of 250, which is different to Consts.DEFAULT_PER_PAGE
-        per_page = self._requester.per_page if self._requester.per_page != Consts.DEFAULT_PER_PAGE else 250
-        # only with page=1 we get the pagination headers for the commits element
-        params = {"page": 1, "per_page": per_page}
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/compare/{base}...{head}", params)
-        return github.Comparison.Comparison(self._requester, headers, data, completed=True)
+        return github.Comparison.Comparison(
+            self._requester, url=f"{self.url}/compare/{base}...{head}", per_page=comparison_commits_per_page
+        )
 
-    def create_autolink(
-        self, key_prefix: str, url_template: str, is_alphanumeric: Opt[bool] = NotSet
-    ) -> github.Autolink.Autolink:
+    def create_autolink(self, key_prefix: str, url_template: str, is_alphanumeric: Opt[bool] = NotSet) -> Autolink:
         """
         :calls: `POST /repos/{owner}/{repo}/autolinks <http://docs.github.com/en/rest/reference/repos>`_
         :param key_prefix: string
@@ -1597,7 +1617,7 @@ class Repository(CompletableGithubObject):
             "POST", f"{self.url}/releases/generate-notes", input=post_parameters
         )
 
-        return GeneratedReleaseNotes(self._requester, headers, data)
+        return github.GeneratedReleaseNotes.GeneratedReleaseNotes(self._requester, headers, data)
 
     def create_git_tag(
         self,
@@ -1826,8 +1846,9 @@ class Repository(CompletableGithubObject):
         body: Opt[str] = NotSet,
         maintainer_can_modify: Opt[bool] = NotSet,
         draft: Opt[bool] = NotSet,
-        issue: Opt[github.Issue.Issue] = NotSet,
-    ) -> github.PullRequest.PullRequest:
+        issue: Opt[Issue] = NotSet,
+        head_repo: Opt[str] = NotSet,
+    ) -> PullRequest:
         """
         :calls: `POST /repos/{owner}/{repo}/pulls <https://docs.github.com/en/free-pro-team@latest/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request>`_
         """
@@ -1838,6 +1859,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(maintainer_can_modify, bool), maintainer_can_modify
         assert is_optional(draft, bool), draft
         assert is_optional(issue, github.Issue.Issue), issue
+        assert is_optional(head_repo, str), head_repo
 
         post_parameters = NotSet.remove_unset_items(
             {
@@ -1847,6 +1869,7 @@ class Repository(CompletableGithubObject):
                 "body": body,
                 "maintainer_can_modify": maintainer_can_modify,
                 "draft": draft,
+                "head_repo": head_repo,
             }
         )
 
@@ -1862,10 +1885,10 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
+        vulnerabilities: Iterable[AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
-    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        credits: Iterable[AdvisoryCredit] | None = None,
+    ) -> RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param summary: string
@@ -1894,10 +1917,10 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None = None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None = None,
+        vulnerabilities: Iterable[AdvisoryVulnerabilityInput] | None = None,
         cwe_ids: Iterable[str] | None = None,
-        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None = None,
-    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+        credits: Iterable[AdvisoryCredit] | None = None,
+    ) -> RepositoryAdvisory:
         """
         :calls: `POST /repos/{owner}/{repo}/security-advisories/reports <https://docs.github.com/en/rest/security-advisories/repository-advisories#privately-report-a-security-vulnerability>`_
         :param summary: string
@@ -1926,11 +1949,11 @@ class Repository(CompletableGithubObject):
         description: str,
         severity_or_cvss_vector_string: str,
         cve_id: str | None,
-        vulnerabilities: Iterable[github.AdvisoryVulnerability.AdvisoryVulnerabilityInput] | None,
+        vulnerabilities: Iterable[AdvisoryVulnerabilityInput] | None,
         cwe_ids: Iterable[str] | None,
-        credits: Iterable[github.AdvisoryCredit.AdvisoryCredit] | None,
+        credits: Iterable[AdvisoryCredit] | None,
         private_vulnerability_reporting: bool,
-    ) -> github.RepositoryAdvisory.RepositoryAdvisory:
+    ) -> RepositoryAdvisory:
         if vulnerabilities is None:
             vulnerabilities = []
         if cwe_ids is None:
@@ -1995,39 +2018,36 @@ class Repository(CompletableGithubObject):
         secret_name: str,
         unencrypted_value: str,
         secret_type: str = "actions",
-    ) -> github.Secret.Secret:
+    ) -> Secret:
         """
-        :calls: `PUT /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-a-repository-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
-        secret_name = urllib.parse.quote(secret_name, safe="")
+        quoted_secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/{secret_type}/secrets/{quoted_secret_name}"
         public_key = self.get_public_key(secret_type=secret_type)
         payload = public_key.encrypt(unencrypted_value)
         put_parameters = {
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/{secret_type}/secrets/{secret_name}", input=put_parameters
-        )
+        self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
         return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={
-                "name": secret_name,
-                "url": f"{self.url}/{secret_type}/secrets/{secret_name}",
-            },
+            self._requester,
+            url=url,
+            attributes={"name": secret_name},
             completed=False,
         )
 
     def get_secrets(
         self,
         secret_type: str = "actions",
-    ) -> PaginatedList[github.Secret.Secret]:
+    ) -> PaginatedList[Secret]:
         """
         Gets all repository secrets :param secret_type: string options actions or dependabot.
         """
@@ -2044,25 +2064,22 @@ class Repository(CompletableGithubObject):
             list_item="secrets",
         )
 
-    def get_secret(self, secret_name: str, secret_type: str = "actions") -> github.Secret.Secret:
+    def get_secret(self, secret_name: str, secret_type: str = "actions") -> Secret:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#get-an-organization-secret>`_
+        :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/actions/dependabot#get-an-organization-secret>`_
         :param secret_type: string options actions or dependabot
         """
         assert isinstance(secret_name, str), secret_name
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
         secret_name = urllib.parse.quote(secret_name, safe="")
-        return github.Secret.Secret(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/{secret_type}/secrets/{secret_name}"},
-            completed=False,
-        )
+        url = f"{self.url}/{secret_type}/secrets/{secret_name}"
+        return github.Secret.Secret(self._requester, url=url)
 
-    def create_variable(self, variable_name: str, value: str) -> github.Variable.Variable:
+    def create_variable(self, variable_name: str, value: str) -> Variable:
         """
-        :calls: `POST /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
+        :calls: `POST /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/actions/variables#create-a-repository-variable>`_
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -2071,18 +2088,20 @@ class Repository(CompletableGithubObject):
             "value": value,
         }
         self._requester.requestJsonAndCheck("POST", f"{self.url}/actions/variables", input=post_parameters)
+
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/actions/variables/{quoted_variable_name}"
         return github.Variable.Variable(
             self._requester,
-            headers={},
+            url=url,
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": f"{self.url}/actions/variables/{variable_name}",
             },
             completed=False,
         )
 
-    def get_variables(self) -> PaginatedList[github.Variable.Variable]:
+    def get_variables(self) -> PaginatedList[Variable]:
         """
         Gets all repository variables :rtype: :class:`PaginatedList` of :class:`github.Variable.Variable`
         """
@@ -2095,24 +2114,21 @@ class Repository(CompletableGithubObject):
             list_item="variables",
         )
 
-    def get_variable(self, variable_name: str) -> github.Variable.Variable:
+    def get_variable(self, variable_name: str) -> Variable:
         """
-        :calls: `GET /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#get-an-organization-variable>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/rest/actions/variables#get-a-repository-variable>`_
         :param variable_name: string
         :rtype: github.Variable.Variable
         """
         assert isinstance(variable_name, str), variable_name
         variable_name = urllib.parse.quote(variable_name, safe="")
-        return github.Variable.Variable(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/actions/variables/{variable_name}"},
-            completed=False,
-        )
+        url = f"{self.url}/actions/variables/{variable_name}"
+        return github.Variable.Variable(self._requester, url=url)
 
     def delete_secret(self, secret_name: str, secret_type: str = "actions") -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/{secret_type}/secrets/{secret_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name} <https://docs.github.com/rest/actions/secrets#get-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/dependabot/secrets/{secret_name} <https://docs.github.com/rest/dependabot/secrets#get-a-repository-secret>`_
         :param secret_name: string
         :param secret_type: string options actions or dependabot
         :rtype: bool
@@ -2125,7 +2141,7 @@ class Repository(CompletableGithubObject):
 
     def delete_variable(self, variable_name: str) -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions#delete-a-repository-variable>`_
         :param variable_name: string
         :rtype: bool
         """
@@ -2203,6 +2219,7 @@ class Repository(CompletableGithubObject):
         archived: Opt[bool] = NotSet,
         allow_forking: Opt[bool] = NotSet,
         web_commit_signoff_required: Opt[bool] = NotSet,
+        security_and_analysis: Opt[dict[str, Any]] = NotSet,
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -2239,6 +2256,7 @@ class Repository(CompletableGithubObject):
         assert is_optional(archived, bool), archived
         assert is_optional(allow_forking, bool), allow_forking
         assert is_optional(web_commit_signoff_required, bool), web_commit_signoff_required
+        assert is_optional(security_and_analysis, dict), security_and_analysis
 
         post_parameters: dict[str, Any] = NotSet.remove_unset_items(
             {
@@ -2267,11 +2285,13 @@ class Repository(CompletableGithubObject):
                 "archived": archived,
                 "allow_forking": allow_forking,
                 "web_commit_signoff_required": web_commit_signoff_required,
+                "security_and_analysis": security_and_analysis,
             }
         )
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_archive_link(self, archive_format: str, ref: Opt[str] = NotSet) -> str:
         """
@@ -2368,13 +2388,13 @@ class Repository(CompletableGithubObject):
 
     def get_comment(self, id: int) -> CommitComment:
         """
-        :calls: `GET /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :param id: integer
         :rtype: :class:`github.CommitComment.CommitComment`
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/comments/{id}")
-        return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
+        url = f"{self.url}/comments/{id}"
+        return github.CommitComment.CommitComment(self._requester, url=url)
 
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
@@ -2388,16 +2408,18 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def get_commit(self, sha: str) -> Commit:
+    def get_commit(self, sha: str, *, commit_files_per_page: int | None = None) -> Commit:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha} <https://docs.github.com/en/rest/reference/repos#commits>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
         :param sha: string
+        :param commit_files_per_page: int Number of files retrieved with the commit. Iterating over the files property will fetch pages of this size. Default is 300. Maximum is 300. At most 3000 files can be retrieved.
         :rtype: :class:`github.Commit.Commit`
         """
         assert isinstance(sha, str), sha
-        sha = urllib.parse.quote(sha)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/commits/{sha}")
-        return github.Commit.Commit(self._requester, headers, data, completed=True)
+        # commit_files_per_page asserted in Commit(CompletableGithubObjectWithPaginatedProperty)
+        sha = urllib.parse.quote(sha, safe="")
+        url = f"{self.url}/commits/{sha}"
+        return github.Commit.Commit(self._requester, url=url, per_page=commit_files_per_page)
 
     def get_commits(
         self,
@@ -2513,16 +2535,12 @@ class Repository(CompletableGithubObject):
     def get_deployment(self, id_: int) -> Deployment:
         """
         :calls: `GET /repos/{owner}/{repo}/deployments/{deployment_id} <https://docs.github.com/en/rest/reference/repos#deployments>`_
-        :param: id_: int
+        :param: id: int
         :rtype: :class:`github.Deployment.Deployment`
         """
         assert isinstance(id_, int), id_
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            f"{self.url}/deployments/{id_}",
-            headers={"Accept": Consts.deploymentEnhancementsPreview},
-        )
-        return github.Deployment.Deployment(self._requester, headers, data, completed=True)
+        url = f"{self.url}/deployments/{id_}"
+        return github.Deployment.Deployment(self._requester, url=url, accept=Consts.deploymentEnhancementsPreview)
 
     def create_deployment(
         self,
@@ -2789,7 +2807,7 @@ class Repository(CompletableGithubObject):
 
     def get_repository_advisories(
         self,
-    ) -> PaginatedList[github.RepositoryAdvisory.RepositoryAdvisory]:
+    ) -> PaginatedList[RepositoryAdvisory]:
         """
         :calls: `GET /repos/{owner}/{repo}/security-advisories <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :rtype: :class:`PaginatedList` of :class:`github.RepositoryAdvisory.RepositoryAdvisory`
@@ -2801,9 +2819,9 @@ class Repository(CompletableGithubObject):
             None,
         )
 
-    def get_repository_advisory(self, ghsa: str) -> github.RepositoryAdvisory.RepositoryAdvisory:
+    def get_repository_advisory(self, ghsa: str) -> RepositoryAdvisory:
         """
-        :calls: `GET /repos/{owner}/{repo}/security-advisories/{ghsa} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
+        :calls: `GET /repos/{owner}/{repo}/security-advisories/{ghsa_id} <https://docs.github.com/en/rest/security-advisories/repository-advisories>`_
         :param ghsa: string
         :rtype: :class:`github.RepositoryAdvisory.RepositoryAdvisory`
         """
@@ -2959,8 +2977,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Download.Download`
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/downloads/{id}")
-        return github.Download.Download(self._requester, headers, data, completed=True)
+        url = f"{self.url}/downloads/{id}"
+        return github.Download.Download(self._requester, url=url)
 
     def get_downloads(self) -> PaginatedList[Download]:
         """
@@ -3018,23 +3036,23 @@ class Repository(CompletableGithubObject):
 
     def get_git_blob(self, sha: str) -> GitBlob:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/blobs/{sha} <https://docs.github.com/en/rest/reference/git#blobs>`_
+        :calls: `GET /repos/{owner}/{repo}/git/blobs/{file_sha} <https://docs.github.com/en/rest/reference/git#blobs>`_
         :param sha: string
         :rtype: :class:`github.GitBlob.GitBlob`
         """
         assert isinstance(sha, str), sha
-        sha = urllib.parse.quote(sha)
+        sha = urllib.parse.quote(sha, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/blobs/{sha}")
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
     def get_git_commit(self, sha: str) -> GitCommit:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/commits/{sha} <https://docs.github.com/en/rest/reference/git#commits>`_
+        :calls: `GET /repos/{owner}/{repo}/git/commits/{commit_sha} <https://docs.github.com/en/rest/reference/git#commits>`_
         :param sha: string
         :rtype: :class:`github.GitCommit.GitCommit`
         """
         assert isinstance(sha, str), sha
-        sha = urllib.parse.quote(sha)
+        sha = urllib.parse.quote(sha, safe="")
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/git/commits/{sha}")
         return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
@@ -3048,9 +3066,9 @@ class Repository(CompletableGithubObject):
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, str), ref
-        ref = urllib.parse.quote(ref)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}{prefix}{ref}")
-        return github.GitRef.GitRef(self._requester, headers, data, completed=True)
+        quoted_ref = urllib.parse.quote(ref)
+        url = f"{self.url}{prefix}{quoted_ref}"
+        return github.GitRef.GitRef(self._requester, url=url, attributes={"ref": ref})
 
     def get_git_refs(self) -> PaginatedList[GitRef]:
         """
@@ -3075,7 +3093,7 @@ class Repository(CompletableGithubObject):
 
     def get_git_tag(self, sha: str) -> GitTag:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/tags/{sha} <https://docs.github.com/en/rest/reference/git#tags>`_
+        :calls: `GET /repos/{owner}/{repo}/git/tags/{tag_sha} <https://docs.github.com/en/rest/reference/git#tags>`_
         :param sha: string
         :rtype: :class:`github.GitTag.GitTag`
         """
@@ -3086,14 +3104,14 @@ class Repository(CompletableGithubObject):
 
     def get_git_tree(self, sha: str, recursive: Opt[bool] = NotSet) -> GitTree:
         """
-        :calls: `GET /repos/{owner}/{repo}/git/trees/{sha} <https://docs.github.com/en/rest/reference/git#trees>`_
+        :calls: `GET /repos/{owner}/{repo}/git/trees/{tree_sha} <https://docs.github.com/en/rest/reference/git#trees>`_
         :param sha: string
         :param recursive: bool
         :rtype: :class:`github.GitTree.GitTree`
         """
         assert isinstance(sha, str), sha
         assert is_optional(recursive, bool), recursive
-        sha = urllib.parse.quote(sha)
+        sha = urllib.parse.quote(sha, safe="")
         url_parameters = dict()
         if is_defined(recursive) and recursive:
             # GitHub API requires the recursive parameter be set to 1.
@@ -3105,13 +3123,13 @@ class Repository(CompletableGithubObject):
 
     def get_hook(self, id: int) -> Hook:
         """
-        :calls: `GET /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         :param id: integer
         :rtype: :class:`github.Hook.Hook`
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/hooks/{id}")
-        return github.Hook.Hook(self._requester, headers, data, completed=True)
+        url = f"{self.url}/hooks/{id}"
+        return github.Hook.Hook(self._requester, url=url)
 
     def get_hooks(self) -> PaginatedList[Hook]:
         """
@@ -3120,7 +3138,7 @@ class Repository(CompletableGithubObject):
         """
         return PaginatedList(github.Hook.Hook, self._requester, f"{self.url}/hooks", None)
 
-    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> github.HookDelivery.HookDelivery:
+    def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
         """
         :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id} <https://docs.github.com/en/rest/webhooks/repo-deliveries>`_
         :param hook_id: integer
@@ -3134,7 +3152,7 @@ class Repository(CompletableGithubObject):
         )
         return github.HookDelivery.HookDelivery(self._requester, headers, data)
 
-    def get_hook_deliveries(self, hook_id: int) -> PaginatedList[github.HookDelivery.HookDeliverySummary]:
+    def get_hook_deliveries(self, hook_id: int) -> PaginatedList[HookDeliverySummary]:
         """
         :calls: `GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries <https://docs.github.com/en/rest/webhooks/repo-deliveries>`_
         :param hook_id: integer
@@ -3151,13 +3169,13 @@ class Repository(CompletableGithubObject):
 
     def get_issue(self, number: int) -> Issue:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number} <https://docs.github.com/en/rest/reference/issues>`_
         :param number: integer
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(number, int), number
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/issues/{number}")
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        url = f"{self.url}/issues/{number}"
+        return github.Issue.Issue(self._requester, url=url)
 
     def get_issues(
         self,
@@ -3170,6 +3188,7 @@ class Repository(CompletableGithubObject):
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
         creator: Opt[NamedUser] = NotSet,
+        type: Opt[str] = NotSet,
     ) -> PaginatedList[Issue]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues <https://docs.github.com/en/rest/reference/issues>`_
@@ -3182,11 +3201,13 @@ class Repository(CompletableGithubObject):
         :param direction: string
         :param since: datetime
         :param creator: string or :class:`github.NamedUser.NamedUser`
+        :param type: string
         :rtype: :class:`PaginatedList` of :class:`github.Issue.Issue`
         """
         assert milestone in ["*", "none", NotSet] or isinstance(milestone, github.Milestone.Milestone), milestone
         assert is_optional(state, str), state
         assert is_optional(assignee, (str, github.NamedUser.NamedUser)), assignee
+        assert is_optional(type, str), type
         assert is_optional(mentioned, github.NamedUser.NamedUser), mentioned
         assert is_optional_list(labels, (github.Label.Label, str)), labels
         assert is_optional(sort, str), sort
@@ -3206,6 +3227,8 @@ class Repository(CompletableGithubObject):
                 url_parameters["assignee"] = assignee._identity
             else:
                 url_parameters["assignee"] = assignee
+        if is_defined(type):
+            url_parameters["type"] = type
         if is_defined(mentioned):
             url_parameters["mentioned"] = mentioned._identity
         if is_defined(labels):
@@ -3257,7 +3280,7 @@ class Repository(CompletableGithubObject):
 
     def get_issues_event(self, id: int) -> IssueEvent:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/events/{id} <https://docs.github.com/en/rest/reference/issues#events>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/events/{event_id} <https://docs.github.com/en/rest/reference/issues#events>`_
         :param id: integer
         :rtype: :class:`github.IssueEvent.IssueEvent`
         """
@@ -3284,13 +3307,13 @@ class Repository(CompletableGithubObject):
 
     def get_key(self, id: int) -> RepositoryKey:
         """
-        :calls: `GET /repos/{owner}/{repo}/keys/{id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
+        :calls: `GET /repos/{owner}/{repo}/keys/{key_id} <https://docs.github.com/en/rest/reference/repos#deploy-keys>`_
         :param id: integer
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/keys/{id}")
-        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True)
+        url = f"{self.url}/keys/{id}"
+        return github.RepositoryKey.RepositoryKey(self._requester, url=url)
 
     def get_keys(self) -> PaginatedList[RepositoryKey]:
         """
@@ -3311,10 +3334,9 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.Label.Label`
         """
         assert isinstance(name, str), name
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET", f"{self.url}/labels/{urllib.parse.quote(name, safe='')}"
-        )
-        return github.Label.Label(self._requester, headers, data, completed=True)
+        label_name = urllib.parse.quote(name, safe="")
+        url = f"{self.url}/labels/{label_name}"
+        return github.Label.Label(self._requester, url=url)
 
     def get_labels(self) -> PaginatedList[Label]:
         """
@@ -3342,13 +3364,13 @@ class Repository(CompletableGithubObject):
 
     def get_milestone(self, number: int) -> Milestone:
         """
-        :calls: `GET /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `GET /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         :param number: integer
         :rtype: :class:`github.Milestone.Milestone`
         """
         assert isinstance(number, int), number
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/milestones/{number}")
-        return github.Milestone.Milestone(self._requester, headers, data, completed=True)
+        url = f"{self.url}/milestones/{number}"
+        return github.Milestone.Milestone(self._requester, url=url)
 
     def get_milestones(
         self,
@@ -3394,7 +3416,8 @@ class Repository(CompletableGithubObject):
 
     def get_public_key(self, secret_type: str = "actions") -> PublicKey:
         """
-        :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/en/rest/reference/actions#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/secrets/public-key <https://docs.github.com/rest/actions/secrets#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/dependabot/secrets/public-key <https://docs.github.com/rest/dependabot/secrets#get-a-repository-public-key>`_
         :param secret_type: string options actions or dependabot
         :rtype: :class:`github.PublicKey.PublicKey`
         """
@@ -3405,13 +3428,13 @@ class Repository(CompletableGithubObject):
 
     def get_pull(self, number: int) -> PullRequest:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls>`_
         :param number: integer
         :rtype: :class:`github.PullRequest.PullRequest`
         """
         assert isinstance(number, int), number
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/pulls/{number}")
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+        url = f"{self.url}/pulls/{number}"
+        return github.PullRequest.PullRequest(self._requester, url=url)
 
     def get_pulls(
         self,
@@ -3460,7 +3483,7 @@ class Repository(CompletableGithubObject):
         since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#comments>`__
         :param sort: string
         :param direction: string
         :param since: datetime
@@ -3475,7 +3498,7 @@ class Repository(CompletableGithubObject):
         since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_:
         :param sort: string 'created', 'updated', 'created_at'
         :param direction: string 'asc' or 'desc'
         :param since: datetime
@@ -3513,7 +3536,7 @@ class Repository(CompletableGithubObject):
 
     def get_self_hosted_runner(self, runner_id: int) -> SelfHostedActionsRunner:
         """
-        :calls: `GET /repos/{owner}/{repo}/actions/runners/{id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository>`_
+        :calls: `GET /repos/{owner}/{repo}/actions/runners/{runner_id} <https://docs.github.com/en/rest/reference/actions#get-a-self-hosted-runner-for-a-repository>`_
         :param runner_id: int
         :rtype: :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         """
@@ -3655,26 +3678,27 @@ class Repository(CompletableGithubObject):
 
     def get_release(self, id: int | str) -> GitRelease:
         """
-        :calls: `GET /repos/{owner}/{repo}/releases/{id} <https://docs.github.com/en/rest/reference/repos#get-a-release>`_
+        :calls: `GET /repos/{owner}/{repo}/releases/{release_id} <https://docs.github.com/en/rest/reference/repos#get-a-release>`_
         :param id: int (release id), str (tag name)
         :rtype: None or :class:`github.GitRelease.GitRelease`
         """
         assert isinstance(id, (int, str)), id
         if isinstance(id, int):
-            headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/{id}")
-            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
-        elif isinstance(id, str):
-            id = urllib.parse.quote(id, safe="")
-            headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/tags/{id}")
-            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+            url = f"{self.url}/releases/{id}"
+            return github.GitRelease.GitRelease(self._requester, url=url)
+        else:
+            tag = urllib.parse.quote(id, safe="")
+            url = f"{self.url}/releases/tags/{tag}"
+            # a release by tag cannot be lazy, we need to get the url with release id
+            return github.GitRelease.GitRelease(self._requester, url=url).complete()
 
     def get_latest_release(self) -> GitRelease:
         """
         :calls: `GET /repos/{owner}/{repo}/releases/latest <https://docs.github.com/en/rest/reference/repos#get-the-latest-release>`_
         :rtype: :class:`github.GitRelease.GitRelease`
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/latest")
-        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+        url = f"{self.url}/releases/latest"
+        return github.GitRelease.GitRelease(self._requester, url=url)
 
     def get_teams(self) -> PaginatedList[Team]:
         """
@@ -3723,8 +3747,8 @@ class Repository(CompletableGithubObject):
         """
         assert isinstance(id_or_file_name, (int, str)), id_or_file_name
         id_or_file_name = urllib.parse.quote(str(id_or_file_name), safe="")
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/workflows/{id_or_file_name}")
-        return github.Workflow.Workflow(self._requester, headers, data, completed=True)
+        url = f"{self.url}/actions/workflows/{id_or_file_name}"
+        return github.Workflow.Workflow(self._requester, url=url)
 
     def get_workflow_runs(
         self,
@@ -3798,8 +3822,18 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.WorkflowRun.WorkflowRun`
         """
         assert isinstance(id_, int)
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/runs/{id_}")
-        return github.WorkflowRun.WorkflowRun(self._requester, headers, data, completed=True)
+        url = f"{self.url}/actions/runs/{id_}"
+        return github.WorkflowRun.WorkflowRun(self._requester, url=url)
+
+    def get_workflow_job(self, id_: int) -> WorkflowJob:
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/jobs/{job_id} <https://docs.github.com/en/rest/actions/workflow-jobs#get-a-job-for-a-workflow-run>`_
+        :param id_: int
+        :rtype: :class:`github.WorkflowJob.WorkflowJob`
+        """
+        assert isinstance(id_, int)
+        url = f"{self.url}/actions/jobs/{id_}"
+        return github.WorkflowJob.WorkflowJob(self._requester, url=url)
 
     def has_in_assignees(self, assignee: str | NamedUser) -> bool:
         """
@@ -3819,7 +3853,7 @@ class Repository(CompletableGithubObject):
 
     def has_in_collaborators(self, collaborator: str | NamedUser) -> bool:
         """
-        :calls: `GET /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `GET /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -4039,7 +4073,7 @@ class Repository(CompletableGithubObject):
 
     def remove_from_collaborators(self, collaborator: str | NamedUser) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/collaborators/{user} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
+        :calls: `DELETE /repos/{owner}/{repo}/collaborators/{username} <https://docs.github.com/en/rest/reference/repos#collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -4070,7 +4104,7 @@ class Repository(CompletableGithubObject):
 
     def remove_autolink(self, autolink: Autolink | int) -> bool:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/autolinks/{id} <https://docs.github.com/en/rest/reference/repos>`_
+        :calls: `DELETE /repos/{owner}/{repo}/autolinks/{autolink_id} <https://docs.github.com/en/rest/reference/repos>`_
         :param autolink: int or :class:`github.Autolink.Autolink`
         :rtype: None
         """
@@ -4123,13 +4157,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.CheckSuite.CheckSuite`
         """
         assert isinstance(check_suite_id, int), check_suite_id
-        requestHeaders = {"Accept": "application/vnd.github.v3+json"}
-        headers, data = self._requester.requestJsonAndCheck(
-            "GET",
-            f"{self.url}/check-suites/{check_suite_id}",
-            headers=requestHeaders,
-        )
-        return github.CheckSuite.CheckSuite(self._requester, headers, data)
+        url = f"{self.url}/check-suites/{check_suite_id}"
+        return github.CheckSuite.CheckSuite(self._requester, url=url, accept="application/vnd.github.v3+json")
 
     def update_check_suites_preferences(
         self, auto_trigger_checks: list[dict[str, bool | int]]
@@ -4164,9 +4193,9 @@ class Repository(CompletableGithubObject):
         headers, output = self._requester.requestMultipartAndCheck("POST", "/hub", input=post_parameters)
 
     def get_release_asset(self, id: int) -> GitReleaseAsset:
-        assert isinstance(id, (int)), id
-        resp_headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/releases/assets/{id}")
-        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
+        assert isinstance(id, int), id
+        url = f"{self.url}/releases/assets/{id}"
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, url=url)
 
     def create_check_run(
         self,
@@ -4238,8 +4267,8 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`github.CheckRun.CheckRun`
         """
         assert isinstance(check_run_id, int), check_run_id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/check-runs/{check_run_id}")
-        return github.CheckRun.CheckRun(self._requester, headers, data, completed=True)
+        url = f"{self.url}/check-runs/{check_run_id}"
+        return github.CheckRun.CheckRun(self._requester, url=url)
 
     def get_artifacts(self, name: Opt[str] = NotSet) -> PaginatedList[Artifact]:
         """
@@ -4270,25 +4299,170 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/actions/artifacts/{artifact_id}")
         return github.Artifact.Artifact(self._requester, headers, data)
 
-    def get_codescan_alerts(self) -> PaginatedList[CodeScanAlert]:
+    def get_codescan_alerts(
+        self,
+        tool_name: Opt[str] = NotSet,
+        tool_guid: Opt[str] = NotSet,
+        ref: Opt[str] = NotSet,
+        pr: Opt[int] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        state: Opt[str] = NotSet,
+        severity: Opt[str] = NotSet,
+    ) -> PaginatedList[CodeScanAlert]:
         """
-        :calls: `GET https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
+        :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts <https://docs.github.com/en/rest/reference/code-scanning#list-code-scanning-alerts-for-a-repository>`_
+        :param tool_name: Optional string
+        :param tool_guid: Optional string
+        :param ref: Optional string
+        :param pr: Optional integer
+        :param sort: Optional string
+        :param direction: Optional string
+        :param state: Optional string
+        :param severity: Optional string
         :rtype: :class:`PaginatedList` of :class:`github.CodeScanAlert.CodeScanAlert`
         """
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        allowed_states = ["open", "closed", "dismissed", "fixed"]
+        allowed_severities = ["critical", "high", "medium", "low", "warning", "note", "error"]
+        assert is_optional(tool_name, str), tool_name
+        assert is_optional(tool_guid, str), tool_guid
+        assert (
+            tool_name is NotSet or tool_guid is NotSet
+        ), "You can specify the tool by using either tool_guid or tool_name, but not both."
+        assert is_optional(ref, str), ref
+        assert is_optional(pr, int), pr
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        assert severity in allowed_severities + [NotSet], f"Severity can be one of {', '.join(allowed_severities)}"
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "tool_name": tool_name,
+                "tool_guid": tool_guid,
+                "ref": ref,
+                "pr": pr,
+                "sort": sort,
+                "direction": direction,
+                "state": state,
+                "severity": severity,
+            }
+        )
         return PaginatedList(
             github.CodeScanAlert.CodeScanAlert,
             self._requester,
             f"{self.url}/code-scanning/alerts",
-            None,
+            url_parameters,
         )
+
+    def get_codescan_alert(self, number: int) -> CodeScanAlert:
+        """
+        :calls: `GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number} <https://docs.github.com/en/rest/code-scanning/code-scanning#get-a-code-scanning-alert>`_
+        :param number: int
+        :rtype: :class:`github.CodeScanAlert.CodeScanAlert`
+        """
+        assert isinstance(number, int), number
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-scanning/alerts/{number}")
+        return github.CodeScanAlert.CodeScanAlert(self._requester, headers, data)
+
+    def get_secret_scanning_alerts(
+        self,
+        state: Opt[str] = NotSet,
+        secret_type: Opt[str] = NotSet,
+        resolution: Opt[str] = NotSet,
+        sort: Opt[str] = NotSet,
+        direction: Opt[str] = NotSet,
+        validity: Opt[str] = NotSet,
+        is_publicly_leaked: Opt[bool] = NotSet,
+        is_multi_repo: Opt[bool] = NotSet,
+        hide_secret: Opt[bool] = NotSet,
+    ) -> PaginatedList[SecretScanAlert]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/secret-scanning/alerts <https://docs.github.com/en/rest/secret-scanning/secret-scanning#list-secret-scanning-alerts-for-a-repository>`_
+        :param state: Optional string
+        :param secret_type: Optional string
+        :param resolution: Optional string
+        :param sort: Optional string
+        :param direction: Optional string
+        :param validity: Optional string
+        :param is_publicly_leaked: Optional bool
+        :param is_multi_repo: Optional bool
+        :param hide_secret: Optional bool
+        :rtype: :class:`PaginatedList` of :class:`github.SecretScanAlert.SecretScanAlert`
+        """
+        allowed_states = ["open", "resolved"]
+        # allowed_secret_types = ["http_basic_authentication_header", "http_bearer_authentication_header", ...]
+        allowed_resolutions = [
+            "false_positive",
+            "wont_fix",
+            "revoked",
+            "pattern_edited",
+            "pattern_deleted",
+            "used_in_tests",
+        ]
+        allowed_sorts = ["created", "updated"]
+        allowed_directions = ["asc", "desc"]
+        allowed_validities = ["active", "inactive", "unknown"]
+        assert state in allowed_states + [NotSet], f"State can be one of {', '.join(allowed_states)}"
+        # assert secret_type in allowed_secret_types + [NotSet], \
+        # "Secret_type can be one of the tokens listed on \
+        # https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets"
+        assert resolution in allowed_resolutions + [
+            NotSet
+        ], f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
+        assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
+        assert validity in allowed_validities + [NotSet], f"Validity can be one of {', '.join(allowed_validities)}"
+        assert is_optional(is_publicly_leaked, bool), is_publicly_leaked
+        assert is_optional(is_multi_repo, bool), is_multi_repo
+        assert is_optional(hide_secret, bool), hide_secret
+        url_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "secret_type": secret_type,
+                "resolution": resolution,
+                "sort": sort,
+                "direction": direction,
+                "validity": validity,
+                "is_publicly_leaked": is_publicly_leaked,
+                "is_multi_repo": is_multi_repo,
+                "hide_secret": hide_secret,
+            }
+        )
+        return PaginatedList(
+            github.SecretScanAlert.SecretScanAlert,
+            self._requester,
+            f"{self.url}/secret-scanning/alerts",
+            url_parameters,
+        )
+
+    def get_secret_scanning_alert(self, number: int, hide_secret: Opt[bool] = NotSet) -> SecretScanAlert:
+        """
+        :calls: `GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number} <https://docs.github.com/en/rest/secret-scanning/secret-scanning#get-a-secret-scanning-alert>`_
+        :param number: int
+        :param hide_secret: Optional bool
+        :rtype: :class:`github.SecretScanAlert.SecretScanAlert`
+        """
+        assert isinstance(number, int), number
+        assert is_optional(hide_secret, bool), hide_secret
+        query_parameters = NotSet.remove_unset_items(
+            {
+                "hide_secret": hide_secret,
+            }
+        )
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/secret-scanning/alerts/{number}", parameters=query_parameters
+        )
+        return github.SecretScanAlert.SecretScanAlert(self._requester, headers, data)
 
     def get_environments(self) -> PaginatedList[Environment]:
         """
-        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
+        :calls: `GET /repos/{owner}/{repo}/environments <https://docs.github.com/en/rest/reference/deployments#get-all-environments>`_
         :rtype: :class:`PaginatedList` of :class:`github.Environment.Environment`
         """
         return PaginatedList(
-            Environment,
+            github.Environment.Environment,
             self._requester,
             f"{self.url}/environments",
             None,
@@ -4300,14 +4474,13 @@ class Repository(CompletableGithubObject):
 
     def get_environment(self, environment_name: str) -> Environment:
         """
-        :calls: `GET /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#get-an-environment>`_
         :rtype: :class:`github.Environment.Environment`
         """
         assert isinstance(environment_name, str), environment_name
         environment_name = urllib.parse.quote(environment_name, safe="")
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/environments/{environment_name}")
-        data["environments_url"] = f"/repositories/{self.id}/environments"
-        return Environment(self._requester, headers, data, completed=True)
+        url = f"{self.url}/environments/{environment_name}"
+        return github.Environment.Environment(self._requester, url=url)
 
     def create_environment(
         self,
@@ -4318,7 +4491,7 @@ class Repository(CompletableGithubObject):
         deployment_branch_policy: EnvironmentDeploymentBranchPolicyParams | None = None,
     ) -> Environment:
         """
-        :calls: `PUT /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#create-or-update-an-environment>`_
         :param environment_name: string
         :param wait_timer: int
         :param reviewers: List[:class:github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicyParams]
@@ -4352,12 +4525,13 @@ class Repository(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT", f"{self.url}/environments/{environment_name}", input=put_parameters
         )
-        data["environments_url"] = f"/repositories/{self.id}/environments"
-        return Environment(self._requester, headers, data, completed=True)
+        if "url" not in data:
+            data["url"] = f"{self.url}/environments/{environment_name}"
+        return github.Environment.Environment(self._requester, headers, data, completed=True)
 
     def delete_environment(self, environment_name: str) -> None:
         """
-        :calls: `DELETE /repositories/{self._repository.id}/environments/{self.environment_name}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name} <https://docs.github.com/en/rest/reference/deployments#delete-an-environment>`_
         :param environment_name: string
         :rtype: None
         """
@@ -4598,6 +4772,19 @@ class Repository(CompletableGithubObject):
             self._forks_url = self._makeStringAttribute(attributes["forks_url"])
         if "full_name" in attributes:  # pragma no branch
             self._full_name = self._makeStringAttribute(attributes["full_name"])
+        elif "url" in attributes and attributes["url"]:
+            url = attributes["url"]
+            if url.startswith(self.requester.base_url):
+                base_url = self.requester.base_url
+                if base_url.endswith("/"):
+                    base_url = base_url[:-1]
+                url = url.removeprefix(base_url)
+            if url.startswith("/repos/") and url.count("/") == 3:
+                self._full_name = self._makeStringAttribute(url.split("/", maxsplit=2)[-1])
+        elif "owner" in attributes and "login" in attributes["owner"] and "name" in attributes:
+            login = attributes["owner"]["login"]
+            name = attributes["name"]
+            self._full_name = self._makeStringAttribute(f"{login}/{name}")
         if "git_commits_url" in attributes:  # pragma no branch
             self._git_commits_url = self._makeStringAttribute(attributes["git_commits_url"])
         if "git_refs_url" in attributes:  # pragma no branch
@@ -4626,6 +4813,17 @@ class Repository(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes:
+            url = attributes["url"]
+            if url.startswith(self.requester.base_url):
+                base_url = self.requester.base_url
+                if base_url.endswith("/"):
+                    base_url = base_url[:-1]
+                url = url.removeprefix(base_url)
+            if url.startswith("/repositories/") and url.count("/") == 2:
+                id = url.split("/", maxsplit=2)[-1]
+                if id.isnumeric():
+                    self._id = self._makeIntAttribute(int(id))
         if "is_template" in attributes:  # pragma no branch
             self._is_template = self._makeBoolAttribute(attributes["is_template"])
         if "issue_comment_url" in attributes:  # pragma no branch
@@ -4658,6 +4856,18 @@ class Repository(CompletableGithubObject):
             self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes:
+            url = attributes["url"]
+            if url.startswith(self.requester.base_url):
+                base_url = self.requester.base_url
+                if base_url.endswith("/"):
+                    base_url = base_url[:-1]
+                url = url.removeprefix(base_url)
+            if url.startswith("/repos/") and url.count("/") == 3:
+                self._name = self._makeStringAttribute(attributes["url"].split("/")[-1])
+        elif "full_name" in attributes and "/" in attributes["full_name"]:
+            name = attributes["full_name"].split("/", 2)[1]
+            self._name = self._makeStringAttribute(name)
         if "network_count" in attributes:  # pragma no branch
             self._network_count = self._makeIntAttribute(attributes["network_count"])
         if "node_id" in attributes:  # pragma no branch
@@ -4723,9 +4933,7 @@ class Repository(CompletableGithubObject):
         if "temp_clone_token" in attributes:  # pragma no branch
             self._temp_clone_token = self._makeStringAttribute(attributes["temp_clone_token"])
         if "template_repository" in attributes:  # pragma no branch
-            self._template_repository = self._makeClassAttribute(
-                github.Repository.Repository, attributes["template_repository"]
-            )
+            self._template_repository = self._makeClassAttribute(Repository, attributes["template_repository"])
         if "topics" in attributes:  # pragma no branch
             self._topics = self._makeListOfStringsAttribute(attributes["topics"])
         if "trees_url" in attributes:  # pragma no branch
@@ -4734,6 +4942,14 @@ class Repository(CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        elif "owner" in attributes and "login" in attributes["owner"] and "name" in attributes:
+            login = attributes["owner"]["login"]
+            name = attributes["name"]
+            self._url = self._makeStringAttribute(f"/repos/{login}/{name}")
+        elif "full_name" in attributes:
+            self._url = self._makeStringAttribute(f"/repos/{attributes['full_name']}")
+        elif "id" in attributes:
+            self._url = self._makeStringAttribute(f"/repositories/{attributes['id']}")
         if "use_squash_pr_title_as_default" in attributes:  # pragma no branch
             self._use_squash_pr_title_as_default = self._makeBoolAttribute(attributes["use_squash_pr_title_as_default"])
         if "visibility" in attributes:  # pragma no branch

@@ -62,6 +62,7 @@ class CommitStatus(Framework.TestCase):
         self.assertEqual(self.status.description, "Status successfully created by PyGithub")
         self.assertEqual(self.status.id, 277040)
         self.assertIsNone(self.status.node_id)
+        self.assertIsNone(self.status.required)
         self.assertEqual(self.status.state, "success")
         self.assertEqual(self.status.target_url, "https://github.com/jacquev6/PyGithub/issues/67")
         self.assertEqual(

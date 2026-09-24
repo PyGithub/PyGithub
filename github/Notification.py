@@ -23,6 +23,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Matthias Bilger <matthias@bilger.info>                        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,7 +46,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.Issue
@@ -53,6 +54,12 @@ import github.NotificationSubject
 import github.PullRequest
 import github.Repository
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.Issue import Issue
+    from github.NotificationSubject import NotificationSubject
+    from github.PullRequest import PullRequest
+    from github.Repository import Repository
 
 
 class Notification(CompletableGithubObject):
@@ -72,8 +79,8 @@ class Notification(CompletableGithubObject):
         self._id: Attribute[str] = NotSet
         self._last_read_at: Attribute[datetime] = NotSet
         self._reason: Attribute[str] = NotSet
-        self._repository: Attribute[github.Repository.Repository] = NotSet
-        self._subject: Attribute[github.NotificationSubject.NotificationSubject] = NotSet
+        self._repository: Attribute[Repository] = NotSet
+        self._subject: Attribute[NotificationSubject] = NotSet
         self._subscription_url: Attribute[str] = NotSet
         self._unread: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -98,12 +105,12 @@ class Notification(CompletableGithubObject):
         return self._reason.value
 
     @property
-    def repository(self) -> github.Repository.Repository:
+    def repository(self) -> Repository:
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
     @property
-    def subject(self) -> github.NotificationSubject.NotificationSubject:
+    def subject(self) -> NotificationSubject:
         self._completeIfNotSet(self._subject)
         return self._subject.value
 
@@ -129,7 +136,7 @@ class Notification(CompletableGithubObject):
 
     def mark_as_read(self) -> None:
         """
-        :calls: `PATCH /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
+        :calls: `PATCH /notifications/threads/{thread_id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
@@ -138,20 +145,18 @@ class Notification(CompletableGithubObject):
 
     def mark_as_done(self) -> None:
         """
-        :calls: `DELETE /notifications/threads/{id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
+        :calls: `DELETE /notifications/threads/{thread_id} <https://docs.github.com/en/rest/reference/activity#notifications>`_
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
         )
 
-    def get_pull_request(self) -> github.PullRequest.PullRequest:
-        headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
-        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+    def get_pull_request(self) -> PullRequest:
+        return github.PullRequest.PullRequest(self._requester, url=self.subject.url)
 
-    def get_issue(self) -> github.Issue.Issue:
-        headers, data = self._requester.requestJsonAndCheck("GET", self.subject.url)
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+    def get_issue(self) -> Issue:
+        return github.Issue.Issue(self._requester, url=self.subject.url)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch

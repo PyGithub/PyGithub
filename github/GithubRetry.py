@@ -8,6 +8,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Tanishk <tanishk7531@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,7 +47,7 @@ from urllib3.connectionpool import ConnectionPool
 from urllib3.exceptions import MaxRetryError
 from urllib3.response import HTTPResponse
 
-from github.GithubException import GithubException
+from github.GithubException import GithubException, RateLimitExceededExceedsMaxWait
 from github.Requester import Requester
 
 DEFAULT_SECONDARY_RATE_WAIT: int = 60
@@ -72,12 +74,23 @@ class GithubRetry(Retry):
     # references the class, not the module (due to re-exporting in github/__init__.py)
     __datetime = datetime
 
-    def __init__(self, secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        secondary_rate_wait: float = DEFAULT_SECONDARY_RATE_WAIT,
+        max_rate_limit_wait: float | None = None,
+        **kwargs: Any,
+    ) -> None:
         """
         :param secondary_rate_wait: seconds to wait before retrying secondary rate limit errors
+        :param max_rate_limit_wait: maximum seconds to wait for a primary or secondary rate limit reset;
+            if the required backoff would exceed this, raises
+            :class:`~github.GithubException.RateLimitExceededExceedsMaxWait` instead of waiting.
+            Note that ``max_rate_limit_wait < secondary_rate_wait`` causes any secondary rate limit error to raise an exception and never wait.
+            ``None`` (the default) means no cap is applied.
         :param kwargs: see urllib3.Retry for more arguments
         """
         self.secondary_rate_wait = secondary_rate_wait
+        self.max_rate_limit_wait = max_rate_limit_wait
         # 403 is too broad to be retried, but GitHub API signals rate limits via 403
         # we retry 403 and look into the response header via Retry.increment
         # to determine if we really retry that 403
@@ -86,7 +99,7 @@ class GithubRetry(Retry):
         super().__init__(**kwargs)
 
     def new(self, **kw: Any) -> Self:
-        kw.update(dict(secondary_rate_wait=self.secondary_rate_wait))
+        kw.update(dict(secondary_rate_wait=self.secondary_rate_wait, max_rate_limit_wait=self.max_rate_limit_wait))
         return super().new(**kw)  # type: ignore
 
     def increment(  # type: ignore[override]
@@ -161,6 +174,18 @@ class GithubRetry(Retry):
                                         backoff = resetBackoff + 1
                             else:
                                 backoff = self.secondary_rate_wait
+                            if self.max_rate_limit_wait is not None and backoff > self.max_rate_limit_wait:
+                                self.__log(
+                                    logging.INFO,
+                                    f"Required backoff of {backoff}s exceeds "
+                                    f"max_rate_limit_wait of {self.max_rate_limit_wait}s".replace(".0s", "s"),
+                                )
+                                raise RateLimitExceededExceedsMaxWait(
+                                    response.status,  # type: ignore
+                                    content,  # type: ignore
+                                    response.headers,  # type: ignore
+                                    wait=backoff,
+                                )
 
                             # we backoff at least retry's next backoff
                             retry_backoff = retry.get_backoff_time()
@@ -225,7 +250,7 @@ class GithubRetry(Retry):
 
         response.url = url
 
-        return response.content
+        return response.content or b""
 
     def __log(self, level: int, message: str, **kwargs: Any) -> None:
         if self.__logger is None:

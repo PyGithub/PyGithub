@@ -49,12 +49,15 @@
 # Copyright 2024 Evan Fetsko <emfetsko@gmail.com>                              #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Bruno Didot <bdidot@gmail.com>                                #
+# Copyright 2025 Eddie Santos <9561596+eddie-santos@users.noreply.github.com>  #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Matt Tuchfarber <matt@tuchfarber.com>                         #
 # Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
 # Copyright 2025 Ryan Peach <github.essential257@passmail.net>                 #
 # Copyright 2025 a-sido <andrei.sidorenko.1993@gmail.com>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -84,6 +87,7 @@ from typing_extensions import NotRequired, TypedDict
 
 import github.Commit
 import github.File
+import github.Issue
 import github.IssueComment
 import github.IssueEvent
 import github.Label
@@ -108,13 +112,13 @@ from github.GithubObject import (
     is_optional_list,
     is_undefined,
 )
-from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Commit import Commit
     from github.File import File
     from github.GitRef import GitRef
+    from github.Issue import Issue
     from github.IssueComment import IssueComment
     from github.IssueEvent import IssueEvent
     from github.Label import Label
@@ -448,21 +452,20 @@ class PullRequest(CompletableGithubObject):
 
     def as_issue(self) -> Issue:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number} <https://docs.github.com/en/rest/reference/issues>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number} <https://docs.github.com/en/rest/reference/issues>`_
         """
-        headers, data = self._requester.requestJsonAndCheck("GET", self.issue_url)
-        return github.Issue.Issue(self._requester, headers, data, completed=True)
+        return github.Issue.Issue(self._requester, url=self.issue_url)
 
-    def create_comment(self, body: str, commit: github.Commit.Commit, path: str, position: int) -> PullRequestComment:
+    def create_comment(self, body: str, commit: Commit, path: str, position: int) -> PullRequestComment:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         return self.create_review_comment(body, commit, path, position)
 
     def create_review_comment(
         self,
         body: str,
-        commit: github.Commit.Commit | str,
+        commit: Commit | str,
         path: str,
         # line replaces deprecated position argument, so we put it between path and side
         line: Opt[int] = NotSet,
@@ -474,7 +477,7 @@ class PullRequest(CompletableGithubObject):
         as_suggestion: bool = False,
     ) -> PullRequestComment:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(body, str), body
         assert isinstance(commit, (github.Commit.Commit, str)), commit
@@ -553,7 +556,7 @@ class PullRequest(CompletableGithubObject):
 
     def create_issue_comment(self, body: str) -> IssueComment:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -564,13 +567,13 @@ class PullRequest(CompletableGithubObject):
 
     def create_review(
         self,
-        commit: Opt[github.Commit.Commit] = NotSet,
+        commit: Opt[Commit] = NotSet,
         body: Opt[str] = NotSet,
         event: Opt[str] = NotSet,
         comments: Opt[list[ReviewComment]] = NotSet,
     ) -> PullRequestReview:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/free-pro-team@latest/rest/pulls/reviews?apiVersion=2022-11-28#create-a-review-for-a-pull-request>`_
+        :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews <https://docs.github.com/en/free-pro-team@latest/rest/pulls/reviews?apiVersion=2022-11-28#create-a-review-for-a-pull-request>`_
         """
         assert is_optional(commit, github.Commit.Commit), commit
         assert is_optional(body, str), body
@@ -604,7 +607,7 @@ class PullRequest(CompletableGithubObject):
         team_reviewers: Opt[list[str] | str] = NotSet,
     ) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
+        :calls: `POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         """
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
@@ -626,7 +629,7 @@ class PullRequest(CompletableGithubObject):
         team_reviewers: Opt[list[str] | str] = NotSet,
     ) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
+        :calls: `DELETE /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         """
         assert is_optional(reviewers, str) or is_optional_list(reviewers, str), reviewers
         assert is_optional(team_reviewers, str) or is_optional_list(team_reviewers, str), team_reviewers
@@ -651,7 +654,7 @@ class PullRequest(CompletableGithubObject):
         maintainer_can_modify: Opt[bool] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `PATCH /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls>`_
         """
         assert is_optional(title, str), title
         assert is_optional(body, str), body
@@ -664,20 +667,21 @@ class PullRequest(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_comment(self, id: int) -> PullRequestComment:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         return self.get_review_comment(id)
 
     def get_review_comment(self, id: int) -> PullRequestComment:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{number} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/comments/{comment_id} <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.url)}/comments/{id}")
-        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
+        url = f"{self._parentUrl(self.url)}/comments/{id}"
+        return github.PullRequestComment.PullRequestComment(self._requester, url=url)
 
     def get_comments(
         self,
@@ -688,7 +692,7 @@ class PullRequest(CompletableGithubObject):
         """
         Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
 
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
         :param since: datetime
@@ -704,7 +708,7 @@ class PullRequest(CompletableGithubObject):
         since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
         :param direction: string 'asc' or 'desc'
         :param since: datetime
@@ -726,7 +730,7 @@ class PullRequest(CompletableGithubObject):
 
     def get_single_review_comments(self, id: int) -> PaginatedList[PullRequestComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/review/{id}/comments <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         """
         assert isinstance(id, int), id
         return PaginatedList(
@@ -738,27 +742,27 @@ class PullRequest(CompletableGithubObject):
 
     def get_commits(self) -> PaginatedList[Commit]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/commits <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/commits <https://docs.github.com/en/rest/reference/pulls>`_
         """
         return PaginatedList(github.Commit.Commit, self._requester, f"{self.url}/commits", None)
 
     def get_files(self) -> PaginatedList[File]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/files <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/files <https://docs.github.com/en/rest/reference/pulls>`_
         """
         return PaginatedList(github.File.File, self._requester, f"{self.url}/files", None)
 
     def get_issue_comment(self, id: int) -> IssueComment:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self._parentUrl(self.issue_url)}/comments/{id}")
-        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
+        url = f"{self._parentUrl(self.issue_url)}/comments/{id}"
+        return github.IssueComment.IssueComment(self._requester, url=url)
 
     def get_issue_comments(self) -> PaginatedList[IssueComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/comments <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         return PaginatedList(
             github.IssueComment.IssueComment,
@@ -795,7 +799,7 @@ class PullRequest(CompletableGithubObject):
 
     def get_review(self, id: int) -> PullRequestReview:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews/{id} <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id} <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :param id: integer
         :rtype: :class:`github.PullRequestReview.PullRequestReview`
         """
@@ -808,7 +812,7 @@ class PullRequest(CompletableGithubObject):
 
     def get_reviews(self) -> PaginatedList[PullRequestReview]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestReview.PullRequestReview`
         """
         return PaginatedList(
@@ -820,7 +824,7 @@ class PullRequest(CompletableGithubObject):
 
     def get_review_requests(self) -> tuple[PaginatedList[NamedUser], PaginatedList[Team]]:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers <https://docs.github.com/en/rest/reference/pulls#review-requests>`_
         :rtype: tuple of :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser` and of :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return (
@@ -842,13 +846,13 @@ class PullRequest(CompletableGithubObject):
 
     def get_labels(self) -> PaginatedList[Label]:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         return PaginatedList(github.Label.Label, self._requester, f"{self.issue_url}/labels", None)
 
-    def add_to_labels(self, *labels: github.Label.Label | str) -> None:
+    def add_to_labels(self, *labels: Label | str) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         assert all(isinstance(element, (github.Label.Label, str)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
@@ -856,13 +860,13 @@ class PullRequest(CompletableGithubObject):
 
     def delete_labels(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.issue_url}/labels")
 
-    def remove_from_labels(self, label: github.Label.Label | str) -> None:
+    def remove_from_labels(self, label: Label | str) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         assert isinstance(label, (github.Label.Label, str)), label
         if isinstance(label, github.Label.Label):
@@ -871,9 +875,9 @@ class PullRequest(CompletableGithubObject):
             label = urllib.parse.quote(label)
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.issue_url}/labels/{label}")
 
-    def set_labels(self, *labels: github.Label.Label | str) -> None:
+    def set_labels(self, *labels: Label | str) -> None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/issues/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `PUT /repos/{owner}/{repo}/issues/{issue_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         assert all(isinstance(element, (github.Label.Label, str)) for element in labels), labels
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
@@ -881,7 +885,7 @@ class PullRequest(CompletableGithubObject):
 
     def is_merged(self) -> bool:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
         """
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/merge")
         return status == 204
@@ -915,7 +919,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
-        <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
+            <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
         """
         assert is_optional(author_email, str), author_email
         assert is_optional(client_mutation_id, str), client_mutation_id
@@ -949,7 +953,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to disable pull request auto merge
-        <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
+            <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -976,7 +980,7 @@ class PullRequest(CompletableGithubObject):
         delete_branch: bool = False,
     ) -> PullRequestMergeStatus:
         """
-        :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
+        :calls: `PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge <https://docs.github.com/en/rest/reference/pulls>`_
         """
         assert is_optional(commit_message, str), commit_message
         assert is_optional(commit_title, str), commit_title
@@ -991,9 +995,9 @@ class PullRequest(CompletableGithubObject):
 
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data)
 
-    def add_to_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
+    def add_to_assignees(self, *assignees: NamedUser | str) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/issues/assignees?apiVersion=2022-11-28#add-assignees-to-an-issue>`_
+        :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/assignees <https://docs.github.com/en/rest/issues/assignees?apiVersion=2022-11-28#add-assignees-to-an-issue>`_
         """
         assert all(isinstance(element, (github.NamedUser.NamedUser, str)) for element in assignees), assignees
         post_parameters = {
@@ -1008,9 +1012,9 @@ class PullRequest(CompletableGithubObject):
         # Only use the assignees attribute, since we call this PR as an issue
         self._useAttributes({"assignees": data["assignees"]})
 
-    def remove_from_assignees(self, *assignees: github.NamedUser.NamedUser | str) -> None:
+    def remove_from_assignees(self, *assignees: NamedUser | str) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/{number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
+        :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees <https://docs.github.com/en/rest/reference/issues#assignees>`_
         """
         assert all(isinstance(element, (github.NamedUser.NamedUser, str)) for element in assignees), assignees
         post_parameters = {
@@ -1045,7 +1049,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to convert pull request to draft
-        <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
+            <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -1070,7 +1074,7 @@ class PullRequest(CompletableGithubObject):
     ) -> dict[str, Any]:
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to mark pull request ready for review
-        <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
+            <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -1165,6 +1169,10 @@ class PullRequest(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        elif "url" in attributes:
+            number = attributes["url"].split("/")[-1]
+            if number.isnumeric():
+                self._number = self._makeIntAttribute(int(number))
         if "patch_url" in attributes:  # pragma no branch
             self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "rebaseable" in attributes:  # pragma no branch

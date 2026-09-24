@@ -57,6 +57,8 @@ class GitBlob(Framework.TestCase):
         )
         self.assertEqual(len(self.blob.content), 1757)
         self.assertEqual(self.blob.encoding, "base64")
+        self.assertIsNone(self.blob.highlighted_content)
+        self.assertIsNone(self.blob.node_id)
         self.assertEqual(self.blob.sha, "53bce9fa919b4544e67275089b3ec5b44be20667")
         self.assertEqual(
             self.blob.url,

@@ -4,6 +4,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -25,10 +26,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from github.AdvisoryVulnerabilityPackage import AdvisoryVulnerabilityPackage
+import github.AdvisoryVulnerabilityPackage
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.AdvisoryVulnerabilityPackage import AdvisoryVulnerabilityPackage
 
 
 class DependabotAlertDependency(NonCompletableGithubObject):
@@ -79,7 +83,7 @@ class DependabotAlertDependency(NonCompletableGithubObject):
             self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
         if "package" in attributes:
             self._package = self._makeClassAttribute(
-                AdvisoryVulnerabilityPackage,
+                github.AdvisoryVulnerabilityPackage.AdvisoryVulnerabilityPackage,
                 attributes["package"],
             )
         if "relationship" in attributes:  # pragma no branch

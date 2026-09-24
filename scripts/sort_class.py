@@ -1,6 +1,8 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,7 +29,7 @@ import difflib
 import json
 import multiprocessing
 import sys
-from typing import Sequence
+from collections.abc import Sequence
 
 import libcst as cst
 
@@ -163,7 +165,11 @@ class SortMethodsTransformer(cst.CSTTransformer):
                     stmts[start_if:end_if],
                     key=lambda stmt: stmt.test.left.value
                     if isinstance(stmt.test, cst.Comparison)
-                    else stmt.test.children[0].left.value,
+                    else (
+                        stmt.test.children[0].func.value
+                        if isinstance(stmt.test.children[0], cst.Call)
+                        else stmt.test.children[0].left.value
+                    ),
                 )
                 updated_node = updated_node.with_changes(
                     body=updated_node.body.with_changes(

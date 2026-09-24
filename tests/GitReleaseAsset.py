@@ -12,6 +12,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -44,7 +45,7 @@ from . import Framework
 class GitReleaseAsset(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.release = self.g.get_repo("EnricoMi/PyGithub", lazy=True).get_release(197548596)
+        self.release = self.g.withLazy(True).get_repo("EnricoMi/PyGithub").get_release(197548596)
         self.asset = self.release.assets[0]
 
     def testAttributes(self):
@@ -64,6 +65,12 @@ class GitReleaseAsset(Framework.TestCase):
         self.assertEqual(self.asset.updated_at, datetime(2025, 1, 30, 11, 12, tzinfo=timezone.utc))
         self.assertEqual(self.asset.uploader.login, "EnricoMi")
         self.assertEqual(self.asset.url, "https://api.github.com/repos/EnricoMi/PyGithub/releases/assets/224868540")
+
+    def testLazyAttributes(self):
+        asset = self.g.withLazy(True).get_repo("lazy/repo").get_release_asset(42)
+        self.assertEqual(str(asset), 'GitReleaseAsset(url="/repos/lazy/repo/releases/assets/42")')
+        self.assertEqual(asset.id, 42)
+        self.assertEqual(asset.url, "/repos/lazy/repo/releases/assets/42")
 
     @skipIf(os.name == "nt", "not working on Windows")
     def testDownloadAssetFile(self):

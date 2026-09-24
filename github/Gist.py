@@ -24,6 +24,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,9 +46,11 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.AuthenticatedUser
 import github.GistComment
 import github.GistFile
 import github.GistHistoryState
@@ -60,8 +63,10 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.GistComment import GistComment
+    from github.GistFile import GistFile
     from github.GistHistoryState import GistHistoryState
     from github.InputFileContent import InputFileContent
+    from github.NamedUser import NamedUser
 
 
 class Gist(CompletableGithubObject):
@@ -87,7 +92,7 @@ class Gist(CompletableGithubObject):
         self._commits_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
-        self._files: Attribute[dict[str, github.GistFile.GistFile]] = NotSet
+        self._files: Attribute[dict[str, GistFile]] = NotSet
         self._fork_of: Attribute[Gist] = NotSet
         self._forks: Attribute[list[Gist]] = NotSet
         self._forks_url: Attribute[str] = NotSet
@@ -97,12 +102,12 @@ class Gist(CompletableGithubObject):
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._owner: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._owner: Attribute[NamedUser] = NotSet
         self._public: Attribute[bool] = NotSet
         self._truncated: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -138,12 +143,12 @@ class Gist(CompletableGithubObject):
         return self._description.value
 
     @property
-    def files(self) -> dict[str, github.GistFile.GistFile]:
+    def files(self) -> dict[str, GistFile]:
         self._completeIfNeeded()
         return self._files.value
 
     @property
-    def fork_of(self) -> github.Gist.Gist:
+    def fork_of(self) -> Gist:
         self._completeIfNotSet(self._fork_of)
         return self._fork_of.value
 
@@ -188,7 +193,7 @@ class Gist(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def owner(self) -> github.NamedUser.NamedUser:
+    def owner(self) -> NamedUser:
         self._completeIfNotSet(self._owner)
         return self._owner.value
 
@@ -213,7 +218,7 @@ class Gist(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> github.NamedUser.NamedUser:
+    def user(self) -> NamedUser:
         self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -230,20 +235,20 @@ class Gist(CompletableGithubObject):
 
     def create_fork(self) -> Gist:
         """
-        :calls: `POST /gists/{id}/forks <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `POST /gists/{gist_id}/forks <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/forks")
         return Gist(self._requester, headers, data, completed=True)
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `DELETE /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, description: Opt[str] = NotSet, files: Opt[dict[str, InputFileContent | None]] = NotSet) -> None:
         """
-        :calls: `PATCH /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `PATCH /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert is_optional(description, str), description
         # limitation of `TypeGuard`
@@ -256,15 +261,17 @@ class Gist(CompletableGithubObject):
         if is_defined(files):
             post_parameters["files"] = {key: None if value is None else value._identity for key, value in files.items()}
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
+
         self._useAttributes(data)
+        self._set_complete()
 
     def get_comment(self, id: int) -> GistComment:
         """
-        :calls: `GET /gists/{gist_id}/comments/{id} <https://docs.github.com/en/rest/reference/gists#comments>`_
+        :calls: `GET /gists/{gist_id}/comments/{comment_id} <https://docs.github.com/en/rest/reference/gists#comments>`_
         """
         assert isinstance(id, int), id
-        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/comments/{id}")
-        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
+        url = f"{self.url}/comments/{id}"
+        return github.GistComment.GistComment(self._requester, url=url)
 
     def get_comments(self) -> PaginatedList[GistComment]:
         """
@@ -279,20 +286,20 @@ class Gist(CompletableGithubObject):
 
     def is_starred(self) -> bool:
         """
-        :calls: `GET /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /gists/{gist_id}/star <https://docs.github.com/en/rest/reference/gists>`_
         """
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/star")
         return status == 204
 
     def reset_starred(self) -> None:
         """
-        :calls: `DELETE /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `DELETE /gists/{gist_id}/star <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/star")
 
     def set_starred(self) -> None:
         """
-        :calls: `PUT /gists/{id}/star <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `PUT /gists/{gist_id}/star <https://docs.github.com/en/rest/reference/gists>`_
         """
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/star")
 
@@ -329,6 +336,10 @@ class Gist(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_id = attributes["url"].split("/")[-1]
+            id = urllib.parse.unquote(quoted_id)
+            self._id = self._makeStringAttribute(id)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "owner" in attributes:  # pragma no branch

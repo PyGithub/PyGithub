@@ -17,6 +17,7 @@
 # Copyright 2024 Caleb McCombs <caleb@mccombalot.net>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -50,12 +51,25 @@ class SecurityAndAnalysis(Framework.TestCase):
     def testAttributes(self):
         security_and_analysis = self.repo.security_and_analysis
         self.assertIsNone(security_and_analysis.advanced_security)
+        self.assertEqual(security_and_analysis.code_security.status, "enabled")
         self.assertEqual(security_and_analysis.dependabot_security_updates.status, "enabled")
         self.assertEqual(security_and_analysis.secret_scanning.status, "disabled")
-        self.assertIsNone(security_and_analysis.secret_scanning_ai_detection)
+        self.assertEqual(security_and_analysis.secret_scanning_ai_detection.status, "enabled")
+        self.assertEqual(security_and_analysis.secret_scanning_delegated_alert_dismissal.status, "disabled")
+        self.assertEqual(security_and_analysis.secret_scanning_delegated_bypass.status, "enabled")
+        self.assertEqual(
+            security_and_analysis.secret_scanning_delegated_bypass_options,
+            {"reviewers": [{"reviewer_id": 123, "reviewer_type": "TEAM", "mode": "ALWAYS"}]},
+        )
         self.assertEqual(security_and_analysis.secret_scanning_push_protection.status, "disabled")
         self.assertEqual(security_and_analysis.secret_scanning_non_provider_patterns.status, "disabled")
-        self.assertIsNone(security_and_analysis.secret_scanning_validity_checks)
+        # secret_scanning_validity_checks is deprecated and no longer part of the GitHub API
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertIsNone(security_and_analysis.secret_scanning_validity_checks)
+        self.assertWarning(
+            warning,
+            "Property secret_scanning_validity_checks is deprecated and will be removed",
+        )
 
     def testRepresentation(self):
         self.assertEqual(
@@ -64,7 +78,13 @@ class SecurityAndAnalysis(Framework.TestCase):
             'secret_scanning_validity_checks="None", '
             'secret_scanning_push_protection="SecurityAndAnalysisFeature(status="disabled")", '
             'secret_scanning_non_provider_patterns="SecurityAndAnalysisFeature(status="disabled")", '
+            "secret_scanning_delegated_bypass_options=\"{'reviewers': "
+            "[{'reviewer_id': 123, 'reviewer_type': 'TEAM', 'mode': 'ALWAYS'}]}\", "
+            'secret_scanning_delegated_bypass="SecurityAndAnalysisFeature(status="enabled")", '
+            'secret_scanning_delegated_alert_dismissal="SecurityAndAnalysisFeature(status="disabled")", '
+            'secret_scanning_ai_detection="SecurityAndAnalysisFeature(status="enabled")", '
             'secret_scanning="SecurityAndAnalysisFeature(status="disabled")", '
             'dependabot_security_updates="SecurityAndAnalysisFeature(status="enabled")", '
+            'code_security="SecurityAndAnalysisFeature(status="enabled")", '
             'advanced_security="None")',
         )

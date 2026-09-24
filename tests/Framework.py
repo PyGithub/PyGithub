@@ -33,10 +33,13 @@
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2025 Alex Olieman <alex@olieman.net>                               #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Maja Massarini <2678400+majamassarini@users.noreply.github.com>#
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -60,13 +63,15 @@ from __future__ import annotations
 
 import base64
 import contextlib
-import io
 import json
 import os
 import traceback
 import unittest
 import warnings
+from collections.abc import Callable, Generator
+from dataclasses import dataclass
 from io import BytesIO
+from typing import Any
 
 import responses
 from requests.structures import CaseInsensitiveDict
@@ -92,13 +97,6 @@ m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
 eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
-
-
-def readLine(file_):
-    line = file_.readline()
-    if isinstance(line, bytes):
-        line = line.decode("utf-8")
-    return line.strip()
 
 
 class FakeHttpResponse:
@@ -136,17 +134,76 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "Bearer jwt_removed"
 
 
-class RecordingConnection:
-    __openFile = None
+@dataclass
+class Request:
+    protocol: str
+    verb: str
+    host: str
+    port: int | None
+    url: str
+    request_headers: dict[str, Any]
+    input: Any
 
-    @staticmethod
-    def setOpenFile(func):
-        RecordingConnection.__openFile = func
+    def with_response(self, status: int, response_headers: dict[str, Any], output: bytes) -> RequestResponse:
+        return RequestResponse(
+            self.protocol,
+            self.verb,
+            self.host,
+            self.port,
+            self.url,
+            self.request_headers,
+            self.input,
+            status,
+            response_headers,
+            output,
+        )
 
+
+@dataclass
+class RequestResponse(Request):
+    protocol: str
+    verb: str
+    host: str
+    port: int | None
+    url: str
+    request_headers: dict[str, Any]
+    input: Any
+    status: int
+    response_headers: dict[str, Any]
+    output: bytes
+
+
+class Connection:
+    __openFile: Callable[[str], ReplayDataFile] | None = None
+    __requests: list[RequestResponse] = []
+
+    @classmethod
+    def setOpenFile(cls, func: Callable[[str], ReplayDataFile]):
+        cls.__openFile = func
+
+    @classmethod
+    def openFile(cls, mode: str):
+        assert cls.__openFile is not None
+        return cls.__openFile(mode)
+
+    @classmethod
+    def resetRequests(cls, requests: list[RequestResponse]) -> list[RequestResponse]:
+        try:
+            return cls.__requests
+        finally:
+            cls.__requests = requests
+
+    @classmethod
+    def addRequest(cls, request: RequestResponse):
+        cls.__requests.append(request)
+
+
+class RecordingConnection(Connection):
     def __init__(self, protocol, host, port, *args, **kwds):
-        self.__file = self.__openFile("w")
+        self.__file = self.openFile("w")
         # write operations make the assumption that the file is not in binary mode
-        assert isinstance(self.__file, io.TextIOBase)
+        assert isinstance(self.__file, ReplayDataFile)
+        self.__request = None
         self.__protocol = protocol
         self.__host = host
         self.__port = port
@@ -169,6 +226,7 @@ class RecordingConnection:
         # Since it's dict[str, str], a simple copy is enough.
         anonymous_headers = headers.copy()
         fixAuthorizationHeader(anonymous_headers)
+        self.__request = Request(self.__protocol, verb, self.__host, self.__port, url, anonymous_headers, input)
         self.__writeLine(self.__protocol)
         self.__writeLine(verb)
         self.__writeLine(self.__host)
@@ -196,6 +254,9 @@ class RecordingConnection:
             self.__writeLine(output)
         self.__writeLine("")
 
+        self.addRequest(self.__request.with_response(status, dict(headers), output))
+        self.__request = None
+
         return FakeHttpResponse(status, headers, output)
 
     def close(self):
@@ -219,15 +280,9 @@ class RecordingHttpsConnection(RecordingConnection):
         super().__init__("https", *args, **kwds)
 
 
-class ReplayingConnection:
-    __openFile = None
-
-    @staticmethod
-    def setOpenFile(func):
-        ReplayingConnection.__openFile = func
-
+class ReplayingConnection(Connection):
     def __init__(self, protocol, host, port, *args, **kwds):
-        self.__file = self.__openFile("r")
+        self.__file = self.openFile("r")
         self.__protocol = protocol
         self.__host = host
         self.__port = port
@@ -261,25 +316,31 @@ class ReplayingConnection:
         self.__stream = stream
         self.__cnx.request(verb, url, input, headers, stream=stream)
 
-    def __readNextRequest(self, verb, url, input, headers):
+    def __replayDataMismatchLine(self) -> str:
+        return f"Replay data mismatch in {self.__file}"
+
+    def __readNextRequest(self, verb, url, input, headers) -> Request:
         fixAuthorizationHeader(headers)
-        assert self.__protocol == readLine(self.__file)
-        assert verb == readLine(self.__file)
-        assert self.__host == readLine(self.__file)
-        assert str(self.__port) == readLine(self.__file)
-        assert self.__splitUrl(url) == self.__splitUrl(readLine(self.__file))
-        assert headers == eval(readLine(self.__file))
-        expectedInput = readLine(self.__file)
+        request = Request(self.__protocol, verb, self.__host, self.__port, url, headers, input)
+        assert request.protocol == self.__file.readline(), self.__replayDataMismatchLine()
+        assert request.verb == self.__file.readline(), self.__replayDataMismatchLine()
+        assert request.host == self.__file.readline(), self.__replayDataMismatchLine()
+        assert str(request.port) == self.__file.readline(), self.__replayDataMismatchLine()
+        assert self.__splitUrl(request.url) == self.__splitUrl(self.__file.readline()), self.__replayDataMismatchLine()
+        assert request.request_headers == eval(self.__file.readline()), self.__replayDataMismatchLine()
+        expectedInput = self.__file.readline()
         if isinstance(input, str):
             trInput = input.replace("\n", "").replace("\r", "")
             if input.startswith("{"):
-                assert expectedInput.startswith("{"), expectedInput
-                assert json.loads(trInput) == json.loads(expectedInput)
+                assert expectedInput.startswith("{"), self.__replayDataMismatchLine()
+                assert json.loads(trInput) == json.loads(expectedInput), self.__replayDataMismatchLine()
             else:
-                assert trInput == expectedInput
+                assert trInput == expectedInput, self.__replayDataMismatchLine()
         else:
             # for non-string input (e.g. upload asset), let it pass.
             pass
+
+        return request
 
     def __splitUrl(self, url):
         splitedUrl = url.split("?")
@@ -290,21 +351,21 @@ class ReplayingConnection:
         return (base, sorted(qs.split("&")))
 
     def __request_callback(self, request, uri, response_headers):
-        self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
+        request = self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
 
-        status = int(readLine(self.__file))
-        self.response_headers = CaseInsensitiveDict(eval(readLine(self.__file)))
+        status = int(self.__file.readline())
+        self.response_headers = CaseInsensitiveDict(eval(self.__file.readline()))
         if self.__stream:
             output = BytesIO()
             while True:
-                line = readLine(self.__file)
+                line = self.__file.readline()
                 if not line:
                     break
                 output.write(base64.b64decode(line))
             output = output.getvalue()
         else:
-            output = bytearray(readLine(self.__file), "utf-8")
-        readLine(self.__file)
+            output = bytearray(self.__file.readline(), "utf-8")
+        self.__file.readline()
 
         # make a copy of the headers and remove the ones that interfere with the response handling
         adding_headers = CaseInsensitiveDict(self.response_headers)
@@ -313,6 +374,7 @@ class ReplayingConnection:
         adding_headers.pop("content-encoding", None)
 
         response_headers.update(adding_headers)
+        self.addRequest(request.with_response(status, response_headers, output))
 
         return [status, response_headers, output]
 
@@ -342,6 +404,38 @@ class ReplayingHttpsConnection(ReplayingConnection):
         super().__init__("https", *args, **kwds)
 
 
+class ReplayDataFile:
+    @staticmethod
+    def open(filename: str, mode: str, encoding: str) -> ReplayDataFile:
+        file = open(filename, mode, encoding=encoding)
+        return ReplayDataFile(filename, file)
+
+    def __init__(self, filename: str, file):
+        self.__filename = filename
+        self.__file = file
+        self.__line = 0
+
+    def __repr__(self) -> str:
+        return f"{self.__filename}:{self.__line}"
+
+    def write(self, string: str):
+        self.__file.write(string)
+
+    def readline(self) -> str:
+        self.__line += 1
+        line = self.__file.readline()
+        if isinstance(line, bytes):
+            line = line.decode("utf-8")
+        return line.strip()
+
+    @property
+    def line_number(self):
+        return self.__line
+
+    def close(self):
+        self.__file.close()
+
+
 class BasicTestCase(unittest.TestCase):
     recordMode = False
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
@@ -363,7 +457,8 @@ class BasicTestCase(unittest.TestCase):
         if (
             self.recordMode
         ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
-            RecordingConnection.setOpenFile(self.__openFile)
+            RecordingHttpConnection.setOpenFile(self.__openFile)
+            RecordingHttpsConnection.setOpenFile(self.__openFile)
             github.Requester.Requester.injectConnectionClasses(
                 RecordingHttpConnection,
                 RecordingHttpsConnection,
@@ -380,7 +475,8 @@ class BasicTestCase(unittest.TestCase):
                 else None
             )
         else:
-            ReplayingConnection.setOpenFile(self.__openFile)
+            ReplayingHttpConnection.setOpenFile(self.__openFile)
+            ReplayingHttpsConnection.setOpenFile(self.__openFile)
             github.Requester.Requester.injectConnectionClasses(
                 ReplayingHttpConnection,
                 ReplayingHttpsConnection,
@@ -448,6 +544,16 @@ class BasicTestCase(unittest.TestCase):
         finally:
             self.__customFilename = previous
 
+    @contextlib.contextmanager
+    def captureRequests(self) -> Generator[list[RequestResponse]]:
+        requests: list[RequestResponse] = []
+        earlier_requests = Connection.resetRequests(requests)
+        try:
+            yield requests
+        finally:
+            earlier_requests.extend(requests)
+            Connection.resetRequests(earlier_requests)
+
     def __openFile(self, mode):
         fileName = None
         if self.__customFilename:
@@ -462,7 +568,7 @@ class BasicTestCase(unittest.TestCase):
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
-            self.__file = open(self.__fileName, mode, encoding="utf-8")
+            self.__file = ReplayDataFile.open(self.__fileName, mode, encoding="utf-8")
         return self.__file
 
     def __closeReplayFileIfNeeded(self, silent=False):
@@ -470,7 +576,7 @@ class BasicTestCase(unittest.TestCase):
             if (
                 not self.recordMode and not silent
             ):  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
-                self.assertEqual(readLine(self.__file), "", self.__fileName)
+                self.assertEqual(self.__file.readline(), "", self.__file)
             self.__file.close()
 
     def assertListKeyEqual(self, elements, key, expectedKeys):

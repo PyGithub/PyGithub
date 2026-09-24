@@ -1,0 +1,69 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -78,6 +78,7 @@
+         self._received_events_url: Attribute[str] = NotSet
+         self._repos_url: Attribute[str] = NotSet
+         self._site_admin: Attribute[bool] = NotSet
++        self._starred_at: Attribute[str] = NotSet
+         self._starred_url: Attribute[str] = NotSet
+         self._subscriptions_url: Attribute[str] = NotSet
+         self._total_private_repos: Attribute[int] = NotSet
+@@ -246,6 +247,11 @@
+         return self._site_admin.value
+ 
+     @property
++    def starred_at(self) -> str:
++        self._completeIfNotSet(self._starred_at)
++        return self._starred_at.value
++
++    @property
+     def starred_url(self) -> str:
+         self._completeIfNotSet(self._starred_url)
+         return self._starred_url.value
+@@ -344,6 +350,8 @@
+             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
+         if "site_admin" in attributes:  # pragma no branch
+             self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
++        if "starred_at" in attributes:  # pragma no branch
++            self._starred_at = self._makeStringAttribute(attributes["starred_at"])
+         if "starred_url" in attributes:  # pragma no branch
+             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
+         if "subscriptions_url" in attributes:  # pragma no branch
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -970,6 +970,22 @@
+             }
+           }
+         },
++        "starred_at": {
++          "name": "starred_at",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "\"2020-07-09T00:17:55Z\"",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/nullable-simple-user": {
++              "example": "\"2020-07-09T00:17:55Z\"",
++              "type": "string"
++            }
++          }
++        },
+         "starred_url": {
+           "name": "starred_url",
+           "returns": [
+diff --unified --recursive --new-file before/tests/NamedUser.py after/tests/NamedUser.py
+--- before/tests/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -69,6 +69,7 @@
+         self.assertEqual(nu.received_events_url, "")
+         self.assertEqual(nu.repos_url, "")
+         self.assertEqual(nu.site_admin, False)
++        self.assertEqual(nu.starred_at, "")
+         self.assertEqual(nu.starred_url, "")
+         self.assertEqual(nu.subscriptions_url, "")
+         self.assertEqual(nu.total_private_repos, 0)

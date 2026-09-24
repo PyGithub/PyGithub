@@ -36,7 +36,10 @@
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Mathieu Parent <math.parent@etik.com>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -58,9 +61,10 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from os.path import basename
-from typing import Any, BinaryIO
+from typing import TYPE_CHECKING, Any, BinaryIO
 
 from typing_extensions import deprecated
 
@@ -70,6 +74,10 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt,
 from github.PaginatedList import PaginatedList
 
 from . import Consts
+
+if TYPE_CHECKING:
+    from github.GitReleaseAsset import GitReleaseAsset
+    from github.NamedUser import NamedUser
 
 
 class GitRelease(CompletableGithubObject):
@@ -86,9 +94,9 @@ class GitRelease(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._assets: Attribute[list[github.GitReleaseAsset.GitReleaseAsset]] = NotSet
+        self._assets: Attribute[list[GitReleaseAsset]] = NotSet
         self._assets_url: Attribute[str] = NotSet
-        self._author: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._author: Attribute[NamedUser] = NotSet
         self._body: Attribute[str] = NotSet
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
@@ -111,6 +119,7 @@ class GitRelease(CompletableGithubObject):
         self._tag_name: Attribute[str] = NotSet
         self._tarball_url: Attribute[str] = NotSet
         self._target_commitish: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._upload_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
         self._zipball_url: Attribute[str] = NotSet
@@ -119,7 +128,7 @@ class GitRelease(CompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def assets(self) -> list[github.GitReleaseAsset.GitReleaseAsset]:
+    def assets(self) -> list[GitReleaseAsset]:
         self._completeIfNotSet(self._assets)
         return self._assets.value
 
@@ -129,7 +138,7 @@ class GitRelease(CompletableGithubObject):
         return self._assets_url.value
 
     @property
-    def author(self) -> github.NamedUser.NamedUser:
+    def author(self) -> NamedUser:
         self._completeIfNotSet(self._author)
         return self._author.value
 
@@ -245,6 +254,11 @@ class GitRelease(CompletableGithubObject):
         return self.name
 
     @property
+    def updated_at(self) -> datetime:
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
+
+    @property
     def upload_url(self) -> str:
         self._completeIfNotSet(self._upload_url)
         return self._upload_url.value
@@ -310,9 +324,9 @@ class GitRelease(CompletableGithubObject):
 
     def upload_asset(
         self, path: str, label: str = "", content_type: Opt[str] = NotSet, name: Opt[str] = NotSet
-    ) -> github.GitReleaseAsset.GitReleaseAsset:
+    ) -> GitReleaseAsset:
         """
-        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`_
+        :calls: `POST /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#upload-a-release-assett>`__
         """
         assert isinstance(path, str), path
         assert isinstance(label, str), label
@@ -342,13 +356,13 @@ class GitRelease(CompletableGithubObject):
         name: str,
         content_type: Opt[str] = NotSet,
         label: str = "",
-    ) -> github.GitReleaseAsset.GitReleaseAsset:
+    ) -> GitReleaseAsset:
         """
         Uploads an asset.
 
         Unlike ``upload_asset()`` this method allows you to pass in a file-like object to upload.
         Note that this method is more strict and requires you to specify the ``name``, since there's no file name to infer these from.
-        :calls: `POST https://<upload_url>/repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`_
+        :calls: `POST /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/reference/repos#upload-a-release-asset>`__
         :param file_like: binary file-like object, such as those returned by ``open("file_name", "rb")``. At the very minimum, this object must implement ``read()``.
         :param file_size: int, size in bytes of ``file_like``
 
@@ -370,7 +384,7 @@ class GitRelease(CompletableGithubObject):
         )
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
-    def get_assets(self) -> PaginatedList[github.GitReleaseAsset.GitReleaseAsset]:
+    def get_assets(self) -> PaginatedList[GitReleaseAsset]:
         """
         :calls: `GET /repos/{owner}/{repo}/releases/{release_id}/assets <https://docs.github.com/en/rest/releases/assets?apiVersion=2022-11-28#get-a-release-asset>`_
         """
@@ -410,6 +424,10 @@ class GitRelease(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "immutable" in attributes:  # pragma no branch
             self._immutable = self._makeBoolAttribute(attributes["immutable"])
         if "mentions_count" in attributes:  # pragma no branch
@@ -430,10 +448,17 @@ class GitRelease(CompletableGithubObject):
             self._status = self._makeStringAttribute(attributes["status"])
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
+        elif "url" in attributes and attributes["url"] and isinstance(attributes["url"], str):
+            quoted_tag_name = attributes["url"].split("/")[-1]
+            tag_name = urllib.parse.unquote(quoted_tag_name)
+            if tag_name != "latest":
+                self._tag_name = self._makeStringAttribute(tag_name)
         if "tarball_url" in attributes:
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "target_commitish" in attributes:
             self._target_commitish = self._makeStringAttribute(attributes["target_commitish"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "upload_url" in attributes:
             self._upload_url = self._makeStringAttribute(attributes["upload_url"])
         if "url" in attributes:

@@ -58,10 +58,15 @@
 # Copyright 2024 Kobbi Gal <85439776+kgal-pan@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
 # Copyright 2025 Alec Ostrander <alec.ostrander@gmail.com>                     #
+# Copyright 2025 Chris Kuehl <ckuehl@ckuehl.me>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 # Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
+# Copyright 2026 Ville Skyttä <ville.skytta@iki.fi>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -88,25 +93,15 @@ import json
 import logging
 import mimetypes
 import os
-import re
 import threading
 import time
 import urllib
 import urllib.parse
 from collections import deque
+from collections.abc import Callable, ItemsView, Iterator
 from datetime import datetime, timezone
 from io import IOBase
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    BinaryIO,
-    Callable,
-    Deque,
-    Generic,
-    ItemsView,
-    Iterator,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, BinaryIO, Deque, Generic, TypeVar
 
 import requests
 import requests.adapters
@@ -115,7 +110,7 @@ from urllib3 import Retry
 import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
-from github.GithubObject import as_rest_api_attributes
+from github.GithubObject import Opt, as_rest_api_attributes, is_undefined
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -141,7 +136,7 @@ class RequestsResponse:
         return self.headers.items()
 
     def read(self) -> str:
-        return self.response.text
+        return self.response.text or ""
 
     def iter_content(self, chunk_size: int | None = 1) -> Iterator:
         return self.response.iter_content(chunk_size=chunk_size)
@@ -407,6 +402,7 @@ class Requester:
         seconds_between_requests: float | None = None,
         seconds_between_writes: float | None = None,
         lazy: bool = False,
+        api_version: str | None = None,
     ):
         self._initializeDebugFeature()
 
@@ -417,8 +413,12 @@ class Requester:
         self.__graphql_prefix = self.get_graphql_prefix(o.path)
         self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
+        if base_url == Consts.DEFAULT_BASE_URL:
+            self.__domains = ["github.com", "githubusercontent.com"]
+        else:
+            self.__domains = list({o.hostname, o.hostname.removeprefix("api.")})  # type: ignore
         self.__port = o.port
-        self.__prefix = o.path
+        self.__prefix = o.path.rstrip("/")
         self.__timeout = timeout
         self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__pool_size = pool_size
@@ -438,6 +438,7 @@ class Requester:
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
+        assert isinstance(per_page, int) and per_page > 0, per_page
         self.per_page = per_page
 
         self.oauth_scopes = None
@@ -449,6 +450,7 @@ class Requester:
         self.__userAgent = user_agent
         self.__verify = verify
         self.__lazy = lazy
+        self.__apiVersion = api_version
 
         self.__installation_authorization = None
 
@@ -483,8 +485,8 @@ class Requester:
     def get_graphql_prefix(path: str | None) -> str:
         if path is None or path in ["", "/"]:
             path = ""
-        if path.endswith(("/v3", "/v3/")):
-            path = Requester.remove_suffix(path, "/")
+        path = path.rstrip("/")
+        if path.endswith("/v3"):
             path = Requester.remove_suffix(path, "/v3")
         return path + "/graphql"
 
@@ -500,16 +502,22 @@ class Requester:
     ) -> str:
         scheme, netloc, url, params, query, fragment = urllib.parse.urlparse(url)
         url_params = urllib.parse.parse_qs(query)
-        # union parameters in url with given parameters, the latter have precedence
+        # union parameters in url with given parameters, the latter has precedence
         url_params.update(**{k: v if isinstance(v, list) else [v] for k, v in parameters.items()})
-        parameter_list = [(key, value) for key, values in url_params.items() for value in values]
+        # GitHub expects lowercase booleans (true/false) in the query string
+        parameter_list = [
+            (key, str(value).lower() if isinstance(value, bool) else value)
+            for key, values in url_params.items()
+            for value in values
+        ]
         # remove query from url
         url = urllib.parse.urlunparse((scheme, netloc, url, params, "", fragment))
 
         if len(parameter_list) == 0:
             return url
         else:
-            return f"{url}?{urllib.parse.urlencode(parameter_list)}"
+            # we need deterministic URLs for stable test assertions
+            return f"{url}?{urllib.parse.urlencode(sorted(parameter_list))}"
 
     def close(self) -> None:
         """
@@ -540,6 +548,7 @@ class Requester:
             seconds_between_requests=self.__seconds_between_requests,
             seconds_between_writes=self.__seconds_between_writes,
             lazy=self.__lazy,
+            api_version=self.__apiVersion,
         )
 
     @property
@@ -588,17 +597,41 @@ class Requester:
     def is_not_lazy(self) -> bool:
         return not self.__lazy
 
-    def withLazy(self, lazy: bool) -> Requester:
+    def withLazy(self, lazy: Opt[bool]) -> Requester:
         """
         Create a new requester instance with identical configuration but the given lazy setting.
 
-        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
-            from those, and so on
-        :return: new Requester instance
+        :param lazy: if True, completable objects created from this instance are lazy, as well as completable objects
+            created from those, and so on.
+        :return: new Requester instance if is_defined(lazy) and lazy != self.is_lazy, this instance otherwise
 
         """
+        if is_undefined(lazy) or self.is_lazy == lazy:
+            return self
+
         kwargs = self.kwargs
         kwargs.update(lazy=lazy)
+        return Requester(**kwargs)
+
+    @property
+    def api_version(self) -> str | None:
+        return self.__apiVersion
+
+    def withApiVersion(self, api_version: str | None) -> Requester:
+        """
+        Create a new requester instance with identical configuration but the given API version setting.
+
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-
+            api/api-versions). Note that some PyGithub methods might downgrade this version if it is not supported by
+            the implementation. Set to None to not specify any version
+        :return: new Requester instance if is_defined(lazy) and lazy != self.is_lazy, this instance otherwise
+
+        """
+        if api_version == self.api_version:
+            return self
+
+        kwargs = self.kwargs
+        kwargs.update(api_version=api_version)
         return Requester(**kwargs)
 
     def requestJsonAndCheck(
@@ -619,16 +652,20 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(
-            *self.requestJson(
-                verb,
-                url,
-                parameters,
-                headers,
-                input,
-                self.__customConnection(url),
-                follow_302_redirect=follow_302_redirect,
-            )
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(
+                *self.requestJson(
+                    verb,
+                    url,
+                    parameters,
+                    headers,
+                    input,
+                    self.__customConnection(url),
+                    follow_302_redirect=follow_302_redirect,
+                )
+            ),
         )
 
     def requestMultipartAndCheck(
@@ -648,7 +685,11 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url))),
+        )
 
     def requestBlobAndCheck(
         self,
@@ -668,7 +709,11 @@ class Requester:
         :raises: :class:`GithubException` for error status codes
 
         """
-        return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
+        return self.__postProcess(
+            verb,
+            url,
+            *self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url))),
+        )
 
     @classmethod
     def paths_of_dict(cls, d: dict) -> dict:
@@ -852,8 +897,16 @@ class Requester:
             raise self.createException(status, responseHeaders, data)
         return responseHeaders, data
 
+    def __postProcess(
+        self, verb: str, url: str, responseHeaders: dict[str, Any], data: Any
+    ) -> tuple[dict[str, Any], Any]:
+        # make GET url available as "url" attribute
+        if verb == "GET" and isinstance(data, dict) and "url" not in data:
+            data["url"] = url
+        return responseHeaders, data
+
     @classmethod
-    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | tuple[str, ...]) -> bool:
+    def __hostnameHasDomain(cls, hostname: str, domain_or_domains: str | list[str]) -> bool:
         if isinstance(domain_or_domains, str):
             if hostname == domain_or_domains:
                 return True
@@ -869,10 +922,7 @@ class Requester:
             assert o.path.startswith(tuple(prefixes)), o.path
             assert o.port == self.__port, o.port
         else:
-            if self.__base_url == Consts.DEFAULT_BASE_URL:
-                assert self.__hostnameHasDomain(o.hostname, ("github.com", "githubusercontent.com")), o.hostname
-            else:
-                assert self.__hostnameHasDomain(o.hostname, self.__hostname), o.hostname
+            assert self.__hostnameHasDomain(o.hostname, self.__domains), o.hostname
 
     def __customConnection(self, url: str) -> HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None:
         cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None = None
@@ -919,7 +969,7 @@ class Requester:
         exc = GithubException.GithubException
         if status == 401 and lc_message == "bad credentials":
             exc = GithubException.BadCredentialsException
-        elif status == 401 and Consts.headerOTP in headers and re.match(r".*required.*", headers[Consts.headerOTP]):
+        elif status == 401 and Consts.headerOTP in headers and "required" in headers[Consts.headerOTP]:
             exc = GithubException.TwoFactorException
         elif status == 403 and lc_message.startswith("missing or invalid user agent string"):
             exc = GithubException.BadUserAgentException
@@ -1147,7 +1197,7 @@ class Requester:
 
         status, responseHeaders, output = self.__requestEncode(cnx, verb, url, parameters, headers, file_like, encode)
         if isinstance(output, str):
-            return self.__check(status, responseHeaders, output)
+            return self.__postProcess(verb, url, *self.__check(status, responseHeaders, output))
         raise ValueError("requestMemoryBlobAndCheck() Expected a str, should never happen")
 
     def __requestEncode(
@@ -1171,6 +1221,8 @@ class Requester:
         if self.__auth is not None:
             self.__auth.authentication(requestHeaders)
         requestHeaders["User-Agent"] = self.__userAgent
+        if self.__apiVersion is not None:
+            requestHeaders[Consts.headerApiVersion] = self.__apiVersion
 
         url = self.__makeAbsoluteUrl(url)
         url = Requester.add_parameters_to_url(url, parameters)

@@ -23,6 +23,9 @@
 # Copyright 2023 Gael Colas <gael.colas@plus.ai>                               #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -42,6 +45,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -51,7 +56,7 @@ class PullRequestReview(Framework.TestCase):
     def setUp(self):
         super().setUp()
 
-        self.repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+        self.repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(538)
 
         # Test ability to create a review
@@ -78,7 +83,11 @@ class PullRequestReview(Framework.TestCase):
         self.assertEqual(self.pullreview.state, "DISMISSED")
 
     def testAttributes(self):
+        self.assertEqual(self.pullreview.author_association, "OWNER")
+        self.assertIsNone(self.pullreview.body_html)
+        self.assertIsNone(self.pullreview.body_text)
         self.assertEqual(self.pullreview.id, 28482091)
+        self.assertIsNone(self.pullreview.node_id)
         self.assertEqual(self.pullreview.user.login, "jzelinskie")
         self.assertEqual(self.pullreview.body, "")
         self.assertEqual(self.pullreview.commit_id, "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc")

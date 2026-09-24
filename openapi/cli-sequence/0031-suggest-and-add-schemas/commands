@@ -1,0 +1,4 @@
+python scripts/openapi.py suggest schemas openapi.spec.json openapi.index
+python scripts/openapi.py --dry-run suggest schemas --add openapi.spec.json openapi.index
+python scripts/openapi.py suggest schemas --add openapi.spec.json openapi.index
+python scripts/openapi.py index github openapi.spec.json openapi.index

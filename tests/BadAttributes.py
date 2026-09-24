@@ -15,6 +15,7 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 iarspider <iarspider@gmail.com>                               #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -100,7 +101,9 @@ class BadAttributes(Framework.TestCase):
         self.assertEqual(raisedexp.exception.actual_value, 42)
 
     def testBadTransformedAttributeInList(self):
-        commit = self.g.get_repo("klmitch/turnstile", lazy=True).get_commit("38d9082a898d0822b5ccdfd78f3a536e2efa6c26")
+        commit = (
+            self.g.withLazy(True).get_repo("klmitch/turnstile").get_commit("38d9082a898d0822b5ccdfd78f3a536e2efa6c26")
+        )
 
         with self.assertRaises(github.BadAttributeException) as raisedexp:
             commit.parents

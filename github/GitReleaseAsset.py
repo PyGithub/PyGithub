@@ -20,8 +20,11 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Alex Olieman <alex@olieman.net>                               #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
 # Copyright 2025 Neel Malik <41765022+neel-m@users.noreply.github.com>         #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -43,12 +46,16 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Any, Iterator
+from typing import TYPE_CHECKING, Any, overload
 
 import github.NamedUser
 import github.Organization
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class GitReleaseAsset(CompletableGithubObject):
@@ -77,7 +84,7 @@ class GitReleaseAsset(CompletableGithubObject):
         self._size: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-        self._uploader: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._uploader: Attribute[NamedUser] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -144,7 +151,7 @@ class GitReleaseAsset(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def uploader(self) -> github.NamedUser.NamedUser:
+    def uploader(self) -> NamedUser:
         self._completeIfNotSet(self._uploader)
         return self._uploader.value
 
@@ -159,6 +166,14 @@ class GitReleaseAsset(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
         return True
+
+    @overload
+    def download_asset(self, path: None = None, chunk_size: int | None = 1) -> tuple[int, dict[str, Any], Iterator]:
+        ...
+
+    @overload
+    def download_asset(self, path: str, chunk_size: int | None = 1) -> None:
+        ...
 
     def download_asset(
         self, path: None | str = None, chunk_size: int | None = 1
@@ -194,6 +209,10 @@ class GitReleaseAsset(CompletableGithubObject):
             self._download_count = self._makeIntAttribute(attributes["download_count"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "label" in attributes:  # pragma no branch
             self._label = self._makeStringAttribute(attributes["label"])
         if "name" in attributes:  # pragma no branch

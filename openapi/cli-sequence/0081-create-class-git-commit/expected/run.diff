@@ -1,0 +1,534 @@
+diff --unified --recursive --new-file before/github/GitCommit.py after/github/GitCommit.py
+--- before/github/GitCommit.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/GitCommit.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,115 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++import github.GitAuthor
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    from github.GitAuthor import GitAuthor
++    pass
++
++
++class GitCommit(NonCompletableGithubObject):
++    """
++    This class represents GitCommit.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/git#commits
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/commit-search-result-item/properties/commit
++    - /components/schemas/commit/properties/commit
++    - /components/schemas/nullable-simple-commit
++    - /components/schemas/simple-commit
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._author: Attribute[GitAuthor] = NotSet
++        self._comment_count: Attribute[int] = NotSet
++        self._committer: Attribute[GitAuthor] = NotSet
++        self._id: Attribute[str] = NotSet
++        self._message: Attribute[str] = NotSet
++        self._timestamp: Attribute[datetime] = NotSet
++        self._tree_id: Attribute[str] = NotSet
++        self._url: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def author(self) -> GitAuthor:
++        return self._author.value
++
++    @property
++    def comment_count(self) -> int:
++        return self._comment_count.value
++
++    @property
++    def committer(self) -> GitAuthor:
++        return self._committer.value
++
++    @property
++    def id(self) -> str:
++        return self._id.value
++
++    @property
++    def message(self) -> str:
++        return self._message.value
++
++    @property
++    def timestamp(self) -> datetime:
++        return self._timestamp.value
++
++    @property
++    def tree_id(self) -> str:
++        return self._tree_id.value
++
++    @property
++    def url(self) -> str:
++        return self._url.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "author" in attributes:  # pragma no branch
++            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
++        if "comment_count" in attributes:  # pragma no branch
++            self._comment_count = self._makeIntAttribute(attributes["comment_count"])
++        if "committer" in attributes:  # pragma no branch
++            self._committer = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["committer"])
++        if "id" in attributes:  # pragma no branch
++            self._id = self._makeStringAttribute(attributes["id"])
++        if "message" in attributes:  # pragma no branch
++            self._message = self._makeStringAttribute(attributes["message"])
++        if "timestamp" in attributes:  # pragma no branch
++            self._timestamp = self._makeDatetimeAttribute(attributes["timestamp"])
++        if "tree_id" in attributes:  # pragma no branch
++            self._tree_id = self._makeStringAttribute(attributes["tree_id"])
++        if "url" in attributes:  # pragma no branch
++            self._url = self._makeStringAttribute(attributes["url"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -236,6 +236,299 @@
+       ],
+       "test_filename": "tests/GitAuthor.py"
+     },
++    "GitCommit": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents GitCommit.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/git#commits\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/commit-search-result-item/properties/commit\n    - /components/schemas/commit/properties/commit\n    - /components/schemas/nullable-simple-commit\n    - /components/schemas/simple-commit",
++      "filename": "github/GitCommit.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "GitCommit",
++      "name": "GitCommit",
++      "package": "github",
++      "properties": {
++        "author": {
++          "name": "author",
++          "returns": [
++            "GitAuthor"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit": {
++              "properties": {
++                "date": {
++                  "format": "date-time",
++                  "type": "string"
++                },
++                "email": {
++                  "type": "string"
++                },
++                "name": {
++                  "type": "string"
++                }
++              },
++              "required": [
++                "name",
++                "email",
++                "date"
++              ],
++              "type": "object"
++            },
++            "/components/schemas/commit/properties/commit": {
++              "$ref": "#/components/schemas/nullable-git-user"
++            },
++            "/components/schemas/nullable-simple-commit": {
++              "description": "Information about the Git author",
++              "nullable": true,
++              "properties": {
++                "email": {
++                  "description": "Git email address of the commit's author",
++                  "example": "monalisa.octocat@example.com",
++                  "format": "email",
++                  "type": "string"
++                },
++                "name": {
++                  "description": "Name of the commit's author",
++                  "example": "Monalisa Octocat",
++                  "type": "string"
++                }
++              },
++              "required": [
++                "name",
++                "email"
++              ],
++              "type": "object"
++            },
++            "/components/schemas/simple-commit": {
++              "description": "Information about the Git author",
++              "nullable": true,
++              "properties": {
++                "email": {
++                  "description": "Git email address of the commit's author",
++                  "example": "monalisa.octocat@example.com",
++                  "format": "email",
++                  "type": "string"
++                },
++                "name": {
++                  "description": "Name of the commit's author",
++                  "example": "Monalisa Octocat",
++                  "type": "string"
++                }
++              },
++              "required": [
++                "name",
++                "email"
++              ],
++              "type": "object"
++            }
++          }
++        },
++        "comment_count": {
++          "name": "comment_count",
++          "returns": [
++            "int"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit": {
++              "type": "integer"
++            },
++            "/components/schemas/commit/properties/commit": {
++              "example": 0,
++              "type": "integer"
++            }
++          }
++        },
++        "committer": {
++          "name": "committer",
++          "returns": [
++            "GitAuthor"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit": {
++              "$ref": "#/components/schemas/nullable-git-user"
++            },
++            "/components/schemas/commit/properties/commit": {
++              "$ref": "#/components/schemas/nullable-git-user"
++            },
++            "/components/schemas/nullable-simple-commit": {
++              "description": "Information about the Git committer",
++              "nullable": true,
++              "properties": {
++                "email": {
++                  "description": "Git email address of the commit's committer",
++                  "example": "monalisa.octocat@example.com",
++                  "format": "email",
++                  "type": "string"
++                },
++                "name": {
++                  "description": "Name of the commit's committer",
++                  "example": "Monalisa Octocat",
++                  "type": "string"
++                }
++              },
++              "required": [
++                "name",
++                "email"
++              ],
++              "type": "object"
++            },
++            "/components/schemas/simple-commit": {
++              "description": "Information about the Git committer",
++              "nullable": true,
++              "properties": {
++                "email": {
++                  "description": "Git email address of the commit's committer",
++                  "example": "monalisa.octocat@example.com",
++                  "format": "email",
++                  "type": "string"
++                },
++                "name": {
++                  "description": "Name of the commit's committer",
++                  "example": "Monalisa Octocat",
++                  "type": "string"
++                }
++              },
++              "required": [
++                "name",
++                "email"
++              ],
++              "type": "object"
++            }
++          }
++        },
++        "id": {
++          "name": "id",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "SHA for the commit",
++            "example": "7638417db6d59f3c431d3e1f261cc637155684cd",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/nullable-simple-commit": {
++              "description": "SHA for the commit",
++              "example": "7638417db6d59f3c431d3e1f261cc637155684cd",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit": {
++              "description": "SHA for the commit",
++              "example": "7638417db6d59f3c431d3e1f261cc637155684cd",
++              "type": "string"
++            }
++          }
++        },
++        "message": {
++          "name": "message",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit": {
++              "type": "string"
++            },
++            "/components/schemas/commit/properties/commit": {
++              "example": "Fix all the bugs",
++              "type": "string"
++            },
++            "/components/schemas/nullable-simple-commit": {
++              "description": "Message describing the purpose of the commit",
++              "example": "Fix #42",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit": {
++              "description": "Message describing the purpose of the commit",
++              "example": "Fix #42",
++              "type": "string"
++            }
++          }
++        },
++        "timestamp": {
++          "name": "timestamp",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "description": "Timestamp of the commit",
++            "example": "2014-08-09T08:02:04+12:00",
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/nullable-simple-commit": {
++              "description": "Timestamp of the commit",
++              "example": "2014-08-09T08:02:04+12:00",
++              "format": "date-time",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit": {
++              "description": "Timestamp of the commit",
++              "example": "2014-08-09T08:02:04+12:00",
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        },
++        "tree_id": {
++          "name": "tree_id",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "SHA for the commit's tree",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/nullable-simple-commit": {
++              "description": "SHA for the commit's tree",
++              "type": "string"
++            },
++            "/components/schemas/simple-commit": {
++              "description": "SHA for the commit's tree",
++              "type": "string"
++            }
++          }
++        },
++        "url": {
++          "name": "url",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit": {
++              "format": "uri",
++              "type": "string"
++            },
++            "/components/schemas/commit/properties/commit": {
++              "example": "https://api.github.com/repos/octocat/Hello-World/commits/6dcb09b5b57875f334f61aebed695e2e4193db5e",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/commit-search-result-item/properties/commit",
++        "/components/schemas/commit/properties/commit",
++        "/components/schemas/nullable-simple-commit",
++        "/components/schemas/simple-commit"
++      ],
++      "test_filename": "tests/GitCommit.py"
++    },
+     "GithubObject": {
+       "bases": [
+         "ABC"
+@@ -3952,6 +4245,7 @@
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
+         "GitAuthor",
++        "GitCommit",
+         "GithubObject",
+         "IssueComment",
+         "NamedUser",
+@@ -3976,6 +4270,7 @@
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
+         "GitAuthor",
++        "GitCommit",
+         "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult",
+@@ -3988,6 +4283,7 @@
+       ],
+       "NonCompletableGithubObject": [
+         "GitAuthor",
++        "GitCommit",
+         "Reaction"
+       ],
+       "Protocol": [
+@@ -4667,9 +4963,15 @@
+       ]
+     },
+     "schema_to_classes": {
++      "/components/schemas/commit-search-result-item/properties/commit": [
++        "GitCommit"
++      ],
+       "/components/schemas/commit-search-result-item/properties/commit/properties/author": [
+         "GitAuthor"
+       ],
++      "/components/schemas/commit/properties/commit": [
++        "GitCommit"
++      ],
+       "/components/schemas/full-repository": [
+         "Repository"
+       ],
+@@ -4682,6 +4984,9 @@
+       "/components/schemas/nullable-git-user": [
+         "GitAuthor"
+       ],
++      "/components/schemas/nullable-simple-commit": [
++        "GitCommit"
++      ],
+       "/components/schemas/nullable-simple-commit/properties/author": [
+         "GitAuthor"
+       ],
+@@ -4700,6 +5005,9 @@
+       "/components/schemas/repository": [
+         "Repository"
+       ],
++      "/components/schemas/simple-commit": [
++        "GitCommit"
++      ],
+       "/components/schemas/simple-commit/properties/author": [
+         "GitAuthor"
+       ],
+diff --unified --recursive --new-file before/tests/GitCommit.py after/tests/GitCommit.py
+--- before/tests/GitCommit.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/GitCommit.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,48 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class GitCommit(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type GitCommit and assign to self.gc, then run:
++        #   pytest ./tests/GitCommit.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/GitCommit.py testAttributes
++        #   pre-commit run --all-files
++        self.gc = None
++
++    def testAttributes(self):
++        gc = self.gc
++        self.assertEqual(gc.__repr__(), "")
++        self.assertEqual(gc.author.some_attribute, "")
++        self.assertEqual(gc.comment_count, 0)
++        self.assertEqual(gc.committer.some_attribute, "")
++        self.assertEqual(gc.id, "")
++        self.assertEqual(gc.message, "")
++        self.assertEqual(gc.timestamp, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(gc.tree_id, "")
++        self.assertEqual(gc.url, "")

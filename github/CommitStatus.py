@@ -59,6 +59,7 @@ class CommitStatus(NonCompletableGithubObject):
 
     The OpenAPI schema can be found at
 
+    - /components/schemas/simple-commit-status
     - /components/schemas/status
 
     """
@@ -71,6 +72,7 @@ class CommitStatus(NonCompletableGithubObject):
         self._description: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
+        self._required: Attribute[bool] = NotSet
         self._state: Attribute[str] = NotSet
         self._target_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
@@ -114,6 +116,10 @@ class CommitStatus(NonCompletableGithubObject):
         return self._node_id.value
 
     @property
+    def required(self) -> bool:
+        return self._required.value
+
+    @property
     def state(self) -> str:
         return self._state.value
 
@@ -150,6 +156,8 @@ class CommitStatus(NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "required" in attributes:  # pragma no branch
+            self._required = self._makeBoolAttribute(attributes["required"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "target_url" in attributes:  # pragma no branch

@@ -36,6 +36,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Changyong Um <e7217@naver.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -77,6 +78,12 @@ headerRateRemaining = "x-ratelimit-remaining"
 headerRateReset = "x-ratelimit-reset"
 headerOAuthScopes = "x-oauth-scopes"
 headerOTP = "x-github-otp"
+
+# https://docs.github.com/en/rest/about-the-rest-api/api-versions
+headerApiVersion = "X-GitHub-Api-Version"
+headerApiVersionSelected = "x-github-api-version-selected"
+API_VERSION_2022_11_28 = "2022-11-28"
+API_VERSION_2026_03_10 = "2026-03-10"
 
 defaultMediaType = "application/octet-stream"
 

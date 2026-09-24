@@ -24,6 +24,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -217,12 +218,12 @@ class RequiredPullRequestReviews(CompletableGithubObject):
 
     @property
     @deprecated("Use dismissal_restrictions.teams")
-    def dismissal_teams(self) -> list[Team]:
+    def dismissal_teams(self) -> list[Team] | None:
         return self.dismissal_restrictions.teams if self.dismissal_restrictions is not None else None
 
     @property
     @deprecated("Use dismissal_restrictions.users")
-    def dismissal_users(self) -> list[NamedUser]:
+    def dismissal_users(self) -> list[NamedUser] | None:
         return self.dismissal_restrictions.users if self.dismissal_restrictions is not None else None
 
     @property

@@ -18,6 +18,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -51,10 +52,18 @@ class SecurityAndAnalysisFeature(NonCompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/security-and-analysis/properties/advanced_security
+    - /components/schemas/security-and-analysis/properties/code_security
     - /components/schemas/security-and-analysis/properties/dependabot_security_updates
     - /components/schemas/security-and-analysis/properties/secret_scanning
+    - /components/schemas/security-and-analysis/properties/secret_scanning_ai_detection
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_alert_dismissal
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_bypass
     - /components/schemas/security-and-analysis/properties/secret_scanning_non_provider_patterns
     - /components/schemas/security-and-analysis/properties/secret_scanning_push_protection
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_alert_dismissal
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_bypass
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_alert_dismissal
+    - /components/schemas/security-and-analysis/properties/secret_scanning_delegated_alert_dismissal
 
     """
 

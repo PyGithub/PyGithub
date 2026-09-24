@@ -19,6 +19,9 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Nick McClorey <32378821+nickrmcclorey@users.noreply.github.com>#
+# Copyright 2026 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Sebastien NICOT <sebastien.nicot@enterprisedb.com>            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,6 +44,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+
+from github import GithubException
+from github.WorkflowRun import WorkflowRun
 
 from . import Framework
 
@@ -81,6 +87,18 @@ class Workflow(Framework.TestCase):
             self.workflow.badge_url,
             "https://github.com/PyGithub/PyGithub/workflows/check/badge.svg",
         )
+
+    def testLazyAttributes(self):
+        workflow = self.g.withLazy(True).get_repo("PyGithub/PyGithub").get_workflow("check.yml")
+        self.assertEqual(
+            str(workflow), 'Workflow(url="/repos/PyGithub/PyGithub/actions/workflows/check.yml", name=None)'
+        )
+        self.assertEqual(workflow.url, "/repos/PyGithub/PyGithub/actions/workflows/check.yml")
+
+        workflow = self.g.withLazy(True).get_repo("PyGithub/PyGithub").get_workflow(42)
+        self.assertEqual(str(workflow), 'Workflow(url="/repos/PyGithub/PyGithub/actions/workflows/42", name=None)')
+        self.assertEqual(workflow.id, 42)
+        self.assertEqual(workflow.url, "/repos/PyGithub/PyGithub/actions/workflows/42")
 
     def testGetRunsWithNoArguments(self):
         self.assertListKeyEqual(
@@ -141,6 +159,22 @@ class Workflow(Framework.TestCase):
     def testCreateDispatchForNonTriggerEnabled(self):
         workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("check.yml")
         self.assertFalse(workflow.create_dispatch("main"))
+
+    def testCreateDispatchException(self):
+        workflow = self.g.get_repo("test-org/test-repo").get_workflow("workflow-with-params.yaml")
+        with self.assertRaises(GithubException) as raisedexp:
+            workflow.create_dispatch("main", throw=True)
+        self.assertEqual(raisedexp.exception.status, 422)
+        self.assertEqual(raisedexp.exception.data["message"], "Required input 'mandatory-parameter' not provided")
+
+    def testCreateDispatchWithReturnRunDetails(self):
+        dispatch_inputs = {"logLevel": "Warning", "message": "Log Message"}
+        workflow = self.g.get_repo("wrecker/PyGithub").get_workflow("manual_dispatch.yml")
+        run = workflow.create_dispatch("main", dispatch_inputs, return_run_details=True)
+        self.assertIsInstance(run, WorkflowRun)
+        self.assertEqual(run.id, 123456789)
+        self.assertEqual(run.url, "https://api.github.com/repos/wrecker/PyGithub/actions/runs/123456789")
+        self.assertEqual(run.html_url, "https://github.com/wrecker/PyGithub/actions/runs/123456789")
 
     def testDisable(self):
         workflow = self.g.get_repo("nickrmcclorey/PyGithub").get_workflow("ci.yml")

@@ -1,0 +1,9 @@
+python scripts/openapi.py --dry-run create class --parent CompletableGithubObjectWithPaginatedProperty --tests github openapi.spec.json openapi.index Commit "https://docs.github.com/en/rest/commits/commits#get-a-commit" "/components/schemas/commit" "/components/schemas/commit/properties/parents/items" "/components/schemas/commit-search-result-item/properties/commit" "/components/schemas/commit-search-result-item/properties/parents/items"
+python scripts/openapi.py create class --parent CompletableGithubObjectWithPaginatedProperty --tests github openapi.spec.json openapi.index Commit "https://docs.github.com/en/rest/commits/commits#get-a-commit" "/components/schemas/commit" "/components/schemas/commit/properties/parents/items" "/components/schemas/commit-search-result-item/properties/commit" "/components/schemas/commit-search-result-item/properties/parents/items"
+python scripts/openapi.py index github openapi.spec.json openapi.index
+
+# Commit references itself, those properties can only be added after Commit is created and index is refreshed
+python scripts/openapi.py --dry-run apply properties --tests github openapi.spec.json openapi.index Commit
+python scripts/openapi.py apply properties --tests github openapi.spec.json openapi.index Commit
+
+python scripts/openapi.py index github openapi.spec.json openapi.index

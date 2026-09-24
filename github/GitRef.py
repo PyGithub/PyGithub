@@ -108,6 +108,7 @@ class GitRef(CompletableGithubObject):
         post_parameters = NotSet.remove_unset_items({"sha": sha, "force": force})
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "node_id" in attributes:  # pragma no branch

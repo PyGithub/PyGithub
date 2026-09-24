@@ -1,0 +1,146 @@
++ python scripts/openapi.py --dry-run apply properties --tests github openapi.spec.json openapi.index
+Using spec openapi.spec.json
+Applying API schemas to 14 PyGithub classes
+Applying spec openapi.spec.json to github.GithubObject.Attribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObjectWithPaginatedProperty (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GraphQlObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/IssueComment.py)
+Applying schema /components/schemas/issue-comment
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+Applying schema /components/schemas/nullable-simple-user
+Diff:
+
+Diff:
+
+Applying schema /components/schemas/public-user
+Diff:
+
+Diff:
+
+Applying schema /components/schemas/simple-user
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.NamedUser.NamedUserSearchResult (github/NamedUser.py)
+Applying schema /components/schemas/user-search-result-item
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.GithubObject.NonCompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.Reaction.Reaction (github/Reaction.py)
+Applying schema /components/schemas/reaction
+Diff:
+
+Diff:
+
+Applying spec openapi.spec.json to github.Repository.Repository (github/Repository.py)
+Applying schema /components/schemas/repository
+Diff:
+--- 
++++ 
+@@ -26,8 +26,10 @@
+ 
+ from github.GithubObject import CompletableGithubObject
+ from github.GithubObject import Attribute, NotSet
++import github.NamedUser
+ 
+ if TYPE_CHECKING:
++    from github.NamedUser import NamedUser
+     pass
+ 
+ 
+@@ -111,6 +113,7 @@
+         self._notifications_url: Attribute[str] = NotSet
+         self._open_issues: Attribute[int] = NotSet
+         self._open_issues_count: Attribute[int] = NotSet
++        self._owner: Attribute[NamedUser] = NotSet
+         self._private: Attribute[bool] = NotSet
+         self._pulls_url: Attribute[str] = NotSet
+         self._pushed_at: Attribute[datetime] = NotSet
+@@ -466,6 +469,11 @@
+     def open_issues_count(self) -> int:
+         self._completeIfNotSet(self._open_issues_count)
+         return self._open_issues_count.value
++
++    @property
++    def owner(self) -> NamedUser:
++        self._completeIfNotSet(self._owner)
++        return self._owner.value
+ 
+     @property
+     def private(self) -> bool:
+@@ -729,6 +737,8 @@
+             self._open_issues = self._makeIntAttribute(attributes["open_issues"])
+         if "open_issues_count" in attributes:  # pragma no branch
+             self._open_issues_count = self._makeIntAttribute(attributes["open_issues_count"])
++        if "owner" in attributes:  # pragma no branch
++            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+         if "private" in attributes:  # pragma no branch
+             self._private = self._makeBoolAttribute(attributes["private"])
+         if "pulls_url" in attributes:  # pragma no branch
+
+Diff:
+--- 
++++ 
+@@ -103,6 +103,7 @@
+         self.assertEqual(r.notifications_url, "")
+         self.assertEqual(r.open_issues, 0)
+         self.assertEqual(r.open_issues_count, 0)
++        self.assertEqual(r.owner.some_attribute, "")
+         self.assertEqual(r.private, False)
+         self.assertEqual(r.pulls_url, "")
+         self.assertEqual(r.pushed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
+
+Class Repository changed
+Test tests/Repository.py changed
+Applying spec openapi.spec.json to github.GithubObject._BadAttribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._NotSetType (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._ValuedAttribute (github/GithubObject.py)
++ python scripts/openapi.py apply properties --tests github openapi.spec.json openapi.index
+Using spec openapi.spec.json
+Applying API schemas to 14 PyGithub classes
+Applying spec openapi.spec.json to github.GithubObject.Attribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.CompletableGithubObjectWithPaginatedProperty (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject.GraphQlObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/IssueComment.py)
+Applying schema /components/schemas/issue-comment
+Class IssueComment changed
+Test tests/IssueComment.py changed
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+Applying schema /components/schemas/nullable-simple-user
+Applying schema /components/schemas/public-user
+Applying schema /components/schemas/simple-user
+Class NamedUser changed
+Test tests/NamedUser.py changed
+Applying spec openapi.spec.json to github.NamedUser.NamedUserSearchResult (github/NamedUser.py)
+Applying schema /components/schemas/user-search-result-item
+Class NamedUserSearchResult changed
+Test tests/NamedUser.py changed
+Applying spec openapi.spec.json to github.GithubObject.NonCompletableGithubObject (github/GithubObject.py)
+Applying spec openapi.spec.json to github.Reaction.Reaction (github/Reaction.py)
+Applying schema /components/schemas/reaction
+Class Reaction changed
+Test tests/Reaction.py changed
+Applying spec openapi.spec.json to github.Repository.Repository (github/Repository.py)
+Applying schema /components/schemas/repository
+Class Repository changed
+Test tests/Repository.py changed
+Applying spec openapi.spec.json to github.GithubObject._BadAttribute (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._NotSetType (github/GithubObject.py)
+Applying spec openapi.spec.json to github.GithubObject._ValuedAttribute (github/GithubObject.py)
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 5 Python files
+Indexed 14 classes
+Indexed 2 paths
+Indexed 7 schemas
+Indexing OpenAPI spec

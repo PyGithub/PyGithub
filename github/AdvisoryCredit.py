@@ -8,6 +8,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -29,12 +30,15 @@
 
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from typing_extensions import TypedDict
 
 import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class SimpleCredit(TypedDict):
@@ -42,7 +46,7 @@ class SimpleCredit(TypedDict):
     A simple credit for a security advisory.
     """
 
-    login: str | github.NamedUser.NamedUser
+    login: str | NamedUser
     type: str
 
 

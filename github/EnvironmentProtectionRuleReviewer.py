@@ -20,6 +20,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -62,7 +63,7 @@ class EnvironmentProtectionRuleReviewer(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._reviewer: Attribute[github.NamedUser.NamedUser | github.Team.Team] = NotSet
+        self._reviewer: Attribute[NamedUser | Team] = NotSet
         self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:

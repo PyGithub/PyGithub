@@ -1,0 +1,2 @@
+python scripts/openapi.py create class --completable --tests github openapi.spec.json openapi.index Repository https://docs.github.com/en/rest/reference/repos /components/schemas/repository
+python scripts/openapi.py index github openapi.spec.json openapi.index

@@ -81,6 +81,12 @@ class CommitComment(Framework.TestCase):
         self.assertEqual(self.comment.user.login, "jacquev6")
         self.assertEqual(repr(self.comment), 'CommitComment(user=NamedUser(login="jacquev6"), id=1362000)')
 
+    def testLazyAttributes(self):
+        comment = self.g.withLazy(True).get_repo("lazy/repo").get_comment(42)
+        self.assertEqual(str(comment), "CommitComment(user=None, id=42)")
+        self.assertEqual(comment.id, 42)
+        self.assertEqual(comment.url, "/repos/lazy/repo/comments/42")
+
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
 

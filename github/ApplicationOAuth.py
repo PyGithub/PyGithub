@@ -9,6 +9,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Théo Goudout <TheoGoudout@users.noreply.github.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -113,9 +114,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
 
         return self.get_oauth_url(f"/authorize?{query}")
 
-    def get_access_token(self, code: str, state: str | None = None) -> AccessToken:
+    def get_access_token(self, code: str, code_verifier: str | None = None) -> AccessToken:
         """
-        :calls: `POST /login/oauth/access_token <https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps>`_
+        :calls: `POST /login/oauth/access_token <https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app#using-the-web-application-flow-to-generate-a-user-access-token>`_
         """
         assert isinstance(code, str), code
         post_parameters = {
@@ -124,8 +125,8 @@ class ApplicationOAuth(NonCompletableGithubObject):
             "client_secret": self.client_secret,
         }
 
-        if state is not None:
-            post_parameters["state"] = state
+        if code_verifier is not None:
+            post_parameters["code_verifier"] = code_verifier
 
         headers, data = self._checkError(
             *self._requester.requestJsonAndCheck(

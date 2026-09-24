@@ -5,6 +5,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Krishna Chaitanya <krishnabkc15@gmail.com>                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,13 +28,15 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Repository
 from github.GithubObject import Attribute, NotSet
 from github.PaginatedList import PaginatedList
-from github.Repository import Repository
 from github.Variable import Variable
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class OrganizationVariable(Variable):
@@ -42,16 +46,31 @@ class OrganizationVariable(Variable):
     The reference can be found here
     https://docs.github.com/en/rest/actions/variables
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/organization-actions-variable
+
     """
 
     def _initAttributes(self) -> None:
-        self._created_at: Attribute[datetime] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
+        super()._initAttributes()
         self._selected_repositories_url: Attribute[str] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._url: Attribute[str] = NotSet
         self._visibility: Attribute[str] = NotSet
+
+    @property
+    def selected_repositories(self) -> PaginatedList[Repository]:
+        return PaginatedList(
+            github.Repository.Repository,
+            self._requester,
+            self.selected_repositories_url,
+            None,
+            list_item="repositories",
+        )
+
+    @property
+    def selected_repositories_url(self) -> str:
+        self._completeIfNotSet(self._selected_repositories_url)
+        return self._selected_repositories_url.value
 
     @property
     def visibility(self) -> str:
@@ -61,23 +80,13 @@ class OrganizationVariable(Variable):
         self._completeIfNotSet(self._visibility)
         return self._visibility.value
 
-    @property
-    def selected_repositories(self) -> PaginatedList[Repository]:
-        return PaginatedList(
-            Repository,
-            self._requester,
-            self._selected_repositories_url.value,
-            None,
-            list_item="repositories",
-        )
-
     def edit(
         self,
         value: str,
         visibility: str = "all",
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
+        :calls: `PATCH /orgs/{org}/actions/variables/{name} <https://docs.github.com/en/rest/reference/actions/variables#update-an-organization-variable>`_
         :param variable_name: string
         :param value: string
         :param visibility: string
@@ -94,14 +103,14 @@ class OrganizationVariable(Variable):
 
         status, _, _ = self._requester.requestJson(
             "PATCH",
-            f"{self.url}/actions/variables/{self.name}",
+            self.url,
             input=patch_parameters,
         )
         return status == 204
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: `PUT /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/variables/{name}/repositories/{repository_id} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -112,7 +121,7 @@ class OrganizationVariable(Variable):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: `DELETE /orgs/{org}/actions/variables/{variable_name} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id} <https://docs.github.com/en/rest/actions/variables#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -122,15 +131,8 @@ class OrganizationVariable(Variable):
         return True
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "created_at" in attributes:
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
+        super()._useAttributes(attributes)
         if "selected_repositories_url" in attributes:
             self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "url" in attributes:
-            self._url = self._makeStringAttribute(attributes["url"])
         if "visibility" in attributes:
             self._visibility = self._makeStringAttribute(attributes["visibility"])

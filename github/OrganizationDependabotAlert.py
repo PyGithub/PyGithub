@@ -4,6 +4,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -25,11 +26,14 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.Repository
 from github.DependabotAlert import DependabotAlert
 from github.GithubObject import Attribute, NotSet
-from github.Repository import Repository
+
+if TYPE_CHECKING:
+    from github.Repository import Repository
 
 
 class OrganizationDependabotAlert(DependabotAlert):
@@ -56,4 +60,4 @@ class OrganizationDependabotAlert(DependabotAlert):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
         if "repository" in attributes:
-            self._repository = self._makeClassAttribute(Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

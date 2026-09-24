@@ -1,0 +1,3 @@
+python scripts/openapi.py --dry-run apply properties --tests --new-schemas as-dict github openapi.spec.json openapi.index Commit
+python scripts/openapi.py apply properties --tests --new-schemas as-dict github openapi.spec.json openapi.index Commit
+python scripts/openapi.py index github openapi.spec.json openapi.index

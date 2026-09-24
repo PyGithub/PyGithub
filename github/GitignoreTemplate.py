@@ -18,6 +18,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -60,6 +61,7 @@ class GitignoreTemplate(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._name: Attribute[str] = NotSet
         self._source: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -72,8 +74,14 @@ class GitignoreTemplate(NonCompletableGithubObject):
     def source(self) -> str:
         return self._source.value
 
+    @property
+    def url(self) -> str:
+        return self._url.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "source" in attributes:  # pragma no branch
             self._source = self._makeStringAttribute(attributes["source"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])

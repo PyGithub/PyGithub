@@ -72,8 +72,13 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 blyedev <63808441+blyedev@users.noreply.github.com>           #
+# Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2026 xmo-odoo <xmo@odoo.com>                                       #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -99,7 +104,7 @@ import pickle
 import urllib.parse
 import warnings
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar
+from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar, overload
 
 import urllib3
 from urllib3.util import Retry
@@ -116,37 +121,51 @@ import github.GithubIntegration
 import github.GithubRetry
 import github.GitignoreTemplate
 import github.GlobalAdvisory
+import github.HookDelivery
+import github.HookDescription
 import github.Issue
 import github.License
 import github.NamedUser
+import github.RateLimitOverview
+import github.RepositoryDiscussion
 import github.Topic
 from github import Consts
 from github.GithubIntegration import GithubIntegration
-from github.GithubObject import CompletableGithubObject, GithubObject, NotSet, Opt, is_defined
+from github.GithubObject import (
+    CompletableGithubObject,
+    GithubObject,
+    NotSet,
+    Opt,
+    _NotSetType,
+    is_defined,
+    is_undefined,
+)
 from github.GithubRetry import GithubRetry
-from github.HookDelivery import HookDelivery, HookDeliverySummary
-from github.HookDescription import HookDescription
 from github.PaginatedList import PaginatedList
-from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 if TYPE_CHECKING:
     from github.AppAuthentication import AppAuthentication
     from github.ApplicationOAuth import ApplicationOAuth
+    from github.Auth import Auth
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Commit import CommitSearchResult
     from github.ContentFile import ContentFileSearchResult
+    from github.Enterprise import Enterprise
     from github.Event import Event
     from github.Gist import Gist
     from github.GithubApp import GithubApp
     from github.GitignoreTemplate import GitignoreTemplate
     from github.GlobalAdvisory import GlobalAdvisory
+    from github.HookDelivery import HookDelivery, HookDeliverySummary
+    from github.HookDescription import HookDescription
     from github.Issue import IssueSearchResult
     from github.License import License
     from github.NamedUser import NamedUser, NamedUserSearchResult
     from github.Organization import Organization
     from github.Project import Project
     from github.ProjectColumn import ProjectColumn
+    from github.RateLimitOverview import RateLimitOverview
     from github.Repository import Repository, RepositorySearchResult
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.Topic import Topic
@@ -186,9 +205,10 @@ class Github:
         pool_size: int | None = None,
         seconds_between_requests: float | None = Consts.DEFAULT_SECONDS_BETWEEN_REQUESTS,
         seconds_between_writes: float | None = Consts.DEFAULT_SECONDS_BETWEEN_WRITES,
-        auth: github.Auth.Auth | None = None,
+        auth: Auth | None = None,
         # v3: set lazy = True as the default
         lazy: bool = False,
+        api_version: str | None = None,
     ) -> None:
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
@@ -209,6 +229,9 @@ class Github:
         :param auth: authentication method
         :param lazy: completable objects created from this instance are lazy,
                      as well as completable objects created from those, and so on
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-api/api-versions).
+                            Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
+                            Set to None to not specify any version
         """
 
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
@@ -225,34 +248,32 @@ class Github:
         assert seconds_between_writes is None or seconds_between_writes >= 0
         assert auth is None or isinstance(auth, github.Auth.Auth), auth
         assert isinstance(lazy, bool), lazy
+        assert api_version is None or isinstance(api_version, str), api_version
 
         if password is not None:
             warnings.warn(
-                "Arguments login_or_token and password are deprecated, please use "
-                "auth=github.Auth.Login(...) instead",
+                "Arguments login_or_token and password are deprecated, please use auth=github.Auth.Login(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
             auth = github.Auth.Login(login_or_token, password)  # type: ignore
         elif login_or_token is not None:
             warnings.warn(
-                "Argument login_or_token is deprecated, please use " "auth=github.Auth.Token(...) instead",
+                "Argument login_or_token is deprecated, please use auth=github.Auth.Token(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
             auth = github.Auth.Token(login_or_token)
         elif jwt is not None:
             warnings.warn(
-                "Argument jwt is deprecated, please use "
-                "auth=github.Auth.AppAuth(...) or "
-                "auth=github.Auth.AppAuthToken(...) instead",
+                "Argument jwt is deprecated, please use auth=github.Auth.AppAuth(...) or auth=github.Auth.AppAuthToken(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
             auth = github.Auth.AppAuthToken(jwt)
         elif app_auth is not None:
             warnings.warn(
-                "Argument app_auth is deprecated, please use " "auth=github.Auth.AppInstallationAuth(...) instead",
+                "Argument app_auth is deprecated, please use auth=github.Auth.AppInstallationAuth(...) instead",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -270,6 +291,7 @@ class Github:
             seconds_between_requests,
             seconds_between_writes,
             lazy,
+            api_version,
         )
 
     def withLazy(self, lazy: bool) -> Github:
@@ -355,11 +377,11 @@ class Github:
         """
         Rate limit overview that provides general status and status for different resources (core/search/graphql).
 
-        :calls:`GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
-        return RateLimitOverview(self.__requester, headers, data)
+        return github.RateLimitOverview.RateLimitOverview(self.__requester, headers, data)
 
     @property
     def oauth_scopes(self) -> list[str] | None:
@@ -394,32 +416,45 @@ class Github:
 
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
-    def get_user(self, login: Opt[str] = NotSet) -> NamedUser | AuthenticatedUser:
+    @overload
+    def get_user(self, login: _NotSetType = NotSet, lazy: Opt[bool] = NotSet) -> AuthenticatedUser:
+        ...
+
+    @overload
+    def get_user(self, login: str, lazy: Opt[bool] = NotSet) -> NamedUser:
+        ...
+
+    # v3: remove lazy argument, laziness is fully controlled via requester
+    def get_user(self, login: Opt[str] = NotSet, lazy: Opt[bool] = NotSet) -> NamedUser | AuthenticatedUser:
         """
-        :calls: `GET /users/{user} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
+        :calls: `GET /users/{username} <https://docs.github.com/en/rest/reference/users>`_ or `GET /user <https://docs.github.com/en/rest/reference/users>`_
         """
-        if login is NotSet:
+        requester = self.__requester.withLazy(lazy)
+        if is_undefined(login):
             url = "/user"
-            # always return a lazy completable AuthenticatedUser
+            # default is to return a lazy completable AuthenticatedUser
             # v3: given github.Github(lazy=True) is now default, remove completed=False here
-            return github.AuthenticatedUser.AuthenticatedUser(self.__requester, url=url, completed=False)
+            return github.AuthenticatedUser.AuthenticatedUser(
+                requester, url=url, completed=False if is_undefined(lazy) else None
+            )
         else:
             assert isinstance(login, str), login
             login = urllib.parse.quote(login)
             url = f"/users/{login}"
             # always return a completed NamedUser
             # v3: remove complete() here and make this as lazy as github.Github is
-            return github.NamedUser.NamedUser(self.__requester, url=url).complete()
+            user = github.NamedUser.NamedUser(requester, url=url)
+            return user.complete() if is_undefined(lazy) else user
 
     def get_user_by_id(self, user_id: int) -> NamedUser:
         """
-        :calls: `GET /user/{id} <https://docs.github.com/en/rest/reference/users>`_
+        :calls: `GET /user/{account_id} <https://docs.github.com/en/rest/reference/users>`_
         :param user_id: int
         :rtype: :class:`github.NamedUser.NamedUser`
         """
         assert isinstance(user_id, int), user_id
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/user/{user_id}")
-        return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
+        url = f"/user/{user_id}"
+        return github.NamedUser.NamedUser(self.__requester, url=url)
 
     def get_users(self, since: Opt[int] = NotSet) -> PaginatedList[NamedUser]:
         """
@@ -436,9 +471,9 @@ class Github:
         :calls: `GET /orgs/{org} <https://docs.github.com/en/rest/reference/orgs>`_
         """
         assert isinstance(org, str), org
-        org = urllib.parse.quote(org)
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/orgs/{org}")
-        return github.Organization.Organization(self.__requester, headers, data, completed=True)
+        org = urllib.parse.quote(org, safe="")
+        url = f"/orgs/{org}"
+        return github.Organization.Organization(self.__requester, url=url)
 
     def get_organizations(self, since: Opt[int] = NotSet) -> PaginatedList[Organization]:
         """
@@ -456,7 +491,7 @@ class Github:
         )
 
     # v3: rename enterprise to slug
-    def get_enterprise(self, enterprise: str) -> github.Enterprise.Enterprise:
+    def get_enterprise(self, enterprise: str) -> Enterprise:
         """
         :calls: `GET /enterprises/{enterprise} <https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin>`_
         :param enterprise: string
@@ -466,17 +501,21 @@ class Github:
         # There is no native "/enterprises/{enterprise}" api, so this function is a hub for apis that start with "/enterprise/{enterprise}".
         return github.Enterprise.Enterprise.from_slug(self.__requester, enterprise)
 
-    def get_repo(self, full_name_or_id: int | str, lazy: bool = False) -> Repository:
+    # v3: remove lazy option
+    def get_repo(self, full_name_or_id: int | str, lazy: Opt[bool] = NotSet) -> Repository:
         """
-        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{id} <https://docs.github.com/en/rest/reference/repos>`_
+        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_ or `GET /repositories/{repository_id} <https://docs.github.com/en/rest/reference/repos>`_
         """
+        if is_defined(lazy):
+            warnings.warn(
+                "Argument lazy is deprecated, please use Github(..., lazy=...).get_repo(...) instead",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
         url = f"{url_base}{full_name_or_id}"
-        if lazy:
-            return github.Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
-        headers, data = self.__requester.requestJsonAndCheck("GET", url)
-        return github.Repository.Repository(self.__requester, headers, data, completed=True)
+        return github.Repository.Repository(self.__requester.withLazy(lazy), url=url)
 
     def get_repos(
         self,
@@ -511,12 +550,8 @@ class Github:
         """
         :calls: `GET /projects/{project_id} <https://docs.github.com/en/rest/reference/projects#get-a-project>`_
         """
-        headers, data = self.__requester.requestJsonAndCheck(
-            "GET",
-            f"/projects/{id:d}",
-            headers={"Accept": Consts.mediaTypeProjectsPreview},
-        )
-        return github.Project.Project(self.__requester, headers, data, completed=True)
+        url = f"/projects/{id:d}"
+        return github.Project.Project(self.__requester, url=url, accept=Consts.mediaTypeProjectsPreview)
 
     def get_project_column(self, id: int) -> ProjectColumn:
         """
@@ -531,11 +566,11 @@ class Github:
 
     def get_gist(self, id: str) -> Gist:
         """
-        :calls: `GET /gists/{id} <https://docs.github.com/en/rest/reference/gists>`_
+        :calls: `GET /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
         """
         assert isinstance(id, str), id
-        headers, data = self.__requester.requestJsonAndCheck("GET", f"/gists/{id}")
-        return github.Gist.Gist(self.__requester, headers, data, completed=True)
+        url = f"/gists/{id}"
+        return github.Gist.Gist(self.__requester, url=url)
 
     def get_gists(self, since: Opt[datetime] = NotSet) -> PaginatedList[Gist]:
         """
@@ -565,7 +600,7 @@ class Github:
         cve_id: Opt[str] = NotSet,
         ecosystem: Opt[str] = NotSet,
         severity: Opt[str] = NotSet,
-        cwes: list[Opt[str]] | Opt[str] = NotSet,
+        cwes: list[str | int] | Opt[str] = NotSet,
         is_withdrawn: Opt[bool] = NotSet,
         affects: list[str] | Opt[str] = NotSet,
         published: Opt[str] = NotSet,
@@ -674,6 +709,13 @@ class Github:
         :param sort: string ('stars', 'forks', 'updated')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`PaginatedList` of :class:`github.Repository.RepositorySearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_repositories("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -715,6 +757,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUserSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_users("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -756,6 +804,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Issue.IssueSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_issues("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -794,6 +848,12 @@ class Github:
         :param highlight: boolean (True, False)
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.ContentFile.ContentFileSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_code("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -838,6 +898,12 @@ class Github:
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Commit.CommitSearchResult`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_commits("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -872,6 +938,12 @@ class Github:
         :param query: string
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`PaginatedList` of :class:`github.Topic.Topic`
+
+        You can check if GitHub search returned `incomplete results <https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#timeouts-and-incomplete-results>`_::
+
+            results = gh.search_topics("query")
+            if results.incomplete_results:
+                print(f"Not sure if {results.totalCount} results are actually all results")
         """
         assert isinstance(query, str), query
         url_parameters = dict()
@@ -915,9 +987,9 @@ class Github:
         :calls: `GET /hooks/{name} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         assert isinstance(name, str), name
-        name = urllib.parse.quote(name)
+        name = urllib.parse.quote(name, safe="")
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{name}")
-        return HookDescription(self.__requester, headers, attributes)
+        return github.HookDescription.HookDescription(self.__requester, headers, attributes)
 
     def get_hooks(self) -> list[HookDescription]:
         """
@@ -925,7 +997,7 @@ class Github:
         :rtype: list of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/hooks")
-        return [HookDescription(self.__requester, headers, attributes) for attributes in data]
+        return [github.HookDescription.HookDescription(self.__requester, headers, attributes) for attributes in data]
 
     def get_hook_delivery(self, hook_id: int, delivery_id: int) -> HookDelivery:
         """
@@ -937,7 +1009,7 @@ class Github:
         assert isinstance(hook_id, int), hook_id
         assert isinstance(delivery_id, int), delivery_id
         headers, attributes = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries/{delivery_id}")
-        return HookDelivery(self.__requester, headers, attributes)
+        return github.HookDelivery.HookDelivery(self.__requester, headers, attributes)
 
     def get_hook_deliveries(self, hook_id: int) -> list[HookDeliverySummary]:
         """
@@ -947,7 +1019,7 @@ class Github:
         """
         assert isinstance(hook_id, int), hook_id
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/hooks/{hook_id}/deliveries")
-        return [HookDeliverySummary(self.__requester, headers, attributes) for attributes in data]
+        return [github.HookDelivery.HookDeliverySummary(self.__requester, headers, attributes) for attributes in data]
 
     def get_gitignore_templates(self) -> list[str]:
         """
@@ -999,26 +1071,6 @@ class Github:
         information like the Github credentials used in the :class:`Github` instance. But NO EFFORT is made to remove
         sensitive information from the object's attributes.
 
-        :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-stream-format>`_
-         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-         :param obj: the object to pickle :param file: the file-like object to pickle to :param protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-             stream-format>`_ :param obj: the object to pickle :param file: the file-like object to pickle to :param
-        protocol: the
-        `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-            stream-format>`_
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-        :param obj: the object to pickle
-        :param file: the file-like object to pickle to
-        :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
-            stream-format>`_
         :param obj: the object to pickle
         :param file: the file-like object to pickle to
         :param protocol: the `pickling protocol <https://python.readthedocs.io/en/latest/library/pickle.html#data-
@@ -1046,7 +1098,7 @@ class Github:
 
     def get_app(self, slug: Opt[str] = NotSet) -> GithubApp:
         """
-        :calls: `GET /apps/{slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
+        :calls: `GET /apps/{app_slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
 
         if slug is NotSet:
@@ -1062,5 +1114,5 @@ class Github:
         else:
             assert isinstance(slug, str), slug
             # with a slug given, we can lazily load the GithubApp
-            slug = urllib.parse.quote(slug)
+            slug = urllib.parse.quote(slug, safe="")
             return github.GithubApp.GithubApp(self.__requester, {}, {"url": f"/apps/{slug}"}, completed=False)

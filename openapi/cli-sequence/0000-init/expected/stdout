@@ -1,0 +1,9 @@
++ mkdir github tests scripts
++ cp ../../../../scripts/openapi.py scripts/
++ cp ../../../../github/GithubObject.py github/
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 1 Python files
+Indexed 9 classes
+Indexed 0 paths
+Indexed 0 schemas
+Indexing OpenAPI spec

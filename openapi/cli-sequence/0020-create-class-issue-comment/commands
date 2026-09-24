@@ -1,0 +1,3 @@
+python scripts/openapi.py --dry-run create class --completable --tests --new-schemas as-dict github openapi.spec.json openapi.index IssueComment "https://docs.github.com/en/rest/reference/issues#comments" "/components/schemas/issue-comment"
+python scripts/openapi.py create class --completable --tests --new-schemas as-dict github openapi.spec.json openapi.index IssueComment "https://docs.github.com/en/rest/reference/issues#comments" "/components/schemas/issue-comment"
+python scripts/openapi.py index github openapi.spec.json openapi.index

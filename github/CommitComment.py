@@ -90,7 +90,7 @@ class CommitComment(CompletableGithubObject):
         self._user: Attribute[NamedUser | Organization] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"id": self._id.value, "user": self.user})
+        return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
     def author_association(self) -> str:
@@ -164,14 +164,14 @@ class CommitComment(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -179,10 +179,11 @@ class CommitComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_reactions(self) -> PaginatedList[Reaction]:
         """
-        :calls: `GET /repos/{owner}/{repo}/comments/{id}/reactions
+        :calls: `GET /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-commit-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
@@ -196,7 +197,7 @@ class CommitComment(CompletableGithubObject):
 
     def create_reaction(self, reaction_type: str) -> Reaction:
         """
-        :calls: `POST /repos/{owner}/{repo}/comments/{id}/reactions
+        :calls: `POST /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-commit-comment>`_
         """
         assert isinstance(reaction_type, str), reaction_type
@@ -209,7 +210,7 @@ class CommitComment(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+        return github.Reaction.Reaction(self._requester, headers, data)
 
     def delete_reaction(self, reaction_id: int) -> bool:
         """
@@ -239,6 +240,10 @@ class CommitComment(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "line" in attributes:  # pragma no branch
             self._line = self._makeIntAttribute(attributes["line"])
         if "node_id" in attributes:  # pragma no branch

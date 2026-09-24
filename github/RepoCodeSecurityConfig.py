@@ -20,6 +20,7 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Bill Napier <napier@pobox.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,7 +48,7 @@ import github.CodeSecurityConfig
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
-    pass
+    from github.CodeSecurityConfig import CodeSecurityConfig
 
 
 class RepoCodeSecurityConfig(NonCompletableGithubObject):
@@ -64,7 +65,7 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._configuration: Attribute[github.CodeSecurityConfig.CodeSecurityConfig] = NotSet
+        self._configuration: Attribute[CodeSecurityConfig] = NotSet
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -75,7 +76,7 @@ class RepoCodeSecurityConfig(NonCompletableGithubObject):
         )
 
     @property
-    def configuration(self) -> github.CodeSecurityConfig.CodeSecurityConfig:
+    def configuration(self) -> CodeSecurityConfig:
         return self._configuration.value
 
     @property

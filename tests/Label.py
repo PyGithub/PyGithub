@@ -56,6 +56,13 @@ class Label(Framework.TestCase):
         self.assertEqual(self.label.url, "https://api.github.com/repos/PyGithub/PyGithub/labels/bug")
         self.assertEqual(repr(self.label), 'Label(name="bug")')
 
+    def testLazyAttributes(self):
+        label = self.g.withLazy(True).get_repo("lazy/repo").get_label("good first issue")
+        self.assertEqual(str(label), 'Label(name="good first issue")')
+        self.assertEqual(label._identity, "good%20first%20issue")
+        self.assertEqual(label.name, "good first issue")
+        self.assertEqual(label.url, "/repos/lazy/repo/labels/good%20first%20issue")
+
     def testEdit(self):
         self.label.edit("LabelEditedByPyGithub", "0000ff", "Description of LabelEditedByPyGithub")
         self.assertEqual(self.label.color, "0000ff")

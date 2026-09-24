@@ -292,6 +292,10 @@ class CheckSuite(CompletableGithubObject):
             self._head_sha = self._makeStringAttribute(attributes["head_sha"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "latest_check_runs_count" in attributes:  # pragma no branch
             self._latest_check_runs_count = self._makeIntAttribute(attributes["latest_check_runs_count"])
         if "node_id" in attributes:  # pragma no branch

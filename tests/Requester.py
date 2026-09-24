@@ -8,6 +8,8 @@
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Timothy Klopotoski <tklopotoski@ebsco.com>                    #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,11 +29,14 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import contextlib
 from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import github
+from github import Consts
 from github import Requester as gr
 
 from . import Framework
@@ -72,6 +77,7 @@ class Requester(Framework.TestCase):
             # v3: this should not be the default value, so if this has been changed in v3,
             # change it here is well
             lazy=True,
+            api_version="version",
         )
         kwargs = requester.kwargs
 
@@ -91,6 +97,7 @@ class Requester(Framework.TestCase):
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
                 lazy=True,
+                api_version="version",
             ),
         )
 
@@ -126,6 +133,7 @@ class Requester(Framework.TestCase):
             # v3: this should not be the default value, so if this has been changed in v3,
             # change it here is well
             lazy=True,
+            api_version="version",
         )
 
         # create a copy with different auth
@@ -147,8 +155,83 @@ class Requester(Framework.TestCase):
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
                 lazy=True,
+                api_version="version",
             ),
         )
+
+    def testApiVersion(self):
+        def requester(version: str | None) -> gr.Requester:
+            return gr.Requester(
+                auth=None,
+                base_url=Consts.DEFAULT_BASE_URL,
+                timeout=Consts.DEFAULT_TIMEOUT,
+                user_agent=Consts.DEFAULT_USER_AGENT,
+                per_page=Consts.DEFAULT_PER_PAGE,
+                verify=True,
+                retry=github.GithubRetry(),
+                pool_size=None,
+                api_version=version,
+            )
+
+        for api_version in [None, Consts.API_VERSION_2022_11_28, Consts.API_VERSION_2026_03_10, "version"]:
+            r = requester(api_version)
+            self.assertEqual(r.api_version, api_version)
+
+            with self.captureRequests() as requests:
+                # endpoint /rate_limit should contain the item "rate" for version "2022-11-28", but not for later versions
+                # json = r.requestJson("GET", "/rate_limit")
+                json = r.requestJson("GET", "/repos/PyGithub/PyGithub")
+
+            self.assertIsNotNone(json)
+            status, header, body = json
+            self.assertEqual(status, 200)
+            # you would expect the endpoint to fail for unknown / unsupported versions
+            # and return "x-github-api-version-selected": api_version for supported ones
+            # if api_version in [Consts.API_VERSION_2022_11_28, Consts.API_VERSION_2026_03_10]:
+            #    self.assertEqual(header.get("x-github-api-version-selected"), api_version)
+            # else:
+            self.assertEqual(header.get("x-github-api-version-selected"), "2022-11-28")
+            self.assertIn('"id":3544490,', body)
+
+            self.assertEqual(len(requests), 1)
+            request_headers = requests[0].request_headers
+            if api_version is None:
+                self.assertNotIn(Consts.headerApiVersion, request_headers)
+            else:
+                self.assertEqual(request_headers.get(Consts.headerApiVersion), api_version)
+
+    def testWithApiVersion(self):
+        r = gr.Requester(
+            auth=None,
+            base_url=Consts.DEFAULT_BASE_URL,
+            timeout=Consts.DEFAULT_TIMEOUT,
+            user_agent=Consts.DEFAULT_USER_AGENT,
+            per_page=Consts.DEFAULT_PER_PAGE,
+            verify=True,
+            retry=github.GithubRetry(),
+            pool_size=None,
+            api_version=None,
+        )
+        self.assertIsNone(r.api_version)
+
+        r2 = r.withApiVersion(None)
+        self.assertIs(r2, r)
+
+        r3 = r2.withApiVersion("version")
+        self.assertIsNot(r3, r2)
+        self.assertEqual(r3.api_version, "version")
+
+        r4 = r3.withApiVersion("version")
+        self.assertIs(r4, r3)
+
+        r5 = r4.withApiVersion("version2")
+        self.assertIsNot(r5, r4)
+        self.assertEqual(r5.api_version, "version2")
+
+        r6 = r5.withApiVersion(None)
+        self.assertIsNot(r6, r5)
+        self.assertIsNot(r6, r)
+        self.assertIsNone(r6.api_version)
 
     def testGetParametersOfUrl(self):
         self.assertEqual({}, gr.Requester.get_parameters_of_url("https://github.com/api"))
@@ -168,20 +251,24 @@ class Requester(Framework.TestCase):
             gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api", {"per_page": 10, "page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10", {"page": 2}),
         )
         self.assertEqual(
-            "https://github.com/api?per_page=10&page=2",
+            "https://github.com/api?page=2&per_page=10",
             gr.Requester.add_parameters_to_url("https://github.com/api?per_page=10&page=1", {"page": 2}),
         )
         self.assertEqual(
             "https://github.com/api?item=3&item=4",
             gr.Requester.add_parameters_to_url("https://github.com/api?item=1&item=2&item=3", {"item": [3, 4]}),
+        )
+        self.assertEqual(
+            "https://github.com/api?all=true&participating=false",
+            gr.Requester.add_parameters_to_url("https://github.com/api", {"all": True, "participating": False}),
         )
 
     def testCloseGithub(self):
@@ -271,18 +358,19 @@ class Requester(Framework.TestCase):
         assert self.g.requester.__hostnameHasDomain("ghe.local", "ghe.local")
         assert self.g.requester.__hostnameHasDomain("api.ghe.local", "ghe.local")
         assert self.g.requester.__hostnameHasDomain("api.prod.ghe.local", "prod.ghe.local")
-        assert self.g.requester.__hostnameHasDomain("github.com", ("github.com", "githubusercontent.com"))
-        assert self.g.requester.__hostnameHasDomain("api.github.com", ("github.com", "githubusercontent.com"))
-        assert self.g.requester.__hostnameHasDomain("githubusercontent.com", ("github.com", "githubusercontent.com"))
+        assert self.g.requester.__hostnameHasDomain("github.com", ["github.com", "githubusercontent.com"])
+        assert self.g.requester.__hostnameHasDomain("api.github.com", ["github.com", "githubusercontent.com"])
+        assert self.g.requester.__hostnameHasDomain("githubusercontent.com", ["github.com", "githubusercontent.com"])
         assert self.g.requester.__hostnameHasDomain(
-            "objects.githubusercontent.com", ("github.com", "githubusercontent.com")
+            "objects.githubusercontent.com", ["github.com", "githubusercontent.com"]
         )
         assert self.g.requester.__hostnameHasDomain("maliciousgithub.com", "github.com") is False
-        assert self.g.requester.__hostnameHasDomain("abc.def", ("github.com", "githubusercontent.com")) is False
+        assert self.g.requester.__hostnameHasDomain("abc.def", ["github.com", "githubusercontent.com"]) is False
 
     def testAssertUrlAllowed(self):
         # default github.com requester
         requester = self.g.requester
+        self.assertEqual(set(requester.__domains), {"github.com", "githubusercontent.com"})
 
         for allowed in [
             "https://api.github.com/request",
@@ -308,6 +396,7 @@ class Requester(Framework.TestCase):
 
         # custom (Enterprise) requester with prefix
         requester = github.Github(base_url="https://prod.ghe.local/github-api/").requester
+        self.assertEqual(set(requester.__domains), {"prod.ghe.local"})
 
         for allowed in [
             "https://prod.ghe.local/github-api/request",
@@ -335,24 +424,65 @@ class Requester(Framework.TestCase):
                 requester.__assertUrlAllowed(not_allowed)
             self.assertEqual(exc.exception.args, (arg,))
 
-    def testMakeAbsoluteUrl(self):
-        # default github.com requester
-        requester = self.g.requester
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("/request")
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("/request?param=value")
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("https://github.com/api/v3/request")
-        assert "/api/v3/request", requester.__makeAbsoluteUrl("https://github.com/api/v3/request?param=value")
-        assert "/request", requester.__makeAbsoluteUrl("https://github.com/request?param=value")
+        # custom (Enterprise) requester with api subdomain and prefix
+        requester = github.Github(base_url="https://api.prod.ghe.local/github-api/").requester
+        self.assertEqual(set(requester.__domains), {"api.prod.ghe.local", "prod.ghe.local"})
 
-        # custom (Enterprise) requester with different prefix
+        for allowed in [
+            "https://api.prod.ghe.local/github-api/request",
+            "https://prod.ghe.local/path",
+            "https://uploads.prod.ghe.local/path",
+            "https://status.prod.ghe.local/path",
+        ]:
+            requester.__assertUrlAllowed(allowed)
+
+        for not_allowed, arg in [
+            ("https://api.prod.ghe.local/path", "/path"),
+            ("https://ghe.local/path", "ghe.local"),
+            ("https://api.github.com/request", "api.github.com"),
+            ("https://github.com/path", "github.com"),
+            ("https://uploads.github.com/path", "uploads.github.com"),
+            ("https://status.github.com/path", "status.github.com"),
+            ("https://githubusercontent.com/path", "githubusercontent.com"),
+            ("https://objects.githubusercontent.com/path", "objects.githubusercontent.com"),
+            (
+                "https://release-assets.githubusercontent.com/path",
+                "release-assets.githubusercontent.com",
+            ),
+            ("https://example.com/", "example.com"),
+        ]:
+            with self.assertRaises(AssertionError) as exc:
+                requester.__assertUrlAllowed(not_allowed)
+            self.assertEqual(exc.exception.args, (arg,))
+
+    def testMakeAbsoluteUrl(self):
+        # default github.com requester (empty prefix)
+        requester = self.g.requester
+        self.assertEqual("/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+        self.assertEqual("/request", requester.__makeAbsoluteUrl("https://github.com/request"))
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("https://github.com/request?param=value"))
+
+        # default base_url with a trailing slash must not produce a doubled slash
+        requester = github.Github(base_url="https://api.github.com/").requester
+        self.assertEqual("/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+
+        # GHE requester with /api/v3 prefix and a trailing slash
+        requester = github.Github(base_url="https://ghe.example.com/api/v3/").requester
+        self.assertEqual("/api/v3/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/api/v3/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+
+        # custom (Enterprise) requester with different prefix and a trailing slash
         requester = github.Github(base_url="https://api.enterprise.ghe.com/github-api/").requester
-        assert "/github-api/request", requester.__makeAbsoluteUrl("/request")
-        assert "/github-api/request", requester.__makeAbsoluteUrl("/request?param=value")
-        assert "/github-api/request", requester.__makeAbsoluteUrl("https://api.enterprise.ghe.com/github-api/request")
-        assert "/github-api/request", requester.__makeAbsoluteUrl(
-            "https://api.enterprise.ghe.com/github-api/request?param=value"
+        self.assertEqual("/github-api/request", requester.__makeAbsoluteUrl("/request"))
+        self.assertEqual("/github-api/request?param=value", requester.__makeAbsoluteUrl("/request?param=value"))
+        # absolute URLs returned by the server (pagination links) pass through unchanged
+        self.assertEqual(
+            "/github-api/request",
+            requester.__makeAbsoluteUrl("https://api.enterprise.ghe.com/github-api/request"),
         )
-        assert "/request", requester.__makeAbsoluteUrl("https://github.com/request?param=value")
+        self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("https://github.com/request?param=value"))
 
     PrimaryRateLimitErrors = [
         "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",

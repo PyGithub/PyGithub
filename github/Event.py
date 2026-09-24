@@ -19,6 +19,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,13 +42,18 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
 import github.Organization
 import github.Repository
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
+    from github.Repository import Repository
 
 
 class Event(NonCompletableGithubObject):
@@ -64,20 +70,20 @@ class Event(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._actor: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._actor: Attribute[NamedUser] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[str] = NotSet
-        self._org: Attribute[github.Organization.Organization] = NotSet
+        self._org: Attribute[Organization] = NotSet
         self._payload: Attribute[dict[str, Any]] = NotSet
         self._public: Attribute[bool] = NotSet
-        self._repo: Attribute[github.Repository.Repository] = NotSet
+        self._repo: Attribute[Repository] = NotSet
         self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "type": self._type.value})
 
     @property
-    def actor(self) -> github.NamedUser.NamedUser:
+    def actor(self) -> NamedUser:
         return self._actor.value
 
     @property
@@ -89,7 +95,7 @@ class Event(NonCompletableGithubObject):
         return self._id.value
 
     @property
-    def org(self) -> github.Organization.Organization:
+    def org(self) -> Organization:
         return self._org.value
 
     @property
@@ -101,7 +107,7 @@ class Event(NonCompletableGithubObject):
         return self._public.value
 
     @property
-    def repo(self) -> github.Repository.Repository:
+    def repo(self) -> Repository:
         return self._repo.value
 
     @property

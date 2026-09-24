@@ -1,0 +1,2 @@
+patch github/IssueComment.py ../IssueComment.py.patch
+python scripts/openapi.py index github openapi.spec.json openapi.index

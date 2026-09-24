@@ -20,6 +20,7 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,11 +42,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.CommitStatus
 import github.Repository
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.CommitStatus import CommitStatus
+    from github.Repository import Repository
 
 
 class CommitCombinedStatus(NonCompletableGithubObject):
@@ -55,14 +60,18 @@ class CommitCombinedStatus(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#statuses
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/combined-commit-status
+
     """
 
     def _initAttributes(self) -> None:
         self._commit_url: Attribute[str] = NotSet
-        self._repository: Attribute[github.Repository.Repository] = NotSet
+        self._repository: Attribute[Repository] = NotSet
         self._sha: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
-        self._statuses: Attribute[list[github.CommitStatus.CommitStatus]] = NotSet
+        self._statuses: Attribute[list[CommitStatus]] = NotSet
         self._total_count: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -74,7 +83,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
         return self._commit_url.value
 
     @property
-    def repository(self) -> github.Repository.Repository:
+    def repository(self) -> Repository:
         return self._repository.value
 
     @property
@@ -86,7 +95,7 @@ class CommitCombinedStatus(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def statuses(self) -> list[github.CommitStatus.CommitStatus]:
+    def statuses(self) -> list[CommitStatus]:
         return self._statuses.value
 
     @property
