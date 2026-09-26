@@ -40,6 +40,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+
 from urllib3.exceptions import InsecureRequestWarning
 
 import github
