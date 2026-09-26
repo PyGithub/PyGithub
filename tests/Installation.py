@@ -45,7 +45,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 import github
 from github import Consts
-from github.Auth import AppAuth, AppInstallationAuth
+from github.Auth import AppAuth, AppInstallationAuth, AppUserAuth, Token
 
 from . import Framework, GithubIntegration
 
@@ -139,3 +139,64 @@ class Installation(Framework.BasicTestCase):
         self.assertEqual(len(self.installations), 1)
         installation = self.installations[0]
         assert installation.requester is installation._requester
+
+
+class InstallationGetRepos(Framework.BasicTestCase):
+    def __testGetReposWithAppUserAuth(self, base_url: str, expected_urls: list[str]):
+        auth = AppUserAuth("client_id", "client_secret", "user_token")
+        with self.captureRequests() as requests:
+            with github.Github(
+                auth=auth,
+                base_url=base_url,
+                per_page=1,
+                api_version="2022-11-28",
+                seconds_between_requests=None,
+            ) as gh:
+                installation = gh.get_user().get_installations()[0]
+                repositories = installation.get_repos()
+                self.assertIs(installation.requester.auth, auth)
+                self.assertEqual(installation.repositories_url, f"{base_url}/installation/repositories")
+                self.assertListKeyEqual(repositories, lambda repo: repo.full_name, ["owner/first", "owner/second"])
+                self.assertEqual(repositories.totalCount, 2)
+
+        self.assertListKeyEqual(requests, lambda request: request.url, expected_urls)
+        self.assertListKeyEqual(
+            requests,
+            lambda request: request.request_headers["Authorization"],
+            ["bearer user_token"] * 3,
+        )
+
+    def testGetReposWithAppUserAuthApiGithub(self):
+        self.__testGetReposWithAppUserAuth(
+            "https://api.github.com",
+            [
+                "/user/installations?per_page=1",
+                "/user/installations/123456/repositories?per_page=1",
+                "/user/installations/123456/repositories?page=2&per_page=1",
+            ],
+        )
+
+    def testGetReposWithAppUserAuthEnterprise(self):
+        self.__testGetReposWithAppUserAuth(
+            "https://github.example:8443/api/v3",
+            [
+                "/api/v3/user/installations?per_page=1",
+                "/api/v3/user/installations/123456/repositories?per_page=1",
+                "/api/v3/user/installations/123456/repositories?page=2&per_page=1",
+            ],
+        )
+
+    def testGetReposWithTokenAuth(self):
+        with self.captureRequests() as requests:
+            with github.Github(auth=Token("installation_token"), api_version="2022-11-28") as client:
+                installation = github.Installation.Installation(client.requester, {}, {"id": 123456})
+                repositories = installation.get_repos()
+                self.assertListKeyEqual(repositories, lambda repo: repo.full_name, [])
+                self.assertEqual(repositories.totalCount, 0)
+
+        self.assertListKeyEqual(requests, lambda request: request.url, ["/installation/repositories"])
+        self.assertListKeyEqual(
+            requests,
+            lambda request: request.request_headers["Authorization"],
+            ["token private_token_removed"],
+        )
