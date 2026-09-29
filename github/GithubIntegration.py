@@ -49,9 +49,11 @@ from github import Consts
 from github.Auth import AppAuth
 from github.GithubApp import GithubApp
 from github.GithubException import GithubException
+from github.GithubObject import is_list
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
 from github.PaginatedList import PaginatedList
+from github.Repository import Repository
 from github.Requester import Requester
 
 
@@ -263,7 +265,10 @@ class GithubIntegration:
         return self.auth.create_jwt(expiration)
 
     def get_access_token(
-        self, installation_id: int, permissions: dict[str, str] | None = None
+        self,
+        installation_id: int,
+        permissions: dict[str, str] | None = None,
+        repositories: list[str | Repository] | None = None,
     ) -> InstallationAuthorization:
         """
         :calls: `POST /app/installations/{installation_id}/access_tokens <https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app>`
@@ -274,7 +279,12 @@ class GithubIntegration:
         if not isinstance(permissions, dict):
             raise GithubException(status=400, data={"message": "Invalid permissions"}, headers=None)
 
-        body = {"permissions": permissions}
+        body: dict[str, Any] = {"permissions": permissions}
+        if repositories is not None:
+            if not is_list(repositories, (str, Repository)):
+                raise GithubException(status=400, data={"message": "Invalid repositories"}, headers=None)
+
+            body["repositories"] = [repo.name if isinstance(repo, Repository) else repo for repo in repositories]
         headers, response = self.__requester.requestJsonAndCheck(
             "POST",
             f"/app/installations/{installation_id}/access_tokens",
