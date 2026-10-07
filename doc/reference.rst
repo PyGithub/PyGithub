@@ -8,6 +8,7 @@ Reference
    github
    github_integration
    apis
+   graphql_apis
    utilities
    scripts
    github_objects

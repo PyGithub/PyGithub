@@ -45,12 +45,15 @@ import os
 import re
 import sys
 from collections.abc import Iterable
+from pathlib import Path
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath(".."))
 from importlib.metadata import version  # noqa: E402
+
+from doc.graphql_reference import generate_graphql_reference  # noqa: E402
 
 setupVersion = version("pygithub")
 
@@ -371,7 +374,7 @@ for githubObjectClass, module in githubObjectClasses.items():
                     ]:
                         method = None
                 isProperty = False
-            if line.startswith("        :calls: `") and method:
+            if line.startswith("        :calls: `") and not line.startswith("        :calls: `GraphQL ") and method:
                 for callee in line[16:].split(" or "):
                     verb, url = callee[1:].split(" ")[0:2]
                     if url not in methods:
@@ -396,3 +399,5 @@ with open("apis.rst", "w") as apis:
             if verb in verbs:
                 apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
+
+Path("graphql_apis.rst").write_text(generate_graphql_reference(Path("../github")), encoding="utf-8")

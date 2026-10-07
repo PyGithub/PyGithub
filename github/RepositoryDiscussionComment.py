@@ -101,6 +101,9 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
         )
 
     def edit(self, body: str, output_schema: str = "id") -> RepositoryDiscussionComment:
+        """
+        :calls: `GraphQL mutation updateDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#updatediscussioncomment>`_
+        """
         if not output_schema.startswith("\n"):
             output_schema = f" {output_schema} "
         return self._requester.graphql_named_mutation_class(
@@ -112,6 +115,9 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
         )
 
     def delete(self, output_schema: str = "id") -> RepositoryDiscussionComment:
+        """
+        :calls: `GraphQL mutation deleteDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#deletediscussioncomment>`_
+        """
         if not output_schema.startswith("\n"):
             output_schema = f" {output_schema} "
         return self._requester.graphql_named_mutation_class(
