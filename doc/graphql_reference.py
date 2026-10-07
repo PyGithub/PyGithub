@@ -7,7 +7,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-GRAPHQL_CALL = re.compile(r"^:calls:\s+`GraphQL (query|mutation) ([\w.]+)\s+<([^>]+)>`__?", re.MULTILINE)
+GRAPHQL_CALL = re.compile(r"^:graphql:\s+`(query|mutation) ([\w.]+)\s+<([^>]+)>`__?", re.MULTILINE)
 
 
 def collect_graphql_calls(source: str, module: str) -> dict[tuple[str, str, str], set[str]]:
@@ -28,7 +28,7 @@ def collect_graphql_calls(source: str, module: str) -> dict[tuple[str, str, str]
 
 def generate_graphql_reference(source_dir: Path) -> str:
     """
-    Generate the GraphQL reference from :calls: annotations, without importing library code.
+    Generate the GraphQL reference from :graphql: annotations, without importing library code.
     """
     calls: dict[tuple[str, str, str], set[str]] = defaultdict(set)
     for source_path in sorted(source_dir.glob("*.py")):

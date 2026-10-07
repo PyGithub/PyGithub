@@ -232,7 +232,9 @@ class IssueComment(CompletableGithubObject):
 
     def minimize(self, reason: str = "OUTDATED") -> bool:
         """
-        :calls: `GraphQL mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to minimize comment
+            <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>
+        :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
         """
         assert isinstance(reason, str), reason
         variables = {
@@ -248,7 +250,9 @@ class IssueComment(CompletableGithubObject):
 
     def unminimize(self) -> bool:
         """
-        :calls: `GraphQL mutation unminimizeComment <https://docs.github.com/en/graphql/reference/mutations#unminimizecomment>`_
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to unminimize comment
+            <https://docs.github.com/en/graphql/reference/mutations#unminimizecomment>
+        :graphql: `mutation unminimizeComment <https://docs.github.com/en/graphql/reference/mutations#unminimizecomment>`_
         """
         variables = {
             "subjectId": self.node_id,

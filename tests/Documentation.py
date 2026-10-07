@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import tempfile
 import unittest
 from pathlib import Path
@@ -10,6 +11,51 @@ from doc.graphql_reference import collect_graphql_calls, generate_graphql_refere
 
 
 class GraphqlReference(unittest.TestCase):
+    def testGraphqlMetadataCanCoexistWithHttpCalls(self):
+        source = '''
+class Example:
+    def minimize(self):
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to minimize comment
+            <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>
+        :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
+        """
+'''
+        self.assertEqual(
+            collect_graphql_calls(source, "github.Example"),
+            {
+                (
+                    "mutation",
+                    "minimizeComment",
+                    "https://docs.github.com/en/graphql/reference/mutations#minimizecomment",
+                ): {"github.Example.Example.minimize"}
+            },
+        )
+
+    def testGraphqlMetadataDoesNotUseHttpCallsField(self):
+        source = '''
+class Example:
+    def minimize(self):
+        """
+        :calls: `GraphQL mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
+        """
+'''
+        self.assertEqual(collect_graphql_calls(source, "github.Example"), {})
+
+    def testCallAnnotationsRemainHttpEndpoints(self):
+        source_dir = Path(__file__).resolve().parents[1] / "github"
+        for source_path in source_dir.glob("*.py"):
+            for node in ast.walk(ast.parse(source_path.read_text(encoding="utf-8"))):
+                if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    continue
+                for line in (ast.get_docstring(node) or "").splitlines():
+                    if line.startswith(":calls:"):
+                        fields = line.removeprefix(":calls:").strip(" `").split()
+                        context = f"{source_path.name}:{node.name}: {line}"
+                        self.assertGreaterEqual(len(fields), 2, context)
+                        self.assertIn(fields[0], {"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}, context)
+                        self.assertTrue(fields[1].startswith("/"), context)
+
     def testCallsAreScopedToTheirClassAndMethod(self):
         source = '''
 class First:
@@ -17,7 +63,7 @@ class First:
 
     def get(self):
         """
-        :calls: `GraphQL query Query.node
+        :graphql: `query Query.node
             <https://docs.github.com/en/graphql/reference/queries#node>`_
         """
 
@@ -27,12 +73,12 @@ class First:
 class Second:
     def get(self):
         """
-        :calls: `GraphQL query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`__
-        :calls: `GraphQL query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`__
+        :graphql: `query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`__
+        :graphql: `query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`__
         """
 
     def _helper(self):
-        """:calls: `GraphQL query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`_"""
+        """:graphql: `query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`_"""
 '''
         self.assertEqual(
             collect_graphql_calls(source, "github.Example"),
@@ -54,7 +100,7 @@ class Example:
 
         Example annotation::
 
-            :calls: `GraphQL mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
+            :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
         """
 '''
         self.assertEqual(collect_graphql_calls(source, "github.Example"), {})
@@ -68,13 +114,13 @@ raise RuntimeError("Documentation must not execute this module")
 
 class Example:
     def z_method(self):
-        """:calls: `GraphQL mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_"""
+        """:graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_"""
 
     def a_method(self):
-        """:calls: `GraphQL mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_"""
+        """:graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_"""
 
     def query(self):
-        """:calls: `GraphQL query Repository.discussion <https://docs.github.com/en/graphql/reference/objects#repository>`_"""
+        """:graphql: `query Repository.discussion <https://docs.github.com/en/graphql/reference/objects#repository>`_"""
 ''',
                 encoding="utf-8",
             )

@@ -543,7 +543,7 @@ class Github:
 
     def get_repository_discussion(self, node_id: str, discussion_graphql_schema: str) -> RepositoryDiscussion:
         """
-        :calls: `GraphQL query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`_
+        :graphql: `query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`_
         """
         return self.__requester.graphql_node_class(
             node_id, discussion_graphql_schema, github.RepositoryDiscussion.RepositoryDiscussion, "Discussion"

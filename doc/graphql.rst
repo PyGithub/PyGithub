@@ -12,14 +12,18 @@ hierarchy.
 This documents the current support for the GraphQL API.
 
 The :doc:`graphql_apis` reference lists the queries and mutations with dedicated
-PyGithub methods. It is generated from method docstrings, using ``:calls:``
+PyGithub methods. It is generated from method docstrings, using ``:graphql:``
 annotations such as::
 
-    :calls: `GraphQL mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_
+    :graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_
 
-Use ``GraphQL query`` for queries, naming the object and field when appropriate
+Use ``query`` for queries, naming the object and field when appropriate
 (for example, ``Repository.discussion``). Add an annotation when implementing a
 new GraphQL method so the reference stays up to date.
+
+Keep existing ``:calls:`` annotations unchanged: they describe HTTP methods and
+paths for the API index and its validation tools. GraphQL operation names belong
+in the separate ``:graphql:`` field, which can coexist with ``:calls: POST /graphql``.
 
 GraphQL Classes
 ---------------

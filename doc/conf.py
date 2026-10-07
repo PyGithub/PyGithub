@@ -374,7 +374,7 @@ for githubObjectClass, module in githubObjectClasses.items():
                     ]:
                         method = None
                 isProperty = False
-            if line.startswith("        :calls: `") and not line.startswith("        :calls: `GraphQL ") and method:
+            if line.startswith("        :calls: `") and method:
                 for callee in line[16:].split(" or "):
                     verb, url = callee[1:].split(" ")[0:2]
                     if url not in methods:
