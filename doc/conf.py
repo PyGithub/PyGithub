@@ -392,12 +392,16 @@ with open("apis.rst", "w") as apis:
     apis.write("APIs\n")
     apis.write("====\n")
     apis.write("\n")
+    apis.write("REST\n")
+    apis.write("----\n")
+    apis.write("\n")
     for url, verbs in sorted(methods.items()):
+        if url == "/graphql":
+            continue
         apis.write("* ``" + url + "``\n")
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
                 apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
-
-Path("graphql_apis.rst").write_text(generate_graphql_reference(Path("../github")), encoding="utf-8")
+    apis.write(generate_graphql_reference(Path("../github")))

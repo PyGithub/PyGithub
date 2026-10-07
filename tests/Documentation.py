@@ -17,8 +17,8 @@ class Example:
     def minimize(self):
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to minimize comment
-            <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>
-        :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
+            <https://docs.github.com/en/graphql/reference/issues#mutation-minimizecomment>
+        :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/issues#mutation-minimizecomment>`_
         """
 '''
         self.assertEqual(
@@ -27,7 +27,7 @@ class Example:
                 (
                     "mutation",
                     "minimizeComment",
-                    "https://docs.github.com/en/graphql/reference/mutations#minimizecomment",
+                    "https://docs.github.com/en/graphql/reference/issues#mutation-minimizecomment",
                 ): {"github.Example.Example.minimize"}
             },
         )
@@ -37,7 +37,7 @@ class Example:
 class Example:
     def minimize(self):
         """
-        :calls: `GraphQL mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
+        :calls: `GraphQL mutation minimizeComment <https://docs.github.com/en/graphql/reference/issues#mutation-minimizecomment>`_
         """
 '''
         self.assertEqual(collect_graphql_calls(source, "github.Example"), {})
@@ -59,12 +59,12 @@ class Example:
     def testCallsAreScopedToTheirClassAndMethod(self):
         source = '''
 class First:
-    """https://docs.github.com/en/graphql/reference/objects#discussion"""
+    """https://docs.github.com/en/graphql/reference/discussions#object-discussion"""
 
     def get(self):
         """
         :graphql: `query Query.node
-            <https://docs.github.com/en/graphql/reference/queries#node>`_
+            <https://docs.github.com/en/graphql/reference/meta#query-node>`_
         """
 
     def rest(self):
@@ -73,17 +73,17 @@ class First:
 class Second:
     def get(self):
         """
-        :graphql: `query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`__
-        :graphql: `query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`__
+        :graphql: `query Query.node <https://docs.github.com/en/graphql/reference/meta#query-node>`__
+        :graphql: `query Query.node <https://docs.github.com/en/graphql/reference/meta#query-node>`__
         """
 
     def _helper(self):
-        """:graphql: `query Query.node <https://docs.github.com/en/graphql/reference/queries#node>`_"""
+        """:graphql: `query Query.node <https://docs.github.com/en/graphql/reference/meta#query-node>`_"""
 '''
         self.assertEqual(
             collect_graphql_calls(source, "github.Example"),
             {
-                ("query", "Query.node", "https://docs.github.com/en/graphql/reference/queries#node"): {
+                ("query", "Query.node", "https://docs.github.com/en/graphql/reference/meta#query-node"): {
                     "github.Example.First.get",
                     "github.Example.Second.get",
                 }
@@ -96,11 +96,11 @@ class Example:
     def method(self):
         """
         Related documentation:
-        https://docs.github.com/en/graphql/reference/mutations#minimizecomment
+        https://docs.github.com/en/graphql/reference/issues#mutation-minimizecomment
 
         Example annotation::
 
-            :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>`_
+            :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/issues#mutation-minimizecomment>`_
         """
 '''
         self.assertEqual(collect_graphql_calls(source, "github.Example"), {})
@@ -114,13 +114,13 @@ raise RuntimeError("Documentation must not execute this module")
 
 class Example:
     def z_method(self):
-        """:graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_"""
+        """:graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/discussions#mutation-adddiscussioncomment>`_"""
 
     def a_method(self):
-        """:graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_"""
+        """:graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/discussions#mutation-adddiscussioncomment>`_"""
 
     def query(self):
-        """:graphql: `query Repository.discussion <https://docs.github.com/en/graphql/reference/objects#repository>`_"""
+        """:graphql: `query Repository.discussion <https://docs.github.com/en/graphql/reference/repos#object-repository>`_"""
 ''',
                 encoding="utf-8",
             )

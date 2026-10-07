@@ -887,7 +887,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to enable pull request auto merge
             <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>
-        :graphql: `mutation enablePullRequestAutoMerge <https://docs.github.com/en/graphql/reference/mutations#enablepullrequestautomerge>`_
+        :graphql: `mutation enablePullRequestAutoMerge <https://docs.github.com/en/graphql/reference/pulls#mutation-enablepullrequestautomerge>`_
         """
         assert is_optional(author_email, str), author_email
         assert is_optional(client_mutation_id, str), client_mutation_id
@@ -922,7 +922,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ with a mutation to disable pull request auto merge
             <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>
-        :graphql: `mutation disablePullRequestAutoMerge <https://docs.github.com/en/graphql/reference/mutations#disablepullrequestautomerge>`_
+        :graphql: `mutation disablePullRequestAutoMerge <https://docs.github.com/en/graphql/reference/pulls#mutation-disablepullrequestautomerge>`_
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -1019,7 +1019,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to convert pull request to draft
             <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>
-        :graphql: `mutation convertPullRequestToDraft <https://docs.github.com/en/graphql/reference/mutations#convertpullrequesttodraft>`_
+        :graphql: `mutation convertPullRequestToDraft <https://docs.github.com/en/graphql/reference/pulls#mutation-convertpullrequesttodraft>`_
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 
@@ -1045,7 +1045,7 @@ class PullRequest(CompletableGithubObject):
         """
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`_ to mark pull request ready for review
             <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>
-        :graphql: `mutation markPullRequestReadyForReview <https://docs.github.com/en/graphql/reference/mutations#markpullrequestreadyforreview>`_
+        :graphql: `mutation markPullRequestReadyForReview <https://docs.github.com/en/graphql/reference/pulls#mutation-markpullrequestreadyforreview>`_
         """
         assert is_optional(client_mutation_id, str), client_mutation_id
 

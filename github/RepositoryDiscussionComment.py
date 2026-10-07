@@ -102,7 +102,7 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
 
     def edit(self, body: str, output_schema: str = "id") -> RepositoryDiscussionComment:
         """
-        :graphql: `mutation updateDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#updatediscussioncomment>`_
+        :graphql: `mutation updateDiscussionComment <https://docs.github.com/en/graphql/reference/discussions#mutation-updatediscussioncomment>`_
         """
         if not output_schema.startswith("\n"):
             output_schema = f" {output_schema} "
@@ -116,7 +116,7 @@ class RepositoryDiscussionComment(GraphQlObject, DiscussionCommentBase):
 
     def delete(self, output_schema: str = "id") -> RepositoryDiscussionComment:
         """
-        :graphql: `mutation deleteDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#deletediscussioncomment>`_
+        :graphql: `mutation deleteDiscussionComment <https://docs.github.com/en/graphql/reference/discussions#mutation-deletediscussioncomment>`_
         """
         if not output_schema.startswith("\n"):
             output_schema = f" {output_schema} "

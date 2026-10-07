@@ -38,8 +38,10 @@ def generate_graphql_reference(source_dir: Path) -> str:
             calls[operation].update(methods)
 
     lines = [
-        "GraphQL API",
-        "===========",
+        ".. _graphql-api-reference:",
+        "",
+        "GraphQL",
+        "-------",
         "",
         "These GraphQL queries and mutations have dedicated PyGithub methods. On",
         "GitHub.com, they use ``POST /graphql``. The names below identify the GraphQL",
@@ -49,7 +51,7 @@ def generate_graphql_reference(source_dir: Path) -> str:
         "",
     ]
     for kind, title in [("query", "Queries"), ("mutation", "Mutations")]:
-        lines.extend([title, "-" * len(title), ""])
+        lines.extend([title, "~" * len(title), ""])
         for (operation_kind, name, url), methods in sorted(calls.items()):
             if operation_kind == kind:
                 lines.extend(

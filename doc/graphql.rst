@@ -11,11 +11,11 @@ hierarchy.
 
 This documents the current support for the GraphQL API.
 
-The :doc:`graphql_apis` reference lists the queries and mutations with dedicated
+The :ref:`GraphQL API reference <graphql-api-reference>` lists the queries and mutations with dedicated
 PyGithub methods. It is generated from method docstrings, using ``:graphql:``
 annotations such as::
 
-    :graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/mutations#adddiscussioncomment>`_
+    :graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/discussions#mutation-adddiscussioncomment>`_
 
 Use ``query`` for queries, naming the object and field when appropriate
 (for example, ``Repository.discussion``). Add an annotation when implementing a

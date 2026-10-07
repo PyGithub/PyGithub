@@ -2610,7 +2610,7 @@ class Repository(CompletableGithubObject):
         discussion_graphql_schema: str,
     ) -> RepositoryDiscussion:
         """
-        :graphql: `query Repository.discussion <https://docs.github.com/en/graphql/reference/objects#repository>`_
+        :graphql: `query Repository.discussion <https://docs.github.com/en/graphql/reference/repos#object-repository>`_
         """
         assert isinstance(number, int), number
         if not discussion_graphql_schema.startswith("\n"):
@@ -2644,7 +2644,7 @@ class Repository(CompletableGithubObject):
         states: list[str] | None = None,
     ) -> PaginatedList[RepositoryDiscussion]:
         """
-        :graphql: `query Repository.discussions <https://docs.github.com/en/graphql/reference/objects#repository>`_
+        :graphql: `query Repository.discussions <https://docs.github.com/en/graphql/reference/repos#object-repository>`_
         """
         if not discussion_graphql_schema.startswith("\n"):
             discussion_graphql_schema = f" {discussion_graphql_schema} "
