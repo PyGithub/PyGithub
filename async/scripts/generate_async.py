@@ -496,7 +496,7 @@ PATCHES: dict[str, list[Patch]] = {
             match="    def token(self) -> str:\n"
             "        if self.__installation_authorization is None or self._is_expired:\n"
             "            self.__installation_authorization = self._get_installation_authorization()\n",
-            replace="    async def token(self) -> str:\n"
+            replace="    async def token(self) -> str:  # type: ignore[override]  # awaited by Auth.authentication()\n"
             "        if self.__installation_authorization is None or self._is_expired:\n"
             "            self.__installation_authorization = await self._get_installation_authorization()\n",
         ),
@@ -512,7 +512,7 @@ PATCHES: dict[str, list[Patch]] = {
         Patch(
             reason="AppUserAuth.token refreshes an expired user token (I/O)",
             match="    def token(self) -> str:\n        if self._is_expired:\n            self._refresh()\n",
-            replace="    async def token(self) -> str:\n        if self._is_expired:\n            await self._refresh()\n",
+            replace="    async def token(self) -> str:  # type: ignore[override]  # awaited by Auth.authentication()\n        if self._is_expired:\n            await self._refresh()\n",
         ),
         Patch(
             reason="ApplicationOAuth.refresh_access_token is a coroutine",
