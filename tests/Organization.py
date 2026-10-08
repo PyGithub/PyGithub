@@ -421,6 +421,13 @@ class Organization(Framework.TestCase):
         team = self.org.get_team_by_slug("Members")
         self.assertEqual(team.id, 141496)
 
+    def testGetTeamById(self):
+        url = f"/organizations/{self.org.id}/team/141496"
+        with mock.patch.object(self.org.requester, "requestJsonAndCheck", return_value=({}, {"id": 141496})) as request:
+            team = self.org.get_team(141496)
+        request.assert_called_once_with("GET", url, parameters=None, headers=None)
+        self.assertEqual(team.id, 141496)
+
     def testCreateHookWithMinimalParameters(self):
         hook = self.org.create_hook("web", {"url": "http://foobar.com"})
         self.assertEqual(hook.id, 257967)
