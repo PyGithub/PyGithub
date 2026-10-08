@@ -99,5 +99,6 @@ extend-ignore = [
 extend-safe-fixes = ["ALL"]
 
 [tool.pytest.ini_options]
+testpaths = ["tests"]
 python_files = "tests/*.py"
 addopts = "--color=yes --ignore=openapi"
