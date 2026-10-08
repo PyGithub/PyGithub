@@ -41,6 +41,9 @@ Documentation = "https://pygithub.readthedocs.io/en/stable/"
 Source = "https://github.com/pygithub/pygithub"
 Tracker = "https://github.com/pygithub/pygithub/issues"
 
+[project.optional-dependencies]
+niquests = ["niquests>=3.12,<4"]
+
 [tool.setuptools_scm]
 
 [tool.setuptools]
