@@ -559,23 +559,21 @@ PATCHES: dict[str, list[Patch]] = {
             "normally rewrite this to the bare async class name) deliberately skips it, since "
             "MainClass.py imports back from GithubIntegration.py (a real, mutual dependency, not "
             "just this generator's eagerness), so 'bare Github' isn't safely in scope here either "
-            "way. Import the module instead -- safe regardless of load order -- and qualify the "
-            "one usage below, matching Step 1's own `import githubasyncio.X` + `githubasyncio.X.Y` "
-            "convention.",
+            "way. Use the package-level `githubasyncio.Github` instead (resolved at call time, so "
+            "safe regardless of load order), matching Step 3b's own rewrite for package re-exports.",
             match="return github.Github(**self.__requester.withAuth(auth).kwargs)",
-            replace="return MainClass.Github(**self.__requester.withAuth(auth).kwargs)",
+            replace="return githubasyncio.Github(**self.__requester.withAuth(auth).kwargs)",
         ),
         Patch(
-            reason="module-only import backing the qualified usage above (replaces the now-unused "
-            "bare `import github`)",
+            reason="bare package import backing the usage above (replaces the classic bare `import github`)",
             match="import github\n",
-            replace="from githubasyncio import MainClass\n",
+            replace="import githubasyncio\n",
         ),
         Patch(
             reason="qualify the return type annotation to match (lazy string either way, thanks "
             "to `from __future__ import annotations`, but keep it consistent for type checkers)",
             match=") -> github.Github:",
-            replace=") -> MainClass.Github:",
+            replace=") -> githubasyncio.Github:",
         ),
         Patch(
             reason="a docstring mention of `github.GithubIntegration` (not real code) is enough "
@@ -3481,7 +3479,7 @@ class AsyncTransformer:
 
         # Step 3b: Rewrite package-level class references: `github.ClassName`
         # where ClassName is re-exported from github/__init__.py and the underlying
-        # module has an async version.  e.g. `github.Github(...)` → `githubasyncio.MainClass.Github(...)`
+        # module has an async version.  e.g. `github.Github(...)` → `githubasyncio.Github(...)`
         # (using async class from MainClass). See _init_reexports_map().
         _init_reexports = {
             cls_name: mod_name for cls_name, mod_name in _init_reexports_map().items() if mod_name in async_files
@@ -3525,30 +3523,35 @@ class AsyncTransformer:
             # already handled by step 2 via the module pattern). Skip docstrings: a class
             # mentioned only in prose (e.g. a Sphinx `:meth:` cross-reference) is not real
             # usage, and treating it as such would add a needless import.
-            # Rewrite to the module-qualified `githubasyncio.mod_name.ClassName` backed by a
-            # module-only `import githubasyncio.mod_name` -- same form as Step 2d, and the
-            # ARCHITECTURE.md two-import convention -- never an eager `from githubasyncio.mod_name
-            # import ClassName`: that one breaks when mod_name is still mid-import (e.g.
-            # MainClass -> ... -> Installation -> MainClass), and a bare `ClassName` is commonly
-            # bound only under `if TYPE_CHECKING:` (so a plain textual "already imported?" check
-            # wrongly concludes the runtime name exists -- Installation.get_github_for_installation()
-            # raised NameError that way).
+            # Rewrite to `githubasyncio.ClassName` when githubasyncio/__init__.py re-exports it too
+            # (ASYNC_INIT_EXPORTS, e.g. `githubasyncio.Github`), backed by a bare `import
+            # githubasyncio`; otherwise to the module-qualified `githubasyncio.mod_name.ClassName`
+            # backed by a module-only `import githubasyncio.mod_name` -- same form as Step 2d.
+            # Both resolve lazily, at call time, never an eager `from githubasyncio.mod_name import
+            # ClassName`: that one breaks when mod_name is still mid-import (e.g. MainClass -> ... ->
+            # Installation -> MainClass), and a bare `ClassName` is commonly bound only under `if
+            # TYPE_CHECKING:` (so a plain textual "already imported?" check wrongly concludes the
+            # runtime name exists -- Installation.get_github_for_installation() raised NameError that
+            # way).
             # Use word boundary to avoid partial matches.
+            pkg_level = cls_name in ASYNC_INIT_EXPORTS.get(mod_name, ())
+            target = f"githubasyncio.{cls_name}" if pkg_level else f"{_alias(mod_name)}.{cls_name}"
             pattern = rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)"
-            result, _matched = self._sub_outside_docstrings(pattern, f"{_alias(mod_name)}.{cls_name}", result)
+            result, _matched = self._sub_outside_docstrings(pattern, target, result)
             if _matched:
-                if mod_name not in already_imported:
+                if pkg_level:
+                    # any `import githubasyncio.X` already binds the bare `githubasyncio` name
+                    if not re.search(r"^import githubasyncio\b", result, re.MULTILINE):
+                        last_import_end = self._last_toplevel_import_end(result)
+                        result = (
+                            result[: last_import_end + 1] + "\nimport githubasyncio\n" + result[last_import_end + 1 :]
+                        )
+                elif mod_name not in already_imported:
                     last_import_end = self._last_toplevel_import_end(result)
                     import_line = f"\nimport githubasyncio.{mod_name}\n"
                     result = result[: last_import_end + 1] + import_line + result[last_import_end + 1 :]
                     already_imported.add(mod_name)
-                logger.debug(
-                    "fix_imports[%s]: step 3b — github.%s → %s.%s",
-                    stem,
-                    cls_name,
-                    _alias(mod_name),
-                    cls_name,
-                )
+                logger.debug("fix_imports[%s]: step 3b — github.%s → %s", stem, cls_name, target)
 
         # Step 4: Handle relative imports (from .X → from .X, already correct)
         # These are already relative within the package.
