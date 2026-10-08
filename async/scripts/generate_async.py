@@ -79,7 +79,7 @@ SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
 # code that does `import github.X as X` (bare dotted-attribute access) must special-case these,
 # not about whether X gets its own githubasyncio/X.py (every module does now -- see main()).
 SHADOWED_MODULE_NAMES = frozenset(
-    {"GithubException", "GithubRetry", "InputFileContent", "InputGitAuthor", "InputGitTreeElement"}
+    {"GithubException", "GithubIntegration", "GithubRetry", "InputFileContent", "InputGitAuthor", "InputGitTreeElement"}
 )
 
 # Modules that, if given a real (import-fixed) copy, would produce a circular import
@@ -3481,8 +3481,8 @@ class AsyncTransformer:
 
         # Step 3b: Rewrite package-level class references: `github.ClassName`
         # where ClassName is re-exported from github/__init__.py and the underlying
-        # module has an async version.  e.g. `github.Github(...)` → `Github(...)`
-        # (using async class from .MainClass). See _init_reexports_map().
+        # module has an async version.  e.g. `github.Github(...)` → `githubasyncio.MainClass.Github(...)`
+        # (using async class from MainClass). See _init_reexports_map().
         _init_reexports = {
             cls_name: mod_name for cls_name, mod_name in _init_reexports_map().items() if mod_name in async_files
         }
@@ -3502,10 +3502,9 @@ class AsyncTransformer:
                     )
                 continue
 
-            # Check for circular import: if mod_name imports from the current file (stem),
-            # adding `from .mod_name import cls_name` would create a cycle.
-            # In that case, keep `github.ClassName` and rely on `import github` (added
-            # by _ensure_import_github in step 15) for lazy module-level access.
+            # Check for circular import: if mod_name imports from the current file (stem), keep
+            # `github.ClassName` for a hand-written PATCHES entry to handle (see
+            # PATCHES["GithubIntegration"]).
             target_src_file = SRC_PKG / f"{mod_name}.py"
             if target_src_file.exists():
                 target_src = target_src_file.read_text()
@@ -3525,36 +3524,30 @@ class AsyncTransformer:
             # Match github.ClassName that is NOT followed by '.' (which would be github.ClassName.attr,
             # already handled by step 2 via the module pattern). Skip docstrings: a class
             # mentioned only in prose (e.g. a Sphinx `:meth:` cross-reference) is not real
-            # usage, and treating it as such would add a needless import — which, for a
-            # tightly-coupled module graph, can create a genuine circular import (e.g. a stray
-            # `:meth:`github.Github`` docstring mention on an unrelated class would otherwise add
-            # `from .MainClass import Github`, breaking the import chain since Github is defined
-            # in MainClass itself).
+            # usage, and treating it as such would add a needless import.
+            # Rewrite to the module-qualified `githubasyncio.mod_name.ClassName` backed by a
+            # module-only `import githubasyncio.mod_name` -- same form as Step 2d, and the
+            # ARCHITECTURE.md two-import convention -- never an eager `from githubasyncio.mod_name
+            # import ClassName`: that one breaks when mod_name is still mid-import (e.g.
+            # MainClass -> ... -> Installation -> MainClass), and a bare `ClassName` is commonly
+            # bound only under `if TYPE_CHECKING:` (so a plain textual "already imported?" check
+            # wrongly concludes the runtime name exists -- Installation.get_github_for_installation()
+            # raised NameError that way).
             # Use word boundary to avoid partial matches.
             pattern = rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)"
-            result, _matched = self._sub_outside_docstrings(pattern, cls_name, result)
+            result, _matched = self._sub_outside_docstrings(pattern, f"{_alias(mod_name)}.{cls_name}", result)
             if _matched:
-                # Ensure there's a runtime import of the class from the async module
-                import_line = f"from githubasyncio.{mod_name} import {cls_name}"
-                if import_line not in result:
-                    # Check if there's a TYPE_CHECKING-only import — need to add runtime one too
-                    # Find insertion point: after existing `from githubasyncio import` imports
-                    insert_pattern = re.search(r"^from githubasyncio import .+$", result, re.MULTILINE)
-                    if insert_pattern:
-                        result = result[: insert_pattern.end()] + "\n" + import_line + result[insert_pattern.end() :]
-                    else:
-                        # Add after last import
-                        insert_m = None
-                        for insert_m in re.finditer(r"^(?:from|import) .+$", result, re.MULTILINE):
-                            pass
-                        if insert_m:
-                            result = result[: insert_m.end()] + "\n" + import_line + result[insert_m.end() :]
+                if mod_name not in already_imported:
+                    last_import_end = self._last_toplevel_import_end(result)
+                    import_line = f"\nimport githubasyncio.{mod_name}\n"
+                    result = result[: last_import_end + 1] + import_line + result[last_import_end + 1 :]
+                    already_imported.add(mod_name)
                 logger.debug(
-                    "fix_imports[%s]: step 3b — github.%s → %s (from githubasyncio.%s)",
+                    "fix_imports[%s]: step 3b — github.%s → %s.%s",
                     stem,
                     cls_name,
+                    _alias(mod_name),
                     cls_name,
-                    mod_name,
                 )
 
         # Step 4: Handle relative imports (from .X → from .X, already correct)
@@ -5273,6 +5266,26 @@ def generate_async_init() -> str:
     return "\n".join(lines)
 
 
+def _in_string_literal(line: str, pos: int) -> bool:
+    """
+    Whether `pos` in a single source line falls inside a single-line string literal (quote parity up to `pos`,
+    honouring backslash escapes and the other quote kind).
+    """
+    quote = None
+    i = 0
+    while i < pos:
+        c = line[i]
+        if quote and c == "\\":
+            i += 2
+            continue
+        if c in "\"'" and quote in (None, c):
+            quote = None if quote else c
+        elif c == "#" and quote is None:
+            return False
+        i += 1
+    return quote is not None
+
+
 def _method_ranges_matching(src: str, patterns: tuple[str, ...]) -> list[tuple[int, int]]:
     """
     Line-index ranges [start, end) of every method (``    def name(...`` at one level of indentation) whose body
@@ -5398,9 +5411,15 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
             if any(start <= _i < end for start, end in _protected_ranges):
                 continue
             for mod, cls_name in _entry_point_pairs:
+                # inside a string literal (e.g. an expected deprecation message), this is prose naming
+                # the class, not a construction: give it the plain async path the package's own message uses
                 _line, _n = re.subn(
                     rf"(?<!\w)github\.{re.escape(cls_name)}\(",
-                    f"Framework.make_async(githubasyncio.{mod}.{cls_name}, ",
+                    lambda m, mod=mod, cls_name=cls_name, line=_line: (
+                        f"githubasyncio.{mod}.{cls_name}("
+                        if _in_string_literal(line, m.start())
+                        else f"Framework.make_async(githubasyncio.{mod}.{cls_name}, "
+                    ),
                     _line,
                 )
                 _line = _line.replace(f"githubasyncio.{mod}.{cls_name}, )", f"githubasyncio.{mod}.{cls_name})")
@@ -5897,6 +5916,13 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
                 "from tests import AsyncFramework as Framework",
                 "from tests import AsyncFramework as Framework\nfrom tests.AsyncFramework import SyncProxy",
             )
+
+    # `type(X)`: X may now be a SyncProxy (e.g. a value reached through a wrapped client, like
+    # `g._Github__requester.kwargs["auth"]`), whose __class__ spoofing satisfies isinstance() but not
+    # type(). Framework.type_of() unwraps first, and is plain type() for anything else (the classic
+    # tests only ever call one-argument type()).
+    if "from tests import AsyncFramework as Framework" in result:
+        result = re.sub(r"(?<![\w.])type\(", "Framework.type_of(", result)
 
     # Every `githubasyncio.<Module>.` reference must have its submodule imported: a bare
     # `import githubasyncio` doesn't bind `githubasyncio.<Module>` unless something already loaded

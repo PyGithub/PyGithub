@@ -164,14 +164,17 @@ class CassetteConnection:
     _protocol: str
     _default_port: int
 
-    def __init__(self, host, port=None, *args, **kwds):
+    def __init__(self, host, port=None, *args, retry=None, pool_size=None, **kwds):
         BasicTestCase.ensureCassette()
         self.host = host
         self.port = port if port else self._default_port
+        # honour the Requester's retry/pool_size like its real connection classes do, so Retry tests see the retries
+        retry = adapters.DEFAULT_RETRIES if retry is None else retry
+        pool_size = adapters.DEFAULT_POOLSIZE if pool_size is None else pool_size
         self.adapter = adapters.HTTPAdapter(
-            max_retries=adapters.DEFAULT_RETRIES,
-            pool_connections=adapters.DEFAULT_POOLSIZE,
-            pool_maxsize=adapters.DEFAULT_POOLSIZE,
+            max_retries=retry,
+            pool_connections=pool_size,
+            pool_maxsize=pool_size,
         )
         self.session = Session()
         self.session.mount(f"{self._protocol}://", self.adapter)
@@ -478,6 +481,17 @@ def make_async(async_cls, *args, **kwargs):
     args = tuple(SyncProxy._deep_unwrap(a) for a in args)
     kwargs = {k: SyncProxy._deep_unwrap(v) for k, v in kwargs.items()}
     return SyncProxy(async_cls(*args, **kwargs))
+
+
+def type_of(obj):
+    """
+    SyncProxy-aware type(): the type of the wrapped object for a SyncProxy, type(obj) otherwise.
+
+    SyncProxy spoofs __class__, which is enough for isinstance(), but type() can't be fooled. Generated tests call this
+    wherever the classic test calls type(), since the argument may now be a SyncProxy.
+
+    """
+    return type(SyncProxy._deep_unwrap(obj)) if isinstance(obj, SyncProxy) else type(obj)
 
 
 def _is_completable(obj):
