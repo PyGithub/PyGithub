@@ -2,23 +2,16 @@
 """
 Async test framework.
 
-Doesn't need the classic checkout's tests/Framework.py (this replaces it -- see
-TEMPLATE_TEST_FILES) or its tests/ReplayData (scripts/sync_async.sh copies that in directly). It
-still needs the classic PyGithub *package* importable, but only for the few generated test methods
-that exercise I/O-backed token auth (AppInstallationAuth / AppUserAuth): the async Auth classes
-can't refresh those tokens yet, so those methods stay on the classic stack (`import
-github.Requester` below serves them). Copied byte-for-byte into tests/AsyncFramework.py by
+Self-contained: needs neither the classic checkout's tests/Framework.py (this replaces it -- see
+TEMPLATE_TEST_FILES) or its tests/ReplayData (scripts/sync_async.sh copies that in directly), nor
+the classic PyGithub package. Copied byte-for-byte into tests/AsyncFramework.py by
 scripts/generate_async.py -- edit this file, not the generated one.
 
 This module provides:
 
-- Cassette replay (BasicTestCase and friends): reimplemented against niquests directly instead of
-  wrapping the classic package's github.Requester connection classes -- vcrpy only patches
-  *synchronous* HTTP transports, so it can't see niquests's AsyncSession either way, sync or
-  async. BasicTestCase.setUp() also calls the classic Requester's own
-  `injectConnectionClasses()` (with the plain sync CassetteHttpConnection below, not an async
-  wrapper) -- a *class*-level patch, so the classic-stack methods above replay from the cassette
-  instead of hitting the real network.
+- Cassette replay (BasicTestCase and friends): built on niquests directly. vcrpy only patches
+  *synchronous* HTTP transports, so it can't see niquests's AsyncSession either way; the async
+  connection classes bridge each request through a real sync CassetteConnection instead.
 - Sync-to-async bridging (SyncProxy, TestCase): a proxy that wraps the async Github object (and
   everything it returns) so generated test method bodies -- copied verbatim from the classic
   project's sync test files -- can call async methods without themselves being async.
@@ -39,7 +32,6 @@ from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlsplit
 
-import github.Requester
 import vcr
 import vcr.cassette
 from niquests import Session
@@ -275,15 +267,6 @@ class BasicTestCase(unittest.TestCase):
             AsyncCassetteHttpConnection,
             AsyncCassetteHttpsConnection,
         )
-        # injectConnectionClasses() patches the *class*, not an instance: every Requester built
-        # afterward -- including deep inside a directly-constructed classic `github.Github(...)`
-        # -- picks up these connection classes too, so it replays from the cassette instead of
-        # hitting the real network. CassetteHttpConnection is plain sync (see its docstring
-        # above), which is exactly what the classic Requester expects.
-        github.Requester.Requester.injectConnectionClasses(
-            CassetteHttpConnection,
-            CassetteHttpsConnection,
-        )
         if (
             self.recordMode
         ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
@@ -334,7 +317,6 @@ class BasicTestCase(unittest.TestCase):
         super().tearDown()
         self.__closeCassetteIfNeeded(silent=self.thisTestFailed)
         githubasyncio.Requester.Requester.resetConnectionClasses()
-        github.Requester.Requester.resetConnectionClasses()
         BasicTestCase.__activeInstance = None
 
     def assertWarning(self, warning, expected):
@@ -489,12 +471,12 @@ def make_async(async_cls, *args, **kwargs):
     Most generated tests get their client from TestCase.get_github() (self.g), already SyncProxy-wrapped. A number
     instead construct their own client inline (e.g. to test an auth-failure path, or a non-default base_url) -- calling
     the async class directly there would just hand back an unawaited coroutine from the first method call; this gives
-    them the same synchronous-looking bridging self.g gets. (Not used for every such call site: see
-    ENTRY_POINT_CTOR_SKIP_MARKERS in generate_async.py for the ones left constructing the classic class instead, because
-    SyncProxy's __class__ spoofing breaks pickling, or because they mock a sync-specific connection object that an async
-    close() can't await.)
+    them the same synchronous-looking bridging self.g gets. SyncProxy arguments are unwrapped first, so a wrapped Auth
+    can be handed to the client.
 
     """
+    args = tuple(SyncProxy._deep_unwrap(a) for a in args)
+    kwargs = {k: SyncProxy._deep_unwrap(v) for k, v in kwargs.items()}
     return SyncProxy(async_cls(*args, **kwargs))
 
 

@@ -114,16 +114,10 @@ PURE_DATA_MODULES = frozenset(
 # Regex patterns: a test *method* containing any of these keeps constructing entry-point classes
 # (Github, GithubIntegration) the classic (sync) way, even though transform_test_file otherwise
 # routes such construction through Framework.make_async() for SyncProxy bridging. See the call
-# site (in transform_test_file) for why each needs the escape hatch.
+# site (in transform_test_file) for why each needs the escape hatch. (`mock.Mock(return_value=...)`
+# / `side_effect=` are plain function stubs -- e.g. a frozen `datetime.now` -- and behave the same
+# against either stack, so they don't count.)
 ENTRY_POINT_CTOR_SKIP_MARKERS = (r"\bmock\.MagicMock\(", r"\bmock\.Mock\((?!return_value=|side_effect=)")
-
-# `mock.Mock(return_value=...)` / `side_effect=` are plain function stubs (e.g. a frozen
-# `datetime.now`) and behave the same against either stack -- unless the method also drives an
-# Auth whose `token`/`authentication()` does I/O (installation / user tokens): the async Auth
-# classes can't refresh those yet (their `token` property calls an async method without awaiting
-# it), so such a method has to stay on the classic stack even when its only mocks are stubs.
-STUB_MOCK_MARKER = r"\bmock\.Mock\("
-IO_TOKEN_AUTH_MARKER = r"\b(?:AppInstallationAuth|AppUserAuth|get_installation_auth|get_app_user_auth)\b"
 
 # Test files to skip (not test modules, or infrastructure)
 SKIP_TEST_FILES = {
@@ -251,7 +245,7 @@ TEST_MOCK_REWRITES: tuple[tuple[str, str, frozenset[str]], ...] = (
     ),
     ('"github.Requester.datetime"', '"githubasyncio.Requester.datetime"', frozenset()),
     ('mock.patch("github.PublicKey.encrypt")', 'mock.patch("githubasyncio.PublicKey.encrypt")', frozenset()),
-    ('"github.AccessToken.datetime"', '"githubasyncio.AccessToken.datetime"', frozenset({"Authentication"})),
+    ('"github.AccessToken.datetime"', '"githubasyncio.AccessToken.datetime"', frozenset()),
     ("github.GithubObject.NotSet", "githubasyncio.GithubObject.NotSet", frozenset()),
     # The async stack reads its own Consts / requestlib, so patch and use those.
     ('"github.Requester.Consts.', '"githubasyncio.Requester.Consts.', frozenset()),
@@ -472,7 +466,73 @@ PATCHES: dict[str, list[Patch]] = {
             replace="from collections.abc import AsyncIterator, ",
         ),
     ],
+    "Auth": [
+        Patch(
+            reason="the analyzer can't type `self.__integration` / `self.__app` (private attributes "
+            "assigned in withRequester from lazily imported classes), so it misses that fetching or "
+            "refreshing a token is I/O. Auth.authentication() is what the Requester calls per request; "
+            "make it awaitable, and let it await a subclass `token` that is itself async (the "
+            "installation / user token classes below) -- token classes with no I/O keep a plain "
+            "property.",
+            match='        headers["Authorization"] = f"{self.token_type} {self.token}"',
+            replace="        token = self.token\n"
+            "        if inspect.isawaitable(token):\n"
+            "            token = await token\n"
+            '        headers["Authorization"] = f"{self.token_type} {token}"',
+        ),
+        Patch(
+            reason="authentication() is now a coroutine (see above)",
+            match="    def authentication(self, headers: dict) -> None:",
+            replace="    async def authentication(self, headers: dict) -> None:",
+        ),
+        Patch(
+            reason="inspect.isawaitable, used by authentication()",
+            match="import base64\n",
+            replace="import base64\nimport inspect\n",
+        ),
+        Patch(
+            reason="AppInstallationAuth.token fetches a live installation access token (I/O)",
+            match="    def token(self) -> str:\n"
+            "        if self.__installation_authorization is None or self._is_expired:\n"
+            "            self.__installation_authorization = self._get_installation_authorization()\n",
+            replace="    async def token(self) -> str:\n"
+            "        if self.__installation_authorization is None or self._is_expired:\n"
+            "            self.__installation_authorization = await self._get_installation_authorization()\n",
+        ),
+        Patch(
+            reason="GithubIntegration.get_access_token is a coroutine",
+            match="    def _get_installation_authorization(self) -> InstallationAuthorization:\n"
+            '        assert self.__integration is not None, "Method withRequester(Requester) must be called first"\n'
+            "        return self.__integration.get_access_token(",
+            replace="    async def _get_installation_authorization(self) -> InstallationAuthorization:\n"
+            '        assert self.__integration is not None, "Method withRequester(Requester) must be called first"\n'
+            "        return await self.__integration.get_access_token(",
+        ),
+        Patch(
+            reason="AppUserAuth.token refreshes an expired user token (I/O)",
+            match="    def token(self) -> str:\n        if self._is_expired:\n            self._refresh()\n",
+            replace="    async def token(self) -> str:\n        if self._is_expired:\n            await self._refresh()\n",
+        ),
+        Patch(
+            reason="ApplicationOAuth.refresh_access_token is a coroutine",
+            match="    def _refresh(self) -> None:",
+            replace="    async def _refresh(self) -> None:",
+        ),
+        Patch(
+            reason="ApplicationOAuth.refresh_access_token is a coroutine",
+            match="        token = self.__app.refresh_access_token(self._refresh_token)",
+            replace="        token = await self.__app.refresh_access_token(self._refresh_token)",
+        ),
+    ],
     "Requester": [
+        Patch(
+            reason="Auth.authentication() is a coroutine (see PATCHES['Auth']), but a user-defined "
+            "Auth subclass may still override it as a plain method, so only await a coroutine",
+            match="            self.__auth.authentication(requestHeaders)",
+            replace="            authenticated = self.__auth.authentication(requestHeaders)\n"
+            "            if asyncio.iscoroutine(authenticated):\n"
+            "                await authenticated",
+        ),
         Patch(
             reason="async I/O requires niquests's AsyncSession, which githubasyncio.requestlib "
             "intentionally doesn't export (it covers the symbols async code needs as plain "
@@ -5299,17 +5359,12 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     # mock.MagicMock() to a connection slot and expects close() to be called on it synchronously
     # will fail differently (not incorrectly, just differently -- close() is
     # `await self.__connection.close()` on the async side, which can't await a MagicMock) if that
-    # connection now belongs to a real async Requester. Left constructing the classic class in
-    # those methods instead -- cassette replay still works there (BasicTestCase.setUp() patches
-    # github.Requester too), they just exercise the sync stack for this one call.
+    # connection now belongs to a real async Requester. Such methods are left untouched (the
+    # bare-connection-double and requester-spec-mock passes below convert the ones that can be);
+    # a method that still ends up constructing a classic class fails loudly (no `github` import).
     # (pickle round-trips are not skipped: `pickle.dumps(X)` arguments get unwrapped from their
     # SyncProxy instead -- see the pickle pass below -- and the raw async objects pickle fine.)
     _protected_ranges = _method_ranges_matching(result, ENTRY_POINT_CTOR_SKIP_MARKERS)
-    for _rng in _method_ranges_matching(result, (STUB_MOCK_MARKER,)):
-        if _rng not in _protected_ranges and re.search(
-            IO_TOKEN_AUTH_MARKER, "\n".join(result.split("\n")[_rng[0] : _rng[1]])
-        ):
-            _protected_ranges.append(_rng)
 
     # Bare connection doubles: a method that assigns a plain `mock.MagicMock()` to a Requester's
     # connection slot (`_Requester__connection`, `__custom_connections`) only to check that
@@ -5554,6 +5609,14 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
             continue
         new_line = _line.replace("github.Auth.", "githubasyncio.Auth.").replace(
             "github.Requester.Requester(", "githubasyncio.Requester.Requester("
+        )
+        # Auth classes whose `token` does I/O (installation / user tokens) have an async `token`
+        # property, so a test that reads it directly needs the SyncProxy wrapping; make_async()
+        # unwraps it again when it's handed to an entry point.
+        new_line = re.sub(
+            r"\bgithubasyncio\.Auth\.(AppInstallationAuth|AppUserAuth)\((?!\.\.\.)",
+            r"Framework.make_async(githubasyncio.Auth.\1, ",
+            new_line,
         )
         # static / attribute references (isRateLimitError, get_graphql_prefix, __init__ annotations,
         # ...) -- but not injectLogger/resetLogger, which TEST_LOGGER_CALLS handles explicitly
