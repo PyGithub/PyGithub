@@ -33,6 +33,7 @@ from urllib.parse import urlsplit
 
 import vcr
 import vcr.cassette
+import vcr.stubs
 from niquests import Session
 from vcr.matchers import requests_match
 
@@ -145,6 +146,23 @@ class OrderedVCR(vcr.VCR):
 _vcr = OrderedVCR(serializer="pygithub-replaydata", record_mode="none")
 _vcr.register_serializer("pygithub-replaydata", VcrSerializer)
 _vcr.register_persister(VcrSerializer.Utf8FilesystemPersister)
+
+
+def _fake_socket_gettimeout(self):
+    return None
+
+
+def _fake_socket_recv(self, *args, **kwargs):
+    raise BlockingIOError
+
+
+# vcrpy's replay socket only stubs settimeout(). urllib3-future >= 2.25 peeks reused pooled connections for unsolicited
+# data (HTTPConnection.peek_and_react) and, since the fake socket's fileno() 0 always polls readable under pytest, goes
+# on to call gettimeout() and recv() on it. Behave like an idle non-blocking socket: nothing to read.
+if not hasattr(vcr.stubs.VCRFakeSocket, "gettimeout"):
+    vcr.stubs.VCRFakeSocket.gettimeout = _fake_socket_gettimeout
+if not hasattr(vcr.stubs.VCRFakeSocket, "recv"):
+    vcr.stubs.VCRFakeSocket.recv = _fake_socket_recv
 
 
 class CassetteConnection:
