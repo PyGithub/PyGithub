@@ -43,6 +43,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tokenize
 from collections.abc import Callable
 from pathlib import Path
 from typing import NamedTuple
@@ -2144,6 +2145,33 @@ class AsyncTransformer:
         return import_line + src
 
     @staticmethod
+    def _code_only(src: str) -> str:
+        """
+        Blank out every string literal (docstrings and f-string text too) and comment in `src`.
+
+        A textual search on the result only sees real code; f-string replacement fields stay. Falls back to `src` if
+        it doesn't tokenize.
+
+        """
+        lines = src.splitlines(keepends=True)
+        offsets = [0]
+        for line in lines:
+            offsets.append(offsets[-1] + len(line))
+        blank_types = {tokenize.STRING, tokenize.COMMENT, getattr(tokenize, "FSTRING_MIDDLE", tokenize.STRING)}
+        chars = list(src)
+        try:
+            for tok in tokenize.generate_tokens(iter(lines).__next__):
+                if tok.type in blank_types:
+                    start = offsets[tok.start[0] - 1] + tok.start[1]
+                    end = offsets[tok.end[0] - 1] + tok.end[1]
+                    for i in range(start, end):
+                        if chars[i] != "\n":
+                            chars[i] = " "
+        except (tokenize.TokenError, SyntaxError, IndentationError):
+            return src
+        return "".join(chars)
+
+    @staticmethod
     def _sub_outside_docstrings(pattern: str, repl: str, src: str) -> tuple[str, bool]:
         """
         Apply re.sub(pattern, repl) to `src`, skipping any line that is inside — or is itself a delimiter of — a
@@ -3366,11 +3394,15 @@ class AsyncTransformer:
         # import from Step 1). Only for modules that have async versions.
         # Also track which modules are referenced in the code body but not yet imported
         needed_imports: set[str] = set()
+        # only a reference in real code needs an import: a mention in a string literal (e.g. a deprecation message's
+        # `auth=github.Auth.AppAuth(...)`), docstring or comment still gets rewritten below, but needs no import
+        code_only = self._code_only(result)
         for mod in sorted(async_files, key=len, reverse=True):
             # Check if this module is actually referenced in the body
             pattern_bare = rf"(?<!asyncio\.)github\.{re.escape(mod)}\."
             pattern_async = rf"githubasyncio\.{re.escape(mod)}\."
             has_ref = bool(re.search(pattern_bare, result)) or bool(re.search(pattern_async, result))
+            has_code_ref = bool(re.search(pattern_bare, code_only)) or bool(re.search(pattern_async, code_only))
 
             if has_ref and mod == stem:
                 # Self-reference: e.g. Enterprise.py using github.Enterprise.Enterprise(...)
@@ -3410,7 +3442,7 @@ class AsyncTransformer:
                     f"{_alias(mod)}.",
                     result,
                 )
-                if has_ref and mod not in already_imported:
+                if has_code_ref and mod not in already_imported:
                     needed_imports.add(mod)
 
         # Add missing `import githubasyncio.X` for modules referenced but never imported
