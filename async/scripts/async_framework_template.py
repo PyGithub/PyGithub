@@ -22,6 +22,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import functools
+import inspect
 import os
 import traceback
 import unittest
@@ -651,7 +652,7 @@ class SyncProxy:
             return attr
 
         if callable(attr):
-            if asyncio.iscoroutinefunction(attr):
+            if inspect.iscoroutinefunction(attr):
 
                 def async_wrapper(*args, **kwargs):
                     # Deep-unwrap any SyncProxy arguments (including inside containers)
