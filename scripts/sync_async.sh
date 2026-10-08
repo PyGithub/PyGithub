@@ -11,6 +11,6 @@ then
 fi
 echo "Syncing PyGithub project with PyGithub-async in $async_dir"
 
-(cd "$base"; tar -cf - $(git ls-files | grep -v -e "^\." -e "^async" -e "^github" -e "^openapi" -e "^pyproject.toml$" -e "^requirements/" -e "^scripts/" -e "^tests/.*\.py") | tar -xvf - -C "$async_dir/")
+(cd "$base"; tar -cf - $(git ls-files | grep -v -e "^\." -e "^async" -e "^github" -e "^openapi" -e "^pyproject.toml$" -e "^tox.ini$" -e "^requirements/" -e "^scripts/" -e "^tests/.*\.py") | tar -xvf - -C "$async_dir/")
 
 python "$async_dir/scripts/generate_async.py"
