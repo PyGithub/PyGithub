@@ -43,6 +43,7 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 
 [project.optional-dependencies]
 integrations = []
+niquests = ["niquests>=3.12,<4"]
 
 [tool.setuptools_scm]
 
