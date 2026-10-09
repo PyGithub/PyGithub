@@ -49,7 +49,10 @@ jobs:
         env:
           REQUEST_LIB: ${{ matrix.request-lib }}
       - name: Generate Async
-        run: scripts/sync_async.sh
+        run: |
+          scripts/sync_async.sh
+          pip install -r async/requirements/scripts.txt
+          python async/scripts/generate_async.py
       - name: Run async tests
         run: cd async; tox
       - name: Upload Test Results
