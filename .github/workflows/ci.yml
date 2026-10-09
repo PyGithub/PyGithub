@@ -48,12 +48,18 @@ jobs:
         run: tox
         env:
           REQUEST_LIB: ${{ matrix.request-lib }}
+      - name: Generate Async
+        run: scripts/sync_async.sh
+      - name: Run async tests
+        run: cd async; tox
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: Test Results (${{ matrix.request-lib }} and Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
-          path: pytest.xml
+          path: |
+            pytest.xml
+            async/pytest.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
 
