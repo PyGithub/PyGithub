@@ -6036,7 +6036,29 @@ def _find_tool(name: str) -> str | None:
     return shutil.which(name)
 
 
-def run_formatters(directory: Path):
+FORMATTERS = ("pyupgrade", "ruff", "docformatter", "black")
+
+
+def _require_tools() -> dict[str, str]:
+    """
+    Resolve all formatter binaries, exiting with an error if any is missing.
+
+    Called before any output is written so a missing tool does not leave behind unformatted generated files.
+
+    """
+    tools = {name: _find_tool(name) for name in FORMATTERS}
+    missing = [name for name, path in tools.items() if path is None]
+    if missing:
+        logger.error(
+            "Required command(s) not found: %s. Install them (e.g. `pip install %s`) and retry.",
+            ", ".join(missing),
+            " ".join(missing),
+        )
+        sys.exit(1)
+    return {name: path for name, path in tools.items() if path is not None}
+
+
+def run_formatters(directory: Path, tools: dict[str, str]):
     """
     Run the same formatter chain as pre-commit (in the same order) so that the generated output is already stable and
     won't cause cascading "files were modified" failures on the next pre-commit run.
@@ -6044,58 +6066,41 @@ def run_formatters(directory: Path):
     Order: pyupgrade → ruff → docformatter → black
 
     """
-    pyupgrade = _find_tool("pyupgrade")
-    ruff = _find_tool("ruff")
-    docformatter = _find_tool("docformatter")
-    black = _find_tool("black")
-
     py_files = sorted(directory.rglob("*.py"))
 
     # 1. pyupgrade --py39-plus  (per-file tool)
-    if pyupgrade:
-        logger.info("  Running pyupgrade on %s...", directory)
-        for f in py_files:
-            subprocess.run(
-                [pyupgrade, "--py39-plus", str(f)],
-                cwd=str(REPO_ROOT),
-                capture_output=True,
-            )
-    else:
-        logger.debug("run_formatters: pyupgrade not found")
+    logger.info("  Running pyupgrade on %s...", directory)
+    for f in py_files:
+        subprocess.run(
+            [tools["pyupgrade"], "--py39-plus", str(f)],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+        )
 
     # 2. ruff check --fix --fixable=ALL  (matches pre-commit args)
-    if ruff:
-        logger.info("  Running ruff check --fix on %s...", directory)
-        subprocess.run(
-            [ruff, "check", "--fix", "--fixable=ALL", str(directory), "--quiet"],
-            cwd=str(REPO_ROOT),
-            capture_output=True,
-        )
-    else:
-        logger.debug("run_formatters: ruff not found")
+    logger.info("  Running ruff check --fix on %s...", directory)
+    subprocess.run(
+        [tools["ruff"], "check", "--fix", "--fixable=ALL", str(directory), "--quiet"],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+    )
 
     # 3. docformatter --in-place  (per-file tool, reads config from pyproject.toml)
-    if docformatter:
-        logger.info("  Running docformatter on %s...", directory)
-        for f in py_files:
-            subprocess.run(
-                [docformatter, "--in-place", str(f)],
-                cwd=str(REPO_ROOT),
-                capture_output=True,
-            )
-    else:
-        logger.debug("run_formatters: docformatter not found")
-
-    # 4. black  (directory-level tool, reads config from pyproject.toml)
-    if black:
-        logger.info("  Running black on %s...", directory)
+    logger.info("  Running docformatter on %s...", directory)
+    for f in py_files:
         subprocess.run(
-            [black, str(directory), "--quiet"],
+            [tools["docformatter"], "--in-place", str(f)],
             cwd=str(REPO_ROOT),
             capture_output=True,
         )
-    else:
-        logger.debug("run_formatters: black not found")
+
+    # 4. black  (directory-level tool, reads config from pyproject.toml)
+    logger.info("  Running black on %s...", directory)
+    subprocess.run(
+        [tools["black"], str(directory), "--quiet"],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+    )
 
 
 def main():
@@ -6109,6 +6114,8 @@ def main():
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s",
     )
+
+    tools = _require_tools()
 
     logger.info("[1/6] Parsing source files...")
     analyzer = IOAnalyzer()
@@ -6249,8 +6256,8 @@ def main():
     logger.info(f"Generated {test_count} async test files")
 
     logger.info("[5/6] Running formatters...")
-    run_formatters(DST_PKG)
-    run_formatters(TEST_DST)
+    run_formatters(DST_PKG, tools)
+    run_formatters(TEST_DST, tools)
     logger.info("Done.")
 
     logger.info("[6/6] Syntax-checking generated files...")
