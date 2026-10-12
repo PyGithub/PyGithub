@@ -160,6 +160,8 @@ class Logging(Framework.BasicTestCase):
 
     def setUp(self):
         super().setUp()
+        # expected response headers contain the DEBUG_FRAME key
+        github.Requester.Requester.setDebugFlag(True)
         self.logger = self.MockLogger()
         github.Requester.Requester.injectLogger(self.logger)
 
