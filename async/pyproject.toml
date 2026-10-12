@@ -97,6 +97,10 @@ extend-ignore = [
 ]
 extend-safe-fixes = ["ALL"]
 
+[tool.ruff.lint.isort]
+# githubasyncio and tests are generated, so ruff cannot detect them as first-party where they do not exist (e.g. in CI)
+known-first-party = ["githubasyncio", "tests"]
+
 [tool.pytest.ini_options]
 python_files = "tests/*.py"
 addopts = "--color=yes --ignore=openapi"
