@@ -288,6 +288,15 @@ TEST_LOGGER_CALLS: tuple[tuple[str, str], ...] = (
     ),
 )
 
+# Code snippets that tests run in a fresh interpreter (e.g. Logging_'s `python -c` subprocesses):
+# they are string literals, so no import/usage rewrite reaches them, yet they must exercise the
+# async package and its "githubasyncio" logger hierarchy. (MULTILINE regex, replacement)
+TEST_SNIPPET_REWRITES: tuple[tuple[str, str], ...] = (
+    (r"^([ \t]+)import github$", r"\1import githubasyncio"),
+    (r'\blogging\.getLogger\("github(?=[".])', 'logging.getLogger("githubasyncio'),
+    (r"(?<![\w.])github\.enable_console_debug_logging\(", "githubasyncio.enable_console_debug_logging("),
+)
+
 # Module-level helpers patched in PATCHES["GithubObject"] whose async variants
 # must be imported by tests instead of the sync originals (the async versions
 # accept both sync and async NotSet).
@@ -5286,12 +5295,30 @@ def generate_async_init() -> str:
     lines.append("Async counterparts of the github package classes.")
     lines.append('"""')
     lines.append("")
+    lines.append("import logging")
     lines.append("")
     exported: list[str] = []
     for mod, names in sorted(ASYNC_INIT_EXPORTS.items()):
         for name in names:
             lines.append(f"from githubasyncio.{mod} import {name}")
             exported.append(name)
+    lines.append("")
+    # The package logger setup (NullHandler, set_log_level, enable_console_debug_logging) is copied
+    # from the sync __init__.py, bound to the "githubasyncio" logger: the async modules log via
+    # logging.getLogger(__name__), i.e. below "githubasyncio", not "github".
+    sync_init = (SRC_PKG / "__init__.py").read_text()
+    m = re.search(
+        r'^logger = logging\.getLogger\("github"\)\n.*?(?=^__all__ = \[)', sync_init, re.MULTILINE | re.DOTALL
+    )
+    if m is None:
+        raise RuntimeError(f"logging setup not found in {SRC_PKG / '__init__.py'}")
+    lines.append(
+        m.group(0)
+        .replace('logging.getLogger("github")', 'logging.getLogger("githubasyncio")')
+        .replace("the github logger", "the githubasyncio logger")
+        .rstrip()
+    )
+    exported.append("enable_console_debug_logging")
     lines.append("")
     lines.append("")
     lines.append("__all__ = [")
@@ -5625,10 +5652,16 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
             continue  # leave import statements alone -- only rewrite expression usages
         new_line = _line
         for cls_name, mod_name in sorted(_test_reexports.items(), key=lambda kv: len(kv[0]), reverse=True):
-            new_line, _n = re.subn(
-                rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)", f"githubasyncio.{mod_name}.{cls_name}", new_line
+            # inside a string literal (e.g. the logger name "github.GithubRetry"), `github.X` names a
+            # module, not the class: leave it to the string-specific rewrites (TEST_SNIPPET_REWRITES)
+            new_line = re.sub(
+                rf"\bgithub\.{re.escape(cls_name)}\b(?!\.)",
+                lambda m, mod_name=mod_name, cls_name=cls_name: (
+                    m.group(0) if _in_string_literal(m.string, m.start()) else f"githubasyncio.{mod_name}.{cls_name}"
+                ),
+                new_line,
             )
-            _shadowed_rewritten = _shadowed_rewritten or _n > 0
+        _shadowed_rewritten = _shadowed_rewritten or new_line != _line
         _shadowed_lines[_i] = new_line
     result = "\n".join(_shadowed_lines)
     if _shadowed_rewritten:
@@ -5840,6 +5873,12 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
                 "import github\nimport githubasyncio.Requester\n",
                 1,
             )
+
+    # Subprocess code snippets (TEST_SNIPPET_REWRITES): run them against the async package.
+    for pattern, replacement in TEST_SNIPPET_REWRITES:
+        result, _n = re.subn(pattern, replacement, result, flags=re.MULTILINE)
+        if _n:
+            logger.debug("transform_test[%s]: snippet rewrite %s (%d)", test_stem, pattern, _n)
 
     # Helper import rewrites (TEST_HELPER_IMPORT_REWRITES): use the async variants
     # of module-level helpers that were patched for sync/async NotSet duality.
