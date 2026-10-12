@@ -58,7 +58,8 @@ class EnterpriseConsumedLicenses(CompletableGithubObjectWithPaginatedProperty):
     The reference can be found here
     https://docs.github.com/en/enterprise-cloud@latest/rest/enterprise-admin/license#list-enterprise-consumed-licenses
 
-    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    This class has a
+    `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
     For details, see :meth:`EnterpriseConsumedLicenses.users` or :meth:`EnterpriseConsumedLicenses.get_users`.
 
     """

@@ -117,11 +117,11 @@ class RepositoryDiscussion(Framework.TestCase):
         self.assertEqual(self.discussion.answer.author.login, "dawngerpony")
         self.assertEqual(
             self.discussion.answer.body,
-            """[This comment](https://github.com/PyGithub/PyGithub/issues/2895#issue-2118964108) contains the answer to your question:\r\n\r\n```python\r\nmy_repo.raw_data["custom_properties"]\r\n```\r\n\r\n#2968 appears to add proper support for custom properties, but doesn't look like it's made it into a release yet.""",
+            "[This comment](https://github.com/PyGithub/PyGithub/issues/2895#issue-2118964108) contains the answer to your question:\r\n\r\n```python\r\nmy_repo.raw_data[\"custom_properties\"]\r\n```\r\n\r\n#2968 appears to add proper support for custom properties, but doesn't look like it's made it into a release yet.",
         )
         self.assertEqual(
             self.discussion.answer.body_html,
-            """<p dir="auto"><a href="https://github.com/PyGithub/PyGithub/issues/2895#issue-2118964108" data-hovercard-type="issue" data-hovercard-url="/PyGithub/PyGithub/issues/2895/hovercard">This comment</a> contains the answer to your question:</p>\n<div class="highlight highlight-source-python notranslate position-relative overflow-auto" dir="auto" data-snippet-clipboard-copy-content="my_repo.raw_data[&quot;custom_properties&quot;]"><pre class="notranslate"><span class="pl-s1">my_repo</span>.<span class="pl-s1">raw_data</span>[<span class="pl-s">"custom_properties"</span>]</pre></div>\n<p dir="auto"><a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="2293897055" data-permission-text="Title is private" data-url="https://github.com/PyGithub/PyGithub/issues/2968" data-hovercard-type="pull_request" data-hovercard-url="/PyGithub/PyGithub/pull/2968/hovercard" href="https://github.com/PyGithub/PyGithub/pull/2968">#2968</a> appears to add proper support for custom properties, but doesn't look like it's made it into a release yet.</p>""",
+            '<p dir="auto"><a href="https://github.com/PyGithub/PyGithub/issues/2895#issue-2118964108" data-hovercard-type="issue" data-hovercard-url="/PyGithub/PyGithub/issues/2895/hovercard">This comment</a> contains the answer to your question:</p>\n<div class="highlight highlight-source-python notranslate position-relative overflow-auto" dir="auto" data-snippet-clipboard-copy-content="my_repo.raw_data[&quot;custom_properties&quot;]"><pre class="notranslate"><span class="pl-s1">my_repo</span>.<span class="pl-s1">raw_data</span>[<span class="pl-s">"custom_properties"</span>]</pre></div>\n<p dir="auto"><a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="2293897055" data-permission-text="Title is private" data-url="https://github.com/PyGithub/PyGithub/issues/2968" data-hovercard-type="pull_request" data-hovercard-url="/PyGithub/PyGithub/pull/2968/hovercard" href="https://github.com/PyGithub/PyGithub/pull/2968">#2968</a> appears to add proper support for custom properties, but doesn\'t look like it\'s made it into a release yet.</p>',
         )
         self.assertEqual(
             self.discussion.answer.body_text,
@@ -141,15 +141,15 @@ class RepositoryDiscussion(Framework.TestCase):
         self.assertEqual(self.discussion.author.login, "heitorPB")
         self.assertEqual(
             self.discussion.body,
-            """What is the equivalent of `https://api.github.com/repos/OWNER/REPO/properties/values`? I'm interested in getting/setting custom properties for my repos. I can do that with `curl`, but couldn't find a way to do it via this project.\r\n\r\nDocs here: [Get all custom property values for a repository](https://docs.github.com/en/rest/repos/custom-properties?apiVersion=2022-11-28#get-all-custom-property-values-for-a-repository).""",
+            "What is the equivalent of `https://api.github.com/repos/OWNER/REPO/properties/values`? I'm interested in getting/setting custom properties for my repos. I can do that with `curl`, but couldn't find a way to do it via this project.\r\n\r\nDocs here: [Get all custom property values for a repository](https://docs.github.com/en/rest/repos/custom-properties?apiVersion=2022-11-28#get-all-custom-property-values-for-a-repository).",
         )
         self.assertEqual(
             self.discussion.body_html,
-            """<p dir="auto">What is the equivalent of <code class="notranslate">https://api.github.com/repos/OWNER/REPO/properties/values</code>? I'm interested in getting/setting custom properties for my repos. I can do that with <code class="notranslate">curl</code>, but couldn't find a way to do it via this project.</p>\n<p dir="auto">Docs here: <a href="https://docs.github.com/en/rest/repos/custom-properties?apiVersion=2022-11-28#get-all-custom-property-values-for-a-repository">Get all custom property values for a repository</a>.</p>""",
+            '<p dir="auto">What is the equivalent of <code class="notranslate">https://api.github.com/repos/OWNER/REPO/properties/values</code>? I\'m interested in getting/setting custom properties for my repos. I can do that with <code class="notranslate">curl</code>, but couldn\'t find a way to do it via this project.</p>\n<p dir="auto">Docs here: <a href="https://docs.github.com/en/rest/repos/custom-properties?apiVersion=2022-11-28#get-all-custom-property-values-for-a-repository">Get all custom property values for a repository</a>.</p>',
         )
         self.assertEqual(
             self.discussion.body_text,
-            """What is the equivalent of https://api.github.com/repos/OWNER/REPO/properties/values? I'm interested in getting/setting custom properties for my repos. I can do that with curl, but couldn't find a way to do it via this project.\nDocs here: Get all custom property values for a repository.""",
+            "What is the equivalent of https://api.github.com/repos/OWNER/REPO/properties/values? I'm interested in getting/setting custom properties for my repos. I can do that with curl, but couldn't find a way to do it via this project.\nDocs here: Get all custom property values for a repository.",
         )
         self.assertEqual(self.discussion.category.created_at, datetime(2020, 12, 8, 23, 29, 13, tzinfo=timezone.utc))
         self.assertEqual(self.discussion.category.description, "Ask the community for help")

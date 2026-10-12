@@ -283,8 +283,9 @@ class Team(CompletableGithubObject):
     @deprecated("Use add_membership instead")
     def add_to_members(self, member: NamedUser) -> None:
         """
-        This API call is deprecated. Use `add_membership` instead.
-        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
+        .. warning::
+            This API call is deprecated. Use `add_membership` instead.
+            https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
         :calls: `PUT /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
@@ -347,11 +348,7 @@ class Team(CompletableGithubObject):
         except UnknownObjectException:
             return None
 
-    @deprecated(
-        """
-        Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.
-        """
-    )
+    @deprecated("Team.set_repo_permission() is deprecated, use Team.update_team_repository() instead.")
     def set_repo_permission(self, repo: str | Repository, permission: str) -> None:
         """
         :calls: `PUT /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
@@ -509,8 +506,9 @@ class Team(CompletableGithubObject):
     @deprecated("Use remove_membership instead")
     def remove_from_members(self, member: NamedUser) -> None:
         """
-        This API call is deprecated. Use `remove_membership` instead:
-        https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
+        .. warning::
+            This API call is deprecated. Use `remove_membership` instead:
+            https://docs.github.com/en/rest/reference/teams#add-or-update-team-membership-for-a-user-legacy
 
         :calls: `DELETE /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """

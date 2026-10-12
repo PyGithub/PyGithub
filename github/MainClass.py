@@ -233,7 +233,6 @@ class Github:
                             Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
                             Set to None to not specify any version
         """
-
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
         assert password is None or isinstance(password, str), password
         assert jwt is None or isinstance(jwt, str), jwt
@@ -308,13 +307,16 @@ class Github:
         return Github(**kwargs)
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the Github
-        object as a context manager:
+        """
+        Close connections to the server.
+
+        Alternatively, use the Github object as a context manager:
 
         .. code-block:: python
 
           with github.Github(...) as gh:
             # do something
+
         """
         self.__requester.close()
 
@@ -394,7 +396,6 @@ class Github:
         """
         :calls: `GET /license/{license} <https://docs.github.com/en/rest/reference/licenses#get-a-license>`_
         """
-
         assert isinstance(key, str), key
         key = urllib.parse.quote(key)
         headers, data = self.__requester.requestJsonAndCheck("GET", f"/licenses/{key}")
@@ -404,7 +405,6 @@ class Github:
         """
         :calls: `GET /licenses <https://docs.github.com/en/rest/reference/licenses#get-all-commonly-used-licenses>`_
         """
-
         url_parameters: dict[str, Any] = {}
 
         return PaginatedList(github.License.License, self.__requester, "/licenses", url_parameters)
@@ -413,7 +413,6 @@ class Github:
         """
         :calls: `GET /events <https://docs.github.com/en/rest/reference/activity#list-public-events>`_
         """
-
         return PaginatedList(github.Event.Event, self.__requester, "/events", None)
 
     @overload
@@ -1067,9 +1066,10 @@ class Github:
 
     def dump(self, obj: GithubObject, file: BinaryIO, protocol: int = 0) -> None:
         """
-        Dumps (pickles) a PyGithub object to a file-like object. Some effort is made to not pickle sensitive
-        information like the Github credentials used in the :class:`Github` instance. But NO EFFORT is made to remove
-        sensitive information from the object's attributes.
+        Dumps (pickles) a PyGithub object to a file-like object.
+
+        Some effort is made to not pickle sensitive information like the Github credentials used in the :class:`Github`
+        instance. But NO EFFORT is made to remove sensitive information from the object's attributes.
 
         :param obj: the object to pickle
         :param file: the file-like object to pickle to
@@ -1100,7 +1100,6 @@ class Github:
         """
         :calls: `GET /apps/{app_slug} <https://docs.github.com/en/rest/reference/apps>`_ or `GET /app <https://docs.github.com/en/rest/reference/apps>`_
         """
-
         if slug is NotSet:
             # with no slug given, calling /app returns the authenticated app,
             # including the actual /apps/{slug}

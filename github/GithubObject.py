@@ -90,7 +90,6 @@ def _datetime_from_http_date(value: str) -> datetime:
     Raises ValueError for invalid dates.
 
     """
-
     dt = email.utils.parsedate_to_datetime(value)
     if dt.tzinfo is None:
         # RFC7231 states that UTC is assumed if no timezone info is present
@@ -105,7 +104,6 @@ def _datetime_from_github_isoformat(value: str) -> datetime:
     Raises ValueError for invalid timestamps.
 
     """
-
     # Github always returns YYYY-MM-DDTHH:MM:SSZ, so we can use the stdlib parser
     # with some minor adjustments for Python < 3.11 which doesn't support "Z"
     # https://docs.github.com/en/rest/overview/resources-in-the-rest-api#schema
@@ -596,16 +594,16 @@ class CompletableGithubObject(GithubObject, ABC):
         accept: str | None = None,
     ):
         """
-        A CompletableGithubObject can be partially initialised (completed=False). Accessing attributes that are not
-        initialized will then trigger a request to complete all attributes.
+        A CompletableGithubObject can be partially initialised (completed=False).
 
-        A partially initialized CompletableGithubObject (completed=False) can be completed
-        via ``complete()``. This requires the url to be given via parameter ``url`` or ``attributes``.
+        Accessing attributes that are not initialized will then trigger a request to complete all attributes.
 
-        With a requester where ``Requester.is_lazy == True``, this CompletableGithubObjects is
-        partially initialized. This requires the url to be given via parameter ``url`` or ``attributes``.
-        Any CompletableGithubObject created from this lazy object will be lazy itself if created with
-        parameter ``url`` or ``attributes``.
+        A partially initialized CompletableGithubObject (completed=False) can be completed via ``complete()``. This
+        requires the url to be given via parameter ``url`` or ``attributes``.
+
+        With a requester where ``Requester.is_lazy == True``, this CompletableGithubObjects is partially initialized.
+        This requires the url to be given via parameter ``url`` or ``attributes``. Any CompletableGithubObject created
+        from this lazy object will be lazy itself if created with parameter ``url`` or ``attributes``.
 
         :param requester: requester
         :param headers: response headers
@@ -743,8 +741,8 @@ class CompletableGithubObjectWithPaginatedProperty(CompletableGithubObject):
     """
     A CompletableGithubObject that has a property that is subject to pagination.
 
-    An instance created from a Requester with a non-default value for ``per_page`` must have the
-    ``per_page`` value in the URL in order for the paginated property to use the ``per_page`` value.
+    An instance created from a Requester with a non-default value for ``per_page`` must have the ``per_page`` value in
+    the URL in order for the paginated property to use the ``per_page`` value.
 
     """
 

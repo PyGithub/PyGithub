@@ -1275,7 +1275,6 @@ class Organization(CompletableGithubObject):
         """
         :calls: `GET /orgs/{org}/projects <https://docs.github.com/en/rest/reference/projects#list-organization-projects>`_
         """
-
         url_parameters = NotSet.remove_unset_items({"state": state})
 
         return PaginatedList(
@@ -1575,7 +1574,6 @@ class Organization(CompletableGithubObject):
         :calls: `GET /orgs/{org}/installations <https://docs.github.com/en/rest/reference/orgs#list-app-installations-for-an-organization>`_
         :rtype: :class:`PaginatedList` of :class:`github.Installation.Installation`
         """
-
         return PaginatedList(
             github.Installation.Installation,
             self._requester,
@@ -2188,7 +2186,6 @@ class Organization(CompletableGithubObject):
         """
         :calls: `GET /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners#get-a-self-hosted-runner-for-an-organization>`_
         """
-
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"{self.url}/actions/runners/{runner_id}",
@@ -2199,7 +2196,6 @@ class Organization(CompletableGithubObject):
         """
         :calls: `DELETE /orgs/{org}/actions/runners/{runner_id} <https://docs.github.com/en/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-an-organization>`_
         """
-
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             f"{self.url}/actions/runners/{runner_id}",

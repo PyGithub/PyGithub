@@ -36,7 +36,7 @@ repos:
         additional_dependencies: [tomli]
 
   - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.7
+    rev: v1.7.8
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]
