@@ -361,8 +361,8 @@ PATCHES: dict[str, list[Patch]] = {
         Patch(
             reason="TypeGuard now imported from typing, not typing_extensions; drop it here since "
             "is_defined/is_undefined switch to TypeIs (typing_extensions-only)",
-            match="from typing import TYPE_CHECKING, Any, TypeGuard, Union, overload",
-            replace="from typing import TYPE_CHECKING, Any, Union, overload",
+            match="from typing import TYPE_CHECKING, Any, TypeAlias, TypeGuard, overload",
+            replace="from typing import TYPE_CHECKING, Any, TypeAlias, overload",
         ),
         Patch(
             reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
@@ -371,14 +371,13 @@ PATCHES: dict[str, list[Patch]] = {
         ),
         Patch(
             reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
-            match=("def is_defined(v: T | _NotSetType) -> TypeGuard[T]:\n" "    return not isinstance(v, _NotSetType)"),
-            replace=("def is_defined(v: T | _NotSetType) -> TypeIs[T]:\n" "    return not isinstance(v, _NotSetType)"),
+            match=("def is_defined(v: T | _NotSetType) -> TypeGuard[T]:\n    return not isinstance(v, _NotSetType)"),
+            replace=("def is_defined(v: T | _NotSetType) -> TypeIs[T]:\n    return not isinstance(v, _NotSetType)"),
         ),
         Patch(
             reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
             match=(
-                "def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:\n"
-                "    return isinstance(v, _NotSetType)"
+                "def is_undefined(v: T | _NotSetType) -> TypeGuard[_NotSetType]:\n    return isinstance(v, _NotSetType)"
             ),
             replace=(
                 "def is_undefined(v: T | _NotSetType) -> TypeIs[_NotSetType]:\n    return isinstance(v, _NotSetType)"
@@ -1450,11 +1449,7 @@ class IOAnalyzer:
                 if self.is_attr_async_on_type(obj_types, attr_name):
                     # Build a readable reason
                     if isinstance(node.value, ast.Name):
-                        return "cross-object: {}.{} (type {})".format(
-                            node.value.id,
-                            attr_name,
-                            obj_types,
-                        )
+                        return f"cross-object: {node.value.id}.{attr_name} (type {obj_types})"
                     else:
                         return f"cross-object: *.{attr_name} (type {obj_types})"
 
@@ -1971,7 +1966,7 @@ class IOAnalyzer:
                         for pp in all_promoted:
                             if pp in method_src and self._search(rf"self\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src):
                                 found = True
-                                found_reason = "accesses promoted property '%s'" % pp
+                                found_reason = f"accesses promoted property '{pp}'"
                                 break
                         # Check A2: accesses a promoted async property via super()
                         if not found and "super()" in method_src:
@@ -1980,7 +1975,7 @@ class IOAnalyzer:
                                     rf"super\(\)\.{re.escape(pp)}(?!\s*\()(?!\w)", method_src
                                 ):
                                     found = True
-                                    found_reason = "accesses promoted property via super().%s" % pp
+                                    found_reason = f"accesses promoted property via super().{pp}"
                                     break
                         # Check B: calls an async method via self
                         if not found:
@@ -1989,14 +1984,14 @@ class IOAnalyzer:
                                     rf"self\.(?:_\w+)?{re.escape(am)}\s*\(", method_src
                                 ):
                                     found = True
-                                    found_reason = "calls async method '%s'" % am
+                                    found_reason = f"calls async method '{am}'"
                                     break
                         # Check B2: calls an async method via super()
                         if not found and "super()" in method_src:
                             for am in current_async:
                                 if am in method_src and self._search(rf"super\(\)\.{re.escape(am)}\s*\(", method_src):
                                     found = True
-                                    found_reason = "calls async method via super().%s()" % am
+                                    found_reason = f"calls async method via super().{am}()"
                                     break
                         if found:
                             promote_methods.add(item.name)
@@ -4103,7 +4098,8 @@ class AsyncTransformer:
         return "\n".join(lines)
 
     def _add_chained_awaits(self, src: str, class_name: str) -> str:
-        """Phase G: Add await to chained attribute accesses after (await ...).
+        """
+        Phase G: Add await to chained attribute accesses after (await ...).
 
         After earlier phases create patterns like ``(await self.owner).login``,
         this pass checks whether ``.login`` is async on the resolved type of
@@ -4135,7 +4131,8 @@ class AsyncTransformer:
         return src
 
     def _annotate_sync_property_overrides(self, src: str, class_name: str) -> str:
-        """Phase J: Add ``# type: ignore[override]`` to sync @property defs that
+        """
+        Phase J: Add ``# type: ignore[override]`` to sync @property defs that
         override an async property inherited from a base class.
 
         mypy reports these as signature mismatches (e.g. ``str`` vs
@@ -4176,7 +4173,8 @@ class AsyncTransformer:
         return src
 
     def _break_async_method_chains(self, src: str, class_name: str) -> str:
-        """Phase I: Break chains where an async method call has further accesses.
+        """
+        Phase I: Break chains where an async method call has further accesses.
 
         Detects patterns like ``await EXPR.async_method(ARGS).next(...)`` where
         ``.async_method()`` returns a coroutine in async mode and ``.next()``
@@ -4840,6 +4838,8 @@ class AsyncTransformer:
         Handles chained access: var.prop.something -> (await var.prop).something
 
         Args:
+            src: The source code to transform.
+            prop: The property name to match.
             restrict_vars: Only match these specific variable names (determined by
                            type-registry analysis).
 
@@ -4893,6 +4893,7 @@ class AsyncTransformer:
         Only matches lowercase variable names (to avoid module.method false positives).
 
         Args:
+            src: The source code to transform.
             method: The method name to match.
             restrict_vars: Only match these specific variable names (determined by
                            type-registry analysis).
@@ -5344,7 +5345,7 @@ def _method_ranges_matching(src: str, patterns: tuple[str, ...]) -> list[tuple[i
 
 
 def _ensure_bare_githubasyncio_import(src: str) -> str:
-    """
+    r"""
     Ensure a bare ``import githubasyncio`` line exists, inserted right after the last top-level ``import github`` /
     ``import github.X`` line.
 
@@ -6036,7 +6037,7 @@ def _find_tool(name: str) -> str | None:
     return shutil.which(name)
 
 
-FORMATTERS = ("pyupgrade", "ruff", "docformatter", "black")
+FORMATTERS = ("ruff",)
 
 
 def _require_tools() -> dict[str, str]:
@@ -6060,44 +6061,24 @@ def _require_tools() -> dict[str, str]:
 
 def run_formatters(directory: Path, tools: dict[str, str]):
     """
-    Run the same formatter chain as pre-commit (in the same order) so that the generated output is already stable and
+    Run the same formatters as pre-commit (in the same order) so that the generated output is already stable and
     won't cause cascading "files were modified" failures on the next pre-commit run.
 
-    Order: pyupgrade → ruff → docformatter → black
+    Order: ruff check --fix → ruff format
 
     """
-    py_files = sorted(directory.rglob("*.py"))
-
-    # 1. pyupgrade --py39-plus  (per-file tool)
-    logger.info("  Running pyupgrade on %s...", directory)
-    for f in py_files:
-        subprocess.run(
-            [tools["pyupgrade"], "--py39-plus", str(f)],
-            cwd=str(REPO_ROOT),
-            capture_output=True,
-        )
-
-    # 2. ruff check --fix --fixable=ALL  (matches pre-commit args)
+    # 1. ruff check --fix  (matches pre-commit args, reads config from pyproject.toml)
     logger.info("  Running ruff check --fix on %s...", directory)
     subprocess.run(
-        [tools["ruff"], "check", "--fix", "--fixable=ALL", str(directory), "--quiet"],
+        [tools["ruff"], "check", "--fix", str(directory), "--quiet"],
         cwd=str(REPO_ROOT),
         capture_output=True,
     )
 
-    # 3. docformatter --in-place  (per-file tool, reads config from pyproject.toml)
-    logger.info("  Running docformatter on %s...", directory)
-    for f in py_files:
-        subprocess.run(
-            [tools["docformatter"], "--in-place", str(f)],
-            cwd=str(REPO_ROOT),
-            capture_output=True,
-        )
-
-    # 4. black  (directory-level tool, reads config from pyproject.toml)
-    logger.info("  Running black on %s...", directory)
+    # 2. ruff format  (reads config from pyproject.toml)
+    logger.info("  Running ruff format on %s...", directory)
     subprocess.run(
-        [tools["black"], str(directory), "--quiet"],
+        [tools["ruff"], "format", str(directory), "--quiet"],
         cwd=str(REPO_ROOT),
         capture_output=True,
     )
