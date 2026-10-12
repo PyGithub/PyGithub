@@ -76,6 +76,7 @@ import vcr
 import vcr.cassette
 from requests.structures import CaseInsensitiveDict
 from vcr.matchers import requests_match
+from vcr.stubs import VCRFakeSocket
 
 import github
 from github import Consts
@@ -170,6 +171,24 @@ class OrderedVCR(vcr.VCR):
             return OrderedCassette.use(**config)
         args_getter = functools.partial(self.get_merged_config, **kwargs)
         return OrderedCassette.use_arg_getter(args_getter)
+
+
+# urllib3-future >= 2.25.902 (niquests) peeks into an idle pooled connection for unsolicited data
+# before reusing it (``HTTPConnection.peek_and_react``), calling ``gettimeout()`` and ``recv()`` on
+# its socket. vcrpy's ``VCRFakeSocket`` (used by replayed connections) has neither, so make it
+# behave like an idle socket that has nothing to read.
+def _vcrFakeSocketGettimeout(self: VCRFakeSocket) -> float | None:
+    return None
+
+
+def _vcrFakeSocketRecv(self: VCRFakeSocket, *args: Any, **kwargs: Any) -> bytes:
+    raise BlockingIOError()
+
+
+if not hasattr(VCRFakeSocket, "gettimeout"):
+    VCRFakeSocket.gettimeout = _vcrFakeSocketGettimeout  # type: ignore[attr-defined]
+if not hasattr(VCRFakeSocket, "recv"):
+    VCRFakeSocket.recv = _vcrFakeSocketRecv  # type: ignore[attr-defined]
 
 
 # A single VCR instance, shared across all tests: it patches http.client/urllib3 generically
