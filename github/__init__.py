@@ -79,7 +79,7 @@ _console_debug_handler: logging.StreamHandler | None = None
 
 def set_log_level(level: int) -> None:
     """
-    Set the log level of the github logger, e.g. set_log_level(logging.WARNING) :param level: log level.
+    Set the log level of the github logger.
     """
     logger.setLevel(level)
 
