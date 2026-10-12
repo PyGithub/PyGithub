@@ -37,11 +37,90 @@
 #                                                                              #
 ################################################################################
 
+import subprocess
+import sys
+import textwrap
+import unittest
+
 import github
 from github.Auth import Login
 
 from . import Framework
 from .Authentication import CustomAuth
+
+
+class LoggingConfiguration(unittest.TestCase):
+    def assertLogOutput(self, code, expected):
+        # Import in a fresh interpreter so the test runner's logging setup and
+        # previously imported github modules cannot affect the result.
+        result = subprocess.run([sys.executable, "-c", textwrap.dedent(code)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(result.stderr, expected)
+
+    def testRootLoggerConfiguration(self):
+        for level, expected in (("DEBUG", "app:debug message\napp:info message\n"), ("ERROR", "")):
+            with self.subTest(level=level):
+                self.assertLogOutput(
+                    f"""
+                    import logging
+                    logging.basicConfig(level=logging.{level}, format="app:%(message)s")
+                    import github
+                    logger = logging.getLogger("github.Requester")
+                    logger.debug("debug message")
+                    logger.info("info message")
+                    """,
+                    expected,
+                )
+
+    def testRootLoggerConfiguredAfterImport(self):
+        self.assertLogOutput(
+            """
+            import logging
+            import github
+            logging.basicConfig(level=logging.DEBUG, format="app:%(message)s")
+            logging.getLogger("github.Requester").debug("debug message")
+            """,
+            "app:debug message\n",
+        )
+
+    def testPreservesExplicitLoggerConfiguration(self):
+        self.assertLogOutput(
+            """
+            import logging
+            logger = logging.getLogger("github")
+            logger.setLevel(logging.ERROR)
+            handler = logging.StreamHandler()
+            handler.setFormatter(logging.Formatter("app:%(message)s"))
+            logger.addHandler(handler)
+            import github
+            logger.info("info message")
+            logger.error("error message")
+            """,
+            "app:error message\n",
+        )
+
+    def testNoConsoleOutputWithoutConfiguration(self):
+        self.assertLogOutput(
+            """
+            import logging
+            import github
+            logging.getLogger("github.GithubRetry").warning("warning message")
+            """,
+            "",
+        )
+
+    def testEnableConsoleDebugLogging(self):
+        self.assertLogOutput(
+            """
+            import logging
+            import github
+            github.enable_console_debug_logging()
+            github.enable_console_debug_logging()
+            logging.getLogger("github.Requester").debug("debug message")
+            """,
+            "debug message\n",
+        )
 
 
 class Logging(Framework.BasicTestCase):
