@@ -192,6 +192,7 @@ import github.CheckRun
 import github.CheckSuite
 import github.Clones
 import github.CodeScanAlert
+import github.CodeScanDefaultSetup
 import github.Commit
 import github.CommitComment
 import github.Comparison
@@ -282,6 +283,7 @@ if TYPE_CHECKING:
     from github.CheckSuite import CheckSuite
     from github.Clones import Clones
     from github.CodeScanAlert import CodeScanAlert
+    from github.CodeScanDefaultSetup import CodeScanDefaultSetup
     from github.Commit import Commit
     from github.CommitComment import CommitComment
     from github.Comparison import Comparison
@@ -4367,6 +4369,58 @@ class Repository(CompletableGithubObject):
         assert isinstance(number, int), number
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-scanning/alerts/{number}")
         return github.CodeScanAlert.CodeScanAlert(self._requester, headers, data)
+
+    def get_codescan_default_setup(self) -> CodeScanDefaultSetup:
+        """
+        :calls: `GET /repos/{owner}/{repo}/code-scanning/default-setup <https://docs.github.com/en/rest/code-scanning/code-scanning#get-a-code-scanning-default-setup-configuration>`_
+        :rtype: :class:`github.CodeScanDefaultSetup.CodeScanDefaultSetup`
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-scanning/default-setup")
+        return github.CodeScanDefaultSetup.CodeScanDefaultSetup(self._requester, headers, data)
+
+    def set_codescan_default_setup(
+        self,
+        state: Opt[str] = NotSet,
+        runner_type: Opt[str] = NotSet,
+        runner_label: Opt[str | None] = NotSet,
+        query_suite: Opt[str] = NotSet,
+        threat_model: Opt[str] = NotSet,
+        languages: Opt[list[str]] = NotSet,
+    ) -> WorkflowRun | None:
+        """
+        :calls: `PATCH /repos/{owner}/{repo}/code-scanning/default-setup <https://docs.github.com/en/rest/code-scanning/code-scanning#update-a-code-scanning-default-setup-configuration>`_
+        :param state: string
+        :param runner_type: string
+        :param runner_label: string or None
+        :param query_suite: string
+        :param threat_model: string
+        :param languages: list of strings
+        :rtype: :class:`github.WorkflowRun.WorkflowRun` if a validation run is started, otherwise None
+        """
+        assert is_optional(state, str), state
+        assert is_optional(runner_type, str), runner_type
+        assert is_optional(runner_label, (str, type(None))), runner_label
+        assert is_optional(query_suite, str), query_suite
+        assert is_optional(threat_model, str), threat_model
+        assert is_optional_list(languages, str), languages
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "state": state,
+                "runner_type": runner_type,
+                "runner_label": runner_label,
+                "query_suite": query_suite,
+                "threat_model": threat_model,
+                "languages": languages,
+            }
+        )
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH", f"{self.url}/code-scanning/default-setup", input=post_parameters
+        )
+        if data:
+            return github.WorkflowRun.WorkflowRun(
+                self._requester, headers, {"id": data["run_id"], "url": data["run_url"]}
+            )
+        return None
 
     def get_secret_scanning_alerts(
         self,
