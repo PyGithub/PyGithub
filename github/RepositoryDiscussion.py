@@ -119,8 +119,8 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         if not comment_graphql_schema.startswith("\n"):
             comment_graphql_schema = f" {comment_graphql_schema} "
 
-        query = (
-            """
+        # string literals are assigned to variables first, so docformatter does not mistake them for docstrings
+        query_head = """
             query Q($discussionId: ID!, $first: Int, $last: Int, $before: String, $after: String) {
               node(id: $discussionId) {
                 ... on Discussion {
@@ -133,13 +133,12 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
                       hasPreviousPage
                     }
                     nodes {"""
-            + comment_graphql_schema
-            + """}
+        query_tail = """}
                   }
                 }
               }
             }"""
-        )
+        query = query_head + comment_graphql_schema + query_tail
         variables = {"discussionId": self.node_id}
         return PaginatedList(
             github.RepositoryDiscussionComment.RepositoryDiscussionComment,

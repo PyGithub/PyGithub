@@ -894,9 +894,10 @@ class IssueSearchResult(Issue):
 
 class SubIssue(Issue):
     """
-    This class represents a Sub-issue in GitHub's REST API. Sub-issues are issues that are linked to a parent issue.
+    This class represents a Sub-issue in GitHub's REST API.
 
-    See https://docs.github.com/en/rest/issues/sub-issues for more details.
+    Sub-issues are issues that are linked to a parent issue. See `sub-issues
+    <https://docs.github.com/en/rest/issues/sub-issues>`_ for more details.
 
     """
 

@@ -32,7 +32,9 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, O
 
 class CustomProperty:
     """
-    This class represents a CustomProperty for an Organization. Use this class to create a new post parameter object.
+    This class represents a CustomProperty for an Organization.
+
+    Use this class to create a new post parameter object.
 
     The reference can be found here
     https://docs.github.com/en/rest/orgs/custom-properties#create-or-update-custom-properties-for-an-organization

@@ -647,8 +647,7 @@ class Requester:
         Send a request with JSON body.
 
         :param input: request body, serialized to JSON if specified
-
-        :return: ``(headers: dict, JSON Response: Any)``
+        :return: tuple ``(headers: dict, JSON Response: Any)``
         :raises: :class:`GithubException` for error status codes
 
         """
@@ -680,8 +679,7 @@ class Requester:
         Send a request with multi-part-encoded body.
 
         :param input: request body, will be multi-part encoded if specified
-
-        :return: ``(headers: dict, JSON Response: Any)``
+        :return: tuple ``(headers: dict, JSON Response: Any)``
         :raises: :class:`GithubException` for error status codes
 
         """
@@ -704,8 +702,7 @@ class Requester:
         Send a request with a file for the body.
 
         :param input: path to a file to use for the request body
-
-        :return: ``(headers: dict, JSON Response: Any)``
+        :return: tuple ``(headers: dict, JSON Response: Any)``
         :raises: :class:`GithubException` for error status codes
 
         """
@@ -736,7 +733,7 @@ class Requester:
 
         :param query: GraphQL query
         :param variables: GraphQL variables
-        :return: ``(headers: dict, JSON Response: dict)``
+        :return: tuple ``(headers: dict, JSON Response: dict)``
         :raises: :class:`GithubException` for error status codes
 
         """
@@ -787,7 +784,7 @@ class Requester:
         :param node_id: GraphQL node id
         :param output_schema: The schema of the retrieved properties of the node, without enclosing curly brackets
         :param node_type: The GraphQL node type
-        :return: ``(headers: dict, JSON Response: dict)``
+        :return: tuple ``(headers: dict, JSON Response: dict)``
         :raises: :class:`GithubException` for error status codes
 
         """
@@ -858,7 +855,7 @@ class Requester:
         :param mutation_name: name of the mutation
         :param mutation_input: input data for the mutation
         :param output_schema: The schema of the retrieved properties of the mutation, without enclosing curly brackets
-        :return: ``(headers: dict, JSON Response: dict)``
+        :return: tuple ``(headers: dict, JSON Response: dict)``
         :raises: :class:`GithubException` for error status codes
 
         """
@@ -1183,7 +1180,7 @@ class Requester:
         Send a request with a binary file-like for the body.
 
         :param file_like: file-like object to use for the request body
-        :return: ``(headers: dict, JSON Response: Any)``
+        :return: tuple ``(headers: dict, JSON Response: Any)``
         :raises: :class:`GithubException` for error status codes
 
         """

@@ -199,13 +199,16 @@ class GithubIntegration:
         return GithubIntegration(**kwargs)
 
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the
-        GithubIntegration object as a context manager:
+        """
+        Close connections to the server.
+
+        Alternatively, use the GithubIntegration object as a context manager:
 
         .. code-block:: python
 
           with github.GithubIntegration(...) as gi:
             # do something
+
         """
         self.__requester.close()
 
@@ -346,6 +349,5 @@ class GithubIntegration:
         """
         :calls: `GET /app <https://docs.github.com/en/rest/reference/apps#get-the-authenticated-app>`_
         """
-
         headers, data = self.__requester.requestJsonAndCheck("GET", "/app", headers=self._get_headers())
         return GithubApp(requester=self.__requester, headers=headers, attributes=data, completed=True)

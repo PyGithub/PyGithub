@@ -2365,7 +2365,6 @@ class Repository(CompletableGithubObject):
         :param permission: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-
         url_parameters = dict()
         allowed_affiliations = ["outside", "direct", "all"]
         allowed_permissions = ["pull", "triage", "push", "maintain", "admin"]
@@ -2612,17 +2611,16 @@ class Repository(CompletableGithubObject):
         assert isinstance(number, int), number
         if not discussion_graphql_schema.startswith("\n"):
             discussion_graphql_schema = f" {discussion_graphql_schema} "
-        query = (
-            """
+        # string literals are assigned to variables first, so docformatter does not mistake them for docstrings
+        query_head = """
             query Q($repo: String!, $owner: String!, $number: Int!) {
               repository(name: $repo, owner: $owner) {
                 discussion(number: $number) {"""
-            + discussion_graphql_schema
-            + """}
+        query_tail = """}
               }
             }
             """
-        )
+        query = query_head + discussion_graphql_schema + query_tail
         variables = {
             "repo": self.name,
             "owner": self.owner.login,
@@ -2642,8 +2640,8 @@ class Repository(CompletableGithubObject):
     ) -> PaginatedList[RepositoryDiscussion]:
         if not discussion_graphql_schema.startswith("\n"):
             discussion_graphql_schema = f" {discussion_graphql_schema} "
-        query = (
-            """
+        # string literals are assigned to variables first, so docformatter does not mistake them for docstrings
+        query_head = """
             query Q($repo: String!, $owner: String!, $answered: Boolean, $category_id: ID, $states: [DiscussionState!], $first: Int, $last: Int, $before: String, $after: String) {
               repository(name: $repo, owner: $owner) {
                 discussions(answered: $answered, categoryId: $category_id, states: $states, first: $first, last: $last, before: $before, after: $after) {
@@ -2655,13 +2653,12 @@ class Repository(CompletableGithubObject):
                     hasPreviousPage
                   }
                   nodes {"""
-            + discussion_graphql_schema
-            + """}
+        query_tail = """}
                 }
               }
             }
             """
-        )
+        query = query_head + discussion_graphql_schema + query_tail
         variables = {
             "repo": self.name,
             "owner": self.owner.login,
@@ -2728,7 +2725,6 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-
         url_parameters = dict()
         if is_defined(state):
             url_parameters["state"] = state
@@ -2941,12 +2937,7 @@ class Repository(CompletableGithubObject):
             "content": NotSet,
         }
 
-    @deprecated(
-        """
-        Repository.get_dir_contents() is deprecated, use
-        Repository.get_contents() instead.
-        """
-    )
+    @deprecated("Repository.get_dir_contents() is deprecated, use Repository.get_contents() instead.")
     def get_dir_contents(self, path: str, ref: Opt[str] = NotSet) -> list[ContentFile]:
         """
         :calls: `GET /repos/{owner}/{repo}/contents/{path} <https://docs.github.com/en/rest/reference/repos#contents>`_
@@ -3358,7 +3349,6 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/license <https://docs.github.com/en/rest/reference/licenses>`_
         :rtype: :class:`github.ContentFile.ContentFile`
         """
-
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/license")
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
@@ -3921,7 +3911,6 @@ class Repository(CompletableGithubObject):
         :param before: datetime
         :rtype: :class:`PaginatedList` of :class:`github.Notification.Notification`
         """
-
         assert is_optional(all, bool), all
         assert is_optional(participating, bool), participating
         assert is_optional(since, datetime), since
@@ -4276,7 +4265,6 @@ class Repository(CompletableGithubObject):
         :param name: str
         :rtype: :class:`PaginatedList` of :class:`github.Artifact.Artifact`
         """
-
         assert is_optional(name, str), name
 
         param = {key: value for key, value in {"name": name}.items() if is_defined(value)}

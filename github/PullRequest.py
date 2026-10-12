@@ -657,7 +657,8 @@ class PullRequest(CompletableGithubObject):
         since: Opt[datetime] = NotSet,
     ) -> PaginatedList[PullRequestComment]:
         """
-        Warning: this only returns review comments. For normal conversation comments, use get_issue_comments.
+        .. warning::
+            This only returns review comments. For normal conversation comments, use get_issue_comments.
 
         :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments <https://docs.github.com/en/rest/reference/pulls#review-comments>`_
         :param sort: string 'created' or 'updated'
