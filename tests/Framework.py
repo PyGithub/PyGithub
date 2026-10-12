@@ -76,7 +76,7 @@ import vcr
 import vcr.cassette
 from requests.structures import CaseInsensitiveDict
 from vcr.matchers import requests_match
-from vcr.stubs import VCRFakeSocket
+from vcr.stubs import VCRConnection
 
 import github
 from github import Consts
@@ -174,21 +174,19 @@ class OrderedVCR(vcr.VCR):
 
 
 # urllib3-future >= 2.25.902 (niquests) peeks into an idle pooled connection for unsolicited data
-# before reusing it (``HTTPConnection.peek_and_react``), calling ``gettimeout()`` and ``recv()`` on
-# its socket. vcrpy's ``VCRFakeSocket`` (used by replayed connections) has neither, so make it
-# behave like an idle socket that has nothing to read.
-def _vcrFakeSocketGettimeout(self: VCRFakeSocket) -> float | None:
-    return None
+# before reusing it (``HTTPConnection.peek_and_react``). vcrpy's connection stubs inherit that
+# method, but during playback it runs against vcrpy's ``VCRFakeSocket`` (fails on missing
+# ``gettimeout()``, or on Windows on ``select()`` of a non-socket) and the stub's ``_protocol``
+# (which vcrpy uses for the URL scheme string). Like vcrpy's own ``is_connection_dropped`` patch,
+# report an idle connection during playback and peek into the real connection while recording.
+def _vcrConnectionPeekAndReact(self: VCRConnection, *args: Any, **kwargs: Any) -> bool:
+    if getattr(self.real_connection, "sock", None) is None:
+        return False
+    return self.real_connection.peek_and_react(*args, **kwargs)
 
 
-def _vcrFakeSocketRecv(self: VCRFakeSocket, *args: Any, **kwargs: Any) -> bytes:
-    raise BlockingIOError()
-
-
-if not hasattr(VCRFakeSocket, "gettimeout"):
-    VCRFakeSocket.gettimeout = _vcrFakeSocketGettimeout  # type: ignore[attr-defined]
-if not hasattr(VCRFakeSocket, "recv"):
-    VCRFakeSocket.recv = _vcrFakeSocketRecv  # type: ignore[attr-defined]
+if not hasattr(VCRConnection, "peek_and_react"):
+    VCRConnection.peek_and_react = _vcrConnectionPeekAndReact  # type: ignore[attr-defined]
 
 
 # A single VCR instance, shared across all tests: it patches http.client/urllib3 generically
