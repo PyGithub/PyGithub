@@ -23,10 +23,19 @@ jobs:
         run: pip install -U build twine
       - name: Build 📦 package
         run: python -m build
+      - name: Build async 📦 package
+        run: |
+          scripts/sync_async.sh
+          pip install -r async/requirements/scripts.txt
+          python async/scripts/generate_async.py
+          cd async; python -m build
+
       - name: Check 📦 package
-        run: twine check dist/*
+        run: twine check dist/* async/dist/*
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: ${{ inputs.artifact-name }}
-          path: dist
+          path: |
+            dist
+            async/dist

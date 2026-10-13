@@ -31,7 +31,9 @@ dynamic = ["version"]
 dependencies = [
   "pynacl>=1.4.0",
   "pyjwt[crypto]>=2.4.0",
+  "requests>=2.14.0",
   "typing-extensions>=4.5.0",
+  "urllib3>=1.26.0",
 ]
 
 [project.urls]
@@ -41,11 +43,6 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 
 [project.optional-dependencies]
 integrations = []
-# requests and niquests are mutually exclusive HTTP backends: install exactly one,
-# e.g. `pip install PyGithub[requests]` or `pip install PyGithub[niquests]`.
-# Note that pip has no notion of a default extra, so a bare `pip install PyGithub` installs neither
-# and PyGithub will fail to import until you pick one.
-requests = ["requests>=2.14.0", "urllib3>=1.26.0"]
 niquests = ["niquests>=3.12,<4"]
 
 [tool.setuptools_scm]
@@ -74,7 +71,7 @@ quiet-level = 3
 #  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
 # also adding links until they ignored by its: nature
 #  https://github.com/codespell-project/codespell/issues/2243#issuecomment-1732019960
-ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel,commitish"
+ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel,commitish,statics,ot"
 
 [tool.ruff]
 line-length = 120
@@ -102,5 +99,6 @@ extend-ignore = [
 extend-safe-fixes = ["ALL"]
 
 [tool.pytest.ini_options]
+testpaths = ["tests"]
 python_files = "tests/*.py"
 addopts = "--color=yes --ignore=openapi"
