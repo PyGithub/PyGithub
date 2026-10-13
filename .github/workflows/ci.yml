@@ -49,6 +49,8 @@ jobs:
         env:
           REQUEST_LIB: ${{ matrix.request-lib }}
       - name: Generate Async
+        # needed on Windows
+        shell: bash
         run: |
           scripts/sync_async.sh
           pip install -r async/requirements/scripts.txt
