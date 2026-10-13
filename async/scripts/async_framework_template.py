@@ -149,21 +149,19 @@ _vcr.register_serializer("pygithub-replaydata", VcrSerializer)
 _vcr.register_persister(VcrSerializer.Utf8FilesystemPersister)
 
 
-def _fake_socket_gettimeout(self):
-    return None
+def _vcr_connection_peek_and_react(self, *args, **kwargs):
+    if getattr(self.real_connection, "sock", None) is None:
+        return False
+    return self.real_connection.peek_and_react(*args, **kwargs)
 
 
-def _fake_socket_recv(self, *args, **kwargs):
-    raise BlockingIOError
-
-
-# vcrpy's replay socket only stubs settimeout(). urllib3-future >= 2.25 peeks reused pooled connections for unsolicited
-# data (HTTPConnection.peek_and_react) and, since the fake socket's fileno() 0 always polls readable under pytest, goes
-# on to call gettimeout() and recv() on it. Behave like an idle non-blocking socket: nothing to read.
-if not hasattr(vcr.stubs.VCRFakeSocket, "gettimeout"):
-    vcr.stubs.VCRFakeSocket.gettimeout = _fake_socket_gettimeout
-if not hasattr(vcr.stubs.VCRFakeSocket, "recv"):
-    vcr.stubs.VCRFakeSocket.recv = _fake_socket_recv
+# urllib3-future >= 2.25 peeks reused pooled connections for unsolicited data (HTTPConnection.peek_and_react). vcrpy's
+# connection stubs inherit that method, but during playback it runs against vcrpy's VCRFakeSocket (fails on missing
+# gettimeout(), or on Windows on select() of a non-socket) and the stub's _protocol (which vcrpy uses for the URL scheme
+# string). Like vcrpy's own is_connection_dropped patch, report an idle connection during playback and peek into the
+# real connection while recording.
+if not hasattr(vcr.stubs.VCRConnection, "peek_and_react"):
+    vcr.stubs.VCRConnection.peek_and_react = _vcr_connection_peek_and_react
 
 
 class CassetteConnection:
