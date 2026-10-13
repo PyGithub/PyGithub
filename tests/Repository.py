@@ -1399,6 +1399,17 @@ class Repository(Framework.TestCase):
             ],
         )
 
+    def testGetImmutableReleasesConfiguration(self) -> None:
+        configuration = self.repo.get_immutable_releases_configuration()
+        self.assertFalse(configuration.enabled)
+        self.assertFalse(configuration.enforced_by_owner)
+
+    def testEnableImmutableReleases(self) -> None:
+        self.repo.enable_immutable_releases()
+
+    def testDisableImmutableReleases(self) -> None:
+        self.repo.disable_immutable_releases()
+
     def testGetLanguages(self):
         self.assertEqual(
             self.repo.get_languages(),
