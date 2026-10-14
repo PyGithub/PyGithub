@@ -2510,6 +2510,33 @@ class LazyRepository(Framework.TestCase):
         lazy_repo = self.getEagerRepository()
         self.assertFalse(lazy_repo.get_vulnerability_alert())
 
+    def testGetActionsPermissions(self):
+        lazy_repo = self.g.withLazy(True).get_repo("andrewfish0/PyGithub")
+        permissions = lazy_repo.get_actions_permissions()
+        self.assertEqual(repr(permissions), 'ActionsRepositoryPermissions(enabled=True, allowed_actions="all")')
+        self.assertTrue(permissions.enabled)
+        self.assertEqual(permissions.allowed_actions, "all")
+        self.assertIsNone(permissions.selected_actions_url)
+        self.assertFalse(permissions.sha_pinning_required)
+
+    def testSetActionsPermissions(self):
+        lazy_repo = self.g.withLazy(True).get_repo("andrewfish0/PyGithub")
+        lazy_repo.set_actions_permissions(True, allowed_actions="selected", sha_pinning_required=True)
+        permissions = lazy_repo.get_actions_permissions()
+        self.assertTrue(permissions.enabled)
+        self.assertEqual(permissions.allowed_actions, "selected")
+        self.assertEqual(
+            permissions.selected_actions_url,
+            "https://api.github.com/repositories/1407991155/actions/permissions/selected-actions",
+        )
+        self.assertTrue(permissions.sha_pinning_required)
+
+        lazy_repo.set_actions_permissions(False)
+        permissions = lazy_repo.get_actions_permissions()
+        self.assertFalse(permissions.enabled)
+        self.assertIsNone(permissions.allowed_actions)
+        self.assertFalse(permissions.sha_pinning_required)
+
     def testRequester(self):
         lazy_repo = self.getLazyRepository()
         assert lazy_repo.requester is lazy_repo._requester
