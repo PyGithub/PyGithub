@@ -54,6 +54,7 @@ from __future__ import annotations
 import warnings
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
+from unittest import mock
 
 from . import Framework
 
@@ -104,11 +105,14 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
 
     def testLazyAttributes(self):
-        team = self.g.withLazy(True).get_organization("org").get_team(42)
+        org = self.g.withLazy(True).get_organization("org")
+        with mock.patch.object(org.requester, "requestJsonAndCheck", return_value=({}, {"id": 123})) as request:
+            team = org.get_team(42)
+        request.assert_called_once_with("GET", "/orgs/org", parameters=None, headers=None)
         self.assertEqual(str(team), "Team(name=None, id=42)")
         self.assertEqual(team._identity, 42)
         self.assertEqual(team.id, 42)
-        self.assertEqual(team.url, "/teams/42")
+        self.assertEqual(team.url, "/organizations/123/team/42")
 
     def testDiscussions(self):
         discussions = list(self.team.get_discussions())
