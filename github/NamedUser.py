@@ -461,7 +461,13 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist, self._requester, f"{self.url}/gists", url_parameters
         )
-
+    def get_gist(self, gist_id: str) -> Gist:
+        """
+        :calls: `GET /gists/{gist_id} <https://docs.github.com/en/rest/reference/gists>`_
+        """
+        assert isinstance(gist_id, str), gist_id
+        headers, data = self._requester.requestJsonAndCheck("GET", f"/gists/{gist_id}")
+        return github.Gist.Gist(self._requester, headers, data, completed=True)
     def get_keys(self) -> PaginatedList[UserKey]:
         """
         :calls: `GET /users/{username}/keys <https://docs.github.com/en/rest/reference/users#create-a-public-ssh-key-for-the-authenticated-user>`_
