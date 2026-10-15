@@ -104,10 +104,10 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._author: Attribute[NamedUser] = NotSet
+        self._author: Attribute[NamedUser | None] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
-        self._committer: Attribute[NamedUser] = NotSet
+        self._committer: Attribute[NamedUser | None] = NotSet
         self._files: Attribute[list[File]] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
@@ -125,7 +125,7 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         return self.sha
 
     @property
-    def author(self) -> NamedUser:
+    def author(self) -> NamedUser | None:
         self._completeIfNotSet(self._author)
         return self._author.value
 
@@ -140,7 +140,7 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
         return self._commit.value
 
     @property
-    def committer(self) -> NamedUser:
+    def committer(self) -> NamedUser | None:
         self._completeIfNotSet(self._committer)
         return self._committer.value
 

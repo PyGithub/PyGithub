@@ -77,7 +77,7 @@ class Notification(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._id: Attribute[str] = NotSet
-        self._last_read_at: Attribute[datetime] = NotSet
+        self._last_read_at: Attribute[datetime | None] = NotSet
         self._reason: Attribute[str] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._subject: Attribute[NotificationSubject] = NotSet
@@ -95,7 +95,7 @@ class Notification(CompletableGithubObject):
         return self._id.value
 
     @property
-    def last_read_at(self) -> datetime:
+    def last_read_at(self) -> datetime | None:
         self._completeIfNotSet(self._last_read_at)
         return self._last_read_at.value
 

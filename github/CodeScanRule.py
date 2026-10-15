@@ -65,13 +65,13 @@ class CodeScanRule(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._description: Attribute[str] = NotSet
         self._full_description: Attribute[str] = NotSet
-        self._help: Attribute[str] = NotSet
-        self._help_uri: Attribute[str] = NotSet
-        self._id: Attribute[str] = NotSet
+        self._help: Attribute[str | None] = NotSet
+        self._help_uri: Attribute[str | None] = NotSet
+        self._id: Attribute[str | None] = NotSet
         self._name: Attribute[str] = NotSet
-        self._security_severity_level: Attribute[str] = NotSet
-        self._severity: Attribute[str] = NotSet
-        self._tags: Attribute[list[str]] = NotSet
+        self._security_severity_level: Attribute[str | None] = NotSet
+        self._severity: Attribute[str | None] = NotSet
+        self._tags: Attribute[list[str] | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self.id, "name": self.name})
@@ -85,15 +85,15 @@ class CodeScanRule(NonCompletableGithubObject):
         return self._full_description.value
 
     @property
-    def help(self) -> str:
+    def help(self) -> str | None:
         return self._help.value
 
     @property
-    def help_uri(self) -> str:
+    def help_uri(self) -> str | None:
         return self._help_uri.value
 
     @property
-    def id(self) -> str:
+    def id(self) -> str | None:
         return self._id.value
 
     @property
@@ -101,15 +101,15 @@ class CodeScanRule(NonCompletableGithubObject):
         return self._name.value
 
     @property
-    def security_severity_level(self) -> str:
+    def security_severity_level(self) -> str | None:
         return self._security_severity_level.value
 
     @property
-    def severity(self) -> str:
+    def severity(self) -> str | None:
         return self._severity.value
 
     @property
-    def tags(self) -> list[str]:
+    def tags(self) -> list[str] | None:
         return self._tags.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

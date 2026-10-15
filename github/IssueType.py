@@ -59,9 +59,9 @@ class IssueType(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._color: Attribute[str] = NotSet
+        self._color: Attribute[str | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._id: Attribute[int] = NotSet
         self._is_enabled: Attribute[bool] = NotSet
         self._name: Attribute[str] = NotSet
@@ -72,7 +72,7 @@ class IssueType(NonCompletableGithubObject):
         return self.get__repr__({"name": self._name.value})
 
     @property
-    def color(self) -> str:
+    def color(self) -> str | None:
         return self._color.value
 
     @property
@@ -80,7 +80,7 @@ class IssueType(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         return self._description.value
 
     @property

@@ -45,18 +45,18 @@ class HookDeliverySummary(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._action: Attribute[str] = NotSet
+        self._action: Attribute[str | None] = NotSet
         self._delivered_at: Attribute[datetime] = NotSet
         self._duration: Attribute[float] = NotSet
         self._event: Attribute[str] = NotSet
         self._guid: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._installation_id: Attribute[int] = NotSet
+        self._installation_id: Attribute[int | None] = NotSet
         self._redelivery: Attribute[bool] = NotSet
-        self._repository_id: Attribute[int] = NotSet
+        self._repository_id: Attribute[int | None] = NotSet
         self._status: Attribute[str] = NotSet
         self._status_code: Attribute[int] = NotSet
-        self._throttled_at: Attribute[datetime] = NotSet
+        self._throttled_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -107,7 +107,7 @@ class HookDeliverySummary(NonCompletableGithubObject):
         return self._status_code.value
 
     @property
-    def throttled_at(self) -> datetime:
+    def throttled_at(self) -> datetime | None:
         return self._throttled_at.value
 
     @property
@@ -154,8 +154,8 @@ class HookDeliveryRequest(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self.__headers: Attribute[dict] = NotSet
-        self._payload: Attribute[dict] = NotSet
+        self.__headers: Attribute[dict | None] = NotSet
+        self._payload: Attribute[dict | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})
@@ -186,8 +186,8 @@ class HookDeliveryResponse(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self.__headers: Attribute[dict] = NotSet
-        self._payload: Attribute[str] = NotSet
+        self.__headers: Attribute[dict | None] = NotSet
+        self._payload: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"payload": self._payload.value})

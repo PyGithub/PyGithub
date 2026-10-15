@@ -129,9 +129,9 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._ldap_dn: Attribute[str] = NotSet
         self._location: Attribute[str | None] = NotSet
         self._login: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
+        self._name: Attribute[str | None] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._notification_email: Attribute[str] = NotSet
+        self._notification_email: Attribute[str | None] = NotSet
         self._organizations_url: Attribute[str] = NotSet
         self._owned_private_repos: Attribute[int] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
@@ -309,7 +309,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def notification_email(self) -> str:
+    def notification_email(self) -> str | None:
         return self._notification_email.value
 
     @property
@@ -773,19 +773,19 @@ class OrganizationInvitation(NamedUser):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
-        self._failed_at: Attribute[str] = NotSet
-        self._failed_reason: Attribute[str] = NotSet
+        self._failed_at: Attribute[str | None] = NotSet
+        self._failed_reason: Attribute[str | None] = NotSet
         self._invitation_source: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def failed_at(self) -> str:
+    def failed_at(self) -> str | None:
         return self._failed_at.value
 
     @property
-    def failed_reason(self) -> str:
+    def failed_reason(self) -> str | None:
         return self._failed_reason.value
 
     @property

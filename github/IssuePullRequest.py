@@ -57,26 +57,26 @@ class IssuePullRequest(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._diff_url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._merged_at: Attribute[datetime] = NotSet
-        self._patch_url: Attribute[str] = NotSet
+        self._diff_url: Attribute[str | None] = NotSet
+        self._html_url: Attribute[str | None] = NotSet
+        self._merged_at: Attribute[datetime | None] = NotSet
+        self._patch_url: Attribute[str | None] = NotSet
         self._url: Attribute[str] = NotSet
 
     @property
-    def diff_url(self) -> str:
+    def diff_url(self) -> str | None:
         return self._diff_url.value
 
     @property
-    def html_url(self) -> str:
+    def html_url(self) -> str | None:
         return self._html_url.value
 
     @property
-    def merged_at(self) -> datetime:
+    def merged_at(self) -> datetime | None:
         return self._merged_at.value
 
     @property
-    def patch_url(self) -> str:
+    def patch_url(self) -> str | None:
         return self._patch_url.value
 
     @property

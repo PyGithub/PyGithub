@@ -54,23 +54,23 @@ class HookResponse(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._code: Attribute[int] = NotSet
-        self._message: Attribute[str] = NotSet
-        self._status: Attribute[str] = NotSet
+        self._code: Attribute[int | None] = NotSet
+        self._message: Attribute[str | None] = NotSet
+        self._status: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"status": self._status.value})
 
     @property
-    def code(self) -> int:
+    def code(self) -> int | None:
         return self._code.value
 
     @property
-    def message(self) -> str:
+    def message(self) -> str | None:
         return self._message.value
 
     @property
-    def status(self) -> str:
+    def status(self) -> str | None:
         return self._status.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

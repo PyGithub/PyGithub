@@ -62,23 +62,23 @@ class WorkflowStep(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._completed_at: Attribute[datetime] = NotSet
-        self._conclusion: Attribute[str] = NotSet
+        self._completed_at: Attribute[datetime | None] = NotSet
+        self._conclusion: Attribute[str | None] = NotSet
         self._name: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
-        self._started_at: Attribute[datetime] = NotSet
+        self._started_at: Attribute[datetime | None] = NotSet
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "name": self._name.value})
 
     @property
-    def completed_at(self) -> datetime:
+    def completed_at(self) -> datetime | None:
         self._completeIfNotSet(self._completed_at)
         return self._completed_at.value
 
     @property
-    def conclusion(self) -> str:
+    def conclusion(self) -> str | None:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
@@ -93,7 +93,7 @@ class WorkflowStep(CompletableGithubObject):
         return self._number.value
 
     @property
-    def started_at(self) -> datetime:
+    def started_at(self) -> datetime | None:
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
 

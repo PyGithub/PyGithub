@@ -80,14 +80,14 @@ class CommitComment(CompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
-        self._line: Attribute[int] = NotSet
+        self._line: Attribute[int | None] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._path: Attribute[str] = NotSet
-        self._position: Attribute[int] = NotSet
+        self._path: Attribute[str | None] = NotSet
+        self._position: Attribute[int | None] = NotSet
         self._reactions: Attribute[dict[str, Any]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser | Organization] = NotSet
+        self._user: Attribute[NamedUser | Organization | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -123,7 +123,7 @@ class CommitComment(CompletableGithubObject):
         return self._id.value
 
     @property
-    def line(self) -> int:
+    def line(self) -> int | None:
         self._completeIfNotSet(self._line)
         return self._line.value
 
@@ -133,12 +133,12 @@ class CommitComment(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def path(self) -> str:
+    def path(self) -> str | None:
         self._completeIfNotSet(self._path)
         return self._path.value
 
     @property
-    def position(self) -> int:
+    def position(self) -> int | None:
         self._completeIfNotSet(self._position)
         return self._position.value
 
@@ -158,7 +158,7 @@ class CommitComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser | Organization:
+    def user(self) -> NamedUser | Organization | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 
@@ -265,4 +265,4 @@ class CommitComment(CompletableGithubObject):
                 attributes["user"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore

@@ -64,7 +64,7 @@ class GitBlob(CompletableGithubObject):
         self._highlighted_content: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._sha: Attribute[str] = NotSet
-        self._size: Attribute[int] = NotSet
+        self._size: Attribute[int | None] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -96,7 +96,7 @@ class GitBlob(CompletableGithubObject):
         return self._sha.value
 
     @property
-    def size(self) -> int:
+    def size(self) -> int | None:
         self._completeIfNotSet(self._size)
         return self._size.value
 
