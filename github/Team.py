@@ -486,7 +486,9 @@ class Team(CompletableGithubObject):
         :calls: `GET /teams/{team_id}/members/{username} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestJson("GET", f"{self.url}/members/{member._identity}")
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"{self.url}/members/{member._identity}", valid_codes={204, 404}
+        )
         return status == 204
 
     def has_in_repos(self, repo: str | Repository) -> bool:
@@ -494,8 +496,8 @@ class Team(CompletableGithubObject):
         :calls: `GET /teams/{team_id}/repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/teams>`_
         """
         assert isinstance(repo, (str, github.Repository.Repository)), repo
-        status, headers, data = self._requester.requestJson(
-            "GET", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}"
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"{self.url}/repos/{github.Repository.Repository.as_url_param(repo)}", valid_codes={204, 404}
         )
         return status == 204
 
