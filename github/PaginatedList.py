@@ -130,7 +130,11 @@ class PaginatedListBase(Generic[T]):
             index = self.__start
             while not self.__finished(index):
                 if self.__list._isBiggerThan(index):
-                    yield self.__list[index]  # type: ignore
+                    try:
+                        element = self.__list[index]  # type: ignore
+                    except IndexError:
+                        return
+                    yield element
                     index += self.__step
                 else:
                     return
