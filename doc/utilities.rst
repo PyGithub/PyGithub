@@ -32,6 +32,32 @@ Default argument
 
 :const:`github.NotSet` is a special value for arguments you don't want to provide. You should not have to manipulate it directly, because it's the default value of all parameters accepting it. Just note that it is different from :const:`None`, which is an allowed value for some parameters.
 
+Refreshing objects
+------------------
+
+Objects cache the attributes they receive from GitHub. Reading an attribute again
+does not fetch a fresh value if it has already been loaded. Use
+:meth:`github.GithubObject.CompletableGithubObject.update` to refresh an existing
+object in place, for example when checking a pull request's mergeability after
+GitHub has had time to calculate it:
+
+.. code-block:: python
+
+    pull = repo.get_pull(42)
+    print(pull.mergeable)
+
+    # Later, refresh the same object before checking its current state.
+    pull.update()
+    print(pull.mergeable)
+
+``update()`` makes a conditional request using the object's cached ETag and
+Last-Modified headers, when available. It returns ``False`` if GitHub responds
+with ``304 Not Modified``; otherwise, it refreshes the attributes and returns
+``True``. This return value describes the refresh, not whether the pull request
+is mergeable. Request errors raise the usual :class:`github.GithubException.GithubException`.
+
+.. automethod:: github.GithubObject.CompletableGithubObject.update
+
 Pagination
 ----------
 
