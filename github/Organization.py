@@ -1392,10 +1392,10 @@ class Organization(CompletableGithubObject):
 
     def get_team(self, id: int) -> Team:
         """
-        :calls: `GET /teams/{team_id} <https://docs.github.com/en/rest/reference/teams>`_
+        :calls: `GET /organizations/{org_id}/team/{team_id} <https://docs.github.com/en/rest/teams/teams#get-a-team-by-name>`_
         """
         assert isinstance(id, int), id
-        url = f"/teams/{id}"
+        url = f"/organizations/{self.id}/team/{id}"
         return github.Team.Team(self._requester, url=url)
 
     def get_team_by_slug(self, slug: str) -> Team:
