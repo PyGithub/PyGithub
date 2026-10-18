@@ -121,6 +121,8 @@ class PaginatedListBase(Generic[T]):
 
     class _Slice:
         def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
+            if theSlice.step == 0:
+                raise ValueError("slice step cannot be zero")
             self.__list = theList
             self.__start = theSlice.start or 0
             self.__stop = theSlice.stop

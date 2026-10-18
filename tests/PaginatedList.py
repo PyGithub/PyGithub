@@ -85,6 +85,10 @@ class PaginatedList(Framework.TestCase):
             self.assertEqual(self.list[0].id, 4772349)
             self.assertEqual(self.list[24].id, 4286936)
 
+    def testSliceWithZeroStep(self):
+        with self.assertRaisesRegex(ValueError, "slice step cannot be zero"):
+            self.list[::0]
+
     def testReversedIterationWithSinglePage(self):
         r = self.list.reversed
         self.assertEqual(r[0].id, 4286936)
