@@ -343,6 +343,33 @@ class GithubIntegration(Framework.BasicTestCase):
         self.assertEqual(raisedexp.exception.message, "The permissions requested are not granted to this installation.")
         self.assertEqual(raisedexp.exception.status, 422)
 
+    def testGetAccessTokenWithValidRepositories(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        authorization = github_integration.get_access_token(
+            166167596 or self.repo_installation_id, repositories=["repo1"]
+        )
+        self.assertIsNotNone(authorization)
+        self.assertIsNotNone(authorization.repositories)
+        self.assertEqual(len(authorization.repositories), 1)
+        self.assertEqual(authorization.repositories[0].name, "repo1")
+
+    def testGetAccessTokenWithInvalidRepositories(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(self.repo_installation_id, repositories="invalid_data")
+        self.assertIsNone(raisedexp.exception.message)
+        self.assertEqual(raisedexp.exception.status, 400)
+
+    def testGetAccessTokenWithUnknownRepositories(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        github_integration = github.GithubIntegration(auth=auth)
+        repositories = ["unknown1", "unknown2"]
+        with self.assertRaises(github.GithubException) as raisedexp:
+            github_integration.get_access_token(self.user_installation_id, repositories=repositories)
+        self.assertEqual(raisedexp.exception.status, 422)
+
     def testGetAccessTokenWithInvalidData(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         github_integration = github.GithubIntegration(auth=auth)
