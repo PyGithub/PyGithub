@@ -3191,7 +3191,7 @@ class Repository(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-        creator: Opt[NamedUser] = NotSet,
+        creator: NamedUser | Opt[str] = NotSet,
         type: Opt[str] = NotSet,
     ) -> PaginatedList[Issue]:
         """
@@ -3246,10 +3246,10 @@ class Repository(CompletableGithubObject):
         if is_defined(since):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         if is_defined(creator):
-            if isinstance(creator, str):
-                url_parameters["creator"] = creator
-            else:
+            if isinstance(creator, github.NamedUser.NamedUser):
                 url_parameters["creator"] = creator._identity
+            else:
+                url_parameters["creator"] = creator
         return PaginatedList(github.Issue.Issue, self._requester, f"{self.url}/issues", url_parameters)
 
     def get_issues_comments(
