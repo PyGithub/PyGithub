@@ -61,7 +61,7 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, TypeGuard, Union, overload
+from typing import TYPE_CHECKING, Any, TypeAlias, TypeGuard, overload
 
 from typing_extensions import ParamSpec, Protocol, Self, TypeVar
 
@@ -90,7 +90,6 @@ def _datetime_from_http_date(value: str) -> datetime:
     Raises ValueError for invalid dates.
 
     """
-
     dt = email.utils.parsedate_to_datetime(value)
     if dt.tzinfo is None:
         # RFC7231 states that UTC is assumed if no timezone info is present
@@ -105,7 +104,6 @@ def _datetime_from_github_isoformat(value: str) -> datetime:
     Raises ValueError for invalid timestamps.
 
     """
-
     # Github always returns YYYY-MM-DDTHH:MM:SSZ, so we can use the stdlib parser
     # with some minor adjustments for Python < 3.11 which doesn't support "Z"
     # https://docs.github.com/en/rest/overview/resources-in-the-rest-api#schema
@@ -129,7 +127,7 @@ class _NotSetType(Attribute[Any]):
 
 NotSet = _NotSetType()
 
-Opt = Union[T, _NotSetType]
+Opt: TypeAlias = T | _NotSetType
 
 
 def is_defined(v: T | _NotSetType) -> TypeGuard[T]:
@@ -156,13 +154,11 @@ camel_to_snake_case_regexp = re.compile(r"(?<!^)(?=[A-Z])")
 
 
 @overload
-def as_rest_api_attributes(graphql_attributes: dict[str, Any]) -> dict[str, Any]:
-    ...
+def as_rest_api_attributes(graphql_attributes: dict[str, Any]) -> dict[str, Any]: ...
 
 
 @overload
-def as_rest_api_attributes(graphql_attributes: None) -> None:
-    ...
+def as_rest_api_attributes(graphql_attributes: None) -> None: ...
 
 
 def as_rest_api_attributes(graphql_attributes: dict[str, Any] | None) -> dict[str, Any] | None:
