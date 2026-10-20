@@ -61,7 +61,7 @@ import github.Plan
 import github.Repository
 import github.UserKey
 from github import Consts
-from github.Auth import AppAuth
+from github.Auth import AppAuth, AppUserAuth
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
@@ -228,14 +228,18 @@ class Installation(NonCompletableGithubObject):
 
     def get_repos(self) -> PaginatedList[Repository]:
         """
-        :calls: `GET /installation/repositories <https://docs.github.com/en/rest/reference/integrations/installations#list-repositories>`_
+        :calls: `GET /installation/repositories <https://docs.github.com/en/rest/apps/installations#list-repositories-accessible-to-the-app-installation>`_
+        :calls: `GET /user/installations/{installation_id}/repositories <https://docs.github.com/en/rest/apps/installations#list-repositories-accessible-to-the-user-access-token>`_
         """
         url_parameters: dict[str, Any] = {}
+        url = "/installation/repositories"
+        if isinstance(self._requester.auth, AppUserAuth):
+            url = f"/user/installations/{self.id}/repositories"
 
         return PaginatedList(
             contentClass=github.Repository.Repository,
             requester=self._requester,
-            firstUrl="/installation/repositories",
+            firstUrl=url,
             firstParams=url_parameters,
             headers=INTEGRATION_PREVIEW_HEADERS,
             list_item="repositories",
