@@ -85,7 +85,8 @@ class Commit(Framework.TestCase):
         )
         self.assertEqual(len(self.commit.parents), 1)
         self.assertEqual(self.commit.parents[0].sha, "b46ed0dfde5ad02d3b91eb54a41c5ed960710eae")
-        self.assertIsNone(self.commit.repository)
+        self.assertEqual(self.commit.repository.full_name, "jacquev6/PyGithub")
+        self.assertEqual(self.commit.repository.url, "https://api.github.com/repos/jacquev6/PyGithub")
         self.assertEqual(self.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.commit.stats.deletions, 20)
         self.assertEqual(self.commit.stats.additions, 0)
@@ -104,6 +105,8 @@ class Commit(Framework.TestCase):
         self.assertEqual(commit._identity, "sha")
         self.assertEqual(commit.sha, "sha")
         self.assertEqual(commit.url, "/repos/lazy/repo/commits/sha")
+        self.assertEqual(commit.repository.full_name, "lazy/repo")
+        self.assertEqual(commit.repository.url, "/repos/lazy/repo")
 
     def testGetBranchesWhereHead(self):
         repo = self.g.get_repo("PyGithub/PyGithub")
