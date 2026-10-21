@@ -48,6 +48,7 @@
 
 from __future__ import annotations
 
+import re
 import urllib.parse
 from typing import TYPE_CHECKING, Any
 
@@ -63,7 +64,14 @@ import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
 import github.Repository
-from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet, Opt, is_optional
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObjectWithPaginatedProperty,
+    NotSet,
+    Opt,
+    is_optional,
+    is_undefined,
+)
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -185,6 +193,12 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
 
     @property
     def repository(self) -> Repository:
+        if is_undefined(self._repository):
+            # Only commit search results contain the repository, other commits refer to it via their url:
+            # .../repos/{owner}/{repo}/commits/{sha} or .../repos/{owner}/{repo}/git/commits/{sha}
+            match = re.fullmatch(r"(.*?/repos/[^/]+/[^/]+)/(?:git/)?commits/[^/]+", self._url.value or "")
+            if match:
+                self._repository = self._makeClassAttribute(github.Repository.Repository, {"url": match.group(1)})
         self._completeIfNotSet(self._repository)
         return self._repository.value
 
