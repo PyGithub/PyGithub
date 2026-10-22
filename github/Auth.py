@@ -37,7 +37,7 @@ import time
 from abc import ABC
 from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 import jwt
 from requests import utils
@@ -49,8 +49,8 @@ from github.Requester import Requester, WithRequester
 if TYPE_CHECKING:
     from github.GithubIntegration import GithubIntegration
 
-PrivateKeyGenerator = Callable[[], Union[str, bytes]]
-DictSignFunction = Callable[[dict], Union[str, bytes]]
+PrivateKeyGenerator = Callable[[], str | bytes]
+DictSignFunction = Callable[[dict], str | bytes]
 
 # For App authentication, time remaining before token expiration to request a new one
 ACCESS_TOKEN_REFRESH_THRESHOLD_SECONDS = 20

@@ -9,7 +9,7 @@ This project's sources can be found at Github: https://github.com/PyGithub/PyGit
 Coding style
 ------------
 
-PyGithub adopts the black coding style.
+PyGithub adopts the `ruff <https://docs.astral.sh/ruff/>`__ coding style, using ruff for linting and formatting.
 
 To manually format the code::
 
@@ -23,7 +23,7 @@ If you use tox::
 Pre-commit plugin
 -----------------
 
-To forget about coding style and let `pre-commit <https://pre-commit.com/#installation>`__ fix your flake8/isort/black issue::
+To forget about coding style and let `pre-commit <https://pre-commit.com/#installation>`__ fix your ruff issues::
 
     pre-commit install
 
