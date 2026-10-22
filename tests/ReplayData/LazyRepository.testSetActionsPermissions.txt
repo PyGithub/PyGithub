@@ -1,0 +1,43 @@
+https
+PUT
+api.github.com
+None
+/repos/andrewfish0/PyGithub/actions/permissions
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{"enabled": true, "allowed_actions": "selected", "sha_pinning_required": true}
+204
+[('Access-Control-Allow-Origin', '*'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning'), ('Content-Security-Policy', "default-src 'none'"), ('Date', 'Tue, 06 Oct 2026 22:50:47 GMT'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Server', 'github.com'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-Accepted-Oauth-Scopes', ''), ('X-Content-Type-Options', 'nosniff'), ('X-Frame-Options', 'deny'), ('X-Github-Api-Version-Selected', '2022-11-28'), ('X-Github-Edge-Region', 'westus3'), ('X-Github-Media-Type', 'github.v3; format=json'), ('X-Github-Request-Id', '4F33:122B8:1A2FAB:1D5C43:6AC57B45'), ('X-Oauth-Scopes', 'gist, read:org, repo'), ('X-Ratelimit-Limit', '5000'), ('X-Ratelimit-Remaining', '4854'), ('X-Ratelimit-Reset', '1791327911'), ('X-Ratelimit-Resource', 'core'), ('X-Ratelimit-Used', '146'), ('X-Xss-Protection', '0')]
+
+
+https
+GET
+api.github.com
+None
+/repos/andrewfish0/PyGithub/actions/permissions
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Access-Control-Allow-Origin', '*'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Type', 'application/json; charset=utf-8'), ('Date', 'Tue, 06 Oct 2026 22:50:47 GMT'), ('Etag', 'W/"06de0cf153c180ab3469ad146d9f17c924217f331dc372d0402582651f80a499"'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Server', 'github.com'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With'), ('X-Accepted-Oauth-Scopes', ''), ('X-Content-Type-Options', 'nosniff'), ('X-Frame-Options', 'deny'), ('X-Github-Api-Version-Selected', '2022-11-28'), ('X-Github-Edge-Region', 'westus3'), ('X-Github-Media-Type', 'github.v3; format=json'), ('X-Github-Request-Id', '1F9C:34EB24:19F076:1D1C67:6AC57B47'), ('X-Oauth-Scopes', 'gist, read:org, repo'), ('X-Ratelimit-Limit', '5000'), ('X-Ratelimit-Remaining', '4853'), ('X-Ratelimit-Reset', '1791327911'), ('X-Ratelimit-Resource', 'core'), ('X-Ratelimit-Used', '147'), ('X-Xss-Protection', '0')]
+{"enabled":true,"allowed_actions":"selected","selected_actions_url":"https://api.github.com/repositories/1407991155/actions/permissions/selected-actions","sha_pinning_required":true}
+
+https
+PUT
+api.github.com
+None
+/repos/andrewfish0/PyGithub/actions/permissions
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{"enabled": false}
+204
+[('Access-Control-Allow-Origin', '*'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning'), ('Content-Security-Policy', "default-src 'none'"), ('Date', 'Tue, 06 Oct 2026 22:50:47 GMT'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Server', 'github.com'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-Accepted-Oauth-Scopes', ''), ('X-Content-Type-Options', 'nosniff'), ('X-Frame-Options', 'deny'), ('X-Github-Api-Version-Selected', '2022-11-28'), ('X-Github-Edge-Region', 'westus3'), ('X-Github-Media-Type', 'github.v3; format=json'), ('X-Github-Request-Id', '43CE:C7835:1AF234:1E1EC4:6AC57B47'), ('X-Oauth-Scopes', 'gist, read:org, repo'), ('X-Ratelimit-Limit', '5000'), ('X-Ratelimit-Remaining', '4852'), ('X-Ratelimit-Reset', '1791327911'), ('X-Ratelimit-Resource', 'core'), ('X-Ratelimit-Used', '148'), ('X-Xss-Protection', '0')]
+
+
+https
+GET
+api.github.com
+None
+/repos/andrewfish0/PyGithub/actions/permissions
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Access-Control-Allow-Origin', '*'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset, Warning'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Type', 'application/json; charset=utf-8'), ('Date', 'Tue, 06 Oct 2026 22:50:48 GMT'), ('Etag', 'W/"5d82125b3e1fe9441fbf2e5d0c400d33f959d504b5f2fbb18177b032836d05e4"'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Server', 'github.com'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP,Accept-Encoding, Accept, X-Requested-With'), ('X-Accepted-Oauth-Scopes', ''), ('X-Content-Type-Options', 'nosniff'), ('X-Frame-Options', 'deny'), ('X-Github-Api-Version-Selected', '2022-11-28'), ('X-Github-Edge-Region', 'westus3'), ('X-Github-Media-Type', 'github.v3; format=json'), ('X-Github-Request-Id', '6917:174658:19315E:1C5D21:6AC57B48'), ('X-Oauth-Scopes', 'gist, read:org, repo'), ('X-Ratelimit-Limit', '5000'), ('X-Ratelimit-Remaining', '4851'), ('X-Ratelimit-Reset', '1791327911'), ('X-Ratelimit-Resource', 'core'), ('X-Ratelimit-Used', '149'), ('X-Xss-Protection', '0')]
+{"enabled":false,"sha_pinning_required":false}
