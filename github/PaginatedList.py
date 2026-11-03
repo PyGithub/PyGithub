@@ -187,6 +187,21 @@ class PaginatedList(PaginatedListBase[T]):
         if results.incomplete_results:
             print(f"Not sure if {results.totalCount} results are actually all results")
 
+    Response headers from this list's most recent successful REST or GraphQL request are
+    available without making another request. For example, a code-search client
+    can inspect its search quota after processing a page::
+
+        results = gh.search_code("query")
+        for result in results.get_page(0):
+            print(result.path)
+        remaining = results.raw_headers.get("x-ratelimit-remaining")
+        reset_time = results.raw_headers.get("x-ratelimit-reset")
+
+    ``raw_headers`` is empty before the first response. It returns a copy, with
+    lowercase header names, and includes responses fetched by ``get_page()``,
+    ``totalCount`` and ``incomplete_results``. Cached iteration does not update
+    it, and requests made through other lists or objects do not affect it.
+
     """
 
     # v3: move * before firstUrl and fix call sites
@@ -229,6 +244,7 @@ class PaginatedList(PaginatedListBase[T]):
         self.__firstParams: dict[str, Any] = firstParams
         self.__firstData = firstData
         self.__firstHeaders = firstHeaders
+        self.__responseHeaders: dict[str, str | int] = {}
         self.__nextUrl = firstUrl
         self.__nextParams: dict[str, Any] = firstParams
         self.__lastUrl: str | None = None
@@ -261,6 +277,15 @@ class PaginatedList(PaginatedListBase[T]):
     def is_graphql(self) -> bool:
         return not self.is_rest
 
+    @property
+    def raw_headers(self) -> dict[str, str | int]:
+        """
+        A copy of the most recent successful response headers for this list, without making a request.
+
+        :type: dict
+        """
+        return self.__responseHeaders.copy()
+
     def _transformAttributes(self, element: dict[str, Any]) -> dict[str, Any]:
         if self._attributesTransformer is None:
             return element
@@ -278,6 +303,7 @@ class PaginatedList(PaginatedListBase[T]):
                 parameters=params,
                 headers=self.__headers,
             )
+            self.__responseHeaders = headers.copy()
             links = self.__parseLinkHeader(headers)
             lastUrl = links.get("last")
 
@@ -305,7 +331,8 @@ class PaginatedList(PaginatedListBase[T]):
                 variables["last"] = 1
                 variables["before"] = None
 
-            _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+            headers, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+            self.__responseHeaders = headers.copy()
             pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
             self.__totalCount = pagination.get("totalCount")
 
@@ -334,6 +361,7 @@ class PaginatedList(PaginatedListBase[T]):
             parameters=self.__nextParams,
             headers=self.__headers,
         )
+        self.__responseHeaders = headers.copy()
         links = self.__parseLinkHeader(headers)
         return links.get("last")
 
@@ -422,13 +450,15 @@ class PaginatedList(PaginatedListBase[T]):
                 if self.__page_info is not None:
                     variables["before"] = self.__page_info["startCursor"]
 
-            _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+            headers, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+            self.__responseHeaders = headers.copy()
 
             pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
             return self._getPage(pagination, {})
 
     def _getPage(self, data: Any, headers: dict[str, str | int] | None) -> list[T]:
         if self.is_rest:
+            self.__responseHeaders = headers.copy() if headers is not None else {}
             self.__nextUrl = None  # type: ignore
             if len(data) > 0:
                 links = self.__parseLinkHeader(headers)  # type: ignore
@@ -505,6 +535,7 @@ class PaginatedList(PaginatedListBase[T]):
             parameters=params,
             headers=self.__headers,
         )
+        self.__responseHeaders = headers.copy()
 
         if self.__list_item in data:
             self.__totalCount = data.get("total_count")

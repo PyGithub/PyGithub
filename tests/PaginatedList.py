@@ -46,11 +46,172 @@
 #                                                                              #
 ################################################################################
 
+import unittest
 from datetime import datetime, timezone
 
+import responses
+
+from github import Github, GithubException
+from github.NamedUser import NamedUser
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 from . import Framework
+
+
+class PaginatedListResponseHeaders(unittest.TestCase):
+    @responses.activate
+    def testFailedRequestPreservesLastSuccessfulResponse(self):
+        url = "https://api.github.com:443/search/code"
+        responses.get(url, json={"items": []}, headers={"X-RateLimit-Remaining": "2"})
+        responses.get(url, status=500, json={"message": "server error"}, headers={"X-RateLimit-Remaining": "1"})
+        results = Github(retry=0).search_code("query")
+        self.assertEqual(results.get_page(0), [])
+        with self.assertRaises(GithubException):
+            results.get_page(1)
+        self.assertEqual(results.raw_headers["x-ratelimit-remaining"], "2")
+
+    @responses.activate
+    def testSearchCanStopBeforeFetchingAnExhaustedPage(self):
+        first_headers = {
+            "X-RateLimit-Remaining": "1",
+            "X-RateLimit-Reset": "1800000000",
+            "X-RateLimit-Resource": "code_search",
+            "Link": '<https://api.github.com/search/code?q=query&page=2>; rel="next"',
+        }
+        responses.get(
+            "https://api.github.com:443/search/code", json={"items": [{"path": "one"}]}, headers=first_headers
+        )
+        responses.get(
+            "https://api.github.com:443/search/code",
+            json={"items": [{"path": "two"}]},
+            headers={**first_headers, "X-RateLimit-Remaining": "0"},
+        )
+        client = Github(lazy=True)
+        results = client.search_code("query")
+        self.assertEqual(results.raw_headers, {})
+        self.assertEqual(len(responses.calls), 0)
+        paths = []
+        for result in results:
+            paths.append(result.path)
+            if results.raw_headers["x-ratelimit-remaining"] == "0":
+                break
+        self.assertEqual(paths, ["one", "two"])
+        self.assertEqual(len(responses.calls), 2)
+        self.assertEqual(results.raw_headers["x-ratelimit-reset"], "1800000000")
+        self.assertEqual(results.raw_headers["x-ratelimit-resource"], "code_search")
+
+        snapshot = results.raw_headers
+        snapshot.clear()
+        responses.get(
+            "https://api.github.com:443/users/other", json={"login": "other"}, headers={"X-RateLimit-Remaining": "99"}
+        )
+        client.get_user("other", lazy=True).complete()
+        self.assertEqual(results.raw_headers["x-ratelimit-remaining"], "0")
+
+    @responses.activate
+    def testEmptyPageAndCachedIteration(self):
+        responses.get(
+            "https://api.github.com:443/users/example/repos",
+            json=[{"name": "one"}],
+            headers={
+                "X-RateLimit-Remaining": "1",
+                "Link": '<https://api.github.com/users/example/repos?page=2>; rel="next"',
+            },
+        )
+        responses.get("https://api.github.com:443/users/example/repos", json=[], headers={"X-RateLimit-Remaining": "0"})
+        repos = Github(lazy=True).get_user("example", lazy=True).get_repos()
+        self.assertEqual([repo.name for repo in repos], ["one"])
+        self.assertEqual(repos.raw_headers["x-ratelimit-remaining"], "0")
+        self.assertEqual([repo.name for repo in repos], ["one"])
+        self.assertEqual(len(responses.calls), 2)
+        self.assertEqual(repos.raw_headers["x-ratelimit-remaining"], "0")
+
+    @responses.activate
+    def testExplicitPageDoesNotAdvanceIteration(self):
+        url = "https://api.github.com:443/users/example/repos"
+        responses.get(url, json=[{"name": "second"}], headers={"X-RateLimit-Remaining": "8"})
+        responses.get(url, json=[{"name": "first"}], headers={"X-RateLimit-Remaining": "7"})
+        repos = Github(lazy=True).get_user("example", lazy=True).get_repos()
+        self.assertEqual(repos.get_page(1)[0].name, "second")
+        self.assertEqual(repos.raw_headers["x-ratelimit-remaining"], "8")
+        self.assertEqual([repo.name for repo in repos], ["first"])
+        self.assertEqual(repos.raw_headers["x-ratelimit-remaining"], "7")
+        self.assertIn("page=2", responses.calls[0].request.url)
+        self.assertNotIn("page=", responses.calls[1].request.url)
+
+    @responses.activate
+    def testCountAndIncompleteResultsRequests(self):
+        responses.get(
+            "https://api.github.com:443/search/code",
+            json={"items": [], "total_count": 0, "incomplete_results": False},
+            headers={"X-RateLimit-Remaining": "4"},
+        )
+        for property_name in ("totalCount", "incomplete_results"):
+            with self.subTest(property_name=property_name):
+                results = Github(lazy=True).search_code("query")
+                self.assertEqual(results.raw_headers, {})
+                self.assertFalse(getattr(results, property_name))
+                self.assertEqual(results.raw_headers["x-ratelimit-remaining"], "4")
+                self.assertIn("per_page=1", responses.calls[-1].request.url)
+        self.assertEqual(len(responses.calls), 2)
+
+    def testPrefetchedHeadersAreCopied(self):
+        with Github(lazy=True) as client:
+            headers = {"x-ratelimit-remaining": "3"}
+            users = PaginatedListImpl(NamedUser, client.requester, firstData=[], firstHeaders=headers)
+            self.assertEqual(users.raw_headers, headers)
+            headers.clear()
+            self.assertEqual(users.raw_headers, {"x-ratelimit-remaining": "3"})
+            empty = PaginatedListImpl(NamedUser, client.requester, firstData=[])
+            self.assertEqual(empty.raw_headers, {})
+
+    @responses.activate
+    def testReversedHeadersAreIndependent(self):
+        url = "https://api.github.com:443/users/example/repos"
+        responses.get(
+            url,
+            json=[{"name": "first"}],
+            headers={
+                "X-RateLimit-Remaining": "9",
+                "Link": '<https://api.github.com/users/example/repos?page=2>; rel="last"',
+            },
+        )
+        responses.get(url, json=[{"name": "last"}], headers={"X-RateLimit-Remaining": "8"})
+        repos = Github(lazy=True).get_user("example", lazy=True).get_repos()
+        backward = reversed(repos)
+        self.assertEqual(backward.raw_headers["x-ratelimit-remaining"], "9")
+        self.assertEqual(repos.raw_headers, {})
+        self.assertEqual([repo.name for repo in backward], ["last"])
+        self.assertEqual(backward.raw_headers["x-ratelimit-remaining"], "8")
+        self.assertEqual(repos.raw_headers, {})
+
+    @responses.activate
+    def testGraphqlHeaders(self):
+        pagination = {
+            "totalCount": 1,
+            "nodes": [{"login": "example"}],
+            "pageInfo": {
+                "startCursor": "one",
+                "endCursor": "one",
+                "hasNextPage": False,
+                "hasPreviousPage": False,
+            },
+        }
+        responses.post(
+            "https://api.github.com:443/graphql",
+            json={"data": {"users": pagination}},
+            headers={"X-RateLimit-Remaining": "5"},
+        )
+        with Github(lazy=True) as client:
+            users = PaginatedListImpl(
+                NamedUser, client.requester, graphql_query="query { users { nodes { login } } }", list_item=["users"]
+            )
+            self.assertEqual(users.raw_headers, {})
+            self.assertEqual(users.totalCount, 1)
+            self.assertEqual(users.raw_headers["x-ratelimit-remaining"], "5")
+            self.assertEqual([user.login for user in users], ["example"])
+            self.assertEqual(users.raw_headers["x-ratelimit-remaining"], "5")
+        self.assertEqual(len(responses.calls), 2)
 
 
 class PaginatedList(Framework.TestCase):
