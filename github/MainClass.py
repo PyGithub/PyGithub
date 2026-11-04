@@ -303,7 +303,9 @@ class Github:
         """
         kwargs = self.__requester.kwargs
         kwargs.update(lazy=lazy)
-        return Github(**kwargs)
+        gh = Github(**kwargs)
+        self.__requester.shareCurrentRateLimit(gh.requester)
+        return gh
 
     def close(self) -> None:
         """

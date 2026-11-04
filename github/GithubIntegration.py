@@ -196,7 +196,9 @@ class GithubIntegration:
         """
         kwargs = self.__requester.kwargs
         kwargs.update(lazy=lazy)
-        return GithubIntegration(**kwargs)
+        integration = GithubIntegration(**kwargs)
+        self.__requester.shareCurrentRateLimit(integration.requester)
+        return integration
 
     def close(self) -> None:
         """

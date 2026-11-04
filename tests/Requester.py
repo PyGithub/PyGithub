@@ -671,6 +671,42 @@ class Requester(Framework.TestCase):
                 self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "28", "2", "1700000060"))
                 self.assertRate(derived.current_rate_limit.resources.search, 30, 28, 2, 1700000060)
 
+    def testCurrentRateLimitSharedWithGithubWithLazy(self):
+        for lazy in [True, False]:
+            with self.subTest(lazy=lazy):
+                g = github.Github(auth=github.Auth.Token("token"))
+                self._assertCurrentRateLimitShared(g.requester, g.withLazy(lazy).requester)
+
+    def testCurrentRateLimitSharedWithGithubIntegrationWithLazy(self):
+        for lazy in [True, False]:
+            with self.subTest(lazy=lazy):
+                gi = github.GithubIntegration(auth=github.Auth.AppAuth(APP_ID, PRIVATE_KEY))
+                self._assertCurrentRateLimitShared(gi.requester, gi.withLazy(lazy).requester)
+
+    def _assertCurrentRateLimitShared(self, requester, derived):
+        self.assertIsNot(derived, requester)
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self.assertRate(derived.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self._requestWithHeaders(derived, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
+        self.assertRate(requester.current_rate_limit.resources.search, 30, 29, 1, 1700000060)
+
+    def testCurrentRateLimitOfObjectFromGithubWithLazy(self):
+        self._requestWithHeaders(self.g.requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        repo = self.g.withLazy(True).get_repo("lazy/repo")
+        self.assertRate(repo.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+
+    def testShareCurrentRateLimit(self):
+        requester = self.g.requester
+        other = requester.withAuth(github.Auth.Token("other token"))
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self._requestWithHeaders(other, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
+
+        requester.shareCurrentRateLimit(other)
+
+        # the given requester drops its own values
+        self.assertRate(other.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertIsNone(other.current_rate_limit.resources.search)
+
     def testCurrentRateLimitOfLazyObject(self):
         requester = self.g.requester
         self.assertFalse(requester.is_lazy)
