@@ -27,6 +27,58 @@ Error Handling
 
 .. automodule:: github.GithubException
 
+Rate limits
+-----------
+
+GitHub limits the number of API requests per authentication. Limits are counted separately for different resources,
+like ``core``, ``search``, or ``graphql``. PyGithub provides these limits as a
+:class:`github.RateLimitOverview.RateLimitOverview`, where ``resources`` has one :class:`github.Rate.Rate` per resource
+with attributes ``limit``, ``remaining``, ``used`` and ``reset``.
+
+There are three ways to retrieve an overview:
+
+:meth:`github.MainClass.Github.get_rate_limit`
+    Sends a request and returns the rate limits of all resources. This request does not count against any rate limit.
+    Use this when you need all rate limits, for instance before starting work.
+
+:attr:`github.GithubObject.GithubObject.current_rate_limit`
+    Sends no request and returns the latest rate limits known so far, on any object returned by PyGithub.
+    These are updated from each API response, and only for the resource that the request counted against.
+    They are also updated when calling ``get_rate_limit()`` or ``update()``.
+    Resources for which nothing is known yet are ``None``. This is cheap enough to be used between any two requests,
+    without the need to hold on to the :class:`github.MainClass.Github` instance, which also provides
+    :attr:`github.MainClass.Github.current_rate_limit`.
+
+:meth:`github.RateLimitOverview.RateLimitOverview.update`
+    Sends a request and returns a new overview with the rate limits of all resources, like ``get_rate_limit()``.
+    An overview never changes, so make sure you use the returned object.
+    Use this to get values for all resources when you only hold on to an object returned by PyGithub.
+
+For example, pause before running out of ``core`` requests::
+
+    import time
+    from datetime import datetime, timezone
+
+    for issue in repo.get_issues():
+        ...
+
+        core = issue.current_rate_limit.resources.core
+        if core.remaining < 10:
+            time.sleep(max(0, (core.reset - datetime.now(timezone.utc)).total_seconds()))
+
+Get values for a resource that has not been used yet::
+
+    rate_limit = repo.current_rate_limit
+    if rate_limit.resources.search is None:
+        rate_limit = rate_limit.update()
+    print(rate_limit.resources.search.remaining)
+
+Rate limits are counted per authentication and server, so objects retrieved with a different authentication,
+for example through an installation of a GitHub App, provide their own rate limits.
+
+:attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime` are deprecated
+as they do not tell apart resources.
+
 Default argument
 ----------------
 
