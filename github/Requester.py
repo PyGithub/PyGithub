@@ -622,9 +622,7 @@ class Requester:
         :return: new Requester instance
 
         """
-        kwargs = self.kwargs
-        kwargs.update(auth=auth)
-        return Requester(**kwargs)
+        return self.__withArguments(auth=auth)
 
     @property
     def is_lazy(self) -> bool:
@@ -646,7 +644,7 @@ class Requester:
         if is_undefined(lazy) or self.is_lazy == lazy:
             return self
 
-        return self.__withSameAuth(lazy=lazy)
+        return self.__withArguments(lazy=lazy)
 
     @property
     def api_version(self) -> str | None:
@@ -665,18 +663,21 @@ class Requester:
         if api_version == self.api_version:
             return self
 
-        return self.__withSameAuth(api_version=api_version)
+        return self.__withArguments(api_version=api_version)
 
-    def __withSameAuth(self, **kwargs: Any) -> Requester:
+    def __withArguments(self, **kwargs: Any) -> Requester:
         requester = Requester(**{**self.kwargs, **kwargs})
-        requester.useCurrentRateLimit(self)
+        # rate limits are bound to the authentication and the server, none of the other arguments affect them
+        if not kwargs.keys() & {"auth", "base_url"}:
+            requester.useCurrentRateLimit(self)
         return requester
 
     def useCurrentRateLimit(self, requester: Requester) -> None:
         """
         Make this requester share :attr:`current_rate_limit` with the given requester, dropping its own known values.
 
-        Rate limits are bound to the authentication, so only use this with a requester of the same authentication.
+        Rate limits are bound to the authentication and the server, so only use this with a requester of the same
+        authentication and base url.
 
         :param requester: requester to share rate limits with
 

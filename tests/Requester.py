@@ -716,6 +716,35 @@ class Requester(Framework.TestCase):
         self.assertIsNot(user.requester, requester)
         self.assertRate(user.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
 
+    def testCurrentRateLimitSharingByArgument(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+
+        for arguments, shared in [
+            (dict(auth=github.Auth.Token("other token")), False),
+            (dict(auth=None), False),
+            (dict(base_url="https://github.example.com/api/v3"), False),
+            (dict(auth=github.Auth.Token("other token"), base_url="https://github.example.com/api/v3"), False),
+            (dict(timeout=1), True),
+            (dict(user_agent="agent"), True),
+            (dict(per_page=1), True),
+            (dict(verify=False), True),
+            (dict(retry=1), True),
+            (dict(pool_size=1), True),
+            (dict(seconds_between_requests=1.0), True),
+            (dict(seconds_between_writes=1.0), True),
+            (dict(lazy=True), True),
+            (dict(api_version="2026-03-10"), True),
+        ]:
+            with self.subTest(arguments=sorted(arguments)):
+                other = requester._Requester__withArguments(**arguments)
+                self.assertIsNot(other, requester)
+                core = other.current_rate_limit.resources.core
+                if shared:
+                    self.assertRate(core, 5000, 4999, 1, 1700000000)
+                else:
+                    self.assertIsNone(core)
+
     def testCurrentRateLimitNotSharedAcrossAuthentications(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
