@@ -41,7 +41,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -86,6 +86,16 @@ class Rate(NonCompletableGithubObject):
     @property
     def reset(self) -> datetime:
         return self._reset.value
+
+    @property
+    def resets_in_seconds(self) -> float:
+        """
+        Seconds until this rate limit resets, which is zero if the reset time has already passed.
+
+        This is safe to be used with ``time.sleep``.
+
+        """
+        return max(0.0, (self.reset - datetime.now(timezone.utc)).total_seconds())
 
     @property
     def used(self) -> int:

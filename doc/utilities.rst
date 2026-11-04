@@ -57,14 +57,13 @@ There are three ways to retrieve an overview:
 For example, pause before running out of ``core`` requests::
 
     import time
-    from datetime import datetime, timezone
 
     for issue in repo.get_issues():
         ...
 
         core = issue.current_rate_limit.resources.core
         if core.remaining < 10:
-            time.sleep(max(0, (core.reset - datetime.now(timezone.utc)).total_seconds()))
+            time.sleep(core.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
 

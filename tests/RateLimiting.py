@@ -36,7 +36,10 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from unittest import mock
+
+import github.Rate
 
 from . import Framework
 
@@ -63,6 +66,25 @@ class RateLimiting(Framework.TestCase):
         with self.assertWarns(DeprecationWarning) as warning:
             self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
         self.assertWarning(warning, self.DEPRECATION_MESSAGE)
+
+    def testResetsInSeconds(self):
+        reset = datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc)
+        rate = github.Rate.Rate(self.g.requester, {}, {"reset": int(reset.timestamp())})
+
+        for now, expected in [
+            (reset - timedelta(seconds=90, milliseconds=500), 90.5),
+            (reset - timedelta(seconds=1), 1.0),
+            # the reset time is now or has passed
+            (reset, 0.0),
+            (reset + timedelta(seconds=1), 0.0),
+            (reset + timedelta(days=1), 0.0),
+        ]:
+            with self.subTest(now=now):
+                with mock.patch("github.Rate.datetime") as datetime_mock:
+                    datetime_mock.now.return_value = now
+                    actual = rate.resets_in_seconds
+                datetime_mock.now.assert_called_once_with(timezone.utc)
+                self.assertEqual(actual, expected)
 
     def testGetRateLimit(self):
         self.assertIsNone(self.g.requester.current_rate_limit.resources.search)
