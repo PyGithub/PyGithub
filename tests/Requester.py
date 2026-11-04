@@ -650,6 +650,51 @@ class Requester(Framework.TestCase):
         }
     }
 
+    def testCurrentRateLimitSharedWithDerivedRequesters(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+
+        for name, derived in [
+            ("withLazy", requester.withLazy(not requester.is_lazy)),
+            ("withApiVersion", requester.withApiVersion("2026-03-10")),
+            ("chained", requester.withLazy(not requester.is_lazy).withApiVersion("2026-03-10")),
+        ]:
+            with self.subTest(name):
+                self.assertIsNot(derived, requester)
+
+                # known values are available to the derived requester
+                self.assertRate(derived.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+
+                # values seen by the derived requester are available to the original requester, and vice versa
+                self._requestWithHeaders(derived, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
+                self.assertRate(requester.current_rate_limit.resources.search, 30, 29, 1, 1700000060)
+                self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "28", "2", "1700000060"))
+                self.assertRate(derived.current_rate_limit.resources.search, 30, 28, 2, 1700000060)
+
+    def testCurrentRateLimitOfLazyObject(self):
+        requester = self.g.requester
+        self.assertFalse(requester.is_lazy)
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+
+        user = self.g.get_user("login", lazy=True)
+        self.assertIsNot(user.requester, requester)
+        self.assertRate(user.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+
+    def testCurrentRateLimitNotSharedAcrossAuthentications(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+
+        other = requester.withAuth(github.Auth.Token("other token"))
+        self.assertIsNone(other.current_rate_limit.resources.core)
+
+        self._requestWithHeaders(other, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
+        self.assertIsNone(requester.current_rate_limit.resources.search)
+
+        # a requester derived from another authentication shares with that authentication only
+        derived = other.withApiVersion("2026-03-10")
+        self.assertRate(derived.current_rate_limit.resources.search, 30, 29, 1, 1700000060)
+        self.assertIsNone(derived.current_rate_limit.resources.core)
+
     def testGetRateLimitUpdatesCurrentRateLimit(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))

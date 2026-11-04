@@ -538,8 +538,9 @@ class Requester:
         """
         Latest rate limits known to this requester, per resource.
 
-        Values come from the response headers of requests made through this requester, and from calls to
-        :meth:`get_rate_limit`, which provide values for all resources. This does not send any request, use
+        Values come from the response headers of requests made through this requester and any requester derived via
+        :meth:`withLazy` and :meth:`withApiVersion`, and from calls to :meth:`get_rate_limit`, which provide values for
+        all resources. This does not send any request, use
         :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch current values. Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is
         unknown to :class:`github.RateLimit.RateLimit`, ``rate`` holds the values of the ``core`` resource.
 
@@ -643,9 +644,7 @@ class Requester:
         if is_undefined(lazy) or self.is_lazy == lazy:
             return self
 
-        kwargs = self.kwargs
-        kwargs.update(lazy=lazy)
-        return Requester(**kwargs)
+        return self.__withSameAuth(lazy=lazy)
 
     @property
     def api_version(self) -> str | None:
@@ -664,9 +663,13 @@ class Requester:
         if api_version == self.api_version:
             return self
 
-        kwargs = self.kwargs
-        kwargs.update(api_version=api_version)
-        return Requester(**kwargs)
+        return self.__withSameAuth(api_version=api_version)
+
+    def __withSameAuth(self, **kwargs: Any) -> Requester:
+        requester = Requester(**{**self.kwargs, **kwargs})
+        # rate limits are bound to the authentication, so requesters with the same authentication share them
+        requester.__rate_limit_resources = self.__rate_limit_resources
+        return requester
 
     def requestJsonAndCheck(
         self,
