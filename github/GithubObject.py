@@ -69,6 +69,7 @@ from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
 
 if TYPE_CHECKING:
+    from .RateLimitOverview import RateLimitOverview
     from .Requester import Requester
 
 T = typing.TypeVar("T")
@@ -281,6 +282,16 @@ class GithubObject(ABC):
 
         """
         return self._requester
+
+    @property
+    def current_rate_limit(self) -> RateLimitOverview:
+        """
+        Latest rate limits known to the requester of this object, per resource. This does not send any request.
+
+        See :attr:`github.Requester.Requester.current_rate_limit`.
+
+        """
+        return self._requester.current_rate_limit
 
     @property
     def raw_data(self) -> dict[str, Any]:

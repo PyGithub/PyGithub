@@ -34,6 +34,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from unittest import mock
 
+import github.NamedUser
+import github.Rate
 import github.Repository
 import github.RepositoryDiscussion
 
@@ -45,6 +47,18 @@ ghorg = Framework.github.Organization
 
 
 class GithubObject(unittest.TestCase):
+    def testCurrentRateLimit(self):
+        requester = mock.Mock(is_lazy=True, is_not_lazy=False)
+        for obj in [
+            # non-completable object
+            github.Rate.Rate(requester, {}, {}),
+            # completable objects must not be completed
+            github.NamedUser.NamedUser(requester, url="/users/login"),
+        ]:
+            with self.subTest(type=type(obj).__name__):
+                self.assertIs(obj.current_rate_limit, requester.current_rate_limit)
+        requester.requestJsonAndCheck.assert_not_called()
+
     def testAttributesAsRest(self):
         _ = gho.as_rest_api_attributes
         self.assertIsNone(_(None))
