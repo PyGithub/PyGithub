@@ -107,6 +107,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar, overload
 
 import urllib3
+from typing_extensions import deprecated
 from urllib3.util import Retry
 
 import github.ApplicationOAuth
@@ -356,6 +357,7 @@ class Github:
     # v3: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
     # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
+    @deprecated("Use current_rate_limit or get_rate_limit() instead")
     def rate_limiting(self) -> tuple[int, int]:
         """
         First value is requests remaining, second value is request limit.
@@ -366,6 +368,7 @@ class Github:
         return self.__requester.rate_limiting
 
     @property
+    @deprecated("Use current_rate_limit or get_rate_limit() instead")
     def rate_limiting_resettime(self) -> int:
         """
         Unix timestamp indicating when rate limiting will reset.

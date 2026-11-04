@@ -42,14 +42,27 @@ from . import Framework
 
 
 class RateLimiting(Framework.TestCase):
+    DEPRECATION_MESSAGE = "Use current_rate_limit or get_rate_limit() instead"
+
     def testRateLimiting(self):
-        self.assertEqual(self.g.rate_limiting, (4904, 5000))
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting, (4904, 5000))
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
+
         self.g.get_user("yurinnick")
-        self.assertEqual(self.g.rate_limiting, (4903, 5000))
-        self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting, (4903, 5000))
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
+
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
 
     def testResetTime(self):
-        self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
 
     def testGetRateLimit(self):
         self.assertIsNone(self.g.requester.current_rate_limit.resources.search)
