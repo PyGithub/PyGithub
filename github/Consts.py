@@ -76,6 +76,8 @@ RES_LAST_MODIFIED = "last-modified"
 headerRateLimit = "x-ratelimit-limit"
 headerRateRemaining = "x-ratelimit-remaining"
 headerRateReset = "x-ratelimit-reset"
+headerRateResource = "x-ratelimit-resource"
+headerRateUsed = "x-ratelimit-used"
 headerOAuthScopes = "x-oauth-scopes"
 headerOTP = "x-github-otp"
 

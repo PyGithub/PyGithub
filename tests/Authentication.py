@@ -127,6 +127,13 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(auth=self.app_auth.get_installation_auth(29782936))
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
 
+        # rate limit overview reflects the recorded response headers
+        core = g.requester.rate_limit_overview.resources.core
+        self.assertEqual(core.limit, 60)
+        self.assertEqual(core.remaining, 57)
+        self.assertEqual(core.used, 3)
+        self.assertEqual(core.reset, datetime(2022, 10, 25, 2, 56, 23, tzinfo=timezone.utc))
+
     def assert_requester_args(self, g, expected_requester):
         expected_args = expected_requester.kwargs
         expected_args.pop("auth")

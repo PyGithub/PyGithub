@@ -32,6 +32,7 @@
 from __future__ import annotations
 
 import contextlib
+import pickle
 from datetime import datetime, timedelta, timezone
 from unittest import mock
 
@@ -527,6 +528,109 @@ class Requester(Framework.TestCase):
             self.assertEqual(exception.data, data)
         self.assertEqual(exception.headers, headers)
         self.assertEqual(str(exception), string)
+
+    def _requestWithHeaders(self, requester, headers):
+        with mock.patch.object(requester, "_Requester__requestRaw", return_value=(200, headers, "{}")):
+            requester.requestJsonAndCheck("GET", "/some/path")
+
+    @staticmethod
+    def _rateLimitHeaders(resource, limit, remaining, used, reset):
+        return {
+            "x-ratelimit-limit": limit,
+            "x-ratelimit-remaining": remaining,
+            "x-ratelimit-used": used,
+            "x-ratelimit-reset": reset,
+            "x-ratelimit-resource": resource,
+        }
+
+    def assertRate(self, rate, limit, remaining, used, reset):
+        self.assertEqual(rate.limit, limit)
+        self.assertEqual(rate.remaining, remaining)
+        self.assertEqual(rate.used, used)
+        self.assertEqual(rate.reset, datetime.fromtimestamp(reset, tz=timezone.utc))
+
+    def testRateLimitOverviewWithoutResponses(self):
+        overview = self.g.requester.rate_limit_overview
+        self.assertIsInstance(overview, github.RateLimitOverview.RateLimitOverview)
+        self.assertIsNone(overview.rate)
+        self.assertIsNone(overview.resources.core)
+        self.assertIsNone(overview.resources.search)
+
+    def testRateLimitOverviewKeepsResourcesApart(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
+
+        overview = requester.rate_limit_overview
+        self.assertRate(overview.rate, 5000, 4999, 1, 1700000000)
+        self.assertRate(overview.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(overview.resources.search, 30, 29, 1, 1700000060)
+        self.assertIsNone(overview.resources.graphql)
+
+    def testRateLimitOverviewProvidesLatestValues(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        earlier = requester.rate_limit_overview
+
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4998", "2", "1700000000"))
+        self.assertRate(requester.rate_limit_overview.resources.core, 5000, 4998, 2, 1700000000)
+
+        # an overview earlier provided is a snapshot, it does not change with later responses
+        self.assertRate(earlier.resources.core, 5000, 4999, 1, 1700000000)
+
+    def testRateLimitOverviewWithoutCoreResource(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
+
+        overview = requester.rate_limit_overview
+        self.assertIsNone(overview.rate)
+        self.assertRate(overview.resources.graphql, 5000, 4900, 100, 1700000000)
+
+    def testRateLimitOverviewWithFloatHeaderValues(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000.0", "4999.0", "1.0", "1700000000.0"))
+        self.assertRate(requester.rate_limit_overview.resources.core, 5000, 4999, 1, 1700000000)
+
+    def testRateLimitOverviewWithoutUsedHeader(self):
+        requester = self.g.requester
+        headers = self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000")
+        del headers["x-ratelimit-used"]
+        self._requestWithHeaders(requester, headers)
+
+        core = requester.rate_limit_overview.resources.core
+        self.assertEqual(core.remaining, 4999)
+        self.assertIsNone(core.used)
+
+    def testRateLimitOverviewIgnoresResponsesWithoutResource(self):
+        requester = self.g.requester
+        headers = self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000")
+        del headers["x-ratelimit-resource"]
+        self._requestWithHeaders(requester, headers)
+        self._requestWithHeaders(requester, {})
+
+        self.assertIsNone(requester.rate_limit_overview.resources.core)
+        self.assertEqual(requester.rate_limiting, (4999, 5000))
+
+    def testRateLimitOverviewWithUnknownResource(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("new_resource", "10", "9", "1", "1700000000"))
+
+        overview = requester.rate_limit_overview
+        self.assertIsNone(overview.resources.core)
+        self.assertEqual(overview.raw_data["resources"]["new_resource"]["remaining"], 9)
+
+    def testRateLimitOverviewRawDataIsIndependent(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+
+        requester.rate_limit_overview.raw_data["resources"]["core"]["remaining"] = 0
+        self.assertEqual(requester.rate_limit_overview.resources.core.remaining, 4999)
+
+    def testRateLimitOverviewAfterPickle(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        restored = pickle.loads(pickle.dumps(requester))
+        self.assertRate(restored.rate_limit_overview.resources.core, 5000, 4999, 1, 1700000000)
 
     def testShouldCreateBadCredentialsException(self):
         exc = self.g._Github__requester.createException(401, {"header": "value"}, {"message": "Bad credentials"})

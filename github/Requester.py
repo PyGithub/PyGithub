@@ -110,6 +110,7 @@ from urllib3 import Retry
 import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
+import github.RateLimitOverview
 from github.GithubObject import Opt, as_rest_api_attributes, is_undefined
 
 if TYPE_CHECKING:
@@ -117,6 +118,7 @@ if TYPE_CHECKING:
     from .Auth import Auth
     from .GithubObject import GithubObject
     from .InstallationAuthorization import InstallationAuthorization
+    from .RateLimitOverview import RateLimitOverview
 
 T = TypeVar("T")
 T_gh = TypeVar("T_gh", bound="GithubObject")
@@ -437,6 +439,7 @@ class Requester:
         self.__custom_connections: deque[HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass] = deque()
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
+        self.__rate_limit_resources: dict[str, dict[str, int]] = {}
         self.FIX_REPO_GET_GIT_REF = True
         assert isinstance(per_page, int) and per_page > 0, per_page
         self.per_page = per_page
@@ -529,6 +532,22 @@ class Requester:
                 self.__connection = None
         while self.__custom_connections:
             self.__custom_connections.popleft().close()
+
+    @property
+    def rate_limit_overview(self) -> RateLimitOverview:
+        """
+        Latest rate limits seen in the response headers of requests made through this requester, per resource.
+
+        This does not send any request, use :meth:`github.MainClass.Github.get_rate_limit` to fetch all current rate
+        limits. Attributes of ``resources`` are ``None`` until a response for that resource has been received or if the
+        resource is unknown to :class:`github.RateLimit.RateLimit`, ``rate`` holds the values of the ``core`` resource.
+
+        """
+        resources = {resource: dict(rate) for resource, rate in list(self.__rate_limit_resources.items())}
+        attributes: dict[str, Any] = {"resources": resources}
+        if "core" in resources:
+            attributes["rate"] = resources["core"]
+        return github.RateLimitOverview.RateLimitOverview(self, {}, attributes)
 
     @property
     def kwargs(self) -> dict[str, Any]:
@@ -1246,6 +1265,18 @@ class Requester:
         if Consts.headerRateReset in responseHeaders:
             # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
             self.rate_limiting_resettime = int(float(responseHeaders[Consts.headerRateReset]))
+        if Consts.headerRateResource in responseHeaders:
+            self.__rate_limit_resources[responseHeaders[Consts.headerRateResource]] = {
+                # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
+                attribute: int(float(responseHeaders[header]))
+                for attribute, header in (
+                    ("limit", Consts.headerRateLimit),
+                    ("remaining", Consts.headerRateRemaining),
+                    ("reset", Consts.headerRateReset),
+                    ("used", Consts.headerRateUsed),
+                )
+                if header in responseHeaders
+            }
 
         if Consts.headerOAuthScopes in responseHeaders:
             self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
