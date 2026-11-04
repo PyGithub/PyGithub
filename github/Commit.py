@@ -346,7 +346,7 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
 
     def get_check_suites(self, app_id: Opt[int] = NotSet, check_name: Opt[str] = NotSet) -> PaginatedList[CheckSuite]:
         """
-        :class: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/check-suites <https://docs.github.com/en/rest/reference/checks#list-check-suites-for-a-git-reference>`_
         """
         assert is_optional(app_id, int), app_id
         assert is_optional(check_name, str), check_name

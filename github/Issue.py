@@ -95,6 +95,7 @@ from github.GithubObject import (
     is_optional,
     is_optional_list,
     is_undefined,
+    openapi_parameter,
 )
 from github.PaginatedList import PaginatedList
 
@@ -501,6 +502,7 @@ class Issue(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/lock")
 
+    @openapi_parameter(name="comment_id", matches="id", type="int", input=True)
     def get_comment(self, id: int) -> IssueComment:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
@@ -558,6 +560,7 @@ class Issue(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
+    @openapi_parameter(name="name", matches="label", type="Label | str", input=True)
     def remove_from_labels(self, label: Label | str) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name} <https://docs.github.com/en/rest/reference/issues#labels>`_
@@ -577,6 +580,7 @@ class Issue(CompletableGithubObject):
         post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/labels", input=post_parameters)
 
+    @openapi_parameter(name="content", matches="reaction_type")
     def get_reactions(self) -> PaginatedList[Reaction]:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/{issue_number}/reactions <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-an-issue>`_
@@ -602,6 +606,7 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaType},
         )
 
+    @openapi_parameter(name="sub_issue_id", matches="sub_issue", type="int | Issue")
     def add_sub_issue(self, sub_issue: int | Issue) -> SubIssue:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues <https://docs.github.com/en/rest/issues/sub-issues>`_
@@ -625,6 +630,7 @@ class Issue(CompletableGithubObject):
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
+    @openapi_parameter(name="sub_issue_id", matches="sub_issue", type="int | Issue")
     def remove_sub_issue(self, sub_issue: int | Issue) -> SubIssue:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/sub_issue <https://docs.github.com/en/rest/issues/sub-issues>`_
@@ -648,6 +654,9 @@ class Issue(CompletableGithubObject):
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
+    @openapi_parameter(name="sub_issue_id", matches="sub_issue", type="int | Issue")
+    @openapi_parameter(name="after_id", matches="after_sub_issue", type="int | Issue")
+    @openapi_parameter(name="before_id", matches="before_sub_issue", type="int | Issue")
     def prioritize_sub_issue(self, sub_issue: int | Issue, after_sub_issue: int | Issue | None) -> SubIssue:
         """
         :calls: `PATCH /repos/{owner}/{repo}/issues/{issue_number}/sub_issues/priority <https://docs.github.com/en/rest/issues/sub-issues>`_
@@ -674,6 +683,7 @@ class Issue(CompletableGithubObject):
         )
         return SubIssue(self._requester, headers, data, completed=True)
 
+    @openapi_parameter(name="content", matches="reaction_type")
     def create_reaction(self, reaction_type: str) -> Reaction:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/reactions <https://docs.github.com/en/rest/reference/reactions>`_
@@ -690,6 +700,7 @@ class Issue(CompletableGithubObject):
         )
         return github.Reaction.Reaction(self._requester, headers, data)
 
+    @openapi_parameter(name="reaction_id", type="int", input=True)
     def delete_reaction(self, reaction_id: int) -> bool:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id} <https://docs.github.com/en/rest/reference/reactions#delete-an-issue-reaction>`_
@@ -740,6 +751,7 @@ class Issue(CompletableGithubObject):
             headers={"Accept": Consts.mediaType},
         )
 
+    @openapi_parameter(name="issue_id", matches="issue", type="Issue")
     def add_blocked_by(self, issue: Issue) -> None:
         """
         :calls: `POST /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by <https://docs.github.com/en/rest/issues/issue-dependencies#list-dependencies-an-issue-is-blocked-by>`_
@@ -752,6 +764,7 @@ class Issue(CompletableGithubObject):
         self._useAttributes(data)
         self._set_complete()
 
+    @openapi_parameter(name="issue_id", matches="issue", type="Issue")
     def remove_blocked_by(self, issue: Issue) -> None:
         """
         :calls: `DELETE /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by/{issue_id} <https://docs.github.com/en/rest/issues/issue-dependencies#remove-dependency-an-issue-is-blocked-by>`_
