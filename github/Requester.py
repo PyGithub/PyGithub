@@ -536,11 +536,12 @@ class Requester:
     @property
     def rate_limit_overview(self) -> RateLimitOverview:
         """
-        Latest rate limits seen in the response headers of requests made through this requester, per resource.
+        Latest rate limits known to this requester, per resource.
 
-        This does not send any request, use :meth:`github.MainClass.Github.get_rate_limit` to fetch all current rate
-        limits. Attributes of ``resources`` are ``None`` until a response for that resource has been received or if the
-        resource is unknown to :class:`github.RateLimit.RateLimit`, ``rate`` holds the values of the ``core`` resource.
+        Values come from the response headers of requests made through this requester, and from calls to
+        :meth:`github.MainClass.Github.get_rate_limit`, which provide values for all resources. This does not send any
+        request. Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is
+        unknown to :class:`github.RateLimit.RateLimit`, ``rate`` holds the values of the ``core`` resource.
 
         """
         resources = {resource: dict(rate) for resource, rate in list(self.__rate_limit_resources.items())}
@@ -548,6 +549,18 @@ class Requester:
         if "core" in resources:
             attributes["rate"] = resources["core"]
         return github.RateLimitOverview.RateLimitOverview(self, {}, attributes)
+
+    def update_rate_limit_overview(self, overview: dict[str, Any]) -> None:
+        """
+        Update the values provided by :attr:`rate_limit_overview` from the body of a ``GET /rate_limit`` response.
+
+        Resources that are not contained in the given body keep their values.
+
+        :param overview: response body of ``GET /rate_limit``
+
+        """
+        for resource, rate in overview.get("resources", {}).items():
+            self.__rate_limit_resources[resource] = dict(rate)
 
     @property
     def kwargs(self) -> dict[str, Any]:

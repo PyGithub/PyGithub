@@ -381,6 +381,7 @@ class Github:
 
         """
         headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
+        self.__requester.update_rate_limit_overview(data)
         return github.RateLimitOverview.RateLimitOverview(self.__requester, headers, data)
 
     @property

@@ -632,6 +632,45 @@ class Requester(Framework.TestCase):
         restored = pickle.loads(pickle.dumps(requester))
         self.assertRate(restored.rate_limit_overview.resources.core, 5000, 4999, 1, 1700000000)
 
+    def testUpdateRateLimitOverview(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
+
+        requester.update_rate_limit_overview(
+            {
+                "resources": {
+                    "core": {"limit": 5000, "used": 10, "remaining": 4990, "reset": 1700000000},
+                    "search": {"limit": 30, "used": 2, "remaining": 28, "reset": 1700000060},
+                }
+            }
+        )
+
+        overview = requester.rate_limit_overview
+        self.assertRate(overview.rate, 5000, 4990, 10, 1700000000)
+        self.assertRate(overview.resources.core, 5000, 4990, 10, 1700000000)
+        self.assertRate(overview.resources.search, 30, 28, 2, 1700000060)
+        # resources not contained in the update keep their values
+        self.assertRate(overview.resources.graphql, 5000, 4900, 100, 1700000000)
+
+        # later response headers replace updated values
+        self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "27", "3", "1700000060"))
+        self.assertRate(requester.rate_limit_overview.resources.search, 30, 27, 3, 1700000060)
+
+    def testUpdateRateLimitOverviewWithoutResources(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        requester.update_rate_limit_overview({})
+        self.assertRate(requester.rate_limit_overview.resources.core, 5000, 4999, 1, 1700000000)
+
+    def testUpdateRateLimitOverviewDoesNotKeepGivenData(self):
+        requester = self.g.requester
+        overview = {"resources": {"core": {"limit": 5000, "used": 10, "remaining": 4990, "reset": 1700000000}}}
+        requester.update_rate_limit_overview(overview)
+
+        overview["resources"]["core"]["remaining"] = 0
+        self.assertEqual(requester.rate_limit_overview.resources.core.remaining, 4990)
+
     def testShouldCreateBadCredentialsException(self):
         exc = self.g._Github__requester.createException(401, {"header": "value"}, {"message": "Bad credentials"})
         self.assertException(
