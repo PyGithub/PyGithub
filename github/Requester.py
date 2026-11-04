@@ -539,8 +539,8 @@ class Requester:
         Latest rate limits known to this requester, per resource.
 
         Values come from the response headers of requests made through this requester, and from calls to
-        :meth:`github.MainClass.Github.get_rate_limit`, which provide values for all resources. This does not send any
-        request. Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is
+        :meth:`get_rate_limit`, which provide values for all resources. This does not send any request, use
+        :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch current values. Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is
         unknown to :class:`github.RateLimit.RateLimit`, ``rate`` holds the values of the ``core`` resource.
 
         """
@@ -550,17 +550,19 @@ class Requester:
             attributes["rate"] = resources["core"]
         return github.RateLimitOverview.RateLimitOverview(self, {}, attributes)
 
-    def update_rate_limit_overview(self, overview: dict[str, Any]) -> None:
+    def get_rate_limit(self) -> RateLimitOverview:
         """
-        Update the values provided by :attr:`rate_limit_overview` from the body of a ``GET /rate_limit`` response.
+        Fetch all current rate limits, which also updates the values provided by :attr:`rate_limit_overview`.
 
-        Resources that are not contained in the given body keep their values.
+        Resources that are not contained in the response keep their values in :attr:`rate_limit_overview`.
 
-        :param overview: response body of ``GET /rate_limit``
+        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
-        for resource, rate in overview.get("resources", {}).items():
+        headers, data = self.requestJsonAndCheck("GET", "/rate_limit")
+        for resource, rate in data.get("resources", {}).items():
             self.__rate_limit_resources[resource] = dict(rate)
+        return github.RateLimitOverview.RateLimitOverview(self, headers, data)
 
     @property
     def kwargs(self) -> dict[str, Any]:

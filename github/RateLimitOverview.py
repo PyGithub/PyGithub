@@ -70,6 +70,20 @@ class RateLimitOverview(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
+    def update(self) -> None:
+        """
+        Update this object in place with the current rate limits.
+
+        This also updates the values provided by :attr:`github.Requester.Requester.rate_limit_overview`.
+
+        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+
+        """
+        current = self._requester.get_rate_limit()
+        # attributes not provided by the response must not retain their earlier values
+        self._initAttributes()
+        self._storeAndUseAttributes(current.raw_headers, current.raw_data)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "rate" in attributes:  # pragma no branch
             self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])

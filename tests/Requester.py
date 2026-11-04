@@ -32,6 +32,7 @@
 from __future__ import annotations
 
 import contextlib
+import json
 import pickle
 from datetime import datetime, timedelta, timezone
 from unittest import mock
@@ -632,44 +633,91 @@ class Requester(Framework.TestCase):
         restored = pickle.loads(pickle.dumps(requester))
         self.assertRate(restored.rate_limit_overview.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testUpdateRateLimitOverview(self):
+    def _getRateLimit(self, requester, body):
+        headers = self._rateLimitHeaders("core", "5000", "4990", "10", "1700000000")
+        with mock.patch.object(
+            requester, "_Requester__requestRaw", return_value=(200, headers, json.dumps(body))
+        ) as raw:
+            result = requester.get_rate_limit()
+        raw.assert_called_once()
+        self.assertEqual(raw.call_args.args[1:3], ("GET", "/rate_limit"))
+        return result
+
+    RATE_LIMIT_BODY = {
+        "resources": {
+            "core": {"limit": 5000, "used": 10, "remaining": 4990, "reset": 1700000000},
+            "search": {"limit": 30, "used": 2, "remaining": 28, "reset": 1700000060},
+        }
+    }
+
+    def testGetRateLimitUpdatesRateLimitOverview(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
 
-        requester.update_rate_limit_overview(
-            {
-                "resources": {
-                    "core": {"limit": 5000, "used": 10, "remaining": 4990, "reset": 1700000000},
-                    "search": {"limit": 30, "used": 2, "remaining": 28, "reset": 1700000060},
-                }
-            }
-        )
+        self._getRateLimit(requester, self.RATE_LIMIT_BODY)
 
         overview = requester.rate_limit_overview
         self.assertRate(overview.rate, 5000, 4990, 10, 1700000000)
         self.assertRate(overview.resources.core, 5000, 4990, 10, 1700000000)
         self.assertRate(overview.resources.search, 30, 28, 2, 1700000060)
-        # resources not contained in the update keep their values
+        # resources not contained in the response keep their values
         self.assertRate(overview.resources.graphql, 5000, 4900, 100, 1700000000)
 
-        # later response headers replace updated values
+        # later response headers replace these values
         self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "27", "3", "1700000060"))
         self.assertRate(requester.rate_limit_overview.resources.search, 30, 27, 3, 1700000060)
 
-    def testUpdateRateLimitOverviewWithoutResources(self):
+    def testGetRateLimitWithoutResources(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
+        self._getRateLimit(requester, {})
+        self.assertRate(requester.rate_limit_overview.resources.graphql, 5000, 4900, 100, 1700000000)
+
+    def testGetRateLimitDoesNotShareDataWithRateLimitOverview(self):
+        requester = self.g.requester
+        result = self._getRateLimit(requester, self.RATE_LIMIT_BODY)
+
+        result.raw_data["resources"]["search"]["remaining"] = 0
+        self.assertEqual(requester.rate_limit_overview.resources.search.remaining, 28)
+
+    def testRateLimitOverviewUpdate(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
-        requester.update_rate_limit_overview({})
-        self.assertRate(requester.rate_limit_overview.resources.core, 5000, 4999, 1, 1700000000)
+        overview = requester.rate_limit_overview
+        self.assertIsNone(overview.resources.search)
 
-    def testUpdateRateLimitOverviewDoesNotKeepGivenData(self):
+        headers = self._rateLimitHeaders("core", "5000", "4990", "10", "1700000000")
+        response = (200, headers, json.dumps(self.RATE_LIMIT_BODY))
+        with mock.patch.object(requester, "_Requester__requestRaw", return_value=response) as raw:
+            self.assertIsNone(overview.update())
+
+        raw.assert_called_once()
+        self.assertEqual(raw.call_args.args[1:3], ("GET", "/rate_limit"))
+        self.assertRate(overview.resources.core, 5000, 4990, 10, 1700000000)
+        self.assertRate(overview.resources.search, 30, 28, 2, 1700000060)
+        self.assertEqual(overview.raw_data["resources"], self.RATE_LIMIT_BODY["resources"])
+        self.assertEqual(overview.raw_headers, headers)
+        # the requester's values get updated as well
+        self.assertRate(requester.rate_limit_overview.resources.search, 30, 28, 2, 1700000060)
+
+    def testRateLimitOverviewUpdateDropsAttributesMissingInResponse(self):
+        # the rate attribute is not provided by the /rate_limit response for later API versions
         requester = self.g.requester
-        overview = {"resources": {"core": {"limit": 5000, "used": 10, "remaining": 4990, "reset": 1700000000}}}
-        requester.update_rate_limit_overview(overview)
+        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
+        overview = requester.rate_limit_overview
+        self.assertIsNotNone(overview.rate)
+        self.assertIsNotNone(overview.resources.graphql)
 
-        overview["resources"]["core"]["remaining"] = 0
-        self.assertEqual(requester.rate_limit_overview.resources.core.remaining, 4990)
+        response = (200, {}, json.dumps(self.RATE_LIMIT_BODY))
+        with mock.patch.object(requester, "_Requester__requestRaw", return_value=response):
+            overview.update()
+
+        self.assertIsNone(overview.rate)
+        self.assertRate(overview.resources.core, 5000, 4990, 10, 1700000000)
+        # the response is the only source of the updated overview
+        self.assertIsNone(overview.resources.graphql)
 
     def testShouldCreateBadCredentialsException(self):
         exc = self.g._Github__requester.createException(401, {"header": "value"}, {"message": "Bad credentials"})

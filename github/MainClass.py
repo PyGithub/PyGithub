@@ -126,7 +126,6 @@ import github.HookDescription
 import github.Issue
 import github.License
 import github.NamedUser
-import github.RateLimitOverview
 import github.RepositoryDiscussion
 import github.Topic
 from github import Consts
@@ -380,9 +379,7 @@ class Github:
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
         """
-        headers, data = self.__requester.requestJsonAndCheck("GET", "/rate_limit")
-        self.__requester.update_rate_limit_overview(data)
-        return github.RateLimitOverview.RateLimitOverview(self.__requester, headers, data)
+        return self.__requester.get_rate_limit()
 
     @property
     def oauth_scopes(self) -> list[str] | None:
