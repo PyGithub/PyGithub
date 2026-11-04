@@ -716,6 +716,18 @@ class Requester(Framework.TestCase):
         self.assertIsNot(user.requester, requester)
         self.assertRate(user.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
 
+    def testCurrentRateLimitOfGithub(self):
+        g = github.Github(auth=github.Auth.Token("token"))
+        self.assertIsNone(g.current_rate_limit.resources.core)
+        self._requestWithHeaders(g.requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self.assertRate(g.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+
+    def testCurrentRateLimitOfGithubIntegration(self):
+        gi = github.GithubIntegration(auth=github.Auth.AppAuth(APP_ID, PRIVATE_KEY))
+        self.assertIsNone(gi.current_rate_limit.resources.core)
+        self._requestWithHeaders(gi.requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self.assertRate(gi.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+
     def testCurrentRateLimitSharingByArgument(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))

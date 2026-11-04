@@ -52,6 +52,7 @@ from github.GithubException import GithubException
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
 from github.PaginatedList import PaginatedList
+from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 
@@ -224,6 +225,16 @@ class GithubIntegration:
         # The installation has to authenticate as an installation, not an app
         auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
+
+    @property
+    def current_rate_limit(self) -> RateLimitOverview:
+        """
+        Latest rate limits known to the requester of this instance, per resource. This does not send any request.
+
+        See :attr:`github.Requester.Requester.current_rate_limit`.
+
+        """
+        return self.__requester.current_rate_limit
 
     @property
     def requester(self) -> Requester:

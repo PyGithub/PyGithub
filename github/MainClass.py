@@ -374,6 +374,16 @@ class Github:
             self.get_rate_limit()
         return self.__requester.rate_limiting_resettime
 
+    @property
+    def current_rate_limit(self) -> RateLimitOverview:
+        """
+        Latest rate limits known to the requester of this instance, per resource. This does not send any request.
+
+        See :attr:`github.Requester.Requester.current_rate_limit`.
+
+        """
+        return self.__requester.current_rate_limit
+
     def get_rate_limit(self) -> RateLimitOverview:
         """
         Rate limit overview that provides general status and status for different resources (core/search/graphql).
