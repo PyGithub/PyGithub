@@ -52,12 +52,12 @@ class RateLimiting(Framework.TestCase):
         self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
 
     def testGetRateLimit(self):
-        self.assertIsNone(self.g.requester.rate_limit_overview.resources.search)
+        self.assertIsNone(self.g.requester.current_rate_limit.resources.search)
 
         rateLimitOverview = self.g.get_rate_limit()
 
         # the requester provides all rate limits from the response body, not just those from the response headers
-        overview = self.g.requester.rate_limit_overview
+        overview = self.g.requester.current_rate_limit
         self.assertEqual(repr(overview.rate), repr(rateLimitOverview.resources.core))
         self.assertEqual(repr(overview.resources.core), repr(rateLimitOverview.resources.core))
         self.assertEqual(repr(overview.resources.search), repr(rateLimitOverview.resources.search))

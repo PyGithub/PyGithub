@@ -534,7 +534,7 @@ class Requester:
             self.__custom_connections.popleft().close()
 
     @property
-    def rate_limit_overview(self) -> RateLimitOverview:
+    def current_rate_limit(self) -> RateLimitOverview:
         """
         Latest rate limits known to this requester, per resource.
 
@@ -552,9 +552,9 @@ class Requester:
 
     def get_rate_limit(self) -> RateLimitOverview:
         """
-        Fetch all current rate limits, which also updates the values provided by :attr:`rate_limit_overview`.
+        Fetch all current rate limits, which also updates the values provided by :attr:`current_rate_limit`.
 
-        Resources that are not contained in the response keep their values in :attr:`rate_limit_overview`.
+        Resources that are not contained in the response keep their values in :attr:`current_rate_limit`.
 
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 

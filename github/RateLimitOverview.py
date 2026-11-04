@@ -74,7 +74,7 @@ class RateLimitOverview(NonCompletableGithubObject):
         """
         Fetch the current rate limits. This object does not change, the current rate limits are returned as a new object.
 
-        This also updates the values provided by :attr:`github.Requester.Requester.rate_limit_overview`.
+        This also updates the values provided by :attr:`github.Requester.Requester.current_rate_limit`.
 
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
         :return: current rate limits

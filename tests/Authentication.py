@@ -128,7 +128,7 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
 
         # rate limit overview reflects the recorded response headers
-        core = g.requester.rate_limit_overview.resources.core
+        core = g.requester.current_rate_limit.resources.core
         self.assertEqual(core.limit, 60)
         self.assertEqual(core.remaining, 57)
         self.assertEqual(core.used, 3)
