@@ -695,15 +695,15 @@ class Requester(Framework.TestCase):
         repo = self.g.withLazy(True).get_repo("lazy/repo")
         self.assertRate(repo.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testShareCurrentRateLimit(self):
+    def testUseCurrentRateLimit(self):
         requester = self.g.requester
         other = requester.withAuth(github.Auth.Token("other token"))
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self._requestWithHeaders(other, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
 
-        requester.shareCurrentRateLimit(other)
+        other.useCurrentRateLimit(requester)
 
-        # the given requester drops its own values
+        # the requester drops its own values
         self.assertRate(other.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
         self.assertIsNone(other.current_rate_limit.resources.search)
 

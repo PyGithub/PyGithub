@@ -539,7 +539,7 @@ class Requester:
         Latest rate limits known to this requester, per resource.
 
         Values come from the response headers of requests made through this requester and any requester sharing them
-        (see :meth:`shareCurrentRateLimit`), e.g. derived via :meth:`withLazy` and :meth:`withApiVersion`, and from
+        (see :meth:`useCurrentRateLimit`), e.g. derived via :meth:`withLazy` and :meth:`withApiVersion`, and from
         calls to :meth:`get_rate_limit`, which provide values for all resources. This does not send any request, use
         :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch current values.
 
@@ -669,19 +669,19 @@ class Requester:
 
     def __withSameAuth(self, **kwargs: Any) -> Requester:
         requester = Requester(**{**self.kwargs, **kwargs})
-        self.shareCurrentRateLimit(requester)
+        requester.useCurrentRateLimit(self)
         return requester
 
-    def shareCurrentRateLimit(self, requester: Requester) -> None:
+    def useCurrentRateLimit(self, requester: Requester) -> None:
         """
-        Make the given requester share :attr:`current_rate_limit` with this requester, dropping its own known values.
+        Make this requester share :attr:`current_rate_limit` with the given requester, dropping its own known values.
 
         Rate limits are bound to the authentication, so only use this with a requester of the same authentication.
 
         :param requester: requester to share rate limits with
 
         """
-        requester.__rate_limit_resources = self.__rate_limit_resources
+        self.__rate_limit_resources = requester.__rate_limit_resources
 
     def requestJsonAndCheck(
         self,

@@ -197,7 +197,7 @@ class GithubIntegration:
         kwargs = self.__requester.kwargs
         kwargs.update(lazy=lazy)
         integration = GithubIntegration(**kwargs)
-        self.__requester.shareCurrentRateLimit(integration.requester)
+        integration.requester.useCurrentRateLimit(self.__requester)
         return integration
 
     def close(self) -> None:

@@ -304,7 +304,7 @@ class Github:
         kwargs = self.__requester.kwargs
         kwargs.update(lazy=lazy)
         gh = Github(**kwargs)
-        self.__requester.shareCurrentRateLimit(gh.requester)
+        gh.requester.useCurrentRateLimit(self.__requester)
         return gh
 
     def close(self) -> None:
