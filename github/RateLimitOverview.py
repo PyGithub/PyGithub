@@ -70,19 +70,17 @@ class RateLimitOverview(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def update(self) -> None:
+    def update(self) -> RateLimitOverview:
         """
-        Update this object in place with the current rate limits.
+        Fetch the current rate limits. This object does not change, the current rate limits are returned as a new object.
 
         This also updates the values provided by :attr:`github.Requester.Requester.rate_limit_overview`.
 
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :return: current rate limits
 
         """
-        current = self._requester.get_rate_limit()
-        # attributes not provided by the response must not retain their earlier values
-        self._initAttributes()
-        self._storeAndUseAttributes(current.raw_headers, current.raw_data)
+        return self._requester.get_rate_limit()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "rate" in attributes:  # pragma no branch

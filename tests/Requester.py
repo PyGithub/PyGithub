@@ -684,40 +684,37 @@ class Requester(Framework.TestCase):
     def testRateLimitOverviewUpdate(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
+        self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
         overview = requester.rate_limit_overview
-        self.assertIsNone(overview.resources.search)
 
         headers = self._rateLimitHeaders("core", "5000", "4990", "10", "1700000000")
         response = (200, headers, json.dumps(self.RATE_LIMIT_BODY))
         with mock.patch.object(requester, "_Requester__requestRaw", return_value=response) as raw:
-            self.assertIsNone(overview.update())
+            updated = overview.update()
 
         raw.assert_called_once()
         self.assertEqual(raw.call_args.args[1:3], ("GET", "/rate_limit"))
-        self.assertRate(overview.resources.core, 5000, 4990, 10, 1700000000)
-        self.assertRate(overview.resources.search, 30, 28, 2, 1700000060)
-        self.assertEqual(overview.raw_data["resources"], self.RATE_LIMIT_BODY["resources"])
-        self.assertEqual(overview.raw_headers, headers)
-        # the requester's values get updated as well
-        self.assertRate(requester.rate_limit_overview.resources.search, 30, 28, 2, 1700000060)
 
-    def testRateLimitOverviewUpdateDropsAttributesMissingInResponse(self):
-        # the rate attribute is not provided by the /rate_limit response for later API versions
-        requester = self.g.requester
-        self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
-        self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
-        overview = requester.rate_limit_overview
-        self.assertIsNotNone(overview.rate)
-        self.assertIsNotNone(overview.resources.graphql)
+        # the returned object provides what the response provides, which does not contain rate in later API versions
+        self.assertIsNot(updated, overview)
+        self.assertIsNone(updated.rate)
+        self.assertRate(updated.resources.core, 5000, 4990, 10, 1700000000)
+        self.assertRate(updated.resources.search, 30, 28, 2, 1700000060)
+        self.assertIsNone(updated.resources.graphql)
+        self.assertEqual(updated.raw_data["resources"], self.RATE_LIMIT_BODY["resources"])
+        self.assertEqual(updated.raw_headers, headers)
 
-        response = (200, {}, json.dumps(self.RATE_LIMIT_BODY))
-        with mock.patch.object(requester, "_Requester__requestRaw", return_value=response):
-            overview.update()
+        # the object itself does not change
+        self.assertRate(overview.rate, 5000, 4999, 1, 1700000000)
+        self.assertRate(overview.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(overview.resources.graphql, 5000, 4900, 100, 1700000000)
+        self.assertIsNone(overview.resources.search)
 
-        self.assertIsNone(overview.rate)
-        self.assertRate(overview.resources.core, 5000, 4990, 10, 1700000000)
-        # the response is the only source of the updated overview
-        self.assertIsNone(overview.resources.graphql)
+        # the requester's values get updated, resources not contained in the response keep their values
+        current = requester.rate_limit_overview
+        self.assertRate(current.resources.core, 5000, 4990, 10, 1700000000)
+        self.assertRate(current.resources.search, 30, 28, 2, 1700000060)
+        self.assertRate(current.resources.graphql, 5000, 4900, 100, 1700000000)
 
     def testShouldCreateBadCredentialsException(self):
         exc = self.g._Github__requester.createException(401, {"header": "value"}, {"message": "Bad credentials"})

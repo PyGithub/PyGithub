@@ -24,6 +24,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import github.RateLimitOverview
+
 from . import Framework
 
 
@@ -33,20 +35,23 @@ class RateLimitOverview(Framework.TestCase):
         self.rate_limit_overview = self.g.get_rate_limit()
 
     def testUpdate(self):
+        updated = self.rate_limit_overview.update()
+
+        self.assertIsInstance(updated, github.RateLimitOverview.RateLimitOverview)
+        self.assertIsNot(updated, self.rate_limit_overview)
+        self.assertEqual(updated.rate.remaining, 4987)
+        self.assertEqual(updated.rate.used, 13)
+        self.assertEqual(updated.resources.core.remaining, 4987)
+        self.assertEqual(updated.resources.core.used, 13)
+        self.assertEqual(updated.resources.search.remaining, 29)
+        self.assertEqual(updated.resources.search.used, 1)
+
+        # the object itself does not change
         self.assertEqual(self.rate_limit_overview.rate.remaining, 4988)
         self.assertEqual(self.rate_limit_overview.resources.core.remaining, 4988)
         self.assertEqual(self.rate_limit_overview.resources.search.remaining, 30)
 
-        self.assertIsNone(self.rate_limit_overview.update())
-
-        self.assertEqual(self.rate_limit_overview.rate.remaining, 4987)
-        self.assertEqual(self.rate_limit_overview.rate.used, 13)
-        self.assertEqual(self.rate_limit_overview.resources.core.remaining, 4987)
-        self.assertEqual(self.rate_limit_overview.resources.core.used, 13)
-        self.assertEqual(self.rate_limit_overview.resources.search.remaining, 29)
-        self.assertEqual(self.rate_limit_overview.resources.search.used, 1)
-
-        # the requester's values get updated as well
+        # the requester's values get updated
         self.assertEqual(self.g.requester.rate_limit_overview.resources.core.remaining, 4987)
         self.assertEqual(self.g.requester.rate_limit_overview.resources.search.remaining, 29)
 
