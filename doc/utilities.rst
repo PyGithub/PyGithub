@@ -54,16 +54,31 @@ There are three ways to retrieve an overview:
     An overview never changes, so make sure you use the returned object.
     Use this to get values for all resources when you only hold on to an object returned by PyGithub.
 
-For example, pause before running out of ``core`` requests::
+For example, pause before running out of requests, after a fetched page has been fully consumed. Searching code counts
+against the ``code_search`` resource, not ``core`` like most other requests. The page tells which resource its
+pagination requests count against, and ``current_rate_limits`` provides the latest rate limit of that resource.
+There is no need to wait after the last page, and a response might not report any rate limit::
 
     import time
 
-    for issue in repo.get_issues():
-        ...
+    results = gh.search_code("query")
+    for page in results.pages():
+        # process the current page
+        for result in page:
+            print(result.path)
 
-        core = issue.current_rate_limits.resources.core
-        if core.remaining < 10:
-            time.sleep(core.resets_in_seconds)
+        # before fetching the next page, inspect the rate limit for page requests
+        if results.has_unfetched_pages and page.rate_limit is not None:
+            # the rate limit known when the page was fetched
+            rate = page.rate_limit
+
+            # alternatively, the most recent rate limit of the same resource type
+            rate = gh.current_rate_limits.get_rate_limit(page.rate_limit.resource)
+
+            # if we run low on remaining requests
+            if rate.remaining < 10:
+                # defer fetching next page until after reset
+                time.sleep(rate.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
 
@@ -76,6 +91,10 @@ Any object also provides the rate limit reported by the response that it came wi
 :attr:`github.GithubObject.GithubObject.rate_limit`, which is ``None`` if that response did not report any. This value
 does not change with later requests, and it is ``None`` for lazy objects that have not been fetched yet.
 This does not send any request.
+
+Likewise, each page returned by :meth:`github.PaginatedList.PaginatedList.pages` and
+``PaginatedList.get_page()`` provides the rate limit reported by the response of that page via
+:attr:`github.PaginatedList.Page.rate_limit`.
 
 Rate limits are counted per authentication and server, so objects retrieved with a different authentication,
 for example through an installation of a GitHub App, provide their own rate limits.
