@@ -54,16 +54,17 @@ There are three ways to retrieve an overview:
     An overview never changes, so make sure you use the returned object.
     Use this to get values for all resources when you only hold on to an object returned by PyGithub.
 
-For example, pause before running out of ``core`` requests::
+For example, pause before running out of requests, after a fetched page has been fully consumed::
 
     import time
 
-    for issue in repo.get_issues():
-        ...
+    for page in repo.get_issues().pages():
+        for issue in page:
+            ...
 
-        core = issue.current_rate_limits.resources.core
-        if core.remaining < 10:
-            time.sleep(core.resets_in_seconds)
+        rate_limit = page.rate_limit
+        if rate_limit.remaining < 10:
+            time.sleep(rate_limit.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
 
