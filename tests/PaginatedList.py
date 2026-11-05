@@ -46,8 +46,12 @@
 #                                                                              #
 ################################################################################
 
+import pickle
 from datetime import datetime, timezone
+from unittest import mock
 
+import github.GithubObject
+import github.Rate
 from github.PaginatedList import Page
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
@@ -326,6 +330,114 @@ class PaginatedList(Framework.TestCase):
             [file.filename for file in pages[0]],
             ["tests/GithubObject.py", "github/GithubObject.py", "github/GithubApp.py"],
         )
+
+    RATE_LIMIT_HEADERS = {
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4999",
+        "x-ratelimit-used": "1",
+        "x-ratelimit-reset": "1700000000",
+        "x-ratelimit-resource": "core",
+    }
+
+    def assertPageRateLimit(self, page, resource="core"):
+        rate = page.rate_limit
+        self.assertIsInstance(rate, github.Rate.Rate)
+        self.assertEqual(rate.resource, resource)
+        self.assertEqual(rate.limit, 5000)
+        self.assertEqual(rate.remaining, 4999)
+        self.assertEqual(rate.used, 1)
+        self.assertEqual(rate.reset, datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc))
+
+    def testPagesProvideRateLimitOfTheirResponse(self):
+        with self.replayData("PaginatedList.testIteration.txt"):
+            pages = list(self.list.pages())
+        self.assertListEqual([page.rate_limit.remaining for page in pages[:4]], [4927, 4942, 4941, 4940])
+        self.assertTrue(all(page.rate_limit.limit == 5000 for page in pages))
+
+    def testGetPageProvidesRateLimit(self):
+        with self.replayData("PaginatedList.testGetFirstPage.txt"):
+            page = self.list.get_page(0)
+        self.assertEqual(page.rate_limit.remaining, 4927)
+        self.assertEqual(page.rate_limit.limit, 5000)
+
+    def testPageRateLimitDoesNotSendRequest(self):
+        with self.replayData("PaginatedList.testGetFirstPage.txt"):
+            page = self.list.get_page(0)
+        with self.captureRequests() as requests:
+            page.rate_limit
+        self.assertEqual(len(requests), 0)
+
+    def testPageRateLimitWithFirstPage(self):
+        paginated_list = PaginatedListImpl(
+            github.Rate.Rate, mock.Mock(), firstData=[{"limit": 1}], firstHeaders=self.RATE_LIMIT_HEADERS
+        )
+        self.assertPageRateLimit(next(paginated_list.pages()))
+
+    def testPageRateLimitOfReversedFetchedPages(self):
+        paginated_list = PaginatedListImpl(
+            github.Rate.Rate, mock.Mock(), firstData=[{"limit": 1}, {"limit": 2}], firstHeaders=self.RATE_LIMIT_HEADERS
+        )
+        paginated_list._reverse()
+        page = next(paginated_list.pages())
+        self.assertListEqual([rate.limit for rate in page], [2, 1])
+        self.assertPageRateLimit(page)
+
+    def testPageRateLimitOfReversedList(self):
+        with self.replayData("PaginatedList.testCustomPerPageReversedIteration.txt"):
+            self.g.per_page = 3
+            repo = self.g.get_repo("PyGithub/PyGithub")
+            comments = repo.get_issue(1136).get_comments().reversed
+            pages = list(comments.pages())
+        self.assertListEqual([page.rate_limit.remaining for page in pages], [4990, 4989, 4988])
+
+    def testPageRateLimitOfCopy(self):
+        self.assertPageRateLimit(Page([], mock.Mock(), self.RATE_LIMIT_HEADERS).copy())
+
+    def testPageRateLimitWithFloatHeaderValues(self):
+        headers = {**self.RATE_LIMIT_HEADERS, "x-ratelimit-limit": "5000.0", "x-ratelimit-reset": "1700000000.0"}
+        self.assertPageRateLimit(Page([], mock.Mock(), headers))
+
+    def testPageRateLimitWithoutHeaders(self):
+        self.assertIsNone(Page([], mock.Mock(), None).rate_limit)
+        self.assertIsNone(Page([], mock.Mock(), {}).rate_limit)
+        self.assertIsNone(Page([], mock.Mock(), {"x-ratelimit-resource": "core"}).rate_limit)
+
+    def testPageRateLimitAfterPickle(self):
+        page = pickle.loads(pickle.dumps(Page([], self.g.requester, self.RATE_LIMIT_HEADERS)))
+        # the test framework cannot relate these headers to any recorded response
+        with mock.patch.object(github.GithubObject.GithubObject, "CHECK_AFTER_INIT_FLAG", False):
+            self.assertPageRateLimit(page)
+
+    def testPageRateLimitWithGraphQl(self):
+        requester = mock.Mock(per_page=30)
+        headers = {**self.RATE_LIMIT_HEADERS, "x-ratelimit-resource": "graphql"}
+        requester.graphql_query.return_value = (
+            headers,
+            {
+                "data": {
+                    "repository": {
+                        "discussions": {
+                            "totalCount": 1,
+                            "pageInfo": {
+                                "startCursor": "start",
+                                "endCursor": "end",
+                                "hasNextPage": False,
+                                "hasPreviousPage": False,
+                            },
+                            "nodes": [{"limit": 1}],
+                        }
+                    }
+                }
+            },
+        )
+        paginated_list = PaginatedListImpl(
+            github.Rate.Rate,
+            requester,
+            graphql_query="query",
+            graphql_variables={},
+            list_item=["repository", "discussions"],
+        )
+        self.assertPageRateLimit(next(paginated_list.pages()), resource="graphql")
 
     def testPagesOfEmptyList(self):
         with self.replayData("PaginatedList.testNoFirstPage.txt"):
