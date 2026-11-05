@@ -78,6 +78,12 @@ class Page(list[T]):
 
     """
 
+    def copy(self) -> Page[T]:
+        """
+        Creates a shallow copy of this page.
+        """
+        return Page(self)
+
 
 class PaginatedListBase(Generic[T]):
     __elements: list[T]
@@ -127,7 +133,8 @@ class PaginatedListBase(Generic[T]):
             if index == len(self.__pages):
                 self._grow()
             else:
-                yield self.__pages[index]
+                # pages are mutable, a copy makes sure modifying a yielded page does not affect later calls to pages()
+                yield self.__pages[index].copy()
                 index += 1
 
     def _isBiggerThan(self, index: int) -> bool:
