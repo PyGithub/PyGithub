@@ -64,6 +64,10 @@ All PyGithub objects (:class:`github.GithubObject.GithubObject`) provide the rat
 does not change with later requests, and it is ``None`` for lazy objects that have not been fetched yet.
 This does not send any request.
 
+Likewise, each page returned by :meth:`github.PaginatedList.PaginatedList.pages` and
+``PaginatedList.get_page()`` provides the rate limit reported by the response of that page via
+:attr:`github.PaginatedList.Page.rate_limit`.
+
 Rate limits are counted per authentication and server, so objects retrieved with a different authentication,
 for example through an installation of a GitHub App, provide their own rate limits.
 
