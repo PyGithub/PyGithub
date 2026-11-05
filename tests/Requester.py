@@ -361,6 +361,21 @@ class Requester(Framework.TestCase):
             "to /repositories/638123443/issues?state=closed"
         )
 
+    def testSelfRedirectionWithQueryParameters(self):
+        # replay data forged
+        repo = self.g.withLazy(True).get_repo("EnricoMi/test")
+        with self.assertRaises(RuntimeError) as exc:
+            list(repo.get_issues(state="closed"))
+        self.assertEqual(
+            exc.exception.args,
+            (
+                "Requested https://api.github.com/repos/EnricoMi/test/issues?state=closed but server "
+                "redirected to https://api.github.com/repos/EnricoMi/test/issues?state=closed, "
+                "you may need to correct your Github server URL "
+                "via base_url: Github(base_url=...)",
+            ),
+        )
+
     def testHostnameHasDomain(self):
         assert self.g.requester.__hostnameHasDomain("github.com", "github.com")
         assert self.g.requester.__hostnameHasDomain("api.github.com", "github.com")
