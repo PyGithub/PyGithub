@@ -37,17 +37,20 @@ like ``core``, ``search``, or ``graphql``. PyGithub provides these limits as a
 Classes :class:`github.MainClass.Github`, :class:`github.GithubIntegration.GithubIntegration`, and all :class:`github.GithubObject.GithubObject` instances provide :attr:`github.GithubObject.GithubObject.current_rate_limits`:
     This returns the latest rate limits known and sends no request. These are collected from each API response. Resources for which rate limits are not known yet are ``None``.  Call ``update()`` to fetch the latest rate limits.
 
-For example, pause before running out of requests, after a fetched page has been fully consumed::
+For example, pause before running out of requests, after a fetched page has been fully consumed. Searching code counts
+against the ``code_search`` resource, not ``core`` like most other requests. The page tells which resource its
+pagination requests count against, and ``current_rate_limits`` provides the latest rate limit of that resource::
 
     import time
 
-    for page in repo.get_issues().pages():
-        for issue in page:
-            ...
+    results = gh.search_code("query")
+    for page in results.pages():
+        for result in page:
+            print(result.path)
 
-        rate_limit = page.rate_limit
-        if rate_limit.remaining < 10:
-            time.sleep(rate_limit.resets_in_seconds)
+        rate = gh.current_rate_limits.get_rate(page.rate_limit.resource)
+        if rate.remaining < 10:
+            time.sleep(rate.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
 
