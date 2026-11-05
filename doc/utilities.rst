@@ -72,6 +72,11 @@ Get values for a resource that has not been used yet::
         rate_limit = rate_limit.update()
     print(rate_limit.resources.search.remaining)
 
+Any object also provides the rate limit reported by the response that it came with as a :class:`github.Rate.Rate` via
+:attr:`github.GithubObject.GithubObject.rate_limit`, which is ``None`` if that response did not report any. This value
+does not change with later requests, and it is ``None`` for lazy objects that have not been fetched yet.
+This does not send any request.
+
 Rate limits are counted per authentication and server, so objects retrieved with a different authentication,
 for example through an installation of a GitHub App, provide their own rate limits.
 

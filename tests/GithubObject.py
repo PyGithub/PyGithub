@@ -59,6 +59,80 @@ class GithubObject(unittest.TestCase):
                 self.assertIs(obj.current_rate_limit, requester.current_rate_limit)
         requester.requestJsonAndCheck.assert_not_called()
 
+    RATE_LIMIT_HEADERS = {
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4999",
+        "x-ratelimit-used": "1",
+        "x-ratelimit-reset": "1700000000",
+        "x-ratelimit-resource": "core",
+    }
+
+    def assertRateLimit(self, rate):
+        self.assertIsInstance(rate, github.Rate.Rate)
+        self.assertEqual(rate.resource, "core")
+        self.assertEqual(rate.limit, 5000)
+        self.assertEqual(rate.remaining, 4999)
+        self.assertEqual(rate.used, 1)
+        self.assertEqual(rate.reset, datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc))
+
+    def testRateLimit(self):
+        self.assertRateLimit(github.Rate.Rate(mock.Mock(), self.RATE_LIMIT_HEADERS, {}).rate_limit)
+
+    def testRateLimitWithFloatHeaderValues(self):
+        headers = {**self.RATE_LIMIT_HEADERS, "x-ratelimit-limit": "5000.0", "x-ratelimit-reset": "1700000000.0"}
+        self.assertRateLimit(github.Rate.Rate(mock.Mock(), headers, {}).rate_limit)
+
+    def testRateLimitWithPartialHeaders(self):
+        rate = github.Rate.Rate(mock.Mock(), {"x-ratelimit-remaining": "4999"}, {}).rate_limit
+        self.assertEqual(rate.remaining, 4999)
+        self.assertIsNone(rate.limit)
+        self.assertIsNone(rate.resource)
+
+    def testRateLimitWithoutHeaders(self):
+        self.assertIsNone(github.Rate.Rate(mock.Mock(), {}, {}).rate_limit)
+        self.assertIsNone(github.Rate.Rate(mock.Mock(), {"x-ratelimit-resource": "core"}, {}).rate_limit)
+
+    def testRateLimitOfIncompleteObjectWithResponse(self):
+        # incomplete object that came with a response must not send a request
+        requester = mock.Mock(is_not_lazy=False)
+        user = github.NamedUser.NamedUser(requester, self.RATE_LIMIT_HEADERS, {"url": "/users/login"}, completed=False)
+        self.assertRateLimit(user.rate_limit)
+        self.assertFalse(user.completed)
+        requester.requestJsonAndCheck.assert_not_called()
+
+    def testRateLimitOfIncompleteObjectWithoutResponse(self):
+        # a lazy object has no response yet, it must not be completed
+        requester = mock.Mock(is_not_lazy=False)
+        requester.requestJsonAndCheck.return_value = (self.RATE_LIMIT_HEADERS, {"login": "login"})
+        user = github.NamedUser.NamedUser(requester, url="/users/login")
+
+        self.assertIsNone(user.rate_limit)
+        self.assertFalse(user.completed)
+        requester.requestJsonAndCheck.assert_not_called()
+
+        # once completed, the object reports the rate limit of the response that completed it
+        user.complete()
+        self.assertRateLimit(user.rate_limit)
+        requester.requestJsonAndCheck.assert_called_once()
+
+    def testRateLimitOfCompleteObjectWithoutRateLimitDoesNotSendRequest(self):
+        requester = mock.Mock(is_not_lazy=False)
+        user = github.NamedUser.NamedUser(requester, {}, {"url": "/users/login"}, completed=True)
+        self.assertIsNone(user.rate_limit)
+        requester.requestJsonAndCheck.assert_not_called()
+
+    def testRateLimitAfterCompletion(self):
+        # once completed, the object reports the rate limit of the response that completed it
+        requester = mock.Mock(is_not_lazy=False)
+        requester.requestJsonAndCheck.return_value = (
+            {**self.RATE_LIMIT_HEADERS, "x-ratelimit-remaining": "4998"},
+            {"login": "login"},
+        )
+        user = github.NamedUser.NamedUser(requester, self.RATE_LIMIT_HEADERS, {"url": "/users/login"}, completed=False)
+        self.assertEqual(user.rate_limit.remaining, 4999)
+        user.complete()
+        self.assertEqual(user.rate_limit.remaining, 4998)
+
     def testAttributesAsRest(self):
         _ = gho.as_rest_api_attributes
         self.assertIsNone(_(None))

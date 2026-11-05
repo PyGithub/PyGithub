@@ -128,6 +128,10 @@ class Authentication(Framework.BasicTestCase):
         user = g.get_user("ammarmallik")
         self.assertEqual(user.name, "Ammar Akbar")
 
+        # any GithubObject provides the rate limit of its response
+        self.assertEqual(user.rate_limit.resource, "core")
+        self.assertEqual(user.rate_limit.remaining, 57)
+
         # any GithubObject provides the current rate limit
         self.assertEqual(user.current_rate_limit.resources.core.remaining, 57)
 

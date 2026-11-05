@@ -111,7 +111,7 @@ import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
 import github.RateLimitOverview
-from github.GithubObject import Opt, as_rest_api_attributes, is_undefined
+from github.GithubObject import Opt, as_rest_api_attributes, is_undefined, rate_limit_from_headers
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -1297,17 +1297,9 @@ class Requester:
             # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
             self.rate_limiting_resettime = int(float(responseHeaders[Consts.headerRateReset]))
         if Consts.headerRateResource in responseHeaders:
-            self.__rate_limit_resources[responseHeaders[Consts.headerRateResource]] = {
-                # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
-                attribute: int(float(responseHeaders[header]))
-                for attribute, header in (
-                    ("limit", Consts.headerRateLimit),
-                    ("remaining", Consts.headerRateRemaining),
-                    ("reset", Consts.headerRateReset),
-                    ("used", Consts.headerRateUsed),
-                )
-                if header in responseHeaders
-            }
+            self.__rate_limit_resources[responseHeaders[Consts.headerRateResource]] = rate_limit_from_headers(
+                responseHeaders
+            )
 
         if Consts.headerOAuthScopes in responseHeaders:
             self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
