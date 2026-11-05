@@ -69,6 +69,7 @@ class RateLimit(NonCompletableGithubObject):
         self._code_scanning_autofix: Attribute[Rate] = NotSet
         self._code_scanning_upload: Attribute[Rate] = NotSet
         self._code_search: Attribute[Rate] = NotSet
+        self._copilot_usage_records: Attribute[Rate] = NotSet
         self._core: Attribute[Rate] = NotSet
         self._dependency_sbom: Attribute[Rate] = NotSet
         self._dependency_snapshots: Attribute[Rate] = NotSet
@@ -105,6 +106,10 @@ class RateLimit(NonCompletableGithubObject):
         Rate limit for the REST API for searching code.
         """
         return self._code_search.value
+
+    @property
+    def copilot_usage_records(self) -> Rate:
+        return self._copilot_usage_records.value
 
     @property
     def core(self) -> Rate:
@@ -184,6 +189,8 @@ class RateLimit(NonCompletableGithubObject):
             self._code_scanning_upload = self._makeRateAttribute(attributes, "code_scanning_upload")
         if "code_search" in attributes:  # pragma no branch
             self._code_search = self._makeRateAttribute(attributes, "code_search")
+        if "copilot_usage_records" in attributes:  # pragma no branch
+            self._copilot_usage_records = self._makeRateAttribute(attributes, "copilot_usage_records")
         if "core" in attributes:  # pragma no branch
             self._core = self._makeRateAttribute(attributes, "core")
         if "dependency_sbom" in attributes:  # pragma no branch
