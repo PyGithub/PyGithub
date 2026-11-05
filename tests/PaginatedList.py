@@ -221,8 +221,7 @@ class PaginatedList(Framework.TestCase):
             self.assertListEqual([element for page in pages for element in page], list(self.list))
             again = self.assertPages(self.list, [25] * 13 + [8])
         self.assertEqual(len(requests), 0)
-        for page, other in zip(pages, again):
-            self.assertIs(page, other)
+        self.assertListEqual(pages, again)
 
     def testPagesAreFetchedLazily(self):
         with self.replayData("PaginatedList.testSliceIndexingUntilFourthPage.txt"):
@@ -262,11 +261,22 @@ class PaginatedList(Framework.TestCase):
         self.assertIs(third[0], self.list[50])
         self.assertIs(fourth[15], element)
 
+    def testPageCopy(self):
+        with self.replayData("PaginatedList.testGetFirstPage.txt"):
+            page = self.list.get_page(0)
+        copy = page.copy()
+        self.assertIsInstance(copy, Page)
+        self.assertIsNot(copy, page)
+        self.assertListEqual(copy, page)
+        self.assertIs(copy[0], page[0])
+
     def testModifyingPageDoesNotModifyList(self):
         with self.replayData("PaginatedList.testGetFirstPage.txt"):
             page = next(self.list.pages())
         page.clear()
         self.assertEqual(self.list[0].id, 4772349)
+        # later calls still provide the unmodified page
+        self.assertEqual(next(self.list.pages())[0].id, 4772349)
 
     def testPagesReversed(self):
         with self.replayData("PaginatedList.testCustomPerPageReversedIteration.txt"):
@@ -291,7 +301,7 @@ class PaginatedList(Framework.TestCase):
             self.assertEqual(len(requests), 0)
             self.assertEqual(len(first), 3)
             pages = self.assertPages(files, [3, 3, 1])
-        self.assertIs(pages[0], first)
+        self.assertListEqual(pages[0], first)
         self.assertListEqual([element for page in pages for element in page], list(files))
 
     def testPagesReversedWithFirstPage(self):
