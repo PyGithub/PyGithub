@@ -73,7 +73,7 @@ There is no need to wait after the last page, and a response might not report an
             rate = page.rate_limit
 
             # alternatively, the most recent rate limit of the same resource type
-            rate = gh.current_rate_limits.get_rate(page.rate_limit.resource)
+            rate = gh.current_rate_limits.get_rate_limit(page.rate_limit.resource)
 
             # if we run low on remaining requests
             if rate.remaining < 10:
