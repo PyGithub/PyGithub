@@ -94,8 +94,8 @@ class RateLimitOverview(Framework.TestCase):
         self.assertEqual(self.rate_limit_overview.resources.search.remaining, 30)
 
         # the requester's values get updated
-        self.assertEqual(self.g.requester.current_rate_limit.resources.core.remaining, 4987)
-        self.assertEqual(self.g.requester.current_rate_limit.resources.search.remaining, 29)
+        self.assertEqual(self.g.requester.current_rate_limits.resources.core.remaining, 4987)
+        self.assertEqual(self.g.requester.current_rate_limits.resources.search.remaining, 29)
 
     def testAttributes(self):
         self.assertIsNotNone(self.rate_limit_overview.rate)

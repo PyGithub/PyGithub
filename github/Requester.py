@@ -534,12 +534,12 @@ class Requester:
             self.__custom_connections.popleft().close()
 
     @property
-    def current_rate_limit(self) -> RateLimitOverview:
+    def current_rate_limits(self) -> RateLimitOverview:
         """
         Latest rate limits known to this requester, per resource.
 
         Values come from the response headers of requests made through this requester and any requester sharing them
-        (see :meth:`useCurrentRateLimit`), e.g. derived via :meth:`withLazy` and :meth:`withApiVersion`, and from
+        (see :meth:`useCurrentRateLimits`), e.g. derived via :meth:`withLazy` and :meth:`withApiVersion`, and from
         calls to :meth:`get_rate_limit`, which provide values for all resources. This does not send any request, use
         :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch current values.
 
@@ -555,9 +555,9 @@ class Requester:
 
     def get_rate_limit(self) -> RateLimitOverview:
         """
-        Fetch all current rate limits, which also updates the values provided by :attr:`current_rate_limit`.
+        Fetch all current rate limits, which also updates the values provided by :attr:`current_rate_limits`.
 
-        Resources that are not contained in the response keep their values in :attr:`current_rate_limit`.
+        Resources that are not contained in the response keep their values in :attr:`current_rate_limits`.
 
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
@@ -669,12 +669,12 @@ class Requester:
         requester = Requester(**{**self.kwargs, **kwargs})
         # rate limits are bound to the authentication and the server, none of the other arguments affect them
         if not kwargs.keys() & {"auth", "base_url"}:
-            requester.useCurrentRateLimit(self)
+            requester.useCurrentRateLimits(self)
         return requester
 
-    def useCurrentRateLimit(self, requester: Requester) -> None:
+    def useCurrentRateLimits(self, requester: Requester) -> None:
         """
-        Make this requester share :attr:`current_rate_limit` with the given requester, dropping its own known values.
+        Make this requester share :attr:`current_rate_limits` with the given requester, dropping its own known values.
 
         Rate limits are bound to the authentication and the server, so only use this with a requester of the same
         authentication and base url.

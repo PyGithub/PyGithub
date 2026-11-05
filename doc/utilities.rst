@@ -41,13 +41,13 @@ There are three ways to retrieve an overview:
     Sends a request and returns the rate limits of all resources. This request does not count against any rate limit.
     Use this when you need all rate limits, for instance before starting work.
 
-:attr:`github.GithubObject.GithubObject.current_rate_limit`
+:attr:`github.GithubObject.GithubObject.current_rate_limits`
     Sends no request and returns the latest rate limits known so far, on any object returned by PyGithub.
     These are updated from each API response, and only for the resource that the request counted against.
     They are also updated when calling ``get_rate_limit()`` or ``update()``.
     Resources for which nothing is known yet are ``None``. This is cheap enough to be used between any two requests,
     without the need to hold on to the :class:`github.MainClass.Github` instance, which also provides
-    :attr:`github.MainClass.Github.current_rate_limit`.
+    :attr:`github.MainClass.Github.current_rate_limits`.
 
 :meth:`github.RateLimitOverview.RateLimitOverview.update`
     Sends a request and returns a new overview with the rate limits of all resources, like ``get_rate_limit()``.
@@ -61,13 +61,13 @@ For example, pause before running out of ``core`` requests::
     for issue in repo.get_issues():
         ...
 
-        core = issue.current_rate_limit.resources.core
+        core = issue.current_rate_limits.resources.core
         if core.remaining < 10:
             time.sleep(core.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
 
-    rate_limit = repo.current_rate_limit
+    rate_limit = repo.current_rate_limits
     if rate_limit.resources.search is None:
         rate_limit = rate_limit.update()
     print(rate_limit.resources.search.remaining)

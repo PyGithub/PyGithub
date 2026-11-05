@@ -308,14 +308,14 @@ class GithubObject(ABC):
         return self._requester
 
     @property
-    def current_rate_limit(self) -> RateLimitOverview:
+    def current_rate_limits(self) -> RateLimitOverview:
         """
         Latest rate limits known to the requester of this object, per resource. This does not send any request.
 
-        See :attr:`github.Requester.Requester.current_rate_limit`.
+        See :attr:`github.Requester.Requester.current_rate_limits`.
 
         """
-        return self._requester.current_rate_limit
+        return self._requester.current_rate_limits
 
     @property
     def rate_limit(self) -> Rate | None:
@@ -323,7 +323,7 @@ class GithubObject(ABC):
         Rate limit reported by the response that provided this object, ``None`` if that response did not report any.
 
         This does not send any request, so it is also ``None`` for a lazy object that has not been completed yet.
-        It does not get updated by later requests, see :attr:`current_rate_limit` for the latest rate limits.
+        It does not get updated by later requests, see :attr:`current_rate_limits` for the latest rate limits.
 
         """
         # imported here as github.Rate depends on this module

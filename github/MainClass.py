@@ -305,7 +305,7 @@ class Github:
         kwargs = self.__requester.kwargs
         kwargs.update(lazy=lazy)
         gh = Github(**kwargs)
-        gh.requester.useCurrentRateLimit(self.__requester)
+        gh.requester.useCurrentRateLimits(self.__requester)
         return gh
 
     def close(self) -> None:
@@ -357,7 +357,7 @@ class Github:
     # v3: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
     # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
-    @deprecated("Use current_rate_limit or get_rate_limit() instead")
+    @deprecated("Use current_rate_limits or get_rate_limit() instead")
     def rate_limiting(self) -> tuple[int, int]:
         """
         First value is requests remaining, second value is request limit.
@@ -368,7 +368,7 @@ class Github:
         return self.__requester.rate_limiting
 
     @property
-    @deprecated("Use current_rate_limit or get_rate_limit() instead")
+    @deprecated("Use current_rate_limits or get_rate_limit() instead")
     def rate_limiting_resettime(self) -> int:
         """
         Unix timestamp indicating when rate limiting will reset.
@@ -378,14 +378,14 @@ class Github:
         return self.__requester.rate_limiting_resettime
 
     @property
-    def current_rate_limit(self) -> RateLimitOverview:
+    def current_rate_limits(self) -> RateLimitOverview:
         """
         Latest rate limits known to the requester of this instance, per resource. This does not send any request.
 
-        See :attr:`github.Requester.Requester.current_rate_limit`.
+        See :attr:`github.Requester.Requester.current_rate_limits`.
 
         """
-        return self.__requester.current_rate_limit
+        return self.__requester.current_rate_limits
 
     def get_rate_limit(self) -> RateLimitOverview:
         """

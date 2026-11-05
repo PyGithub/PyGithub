@@ -550,88 +550,88 @@ class Requester(Framework.TestCase):
         self.assertEqual(rate.used, used)
         self.assertEqual(rate.reset, datetime.fromtimestamp(reset, tz=timezone.utc))
 
-    def testCurrentRateLimitWithoutResponses(self):
-        overview = self.g.requester.current_rate_limit
+    def testCurrentRateLimitsWithoutResponses(self):
+        overview = self.g.requester.current_rate_limits
         self.assertIsInstance(overview, github.RateLimitOverview.RateLimitOverview)
         self.assertIsNone(overview.rate)
         self.assertIsNone(overview.resources.core)
         self.assertIsNone(overview.resources.search)
 
-    def testCurrentRateLimitKeepsResourcesApart(self):
+    def testCurrentRateLimitsKeepsResourcesApart(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
 
-        overview = requester.current_rate_limit
+        overview = requester.current_rate_limits
         self.assertRate(overview.rate, 5000, 4999, 1, 1700000000)
         self.assertRate(overview.resources.core, 5000, 4999, 1, 1700000000)
         self.assertRate(overview.resources.search, 30, 29, 1, 1700000060)
         self.assertIsNone(overview.resources.graphql)
 
-    def testCurrentRateLimitProvidesLatestValues(self):
+    def testCurrentRateLimitsProvidesLatestValues(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
-        earlier = requester.current_rate_limit
+        earlier = requester.current_rate_limits
 
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4998", "2", "1700000000"))
-        self.assertRate(requester.current_rate_limit.resources.core, 5000, 4998, 2, 1700000000)
+        self.assertRate(requester.current_rate_limits.resources.core, 5000, 4998, 2, 1700000000)
 
         # an overview earlier provided is a snapshot, it does not change with later responses
         self.assertRate(earlier.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testCurrentRateLimitWithoutCoreResource(self):
+    def testCurrentRateLimitsWithoutCoreResource(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
 
-        overview = requester.current_rate_limit
+        overview = requester.current_rate_limits
         self.assertIsNone(overview.rate)
         self.assertRate(overview.resources.graphql, 5000, 4900, 100, 1700000000)
 
-    def testCurrentRateLimitWithFloatHeaderValues(self):
+    def testCurrentRateLimitsWithFloatHeaderValues(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000.0", "4999.0", "1.0", "1700000000.0"))
-        self.assertRate(requester.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(requester.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testCurrentRateLimitWithoutUsedHeader(self):
+    def testCurrentRateLimitsWithoutUsedHeader(self):
         requester = self.g.requester
         headers = self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000")
         del headers["x-ratelimit-used"]
         self._requestWithHeaders(requester, headers)
 
-        core = requester.current_rate_limit.resources.core
+        core = requester.current_rate_limits.resources.core
         self.assertEqual(core.remaining, 4999)
         self.assertIsNone(core.used)
 
-    def testCurrentRateLimitIgnoresResponsesWithoutResource(self):
+    def testCurrentRateLimitsIgnoresResponsesWithoutResource(self):
         requester = self.g.requester
         headers = self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000")
         del headers["x-ratelimit-resource"]
         self._requestWithHeaders(requester, headers)
         self._requestWithHeaders(requester, {})
 
-        self.assertIsNone(requester.current_rate_limit.resources.core)
+        self.assertIsNone(requester.current_rate_limits.resources.core)
         self.assertEqual(requester.rate_limiting, (4999, 5000))
 
-    def testCurrentRateLimitWithUnknownResource(self):
+    def testCurrentRateLimitsWithUnknownResource(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("new_resource", "10", "9", "1", "1700000000"))
 
-        overview = requester.current_rate_limit
+        overview = requester.current_rate_limits
         self.assertIsNone(overview.resources.core)
         self.assertEqual(overview.raw_data["resources"]["new_resource"]["remaining"], 9)
 
-    def testCurrentRateLimitRawDataIsIndependent(self):
+    def testCurrentRateLimitsRawDataIsIndependent(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
 
-        requester.current_rate_limit.raw_data["resources"]["core"]["remaining"] = 0
-        self.assertEqual(requester.current_rate_limit.resources.core.remaining, 4999)
+        requester.current_rate_limits.raw_data["resources"]["core"]["remaining"] = 0
+        self.assertEqual(requester.current_rate_limits.resources.core.remaining, 4999)
 
-    def testCurrentRateLimitAfterPickle(self):
+    def testCurrentRateLimitsAfterPickle(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         restored = pickle.loads(pickle.dumps(requester))
-        self.assertRate(restored.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(restored.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
     def _getRateLimit(self, requester, body):
         headers = self._rateLimitHeaders("core", "5000", "4990", "10", "1700000000")
@@ -650,7 +650,7 @@ class Requester(Framework.TestCase):
         }
     }
 
-    def testCurrentRateLimitSharedWithDerivedRequesters(self):
+    def testCurrentRateLimitsSharedWithDerivedRequesters(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
 
@@ -663,72 +663,72 @@ class Requester(Framework.TestCase):
                 self.assertIsNot(derived, requester)
 
                 # known values are available to the derived requester
-                self.assertRate(derived.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+                self.assertRate(derived.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
                 # values seen by the derived requester are available to the original requester, and vice versa
                 self._requestWithHeaders(derived, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
-                self.assertRate(requester.current_rate_limit.resources.search, 30, 29, 1, 1700000060)
+                self.assertRate(requester.current_rate_limits.resources.search, 30, 29, 1, 1700000060)
                 self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "28", "2", "1700000060"))
-                self.assertRate(derived.current_rate_limit.resources.search, 30, 28, 2, 1700000060)
+                self.assertRate(derived.current_rate_limits.resources.search, 30, 28, 2, 1700000060)
 
-    def testCurrentRateLimitSharedWithGithubWithLazy(self):
+    def testCurrentRateLimitsSharedWithGithubWithLazy(self):
         for lazy in [True, False]:
             with self.subTest(lazy=lazy):
                 g = github.Github(auth=github.Auth.Token("token"))
-                self._assertCurrentRateLimitShared(g.requester, g.withLazy(lazy).requester)
+                self._assertCurrentRateLimitsShared(g.requester, g.withLazy(lazy).requester)
 
-    def testCurrentRateLimitSharedWithGithubIntegrationWithLazy(self):
+    def testCurrentRateLimitsSharedWithGithubIntegrationWithLazy(self):
         for lazy in [True, False]:
             with self.subTest(lazy=lazy):
                 gi = github.GithubIntegration(auth=github.Auth.AppAuth(APP_ID, PRIVATE_KEY))
-                self._assertCurrentRateLimitShared(gi.requester, gi.withLazy(lazy).requester)
+                self._assertCurrentRateLimitsShared(gi.requester, gi.withLazy(lazy).requester)
 
-    def _assertCurrentRateLimitShared(self, requester, derived):
+    def _assertCurrentRateLimitsShared(self, requester, derived):
         self.assertIsNot(derived, requester)
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
-        self.assertRate(derived.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(derived.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
         self._requestWithHeaders(derived, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
-        self.assertRate(requester.current_rate_limit.resources.search, 30, 29, 1, 1700000060)
+        self.assertRate(requester.current_rate_limits.resources.search, 30, 29, 1, 1700000060)
 
-    def testCurrentRateLimitOfObjectFromGithubWithLazy(self):
+    def testCurrentRateLimitsOfObjectFromGithubWithLazy(self):
         self._requestWithHeaders(self.g.requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         repo = self.g.withLazy(True).get_repo("lazy/repo")
-        self.assertRate(repo.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(repo.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testUseCurrentRateLimit(self):
+    def testUseCurrentRateLimits(self):
         requester = self.g.requester
         other = requester.withAuth(github.Auth.Token("other token"))
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self._requestWithHeaders(other, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
 
-        other.useCurrentRateLimit(requester)
+        other.useCurrentRateLimits(requester)
 
         # the requester drops its own values
-        self.assertRate(other.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
-        self.assertIsNone(other.current_rate_limit.resources.search)
+        self.assertRate(other.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertIsNone(other.current_rate_limits.resources.search)
 
-    def testCurrentRateLimitOfLazyObject(self):
+    def testCurrentRateLimitsOfLazyObject(self):
         requester = self.g.requester
         self.assertFalse(requester.is_lazy)
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
 
         user = self.g.get_user("login", lazy=True)
         self.assertIsNot(user.requester, requester)
-        self.assertRate(user.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(user.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testCurrentRateLimitOfGithub(self):
+    def testCurrentRateLimitsOfGithub(self):
         g = github.Github(auth=github.Auth.Token("token"))
-        self.assertIsNone(g.current_rate_limit.resources.core)
+        self.assertIsNone(g.current_rate_limits.resources.core)
         self._requestWithHeaders(g.requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
-        self.assertRate(g.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(g.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testCurrentRateLimitOfGithubIntegration(self):
+    def testCurrentRateLimitsOfGithubIntegration(self):
         gi = github.GithubIntegration(auth=github.Auth.AppAuth(APP_ID, PRIVATE_KEY))
-        self.assertIsNone(gi.current_rate_limit.resources.core)
+        self.assertIsNone(gi.current_rate_limits.resources.core)
         self._requestWithHeaders(gi.requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
-        self.assertRate(gi.current_rate_limit.resources.core, 5000, 4999, 1, 1700000000)
+        self.assertRate(gi.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
-    def testCurrentRateLimitSharingByArgument(self):
+    def testCurrentRateLimitsSharingByArgument(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
 
@@ -751,35 +751,35 @@ class Requester(Framework.TestCase):
             with self.subTest(arguments=sorted(arguments)):
                 other = requester._Requester__withArguments(**arguments)
                 self.assertIsNot(other, requester)
-                core = other.current_rate_limit.resources.core
+                core = other.current_rate_limits.resources.core
                 if shared:
                     self.assertRate(core, 5000, 4999, 1, 1700000000)
                 else:
                     self.assertIsNone(core)
 
-    def testCurrentRateLimitNotSharedAcrossAuthentications(self):
+    def testCurrentRateLimitsNotSharedAcrossAuthentications(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
 
         other = requester.withAuth(github.Auth.Token("other token"))
-        self.assertIsNone(other.current_rate_limit.resources.core)
+        self.assertIsNone(other.current_rate_limits.resources.core)
 
         self._requestWithHeaders(other, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
-        self.assertIsNone(requester.current_rate_limit.resources.search)
+        self.assertIsNone(requester.current_rate_limits.resources.search)
 
         # a requester derived from another authentication shares with that authentication only
         derived = other.withApiVersion("2026-03-10")
-        self.assertRate(derived.current_rate_limit.resources.search, 30, 29, 1, 1700000060)
-        self.assertIsNone(derived.current_rate_limit.resources.core)
+        self.assertRate(derived.current_rate_limits.resources.search, 30, 29, 1, 1700000060)
+        self.assertIsNone(derived.current_rate_limits.resources.core)
 
-    def testGetRateLimitUpdatesCurrentRateLimit(self):
+    def testGetRateLimitUpdatesCurrentRateLimits(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
 
         self._getRateLimit(requester, self.RATE_LIMIT_BODY)
 
-        overview = requester.current_rate_limit
+        overview = requester.current_rate_limits
         self.assertRate(overview.rate, 5000, 4990, 10, 1700000000)
         self.assertRate(overview.resources.core, 5000, 4990, 10, 1700000000)
         self.assertRate(overview.resources.search, 30, 28, 2, 1700000060)
@@ -788,31 +788,31 @@ class Requester(Framework.TestCase):
 
         # later response headers replace these values
         self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "27", "3", "1700000060"))
-        self.assertRate(requester.current_rate_limit.resources.search, 30, 27, 3, 1700000060)
+        self.assertRate(requester.current_rate_limits.resources.search, 30, 27, 3, 1700000060)
 
     def testGetRateLimitWithoutResources(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
         self._getRateLimit(requester, {})
-        self.assertRate(requester.current_rate_limit.resources.graphql, 5000, 4900, 100, 1700000000)
+        self.assertRate(requester.current_rate_limits.resources.graphql, 5000, 4900, 100, 1700000000)
 
-    def testGetRateLimitDoesNotShareDataWithCurrentRateLimit(self):
+    def testGetRateLimitDoesNotShareDataWithCurrentRateLimits(self):
         requester = self.g.requester
         result = self._getRateLimit(requester, self.RATE_LIMIT_BODY)
 
         result.raw_data["resources"]["search"]["remaining"] = 0
-        self.assertEqual(requester.current_rate_limit.resources.search.remaining, 28)
+        self.assertEqual(requester.current_rate_limits.resources.search.remaining, 28)
 
-    def testCurrentRateLimitResource(self):
+    def testCurrentRateLimitsResource(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
-        self.assertEqual(requester.current_rate_limit.resources.search.resource, "search")
+        self.assertEqual(requester.current_rate_limits.resources.search.resource, "search")
 
     def testRateLimitOverviewUpdate(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
-        overview = requester.current_rate_limit
+        overview = requester.current_rate_limits
 
         headers = self._rateLimitHeaders("core", "5000", "4990", "10", "1700000000")
         response = (200, headers, json.dumps(self.RATE_LIMIT_BODY))
@@ -838,7 +838,7 @@ class Requester(Framework.TestCase):
         self.assertIsNone(overview.resources.search)
 
         # the requester's values get updated, resources not contained in the response keep their values
-        current = requester.current_rate_limit
+        current = requester.current_rate_limits
         self.assertRate(current.resources.core, 5000, 4990, 10, 1700000000)
         self.assertRate(current.resources.search, 30, 28, 2, 1700000060)
         self.assertRate(current.resources.graphql, 5000, 4900, 100, 1700000000)

@@ -133,10 +133,10 @@ class Authentication(Framework.BasicTestCase):
         self.assertEqual(user.rate_limit.remaining, 57)
 
         # any GithubObject provides the current rate limit
-        self.assertEqual(user.current_rate_limit.resources.core.remaining, 57)
+        self.assertEqual(user.current_rate_limits.resources.core.remaining, 57)
 
         # rate limit overview reflects the recorded response headers
-        core = g.requester.current_rate_limit.resources.core
+        core = g.requester.current_rate_limits.resources.core
         self.assertEqual(core.limit, 60)
         self.assertEqual(core.remaining, 57)
         self.assertEqual(core.used, 3)

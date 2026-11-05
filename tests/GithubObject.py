@@ -47,7 +47,7 @@ ghorg = Framework.github.Organization
 
 
 class GithubObject(unittest.TestCase):
-    def testCurrentRateLimit(self):
+    def testCurrentRateLimits(self):
         requester = mock.Mock(is_lazy=True, is_not_lazy=False)
         for obj in [
             # non-completable object
@@ -56,7 +56,7 @@ class GithubObject(unittest.TestCase):
             github.NamedUser.NamedUser(requester, url="/users/login"),
         ]:
             with self.subTest(type=type(obj).__name__):
-                self.assertIs(obj.current_rate_limit, requester.current_rate_limit)
+                self.assertIs(obj.current_rate_limits, requester.current_rate_limits)
         requester.requestJsonAndCheck.assert_not_called()
 
     RATE_LIMIT_HEADERS = {

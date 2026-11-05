@@ -198,7 +198,7 @@ class GithubIntegration:
         kwargs = self.__requester.kwargs
         kwargs.update(lazy=lazy)
         integration = GithubIntegration(**kwargs)
-        integration.requester.useCurrentRateLimit(self.__requester)
+        integration.requester.useCurrentRateLimits(self.__requester)
         return integration
 
     def close(self) -> None:
@@ -227,14 +227,14 @@ class GithubIntegration:
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
     @property
-    def current_rate_limit(self) -> RateLimitOverview:
+    def current_rate_limits(self) -> RateLimitOverview:
         """
         Latest rate limits known to the requester of this instance, per resource. This does not send any request.
 
-        See :attr:`github.Requester.Requester.current_rate_limit`.
+        See :attr:`github.Requester.Requester.current_rate_limits`.
 
         """
-        return self.__requester.current_rate_limit
+        return self.__requester.current_rate_limits
 
     @property
     def requester(self) -> Requester:
