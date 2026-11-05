@@ -437,7 +437,12 @@ class PaginatedList(Framework.TestCase):
             graphql_variables={},
             list_item=["repository", "discussions"],
         )
-        self.assertPageRateLimit(next(paginated_list.pages()), resource="graphql")
+        page = next(paginated_list.pages())
+        self.assertPageRateLimit(page, resource="graphql")
+
+        # elements provide the rate limit of their response as well
+        self.assertPageRateLimit(page[0], resource="graphql")
+        self.assertEqual(page[0].raw_headers, headers)
 
     def testPagesOfEmptyList(self):
         with self.replayData("PaginatedList.testNoFirstPage.txt"):
@@ -452,6 +457,10 @@ class PaginatedList(Framework.TestCase):
             pages = list(discussions.pages())
             self.assertGreater(len(pages), 1)
             self.assertTrue(all(isinstance(page, Page) for page in pages))
+            for page in pages:
+                self.assertEqual(page.rate_limit.resource, "graphql")
+                for element in page:
+                    self.assertEqual(element.rate_limit.remaining, page.rate_limit.remaining)
             discussions_list = [element for page in pages for element in page]
             self.assertEqual(len(discussions_list), 65)
             self.assertListEqual(discussions_list, list(discussions))
