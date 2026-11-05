@@ -153,16 +153,18 @@ class RateLimit(NonCompletableGithubObject):
     def source_import(self) -> Rate:
         return self._source_import.value
 
-    def get_rate(self, rate: str) -> Rate | None:
+    def get_rate_limit(self, resource: str) -> Rate | None:
         """
         Rate limit of the given resource, ``None`` if that is not known.
 
         This also provides resources that have no property in this class. It does not send any request.
 
-        :param rate: name of the rate limit resource, e.g. ``core``
+        :param resource: name of the rate limit resource, e.g. ``core``
 
         """
-        attribute: Attribute[Rate] = self._makeRateAttribute(self.raw_data, rate) if rate in self.raw_data else NotSet
+        attribute: Attribute[Rate] = (
+            self._makeRateAttribute(self.raw_data, resource) if resource in self.raw_data else NotSet
+        )
         return attribute.value
 
     def _makeRateAttribute(self, attributes: dict[str, Any], resource: str) -> Attribute[Rate]:

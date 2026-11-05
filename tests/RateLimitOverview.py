@@ -77,23 +77,23 @@ class RateLimitOverview(Framework.TestCase):
         with self.assertRaises(github.BadAttributeException):
             rate_limit.search
 
-    def testGetRate(self):
+    def testGetRateLimit(self):
         for resource, remaining in [("core", 4988), ("search", 30), ("graphql", 4808)]:
             with self.subTest(resource=resource):
-                rate = self.rate_limit_overview.get_rate(resource)
+                rate = self.rate_limit_overview.get_rate_limit(resource)
                 self.assertIsInstance(rate, github.Rate.Rate)
                 self.assertEqual(rate.resource, resource)
                 self.assertEqual(rate.remaining, remaining)
                 self.assertEqual(repr(rate), repr(getattr(self.rate_limit_overview.resources, resource)))
-                self.assertEqual(repr(self.rate_limit_overview.resources.get_rate(resource)), repr(rate))
+                self.assertEqual(repr(self.rate_limit_overview.resources.get_rate_limit(resource)), repr(rate))
 
-    def testGetRateOfUnknownResource(self):
-        self.assertIsNone(self.rate_limit_overview.get_rate("unknown"))
-        self.assertIsNone(self.rate_limit_overview.resources.get_rate("unknown"))
+    def testGetRateLimitOfUnknownResource(self):
+        self.assertIsNone(self.rate_limit_overview.get_rate_limit("unknown"))
+        self.assertIsNone(self.rate_limit_overview.resources.get_rate_limit("unknown"))
 
-    def testGetRateOfResourceWithoutProperty(self):
+    def testGetRateLimitOfResourceWithoutProperty(self):
         rate_limit = github.RateLimit.RateLimit(self.g.requester, {}, {"new_resource": {"limit": 10, "remaining": 9}})
-        rate = rate_limit.get_rate("new_resource")
+        rate = rate_limit.get_rate_limit("new_resource")
         self.assertEqual(rate.resource, "new_resource")
         self.assertEqual(rate.limit, 10)
         self.assertEqual(rate.remaining, 9)
@@ -101,20 +101,20 @@ class RateLimitOverview(Framework.TestCase):
         # raw data of the rate limit remains the response
         self.assertNotIn("resource", rate_limit.raw_data["new_resource"])
 
-    def testGetRateWithInvalidValues(self):
+    def testGetRateLimitWithInvalidValues(self):
         rate_limit = github.RateLimit.RateLimit(self.g.requester, {}, {"core": None, "search": "not a dict"})
-        self.assertIsNone(rate_limit.get_rate("core"))
+        self.assertIsNone(rate_limit.get_rate_limit("core"))
         with self.assertRaises(github.BadAttributeException):
-            rate_limit.get_rate("search")
+            rate_limit.get_rate_limit("search")
 
-    def testGetRateResourceFromResponseTakesPrecedence(self):
+    def testGetRateLimitResourceFromResponseTakesPrecedence(self):
         rate_limit = github.RateLimit.RateLimit(self.g.requester, {}, {"core": {"resource": "from response"}})
-        self.assertEqual(rate_limit.get_rate("core").resource, "from response")
+        self.assertEqual(rate_limit.get_rate_limit("core").resource, "from response")
 
-    def testGetRateDoesNotSendRequest(self):
+    def testGetRateLimitDoesNotSendRequest(self):
         with self.captureRequests() as requests:
-            self.rate_limit_overview.get_rate("core")
-            self.rate_limit_overview.get_rate("unknown")
+            self.rate_limit_overview.get_rate_limit("core")
+            self.rate_limit_overview.get_rate_limit("unknown")
         self.assertEqual(len(requests), 0)
 
     def testUpdate(self):

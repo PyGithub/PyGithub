@@ -70,17 +70,17 @@ class RateLimitOverview(NonCompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
-    def get_rate(self, rate: str) -> Rate | None:
+    def get_rate_limit(self, resource: str) -> Rate | None:
         """
         Rate limit of the given resource, ``None`` if that is not known.
 
         This also provides resources that have no property in :class:`github.RateLimit.RateLimit`. It does not send any
         request.
 
-        :param rate: name of the rate limit resource, e.g. ``core``
+        :param resource: name of the rate limit resource, e.g. ``core``
 
         """
-        return self.resources.get_rate(rate)
+        return self.resources.get_rate_limit(resource)
 
     def update(self) -> RateLimitOverview:
         """
