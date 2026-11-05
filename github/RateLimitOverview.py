@@ -80,7 +80,7 @@ class RateLimitOverview(NonCompletableGithubObject):
         :return: current rate limits
 
         """
-        return self._requester.get_rate_limit()
+        return self._requester.get_rate_limits()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "rate" in attributes:  # pragma no branch

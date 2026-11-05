@@ -633,12 +633,12 @@ class Requester(Framework.TestCase):
         restored = pickle.loads(pickle.dumps(requester))
         self.assertRate(restored.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
-    def _getRateLimit(self, requester, body):
+    def _getRateLimits(self, requester, body):
         headers = self._rateLimitHeaders("core", "5000", "4990", "10", "1700000000")
         with mock.patch.object(
             requester, "_Requester__requestRaw", return_value=(200, headers, json.dumps(body))
         ) as raw:
-            result = requester.get_rate_limit()
+            result = requester.get_rate_limits()
         raw.assert_called_once()
         self.assertEqual(raw.call_args.args[1:3], ("GET", "/rate_limit"))
         return result
@@ -772,12 +772,12 @@ class Requester(Framework.TestCase):
         self.assertRate(derived.current_rate_limits.resources.search, 30, 29, 1, 1700000060)
         self.assertIsNone(derived.current_rate_limits.resources.core)
 
-    def testGetRateLimitUpdatesCurrentRateLimits(self):
+    def testGetRateLimitsUpdatesCurrentRateLimits(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
 
-        self._getRateLimit(requester, self.RATE_LIMIT_BODY)
+        self._getRateLimits(requester, self.RATE_LIMIT_BODY)
 
         overview = requester.current_rate_limits
         self.assertRate(overview.rate, 5000, 4990, 10, 1700000000)
@@ -790,15 +790,15 @@ class Requester(Framework.TestCase):
         self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "27", "3", "1700000060"))
         self.assertRate(requester.current_rate_limits.resources.search, 30, 27, 3, 1700000060)
 
-    def testGetRateLimitWithoutResources(self):
+    def testGetRateLimitsWithoutResources(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("graphql", "5000", "4900", "100", "1700000000"))
-        self._getRateLimit(requester, {})
+        self._getRateLimits(requester, {})
         self.assertRate(requester.current_rate_limits.resources.graphql, 5000, 4900, 100, 1700000000)
 
-    def testGetRateLimitDoesNotShareDataWithCurrentRateLimits(self):
+    def testGetRateLimitsDoesNotShareDataWithCurrentRateLimits(self):
         requester = self.g.requester
-        result = self._getRateLimit(requester, self.RATE_LIMIT_BODY)
+        result = self._getRateLimits(requester, self.RATE_LIMIT_BODY)
 
         result.raw_data["resources"]["search"]["remaining"] = 0
         self.assertEqual(requester.current_rate_limits.resources.search.remaining, 28)

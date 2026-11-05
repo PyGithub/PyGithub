@@ -540,7 +540,7 @@ class Requester:
 
         Values come from the response headers of requests made through this requester and any requester sharing them
         (see :meth:`useCurrentRateLimits`), e.g. derived via :meth:`withLazy` and :meth:`withApiVersion`, and from
-        calls to :meth:`get_rate_limit`, which provide values for all resources. This does not send any request, use
+        calls to :meth:`get_rate_limits`, which provide values for all resources. This does not send any request, use
         :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch current values.
 
         Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is unknown
@@ -553,7 +553,7 @@ class Requester:
             attributes["rate"] = resources["core"]
         return github.RateLimitOverview.RateLimitOverview(self, {}, attributes)
 
-    def get_rate_limit(self) -> RateLimitOverview:
+    def get_rate_limits(self) -> RateLimitOverview:
         """
         Fetch all current rate limits, which also updates the values provided by :attr:`current_rate_limits`.
 

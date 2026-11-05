@@ -34,7 +34,7 @@ from . import Framework
 class RateLimitOverview(Framework.TestCase):
     def setUp(self):
         super().setUp()
-        self.rate_limit_overview = self.g.get_rate_limit()
+        self.rate_limit_overview = self.g.get_rate_limits()
 
     def testResource(self):
         self.assertEqual(self.rate_limit_overview.resources.core.resource, "core")
