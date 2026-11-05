@@ -29,7 +29,7 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -223,6 +223,17 @@
+@@ -240,6 +240,17 @@
        ],
        "inherited_schemas": [],
        "methods": {
@@ -47,7 +47,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "get_reactions": {
            "call": {
              "docs": "<https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment>`_",
-@@ -1468,6 +1479,9 @@
+@@ -1485,6 +1496,9 @@
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "IssueComment.get_reactions"
@@ -57,7 +57,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        }
      },
-@@ -1475,6 +1489,9 @@
+@@ -1492,6 +1506,9 @@
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "PaginatedList[Reaction]"
@@ -67,7 +67,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        }
      },
-@@ -2127,6 +2144,17 @@
+@@ -2144,6 +2161,17 @@
              ]
            }
          ]

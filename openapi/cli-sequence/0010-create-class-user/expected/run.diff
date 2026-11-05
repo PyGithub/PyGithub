@@ -365,7 +365,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -207,6 +207,618 @@
+@@ -224,6 +224,618 @@
        "schemas": [],
        "test_filename": "tests/GithubObject.py"
      },
@@ -984,7 +984,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NonCompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -323,6 +935,7 @@
+@@ -340,6 +952,7 @@
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GithubObject",
@@ -992,7 +992,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NonCompletableGithubObject"
        ],
        "Attribute": [
-@@ -331,11 +944,13 @@
+@@ -348,11 +961,13 @@
          "_ValuedAttribute"
        ],
        "CompletableGithubObject": [
@@ -1007,7 +1007,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NonCompletableGithubObject"
        ],
        "Protocol": [
-@@ -966,7 +1581,11 @@
+@@ -983,7 +1598,11 @@
          "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"
        ]
      },

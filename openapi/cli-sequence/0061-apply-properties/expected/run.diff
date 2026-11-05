@@ -44,7 +44,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -2607,6 +2607,20 @@
+@@ -2624,6 +2624,20 @@
              }
            }
          },

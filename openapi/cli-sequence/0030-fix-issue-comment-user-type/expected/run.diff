@@ -45,7 +45,7 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -420,7 +420,7 @@
+@@ -437,7 +437,7 @@
          "user": {
            "name": "user",
            "returns": [
