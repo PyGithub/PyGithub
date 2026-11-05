@@ -803,6 +803,12 @@ class Requester(Framework.TestCase):
         result.raw_data["resources"]["search"]["remaining"] = 0
         self.assertEqual(requester.current_rate_limit.resources.search.remaining, 28)
 
+    def testCurrentRateLimitResource(self):
+        requester = self.g.requester
+        self._requestWithHeaders(requester, self._rateLimitHeaders("search", "30", "29", "1", "1700000060"))
+        self.assertEqual(requester.current_rate_limit.resources.search.resource, "search")
+        self.assertNotIn("resource", requester.current_rate_limit.raw_data["resources"]["search"])
+
     def testRateLimitOverviewUpdate(self):
         requester = self.g.requester
         self._requestWithHeaders(requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))

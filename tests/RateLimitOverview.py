@@ -24,6 +24,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import github
+import github.RateLimit
 import github.RateLimitOverview
 
 from . import Framework
@@ -33,6 +35,46 @@ class RateLimitOverview(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.rate_limit_overview = self.g.get_rate_limit()
+
+    def testResource(self):
+        self.assertEqual(self.rate_limit_overview.resources.core.resource, "core")
+        self.assertEqual(self.rate_limit_overview.resources.search.resource, "search")
+        self.assertEqual(self.rate_limit_overview.resources.graphql.resource, "graphql")
+
+        # the response does not provide this for the rate attribute
+        self.assertIsNone(self.rate_limit_overview.rate.resource)
+
+        # raw data of the overview remains the response, only the rate is aware of the resource
+        self.assertNotIn("resource", self.rate_limit_overview.raw_data["resources"]["core"])
+        self.assertEqual(self.rate_limit_overview.resources.core.raw_data["resource"], "core")
+
+    def testResourceOfAllRates(self):
+        resources = [
+            "actions_runner_registration",
+            "code_scanning_autofix",
+            "code_scanning_upload",
+            "code_search",
+            "core",
+            "dependency_sbom",
+            "dependency_snapshots",
+            "graphql",
+            "integration_manifest",
+            "scim",
+            "search",
+            "source_import",
+        ]
+        rate_limit = github.RateLimit.RateLimit(
+            self.g.requester, {}, {resource: {"limit": 1} for resource in resources}
+        )
+        for resource in resources:
+            with self.subTest(resource=resource):
+                self.assertEqual(getattr(rate_limit, resource).resource, resource)
+
+    def testResourceWithoutRate(self):
+        rate_limit = github.RateLimit.RateLimit(self.g.requester, {}, {"core": None, "search": "not a dict"})
+        self.assertIsNone(rate_limit.core)
+        with self.assertRaises(github.BadAttributeException):
+            rate_limit.search
 
     def testUpdate(self):
         updated = self.rate_limit_overview.update()

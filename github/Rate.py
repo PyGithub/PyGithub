@@ -64,6 +64,7 @@ class Rate(NonCompletableGithubObject):
         self._limit: Attribute[int] = NotSet
         self._remaining: Attribute[int] = NotSet
         self._reset: Attribute[datetime] = NotSet
+        self._resource: Attribute[str] = NotSet
         self._used: Attribute[int] = NotSet
 
     def __repr__(self) -> str:
@@ -98,6 +99,13 @@ class Rate(NonCompletableGithubObject):
         return max(0.0, (self.reset - datetime.now(timezone.utc)).total_seconds())
 
     @property
+    def resource(self) -> str:
+        """
+        Name of the rate limit resource, ``None`` if not known.
+        """
+        return self._resource.value
+
+    @property
     def used(self) -> int:
         return self._used.value
 
@@ -108,5 +116,7 @@ class Rate(NonCompletableGithubObject):
             self._remaining = self._makeIntAttribute(attributes["remaining"])
         if "reset" in attributes:  # pragma no branch
             self._reset = self._makeTimestampAttribute(attributes["reset"])
+        if "resource" in attributes:  # pragma no branch
+            self._resource = self._makeStringAttribute(attributes["resource"])
         if "used" in attributes:  # pragma no branch
             self._used = self._makeIntAttribute(attributes["used"])

@@ -33,7 +33,7 @@ Rate limits
 GitHub limits the number of API requests per authentication. Limits are counted separately for different resources,
 like ``core``, ``search``, or ``graphql``. PyGithub provides these limits as a
 :class:`github.RateLimitOverview.RateLimitOverview`, where ``resources`` has one :class:`github.Rate.Rate` per resource
-with attributes ``limit``, ``remaining``, ``used`` and ``reset``.
+with attributes ``resource``, ``limit``, ``remaining``, ``used`` and ``reset``.
 
 There are three ways to retrieve an overview:
 
