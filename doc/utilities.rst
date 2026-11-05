@@ -93,6 +93,9 @@ Pagination
 ----------
 
 .. autoclass:: github.PaginatedList.PaginatedList()
+   :inherited-members:
+
+.. autoclass:: github.PaginatedList.Page()
 
 .. _utilities-classes-with-paginated-properties:
 
