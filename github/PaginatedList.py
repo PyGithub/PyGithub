@@ -544,7 +544,11 @@ class PaginatedList(PaginatedListBase[T]):
             if self._reversed:
                 nodes = nodes[::-1]
             return Page(
-                [self.__contentClass(self.__requester, {}, element) for element in nodes if element is not None],
+                [
+                    self.__contentClass(self.__requester, headers, element)  # type: ignore
+                    for element in nodes
+                    if element is not None
+                ],
                 self.__requester,
                 headers,
             )
