@@ -141,6 +141,16 @@ class PaginatedListBase(Generic[T]):
             newElements = self._grow()
             yield from newElements
 
+    @property
+    def has_unfetched_pages(self) -> bool:
+        """
+        Whether this list has pages that have not been fetched yet, so that continuing to iterate sends a request.
+
+        This does not send any request. An empty or not yet fetched list may report ``True`` until the first response.
+
+        """
+        return self._couldGrow()
+
     def pages(self) -> Iterator[Page[T]]:
         """
         Iterates over the individual pages of this list, fetching them only when needed.

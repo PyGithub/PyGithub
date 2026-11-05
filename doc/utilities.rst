@@ -56,7 +56,8 @@ There are three ways to retrieve an overview:
 
 For example, pause before running out of requests, after a fetched page has been fully consumed. Searching code counts
 against the ``code_search`` resource, not ``core`` like most other requests. The page tells which resource its
-pagination requests count against, and ``current_rate_limits`` provides the latest rate limit of that resource::
+pagination requests count against, and ``current_rate_limits`` provides the latest rate limit of that resource.
+There is no need to wait after the last page, and a response might not report any rate limit::
 
     import time
 
@@ -65,9 +66,10 @@ pagination requests count against, and ``current_rate_limits`` provides the late
         for result in page:
             print(result.path)
 
-        rate = gh.current_rate_limits.get_rate(page.rate_limit.resource)
-        if rate.remaining < 10:
-            time.sleep(rate.resets_in_seconds)
+        if results.has_unfetched_pages and page.rate_limit is not None:
+            rate = gh.current_rate_limits.get_rate(page.rate_limit.resource)
+            if rate.remaining < 10:
+                time.sleep(rate.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
 
