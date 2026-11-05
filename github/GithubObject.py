@@ -69,6 +69,8 @@ from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
 
 if TYPE_CHECKING:
+    from .Rate import Rate
+    from .RateLimitOverview import RateLimitOverview
     from .Requester import Requester
 
 T = typing.TypeVar("T")
@@ -224,6 +226,29 @@ class _BadAttribute(Attribute[T]):
         raise BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
+def rate_limit_from_headers(headers: dict[str, Any]) -> dict[str, Any]:
+    """
+    Extract the rate limit from response headers, as attributes of :class:`github.Rate.Rate`.
+
+    :return: attributes, empty if the headers do not provide any rate limit values
+
+    """
+    attributes: dict[str, Any] = {
+        # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
+        attribute: int(float(headers[header]))
+        for attribute, header in (
+            ("limit", Consts.headerRateLimit),
+            ("remaining", Consts.headerRateRemaining),
+            ("reset", Consts.headerRateReset),
+            ("used", Consts.headerRateUsed),
+        )
+        if header in headers
+    }
+    if attributes and Consts.headerRateResource in headers:
+        attributes["resource"] = headers[Consts.headerRateResource]
+    return attributes
+
+
 # v3: add * to edit function of all GithubObject implementations,
 #     this allows to rename attributes and maintain the order of attributes
 class GithubObject(ABC):
@@ -281,6 +306,33 @@ class GithubObject(ABC):
 
         """
         return self._requester
+
+    @property
+    def current_rate_limits(self) -> RateLimitOverview:
+        """
+        Latest rate limits known to the requester of this object, per resource. This does not send any request.
+
+        See :attr:`github.Requester.Requester.current_rate_limits`.
+
+        """
+        return self._requester.current_rate_limits
+
+    @property
+    def rate_limit(self) -> Rate | None:
+        """
+        Rate limit reported by the response that provided this object, ``None`` if that response did not report any.
+
+        This does not send any request, so it is also ``None`` for a lazy object that has not been completed yet.
+        It does not get updated by later requests, see :attr:`current_rate_limits` for the latest rate limits.
+
+        """
+        # imported here as github.Rate depends on this module
+        import github.Rate
+
+        attributes = rate_limit_from_headers(self._headers)
+        if not attributes:
+            return None
+        return github.Rate.Rate(self._requester, self._headers, attributes)
 
     @property
     def raw_data(self) -> dict[str, Any]:
