@@ -444,6 +444,49 @@ class PaginatedList(Framework.TestCase):
         self.assertPageRateLimit(page[0], resource="graphql")
         self.assertEqual(page[0].raw_headers, headers)
 
+    def testHasUnfetchedPages(self):
+        with self.replayData("PaginatedList.testIteration.txt"):
+            self.assertTrue(self.list.has_unfetched_pages)
+            with self.captureRequests() as requests:
+                self.assertTrue(self.list.has_unfetched_pages)
+            self.assertEqual(len(requests), 0)
+
+            states = [self.list.has_unfetched_pages for _ in self.list.pages()]
+        self.assertListEqual(states, [True] * 13 + [False])
+
+        # all pages have been fetched, iterating them again does not send requests
+        self.assertFalse(self.list.has_unfetched_pages)
+        with self.captureRequests() as requests:
+            self.assertEqual(len(list(self.list.pages())), 14)
+        self.assertEqual(len(requests), 0)
+        self.assertFalse(self.list.has_unfetched_pages)
+
+    def testHasUnfetchedPagesWhenReversed(self):
+        with self.replayData("PaginatedList.testCustomPerPageReversedIteration.txt"):
+            self.g.per_page = 3
+            repo = self.g.get_repo("PyGithub/PyGithub")
+            comments = repo.get_issue(1136).get_comments().reversed
+            states = [comments.has_unfetched_pages for _ in comments.pages()]
+        self.assertListEqual(states, [True, True, False])
+
+    def testHasUnfetchedPagesWithFirstPage(self):
+        paginated_list = PaginatedListImpl(github.Rate.Rate, mock.Mock(), firstData=[{"limit": 1}], firstHeaders={})
+        self.assertFalse(paginated_list.has_unfetched_pages)
+
+    def testHasUnfetchedPagesWithGraphQl(self):
+        with self.replayData("PaginatedList.testGraphQlPagination.txt"):
+            repo = self.g.get_repo("PyGithub/PyGithub")
+            discussions = repo.get_discussions("id number")
+            rev = discussions.reversed
+            for paginated_list in [discussions, rev]:
+                self.assertTrue(paginated_list.has_unfetched_pages)
+                states = [paginated_list.has_unfetched_pages for _ in paginated_list.pages()]
+                self.assertGreater(len(states), 1)
+                self.assertListEqual(states, [True] * (len(states) - 1) + [False])
+
+            # consumes the remaining replay data
+            self.assertEqual(repo.get_discussions("id number").totalCount, 65)
+
     def testPagesOfEmptyList(self):
         with self.replayData("PaginatedList.testNoFirstPage.txt"):
             self.assertPages(self.list, [0])
