@@ -63,12 +63,21 @@ There is no need to wait after the last page, and a response might not report an
 
     results = gh.search_code("query")
     for page in results.pages():
+        # process the current page
         for result in page:
             print(result.path)
 
+        # before fetching the next page, inspect the rate limit for page requests
         if results.has_unfetched_pages and page.rate_limit is not None:
+            # the rate limit known when the page was fetched
+            rate = page.rate_limit
+
+            # alternatively, the most recent rate limit of the same resource type
             rate = gh.current_rate_limits.get_rate(page.rate_limit.resource)
+
+            # if we run low on remaining requests
             if rate.remaining < 10:
+                # defer fetching next page until after reset
                 time.sleep(rate.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
