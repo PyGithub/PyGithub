@@ -48,6 +48,7 @@
 
 from datetime import datetime, timezone
 
+from github.PaginatedList import Page
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 from . import Framework
@@ -193,6 +194,154 @@ class PaginatedList(Framework.TestCase):
                 3605277,
             ],
         )
+
+    def assertPages(self, paginated_list, sizes):
+        pages = list(paginated_list.pages())
+        for page in pages:
+            self.assertIsInstance(page, Page)
+            self.assertIsInstance(page, list)
+        self.assertListEqual([len(page) for page in pages], sizes)
+        return pages
+
+    def testGetPageReturnsPage(self):
+        with self.replayData("PaginatedList.testGetFirstPage.txt"):
+            page = self.list.get_page(0)
+        self.assertIsInstance(page, Page)
+        self.assertEqual(len(page), 25)
+        self.assertEqual(page[0].id, 4772349)
+
+    def testPages(self):
+        with self.replayData("PaginatedList.testIteration.txt"):
+            with self.captureRequests() as requests:
+                pages = self.assertPages(self.list, [25] * 13 + [8])
+            self.assertEqual(len(requests), 14)
+
+        # pages and iteration share fetched pages and elements
+        with self.captureRequests() as requests:
+            self.assertListEqual([element for page in pages for element in page], list(self.list))
+            again = self.assertPages(self.list, [25] * 13 + [8])
+        self.assertEqual(len(requests), 0)
+        for page, other in zip(pages, again):
+            self.assertIs(page, other)
+
+    def testPagesAreFetchedLazily(self):
+        with self.replayData("PaginatedList.testSliceIndexingUntilFourthPage.txt"):
+            with self.captureRequests() as requests:
+                pages = self.list.pages()
+                self.assertEqual(len(requests), 0)
+                for expected_requests, expected_index in enumerate((0, 25, 50, 75), start=1):
+                    page = next(pages)
+                    self.assertEqual(len(requests), expected_requests)
+                    self.assertIs(page[0], self.list[expected_index])
+
+    def testPagesAfterIndexing(self):
+        with self.replayData("PaginatedList.testIntIndexingInThirdPage.txt"):
+            # this fetches the first two pages, pages() starts from the first page without fetching them again
+            element = self.list[30]
+            with self.captureRequests() as requests:
+                pages = self.list.pages()
+                first = next(pages)
+                second = next(pages)
+                self.assertEqual(len(requests), 0)
+                self.assertEqual(len(next(pages)), 25)
+                self.assertEqual(len(requests), 1)
+        self.assertIs(first[0], self.list[0])
+        self.assertIs(second[5], element)
+
+    def testPagesInterleavedWithIndexing(self):
+        with self.replayData("PaginatedList.testSliceIndexingUntilFourthPage.txt"):
+            pages = self.list.pages()
+            first = next(pages)
+            # this fetches further pages while pages() is iterating
+            element = self.list[90]
+            with self.captureRequests() as requests:
+                second, third, fourth = next(pages), next(pages), next(pages)
+            self.assertEqual(len(requests), 0)
+        self.assertIs(first[0], self.list[0])
+        self.assertIs(second[0], self.list[25])
+        self.assertIs(third[0], self.list[50])
+        self.assertIs(fourth[15], element)
+
+    def testModifyingPageDoesNotModifyList(self):
+        with self.replayData("PaginatedList.testGetFirstPage.txt"):
+            page = next(self.list.pages())
+        page.clear()
+        self.assertEqual(self.list[0].id, 4772349)
+
+    def testPagesReversed(self):
+        with self.replayData("PaginatedList.testCustomPerPageReversedIteration.txt"):
+            self.g.per_page = 3
+            repo = self.g.get_repo("PyGithub/PyGithub")
+            comments = repo.get_issue(1136).get_comments().reversed
+            pages = self.assertPages(comments, [1, 3, 3])
+        self.assertListEqual(
+            [comment.created_at for comment in pages[0]],
+            [datetime(2024, 3, 24, 13, 58, 57, tzinfo=timezone.utc)],
+        )
+        self.assertListEqual([element for page in pages for element in page], list(comments))
+
+    def testPagesWithFirstPage(self):
+        with self.replayData("PaginatedList.testWithFirstPage.txt"):
+            repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
+            commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
+            commit.complete()
+            files = commit.files
+            with self.captureRequests() as requests:
+                first = next(files.pages())
+            self.assertEqual(len(requests), 0)
+            self.assertEqual(len(first), 3)
+            pages = self.assertPages(files, [3, 3, 1])
+        self.assertIs(pages[0], first)
+        self.assertListEqual([element for page in pages for element in page], list(files))
+
+    def testPagesReversedWithFirstPage(self):
+        with self.replayData("PaginatedList.testReversedWithFirstPage.txt"):
+            repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
+            commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
+            commit.complete()
+            files = commit.files.reversed
+            pages = self.assertPages(files, [1, 3, 3])
+        self.assertListEqual([element for page in pages for element in page], list(files))
+
+    def testPagesReversedWithFirstSinglePage(self):
+        with self.replayData("PaginatedList.testReversedWithFirstSinglePage.txt"):
+            repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
+            commit = repo.get_commit("f5f9756a1dd52a53820cc54927abb34725377987", commit_files_per_page=3)
+            commit.complete()
+            files = commit.files.reversed
+            with self.captureRequests() as requests:
+                pages = self.assertPages(files, [3])
+            self.assertEqual(len(requests), 0)
+        self.assertListEqual(
+            [file.filename for file in pages[0]],
+            ["tests/GithubObject.py", "github/GithubObject.py", "github/GithubApp.py"],
+        )
+
+    def testPagesOfEmptyList(self):
+        with self.replayData("PaginatedList.testNoFirstPage.txt"):
+            self.assertPages(self.list, [0])
+
+    def testPagesWithGraphQl(self):
+        with self.replayData("PaginatedList.testGraphQlPagination.txt"):
+            repo = self.g.get_repo("PyGithub/PyGithub")
+            discussions = repo.get_discussions("id number")
+            rev = discussions.reversed
+
+            pages = list(discussions.pages())
+            self.assertGreater(len(pages), 1)
+            self.assertTrue(all(isinstance(page, Page) for page in pages))
+            discussions_list = [element for page in pages for element in page]
+            self.assertEqual(len(discussions_list), 65)
+            self.assertListEqual(discussions_list, list(discussions))
+
+            rev_pages = list(rev.pages())
+            self.assertListEqual(
+                [d.number for page in rev_pages for d in page],
+                [d.number for d in reversed(discussions_list)],
+            )
+
+            # consumes the remaining replay data
+            self.assertEqual(repo.get_discussions("id number").totalCount, 65)
 
     def testIntIndexingAfterIteration(self):
         with self.replayData("PaginatedList.testIteration.txt"):
