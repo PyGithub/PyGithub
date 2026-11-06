@@ -53,6 +53,9 @@ class SecretScanAlert(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._assigned_to: Attribute[NamedUser | Organization] = NotSet
+        self._closure_request_comment: Attribute[str] = NotSet
+        self._closure_request_reviewer: Attribute[NamedUser | Organization] = NotSet
+        self._closure_request_reviewer_comment: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._first_location_detected: Attribute[SecretScanAlertInstance] = NotSet
         self._has_more_locations: Attribute[bool] = NotSet
@@ -61,6 +64,8 @@ class SecretScanAlert(NonCompletableGithubObject):
         self._locations_url: Attribute[str] = NotSet
         self._multi_repo: Attribute[bool] = NotSet
         self._number: Attribute[int] = NotSet
+        self._provider: Attribute[str] = NotSet
+        self._provider_slug: Attribute[str] = NotSet
         self._publicly_leaked: Attribute[bool] = NotSet
         self._push_protection_bypass_request_comment: Attribute[str | None] = NotSet
         self._push_protection_bypass_request_html_url: Attribute[str | None] = NotSet
@@ -87,6 +92,18 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def assigned_to(self) -> NamedUser | Organization:
         return self._assigned_to.value
+
+    @property
+    def closure_request_comment(self) -> str:
+        return self._closure_request_comment.value
+
+    @property
+    def closure_request_reviewer(self) -> NamedUser | Organization:
+        return self._closure_request_reviewer.value
+
+    @property
+    def closure_request_reviewer_comment(self) -> str:
+        return self._closure_request_reviewer_comment.value
 
     @property
     def created_at(self) -> datetime:
@@ -119,6 +136,14 @@ class SecretScanAlert(NonCompletableGithubObject):
     @property
     def number(self) -> int:
         return self._number.value
+
+    @property
+    def provider(self) -> str:
+        return self._provider.value
+
+    @property
+    def provider_slug(self) -> str:
+        return self._provider_slug.value
 
     @property
     def publicly_leaked(self) -> bool:
@@ -200,10 +225,24 @@ class SecretScanAlert(NonCompletableGithubObject):
         if "assigned_to" in attributes:  # pragma no branch
             self._assigned_to = self._makeUnionClassAttributeFromTypeKey(
                 "type",
-                "unknown",
+                "User",
                 attributes["assigned_to"],
-                (github.NamedUser.NamedUser, "NamedUser"),
+                (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
+            )
+        if "closure_request_comment" in attributes:  # pragma no branch
+            self._closure_request_comment = self._makeStringAttribute(attributes["closure_request_comment"])
+        if "closure_request_reviewer" in attributes:  # pragma no branch
+            self._closure_request_reviewer = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["closure_request_reviewer"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
+        if "closure_request_reviewer_comment" in attributes:  # pragma no branch
+            self._closure_request_reviewer_comment = self._makeStringAttribute(
+                attributes["closure_request_reviewer_comment"]
             )
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
@@ -223,6 +262,10 @@ class SecretScanAlert(NonCompletableGithubObject):
             self._multi_repo = self._makeBoolAttribute(attributes["multi_repo"])
         if "number" in attributes:
             self._number = self._makeIntAttribute(attributes["number"])
+        if "provider" in attributes:  # pragma no branch
+            self._provider = self._makeStringAttribute(attributes["provider"])
+        if "provider_slug" in attributes:  # pragma no branch
+            self._provider_slug = self._makeStringAttribute(attributes["provider_slug"])
         if "publicly_leaked" in attributes:
             self._publicly_leaked = self._makeBoolAttribute(attributes["publicly_leaked"])
         if "push_protection_bypass_request_comment" in attributes:
