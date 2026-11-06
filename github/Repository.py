@@ -414,6 +414,7 @@ class Repository(CompletableGithubObject):
         self._has_issues: Attribute[bool] = NotSet
         self._has_pages: Attribute[bool] = NotSet
         self._has_projects: Attribute[bool] = NotSet
+        self._has_pull_requests: Attribute[bool] = NotSet
         self._has_wiki: Attribute[bool] = NotSet
         self._homepage: Attribute[str] = NotSet
         self._hooks_url: Attribute[str] = NotSet
@@ -445,6 +446,7 @@ class Repository(CompletableGithubObject):
         self._parent: Attribute[Repository] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._private: Attribute[bool] = NotSet
+        self._pull_request_creation_policy: Attribute[str] = NotSet
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
@@ -826,6 +828,11 @@ class Repository(CompletableGithubObject):
         return self._has_projects.value
 
     @property
+    def has_pull_requests(self) -> bool:
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
+
+    @property
     def has_wiki(self) -> bool:
         """
         :type: bool
@@ -1063,6 +1070,11 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._private)
         return self._private.value
+
+    @property
+    def pull_request_creation_policy(self) -> str:
+        self._completeIfNotSet(self._pull_request_creation_policy)
+        return self._pull_request_creation_policy.value
 
     @property
     def pulls_url(self) -> str:
@@ -4807,6 +4819,8 @@ class Repository(CompletableGithubObject):
             self._has_pages = self._makeBoolAttribute(attributes["has_pages"])
         if "has_projects" in attributes:  # pragma no branch
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
@@ -4892,6 +4906,8 @@ class Repository(CompletableGithubObject):
             self._permissions = self._makeClassAttribute(github.Permissions.Permissions, attributes["permissions"])
         if "private" in attributes:  # pragma no branch
             self._private = self._makeBoolAttribute(attributes["private"])
+        if "pull_request_creation_policy" in attributes:  # pragma no branch
+            self._pull_request_creation_policy = self._makeStringAttribute(attributes["pull_request_creation_policy"])
         if "pulls_url" in attributes:  # pragma no branch
             self._pulls_url = self._makeStringAttribute(attributes["pulls_url"])
         if "pushed_at" in attributes:  # pragma no branch
@@ -4981,11 +4997,23 @@ class RepositorySearchResult(Repository):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._has_pull_requests: Attribute[bool] = NotSet
+        self._pull_request_creation_policy: Attribute[str] = NotSet
         self._score: Attribute[float] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"full_name": self._full_name.value, "score": self._score.value})
+
+    @property
+    def has_pull_requests(self) -> bool:
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
+
+    @property
+    def pull_request_creation_policy(self) -> str:
+        self._completeIfNotSet(self._pull_request_creation_policy)
+        return self._pull_request_creation_policy.value
 
     @property
     def score(self) -> float:
@@ -4999,6 +5027,10 @@ class RepositorySearchResult(Repository):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
+        if "pull_request_creation_policy" in attributes:  # pragma no branch
+            self._pull_request_creation_policy = self._makeStringAttribute(attributes["pull_request_creation_policy"])
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
         if "text_matches" in attributes:  # pragma no branch

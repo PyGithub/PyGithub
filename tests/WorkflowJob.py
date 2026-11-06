@@ -23,6 +23,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -36,6 +38,7 @@ class WorkflowJob(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.job.id, 11421878319)
+        self.assertEqual(self.job.run_attempt, 1)
         self.assertEqual(self.job.run_id, 4205440316)
         self.assertEqual(
             self.job.run_url,
@@ -89,5 +92,6 @@ class WorkflowJob(Framework.TestCase):
         self.assertEqual(self.job.created_at, created_at)
         self.assertEqual(self.job.head_branch, "tz-aware-2")
         self.assertEqual(self.job.labels, ["ubuntu-latest"])
+        self.assertEqual(self.job.workflow_name, "CI")
         self.assertEqual(self.job.run_attempt, 1)
         self.assertEqual(self.job.workflow_name, "CI")

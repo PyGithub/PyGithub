@@ -48,6 +48,8 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         self._code_scanning_delegated_alert_dismissal: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._dependabot_alerts: Attribute[str] = NotSet
+        self._dependabot_delegated_alert_dismissal: Attribute[str] = NotSet
+        self._dependabot_reachability: Attribute[str] = NotSet
         self._dependabot_security_updates: Attribute[str] = NotSet
         self._dependency_graph: Attribute[str] = NotSet
         self._dependency_graph_autosubmit_action: Attribute[str] = NotSet
@@ -62,7 +64,9 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         self._secret_scanning_delegated_alert_dismissal: Attribute[str] = NotSet
         self._secret_scanning_delegated_bypass: Attribute[str] = NotSet
         self._secret_scanning_delegated_bypass_options: Attribute[dict[str, Any]] = NotSet
+        self._secret_scanning_extended_metadata: Attribute[str] = NotSet
         self._secret_scanning_generic_secrets: Attribute[str] = NotSet
+        self._secret_scanning_generic_secrets_push_protection: Attribute[str] = NotSet
         self._secret_scanning_non_provider_patterns: Attribute[str] = NotSet
         self._secret_scanning_push_protection: Attribute[str] = NotSet
         self._secret_scanning_validity_checks: Attribute[str] = NotSet
@@ -98,6 +102,14 @@ class CodeSecurityConfig(NonCompletableGithubObject):
     @property
     def dependabot_alerts(self) -> str:
         return self._dependabot_alerts.value
+
+    @property
+    def dependabot_delegated_alert_dismissal(self) -> str:
+        return self._dependabot_delegated_alert_dismissal.value
+
+    @property
+    def dependabot_reachability(self) -> str:
+        return self._dependabot_reachability.value
 
     @property
     def dependabot_security_updates(self) -> str:
@@ -156,8 +168,16 @@ class CodeSecurityConfig(NonCompletableGithubObject):
         return self._secret_scanning_delegated_bypass_options.value
 
     @property
+    def secret_scanning_extended_metadata(self) -> str:
+        return self._secret_scanning_extended_metadata.value
+
+    @property
     def secret_scanning_generic_secrets(self) -> str:
         return self._secret_scanning_generic_secrets.value
+
+    @property
+    def secret_scanning_generic_secrets_push_protection(self) -> str:
+        return self._secret_scanning_generic_secrets_push_protection.value
 
     @property
     def secret_scanning_non_provider_patterns(self) -> str:
@@ -199,6 +219,12 @@ class CodeSecurityConfig(NonCompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "dependabot_alerts" in attributes:  # pragma no branch
             self._dependabot_alerts = self._makeStringAttribute(attributes["dependabot_alerts"])
+        if "dependabot_delegated_alert_dismissal" in attributes:  # pragma no branch
+            self._dependabot_delegated_alert_dismissal = self._makeStringAttribute(
+                attributes["dependabot_delegated_alert_dismissal"]
+            )
+        if "dependabot_reachability" in attributes:  # pragma no branch
+            self._dependabot_reachability = self._makeStringAttribute(attributes["dependabot_reachability"])
         if "dependabot_security_updates" in attributes:  # pragma no branch
             self._dependabot_security_updates = self._makeStringAttribute(attributes["dependabot_security_updates"])
         if "dependency_graph" in attributes:  # pragma no branch
@@ -239,9 +265,17 @@ class CodeSecurityConfig(NonCompletableGithubObject):
             self._secret_scanning_delegated_bypass_options = self._makeDictAttribute(
                 attributes["secret_scanning_delegated_bypass_options"]
             )
+        if "secret_scanning_extended_metadata" in attributes:  # pragma no branch
+            self._secret_scanning_extended_metadata = self._makeStringAttribute(
+                attributes["secret_scanning_extended_metadata"]
+            )
         if "secret_scanning_generic_secrets" in attributes:  # pragma no branch
             self._secret_scanning_generic_secrets = self._makeStringAttribute(
                 attributes["secret_scanning_generic_secrets"]
+            )
+        if "secret_scanning_generic_secrets_push_protection" in attributes:  # pragma no branch
+            self._secret_scanning_generic_secrets_push_protection = self._makeStringAttribute(
+                attributes["secret_scanning_generic_secrets_push_protection"]
             )
         if "secret_scanning_non_provider_patterns" in attributes:  # pragma no branch
             self._secret_scanning_non_provider_patterns = self._makeStringAttribute(
