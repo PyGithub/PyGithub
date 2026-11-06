@@ -70,6 +70,7 @@ class DependabotAlert(Framework.TestCase):
             alert.security_advisory.description,
             "The `xmlattr` filter in affected versions of Jinja accepts keys containing spaces. XML/HTML attributes cannot contain spaces, as each would then be interpreted as a separate attribute. If an application accepts keys (as opposed to only values) as user input, and renders these in pages that other users see as well, an attacker could use this to inject other attributes and perform XSS. Note that accepting keys as user input is not common or a particularly intended use case of the `xmlattr` filter, and an application doing so should already be verifying what keys are provided regardless of this fix.",
         )
+        self.assertEqual(alert.security_advisory.classification, "general")
         self.assertEqual(alert.security_advisory.severity, "medium")
         self.assertEqual(alert.security_advisory.identifiers[0]["value"], "GHSA-h5c8-rqwp-cp95")
         self.assertEqual(alert.security_advisory.identifiers[0]["type"], "GHSA")
