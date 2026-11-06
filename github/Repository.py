@@ -4997,11 +4997,23 @@ class RepositorySearchResult(Repository):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._has_pull_requests: Attribute[bool] = NotSet
+        self._pull_request_creation_policy: Attribute[str] = NotSet
         self._score: Attribute[float] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"full_name": self._full_name.value, "score": self._score.value})
+
+    @property
+    def has_pull_requests(self) -> bool:
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
+
+    @property
+    def pull_request_creation_policy(self) -> str:
+        self._completeIfNotSet(self._pull_request_creation_policy)
+        return self._pull_request_creation_policy.value
 
     @property
     def score(self) -> float:
@@ -5015,6 +5027,10 @@ class RepositorySearchResult(Repository):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
+        if "pull_request_creation_policy" in attributes:  # pragma no branch
+            self._pull_request_creation_policy = self._makeStringAttribute(attributes["pull_request_creation_policy"])
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
         if "text_matches" in attributes:  # pragma no branch
