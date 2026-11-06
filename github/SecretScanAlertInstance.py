@@ -43,6 +43,10 @@ class SecretScanAlertInstance(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/secret-scanning.
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/nullable-secret-scanning-first-detected-location
+
     """
 
     def _initAttributes(self) -> None:

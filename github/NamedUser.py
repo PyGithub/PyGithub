@@ -99,6 +99,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     - /components/schemas/private-user
     - /components/schemas/public-user
     - /components/schemas/simple-user
+    - /components/schemas/team-member
 
     """
 

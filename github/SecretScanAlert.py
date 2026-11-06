@@ -47,6 +47,7 @@ class SecretScanAlert(NonCompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/secret-scanning-alert
+    - /components/schemas/secret-scanning-alert-with-metadata
 
     """
 
