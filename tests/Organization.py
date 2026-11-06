@@ -896,6 +896,10 @@ class Organization(Framework.TestCase):
     def testGetCodeSecurityConfig(self):
         config = self.org.get_code_security_config(id=17)
         self.assertEqual(config.id, 17)
+        self.assertEqual(config.dependabot_delegated_alert_dismissal, "disabled")
+        self.assertEqual(config.dependabot_reachability, "enabled")
+        self.assertEqual(config.secret_scanning_extended_metadata, "not_set")
+        self.assertEqual(config.secret_scanning_generic_secrets_push_protection, "enabled")
 
     def testSetDefaultCodeSecurityConfig(self):
         self.org.set_default_code_security_config(id=17, default_for_new_repos="all")
