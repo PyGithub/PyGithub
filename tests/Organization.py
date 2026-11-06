@@ -828,6 +828,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(custom_property.required, True)
         self.assertEqual(custom_property.default_value, "foo")
         self.assertEqual(custom_property.description, "description")
+        self.assertEqual(custom_property.regex, "^[a-z]+$")
+        self.assertEqual(custom_property.require_explicit_values, True)
         self.assertEqual(custom_property.url, "https://api.github.com/orgs/BeaverSoftware/properties/schema/property_1")
         self.assertEqual(custom_property.values_editable_by, "org_actors")
 

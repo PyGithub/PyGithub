@@ -90,6 +90,8 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
         self._default_value: Attribute[str | list[str]] = NotSet
         self._description: Attribute[str] = NotSet
         self._property_name: Attribute[str] = NotSet
+        self._regex: Attribute[str] = NotSet
+        self._require_explicit_values: Attribute[bool] = NotSet
         self._required: Attribute[bool] = NotSet
         self._source_type: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
@@ -111,6 +113,14 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
     @property
     def property_name(self) -> str:
         return self._property_name.value
+
+    @property
+    def regex(self) -> str:
+        return self._regex.value
+
+    @property
+    def require_explicit_values(self) -> bool:
+        return self._require_explicit_values.value
 
     @property
     def required(self) -> Opt[bool | None]:
@@ -141,6 +151,10 @@ class OrganizationCustomProperty(NonCompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "property_name" in attributes:  # pragma no branch
             self._property_name = self._makeStringAttribute(attributes["property_name"])
+        if "regex" in attributes:  # pragma no branch
+            self._regex = self._makeStringAttribute(attributes["regex"])
+        if "require_explicit_values" in attributes:  # pragma no branch
+            self._require_explicit_values = self._makeBoolAttribute(attributes["require_explicit_values"])
         if "required" in attributes:
             self._required = self._makeBoolAttribute(attributes["required"])
         if "source_type" in attributes:  # pragma no branch
