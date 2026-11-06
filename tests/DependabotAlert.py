@@ -60,6 +60,7 @@ class DependabotAlert(Framework.TestCase):
         self.assertEqual(alert.dependency.package.name, "jinja2")
         self.assertEqual(alert.dependency.manifest_path, "requirements/docs.txt")
         self.assertEqual(alert.dependency.scope, "runtime")
+        self.assertEqual(alert.dependency.version_requirement, "==3.1.2")
         self.assertEqual(alert.security_advisory.ghsa_id, "GHSA-h5c8-rqwp-cp95")
         self.assertEqual(alert.security_advisory.cve_id, "CVE-2024-22195")
         self.assertEqual(
