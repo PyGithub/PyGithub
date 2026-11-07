@@ -1,0 +1,20 @@
++ python scripts/openapi.py create class --tests --new-schemas as-dict github openapi.spec.json openapi.index IssueFieldValue https://docs.github.com/en/rest/issues/issue-field-values /components/schemas/issue-field-value
+Creating class github.IssueFieldValue.IssueFieldValue with parent github.GithubObject.NonCompletableGithubObject in ./github/IssueFieldValue.py
+Updating index
+Indexing 13 Python files
+Indexed 23 classes
+Indexed 6 paths
+Indexed 41 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class IssueFieldValue
+Applying spec openapi.spec.json to github.IssueFieldValue.IssueFieldValue (github/IssueFieldValue.py)
+Applying schema /components/schemas/issue-field-value
+Class IssueFieldValue changed
+Test tests/IssueFieldValue.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 13 Python files
+Indexed 23 classes
+Indexed 6 paths
+Indexed 41 schemas
+Indexing OpenAPI spec
