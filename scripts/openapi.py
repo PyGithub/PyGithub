@@ -100,6 +100,9 @@ def as_python_type(
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
         )
+    elif ("oneOf" in schema_type or "anyOf" in schema_type) and "/".join([""] + schema_path) in schema_to_class:
+        # the wrapper schema itself is implemented by a class, no need to look at the alternative schemas
+        schema = "/".join([""] + schema_path)
     elif "oneOf" in schema_type or "anyOf" in schema_type:
         key = "oneOf" if "oneOf" in schema_type else "anyOf"
         types = [

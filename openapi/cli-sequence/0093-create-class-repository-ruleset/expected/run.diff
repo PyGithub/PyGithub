@@ -1,7 +1,7 @@
 diff --unified --recursive --new-file before/github/RepositoryRuleset.py after/github/RepositoryRuleset.py
 --- before/github/RepositoryRuleset.py	YYYY-MM-DD HH:MM:SS +0000
 +++ after/github/RepositoryRuleset.py	YYYY-MM-DD HH:MM:SS +0000
-@@ -0,0 +1,168 @@
+@@ -0,0 +1,170 @@
 +############################ Copyrights and license ############################
 +#                                                                              #
 +#                                                                              #
@@ -30,8 +30,10 @@ diff --unified --recursive --new-file before/github/RepositoryRuleset.py after/g
 +
 +from github.GithubObject import CompletableGithubObject
 +from github.GithubObject import Attribute, NotSet
++import github.RepositoryRule
 +
 +if TYPE_CHECKING:
++    from github.RepositoryRule import RepositoryRule
 +    pass
 +
 +
@@ -59,7 +61,7 @@ diff --unified --recursive --new-file before/github/RepositoryRuleset.py after/g
 +        self._id: Attribute[int] = NotSet
 +        self._name: Attribute[str] = NotSet
 +        self._node_id: Attribute[str] = NotSet
-+        self._rules: Attribute[list[dict[str, Any]]] = NotSet
++        self._rules: Attribute[list[RepositoryRule]] = NotSet
 +        self._source: Attribute[str] = NotSet
 +        self._source_type: Attribute[str] = NotSet
 +        self._target: Attribute[str] = NotSet
@@ -115,7 +117,7 @@ diff --unified --recursive --new-file before/github/RepositoryRuleset.py after/g
 +        return self._node_id.value
 +
 +    @property
-+    def rules(self) -> list[dict[str, Any]]:
++    def rules(self) -> list[RepositoryRule]:
 +        self._completeIfNotSet(self._rules)
 +        return self._rules.value
 +
@@ -160,7 +162,7 @@ diff --unified --recursive --new-file before/github/RepositoryRuleset.py after/g
 +        if "node_id" in attributes:  # pragma no branch
 +            self._node_id = self._makeStringAttribute(attributes["node_id"])
 +        if "rules" in attributes:  # pragma no branch
-+            self._rules = self._makeListOfDictsAttribute(attributes["rules"])
++            self._rules = self._makeListOfClassesAttribute(github.RepositoryRule.RepositoryRule, attributes["rules"])
 +        if "source" in attributes:  # pragma no branch
 +            self._source = self._makeStringAttribute(attributes["source"])
 +        if "source_type" in attributes:  # pragma no branch
@@ -412,7 +414,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +        "rules": {
 +          "name": "rules",
 +          "returns": [
-+            "list[dict[str, Any]]"
++            "list[RepositoryRule]"
 +          ],
 +          "schema": {
 +            "items": {
@@ -611,7 +613,7 @@ diff --unified --recursive --new-file before/tests/RepositoryRuleset.py after/te
 +        self.assertEqual(rr.id, 0)
 +        self.assertEqual(rr.name, "")
 +        self.assertEqual(rr.node_id, "")
-+        self.assertEqual(rr.rules, "list[dict[str, Any]]")
++        self.assertEqual(rr.rules[0].some_attribute, "")
 +        self.assertEqual(rr.source, "")
 +        self.assertEqual(rr.source_type, "")
 +        self.assertEqual(rr.target, "")
