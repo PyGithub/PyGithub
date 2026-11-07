@@ -550,7 +550,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "SecretScanAlert",
          "SecretScanAlertInstance"
        ],
-@@ -6676,6 +7023,9 @@
+@@ -6691,6 +7038,9 @@
        "/components/schemas/repository-rule": [
          "RepositoryRule"
        ],

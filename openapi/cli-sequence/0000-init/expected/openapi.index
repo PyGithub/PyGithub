@@ -681,6 +681,11 @@
         "/app",
         "/apps/{app_slug}"
       ],
+      "/components/schemas/interaction-limit-response": [
+        "/orgs/{org}/interaction-limits",
+        "/repos/{owner}/{repo}/interaction-limits",
+        "/user/interaction-limits"
+      ],
       "/components/schemas/issue": [
         "/repos/{owner}/{repo}/issues/{issue_number}",
         "/repos/{owner}/{repo}/issues/{issue_number}/parent"
@@ -851,6 +856,9 @@
       "/components/schemas/repo-codespaces-secret": [
         "/repos/{owner}/{repo}/codespaces/secrets/{secret_name}"
       ],
+      "/components/schemas/repository": [
+        "/users/{username}/starred"
+      ],
       "/components/schemas/repository-advisory": [
         "/repos/{owner}/{repo}/security-advisories/{ghsa_id}"
       ],
@@ -903,10 +911,17 @@
         "/orgs/{org}/actions/permissions/self-hosted-runners"
       ],
       "/components/schemas/simple-user": [
-        "/enterprises/{enterprise}/teams/{enterprise-team}/memberships/{username}"
+        "/enterprises/{enterprise}/teams/{enterprise-team}/memberships/{username}",
+        "/repos/{owner}/{repo}/stargazers"
       ],
       "/components/schemas/ssh-signing-key": [
         "/user/ssh_signing_keys/{ssh_signing_key_id}"
+      ],
+      "/components/schemas/stargazer": [
+        "/repos/{owner}/{repo}/stargazers"
+      ],
+      "/components/schemas/starred-repository": [
+        "/users/{username}/starred"
       ],
       "/components/schemas/status-check-policy": [
         "/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"

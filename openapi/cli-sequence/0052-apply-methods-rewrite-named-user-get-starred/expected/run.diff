@@ -31,7 +31,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        }
      },
-@@ -3824,7 +3824,7 @@
+@@ -3839,7 +3839,7 @@
              "class": "NamedUser",
              "name": "get_starred",
              "returns": [

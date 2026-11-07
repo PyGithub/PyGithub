@@ -3362,11 +3362,12 @@ class OpenApi:
         """
         if "$ref" in schema:
             return [schema.get("$ref")]
-        if "oneOf" in schema:
+        if "oneOf" in schema or "anyOf" in schema:
+            key = "oneOf" if "oneOf" in schema else "anyOf"
             return [
                 spec_type
-                for idx, component in enumerate(schema.get("oneOf"))
-                for spec_type in self.get_inner_spec_types(component, schema_path + ["oneOf", str(idx)])
+                for idx, component in enumerate(schema.get(key))
+                for spec_type in self.get_inner_spec_types(component, schema_path + [key, str(idx)])
             ]
         if "allOf" in schema and len(schema.get("allOf")) == 1:
             return [schema.get("allOf")[0].get("$ref")]

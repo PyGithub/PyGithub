@@ -273,7 +273,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Items",
          "Reaction",
          "RepositoryRule",
-@@ -7113,6 +7272,9 @@
+@@ -7128,6 +7287,9 @@
        "/components/schemas/issue-comment": [
          "IssueComment"
        ],

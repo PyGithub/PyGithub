@@ -71,7 +71,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/users/{username}/repos": {
          "get": [
            "PaginatedList[Repository]"
-@@ -7124,6 +7146,19 @@
+@@ -7139,6 +7161,19 @@
              ]
            }
          ]

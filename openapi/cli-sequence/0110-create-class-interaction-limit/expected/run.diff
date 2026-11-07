@@ -185,7 +185,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Items",
          "Reaction",
          "RepositoryRule",
-@@ -7009,6 +7086,9 @@
+@@ -7024,6 +7101,9 @@
        "/components/schemas/full-repository": [
          "Repository"
        ],

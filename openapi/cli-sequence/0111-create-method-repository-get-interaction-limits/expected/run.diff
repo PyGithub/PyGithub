@@ -64,7 +64,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "PaginatedList[Reaction]"
-@@ -7202,6 +7223,19 @@
+@@ -7217,6 +7238,19 @@
              ]
            }
          ]

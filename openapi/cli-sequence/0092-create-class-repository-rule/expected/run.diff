@@ -116,7 +116,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "SecretScanAlertInstance"
        ],
        "Protocol": [
-@@ -6645,6 +6673,9 @@
+@@ -6660,6 +6688,9 @@
        "/components/schemas/repository": [
          "Repository"
        ],

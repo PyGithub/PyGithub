@@ -81,7 +81,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        }
      },
      "return_schema_to_paths": {
-@@ -2155,6 +2177,19 @@
+@@ -2170,6 +2192,19 @@
              ]
            }
          ]

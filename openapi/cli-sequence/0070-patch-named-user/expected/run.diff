@@ -148,7 +148,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/users/{username}/starred": {
          "get": [
            "PaginatedList[dict[str, Any]] | PaginatedList[Repository]"
-@@ -3904,6 +3946,19 @@
+@@ -3919,6 +3961,19 @@
      }
    },
    "paths": {
@@ -168,7 +168,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
        "GET": {
          "methods": [
-@@ -3926,6 +3981,19 @@
+@@ -3941,6 +3996,19 @@
              ]
            }
          ]
