@@ -1,0 +1,4 @@
+# response is anyOf list of simple-user (NamedUser) and list of stargazer (not implemented)
+python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index Repository get_stargazers get /repos/{owner}/{repo}/stargazers
+python scripts/openapi.py create method github openapi.spec.json openapi.index Repository get_stargazers get /repos/{owner}/{repo}/stargazers
+python scripts/openapi.py index github openapi.spec.json openapi.index
