@@ -47,7 +47,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "module": "Repository",
        "name": "Repository",
        "package": "github",
-@@ -5931,6 +5943,11 @@
+@@ -6306,6 +6318,11 @@
            "IssueComment.create_reaction"
          ]
        },
@@ -59,7 +59,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/users/{username}/repos": {
          "get": [
            "NamedUser.get_repos"
-@@ -5956,6 +5973,11 @@
+@@ -6331,6 +6348,11 @@
            "Reaction"
          ]
        },
@@ -71,7 +71,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/users/{username}/repos": {
          "get": [
            "PaginatedList[Repository]"
-@@ -6743,6 +6765,19 @@
+@@ -7124,6 +7146,19 @@
              ]
            }
          ]

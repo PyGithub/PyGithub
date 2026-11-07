@@ -25,10 +25,10 @@ Using spec openapi.spec.json
 Creating method github.Repository.Repository.get_interaction_limits in github/Repository.py
 Schema not implemented: /paths//repos/{owner}/{repo}/interaction-limits/get/responses/200/content/application/json/schema/anyOf/1
 Updating index
-Indexing 12 Python files
-Indexed 22 classes
+Indexing 14 Python files
+Indexed 24 classes
 Indexed 6 paths
-Indexed 40 schemas
+Indexed 42 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Repository
@@ -36,8 +36,8 @@ Applying spec openapi.spec.json to github.Repository.Repository (github/Reposito
 - Updating method get_interaction_limits
 Class Repository changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
-Indexing 12 Python files
-Indexed 22 classes
+Indexing 14 Python files
+Indexed 24 classes
 Indexed 6 paths
-Indexed 40 schemas
+Indexed 42 schemas
 Indexing OpenAPI spec

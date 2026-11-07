@@ -161,7 +161,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "IssueComment": {
        "bases": [
          "CompletableGithubObject"
-@@ -5863,6 +5937,7 @@
+@@ -6232,6 +6306,7 @@
          "GitAuthor",
          "GitCommit",
          "GithubObject",
@@ -169,7 +169,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "IssueComment",
          "Items",
          "NamedUser",
-@@ -5902,6 +5977,7 @@
+@@ -6274,6 +6349,7 @@
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
          "GitCommit",
@@ -177,15 +177,15 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "IssueComment",
          "Items",
          "NamedUser",
-@@ -5918,6 +5994,7 @@
+@@ -6292,6 +6368,7 @@
        "NonCompletableGithubObject": [
          "GitAuthor",
          "GitCommit",
 +        "InteractionLimit",
          "Items",
          "Reaction",
-         "SecretScanAlertInstance"
-@@ -6634,6 +6711,9 @@
+         "RepositoryRule",
+@@ -7009,6 +7086,9 @@
        "/components/schemas/full-repository": [
          "Repository"
        ],

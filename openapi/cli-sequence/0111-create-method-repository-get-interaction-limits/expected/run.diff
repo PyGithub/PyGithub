@@ -40,7 +40,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "get_stargazers": {
            "call": {
              "docs": "<https://docs.github.com/rest/activity/starring#list-stargazers>`_",
-@@ -6012,6 +6023,11 @@
+@@ -6387,6 +6398,11 @@
            "NamedUser.get_repo"
          ]
        },
@@ -52,7 +52,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "IssueComment.get_reactions"
-@@ -6042,6 +6058,11 @@
+@@ -6417,6 +6433,11 @@
            "Repository"
          ]
        },
@@ -64,7 +64,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
          "get": [
            "PaginatedList[Reaction]"
-@@ -6821,6 +6842,19 @@
+@@ -7202,6 +7223,19 @@
              ]
            }
          ]

@@ -1,0 +1,618 @@
+diff --unified --recursive --new-file before/github/RepositoryRuleset.py after/github/RepositoryRuleset.py
+--- before/github/RepositoryRuleset.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/RepositoryRuleset.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,168 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import CompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class RepositoryRuleset(CompletableGithubObject):
++    """
++    This class represents RepositoryRuleset.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/repos/rules
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/repository-ruleset
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self.__links: Attribute[dict[str, Any]] = NotSet
++        self._bypass_actors: Attribute[list[dict[str, Any]]] = NotSet
++        self._conditions: Attribute[dict[str, Any]] = NotSet
++        self._created_at: Attribute[datetime] = NotSet
++        self._current_user_can_bypass: Attribute[str] = NotSet
++        self._enforcement: Attribute[str] = NotSet
++        self._id: Attribute[int] = NotSet
++        self._name: Attribute[str] = NotSet
++        self._node_id: Attribute[str] = NotSet
++        self._rules: Attribute[list[dict[str, Any]]] = NotSet
++        self._source: Attribute[str] = NotSet
++        self._source_type: Attribute[str] = NotSet
++        self._target: Attribute[str] = NotSet
++        self._updated_at: Attribute[datetime] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def _links(self) -> dict[str, Any]:
++        self._completeIfNotSet(self.__links)
++        return self.__links.value
++
++    @property
++    def bypass_actors(self) -> list[dict[str, Any]]:
++        self._completeIfNotSet(self._bypass_actors)
++        return self._bypass_actors.value
++
++    @property
++    def conditions(self) -> dict[str, Any]:
++        self._completeIfNotSet(self._conditions)
++        return self._conditions.value
++
++    @property
++    def created_at(self) -> datetime:
++        self._completeIfNotSet(self._created_at)
++        return self._created_at.value
++
++    @property
++    def current_user_can_bypass(self) -> str:
++        self._completeIfNotSet(self._current_user_can_bypass)
++        return self._current_user_can_bypass.value
++
++    @property
++    def enforcement(self) -> str:
++        self._completeIfNotSet(self._enforcement)
++        return self._enforcement.value
++
++    @property
++    def id(self) -> int:
++        self._completeIfNotSet(self._id)
++        return self._id.value
++
++    @property
++    def name(self) -> str:
++        self._completeIfNotSet(self._name)
++        return self._name.value
++
++    @property
++    def node_id(self) -> str:
++        self._completeIfNotSet(self._node_id)
++        return self._node_id.value
++
++    @property
++    def rules(self) -> list[dict[str, Any]]:
++        self._completeIfNotSet(self._rules)
++        return self._rules.value
++
++    @property
++    def source(self) -> str:
++        self._completeIfNotSet(self._source)
++        return self._source.value
++
++    @property
++    def source_type(self) -> str:
++        self._completeIfNotSet(self._source_type)
++        return self._source_type.value
++
++    @property
++    def target(self) -> str:
++        self._completeIfNotSet(self._target)
++        return self._target.value
++
++    @property
++    def updated_at(self) -> datetime:
++        self._completeIfNotSet(self._updated_at)
++        return self._updated_at.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "_links" in attributes:  # pragma no branch
++            self.__links = self._makeDictAttribute(attributes["_links"])
++        if "bypass_actors" in attributes:  # pragma no branch
++            self._bypass_actors = self._makeListOfDictsAttribute(attributes["bypass_actors"])
++        if "conditions" in attributes:  # pragma no branch
++            self._conditions = self._makeDictAttribute(attributes["conditions"])
++        if "created_at" in attributes:  # pragma no branch
++            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
++        if "current_user_can_bypass" in attributes:  # pragma no branch
++            self._current_user_can_bypass = self._makeStringAttribute(attributes["current_user_can_bypass"])
++        if "enforcement" in attributes:  # pragma no branch
++            self._enforcement = self._makeStringAttribute(attributes["enforcement"])
++        if "id" in attributes:  # pragma no branch
++            self._id = self._makeIntAttribute(attributes["id"])
++        if "name" in attributes:  # pragma no branch
++            self._name = self._makeStringAttribute(attributes["name"])
++        if "node_id" in attributes:  # pragma no branch
++            self._node_id = self._makeStringAttribute(attributes["node_id"])
++        if "rules" in attributes:  # pragma no branch
++            self._rules = self._makeListOfDictsAttribute(attributes["rules"])
++        if "source" in attributes:  # pragma no branch
++            self._source = self._makeStringAttribute(attributes["source"])
++        if "source_type" in attributes:  # pragma no branch
++            self._source_type = self._makeStringAttribute(attributes["source_type"])
++        if "target" in attributes:  # pragma no branch
++            self._target = self._makeStringAttribute(attributes["target"])
++        if "updated_at" in attributes:  # pragma no branch
++            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -4857,6 +4857,350 @@
+       ],
+       "test_filename": "tests/RepositoryRule.py"
+     },
++    "RepositoryRuleset": {
++      "bases": [
++        "CompletableGithubObject"
++      ],
++      "docstring": "This class represents RepositoryRuleset.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/repos/rules\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/repository-ruleset",
++      "filename": "github/RepositoryRuleset.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "CompletableGithubObject",
++        "GithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "RepositoryRuleset",
++      "name": "RepositoryRuleset",
++      "package": "github",
++      "properties": {
++        "_links": {
++          "name": "_links",
++          "returns": [
++            "dict[str, Any]"
++          ],
++          "schema": {
++            "properties": {
++              "html": {
++                "nullable": true,
++                "properties": {
++                  "href": {
++                    "description": "The html URL of the ruleset",
++                    "type": "string"
++                  }
++                },
++                "type": "object"
++              },
++              "self": {
++                "properties": {
++                  "href": {
++                    "description": "The URL of the ruleset",
++                    "type": "string"
++                  }
++                },
++                "type": "object"
++              }
++            },
++            "type": "object"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "properties": {
++                "html": {
++                  "nullable": true,
++                  "properties": {
++                    "href": {
++                      "description": "The html URL of the ruleset",
++                      "type": "string"
++                    }
++                  },
++                  "type": "object"
++                },
++                "self": {
++                  "properties": {
++                    "href": {
++                      "description": "The URL of the ruleset",
++                      "type": "string"
++                    }
++                  },
++                  "type": "object"
++                }
++              },
++              "type": "object"
++            }
++          }
++        },
++        "bypass_actors": {
++          "name": "bypass_actors",
++          "returns": [
++            "list[dict[str, Any]]"
++          ],
++          "schema": {
++            "description": "The actors that can bypass the rules in this ruleset",
++            "items": {
++              "$ref": "#/components/schemas/repository-ruleset-bypass-actor"
++            },
++            "type": "array"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "description": "The actors that can bypass the rules in this ruleset",
++              "items": {
++                "$ref": "#/components/schemas/repository-ruleset-bypass-actor"
++              },
++              "type": "array"
++            }
++          }
++        },
++        "conditions": {
++          "name": "conditions",
++          "returns": [
++            "dict[str, Any]"
++          ],
++          "schema": {
++            "anyOf": [
++              {
++                "$ref": "#/components/schemas/repository-ruleset-conditions"
++              },
++              {
++                "$ref": "#/components/schemas/org-ruleset-conditions"
++              }
++            ],
++            "nullable": true
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "anyOf": [
++                {
++                  "$ref": "#/components/schemas/repository-ruleset-conditions"
++                },
++                {
++                  "$ref": "#/components/schemas/org-ruleset-conditions"
++                }
++              ],
++              "nullable": true
++            }
++          }
++        },
++        "created_at": {
++          "name": "created_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        },
++        "current_user_can_bypass": {
++          "name": "current_user_can_bypass",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The bypass type of the user making the API request for this ruleset. This field is only returned when\nquerying the repository-level endpoint.",
++            "enum": [
++              "always",
++              "pull_requests_only",
++              "never",
++              "exempt"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "description": "The bypass type of the user making the API request for this ruleset. This field is only returned when\nquerying the repository-level endpoint.",
++              "enum": [
++                "always",
++                "pull_requests_only",
++                "never",
++                "exempt"
++              ],
++              "type": "string"
++            }
++          }
++        },
++        "enforcement": {
++          "name": "enforcement",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/repository-rule-enforcement"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "$ref": "#/components/schemas/repository-rule-enforcement"
++            }
++          }
++        },
++        "id": {
++          "name": "id",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "description": "The ID of the ruleset",
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "description": "The ID of the ruleset",
++              "type": "integer"
++            }
++          }
++        },
++        "name": {
++          "name": "name",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The name of the ruleset",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "description": "The name of the ruleset",
++              "type": "string"
++            }
++          }
++        },
++        "node_id": {
++          "name": "node_id",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "type": "string"
++            }
++          }
++        },
++        "rules": {
++          "name": "rules",
++          "returns": [
++            "list[dict[str, Any]]"
++          ],
++          "schema": {
++            "items": {
++              "$ref": "#/components/schemas/repository-rule"
++            },
++            "type": "array"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "items": {
++                "$ref": "#/components/schemas/repository-rule"
++              },
++              "type": "array"
++            }
++          }
++        },
++        "source": {
++          "name": "source",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The name of the source",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "description": "The name of the source",
++              "type": "string"
++            }
++          }
++        },
++        "source_type": {
++          "name": "source_type",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The type of the source of the ruleset",
++            "enum": [
++              "Repository",
++              "Organization",
++              "Enterprise"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "description": "The type of the source of the ruleset",
++              "enum": [
++                "Repository",
++                "Organization",
++                "Enterprise"
++              ],
++              "type": "string"
++            }
++          }
++        },
++        "target": {
++          "name": "target",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The target of the ruleset",
++            "enum": [
++              "branch",
++              "tag",
++              "push",
++              "repository"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "description": "The target of the ruleset",
++              "enum": [
++                "branch",
++                "tag",
++                "push",
++                "repository"
++              ],
++              "type": "string"
++            }
++          }
++        },
++        "updated_at": {
++          "name": "updated_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository-ruleset": {
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/repository-ruleset"
++      ],
++      "test_filename": "tests/RepositoryRuleset.py"
++    },
+     "SecretScanAlert": {
+       "bases": [
+         "CompletableGithubObject"
+@@ -5884,6 +6228,7 @@
+         "Reaction",
+         "Repository",
+         "RepositoryRule",
++        "RepositoryRuleset",
+         "SecretScanAlert",
+         "SecretScanAlertInstance"
+       ],
+@@ -5903,6 +6248,7 @@
+         "NamedUser",
+         "NamedUserSearchResult",
+         "Repository",
++        "RepositoryRuleset",
+         "SecretScanAlert"
+       ],
+       "CompletableGithubObjectWithPaginatedProperty": [
+@@ -5924,6 +6270,7 @@
+         "Reaction",
+         "Repository",
+         "RepositoryRule",
++        "RepositoryRuleset",
+         "SecretScanAlert",
+         "SecretScanAlertInstance"
+       ],
+@@ -6676,6 +7023,9 @@
+       "/components/schemas/repository-rule": [
+         "RepositoryRule"
+       ],
++      "/components/schemas/repository-ruleset": [
++        "RepositoryRuleset"
++      ],
+       "/components/schemas/search-result-text-matches/items": [
+         "Items"
+       ],
+diff --unified --recursive --new-file before/tests/RepositoryRuleset.py after/tests/RepositoryRuleset.py
+--- before/tests/RepositoryRuleset.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/RepositoryRuleset.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,54 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class RepositoryRuleset(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type RepositoryRuleset and assign to self.rr, then run:
++        #   pytest ./tests/RepositoryRuleset.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/RepositoryRuleset.py testAttributes
++        #   pre-commit run --all-files
++        self.rr = None
++
++    def testAttributes(self):
++        rr = self.rr
++        self.assertEqual(rr.__repr__(), "")
++        self.assertEqual(rr._links, "dict[str, Any]")
++        self.assertEqual(rr.bypass_actors, "list[dict[str, Any]]")
++        self.assertEqual(rr.conditions, "dict[str, Any]")
++        self.assertEqual(rr.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(rr.current_user_can_bypass, "")
++        self.assertEqual(rr.enforcement, "")
++        self.assertEqual(rr.id, 0)
++        self.assertEqual(rr.name, "")
++        self.assertEqual(rr.node_id, "")
++        self.assertEqual(rr.rules, "list[dict[str, Any]]")
++        self.assertEqual(rr.source, "")
++        self.assertEqual(rr.source_type, "")
++        self.assertEqual(rr.target, "")
++        self.assertEqual(rr.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
