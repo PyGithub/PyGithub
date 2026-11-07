@@ -1,0 +1,244 @@
+diff --unified --recursive --new-file before/github/InteractionLimit.py after/github/InteractionLimit.py
+--- before/github/InteractionLimit.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/InteractionLimit.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,75 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class InteractionLimit(NonCompletableGithubObject):
++    """
++    This class represents InteractionLimit.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/interactions
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/interaction-limit-response
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._expires_at: Attribute[datetime] = NotSet
++        self._limit: Attribute[str] = NotSet
++        self._origin: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def expires_at(self) -> datetime:
++        return self._expires_at.value
++
++    @property
++    def limit(self) -> str:
++        return self._limit.value
++
++    @property
++    def origin(self) -> str:
++        return self._origin.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "expires_at" in attributes:  # pragma no branch
++            self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
++        if "limit" in attributes:  # pragma no branch
++            self._limit = self._makeStringAttribute(attributes["limit"])
++        if "origin" in attributes:  # pragma no branch
++            self._origin = self._makeStringAttribute(attributes["origin"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -1180,6 +1180,80 @@
+       "schemas": [],
+       "test_filename": "tests/GithubObject.py"
+     },
++    "InteractionLimit": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents InteractionLimit.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/interactions\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/interaction-limit-response",
++      "filename": "github/InteractionLimit.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "InteractionLimit",
++      "name": "InteractionLimit",
++      "package": "github",
++      "properties": {
++        "expires_at": {
++          "name": "expires_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "example": "2018-08-17T04:18:39Z",
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/interaction-limit-response": {
++              "example": "2018-08-17T04:18:39Z",
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        },
++        "limit": {
++          "name": "limit",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/interaction-group"
++          },
++          "schemas": {
++            "/components/schemas/interaction-limit-response": {
++              "$ref": "#/components/schemas/interaction-group"
++            }
++          }
++        },
++        "origin": {
++          "name": "origin",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "repository",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/interaction-limit-response": {
++              "example": "repository",
++              "type": "string"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/interaction-limit-response"
++      ],
++      "test_filename": "tests/InteractionLimit.py"
++    },
+     "IssueComment": {
+       "bases": [
+         "CompletableGithubObject"
+@@ -5919,6 +5993,7 @@
+         "GitAuthor",
+         "GitCommit",
+         "GithubObject",
++        "InteractionLimit",
+         "IssueComment",
+         "Items",
+         "NamedUser",
+@@ -5959,6 +6034,7 @@
+         "CompletableGithubObjectWithPaginatedProperty",
+         "GitAuthor",
+         "GitCommit",
++        "InteractionLimit",
+         "IssueComment",
+         "Items",
+         "NamedUser",
+@@ -5976,6 +6052,7 @@
+       "NonCompletableGithubObject": [
+         "GitAuthor",
+         "GitCommit",
++        "InteractionLimit",
+         "Items",
+         "Reaction",
+         "SecretScanAlertInstance",
+@@ -6693,6 +6770,9 @@
+       "/components/schemas/full-repository": [
+         "Repository"
+       ],
++      "/components/schemas/interaction-limit-response": [
++        "InteractionLimit"
++      ],
+       "/components/schemas/issue-comment": [
+         "IssueComment"
+       ],
+diff --unified --recursive --new-file before/tests/InteractionLimit.py after/tests/InteractionLimit.py
+--- before/tests/InteractionLimit.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/InteractionLimit.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,43 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class InteractionLimit(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type InteractionLimit and assign to self.il, then run:
++        #   pytest ./tests/InteractionLimit.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/InteractionLimit.py testAttributes
++        #   pre-commit run --all-files
++        self.il = None
++
++    def testAttributes(self):
++        il = self.il
++        self.assertEqual(il.__repr__(), "")
++        self.assertEqual(il.expires_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(il.limit, "")
++        self.assertEqual(il.origin, "")

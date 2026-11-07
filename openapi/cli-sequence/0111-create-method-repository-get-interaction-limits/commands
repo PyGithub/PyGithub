@@ -1,0 +1,4 @@
+# response is anyOf interaction-limit-response (InteractionLimit) and an inline empty object
+python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index Repository get_interaction_limits get /repos/{owner}/{repo}/interaction-limits
+python scripts/openapi.py create method github openapi.spec.json openapi.index Repository get_interaction_limits get /repos/{owner}/{repo}/interaction-limits
+python scripts/openapi.py index github openapi.spec.json openapi.index
