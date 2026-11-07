@@ -1,0 +1,385 @@
+diff --unified --recursive --new-file before/github/IssueFieldValue.py after/github/IssueFieldValue.py
+--- before/github/IssueFieldValue.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/IssueFieldValue.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,88 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class IssueFieldValue(NonCompletableGithubObject):
++    """
++    This class represents IssueFieldValue.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/issues/issue-field-values
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/issue-field-value
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._data_type: Attribute[str] = NotSet
++        self._issue_field_id: Attribute[int] = NotSet
++        self._node_id: Attribute[str] = NotSet
++        self._single_select_option: Attribute[dict[str, Any]] = NotSet
++        self._value: Attribute[None] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def data_type(self) -> str:
++        return self._data_type.value
++
++    @property
++    def issue_field_id(self) -> int:
++        return self._issue_field_id.value
++
++    @property
++    def node_id(self) -> str:
++        return self._node_id.value
++
++    @property
++    def single_select_option(self) -> dict[str, Any]:
++        return self._single_select_option.value
++
++    @property
++    def value(self) -> None:
++        return self._value.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "data_type" in attributes:  # pragma no branch
++            self._data_type = self._makeStringAttribute(attributes["data_type"])
++        if "issue_field_id" in attributes:  # pragma no branch
++            self._issue_field_id = self._makeIntAttribute(attributes["issue_field_id"])
++        if "node_id" in attributes:  # pragma no branch
++            self._node_id = self._makeStringAttribute(attributes["node_id"])
++        if "single_select_option" in attributes:  # pragma no branch
++            self._single_select_option = self._makeDictAttribute(attributes["single_select_option"])
++        if "value" in attributes:  # pragma no branch
++            self._value = self._makeClassAttribute(None, attributes["value"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -1507,6 +1507,206 @@
+       ],
+       "test_filename": "tests/IssueComment.py"
+     },
++    "IssueFieldValue": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents IssueFieldValue.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/issues/issue-field-values\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/issue-field-value",
++      "filename": "github/IssueFieldValue.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "IssueFieldValue",
++      "name": "IssueFieldValue",
++      "package": "github",
++      "properties": {
++        "data_type": {
++          "name": "data_type",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The data type of the issue field",
++            "enum": [
++              "text",
++              "single_select",
++              "number",
++              "date"
++            ],
++            "example": "text",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-field-value": {
++              "description": "The data type of the issue field",
++              "enum": [
++                "text",
++                "single_select",
++                "number",
++                "date"
++              ],
++              "example": "text",
++              "type": "string"
++            }
++          }
++        },
++        "issue_field_id": {
++          "name": "issue_field_id",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "description": "Unique identifier for the issue field.",
++            "example": 1,
++            "format": "int64",
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/issue-field-value": {
++              "description": "Unique identifier for the issue field.",
++              "example": 1,
++              "format": "int64",
++              "type": "integer"
++            }
++          }
++        },
++        "node_id": {
++          "name": "node_id",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "IFT_GDKND",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-field-value": {
++              "example": "IFT_GDKND",
++              "type": "string"
++            }
++          }
++        },
++        "single_select_option": {
++          "name": "single_select_option",
++          "returns": [
++            "dict[str, Any]"
++          ],
++          "schema": {
++            "description": "Details about the selected option (only present for single_select fields)",
++            "nullable": true,
++            "properties": {
++              "color": {
++                "description": "The color of the option",
++                "example": "red",
++                "type": "string"
++              },
++              "id": {
++                "description": "Unique identifier for the option.",
++                "example": 1,
++                "format": "int64",
++                "type": "integer"
++              },
++              "name": {
++                "description": "The name of the option",
++                "example": "High",
++                "type": "string"
++              }
++            },
++            "required": [
++              "id",
++              "name",
++              "color"
++            ],
++            "type": "object"
++          },
++          "schemas": {
++            "/components/schemas/issue-field-value": {
++              "description": "Details about the selected option (only present for single_select fields)",
++              "nullable": true,
++              "properties": {
++                "color": {
++                  "description": "The color of the option",
++                  "example": "red",
++                  "type": "string"
++                },
++                "id": {
++                  "description": "Unique identifier for the option.",
++                  "example": 1,
++                  "format": "int64",
++                  "type": "integer"
++                },
++                "name": {
++                  "description": "The name of the option",
++                  "example": "High",
++                  "type": "string"
++                }
++              },
++              "required": [
++                "id",
++                "name",
++                "color"
++              ],
++              "type": "object"
++            }
++          }
++        },
++        "value": {
++          "name": "value",
++          "returns": [
++            "None"
++          ],
++          "schema": {
++            "anyOf": [
++              {
++                "example": "Sample text",
++                "type": "string"
++              },
++              {
++                "example": 42.5,
++                "type": "number"
++              },
++              {
++                "example": 1,
++                "type": "integer"
++              }
++            ],
++            "description": "The value of the issue field",
++            "nullable": true
++          },
++          "schemas": {
++            "/components/schemas/issue-field-value": {
++              "anyOf": [
++                {
++                  "example": "Sample text",
++                  "type": "string"
++                },
++                {
++                  "example": 42.5,
++                  "type": "number"
++                },
++                {
++                  "example": 1,
++                  "type": "integer"
++                }
++              ],
++              "description": "The value of the issue field",
++              "nullable": true
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/issue-field-value"
++      ],
++      "test_filename": "tests/IssueFieldValue.py"
++    },
+     "Items": {
+       "bases": [
+         "NonCompletableGithubObject"
+@@ -6006,6 +6206,7 @@
+         "GithubObject",
+         "InteractionLimit",
+         "IssueComment",
++        "IssueFieldValue",
+         "Items",
+         "NamedUser",
+         "NamedUserSearchResult",
+@@ -6047,6 +6248,7 @@
+         "GitCommit",
+         "InteractionLimit",
+         "IssueComment",
++        "IssueFieldValue",
+         "Items",
+         "NamedUser",
+         "NamedUserSearchResult",
+@@ -6064,6 +6266,7 @@
+         "GitAuthor",
+         "GitCommit",
+         "InteractionLimit",
++        "IssueFieldValue",
+         "Items",
+         "Reaction",
+         "SecretScanAlertInstance",
+@@ -6797,6 +7000,9 @@
+       "/components/schemas/issue-comment": [
+         "IssueComment"
+       ],
++      "/components/schemas/issue-field-value": [
++        "IssueFieldValue"
++      ],
+       "/components/schemas/minimal-repository": [
+         "Repository"
+       ],
+diff --unified --recursive --new-file before/tests/IssueFieldValue.py after/tests/IssueFieldValue.py
+--- before/tests/IssueFieldValue.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/IssueFieldValue.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,45 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class IssueFieldValue(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type IssueFieldValue and assign to self.ifv, then run:
++        #   pytest ./tests/IssueFieldValue.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/IssueFieldValue.py testAttributes
++        #   pre-commit run --all-files
++        self.ifv = None
++
++    def testAttributes(self):
++        ifv = self.ifv
++        self.assertEqual(ifv.__repr__(), "")
++        self.assertEqual(ifv.data_type, "")
++        self.assertEqual(ifv.issue_field_id, 0)
++        self.assertEqual(ifv.node_id, "")
++        self.assertEqual(ifv.single_select_option, "dict[str, Any]")
++        self.assertEqual(ifv.value, None)

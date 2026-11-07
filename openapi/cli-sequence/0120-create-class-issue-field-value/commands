@@ -1,0 +1,3 @@
+# property value is anyOf string, number and integer
+python scripts/openapi.py create class --tests --new-schemas as-dict github openapi.spec.json openapi.index IssueFieldValue "https://docs.github.com/en/rest/issues/issue-field-values" "/components/schemas/issue-field-value"
+python scripts/openapi.py index github openapi.spec.json openapi.index
