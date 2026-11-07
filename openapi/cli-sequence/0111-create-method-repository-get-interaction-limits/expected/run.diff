@@ -1,11 +1,11 @@
 diff --unified --recursive --new-file before/github/Repository.py after/github/Repository.py
 --- before/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
 +++ after/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
-@@ -643,6 +643,16 @@
+@@ -643,6 +643,17 @@
          self._completeIfNotSet(self._web_commit_signoff_required)
          return self._web_commit_signoff_required.value
      
-+    def get_interaction_limits(self) -> None:
++    def get_interaction_limits(self) -> dict[str, Any] | InteractionLimit:
 +        """
 +        Get interaction restrictions for a repository
 +
@@ -14,8 +14,9 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 +        :calls: `GET /repos/{owner}/{repo}/interaction-limits <https://docs.github.com/rest/interactions/repos#get-interaction-restrictions-for-a-repository>`_
 +        """
 +        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/interaction-limits")
++        return data
 +    
-     def get_stargazers(self) -> None:
+     def get_stargazers(self) -> PaginatedList[dict[str, Any]] | PaginatedList[NamedUser]:
          """
          List stargazers
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
@@ -33,7 +34,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +          },
 +          "name": "get_interaction_limits",
 +          "returns": [
-+            "None"
++            "dict[str, Any] | InteractionLimit"
 +          ]
 +        },
          "get_stargazers": {
@@ -57,7 +58,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        },
 +      "/repos/{owner}/{repo}/interaction-limits": {
 +        "get": [
-+          "None"
++          "dict[str, Any] | InteractionLimit"
 +        ]
 +      },
        "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
@@ -76,7 +77,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +            "class": "Repository",
 +            "name": "get_interaction_limits",
 +            "returns": [
-+              "None"
++              "dict[str, Any] | InteractionLimit"
 +            ]
 +          }
 +        ]

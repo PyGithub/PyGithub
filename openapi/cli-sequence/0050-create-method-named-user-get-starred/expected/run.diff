@@ -1,12 +1,12 @@
 diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
 --- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
 +++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
-@@ -285,6 +285,30 @@
+@@ -285,6 +285,31 @@
      def user_view_type(self) -> str:
          self._completeIfNotSet(self._user_view_type)
          return self._user_view_type.value
 +    
-+    def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> None:
++    def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> PaginatedList[dict[str, Any]]:
 +        """
 +        List repositories starred by a user
 +
@@ -29,6 +29,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +            }
 +        )
 +        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/starred")
++        return data
  
      def _useAttributes(self, attributes: dict[str, Any]) -> None:
          super()._useAttributes(attributes)
@@ -49,7 +50,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +          },
 +          "name": "get_starred",
 +          "returns": [
-+            "None"
++            "PaginatedList[dict[str, Any]]"
 +          ]
 +        }
 +      },
@@ -75,7 +76,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +      },
 +      "/users/{username}/starred": {
 +        "get": [
-+          "None"
++          "PaginatedList[dict[str, Any]]"
 +        ]
        }
      },
@@ -93,7 +94,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +            "class": "NamedUser",
 +            "name": "get_starred",
 +            "returns": [
-+              "None"
++              "PaginatedList[dict[str, Any]]"
 +            ]
 +          }
 +        ]

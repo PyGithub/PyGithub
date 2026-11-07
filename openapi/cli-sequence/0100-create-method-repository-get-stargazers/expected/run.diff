@@ -1,12 +1,12 @@
 diff --unified --recursive --new-file before/github/Repository.py after/github/Repository.py
 --- before/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
 +++ after/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
-@@ -642,6 +642,20 @@
+@@ -642,6 +642,21 @@
      def web_commit_signoff_required(self) -> bool:
          self._completeIfNotSet(self._web_commit_signoff_required)
          return self._web_commit_signoff_required.value
 +    
-+    def get_stargazers(self) -> None:
++    def get_stargazers(self) -> PaginatedList[dict[str, Any]] | PaginatedList[NamedUser]:
 +        """
 +        List stargazers
 +
@@ -19,6 +19,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 +        :calls: `GET /repos/{owner}/{repo}/stargazers <https://docs.github.com/rest/activity/starring#list-stargazers>`_
 +        """
 +        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/stargazers")
++        return data
  
      def _useAttributes(self, attributes: dict[str, Any]) -> None:
          super()._useAttributes(attributes)
@@ -39,7 +40,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +          },
 +          "name": "get_stargazers",
 +          "returns": [
-+            "None"
++            "PaginatedList[dict[str, Any]] | PaginatedList[NamedUser]"
 +          ]
 +        }
 +      },
@@ -64,7 +65,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        },
 +      "/repos/{owner}/{repo}/stargazers": {
 +        "get": [
-+          "None"
++          "PaginatedList[dict[str, Any]] | PaginatedList[NamedUser]"
 +        ]
 +      },
        "/users/{username}/repos": {
@@ -83,7 +84,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +            "class": "Repository",
 +            "name": "get_stargazers",
 +            "returns": [
-+              "None"
++              "PaginatedList[dict[str, Any]] | PaginatedList[NamedUser]"
 +            ]
 +          }
 +        ]

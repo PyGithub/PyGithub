@@ -100,11 +100,12 @@ def as_python_type(
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
         )
-    elif "oneOf" in schema_type:
+    elif "oneOf" in schema_type or "anyOf" in schema_type:
+        key = "oneOf" if "oneOf" in schema_type else "anyOf"
         types = [
             as_python_type(
                 t,
-                schema_path + ["oneOf", str(idx)],
+                schema_path + [key, str(idx)],
                 schema_to_class,
                 classes,
                 spec,
@@ -112,7 +113,7 @@ def as_python_type(
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
             )
-            for idx, t in enumerate(schema_type.get("oneOf"))
+            for idx, t in enumerate(schema_type.get(key))
         ]
         types = list({t for t in types if t is not None})
         if len(types) == 0:
