@@ -1425,6 +1425,17 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeOrganizationInvitationPreview},
         )
 
+    def failed_invitations(self) -> PaginatedList[OrganizationInvitation]:
+        """
+        :calls: `GET /orgs/{org}/failed_invitations <https://docs.github.com/en/rest/orgs/members#list-failed-organization-invitations>`_
+        """
+        return PaginatedList(
+            github.NamedUser.OrganizationInvitation,
+            self._requester,
+            f"{self.url}/failed_invitations",
+            None,
+        )
+
     def invite_user(
         self,
         user: Opt[NamedUser] = NotSet,
