@@ -45,7 +45,7 @@ from . import Framework
 
 
 class RateLimiting(Framework.TestCase):
-    DEPRECATION_MESSAGE = "Use current_rate_limits or get_rate_limits() instead"
+    DEPRECATION_MESSAGE = "Use current_rate_limits instead"
 
     def testRateLimiting(self):
         with self.assertWarns(DeprecationWarning) as warning:
@@ -94,11 +94,8 @@ class RateLimiting(Framework.TestCase):
         get_rate_limits.assert_called_once_with()
         self.assertIs(actual, get_rate_limits.return_value)
 
-    def testGetRateLimits(self):
-        self.assertIsNone(self.g.requester.current_rate_limits.resources.search)
-
-        rateLimitOverview = self.g.get_rate_limits()
-
+    def testGetRateLimit(self):
+        rateLimitOverview = self.g.get_rate_limit()
         # the requester provides all rate limits from the response body, not just those from the response headers
         overview = self.g.requester.current_rate_limits
         self.assertEqual(repr(overview.rate), repr(rateLimitOverview.resources.core))
