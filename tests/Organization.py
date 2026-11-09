@@ -380,6 +380,14 @@ class Organization(Framework.TestCase):
         self.assertListKeyEqual(repos, lambda r: r.name, ["FatherBeaver", "PyGithub"])
         self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, True])
 
+    def testFailedInvitations(self):
+        invitations = list(self.org.failed_invitations())
+        self.assertEqual(len(invitations), 1)
+        self.assertEqual(invitations[0].id, 28984230)
+        self.assertEqual(invitations[0].email, "foo@bar.org")
+        self.assertEqual(invitations[0].failed_at, "2021-10-13T13:32:33Z")
+        self.assertEqual(invitations[0].failed_reason, "Email address is invalid")
+
     def testGetEvents(self):
         self.assertListKeyEqual(
             self.org.get_events(),
