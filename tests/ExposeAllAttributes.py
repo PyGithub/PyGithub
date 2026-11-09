@@ -72,7 +72,7 @@ class ExposeAllAttributes(Framework.TestCase):
         pullRequestPart = pullRequest.base
         file = pullRequest.get_files()[0]
         commitComment = repository.get_comment(3630301)
-        rateLimit = self.g.get_rate_limit()
+        rateLimit = self.g.current_rate_limits.update()
         hook = repository.get_hooks()[0]
         hookResponse = hook.last_response
         hookDescription = self.g.get_hooks()[0]

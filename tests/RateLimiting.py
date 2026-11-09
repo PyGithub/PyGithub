@@ -86,16 +86,11 @@ class RateLimiting(Framework.TestCase):
                 datetime_mock.now.assert_called_once_with(timezone.utc)
                 self.assertEqual(actual, expected)
 
-    def testGetRateLimitIsDeprecated(self):
-        with mock.patch.object(self.g, "get_rate_limits") as get_rate_limits:
-            with self.assertWarns(DeprecationWarning) as warning:
-                actual = self.g.get_rate_limit()
-        self.assertWarning(warning, "Use get_rate_limits() instead")
-        get_rate_limits.assert_called_once_with()
-        self.assertIs(actual, get_rate_limits.return_value)
-
     def testGetRateLimit(self):
-        rateLimitOverview = self.g.get_rate_limit()
+        with self.assertWarns(DeprecationWarning) as warning:
+            rateLimitOverview = self.g.get_rate_limit()
+        self.assertWarning(warning, "Use current_rate_limits.update() instead")
+
         # the requester provides all rate limits from the response body, not just those from the response headers
         overview = self.g.requester.current_rate_limits
         self.assertEqual(repr(overview.rate), repr(rateLimitOverview.resources.core))

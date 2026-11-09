@@ -34,7 +34,7 @@ GitHub limits the number of API requests per authentication. Limits are counted 
 like ``core``, ``search``, or ``graphql``. PyGithub provides these limits as a
 :class:`github.RateLimitOverview.RateLimitOverview`, where ``resources`` has one :class:`github.Rate.Rate` per resource.
 
-Classes :class:`github.MainClass.Github`, :class:`github.MainClass.GithubIntegration`, and all :class:`github.GithubObject.GithubObject` instances provide :attr:`github.GithubObject.GithubObject.current_rate_limits`:
+Classes :class:`github.MainClass.Github`, :class:`github.GithubIntegration.GithubIntegration`, and all :class:`github.GithubObject.GithubObject` instances provide :attr:`github.GithubObject.GithubObject.current_rate_limits`:
     This returns the latest rate limits known and sends no request. These are collected from each API response. Resources for which rate limits are not known yet are ``None``.  Call ``update()`` to fetch the latest rate limits.
 
 For example, pause before running out of ``core`` requests::

@@ -392,7 +392,7 @@ class Github:
     @deprecated("Use current_rate_limits.update() instead")
     def get_rate_limit(self) -> RateLimitOverview:
         """
-        Deprecated by get_rate_limits.
+        Deprecated by current_rate_limits.update().
         """
         return self.current_rate_limits.update()
 
