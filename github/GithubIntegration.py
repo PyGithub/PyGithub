@@ -231,7 +231,9 @@ class GithubIntegration:
         """
         Latest rate limits known to the requester of this instance, per resource. This does not send any request.
 
-        See :attr:`github.Requester.Requester.current_rate_limits`.
+        Values come from the response headers of requests made through the requester of this instance.
+        Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is unknown
+        to :class:`github.RateLimit.RateLimit`. Use :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch latest values.
 
         """
         return self.__requester.current_rate_limits

@@ -357,24 +357,24 @@ class Github:
     # v3: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
     # v3: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
-    @deprecated("Use current_rate_limits or get_rate_limits() instead")
+    @deprecated("Use current_rate_limits instead")
     def rate_limiting(self) -> tuple[int, int]:
         """
         First value is requests remaining, second value is request limit.
         """
         remaining, limit = self.__requester.rate_limiting
         if limit < 0:
-            self.get_rate_limits()
+            self.current_rate_limits.update()
         return self.__requester.rate_limiting
 
     @property
-    @deprecated("Use current_rate_limits or get_rate_limits() instead")
+    @deprecated("Use current_rate_limits instead")
     def rate_limiting_resettime(self) -> int:
         """
         Unix timestamp indicating when rate limiting will reset.
         """
         if self.__requester.rate_limiting_resettime == 0:
-            self.get_rate_limits()
+            self.current_rate_limits.update()
         return self.__requester.rate_limiting_resettime
 
     @property
@@ -382,26 +382,19 @@ class Github:
         """
         Latest rate limits known to the requester of this instance, per resource. This does not send any request.
 
-        See :attr:`github.Requester.Requester.current_rate_limits`.
+        Values come from the response headers of requests made through the requester of this instance.
+        Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is unknown
+        to :class:`github.RateLimit.RateLimit`. Use :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch latest values.
 
         """
         return self.__requester.current_rate_limits
 
-    @deprecated("Use get_rate_limits() instead")
+    @deprecated("Use current_rate_limits.update() instead")
     def get_rate_limit(self) -> RateLimitOverview:
         """
         Deprecated by get_rate_limits.
         """
-        return self.get_rate_limits()
-
-    def get_rate_limits(self) -> RateLimitOverview:
-        """
-        Rate limit overview that provides general status and status for different resources (core/search/graphql).
-
-        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
-
-        """
-        return self.__requester.get_rate_limits()
+        return self.current_rate_limits.update()
 
     @property
     def oauth_scopes(self) -> list[str] | None:

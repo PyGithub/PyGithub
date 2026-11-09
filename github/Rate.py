@@ -99,7 +99,7 @@ class Rate(NonCompletableGithubObject):
         return max(0.0, (self.reset - datetime.now(timezone.utc)).total_seconds())
 
     @property
-    def resource(self) -> str:
+    def resource(self) -> str | None:
         """
         Name of the rate limit resource, ``None`` if not known.
         """

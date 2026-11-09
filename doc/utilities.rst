@@ -32,27 +32,10 @@ Rate limits
 
 GitHub limits the number of API requests per authentication. Limits are counted separately for different resources,
 like ``core``, ``search``, or ``graphql``. PyGithub provides these limits as a
-:class:`github.RateLimitOverview.RateLimitOverview`, where ``resources`` has one :class:`github.Rate.Rate` per resource
-with attributes ``resource``, ``limit``, ``remaining``, ``used`` and ``reset``.
+:class:`github.RateLimitOverview.RateLimitOverview`, where ``resources`` has one :class:`github.Rate.Rate` per resource.
 
-There are three ways to retrieve an overview:
-
-:meth:`github.MainClass.Github.get_rate_limits`
-    Sends a request and returns the rate limits of all resources. This request does not count against any rate limit.
-    Use this when you need all rate limits, for instance before starting work.
-
-:attr:`github.GithubObject.GithubObject.current_rate_limits`
-    Sends no request and returns the latest rate limits known so far, on any object returned by PyGithub.
-    These are updated from each API response, and only for the resource that the request counted against.
-    They are also updated when calling ``get_rate_limits()`` or ``update()``.
-    Resources for which nothing is known yet are ``None``. This is cheap enough to be used between any two requests,
-    without the need to hold on to the :class:`github.MainClass.Github` instance, which also provides
-    :attr:`github.MainClass.Github.current_rate_limits`.
-
-:meth:`github.RateLimitOverview.RateLimitOverview.update`
-    Sends a request and returns a new overview with the rate limits of all resources, like ``get_rate_limits()``.
-    An overview never changes, so make sure you use the returned object.
-    Use this to get values for all resources when you only hold on to an object returned by PyGithub.
+Classes :class:`github.MainClass.Github`, :class:`github.MainClass.GithubIntegration`, and all :class:`github.GithubObject.GithubObject` instances provide :attr:`github.GithubObject.GithubObject.current_rate_limits`:
+    This returns the latest rate limits known and sends no request. These are collected from each API response. Resources for which rate limits are not known yet are ``None``.  Call ``update()`` to fetch the latest rate limits.
 
 For example, pause before running out of ``core`` requests::
 
@@ -67,22 +50,18 @@ For example, pause before running out of ``core`` requests::
 
 Get values for a resource that has not been used yet::
 
-    rate_limit = repo.current_rate_limits
-    if rate_limit.resources.search is None:
-        rate_limit = rate_limit.update()
-    print(rate_limit.resources.search.remaining)
+    rate_limits = repo.current_rate_limits
+    if rate_limits.resources.search is None:
+        rate_limits = rate_limits.update()
+    print(rate_limits.resources.search.remaining)
 
-Any object also provides the rate limit reported by the response that it came with as a :class:`github.Rate.Rate` via
+All PyGithub objects (:class:`github.GithubObject.GithubObject`) provide the rate limit reported when the instance was retrieved as a :class:`github.Rate.Rate` via
 :attr:`github.GithubObject.GithubObject.rate_limit`, which is ``None`` if that response did not report any. This value
 does not change with later requests, and it is ``None`` for lazy objects that have not been fetched yet.
 This does not send any request.
 
 Rate limits are counted per authentication and server, so objects retrieved with a different authentication,
 for example through an installation of a GitHub App, provide their own rate limits.
-
-:attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime` are deprecated
-as they do not tell apart resources. :meth:`github.MainClass.Github.get_rate_limit` is deprecated in favour of
-:meth:`github.MainClass.Github.get_rate_limits`.
 
 Default argument
 ----------------

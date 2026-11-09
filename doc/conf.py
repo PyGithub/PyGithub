@@ -385,8 +385,6 @@ for githubObjectClass, module in githubObjectClasses.items():
 
 methods["/markdown/raw"] = dict()
 methods["/markdown/raw"]["POST"] = ["Not implemented, see ``/markdown``"]
-methods["/rate_limit"] = dict()
-methods["/rate_limit"]["GET"] = [":meth:`github.MainClass.Github.get_rate_limits`"]
 
 with open("apis.rst", "w") as apis:
     apis.write("APIs\n")

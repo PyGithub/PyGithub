@@ -555,9 +555,9 @@ class Requester:
 
     def get_rate_limits(self) -> RateLimitOverview:
         """
-        Fetch all current rate limits, which also updates the values provided by :attr:`current_rate_limits`.
+        Fetch all rate limits.
 
-        Resources that are not contained in the response keep their values in :attr:`current_rate_limits`.
+        This updates the respective values provided by :attr:`current_rate_limits`.
 
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
 
