@@ -68,7 +68,7 @@ import github.Permissions
 import github.Plan
 import github.Repository
 from github import Consts
-from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_undefined, method_parameter, openapi_parameter
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -517,6 +517,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             github.Event.Event, self._requester, f"{self.url}/received_events", None
         )
 
+    @method_parameter(
+        name="name",
+        required=True,
+        merge=["owner", "repo"],
+        docstring_prepend='The name of the repository in the form "{owner}/{repo}" with:\n',
+    )
+    @openapi_parameter(name="owner", input=True, docstring_prepend='- "{owner}": ')
+    @openapi_parameter(name="repo", input=True, docstring_prepend='- "{repo}": ')
     def get_repo(self, name: str) -> Repository:
         """
         :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
@@ -586,6 +594,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson("GET", f"{self.url}/following/{following._identity}")
         return status == 204
 
+    @openapi_parameter(name="org", type="str | Organization", input=True)
     def get_organization_membership(self, org: str | Organization) -> Membership:
         """
         :calls: `GET /orgs/{org}/memberships/{username} <https://docs.github.com/en/rest/reference/orgs#check-organization-membership-for-a-user>`_
