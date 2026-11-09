@@ -25,7 +25,8 @@
     "Requester.graphql_node": "POST",
     "Requester.graphql_node_class": "POST",
     "Requester.graphql_query": "POST",
-    "Requester.graphql_query_class": "POST"
+    "Requester.graphql_query_class": "POST",
+    "RateLimitOverview.update": "GET"
   },
   "ignored OpenAPI schemas": [
     "/components/schemas/empty-object",

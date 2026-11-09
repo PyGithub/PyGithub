@@ -559,8 +559,6 @@ class Requester:
 
         This updates the respective values provided by :attr:`current_rate_limits`.
 
-        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
-
         """
         headers, data = self.requestJsonAndCheck("GET", "/rate_limit")
         for resource, rate in data.get("resources", {}).items():
