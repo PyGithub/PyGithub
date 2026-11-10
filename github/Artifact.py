@@ -67,18 +67,18 @@ class Artifact(NonCompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._archive_download_url: Attribute[str] = NotSet
-        self._created_at: Attribute[datetime] = NotSet
-        self._digest: Attribute[str] = NotSet
+        self._created_at: Attribute[datetime | None] = NotSet
+        self._digest: Attribute[str | None] = NotSet
         self._expired: Attribute[bool] = NotSet
-        self._expires_at: Attribute[datetime] = NotSet
+        self._expires_at: Attribute[datetime | None] = NotSet
         self._head_sha: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._size_in_bytes: Attribute[int] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
+        self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
-        self._workflow_run: Attribute[WorkflowRun] = NotSet
+        self._workflow_run: Attribute[WorkflowRun | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value, "id": self._id.value})
@@ -88,11 +88,11 @@ class Artifact(NonCompletableGithubObject):
         return self._archive_download_url.value
 
     @property
-    def created_at(self) -> datetime:
+    def created_at(self) -> datetime | None:
         return self._created_at.value
 
     @property
-    def digest(self) -> str:
+    def digest(self) -> str | None:
         return self._digest.value
 
     @property
@@ -100,7 +100,7 @@ class Artifact(NonCompletableGithubObject):
         return self._expired.value
 
     @property
-    def expires_at(self) -> datetime:
+    def expires_at(self) -> datetime | None:
         return self._expires_at.value
 
     @property
@@ -124,7 +124,7 @@ class Artifact(NonCompletableGithubObject):
         return self._size_in_bytes.value
 
     @property
-    def updated_at(self) -> datetime:
+    def updated_at(self) -> datetime | None:
         return self._updated_at.value
 
     @property
@@ -132,7 +132,7 @@ class Artifact(NonCompletableGithubObject):
         return self._url.value
 
     @property
-    def workflow_run(self) -> WorkflowRun:
+    def workflow_run(self) -> WorkflowRun | None:
         return self._workflow_run.value
 
     def delete(self) -> bool:

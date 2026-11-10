@@ -65,16 +65,16 @@ class CommitStatus(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._avatar_url: Attribute[str] = NotSet
+        self._avatar_url: Attribute[str | None] = NotSet
         self._context: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[NamedUser | Organization] = NotSet
-        self._description: Attribute[str] = NotSet
+        self._creator: Attribute[NamedUser | Organization | None] = NotSet
+        self._description: Attribute[str | None] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._required: Attribute[bool] = NotSet
+        self._required: Attribute[bool | None] = NotSet
         self._state: Attribute[str] = NotSet
-        self._target_url: Attribute[str] = NotSet
+        self._target_url: Attribute[str | None] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -88,7 +88,7 @@ class CommitStatus(NonCompletableGithubObject):
         )
 
     @property
-    def avatar_url(self) -> str:
+    def avatar_url(self) -> str | None:
         return self._avatar_url.value
 
     @property
@@ -100,11 +100,11 @@ class CommitStatus(NonCompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> NamedUser | Organization:
+    def creator(self) -> NamedUser | Organization | None:
         return self._creator.value
 
     @property
-    def description(self) -> str:
+    def description(self) -> str | None:
         return self._description.value
 
     @property
@@ -116,7 +116,7 @@ class CommitStatus(NonCompletableGithubObject):
         return self._node_id.value
 
     @property
-    def required(self) -> bool:
+    def required(self) -> bool | None:
         return self._required.value
 
     @property
@@ -124,7 +124,7 @@ class CommitStatus(NonCompletableGithubObject):
         return self._state.value
 
     @property
-    def target_url(self) -> str:
+    def target_url(self) -> str | None:
         return self._target_url.value
 
     @property
@@ -149,7 +149,7 @@ class CommitStatus(NonCompletableGithubObject):
                 attributes["creator"],
                 (github.NamedUser.NamedUser, "User"),
                 (github.Organization.Organization, "Organization"),
-            )
+            )  # type: ignore
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch

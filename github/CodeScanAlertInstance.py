@@ -60,7 +60,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         self._location: Attribute[CodeScanAlertInstanceLocation] = NotSet
         self._message: Attribute[dict[str, Any]] = NotSet
         self._ref: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
+        self._state: Attribute[str | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"ref": self.ref, "analysis_key": self.analysis_key})
@@ -102,7 +102,7 @@ class CodeScanAlertInstance(NonCompletableGithubObject):
         return self._ref.value
 
     @property
-    def state(self) -> str:
+    def state(self) -> str | None:
         return self._state.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:

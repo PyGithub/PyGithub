@@ -159,14 +159,14 @@ class PullRequest(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self.__links: Attribute[dict[str, Any]] = NotSet
-        self._active_lock_reason: Attribute[str] = NotSet
+        self._active_lock_reason: Attribute[str | None] = NotSet
         self._additions: Attribute[int] = NotSet
-        self._assignee: Attribute[NamedUser] = NotSet
+        self._assignee: Attribute[NamedUser | None] = NotSet
         self._assignees: Attribute[list[NamedUser]] = NotSet
         self._author_association: Attribute[str] = NotSet
-        self._auto_merge: Attribute[dict[str, Any]] = NotSet
+        self._auto_merge: Attribute[dict[str, Any] | None] = NotSet
         self._base: Attribute[PullRequestPart] = NotSet
-        self._body: Attribute[str] = NotSet
+        self._body: Attribute[str | None] = NotSet
         self._changed_files: Attribute[int] = NotSet
         self._closed_at: Attribute[datetime | None] = NotSet
         self._comments: Attribute[int] = NotSet
@@ -184,17 +184,17 @@ class PullRequest(CompletableGithubObject):
         self._labels: Attribute[list[Label]] = NotSet
         self._locked: Attribute[bool] = NotSet
         self._maintainer_can_modify: Attribute[bool] = NotSet
-        self._merge_commit_sha: Attribute[str] = NotSet
-        self._mergeable: Attribute[bool] = NotSet
+        self._merge_commit_sha: Attribute[str | None] = NotSet
+        self._mergeable: Attribute[bool | None] = NotSet
         self._mergeable_state: Attribute[str] = NotSet
         self._merged: Attribute[bool] = NotSet
         self._merged_at: Attribute[datetime | None] = NotSet
-        self._merged_by: Attribute[NamedUser] = NotSet
-        self._milestone: Attribute[Milestone] = NotSet
+        self._merged_by: Attribute[NamedUser | None] = NotSet
+        self._milestone: Attribute[Milestone | None] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
         self._patch_url: Attribute[str] = NotSet
-        self._rebaseable: Attribute[bool] = NotSet
+        self._rebaseable: Attribute[bool | None] = NotSet
         self._requested_reviewers: Attribute[list[NamedUser]] = NotSet
         self._requested_teams: Attribute[list[Team]] = NotSet
         self._review_comment_url: Attribute[str] = NotSet
@@ -205,7 +205,7 @@ class PullRequest(CompletableGithubObject):
         self._title: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime | None] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
@@ -216,7 +216,7 @@ class PullRequest(CompletableGithubObject):
         return self.__links.value
 
     @property
-    def active_lock_reason(self) -> str:
+    def active_lock_reason(self) -> str | None:
         self._completeIfNotSet(self._active_lock_reason)
         return self._active_lock_reason.value
 
@@ -226,7 +226,7 @@ class PullRequest(CompletableGithubObject):
         return self._additions.value
 
     @property
-    def assignee(self) -> NamedUser:
+    def assignee(self) -> NamedUser | None:
         self._completeIfNotSet(self._assignee)
         return self._assignee.value
 
@@ -241,7 +241,7 @@ class PullRequest(CompletableGithubObject):
         return self._author_association.value
 
     @property
-    def auto_merge(self) -> dict[str, Any]:
+    def auto_merge(self) -> dict[str, Any] | None:
         self._completeIfNotSet(self._auto_merge)
         return self._auto_merge.value
 
@@ -251,7 +251,7 @@ class PullRequest(CompletableGithubObject):
         return self._base.value
 
     @property
-    def body(self) -> str:
+    def body(self) -> str | None:
         self._completeIfNotSet(self._body)
         return self._body.value
 
@@ -341,12 +341,12 @@ class PullRequest(CompletableGithubObject):
         return self._maintainer_can_modify.value
 
     @property
-    def merge_commit_sha(self) -> str:
+    def merge_commit_sha(self) -> str | None:
         self._completeIfNotSet(self._merge_commit_sha)
         return self._merge_commit_sha.value
 
     @property
-    def mergeable(self) -> bool:
+    def mergeable(self) -> bool | None:
         self._completeIfNotSet(self._mergeable)
         return self._mergeable.value
 
@@ -366,12 +366,12 @@ class PullRequest(CompletableGithubObject):
         return self._merged_at.value
 
     @property
-    def merged_by(self) -> NamedUser:
+    def merged_by(self) -> NamedUser | None:
         self._completeIfNotSet(self._merged_by)
         return self._merged_by.value
 
     @property
-    def milestone(self) -> Milestone:
+    def milestone(self) -> Milestone | None:
         self._completeIfNotSet(self._milestone)
         return self._milestone.value
 
@@ -391,7 +391,7 @@ class PullRequest(CompletableGithubObject):
         return self._patch_url.value
 
     @property
-    def rebaseable(self) -> bool:
+    def rebaseable(self) -> bool | None:
         self._completeIfNotSet(self._rebaseable)
         return self._rebaseable.value
 
@@ -446,7 +446,7 @@ class PullRequest(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 

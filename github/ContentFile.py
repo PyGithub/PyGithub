@@ -81,15 +81,15 @@ class ContentFile(CompletableGithubObject):
     def _initAttributes(self) -> None:
         self.__links: Attribute[dict[str, Any]] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
-        self._content: Attribute[str] = NotSet
-        self._download_url: Attribute[str] = NotSet
+        self._content: Attribute[str | None] = NotSet
+        self._download_url: Attribute[str | None] = NotSet
         self._encoding: Attribute[str] = NotSet
         self._file_size: Attribute[int] = NotSet
-        self._git_url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
+        self._git_url: Attribute[str | None] = NotSet
+        self._html_url: Attribute[str | None] = NotSet
         self._language: Attribute[str] = NotSet
         self._last_modified_at: Attribute[datetime] = NotSet
-        self._license: Attribute[License] = NotSet
+        self._license: Attribute[License | None] = NotSet
         self._line_numbers: Attribute[list[str]] = NotSet
         self._name: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
@@ -116,17 +116,19 @@ class ContentFile(CompletableGithubObject):
         return self._commit.value
 
     @property
-    def content(self) -> str:
+    def content(self) -> str | None:
         self._completeIfNotSet(self._content)
         return self._content.value
 
     @property
     def decoded_content(self) -> bytes:
         assert self.encoding == "base64", f"unsupported encoding: {self.encoding}"
-        return base64.b64decode(bytearray(self.content, "utf-8"))
+        content = self.content
+        assert content is not None, "content is not set"
+        return base64.b64decode(bytearray(content, "utf-8"))
 
     @property
-    def download_url(self) -> str:
+    def download_url(self) -> str | None:
         self._completeIfNotSet(self._download_url)
         return self._download_url.value
 
@@ -141,12 +143,12 @@ class ContentFile(CompletableGithubObject):
         return self._file_size.value
 
     @property
-    def git_url(self) -> str:
+    def git_url(self) -> str | None:
         self._completeIfNotSet(self._git_url)
         return self._git_url.value
 
     @property
-    def html_url(self) -> str:
+    def html_url(self) -> str | None:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
@@ -161,7 +163,7 @@ class ContentFile(CompletableGithubObject):
         return self._last_modified_at.value
 
     @property
-    def license(self) -> License:
+    def license(self) -> License | None:
         self._completeIfNotSet(self._license)
         return self._license.value
 

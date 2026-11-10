@@ -88,22 +88,22 @@ class CheckRun(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._app: Attribute[GithubApp] = NotSet
-        self._check_suite: Attribute[CheckSuite] = NotSet
+        self._app: Attribute[GithubApp | None] = NotSet
+        self._check_suite: Attribute[CheckSuite | None] = NotSet
         self._check_suite_id: Attribute[int] = NotSet
         self._completed_at: Attribute[datetime | None] = NotSet
-        self._conclusion: Attribute[str] = NotSet
+        self._conclusion: Attribute[str | None] = NotSet
         self._deployment: Attribute[Deployment] = NotSet
-        self._details_url: Attribute[str] = NotSet
-        self._external_id: Attribute[str] = NotSet
+        self._details_url: Attribute[str | None] = NotSet
+        self._external_id: Attribute[str | None] = NotSet
         self._head_sha: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
+        self._html_url: Attribute[str | None] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._output: Attribute[CheckRunOutput] = NotSet
         self._pull_requests: Attribute[list[PullRequest]] = NotSet
-        self._started_at: Attribute[datetime] = NotSet
+        self._started_at: Attribute[datetime | None] = NotSet
         self._status: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -111,12 +111,12 @@ class CheckRun(CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "conclusion": self._conclusion.value})
 
     @property
-    def app(self) -> GithubApp:
+    def app(self) -> GithubApp | None:
         self._completeIfNotSet(self._app)
         return self._app.value
 
     @property
-    def check_suite(self) -> CheckSuite:
+    def check_suite(self) -> CheckSuite | None:
         self._completeIfNotSet(self._check_suite)
         return self._check_suite.value
 
@@ -132,7 +132,7 @@ class CheckRun(CompletableGithubObject):
         return self._completed_at.value
 
     @property
-    def conclusion(self) -> str:
+    def conclusion(self) -> str | None:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
@@ -142,12 +142,12 @@ class CheckRun(CompletableGithubObject):
         return self._deployment.value
 
     @property
-    def details_url(self) -> str:
+    def details_url(self) -> str | None:
         self._completeIfNotSet(self._details_url)
         return self._details_url.value
 
     @property
-    def external_id(self) -> str:
+    def external_id(self) -> str | None:
         self._completeIfNotSet(self._external_id)
         return self._external_id.value
 
@@ -157,7 +157,7 @@ class CheckRun(CompletableGithubObject):
         return self._head_sha.value
 
     @property
-    def html_url(self) -> str:
+    def html_url(self) -> str | None:
         self._completeIfNotSet(self._html_url)
         return self._html_url.value
 
@@ -187,7 +187,7 @@ class CheckRun(CompletableGithubObject):
         return self._pull_requests.value
 
     @property
-    def started_at(self) -> datetime:
+    def started_at(self) -> datetime | None:
         self._completeIfNotSet(self._started_at)
         return self._started_at.value
 

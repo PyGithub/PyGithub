@@ -97,12 +97,12 @@ class WorkflowRun(CompletableGithubObject):
         self._check_suite_id: Attribute[int] = NotSet
         self._check_suite_node_id: Attribute[str] = NotSet
         self._check_suite_url: Attribute[str] = NotSet
-        self._conclusion: Attribute[str] = NotSet
+        self._conclusion: Attribute[str | None] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._display_title: Attribute[str] = NotSet
         self._event: Attribute[str] = NotSet
-        self._head_branch: Attribute[str] = NotSet
-        self._head_commit: Attribute[GitCommit] = NotSet
+        self._head_branch: Attribute[str | None] = NotSet
+        self._head_commit: Attribute[GitCommit | None] = NotSet
         self._head_repository: Attribute[Repository] = NotSet
         self._head_repository_id: Attribute[int] = NotSet
         self._head_sha: Attribute[str] = NotSet
@@ -110,19 +110,19 @@ class WorkflowRun(CompletableGithubObject):
         self._id: Attribute[int] = NotSet
         self._jobs_url: Attribute[str] = NotSet
         self._logs_url: Attribute[str] = NotSet
-        self._name: Attribute[str] = NotSet
+        self._name: Attribute[str | None] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
-        self._previous_attempt_url: Attribute[str] = NotSet
-        self._pull_requests: Attribute[list[PullRequest]] = NotSet
-        self._referenced_workflows: Attribute[list[dict[str, Any]]] = NotSet
+        self._previous_attempt_url: Attribute[str | None] = NotSet
+        self._pull_requests: Attribute[list[PullRequest] | None] = NotSet
+        self._referenced_workflows: Attribute[list[dict[str, Any]] | None] = NotSet
         self._repository: Attribute[Repository] = NotSet
         self._repository_id: Attribute[int] = NotSet
         self._rerun_url: Attribute[str] = NotSet
         self._run_attempt: Attribute[int] = NotSet
         self._run_number: Attribute[int] = NotSet
         self._run_started_at: Attribute[datetime] = NotSet
-        self._status: Attribute[str] = NotSet
+        self._status: Attribute[str | None] = NotSet
         self._triggering_actor: Attribute[NamedUser] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
@@ -163,7 +163,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._check_suite_url.value
 
     @property
-    def conclusion(self) -> str:
+    def conclusion(self) -> str | None:
         self._completeIfNotSet(self._conclusion)
         return self._conclusion.value
 
@@ -183,12 +183,12 @@ class WorkflowRun(CompletableGithubObject):
         return self._event.value
 
     @property
-    def head_branch(self) -> str:
+    def head_branch(self) -> str | None:
         self._completeIfNotSet(self._head_branch)
         return self._head_branch.value
 
     @property
-    def head_commit(self) -> GitCommit:
+    def head_commit(self) -> GitCommit | None:
         self._completeIfNotSet(self._head_commit)
         return self._head_commit.value
 
@@ -228,7 +228,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._logs_url.value
 
     @property
-    def name(self) -> str:
+    def name(self) -> str | None:
         self._completeIfNotSet(self._name)
         return self._name.value
 
@@ -243,17 +243,17 @@ class WorkflowRun(CompletableGithubObject):
         return self._path.value
 
     @property
-    def previous_attempt_url(self) -> str:
+    def previous_attempt_url(self) -> str | None:
         self._completeIfNotSet(self._previous_attempt_url)
         return self._previous_attempt_url.value
 
     @property
-    def pull_requests(self) -> list[PullRequest]:
+    def pull_requests(self) -> list[PullRequest] | None:
         self._completeIfNotSet(self._pull_requests)
         return self._pull_requests.value
 
     @property
-    def referenced_workflows(self) -> list[dict[str, Any]]:
+    def referenced_workflows(self) -> list[dict[str, Any]] | None:
         self._completeIfNotSet(self._referenced_workflows)
         return self._referenced_workflows.value
 
@@ -288,7 +288,7 @@ class WorkflowRun(CompletableGithubObject):
         return self._run_started_at.value
 
     @property
-    def status(self) -> str:
+    def status(self) -> str | None:
         self._completeIfNotSet(self._status)
         return self._status.value
 

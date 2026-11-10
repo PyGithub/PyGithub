@@ -87,7 +87,7 @@ class GistHistoryState(CompletableGithubObject):
         self._public: Attribute[bool] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
         self._version: Attribute[str] = NotSet
 
     @property
@@ -186,7 +186,7 @@ class GistHistoryState(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         self._completeIfNotSet(self._user)
         return self._user.value
 

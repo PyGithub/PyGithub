@@ -66,7 +66,7 @@ class File(NonCompletableGithubObject):
         self._patch: Attribute[str] = NotSet
         self._previous_filename: Attribute[str] = NotSet
         self._raw_url: Attribute[str] = NotSet
-        self._sha: Attribute[str] = NotSet
+        self._sha: Attribute[str | None] = NotSet
         self._status: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -109,7 +109,7 @@ class File(NonCompletableGithubObject):
         return self._raw_url.value
 
     @property
-    def sha(self) -> str:
+    def sha(self) -> str | None:
         return self._sha.value
 
     @property

@@ -76,7 +76,7 @@ class Reaction(NonCompletableGithubObject):
         self._created_at: Attribute[datetime] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._user: Attribute[NamedUser] = NotSet
+        self._user: Attribute[NamedUser | None] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
@@ -98,7 +98,7 @@ class Reaction(NonCompletableGithubObject):
         return self._node_id.value
 
     @property
-    def user(self) -> NamedUser:
+    def user(self) -> NamedUser | None:
         return self._user.value
 
     @deprecated(

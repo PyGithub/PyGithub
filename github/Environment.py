@@ -77,7 +77,7 @@ class Environment(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
-        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
+        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy | None] = NotSet
         self._environments_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
@@ -98,7 +98,7 @@ class Environment(CompletableGithubObject):
     @property
     def deployment_branch_policy(
         self,
-    ) -> EnvironmentDeploymentBranchPolicy:
+    ) -> EnvironmentDeploymentBranchPolicy | None:
         self._completeIfNotSet(self._deployment_branch_policy)
         return self._deployment_branch_policy.value
 

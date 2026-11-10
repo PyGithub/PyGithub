@@ -57,8 +57,11 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import pytest
+from typing_extensions import assert_type
 
 import github
+from github.NamedUser import NamedUser
+from github.PullRequest import PullRequest as PullRequestObject
 
 from . import Framework
 
@@ -112,6 +115,16 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pullIssue256Merged.mergeable_state, "unknown")
         self.assertEqual(self.pullIssue256Conflict.mergeable_state, "clean")
         self.assertEqual(self.pullIssue256Uncached.mergeable_state, "unknown")
+
+    def testMergedBy(self) -> None:
+        pull: PullRequestObject = self.pull
+        merged_by = pull.merged_by
+        assert_type(merged_by, NamedUser | None)
+        assert merged_by is not None
+        self.assertEqual(merged_by.login, "jacquev6")
+
+        closed_pull: PullRequestObject = self.pullIssue256Closed
+        self.assertIsNone(closed_pull.merged_by)
 
     def testAttributes(self):
         self.assertEqual(
