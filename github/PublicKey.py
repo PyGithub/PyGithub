@@ -45,8 +45,6 @@ from __future__ import annotations
 from base64 import b64encode
 from typing import Any
 
-from nacl import encoding, public
-
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 
@@ -54,6 +52,11 @@ def encrypt(public_key: str, secret_value: str) -> str:
     """
     Encrypt a Unicode string using the public key.
     """
+    try:
+        from nacl import encoding, public
+    except ImportError as e:
+        raise ImportError("Encrypting secrets requires PyNaCl, install PyGithub[encryption]") from e
+
     pk = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder)
     sealed_box = public.SealedBox(pk)
     encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
