@@ -104,11 +104,12 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.html_url, "https://github.com/orgs/BeaverSoftware/teams/team-slug")
 
     def testLazyAttributes(self):
-        team = self.g.withLazy(True).get_organization("org").get_team(42)
+        org = self.g.withLazy(True).get_organization("BeaverSoftware")
+        team = org.get_team(42)
         self.assertEqual(str(team), "Team(name=None, id=42)")
         self.assertEqual(team._identity, 42)
         self.assertEqual(team.id, 42)
-        self.assertEqual(team.url, "/teams/42")
+        self.assertEqual(team.url, "/organizations/1234567/team/42")
 
     def testDiscussions(self):
         discussions = list(self.team.get_discussions())
