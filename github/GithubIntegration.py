@@ -52,6 +52,7 @@ from github.GithubException import GithubException
 from github.Installation import Installation
 from github.InstallationAuthorization import InstallationAuthorization
 from github.PaginatedList import PaginatedList
+from github.RateLimitOverview import RateLimitOverview
 from github.Requester import Requester
 
 
@@ -196,7 +197,9 @@ class GithubIntegration:
         """
         kwargs = self.__requester.kwargs
         kwargs.update(lazy=lazy)
-        return GithubIntegration(**kwargs)
+        integration = GithubIntegration(**kwargs)
+        integration.requester.useCurrentRateLimits(self.__requester)
+        return integration
 
     def close(self) -> None:
         """
@@ -222,6 +225,18 @@ class GithubIntegration:
         # The installation has to authenticate as an installation, not an app
         auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
+
+    @property
+    def current_rate_limits(self) -> RateLimitOverview:
+        """
+        Latest rate limits known to the requester of this instance, per resource. This does not send any request.
+
+        Values come from the response headers of requests made through the requester of this instance.
+        Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is unknown
+        to :class:`github.RateLimit.RateLimit`. Use :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch latest values.
+
+        """
+        return self.__requester.current_rate_limits
 
     @property
     def requester(self) -> Requester:

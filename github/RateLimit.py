@@ -69,6 +69,7 @@ class RateLimit(NonCompletableGithubObject):
         self._code_scanning_autofix: Attribute[Rate] = NotSet
         self._code_scanning_upload: Attribute[Rate] = NotSet
         self._code_search: Attribute[Rate] = NotSet
+        self._copilot_usage_records: Attribute[Rate] = NotSet
         self._core: Attribute[Rate] = NotSet
         self._dependency_sbom: Attribute[Rate] = NotSet
         self._dependency_snapshots: Attribute[Rate] = NotSet
@@ -105,6 +106,10 @@ class RateLimit(NonCompletableGithubObject):
         Rate limit for the REST API for searching code.
         """
         return self._code_search.value
+
+    @property
+    def copilot_usage_records(self) -> Rate:
+        return self._copilot_usage_records.value
 
     @property
     def core(self) -> Rate:
@@ -153,32 +158,52 @@ class RateLimit(NonCompletableGithubObject):
     def source_import(self) -> Rate:
         return self._source_import.value
 
+    def get_rate_limit(self, resource: str) -> Rate | None:
+        """
+        Rate limit of the given resource, ``None`` if that is not known.
+
+        This also provides resources that have no property in this class. It does not send any request.
+
+        :param resource: name of the rate limit resource, e.g. ``core``
+
+        """
+        attribute: Attribute[Rate] = (
+            self._makeRateAttribute(self.raw_data, resource) if resource in self.raw_data else NotSet
+        )
+        return attribute.value
+
+    def _makeRateAttribute(self, attributes: dict[str, Any], resource: str) -> Attribute[Rate]:
+        value = attributes[resource]
+        if isinstance(value, dict):
+            # inject into a copy, so that raw_data of this object remains the API response,
+            # a resource provided by the API response takes precedence
+            value = {"resource": resource, **value}
+        return self._makeClassAttribute(github.Rate.Rate, value)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actions_runner_registration" in attributes:  # pragma no branch
-            self._actions_runner_registration = self._makeClassAttribute(
-                github.Rate.Rate, attributes["actions_runner_registration"]
-            )
+            self._actions_runner_registration = self._makeRateAttribute(attributes, "actions_runner_registration")
         if "code_scanning_autofix" in attributes:  # pragma no branch
-            self._code_scanning_autofix = self._makeClassAttribute(
-                github.Rate.Rate, attributes["code_scanning_autofix"]
-            )
+            self._code_scanning_autofix = self._makeRateAttribute(attributes, "code_scanning_autofix")
         if "code_scanning_upload" in attributes:  # pragma no branch
-            self._code_scanning_upload = self._makeClassAttribute(github.Rate.Rate, attributes["code_scanning_upload"])
+            self._code_scanning_upload = self._makeRateAttribute(attributes, "code_scanning_upload")
         if "code_search" in attributes:  # pragma no branch
-            self._code_search = self._makeClassAttribute(github.Rate.Rate, attributes["code_search"])
+            self._code_search = self._makeRateAttribute(attributes, "code_search")
+        if "copilot_usage_records" in attributes:  # pragma no branch
+            self._copilot_usage_records = self._makeRateAttribute(attributes, "copilot_usage_records")
         if "core" in attributes:  # pragma no branch
-            self._core = self._makeClassAttribute(github.Rate.Rate, attributes["core"])
+            self._core = self._makeRateAttribute(attributes, "core")
         if "dependency_sbom" in attributes:  # pragma no branch
-            self._dependency_sbom = self._makeClassAttribute(github.Rate.Rate, attributes["dependency_sbom"])
+            self._dependency_sbom = self._makeRateAttribute(attributes, "dependency_sbom")
         if "dependency_snapshots" in attributes:  # pragma no branch
-            self._dependency_snapshots = self._makeClassAttribute(github.Rate.Rate, attributes["dependency_snapshots"])
+            self._dependency_snapshots = self._makeRateAttribute(attributes, "dependency_snapshots")
         if "graphql" in attributes:  # pragma no branch
-            self._graphql = self._makeClassAttribute(github.Rate.Rate, attributes["graphql"])
+            self._graphql = self._makeRateAttribute(attributes, "graphql")
         if "integration_manifest" in attributes:  # pragma no branch
-            self._integration_manifest = self._makeClassAttribute(github.Rate.Rate, attributes["integration_manifest"])
+            self._integration_manifest = self._makeRateAttribute(attributes, "integration_manifest")
         if "scim" in attributes:  # pragma no branch
-            self._scim = self._makeClassAttribute(github.Rate.Rate, attributes["scim"])
+            self._scim = self._makeRateAttribute(attributes, "scim")
         if "search" in attributes:  # pragma no branch
-            self._search = self._makeClassAttribute(github.Rate.Rate, attributes["search"])
+            self._search = self._makeRateAttribute(attributes, "search")
         if "source_import" in attributes:  # pragma no branch
-            self._source_import = self._makeClassAttribute(github.Rate.Rate, attributes["source_import"])
+            self._source_import = self._makeRateAttribute(attributes, "source_import")
