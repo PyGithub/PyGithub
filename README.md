@@ -21,6 +21,12 @@ This library enables you to manage [GitHub] resources such as repositories, user
 pip install PyGithub
 ```
 
+Creating or updating secrets requires PyNaCl:
+
+```bash
+pip install PyGithub[encryption]
+```
+
 ## Simple Demo
 
 ```python
