@@ -69,17 +69,35 @@ from github.Requester import Requester
 T = TypeVar("T", bound=GithubObject)
 
 
+class Page(list[T]):
+    """
+    A single page of a :class:`PaginatedList`, as returned by :meth:`PaginatedList.pages` and
+    :meth:`PaginatedList.get_page`.
+
+    Provides the elements of that page like a list.
+
+    """
+
+    def copy(self) -> Page[T]:
+        """
+        Creates a shallow copy of this page.
+        """
+        return Page(self)
+
+
 class PaginatedListBase(Generic[T]):
     __elements: list[T]
+    __pages: list[Page[T]]
 
     def _couldGrow(self) -> bool:
         raise NotImplementedError
 
-    def _fetchNextPage(self) -> list[T]:
+    def _fetchNextPage(self) -> Page[T]:
         raise NotImplementedError
 
-    def __init__(self, elements: list[T] | None = None) -> None:
-        self.__elements = [] if elements is None else elements
+    def __init__(self, first_page: Page[T] | None = None) -> None:
+        self.__elements = [] if first_page is None else list(first_page)
+        self.__pages = [] if first_page is None else [first_page]
 
     @overload
     def __getitem__(self, index: int) -> T: ...
@@ -101,6 +119,24 @@ class PaginatedListBase(Generic[T]):
             newElements = self._grow()
             yield from newElements
 
+    def pages(self) -> Iterator[Page[T]]:
+        """
+        Iterates over the individual pages of this list, fetching them only when needed.
+
+        Pages that have been fetched already, also through iterating or indexing this list, are not fetched again.
+        In a reversed list, pages come last to first, and the elements of each page are reversed as well.
+        Every response provides a page, so an empty list has a single empty page.
+
+        """
+        index = 0
+        while index < len(self.__pages) or self._couldGrow():
+            if index == len(self.__pages):
+                self._grow()
+            else:
+                # pages are mutable, a copy makes sure modifying a yielded page does not affect later calls to pages()
+                yield self.__pages[index].copy()
+                index += 1
+
     def _isBiggerThan(self, index: int) -> bool:
         return len(self.__elements) > index or self._couldGrow()
 
@@ -108,16 +144,19 @@ class PaginatedListBase(Generic[T]):
         while len(self.__elements) <= index and self._couldGrow():
             self._grow()
 
-    def _grow(self) -> list[T]:
-        newElements = self._fetchNextPage()
-        self.__elements += newElements
-        return newElements
+    def _grow(self) -> Page[T]:
+        newPage = self._fetchNextPage()
+        self.__elements += newPage
+        self.__pages.append(newPage)
+        return newPage
 
     def _clear(self) -> None:
         self.__elements.clear()
+        self.__pages.clear()
 
     def _reverse(self) -> None:
         self.__elements.reverse()
+        self.__pages = [Page(page[::-1]) for page in self.__pages[::-1]]
 
     class _Slice:
         def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
@@ -170,6 +209,11 @@ class PaginatedList(PaginatedListBase[T]):
 
         some_repos = repos.get_page(0)
         some_other_repos = repos.get_page(3)
+
+    You can also iterate over the individual pages, rather than over all items::
+
+        for page in user.get_repos().pages():
+            print(f"{len(page)} repos on this page")
 
     Individual items of this list are fetched in pages. The size of those pages
     is configured via ``per_page`` when creating the :class:`github.MainClass.Github` instance::
@@ -245,7 +289,7 @@ class PaginatedList(PaginatedListBase[T]):
         self.__graphql_variables = graphql_variables or {}
         self.__page_info = None
 
-        first_page = []
+        first_page = None
         if firstData is not None:
             first_page = self._getPage(firstData, firstHeaders)
             # this paginated list contains a single page
@@ -399,7 +443,7 @@ class PaginatedList(PaginatedListBase[T]):
             data = data[item]
         return data
 
-    def _fetchNextPage(self) -> list[T]:
+    def _fetchNextPage(self) -> Page[T]:
         if self.is_rest:
             # REST API pagination
             headers, data = self.__requester.requestJsonAndCheck(
@@ -427,7 +471,7 @@ class PaginatedList(PaginatedListBase[T]):
             pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
             return self._getPage(pagination, {})
 
-    def _getPage(self, data: Any, headers: dict[str, str | int] | None) -> list[T]:
+    def _getPage(self, data: Any, headers: dict[str, str | int] | None) -> Page[T]:
         if self.is_rest:
             self.__nextUrl = None  # type: ignore
             if len(data) > 0:
@@ -451,8 +495,8 @@ class PaginatedList(PaginatedListBase[T]):
                 if element is not None
             ]
             if self._reversed:
-                return content[::-1]
-            return content
+                content = content[::-1]
+            return Page(content)
         else:
             if "pageInfo" not in data:
                 raise RuntimeError(f"Query must provide pagination with pageInfo:\n{self.__graphql_query}")
@@ -477,7 +521,9 @@ class PaginatedList(PaginatedListBase[T]):
             nodes = data["nodes"]
             if self._reversed:
                 nodes = nodes[::-1]
-            return [self.__contentClass(self.__requester, {}, element) for element in nodes if element is not None]
+            return Page(
+                [self.__contentClass(self.__requester, {}, element) for element in nodes if element is not None]
+            )
 
     def __parseLinkHeader(self, headers: dict[str, str | int]) -> dict[str, str]:
         links = {}
@@ -490,7 +536,7 @@ class PaginatedList(PaginatedListBase[T]):
                 links[rel] = url
         return links
 
-    def get_page(self, page: int) -> list[T]:
+    def get_page(self, page: int) -> Page[T]:
         if self.is_graphql:
             raise RuntimeError("Not supported for GraphQL pagination")
 
@@ -511,7 +557,9 @@ class PaginatedList(PaginatedListBase[T]):
             if "incomplete_results" in data:
                 self.__incomplete_results = data.get("incomplete_results")
             data = data[self.__list_item]
-        return [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
+        return Page(
+            [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
+        )
 
     @classmethod
     def override_attributes(cls, overrides: dict[str, Any]) -> Callable[[dict[str, Any]], dict[str, Any]]:

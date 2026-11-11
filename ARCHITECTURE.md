@@ -176,6 +176,7 @@ keys within the outer dict.
 - `totalCount` fires a `per_page=1` probe to get the count without fetching all items.
 - `reversed` property returns a backward-iterating list (REST only).
 - `get_page(n)` fetches an arbitrary page directly (REST only).
+- `pages()` iterates over the individual `Page`s (a `list` subclass), reusing pages that have been fetched already.
 
 ---
 
