@@ -99,6 +99,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     - /components/schemas/private-user
     - /components/schemas/public-user
     - /components/schemas/simple-user
+    - /components/schemas/team-member
 
     """
 
@@ -124,6 +125,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._hireable: Attribute[bool | None] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._inherited: Attribute[bool] = NotSet
         self._invitation_teams_url: Attribute[str] = NotSet
         self._inviter: Attribute[NamedUser] = NotSet
         self._ldap_dn: Attribute[str] = NotSet
@@ -273,6 +275,10 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
+
+    @property
+    def inherited(self) -> bool:
+        return self._inherited.value
 
     @property
     def invitation_teams_url(self) -> str:
@@ -646,6 +652,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             # or some derived class like /orgs/{org}/invitations/{invitation_id}
             if id.isnumeric() and attributes["url"].endswith(f"/user/{id}"):
                 self._id = self._makeIntAttribute(int(id))
+        if "inherited" in attributes:  # pragma no branch
+            self._inherited = self._makeBoolAttribute(attributes["inherited"])
         if "invitation_teams_url" in attributes:  # pragma no branch
             self._invitation_teams_url = self._makeStringAttribute(attributes["invitation_teams_url"])
         if "inviter" in attributes:  # pragma no branch

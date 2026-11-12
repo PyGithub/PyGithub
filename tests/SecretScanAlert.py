@@ -40,8 +40,16 @@ class SecretScanAlert(Framework.TestCase):
 
     def testAttributes(self):
         alert = self.repo.get_secret_scanning_alert(1)
+        self.assertEqual(alert.assigned_to.login, "EnricoMi")
+        self.assertEqual(alert.closure_request_comment, "This is a test key")
+        self.assertEqual(alert.closure_request_reviewer.login, "EnricoMi")
+        self.assertEqual(alert.closure_request_reviewer_comment, "This key is real, please rotate it")
         self.assertEqual(alert.number, 1)
         self.assertEqual(alert.created_at, datetime(2020, 11, 6, 18, 18, 30, tzinfo=timezone.utc))
+        self.assertEqual(alert.provider, "Mailchimp")
+        self.assertEqual(alert.provider_slug, "mailchimp")
+        self.assertEqual(alert.secret_type_display_name, "Mailchimp API Key")
+        self.assertEqual(alert.updated_at, datetime(2020, 11, 7, 9, 10, 11, tzinfo=timezone.utc))
         self.assertEqual(alert.url, "https://api.github.com/repos/matt-davis27/PyGithub/secret-scanning/alerts/1")
         self.assertEqual(alert.html_url, "https://github.com/matt-davis27/PyGithub/security/secret-scanning/1")
         self.assertEqual(

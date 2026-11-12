@@ -91,6 +91,7 @@ class PullRequestComment(CompletableGithubObject):
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._in_reply_to_id: Attribute[int] = NotSet
+        self._is_copilot_code_review: Attribute[bool] = NotSet
         self._line: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._original_commit_id: Attribute[str] = NotSet
@@ -167,6 +168,11 @@ class PullRequestComment(CompletableGithubObject):
     def in_reply_to_id(self) -> int:
         self._completeIfNotSet(self._in_reply_to_id)
         return self._in_reply_to_id.value
+
+    @property
+    def is_copilot_code_review(self) -> bool:
+        self._completeIfNotSet(self._is_copilot_code_review)
+        return self._is_copilot_code_review.value
 
     @property
     def line(self) -> int:
@@ -354,6 +360,8 @@ class PullRequestComment(CompletableGithubObject):
                 self._id = self._makeIntAttribute(int(id))
         if "in_reply_to_id" in attributes:  # pragma no branch
             self._in_reply_to_id = self._makeIntAttribute(attributes["in_reply_to_id"])
+        if "is_copilot_code_review" in attributes:  # pragma no branch
+            self._is_copilot_code_review = self._makeBoolAttribute(attributes["is_copilot_code_review"])
         if "line" in attributes:  # pragma no branch
             self._line = self._makeIntAttribute(attributes["line"])
         if "node_id" in attributes:  # pragma no branch
