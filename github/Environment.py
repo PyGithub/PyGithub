@@ -287,6 +287,9 @@ class Environment(CompletableGithubObject):
             f"{self.url}/deployment-branch-policies",
             None,
             list_item="branch_policies",
+            attributesTransformer=PaginatedList.override_attributes(
+                {"branch_policies_url": f"{self.url}/deployment-branch-policies"}
+            ),
         )
 
     def get_deployment_branch_policy(self, id: int) -> DeploymentBranchPolicy:
@@ -295,6 +298,7 @@ class Environment(CompletableGithubObject):
         """
         assert isinstance(id, int), id
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/deployment-branch-policies/{id}")
+        data["branch_policies_url"] = f"{self.url}/deployment-branch-policies"
         return github.DeploymentBranchPolicy.DeploymentBranchPolicy(self._requester, headers, data)
 
     def create_deployment_branch_policy(self, name: str, type: Opt[str] = NotSet) -> DeploymentBranchPolicy:
@@ -309,26 +313,8 @@ class Environment(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST", f"{self.url}/deployment-branch-policies", input=post_parameters
         )
+        data["branch_policies_url"] = f"{self.url}/deployment-branch-policies"
         return github.DeploymentBranchPolicy.DeploymentBranchPolicy(self._requester, headers, data)
-
-    def update_deployment_branch_policy(self, id: int, name: str) -> DeploymentBranchPolicy:
-        """
-        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id} <https://docs.github.com/en/rest/deployments/branch-policies#update-a-deployment-branch-policy>`_
-        """
-        assert isinstance(id, int), id
-        assert isinstance(name, str), name
-        headers, data = self._requester.requestJsonAndCheck(
-            "PUT", f"{self.url}/deployment-branch-policies/{id}", input={"name": name}
-        )
-        return github.DeploymentBranchPolicy.DeploymentBranchPolicy(self._requester, headers, data)
-
-    def delete_deployment_branch_policy(self, id: int) -> bool:
-        """
-        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id} <https://docs.github.com/en/rest/deployments/branch-policies#delete-a-deployment-branch-policy>`_
-        """
-        assert isinstance(id, int), id
-        status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/deployment-branch-policies/{id}")
-        return status == 204
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch

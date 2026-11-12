@@ -40,6 +40,7 @@ class DeploymentBranchPolicy(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._branch_policies_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
@@ -47,6 +48,10 @@ class DeploymentBranchPolicy(NonCompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "name": self._name.value})
+
+    @property
+    def branch_policies_url(self) -> str:
+        return self._branch_policies_url.value
 
     @property
     def id(self) -> int:
@@ -64,7 +69,28 @@ class DeploymentBranchPolicy(NonCompletableGithubObject):
     def type(self) -> str:
         return self._type.value
 
+    @property
+    def url(self) -> str:
+        return f"{self.branch_policies_url}/{self.id}"
+
+    def edit(self, name: str) -> None:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id} <https://docs.github.com/en/rest/deployments/branch-policies#update-a-deployment-branch-policy>`_
+        :param name: new name pattern that branches or tags must match to be deployed to the environment
+        """
+        assert isinstance(name, str), name
+        headers, data = self._requester.requestJsonAndCheck("PUT", self.url, input={"name": name})
+        self._useAttributes(data)
+
+    def delete(self) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id} <https://docs.github.com/en/rest/deployments/branch-policies#delete-a-deployment-branch-policy>`_
+        """
+        self._requester.requestJsonAndCheck("DELETE", self.url)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "branch_policies_url" in attributes:  # pragma no branch
+            self._branch_policies_url = self._makeStringAttribute(attributes["branch_policies_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
