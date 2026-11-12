@@ -26,11 +26,19 @@ Properties returning the class:
 - SecretScanAlert.push_protection_bypassed_by
 - SecretScanAlert.resolved_by
 Adding schemas to NamedUser
-Suggested 3 schemas
-Added 3 schemas
+
+Class NamedUser:
+- should implement schema /components/schemas/stargazer
+  Methods returning the schema:
+  - Repository.get_stargazers
+Paths returning the class:
+- GET /repos/{owner}/{repo}/stargazers
+Adding schemas to NamedUser
+Suggested 4 schemas
+Added 4 schemas
 + python scripts/openapi.py index github openapi.spec.json openapi.index
 Indexing 13 Python files
 Indexed 23 classes
 Indexed 5 paths
-Indexed 42 schemas
+Indexed 43 schemas
 Indexing OpenAPI spec

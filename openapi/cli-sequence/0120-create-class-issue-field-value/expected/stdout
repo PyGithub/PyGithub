@@ -4,7 +4,7 @@ Updating index
 Indexing 15 Python files
 Indexed 25 classes
 Indexed 6 paths
-Indexed 44 schemas
+Indexed 45 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class IssueFieldValue
@@ -16,5 +16,5 @@ Test tests/IssueFieldValue.py changed
 Indexing 15 Python files
 Indexed 25 classes
 Indexed 6 paths
-Indexed 44 schemas
+Indexed 45 schemas
 Indexing OpenAPI spec

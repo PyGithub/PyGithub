@@ -4074,8 +4074,25 @@ class OpenApi:
         else:
             print("Suggesting API schemas for PyGithub classes")
 
+        def split_union(return_type: str) -> list[str]:
+            # split by "|" outside of brackets, e.g. "PaginatedList[A] | PaginatedList[B]"
+            alternatives, depth, start = [], 0, 0
+            for idx, char in enumerate(return_type):
+                if char == "[":
+                    depth += 1
+                elif char == "]":
+                    depth -= 1
+                elif char == "|" and depth == 0:
+                    alternatives.append(return_type[start:idx])
+                    start = idx + 1
+            alternatives.append(return_type[start:])
+            return alternatives
+
         def inner_return_type(return_type: str) -> list[str]:
             return_type = return_type.strip()
+            alternatives = split_union(return_type)
+            if len(alternatives) > 1:
+                return [rt for alt in alternatives for rt in inner_return_type(alt)]
             if return_type == "None":
                 return []
             if return_type.startswith("Optional[") and return_type.endswith("]"):
@@ -4089,8 +4106,9 @@ class OpenApi:
                 return []
 
             # now that we have removed outer types, we can look for alternatives
-            if "|" in return_type:
-                return [rt for alt in return_type.split("|") for rt in inner_return_type(alt)]
+            alternatives = split_union(return_type)
+            if len(alternatives) > 1:
+                return [rt for alt in alternatives for rt in inner_return_type(alt)]
 
             # return the pure class name, no outer class, module or package names
             if "." in return_type:
