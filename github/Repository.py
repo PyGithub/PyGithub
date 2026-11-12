@@ -2421,8 +2421,8 @@ class Repository(CompletableGithubObject):
 
     def get_commit(self, sha: str, *, commit_files_per_page: int | None = None) -> Commit:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
-        :param sha: string
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/commits/commits#get-a-commit>`_
+        :param sha: string, the commit SHA, but also a branch name or a tag name, as the API accepts any ref here
         :param commit_files_per_page: int Number of files retrieved with the commit. Iterating over the files property will fetch pages of this size. Default is 300. Maximum is 300. At most 3000 files can be retrieved.
         :rtype: :class:`github.Commit.Commit`
         """
