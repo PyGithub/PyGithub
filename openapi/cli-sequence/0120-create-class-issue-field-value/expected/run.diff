@@ -249,7 +249,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "Items": {
        "bases": [
          "NonCompletableGithubObject"
-@@ -6319,6 +6475,7 @@
+@@ -6336,6 +6492,7 @@
          "GithubObject",
          "InteractionLimit",
          "IssueComment",
@@ -257,7 +257,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Items",
          "NamedUser",
          "NamedUserSearchResult",
-@@ -6362,6 +6519,7 @@
+@@ -6379,6 +6536,7 @@
          "GitCommit",
          "InteractionLimit",
          "IssueComment",
@@ -265,7 +265,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Items",
          "NamedUser",
          "NamedUserSearchResult",
-@@ -6380,6 +6538,7 @@
+@@ -6397,6 +6555,7 @@
          "GitAuthor",
          "GitCommit",
          "InteractionLimit",
@@ -273,7 +273,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Items",
          "Reaction",
          "RepositoryRule",
-@@ -7128,6 +7287,9 @@
+@@ -7149,6 +7308,9 @@
        "/components/schemas/issue-comment": [
          "IssueComment"
        ],

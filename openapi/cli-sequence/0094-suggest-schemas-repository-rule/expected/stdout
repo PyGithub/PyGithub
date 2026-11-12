@@ -1,0 +1,11 @@
++ python scripts/openapi.py suggest schemas --add openapi.spec.json openapi.index RepositoryRule
+Using spec openapi.spec.json
+Suggesting API schemas for PyGithub class RepositoryRule
+Suggested 0 schemas
+Added 0 schemas
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 13 Python files
+Indexed 23 classes
+Indexed 4 paths
+Indexed 41 schemas
+Indexing OpenAPI spec

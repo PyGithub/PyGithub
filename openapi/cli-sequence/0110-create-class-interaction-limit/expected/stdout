@@ -4,7 +4,7 @@ Updating index
 Indexing 14 Python files
 Indexed 24 classes
 Indexed 5 paths
-Indexed 42 schemas
+Indexed 43 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class InteractionLimit
@@ -16,5 +16,5 @@ Test tests/InteractionLimit.py changed
 Indexing 14 Python files
 Indexed 24 classes
 Indexed 5 paths
-Indexed 42 schemas
+Indexed 43 schemas
 Indexing OpenAPI spec
