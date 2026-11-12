@@ -1301,7 +1301,9 @@ class Requester:
                         f"Github server redirected from host {self.__hostname} to {o.hostname}, "
                         f"please correct your Github server URL via base_url: Github(base_url=...)"
                     )
-                if o.path == url:
+                # follow the full location, including its query string (e.g. parameters of a paginated list)
+                path = self.__makeAbsoluteUrl(location)
+                if path == url:
                     port = ":" + str(self.__port) if self.__port is not None else ""
                     requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
                     raise RuntimeError(
@@ -1310,8 +1312,8 @@ class Requester:
                         f"via base_url: Github(base_url=...)"
                     )
                 if self._logger.isEnabledFor(logging.INFO):
-                    self._logger.info(f"Following Github server redirection from {url} to {o.path}")
-                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input, stream=stream)
+                    self._logger.info(f"Following Github server redirection from {url} to {path}")
+                return self.__requestRaw(original_cnx, verb, path, requestHeaders, input, stream=stream)
             if status == 302 and follow_302_redirect and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
