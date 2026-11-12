@@ -28,7 +28,7 @@ Updating index
 Indexing 14 Python files
 Indexed 24 classes
 Indexed 6 paths
-Indexed 44 schemas
+Indexed 42 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Repository
@@ -39,5 +39,5 @@ Class Repository changed
 Indexing 14 Python files
 Indexed 24 classes
 Indexed 6 paths
-Indexed 44 schemas
+Indexed 42 schemas
 Indexing OpenAPI spec

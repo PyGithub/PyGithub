@@ -1,20 +1,15 @@
 diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
 --- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
 +++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
-@@ -42,9 +42,13 @@
+@@ -42,6 +42,8 @@
  
      The OpenAPI schema can be found at
  
 +    - /components/schemas/commit-search-result-item/properties/commit/properties/author
-+    - /components/schemas/empty-object
 +    - /components/schemas/nullable-git-user
      - /components/schemas/nullable-simple-user
      - /components/schemas/public-user
      - /components/schemas/simple-user
-+    - /components/schemas/stargazer
- 
-     """
- 
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
@@ -23,7 +18,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObject"
        ],
 -      "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user\n    - /components/schemas/simple-user",
-+      "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/commit-search-result-item/properties/commit/properties/author\n    - /components/schemas/empty-object\n    - /components/schemas/nullable-git-user\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user\n    - /components/schemas/simple-user\n    - /components/schemas/stargazer",
++      "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/commit-search-result-item/properties/commit/properties/author\n    - /components/schemas/nullable-git-user\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user\n    - /components/schemas/simple-user",
        "filename": "github/NamedUser.py",
        "ids": [
          "some_attribute"
@@ -61,60 +56,25 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/nullable-simple-user": {
                "nullable": true,
                "type": "string"
-@@ -2202,10 +2213,7 @@
-           "returns": [
-             "str"
-           ],
--          "schema": {
--            "example": "\"2020-07-09T00:17:55Z\"",
--            "type": "string"
--          },
-+          "schema": null,
-           "schemas": {
-             "/components/schemas/nullable-simple-user": {
-               "example": "\"2020-07-09T00:17:55Z\"",
-@@ -2214,6 +2222,10 @@
-             "/components/schemas/simple-user": {
-               "example": "\"2020-07-09T00:17:55Z\"",
-               "type": "string"
-+            },
-+            "/components/schemas/stargazer": {
-+              "format": "date-time",
-+              "type": "string"
-             }
-           }
-         },
-@@ -2350,9 +2362,13 @@
+@@ -2350,6 +2361,8 @@
          }
        },
        "schemas": [
 +        "/components/schemas/commit-search-result-item/properties/commit/properties/author",
-+        "/components/schemas/empty-object",
 +        "/components/schemas/nullable-git-user",
          "/components/schemas/nullable-simple-user",
          "/components/schemas/public-user",
--        "/components/schemas/simple-user"
-+        "/components/schemas/simple-user",
-+        "/components/schemas/stargazer"
-       ],
-       "test_filename": "tests/NamedUser.py"
-     },
-@@ -2372,9 +2388,13 @@
+         "/components/schemas/simple-user"
+@@ -2372,6 +2385,8 @@
          "NamedUser"
        ],
        "inherited_schemas": [
 +        "/components/schemas/commit-search-result-item/properties/commit/properties/author",
-+        "/components/schemas/empty-object",
 +        "/components/schemas/nullable-git-user",
          "/components/schemas/nullable-simple-user",
          "/components/schemas/public-user",
--        "/components/schemas/simple-user"
-+        "/components/schemas/simple-user",
-+        "/components/schemas/stargazer"
-       ],
-       "methods": {},
-       "module": "NamedUser",
-@@ -7010,7 +7030,8 @@
+         "/components/schemas/simple-user"
+@@ -7010,7 +7025,8 @@
          "GitCommit"
        ],
        "/components/schemas/commit-search-result-item/properties/commit/properties/author": [
@@ -124,17 +84,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        ],
        "/components/schemas/commit-search-result-item/properties/parents/items": [
          "Commit"
-@@ -7021,6 +7042,9 @@
-       "/components/schemas/commit/properties/parents/items": [
-         "Commit"
-       ],
-+      "/components/schemas/empty-object": [
-+        "NamedUser"
-+      ],
-       "/components/schemas/full-repository": [
-         "Repository"
-       ],
-@@ -7031,7 +7055,8 @@
+@@ -7031,7 +7047,8 @@
          "Repository"
        ],
        "/components/schemas/nullable-git-user": [
@@ -144,13 +94,3 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        ],
        "/components/schemas/nullable-secret-scanning-first-detected-location": [
          "SecretScanAlertInstance"
-@@ -7120,6 +7145,9 @@
-       "/components/schemas/simple-user": [
-         "NamedUser"
-       ],
-+      "/components/schemas/stargazer": [
-+        "NamedUser"
-+      ],
-       "/components/schemas/user-search-result-item": [
-         "NamedUserSearchResult"
-       ]
