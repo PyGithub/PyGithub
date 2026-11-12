@@ -1,0 +1,20 @@
++ python scripts/openapi.py create class --tests github openapi.spec.json openapi.index Stargazer https://docs.github.com/en/rest/activity/starring /components/schemas/stargazer
+Creating class github.Stargazer.Stargazer with parent github.GithubObject.NonCompletableGithubObject in ./github/Stargazer.py
+Updating index
+Indexing 12 Python files
+Indexed 22 classes
+Indexed 4 paths
+Indexed 40 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Stargazer
+Applying spec openapi.spec.json to github.Stargazer.Stargazer (github/Stargazer.py)
+Applying schema /components/schemas/stargazer
+Class Stargazer changed
+Test tests/Stargazer.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 12 Python files
+Indexed 22 classes
+Indexed 4 paths
+Indexed 40 schemas
+Indexing OpenAPI spec

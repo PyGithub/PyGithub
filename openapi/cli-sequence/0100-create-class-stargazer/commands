@@ -1,0 +1,3 @@
+# Stargazer implements /components/schemas/stargazer, one of the alternative schemas returned by GET /repos/{owner}/{repo}/stargazers
+python scripts/openapi.py create class --tests github openapi.spec.json openapi.index Stargazer "https://docs.github.com/en/rest/activity/starring" "/components/schemas/stargazer"
+python scripts/openapi.py index github openapi.spec.json openapi.index

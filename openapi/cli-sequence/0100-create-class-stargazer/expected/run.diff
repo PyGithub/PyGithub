@@ -1,0 +1,226 @@
+diff --unified --recursive --new-file before/github/Stargazer.py after/github/Stargazer.py
+--- before/github/Stargazer.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/Stargazer.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,70 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++import github.NamedUser
++
++if TYPE_CHECKING:
++    from github.NamedUser import NamedUser
++    pass
++
++
++class Stargazer(NonCompletableGithubObject):
++    """
++    This class represents Stargazer.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/activity/starring
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/stargazer
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._starred_at: Attribute[datetime] = NotSet
++        self._user: Attribute[NamedUser] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def starred_at(self) -> datetime:
++        return self._starred_at.value
++
++    @property
++    def user(self) -> NamedUser:
++        return self._user.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "starred_at" in attributes:  # pragma no branch
++            self._starred_at = self._makeDatetimeAttribute(attributes["starred_at"])
++        if "user" in attributes:  # pragma no branch
++            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -5752,6 +5752,62 @@
+       ],
+       "test_filename": "tests/SecretScanAlertInstance.py"
+     },
++    "Stargazer": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents Stargazer.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/activity/starring\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/stargazer",
++      "filename": "github/Stargazer.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "Stargazer",
++      "name": "Stargazer",
++      "package": "github",
++      "properties": {
++        "starred_at": {
++          "name": "starred_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/stargazer": {
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        },
++        "user": {
++          "name": "user",
++          "returns": [
++            "NamedUser"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-simple-user"
++          },
++          "schemas": {
++            "/components/schemas/stargazer": {
++              "$ref": "#/components/schemas/nullable-simple-user"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/stargazer"
++      ],
++      "test_filename": "tests/Stargazer.py"
++    },
+     "_BadAttribute": {
+       "bases": [
+         "Attribute"
+@@ -5859,7 +5915,8 @@
+         "Reaction",
+         "Repository",
+         "SecretScanAlert",
+-        "SecretScanAlertInstance"
++        "SecretScanAlertInstance",
++        "Stargazer"
+       ],
+       "Attribute": [
+         "_BadAttribute",
+@@ -5898,7 +5955,8 @@
+         "Reaction",
+         "Repository",
+         "SecretScanAlert",
+-        "SecretScanAlertInstance"
++        "SecretScanAlertInstance",
++        "Stargazer"
+       ],
+       "NamedUser": [
+         "NamedUserSearchResult"
+@@ -5908,7 +5966,8 @@
+         "GitCommit",
+         "Items",
+         "Reaction",
+-        "SecretScanAlertInstance"
++        "SecretScanAlertInstance",
++        "Stargazer"
+       ],
+       "Protocol": [
+         "Attribute",
+@@ -6702,6 +6761,9 @@
+       "/components/schemas/simple-user": [
+         "NamedUser"
+       ],
++      "/components/schemas/stargazer": [
++        "Stargazer"
++      ],
+       "/components/schemas/user-search-result-item": [
+         "NamedUserSearchResult"
+       ]
+diff --unified --recursive --new-file before/tests/Stargazer.py after/tests/Stargazer.py
+--- before/tests/Stargazer.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/Stargazer.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,42 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class Stargazer(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type Stargazer and assign to self.s, then run:
++        #   pytest ./tests/Stargazer.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/Stargazer.py testAttributes
++        #   pre-commit run --all-files
++        self.s = None
++
++    def testAttributes(self):
++        s = self.s
++        self.assertEqual(s.__repr__(), "")
++        self.assertEqual(s.starred_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(s.user.some_attribute, "")
