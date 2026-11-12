@@ -3446,18 +3446,85 @@ class OpenApi:
                 return [alternatives] if len(alternatives) > 1 else []
         return []
 
-    def get_schema_property_names(self, spec: dict[str, Any], spec_type: str) -> set[str]:
+    @staticmethod
+    def normalize_type(type: PythonType | GithubClass | str | None) -> str | None:
         """
-        Returns the property names of the schema, including those of allOf schemas.
+        Returns a canonical string of the type, so that types from the spec and from the index can be compared.
+        Module and package names are removed, None is removed from unions, and union types are sorted.
         """
-        _, schema = self.get_schema(spec, spec_type.lstrip("#"))
-        names = set(schema.get("properties", {}).keys())
-        for component in schema.get("allOf", []):
+        if type is None:
+            return None
+
+        def render(t: PythonType | GithubClass) -> str:
+            if isinstance(t, GithubClass):
+                return t.name
+            if t.type == "union":
+                return " | ".join(render(inner) for inner in t.inner_types)
+            if t.inner_types:
+                return f"{t.type}[{', '.join(render(inner) for inner in t.inner_types)}]"
+            return t.type
+
+        def split(text: str, separator: str) -> list[str]:
+            parts, depth, start = [], 0, 0
+            for idx, char in enumerate(text):
+                if char == "[":
+                    depth += 1
+                elif char == "]":
+                    depth -= 1
+                elif char == separator and depth == 0:
+                    parts.append(text[start:idx])
+                    start = idx + 1
+            parts.append(text[start:])
+            return parts
+
+        def normalize(text: str) -> str:
+            alternatives = set()
+            for alternative in split(text.replace(" ", ""), "|"):
+                if alternative.startswith("Optional[") and alternative.endswith("]"):
+                    alternative = f"{alternative[9:-1]}|None"
+                if "|" in alternative and "[" not in alternative.split("|")[0]:
+                    alternatives.update(normalize(alternative).split(" | "))
+                    continue
+                if "[" in alternative and alternative.endswith("]"):
+                    name, inner = alternative[:-1].split("[", maxsplit=1)
+                    alternative = f"{name.split('.')[-1]}[{', '.join(normalize(i) for i in split(inner, ','))}]"
+                else:
+                    alternative = alternative.split(".")[-1]
+                if alternative and alternative != "None":
+                    alternatives.add(alternative)
+            return " | ".join(sorted(alternatives))
+
+        return normalize(type if isinstance(type, str) else render(type)) or None
+
+    def get_schema_property_types(self, spec: dict[str, Any], spec_type: str) -> dict[str, str | None]:
+        """
+        Returns the normalized Python types of the schema's properties, including those of allOf schemas.
+        Properties of unknown type have type None.
+        """
+        schema_path, schema = self.get_schema(spec, spec_type.lstrip("#"))
+
+        def types_of(properties: dict[str, Any], path: list[str]) -> dict[str, str | None]:
+            return {
+                name: self.normalize_type(
+                    as_python_type(
+                        property_schema,
+                        path + ["properties", name],
+                        self.schema_to_class,
+                        self.classes,
+                        spec,
+                        verbose=False,
+                    )
+                )
+                for name, property_schema in properties.items()
+            }
+
+        types = types_of(schema.get("properties", {}), schema_path)
+        for idx, component in enumerate(schema.get("allOf", [])):
             if "$ref" in component:
-                names.update(self.get_schema_property_names(spec, component.get("$ref")))
+                types.update(self.get_schema_property_types(spec, component.get("$ref")))
             else:
-                names.update(component.get("properties", {}).keys())
-        return names
+                types.update(types_of(component.get("properties", {}), schema_path + ["allOf", str(idx)]))
+        return types
 
     def print_alternative_spec_types(
         self,
@@ -3469,31 +3536,51 @@ class OpenApi:
         sources: list[str],
     ):
         """
-        Prints how much the alternative schemas overlap with each other and with candidate classes.
+        Prints how much the alternative schemas overlap with each other and with candidate classes,
+        and which overlapping properties have conflicting types.
         """
 
-        def class_property_names(class_name: str) -> set[str]:
+        def class_property_types(class_name: str) -> dict[str, str | None]:
             clazz = classes.get(class_name, {})
-            names = set(clazz.get("properties", {}).keys())
-            for base in clazz.get("inheritance", []):
-                names.update(classes.get(base, {}).get("properties", {}).keys())
-            return names
+            properties = {}
+            for c in [clazz] + [classes.get(base, {}) for base in clazz.get("inheritance", [])]:
+                for name, prop in c.get("properties", {}).items():
+                    if name not in properties:
+                        properties[name] = self.normalize_type(" | ".join(prop.get("returns", [])) or None)
+            return properties
 
-        properties = {alternative: self.get_schema_property_names(spec, alternative) for alternative in alternatives}
-        union = set().union(*properties.values())
+        def conflicting(type: str | None, other_types: list[str | None]) -> bool:
+            return type is not None and any(other is not None and other != type for other in other_types)
+
+        def with_conflicts(text: str, conflicts: list[str]) -> str:
+            if conflicts:
+                return f"{text} ({len(conflicts)} conflicting: {', '.join(sorted(conflicts))})"
+            return text
+
+        properties = {alternative: self.get_schema_property_types(spec, alternative) for alternative in alternatives}
+        union = set().union(*[p.keys() for p in properties.values()])
         implementing_classes = {
             alternative: sorted(schema_to_classes.get(alternative, [])) for alternative in alternatives
         }
         candidate_classes = [cls] + sorted(
             {c for cs in implementing_classes.values() for c in cs if c in classes}.difference({cls})
         )
-        candidate_properties = {c: class_property_names(c) for c in candidate_classes}
+        candidate_properties = {c: class_property_types(c) for c in candidate_classes}
 
         print(f"Alternative schemas returned by {', '.join(sources)} (union of {len(union)} properties):")
         for alternative in alternatives:
             props = properties[alternative]
-            others = set().union(*[p for a, p in properties.items() if a != alternative])
-            overlaps = [f"{len(props & candidate_properties[c])}/{len(props)} in class {c}" for c in candidate_classes]
+            others = {a: p for a, p in properties.items() if a != alternative}
+            shared = [name for name in props if any(name in p for p in others.values())]
+            shared_conflicts = [
+                name for name in shared if conflicting(props[name], [p.get(name) for p in others.values()])
+            ]
+            overlaps = []
+            for c in candidate_classes:
+                class_props = candidate_properties[c]
+                in_class = [name for name in props if name in class_props]
+                class_conflicts = [name for name in in_class if conflicting(props[name], [class_props[name]])]
+                overlaps.append(with_conflicts(f"{len(in_class)}/{len(props)} in class {c}", class_conflicts))
             implemented = (
                 f", implemented by {', '.join(implementing_classes[alternative])}"
                 if implementing_classes[alternative]
@@ -3502,7 +3589,7 @@ class OpenApi:
             print(
                 f"- {alternative}: {len(props)} properties, "
                 f"{len(props)}/{len(union)} of union, "
-                f"{len(props & others)}/{len(props)} shared with other alternatives, "
+                f"{with_conflicts(f'{len(shared)}/{len(props)} shared with other alternatives', shared_conflicts)}, "
                 f"{', '.join(overlaps)}{implemented}"
             )
 
