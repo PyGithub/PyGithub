@@ -1,0 +1,55 @@
+https
+GET
+api.github.com
+None
+/repos/alson/PyGithub/environments/dev/deployment-branch-policies
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Content-Type', 'application/json; charset=utf-8')]
+{"total_count":2,"branch_policies":[{"id":361471,"node_id":"MDE2OkdhdGVCcmFuY2hQb2xpY3k361471","name":"main","type":"branch"},{"id":361472,"node_id":"MDE2OkdhdGVCcmFuY2hQb2xpY3k361472","name":"v*","type":"tag"}]}
+
+https
+POST
+api.github.com
+None
+/repos/alson/PyGithub/environments/dev/deployment-branch-policies
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"name": "release/*", "type": "branch"}
+200
+[('Server', 'GitHub.com'), ('Content-Type', 'application/json; charset=utf-8')]
+{"id":361473,"node_id":"MDE2OkdhdGVCcmFuY2hQb2xpY3k361473","name":"release/*","type":"branch"}
+
+https
+GET
+api.github.com
+None
+/repos/alson/PyGithub/environments/dev/deployment-branch-policies/361473
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Content-Type', 'application/json; charset=utf-8')]
+{"id":361473,"node_id":"MDE2OkdhdGVCcmFuY2hQb2xpY3k361473","name":"release/*","type":"branch"}
+
+https
+PUT
+api.github.com
+None
+/repos/alson/PyGithub/environments/dev/deployment-branch-policies/361473
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"name": "releases/*"}
+200
+[('Server', 'GitHub.com'), ('Content-Type', 'application/json; charset=utf-8')]
+{"id":361473,"node_id":"MDE2OkdhdGVCcmFuY2hQb2xpY3k361473","name":"releases/*","type":"branch"}
+
+https
+DELETE
+api.github.com
+None
+/repos/alson/PyGithub/environments/dev/deployment-branch-policies/361473
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Server', 'GitHub.com')]
+
+
