@@ -1,0 +1,92 @@
+diff --unified --recursive --new-file before/github/Repository.py after/github/Repository.py
+--- before/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -642,6 +642,20 @@
+     def web_commit_signoff_required(self) -> bool:
+         self._completeIfNotSet(self._web_commit_signoff_required)
+         return self._web_commit_signoff_required.value
++    
++    def get_stargazers(self) -> None:
++        """
++        List stargazers
++
++        Lists the people that have starred the repository.
++
++        This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
++
++        - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
++
++        :calls: `GET /repos/{owner}/{repo}/stargazers <https://docs.github.com/rest/activity/starring#list-stargazers>`_
++        """
++        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/stargazers")
+ 
+     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+         super()._useAttributes(attributes)
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -2583,7 +2583,19 @@
+         "GithubObject"
+       ],
+       "inherited_schemas": [],
+-      "methods": {},
++      "methods": {
++        "get_stargazers": {
++          "call": {
++            "docs": "<https://docs.github.com/rest/activity/starring#list-stargazers>`_",
++            "path": "/repos/{owner}/{repo}/stargazers",
++            "verb": "GET"
++          },
++          "name": "get_stargazers",
++          "returns": [
++            "None"
++          ]
++        }
++      },
+       "module": "Repository",
+       "name": "Repository",
+       "package": "github",
+@@ -5990,6 +6002,11 @@
+           "IssueComment.create_reaction"
+         ]
+       },
++      "/repos/{owner}/{repo}/stargazers": {
++        "get": [
++          "Repository.get_stargazers"
++        ]
++      },
+       "/users/{username}/repos": {
+         "get": [
+           "NamedUser.get_repos"
+@@ -6015,6 +6032,11 @@
+           "Reaction"
+         ]
+       },
++      "/repos/{owner}/{repo}/stargazers": {
++        "get": [
++          "None"
++        ]
++      },
+       "/users/{username}/repos": {
+         "get": [
+           "PaginatedList[Repository]"
+@@ -6805,6 +6827,19 @@
+             ]
+           }
+         ]
++      }
++    },
++    "/repos/{owner}/{repo}/stargazers": {
++      "GET": {
++        "methods": [
++          {
++            "class": "Repository",
++            "name": "get_stargazers",
++            "returns": [
++              "None"
++            ]
++          }
++        ]
+       }
+     },
+     "/users/{username}/repos": {
