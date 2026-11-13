@@ -1,0 +1,4 @@
+sphinx==8.2.3
+Jinja2==3.1.6
+sphinx-rtd-theme==3.0.2
+sphinx-copybutton==0.5.2

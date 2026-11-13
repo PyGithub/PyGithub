@@ -1,0 +1,106 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64", "setuptools_scm>=7"]
+
+[project]
+authors = [{ name = "Vincent Jacques", email = "vincent@vincent-jacques.net" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+  "Topic :: Software Development",
+]
+description = "Use the full Github API v3"
+keywords = ["github"]
+name = "PyGithub-asyncio"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dynamic = ["version"]
+
+dependencies = [
+  "niquests>=3.12,<4",
+  "pynacl>=1.4.0",
+  "pyjwt[crypto]>=2.4.0",
+  "typing-extensions>=4.5.0",
+]
+
+[project.urls]
+Documentation = "https://pygithub.readthedocs.io/en/stable/"
+Source = "https://github.com/pygithub/pygithub"
+Tracker = "https://github.com/pygithub/pygithub/issues"
+
+[project.optional-dependencies]
+integrations = []
+
+[tool.setuptools_scm]
+root = ".."
+
+[tool.setuptools]
+packages = ["githubasyncio"]
+
+[tool.setuptools.package-data]
+githubasyncio = ["py.typed", "*.pyi"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = ["githubasyncio.*"]
+check_untyped_defs = true
+disallow_untyped_defs = true
+warn_no_return = false
+
+[tool.codespell]
+skip = "tests/*"
+quiet-level = 3
+# comma separated list of words; waiting for:
+#  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
+# also adding links until they ignored by its: nature
+#  https://github.com/codespell-project/codespell/issues/2243#issuecomment-1732019960
+ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel,commitish,statics,ot"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+# ruff's default rule set before 0.16, which enabled many more rules by default
+select = ["E4", "E7", "E9", "F"]
+extend-select = [
+  "I",  # isort
+  "UP", # pyupgrade
+  "FA", # flake8-future-annotations
+  "D",  # pydocstyle
+]
+extend-ignore = [
+  "D1",   # undocumented-* (Should address gradually)
+  "D200", # unnecessary-multiline-docstring
+  "D203", # incorrect-blank-line-before-class (Mutually exclusive with D211)
+  "D205", # missing-blank-line-after-summary
+  "D212", # multi-line-summary-first-line (Mutually exclusive with D213)
+  "D400", # missing-trailing-period
+  "D401", # non-imperative-mood
+  "D404", # docstring-starts-with-this
+  "D415", # missing-terminal-punctuation
+]
+extend-safe-fixes = ["ALL"]
+
+[tool.ruff.lint.isort]
+# githubasyncio and tests are generated, so ruff cannot detect them as first-party where they do not exist (e.g. in CI)
+known-first-party = ["githubasyncio", "tests"]
+
+[tool.pytest.ini_options]
+python_files = "tests/*.py"
+addopts = "--color=yes --ignore=openapi"

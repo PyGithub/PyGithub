@@ -48,6 +48,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.Auth
 import github.Authorization
 import github.Event
 import github.Gist
@@ -61,7 +62,6 @@ import github.Plan
 import github.Repository
 import github.UserKey
 from github import Consts
-from github.Auth import AppAuth
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
 from github.Requester import Requester
@@ -98,7 +98,7 @@ class Installation(NonCompletableGithubObject):
 
         auth = self._requester.auth if self._requester is not None else None
         # Usually, an Installation is created from a Requester with App authentication
-        if isinstance(auth, AppAuth):
+        if isinstance(auth, github.Auth.AppAuth):
             # But the installation has to authenticate as an installation (e.g. for get_repos())
             auth = auth.get_installation_auth(self.id, requester=self._requester)
             self._requester = self._requester.withAuth(auth)
