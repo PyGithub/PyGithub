@@ -28,11 +28,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import github.NamedUser
 import github.Repository
 from github.DependabotAlert import DependabotAlert
 from github.GithubObject import Attribute, NotSet
 
 if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
     from github.Repository import Repository
 
 
@@ -51,7 +53,12 @@ class OrganizationDependabotAlert(DependabotAlert):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._assignees: Attribute[list[NamedUser]] = NotSet
         self._repository: Attribute[Repository] = NotSet
+
+    @property
+    def assignees(self) -> list[NamedUser]:
+        return self._assignees.value
 
     @property
     def repository(self) -> Repository:
@@ -59,5 +66,7 @@ class OrganizationDependabotAlert(DependabotAlert):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "assignees" in attributes:  # pragma no branch
+            self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
         if "repository" in attributes:
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

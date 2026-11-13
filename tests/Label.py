@@ -37,6 +37,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 from . import Framework
 
 
@@ -46,6 +48,8 @@ class Label(Framework.TestCase):
         self.label = self.g.get_repo("PyGithub/PyGithub").get_label("Bug")
 
     def testAttributes(self):
+        self.assertEqual(self.label.archived_at, datetime(2025, 1, 2, 10, 11, 12, tzinfo=timezone.utc))
+        self.assertEqual(self.label.archived_by.login, "EnricoMi")
         self.assertEqual(self.label.color, "e10c02")
         self.assertEqual(self.label.default, True)
         self.assertIsNone(self.label.description)

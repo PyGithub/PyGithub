@@ -66,6 +66,7 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
         self._os: Attribute[str] = NotSet
         self._runner_group_id: Attribute[int] = NotSet
         self._status: Attribute[str] = NotSet
+        self._version: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -102,6 +103,10 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
     def status(self) -> str:
         return self._status.value
 
+    @property
+    def version(self) -> str:
+        return self._version.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "busy" in attributes:
             self._busy = self._makeBoolAttribute(attributes["busy"])
@@ -119,3 +124,5 @@ class SelfHostedActionsRunner(NonCompletableGithubObject):
             self._runner_group_id = self._makeIntAttribute(attributes["runner_group_id"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
+        if "version" in attributes:  # pragma no branch
+            self._version = self._makeStringAttribute(attributes["version"])

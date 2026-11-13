@@ -414,6 +414,7 @@ class Repository(CompletableGithubObject):
         self._has_issues: Attribute[bool] = NotSet
         self._has_pages: Attribute[bool] = NotSet
         self._has_projects: Attribute[bool] = NotSet
+        self._has_pull_requests: Attribute[bool] = NotSet
         self._has_wiki: Attribute[bool] = NotSet
         self._homepage: Attribute[str] = NotSet
         self._hooks_url: Attribute[str] = NotSet
@@ -445,6 +446,7 @@ class Repository(CompletableGithubObject):
         self._parent: Attribute[Repository] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._private: Attribute[bool] = NotSet
+        self._pull_request_creation_policy: Attribute[str] = NotSet
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
@@ -826,6 +828,11 @@ class Repository(CompletableGithubObject):
         return self._has_projects.value
 
     @property
+    def has_pull_requests(self) -> bool:
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
+
+    @property
     def has_wiki(self) -> bool:
         """
         :type: bool
@@ -1063,6 +1070,11 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._private)
         return self._private.value
+
+    @property
+    def pull_request_creation_policy(self) -> str:
+        self._completeIfNotSet(self._pull_request_creation_policy)
+        return self._pull_request_creation_policy.value
 
     @property
     def pulls_url(self) -> str:
@@ -1600,9 +1612,9 @@ class Repository(CompletableGithubObject):
         assert isinstance(tag_name, str), tag_name
         assert isinstance(previous_tag_name, str) or is_optional(previous_tag_name, str), previous_tag_name
         assert isinstance(target_commitish, str) or is_optional(target_commitish, str), target_commitish
-        assert isinstance(configuration_file_path, str) or is_optional(
-            configuration_file_path, str
-        ), configuration_file_path
+        assert isinstance(configuration_file_path, str) or is_optional(configuration_file_path, str), (
+            configuration_file_path
+        )
 
         post_parameters = NotSet.remove_unset_items(
             {
@@ -2365,7 +2377,6 @@ class Repository(CompletableGithubObject):
         :param permission: string
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-
         url_parameters = dict()
         allowed_affiliations = ["outside", "direct", "all"]
         allowed_permissions = ["pull", "triage", "push", "maintain", "admin"]
@@ -2609,6 +2620,9 @@ class Repository(CompletableGithubObject):
         number: int,
         discussion_graphql_schema: str,
     ) -> RepositoryDiscussion:
+        """
+        :graphql: `query Repository.discussion <https://docs.github.com/en/graphql/reference/repos#object-repository>`_
+        """
         assert isinstance(number, int), number
         if not discussion_graphql_schema.startswith("\n"):
             discussion_graphql_schema = f" {discussion_graphql_schema} "
@@ -2640,6 +2654,9 @@ class Repository(CompletableGithubObject):
         category_id: str | None = None,
         states: list[str] | None = None,
     ) -> PaginatedList[RepositoryDiscussion]:
+        """
+        :graphql: `query Repository.discussions <https://docs.github.com/en/graphql/reference/repos#object-repository>`_
+        """
         if not discussion_graphql_schema.startswith("\n"):
             discussion_graphql_schema = f" {discussion_graphql_schema} "
         query = (
@@ -2728,7 +2745,6 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.Project.Project`
         :param state: string
         """
-
         url_parameters = dict()
         if is_defined(state):
             url_parameters["state"] = state
@@ -3358,7 +3374,6 @@ class Repository(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/license <https://docs.github.com/en/rest/reference/licenses>`_
         :rtype: :class:`github.ContentFile.ContentFile`
         """
-
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/license")
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
@@ -3921,7 +3936,6 @@ class Repository(CompletableGithubObject):
         :param before: datetime
         :rtype: :class:`PaginatedList` of :class:`github.Notification.Notification`
         """
-
         assert is_optional(all, bool), all
         assert is_optional(participating, bool), participating
         assert is_optional(since, datetime), since
@@ -4092,9 +4106,9 @@ class Repository(CompletableGithubObject):
         :param runner: int or :class:`github.SelfHostedActionsRunner.SelfHostedActionsRunner`
         :rtype: bool
         """
-        assert isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner) or isinstance(
-            runner, int
-        ), runner
+        assert isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner) or isinstance(runner, int), (
+            runner
+        )
 
         if isinstance(runner, github.SelfHostedActionsRunner.SelfHostedActionsRunner):
             runner = runner.id
@@ -4112,7 +4126,8 @@ class Repository(CompletableGithubObject):
         assert is_autolink or isinstance(autolink, int), autolink
 
         status, _, _ = self._requester.requestJson(
-            "DELETE", f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}"  # type: ignore
+            "DELETE",
+            f"{self.url}/autolinks/{autolink.id if is_autolink else autolink}",  # type: ignore
         )
         return status == 204
 
@@ -4276,7 +4291,6 @@ class Repository(CompletableGithubObject):
         :param name: str
         :rtype: :class:`PaginatedList` of :class:`github.Artifact.Artifact`
         """
-
         assert is_optional(name, str), name
 
         param = {key: value for key, value in {"name": name}.items() if is_defined(value)}
@@ -4328,9 +4342,9 @@ class Repository(CompletableGithubObject):
         allowed_severities = ["critical", "high", "medium", "low", "warning", "note", "error"]
         assert is_optional(tool_name, str), tool_name
         assert is_optional(tool_guid, str), tool_guid
-        assert (
-            tool_name is NotSet or tool_guid is NotSet
-        ), "You can specify the tool by using either tool_guid or tool_name, but not both."
+        assert tool_name is NotSet or tool_guid is NotSet, (
+            "You can specify the tool by using either tool_guid or tool_name, but not both."
+        )
         assert is_optional(ref, str), ref
         assert is_optional(pr, int), pr
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
@@ -4408,9 +4422,9 @@ class Repository(CompletableGithubObject):
         # assert secret_type in allowed_secret_types + [NotSet], \
         # "Secret_type can be one of the tokens listed on \
         # https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets"
-        assert resolution in allowed_resolutions + [
-            NotSet
-        ], f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        assert resolution in allowed_resolutions + [NotSet], (
+            f"Resolution can be one of {', '.join(allowed_resolutions)}"
+        )
         assert sort in allowed_sorts + [NotSet], f"Sort can be one of {', '.join(allowed_sorts)}"
         assert direction in allowed_directions + [NotSet], f"Direction can be one of {', '.join(allowed_directions)}"
         assert validity in allowed_validities + [NotSet], f"Validity can be one of {', '.join(allowed_validities)}"
@@ -4626,7 +4640,9 @@ class Repository(CompletableGithubObject):
                 "no_bandwidth",
                 "not_used",
                 "tolerable_risk",
-            ], "Dismissed reason can be one of ['fix_started', 'inaccurate', 'no_bandwidth', 'not_used', 'tolerable_risk']"
+            ], (
+                "Dismissed reason can be one of ['fix_started', 'inaccurate', 'no_bandwidth', 'not_used', 'tolerable_risk']"
+            )
         assert is_optional(dismissed_comment, str), dismissed_comment
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
@@ -4803,6 +4819,8 @@ class Repository(CompletableGithubObject):
             self._has_pages = self._makeBoolAttribute(attributes["has_pages"])
         if "has_projects" in attributes:  # pragma no branch
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
@@ -4888,6 +4906,8 @@ class Repository(CompletableGithubObject):
             self._permissions = self._makeClassAttribute(github.Permissions.Permissions, attributes["permissions"])
         if "private" in attributes:  # pragma no branch
             self._private = self._makeBoolAttribute(attributes["private"])
+        if "pull_request_creation_policy" in attributes:  # pragma no branch
+            self._pull_request_creation_policy = self._makeStringAttribute(attributes["pull_request_creation_policy"])
         if "pulls_url" in attributes:  # pragma no branch
             self._pulls_url = self._makeStringAttribute(attributes["pulls_url"])
         if "pushed_at" in attributes:  # pragma no branch
@@ -4977,11 +4997,23 @@ class RepositorySearchResult(Repository):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._has_pull_requests: Attribute[bool] = NotSet
+        self._pull_request_creation_policy: Attribute[str] = NotSet
         self._score: Attribute[float] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"full_name": self._full_name.value, "score": self._score.value})
+
+    @property
+    def has_pull_requests(self) -> bool:
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
+
+    @property
+    def pull_request_creation_policy(self) -> str:
+        self._completeIfNotSet(self._pull_request_creation_policy)
+        return self._pull_request_creation_policy.value
 
     @property
     def score(self) -> float:
@@ -4995,6 +5027,10 @@ class RepositorySearchResult(Repository):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
+        if "pull_request_creation_policy" in attributes:  # pragma no branch
+            self._pull_request_creation_policy = self._makeStringAttribute(attributes["pull_request_creation_policy"])
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
         if "text_matches" in attributes:  # pragma no branch

@@ -48,7 +48,6 @@ import github.CodeSecurityConfig
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
-    pass
     from github.CodeSecurityConfig import CodeSecurityConfig
 
 

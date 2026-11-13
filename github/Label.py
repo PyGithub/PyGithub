@@ -44,10 +44,15 @@
 from __future__ import annotations
 
 import urllib.parse
-from typing import Any
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
+import github.NamedUser
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class Label(CompletableGithubObject):
@@ -70,6 +75,8 @@ class Label(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._archived_at: Attribute[datetime] = NotSet
+        self._archived_by: Attribute[NamedUser] = NotSet
         self._color: Attribute[str] = NotSet
         self._default: Attribute[bool] = NotSet
         self._description: Attribute[str] = NotSet
@@ -84,6 +91,16 @@ class Label(CompletableGithubObject):
     @property
     def _identity(self) -> str:
         return urllib.parse.quote(self.name)
+
+    @property
+    def archived_at(self) -> datetime:
+        self._completeIfNotSet(self._archived_at)
+        return self._archived_at.value
+
+    @property
+    def archived_by(self) -> NamedUser:
+        self._completeIfNotSet(self._archived_by)
+        return self._archived_by.value
 
     @property
     def color(self) -> str:
@@ -144,6 +161,10 @@ class Label(CompletableGithubObject):
         self._set_complete()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "archived_at" in attributes:  # pragma no branch
+            self._archived_at = self._makeDatetimeAttribute(attributes["archived_at"])
+        if "archived_by" in attributes:  # pragma no branch
+            self._archived_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["archived_by"])
         if "color" in attributes:  # pragma no branch
             self._color = self._makeStringAttribute(attributes["color"])
         if "default" in attributes:  # pragma no branch

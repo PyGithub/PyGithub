@@ -198,5 +198,5 @@ class InstallationGetRepos(Framework.BasicTestCase):
         self.assertListKeyEqual(
             requests,
             lambda request: request.request_headers["Authorization"],
-            ["token private_token_removed"],
+            ["token installation_token"],
         )

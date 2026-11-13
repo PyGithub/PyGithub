@@ -110,6 +110,7 @@ class Team(CompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
+        self._access_source: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._description: Attribute[str] = NotSet
         self._enterprise_id: Attribute[int] = NotSet
@@ -144,6 +145,11 @@ class Team(CompletableGithubObject):
     @property
     def _identity(self) -> int:
         return self.id
+
+    @property
+    def access_source(self) -> str:
+        self._completeIfNotSet(self._access_source)
+        return self._access_source.value
 
     @property
     def created_at(self) -> datetime:
@@ -527,6 +533,8 @@ class Team(CompletableGithubObject):
         )
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "access_source" in attributes:  # pragma no branch
+            self._access_source = self._makeStringAttribute(attributes["access_source"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch

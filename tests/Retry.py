@@ -32,7 +32,6 @@
 ################################################################################
 
 import requests
-import responses
 import urllib3
 
 import github
@@ -51,34 +50,36 @@ class Retry(Framework.TestCase):
         super().setUp()
 
     def testShouldNotRetryWhenStatusNotOnList(self):
-        with self.assertRaises(github.GithubException):
+        with self.captureRequests() as calls, self.assertRaises(github.GithubException):
             self.g.get_repo(REPO_NAME)
-        self.assertEqual(len(responses.calls), 1)
+        self.assertEqual(len(calls), 1)
 
     def testReturnsRepoAfter3Retries(self):
-        repository = self.g.get_repo(REPO_NAME)
-        self.assertEqual(len(responses.calls), 4)
-        for call in responses.calls:
-            self.assertEqual(call.request.path_url, "/repos/" + REPO_NAME)
+        with self.captureRequests() as calls:
+            repository = self.g.get_repo(REPO_NAME)
+        self.assertEqual(len(calls), 4)
+        for call in calls:
+            self.assertEqual(call.url, "/repos/" + REPO_NAME)
 
         self.assertIsInstance(repository, github.Repository.Repository)
         self.assertEqual(repository.full_name, REPO_NAME)
 
     def testReturnsRepoAfter1Retry(self):
-        repository = self.g.get_repo(REPO_NAME)
-        self.assertEqual(len(responses.calls), 2)
-        for call in responses.calls:
-            self.assertEqual(call.request.path_url, "/repos/" + REPO_NAME)
+        with self.captureRequests() as calls:
+            repository = self.g.get_repo(REPO_NAME)
+        self.assertEqual(len(calls), 2)
+        for call in calls:
+            self.assertEqual(call.url, "/repos/" + REPO_NAME)
 
         self.assertIsInstance(repository, github.Repository.Repository)
         self.assertEqual(repository.full_name, REPO_NAME)
 
     def testRaisesRetryErrorAfterMaxRetries(self):
-        with self.assertRaises(requests.exceptions.RetryError):
+        with self.captureRequests() as calls, self.assertRaises(requests.exceptions.RetryError):
             self.g.get_repo("PyGithub/PyGithub")
-        self.assertEqual(len(responses.calls), 4)
-        for call in responses.calls:
-            self.assertEqual(call.request.path_url, "/repos/PyGithub/PyGithub")
+        self.assertEqual(len(calls), 4)
+        for call in calls:
+            self.assertEqual(call.url, "/repos/PyGithub/PyGithub")
 
     def testReturnsRepoAfterSettingRetryHttp(self):
         g = github.Github(

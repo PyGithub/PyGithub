@@ -30,4 +30,3 @@ None
 200
 []
 {"total_count":2,"repositories":[{"id":2,"full_name":"owner/second","url":"https://github.example:8443/api/v3/repos/owner/second"}]}
-

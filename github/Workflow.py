@@ -160,8 +160,7 @@ class Workflow(CompletableGithubObject):
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
         return_run_details: Literal[False] = ...,
-    ) -> bool:
-        ...
+    ) -> bool: ...
 
     @overload
     def create_dispatch(
@@ -170,8 +169,7 @@ class Workflow(CompletableGithubObject):
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
         return_run_details: Literal[True] = ...,
-    ) -> WorkflowRun:
-        ...
+    ) -> WorkflowRun: ...
 
     # v3: default throw to True
     @ignore_return_type(ignore_type="WorkflowRun")
