@@ -655,9 +655,11 @@ class Branch(NonCompletableGithubObject):
         if "protected" in attributes:  # pragma no branch
             self._protected = self._makeBoolAttribute(attributes["protected"])
         if "protection" in attributes:  # pragma no branch
-            self._protection = self._makeClassAttribute(
-                github.BranchProtection.BranchProtection, attributes["protection"]
-            )
+            protection = attributes["protection"]
+            if isinstance(protection, dict) and "protection_url" in attributes:
+                # The embedded protection is a summary; use the branch's URL to complete it.
+                protection = {"url": attributes["protection_url"], **protection}
+            self._protection = self._makeClassAttribute(github.BranchProtection.BranchProtection, protection)
         if "protection_url" in attributes:  # pragma no branch
             self._protection_url = self._makeStringAttribute(attributes["protection_url"])
         if "required_approving_review_count" in attributes:  # pragma no branch

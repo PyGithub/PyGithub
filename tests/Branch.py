@@ -43,7 +43,12 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
+from unittest import mock
+
 import github
+import github.Branch
+import github.Requester
 
 from . import Framework
 
@@ -69,7 +74,7 @@ class Branch(Framework.TestCase):
         self.assertEqual(self.branch.commit.sha, "f23da453917a36c8bd48ab8d99e5fa7221884342")
         self.assertIsNone(self.branch.pattern)
         self.assertEqual(self.branch.protected, False)
-        self.assertIsNone(self.branch.protection.url)
+        self.assertEqual(self.branch.protection.url, self.branch.protection_url)
         self.assertEqual(
             self.branch.protection_url,
             "https://api.github.com/repos/jacquev6/PyGithub/branches/topic/RewriteWithGeneratedCode/protection",
@@ -343,3 +348,101 @@ class Branch(Framework.TestCase):
 
     def testAddRequiredSignatures(self):
         self.protected_branch.add_required_signatures()
+
+
+class BranchProtectionCompletion(Framework.BasicTestCase):
+    def testCompleteStatusChecksFromProtectionUrl(self):
+        protection_url = "https://github.example.com/api/v3/repos/owner/repo/branches/topic%2Ffix/protection"
+        for is_not_lazy in (False, True):
+            with self.subTest(is_not_lazy=is_not_lazy):
+                requester = mock.Mock(github.Requester.Requester, is_not_lazy=is_not_lazy)
+                attributes = {
+                    "protection": {
+                        "enabled": True,
+                        "required_status_checks": {"enforcement_level": "off", "contexts": [], "checks": []},
+                    },
+                    "protection_url": protection_url,
+                }
+                original_attributes = deepcopy(attributes)
+                requester.requestJsonAndCheck.return_value = ({}, {"strict": False, "contexts": [], "checks": []})
+                branch = github.Branch.Branch(requester, {}, attributes)
+                status_checks = branch.protection.required_status_checks
+
+                self.assertEqual(status_checks.enforcement_level, "off")
+                self.assertEqual(status_checks.contexts, [])
+                self.assertEqual(status_checks.checks, [])
+                self.assertFalse(status_checks.completed)
+                requester.requestJsonAndCheck.assert_not_called()
+
+                self.assertFalse(status_checks.strict)
+                self.assertFalse(status_checks.strict)
+                self.assertTrue(status_checks.completed)
+                self.assertFalse(branch.protection.completed)
+                requester.requestJsonAndCheck.assert_called_once_with(
+                    "GET", f"{protection_url}/required_status_checks", parameters=None, headers=None
+                )
+                self.assertEqual(attributes, original_attributes)
+
+    def testCompleteProtectionFromBranchUrl(self):
+        protection_url = "https://api.github.com/repos/owner/repo/branches/main/protection"
+        for is_not_lazy in (False, True):
+            with self.subTest(is_not_lazy=is_not_lazy):
+                requester = mock.Mock(github.Requester.Requester, is_not_lazy=is_not_lazy)
+                attributes = {
+                    "name": "main",
+                    "protected": True,
+                    "protection": {"enabled": True},
+                    "protection_url": protection_url,
+                }
+                requester.requestJsonAndCheck.return_value = (
+                    {},
+                    {
+                        "url": protection_url,
+                        "enforce_admins": {"enabled": True},
+                        "allow_force_pushes": {"enabled": False},
+                    },
+                )
+                branch = github.Branch.Branch(requester, {}, attributes)
+
+                self.assertTrue(branch.protection.enabled)
+                self.assertFalse(branch.protection.completed)
+                requester.requestJsonAndCheck.assert_not_called()
+
+                self.assertTrue(branch.protection.enforce_admins)
+                self.assertFalse(branch.protection.allow_force_pushes)
+                self.assertTrue(branch.protection.completed)
+                requester.requestJsonAndCheck.assert_called_once_with(
+                    "GET", protection_url, parameters=None, headers=None
+                )
+                self.assertEqual(attributes["protection"], {"enabled": True})
+
+    def testPreserveProtectionUrl(self):
+        requester = mock.Mock(github.Requester.Requester)
+        protection_url = "https://api.github.com/repos/owner/repo/branches/main/protection"
+        branch = github.Branch.Branch(
+            requester,
+            {},
+            {
+                "protection": {"url": protection_url, "enabled": True},
+                "protection_url": "https://api.github.com/repos/owner/repo/branches/other/protection",
+            },
+        )
+        self.assertEqual(branch.protection.url, protection_url)
+        requester.requestJsonAndCheck.assert_not_called()
+
+    def testProtectionWithoutBranchUrl(self):
+        requester = mock.Mock(github.Requester.Requester)
+        branch = github.Branch.Branch(requester, {}, {"protection": {"enabled": False}})
+        self.assertFalse(branch.protection.enabled)
+        self.assertIsNone(branch.protection.url)
+        requester.requestJsonAndCheck.assert_not_called()
+
+    def testNullProtection(self):
+        requester = mock.Mock(github.Requester.Requester)
+        branch = github.Branch.Branch(
+            requester,
+            {},
+            {"protection": None, "protection_url": "https://api.github.com/repos/owner/repo/branches/main/protection"},
+        )
+        self.assertIsNone(branch.protection)
+        requester.requestJsonAndCheck.assert_not_called()

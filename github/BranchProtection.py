@@ -208,9 +208,15 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
         if "required_signatures" in attributes:  # pragma no branch
             self._required_signatures = self._makeBoolAttribute(attributes["required_signatures"]["enabled"])
         if "required_status_checks" in attributes:  # pragma no branch
+            required_status_checks = attributes["required_status_checks"]
+            if isinstance(required_status_checks, dict) and isinstance(attributes.get("url"), str):
+                required_status_checks = {
+                    "url": f"{attributes['url']}/required_status_checks",
+                    **required_status_checks,
+                }
             self._required_status_checks = self._makeClassAttribute(
                 github.RequiredStatusChecks.RequiredStatusChecks,
-                attributes["required_status_checks"],
+                required_status_checks,
             )
         if "restrictions" in attributes:  # pragma no branch
             self._restrictions = attributes["restrictions"]
