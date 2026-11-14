@@ -1,0 +1,42 @@
++ python scripts/openapi.py suggest schemas --add openapi.spec.json openapi.index NamedUser
+Using spec openapi.spec.json
+Suggesting API schemas for PyGithub class NamedUser
+
+Class NamedUser:
+- should implement schema /components/schemas/commit-search-result-item/properties/commit/properties/author
+  Properties returning the schema:
+  - Commit.author
+- should implement schema /components/schemas/nullable-git-user
+  Properties returning the schema:
+  - Commit.committer
+Properties returning the class:
+- Commit.author
+- Commit.committer
+- IssueComment.user
+- Reaction.user
+- Repository.organization
+- Repository.owner
+- SecretScanAlert.assigned_to
+- SecretScanAlert.push_protection_bypass_request_reviewer
+- SecretScanAlert.push_protection_bypassed_by
+- SecretScanAlert.resolved_by
+Adding schemas to NamedUser
+
+Class NamedUser:
+- may implement alternative schema /components/schemas/stargazer
+  Methods returning the schema:
+  - Repository.get_stargazers
+Paths returning the class:
+- GET /repos/{owner}/{repo}/stargazers
+Alternative schemas returned by GET /repos/{owner}/{repo}/stargazers (union of 23 properties):
+- /components/schemas/simple-user: 22 properties, 22/23 of union, 1/22 shared with other alternatives (1 conflicting: starred_at), 22/22 in class NamedUser, implemented by NamedUser
+- /components/schemas/stargazer: 2 properties, 2/23 of union, 1/2 shared with other alternatives (1 conflicting: starred_at), 1/2 in class NamedUser (1 conflicting: starred_at)
+Suggested 2 schemas
+Suggested 1 alternative schemas, which are not added
+Added 2 schemas
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 13 Python files
+Indexed 23 classes
+Indexed 5 paths
+Indexed 41 schemas
+Indexing OpenAPI spec

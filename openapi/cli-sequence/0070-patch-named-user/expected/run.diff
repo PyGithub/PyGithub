@@ -65,7 +65,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 +            url_parameters,
 +        )
 +
-     def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> None:
+     def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> PaginatedList[dict[str, Any]] | PaginatedList[Repository]:
          """
          List repositories starred by a user
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
@@ -147,8 +147,8 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
 +      },
        "/users/{username}/starred": {
          "get": [
-           "None"
-@@ -3904,6 +3946,19 @@
+           "PaginatedList[dict[str, Any]] | PaginatedList[Repository]"
+@@ -3919,6 +3961,19 @@
      }
    },
    "paths": {
@@ -168,7 +168,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
        "GET": {
          "methods": [
-@@ -3926,6 +3981,19 @@
+@@ -3941,6 +3996,19 @@
              ]
            }
          ]

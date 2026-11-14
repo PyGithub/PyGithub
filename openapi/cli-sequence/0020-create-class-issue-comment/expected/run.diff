@@ -425,7 +425,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject"
-@@ -1649,6 +1882,9 @@
+@@ -1664,6 +1897,9 @@
        ]
      },
      "schema_to_classes": {

@@ -1,0 +1,105 @@
++ python scripts/openapi.py suggest schemas --add openapi.spec.json openapi.index RepositoryRule
+Using spec openapi.spec.json
+Suggesting API schemas for PyGithub class RepositoryRule
+
+Class RepositoryRule:
+- may implement alternative schema /components/schemas/repository-rule-branch-name-pattern
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-code-scanning
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-commit-author-email-pattern
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-commit-message-pattern
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-committer-email-pattern
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-copilot-code-review
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-creation
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-deletion
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-file-extension-restriction
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-file-path-restriction
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-max-file-path-length
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-max-file-size
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-merge-queue
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-non-fast-forward
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-pull-request
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-required-deployments
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-required-linear-history
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-required-signatures
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-required-status-checks
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-tag-name-pattern
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-update
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+- may implement alternative schema /components/schemas/repository-rule-workflows
+  Properties returning the schema:
+  - RepositoryRuleset.rules
+Properties returning the class:
+- RepositoryRuleset.rules
+Alternative schemas returned by RepositoryRuleset.rules (union of 2 properties):
+- /components/schemas/repository-rule-creation: 1 properties, 1/2 of union, 1/1 shared with other alternatives, 0/1 in class RepositoryRule
+- /components/schemas/repository-rule-update: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-deletion: 1 properties, 1/2 of union, 1/1 shared with other alternatives, 0/1 in class RepositoryRule
+- /components/schemas/repository-rule-required-linear-history: 1 properties, 1/2 of union, 1/1 shared with other alternatives, 0/1 in class RepositoryRule
+- /components/schemas/repository-rule-merge-queue: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-required-deployments: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-required-signatures: 1 properties, 1/2 of union, 1/1 shared with other alternatives, 0/1 in class RepositoryRule
+- /components/schemas/repository-rule-pull-request: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-required-status-checks: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-non-fast-forward: 1 properties, 1/2 of union, 1/1 shared with other alternatives, 0/1 in class RepositoryRule
+- /components/schemas/repository-rule-commit-message-pattern: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-commit-author-email-pattern: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-committer-email-pattern: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-branch-name-pattern: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-tag-name-pattern: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-file-path-restriction: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-max-file-path-length: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-file-extension-restriction: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-max-file-size: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-workflows: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-code-scanning: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+- /components/schemas/repository-rule-copilot-code-review: 2 properties, 2/2 of union, 2/2 shared with other alternatives, 0/2 in class RepositoryRule
+Suggested 0 schemas
+Suggested 22 alternative schemas, which are not added
+Added 0 schemas
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 13 Python files
+Indexed 23 classes
+Indexed 4 paths
+Indexed 41 schemas
+Indexing OpenAPI spec

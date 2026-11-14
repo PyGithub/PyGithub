@@ -1,0 +1,20 @@
++ python scripts/openapi.py create class --completable --tests --new-schemas as-dict github openapi.spec.json openapi.index RepositoryRuleset https://docs.github.com/en/rest/repos/rules /components/schemas/repository-ruleset
+Creating class github.RepositoryRuleset.RepositoryRuleset with parent github.GithubObject.CompletableGithubObject in ./github/RepositoryRuleset.py
+Updating index
+Indexing 13 Python files
+Indexed 23 classes
+Indexed 4 paths
+Indexed 41 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class RepositoryRuleset
+Applying spec openapi.spec.json to github.RepositoryRuleset.RepositoryRuleset (github/RepositoryRuleset.py)
+Applying schema /components/schemas/repository-ruleset
+Class RepositoryRuleset changed
+Test tests/RepositoryRuleset.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 13 Python files
+Indexed 23 classes
+Indexed 4 paths
+Indexed 41 schemas
+Indexing OpenAPI spec

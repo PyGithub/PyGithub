@@ -64,6 +64,6 @@
 +            url_parameters,
 +        )
 +
-     def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> None:
+     def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> PaginatedList[dict[str, Any]] | PaginatedList[Repository]:
          """
          List repositories starred by a user

@@ -146,7 +146,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "Protocol": [
          "Attribute",
          "_BadAttribute",
-@@ -1584,6 +1651,9 @@
+@@ -1599,6 +1666,9 @@
      "schema_to_classes": {
        "/components/schemas/public-user": [
          "NamedUser"

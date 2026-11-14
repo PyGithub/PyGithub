@@ -1,0 +1,3 @@
+# RepositoryRule implements only the oneOf wrapper schema, its alternative schemas are similar
+python scripts/openapi.py suggest schemas --add openapi.spec.json openapi.index RepositoryRule
+python scripts/openapi.py index github openapi.spec.json openapi.index

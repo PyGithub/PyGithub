@@ -788,7 +788,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "SecretScanAlertInstance"
        ],
        "NamedUser": [
-@@ -6171,6 +6648,9 @@
+@@ -6186,6 +6663,9 @@
        "/components/schemas/search-result-text-matches/items": [
          "Items"
        ],

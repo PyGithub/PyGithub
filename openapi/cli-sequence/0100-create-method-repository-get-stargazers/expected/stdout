@@ -1,20 +1,21 @@
 + python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index Repository get_stargazers get '/repos/{owner}/{repo}/stargazers'
 Using spec openapi.spec.json
 Creating method github.Repository.Repository.get_stargazers in github/Repository.py
-There is no $ref and no type in schema: {"anyOf": [{"type": "array", "items": {"$ref": "#/components/schemas/simple-user"}}, {"type": "array", "items": {"$ref": "#/components/schemas/stargazer"}}]}
+Schema not implemented: /components/schemas/stargazer
 Diff:
 --- 
 +++ 
-@@ -642,6 +642,12 @@
+@@ -642,6 +642,13 @@
      def web_commit_signoff_required(self) -> bool:
          self._completeIfNotSet(self._web_commit_signoff_required)
          return self._web_commit_signoff_required.value
 +    
-+    def get_stargazers(self) -> None:
++    def get_stargazers(self) -> list[dict[str, Any]] | list[NamedUser]:
 +        """
 +        :calls: `GET /repos/{owner}/{repo}/stargazers <https://docs.github.com/rest/activity/starring#list-stargazers>`_
 +        """
 +        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/stargazers")
++        return data
  
      def _useAttributes(self, attributes: dict[str, Any]) -> None:
          super()._useAttributes(attributes)
@@ -22,12 +23,12 @@ Diff:
 + python scripts/openapi.py create method github openapi.spec.json openapi.index Repository get_stargazers get '/repos/{owner}/{repo}/stargazers'
 Using spec openapi.spec.json
 Creating method github.Repository.Repository.get_stargazers in github/Repository.py
-There is no $ref and no type in schema: {"anyOf": [{"type": "array", "items": {"$ref": "#/components/schemas/simple-user"}}, {"type": "array", "items": {"$ref": "#/components/schemas/stargazer"}}]}
+Schema not implemented: /components/schemas/stargazer
 Updating index
-Indexing 11 Python files
-Indexed 21 classes
+Indexing 13 Python files
+Indexed 23 classes
 Indexed 5 paths
-Indexed 39 schemas
+Indexed 41 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Repository
@@ -35,8 +36,8 @@ Applying spec openapi.spec.json to github.Repository.Repository (github/Reposito
 - Updating method get_stargazers
 Class Repository changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
-Indexing 11 Python files
-Indexed 21 classes
+Indexing 13 Python files
+Indexed 23 classes
 Indexed 5 paths
-Indexed 39 schemas
+Indexed 41 schemas
 Indexing OpenAPI spec

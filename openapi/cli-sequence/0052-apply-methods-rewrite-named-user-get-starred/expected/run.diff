@@ -1,0 +1,42 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -286,7 +286,7 @@
+         self._completeIfNotSet(self._user_view_type)
+         return self._user_view_type.value
+     
+-    def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> PaginatedList[dict[str, Any]]:
++    def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> PaginatedList[dict[str, Any]] | PaginatedList[Repository]:
+         """
+         List repositories starred by a user
+ 
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -484,7 +484,7 @@
+           },
+           "name": "get_starred",
+           "returns": [
+-            "PaginatedList[dict[str, Any]]"
++            "PaginatedList[dict[str, Any]] | PaginatedList[Repository]"
+           ]
+         }
+       },
+@@ -3148,7 +3148,7 @@
+       },
+       "/users/{username}/starred": {
+         "get": [
+-          "PaginatedList[dict[str, Any]]"
++          "PaginatedList[dict[str, Any]] | PaginatedList[Repository]"
+         ]
+       }
+     },
+@@ -3839,7 +3839,7 @@
+             "class": "NamedUser",
+             "name": "get_starred",
+             "returns": [
+-              "PaginatedList[dict[str, Any]]"
++              "PaginatedList[dict[str, Any]] | PaginatedList[Repository]"
+             ]
+           }
+         ]

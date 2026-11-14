@@ -701,7 +701,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        ],
        "Protocol": [
          "Attribute",
-@@ -5695,6 +6144,9 @@
+@@ -5710,6 +6159,9 @@
        "/components/schemas/nullable-git-user": [
          "GitAuthor"
        ],
@@ -711,7 +711,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/nullable-simple-commit": [
          "GitCommit"
        ],
-@@ -5719,6 +6171,45 @@
+@@ -5734,6 +6186,45 @@
        "/components/schemas/search-result-text-matches/items": [
          "Items"
        ],
