@@ -978,7 +978,9 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/following/{username} <http://docs.github.com/en/rest/reference/users#followers>`_
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        status, headers, data = self._requester.requestJson("GET", f"/user/following/{following._identity}")
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"/user/following/{following._identity}", valid_codes={204, 404}
+        )
         return status == 204
 
     def has_in_starred(self, starred: Repository) -> bool:
@@ -986,7 +988,9 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/starred/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#starring>`_
         """
         assert isinstance(starred, github.Repository.Repository), starred
-        status, headers, data = self._requester.requestJson("GET", f"/user/starred/{starred._identity}")
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"/user/starred/{starred._identity}", valid_codes={204, 404}
+        )
         return status == 204
 
     def has_in_subscriptions(self, subscription: Repository) -> bool:
@@ -994,7 +998,9 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /user/subscriptions/{owner}/{repo} <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
-        status, headers, data = self._requester.requestJson("GET", f"/user/subscriptions/{subscription._identity}")
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"/user/subscriptions/{subscription._identity}", valid_codes={204, 404}
+        )
         return status == 204
 
     def has_in_watched(self, watched: Repository) -> bool:
@@ -1002,7 +1008,9 @@ class AuthenticatedUser(CompletableGithubObject):
         :calls: `GET /repos/{owner}/{repo}/subscription <http://docs.github.com/en/rest/reference/activity#watching>`_
         """
         assert isinstance(watched, github.Repository.Repository), watched
-        status, headers, data = self._requester.requestJson("GET", f"/repos/{watched._identity}/subscription")
+        status, _, _ = self._requester.requestJsonAndValidateStatus(
+            "GET", f"/repos/{watched._identity}/subscription", valid_codes={200, 404}
+        )
         return status == 200
 
     def mark_notifications_as_read(self, last_read_at: datetime | None = None) -> None:
