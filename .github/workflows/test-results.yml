@@ -22,9 +22,11 @@ jobs:
         with:
           run_id: ${{ github.event.workflow_run.id }}
           path: artifacts
+          if_no_artifact_found: ignore
 
       - name: Publish Test Results
         id: test-results
+        if: hashFiles('artifacts/Event File/event.json') != ''
         uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
