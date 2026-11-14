@@ -1,0 +1,824 @@
+diff --unified --recursive --new-file before/github/SecretScanAlertInstance.py after/github/SecretScanAlertInstance.py
+--- before/github/SecretScanAlertInstance.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/SecretScanAlertInstance.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,213 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class SecretScanAlertInstance(NonCompletableGithubObject):
++    """
++    This class represents SecretScanAlertInstance.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/secret-scanning
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/nullable-secret-scanning-first-detected-location
++    - /components/schemas/secret-scanning-location-commit
++    - /components/schemas/secret-scanning-location-wiki-commit
++    - /components/schemas/secret-scanning-location-issue-title
++    - /components/schemas/secret-scanning-location-issue-body
++    - /components/schemas/secret-scanning-location-issue-comment
++    - /components/schemas/secret-scanning-location-discussion-title
++    - /components/schemas/secret-scanning-location-discussion-body
++    - /components/schemas/secret-scanning-location-discussion-comment
++    - /components/schemas/secret-scanning-location-pull-request-title
++    - /components/schemas/secret-scanning-location-pull-request-body
++    - /components/schemas/secret-scanning-location-pull-request-comment
++    - /components/schemas/secret-scanning-location-pull-request-review
++    - /components/schemas/secret-scanning-location-pull-request-review-comment
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._blob_sha: Attribute[str] = NotSet
++        self._blob_url: Attribute[str] = NotSet
++        self._commit_sha: Attribute[str] = NotSet
++        self._commit_url: Attribute[str] = NotSet
++        self._discussion_body_url: Attribute[str] = NotSet
++        self._discussion_comment_url: Attribute[str] = NotSet
++        self._discussion_title_url: Attribute[str] = NotSet
++        self._end_column: Attribute[float] = NotSet
++        self._end_line: Attribute[float] = NotSet
++        self._issue_body_url: Attribute[str] = NotSet
++        self._issue_comment_url: Attribute[str] = NotSet
++        self._issue_title_url: Attribute[str] = NotSet
++        self._page_url: Attribute[str] = NotSet
++        self._path: Attribute[str] = NotSet
++        self._pull_request_body_url: Attribute[str] = NotSet
++        self._pull_request_comment_url: Attribute[str] = NotSet
++        self._pull_request_review_comment_url: Attribute[str] = NotSet
++        self._pull_request_review_url: Attribute[str] = NotSet
++        self._pull_request_title_url: Attribute[str] = NotSet
++        self._start_column: Attribute[float] = NotSet
++        self._start_line: Attribute[float] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def blob_sha(self) -> str:
++        return self._blob_sha.value
++
++    @property
++    def blob_url(self) -> str:
++        return self._blob_url.value
++
++    @property
++    def commit_sha(self) -> str:
++        return self._commit_sha.value
++
++    @property
++    def commit_url(self) -> str:
++        return self._commit_url.value
++
++    @property
++    def discussion_body_url(self) -> str:
++        return self._discussion_body_url.value
++
++    @property
++    def discussion_comment_url(self) -> str:
++        return self._discussion_comment_url.value
++
++    @property
++    def discussion_title_url(self) -> str:
++        return self._discussion_title_url.value
++
++    @property
++    def end_column(self) -> float:
++        return self._end_column.value
++
++    @property
++    def end_line(self) -> float:
++        return self._end_line.value
++
++    @property
++    def issue_body_url(self) -> str:
++        return self._issue_body_url.value
++
++    @property
++    def issue_comment_url(self) -> str:
++        return self._issue_comment_url.value
++
++    @property
++    def issue_title_url(self) -> str:
++        return self._issue_title_url.value
++
++    @property
++    def page_url(self) -> str:
++        return self._page_url.value
++
++    @property
++    def path(self) -> str:
++        return self._path.value
++
++    @property
++    def pull_request_body_url(self) -> str:
++        return self._pull_request_body_url.value
++
++    @property
++    def pull_request_comment_url(self) -> str:
++        return self._pull_request_comment_url.value
++
++    @property
++    def pull_request_review_comment_url(self) -> str:
++        return self._pull_request_review_comment_url.value
++
++    @property
++    def pull_request_review_url(self) -> str:
++        return self._pull_request_review_url.value
++
++    @property
++    def pull_request_title_url(self) -> str:
++        return self._pull_request_title_url.value
++
++    @property
++    def start_column(self) -> float:
++        return self._start_column.value
++
++    @property
++    def start_line(self) -> float:
++        return self._start_line.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "blob_sha" in attributes:  # pragma no branch
++            self._blob_sha = self._makeStringAttribute(attributes["blob_sha"])
++        if "blob_url" in attributes:  # pragma no branch
++            self._blob_url = self._makeStringAttribute(attributes["blob_url"])
++        if "commit_sha" in attributes:  # pragma no branch
++            self._commit_sha = self._makeStringAttribute(attributes["commit_sha"])
++        if "commit_url" in attributes:  # pragma no branch
++            self._commit_url = self._makeStringAttribute(attributes["commit_url"])
++        if "discussion_body_url" in attributes:  # pragma no branch
++            self._discussion_body_url = self._makeStringAttribute(attributes["discussion_body_url"])
++        if "discussion_comment_url" in attributes:  # pragma no branch
++            self._discussion_comment_url = self._makeStringAttribute(attributes["discussion_comment_url"])
++        if "discussion_title_url" in attributes:  # pragma no branch
++            self._discussion_title_url = self._makeStringAttribute(attributes["discussion_title_url"])
++        if "end_column" in attributes:  # pragma no branch
++            self._end_column = self._makeFloatAttribute(attributes["end_column"])
++        if "end_line" in attributes:  # pragma no branch
++            self._end_line = self._makeFloatAttribute(attributes["end_line"])
++        if "issue_body_url" in attributes:  # pragma no branch
++            self._issue_body_url = self._makeStringAttribute(attributes["issue_body_url"])
++        if "issue_comment_url" in attributes:  # pragma no branch
++            self._issue_comment_url = self._makeStringAttribute(attributes["issue_comment_url"])
++        if "issue_title_url" in attributes:  # pragma no branch
++            self._issue_title_url = self._makeStringAttribute(attributes["issue_title_url"])
++        if "page_url" in attributes:  # pragma no branch
++            self._page_url = self._makeStringAttribute(attributes["page_url"])
++        if "path" in attributes:  # pragma no branch
++            self._path = self._makeStringAttribute(attributes["path"])
++        if "pull_request_body_url" in attributes:  # pragma no branch
++            self._pull_request_body_url = self._makeStringAttribute(attributes["pull_request_body_url"])
++        if "pull_request_comment_url" in attributes:  # pragma no branch
++            self._pull_request_comment_url = self._makeStringAttribute(attributes["pull_request_comment_url"])
++        if "pull_request_review_comment_url" in attributes:  # pragma no branch
++            self._pull_request_review_comment_url = self._makeStringAttribute(attributes["pull_request_review_comment_url"])
++        if "pull_request_review_url" in attributes:  # pragma no branch
++            self._pull_request_review_url = self._makeStringAttribute(attributes["pull_request_review_url"])
++        if "pull_request_title_url" in attributes:  # pragma no branch
++            self._pull_request_title_url = self._makeStringAttribute(attributes["pull_request_title_url"])
++        if "start_column" in attributes:  # pragma no branch
++            self._start_column = self._makeFloatAttribute(attributes["start_column"])
++        if "start_line" in attributes:  # pragma no branch
++            self._start_line = self._makeFloatAttribute(attributes["start_line"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -4832,6 +4832,452 @@
+       ],
+       "test_filename": "tests/Repository.py"
+     },
++    "SecretScanAlertInstance": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents SecretScanAlertInstance.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/secret-scanning\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-secret-scanning-first-detected-location\n    - /components/schemas/secret-scanning-location-commit\n    - /components/schemas/secret-scanning-location-wiki-commit\n    - /components/schemas/secret-scanning-location-issue-title\n    - /components/schemas/secret-scanning-location-issue-body\n    - /components/schemas/secret-scanning-location-issue-comment\n    - /components/schemas/secret-scanning-location-discussion-title\n    - /components/schemas/secret-scanning-location-discussion-body\n    - /components/schemas/secret-scanning-location-discussion-comment\n    - /components/schemas/secret-scanning-location-pull-request-title\n    - /components/schemas/secret-scanning-location-pull-request-body\n    - /components/schemas/secret-scanning-location-pull-request-comment\n    - /components/schemas/secret-scanning-location-pull-request-review\n    - /components/schemas/secret-scanning-location-pull-request-review-comment",
++      "filename": "github/SecretScanAlertInstance.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "SecretScanAlertInstance",
++      "name": "SecretScanAlertInstance",
++      "package": "github",
++      "properties": {
++        "blob_sha": {
++          "name": "blob_sha",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "SHA-1 hash ID of the associated blob",
++            "example": "af5626b4a114abcb82d63db7c8082c3c4756e51b",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "SHA-1 hash ID of the associated blob",
++              "example": "af5626b4a114abcb82d63db7c8082c3c4756e51b",
++              "type": "string"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "SHA-1 hash ID of the associated blob",
++              "example": "af5626b4a114abcb82d63db7c8082c3c4756e51b",
++              "type": "string"
++            }
++          }
++        },
++        "blob_url": {
++          "name": "blob_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the associated blob resource",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "The API URL to get the associated blob resource",
++              "type": "string"
++            }
++          }
++        },
++        "commit_sha": {
++          "name": "commit_sha",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "SHA-1 hash ID of the associated commit",
++              "example": "af5626b4a114abcb82d63db7c8082c3c4756e51b",
++              "type": "string"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "SHA-1 hash ID of the associated commit",
++              "example": "302c0b7e200761c9dd9b57e57db540ee0b4293a5",
++              "type": "string"
++            }
++          }
++        },
++        "commit_url": {
++          "name": "commit_url",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "The API URL to get the associated commit resource",
++              "type": "string"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "The GitHub URL to get the associated wiki commit",
++              "example": "https://github.com/octocat/Hello-World/wiki/_compare/302c0b7e200761c9dd9b57e57db540ee0b4293a5",
++              "type": "string"
++            }
++          }
++        },
++        "discussion_body_url": {
++          "name": "discussion_body_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The URL to the discussion where the secret was detected.",
++            "example": "https://github.com/community/community/discussions/39082#discussion-4566270",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-discussion-body": {
++              "description": "The URL to the discussion where the secret was detected.",
++              "example": "https://github.com/community/community/discussions/39082#discussion-4566270",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "discussion_comment_url": {
++          "name": "discussion_comment_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the discussion comment where the secret was detected.",
++            "example": "https://github.com/community/community/discussions/39082#discussioncomment-4158232",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-discussion-comment": {
++              "description": "The API URL to get the discussion comment where the secret was detected.",
++              "example": "https://github.com/community/community/discussions/39082#discussioncomment-4158232",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "discussion_title_url": {
++          "name": "discussion_title_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The URL to the discussion where the secret was detected.",
++            "example": "https://github.com/community/community/discussions/39082",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-discussion-title": {
++              "description": "The URL to the discussion where the secret was detected.",
++              "example": "https://github.com/community/community/discussions/39082",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "end_column": {
++          "name": "end_column",
++          "returns": [
++            "float"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "The column at which the secret ends within the end line when the file is interpreted as 8BIT ASCII",
++              "type": "number"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "The column at which the secret ends within the end line when the file is interpreted as 8-bit ASCII.",
++              "type": "number"
++            }
++          }
++        },
++        "end_line": {
++          "name": "end_line",
++          "returns": [
++            "float"
++          ],
++          "schema": {
++            "description": "Line number at which the secret ends in the file",
++            "type": "number"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "Line number at which the secret ends in the file",
++              "type": "number"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "Line number at which the secret ends in the file",
++              "type": "number"
++            }
++          }
++        },
++        "issue_body_url": {
++          "name": "issue_body_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the issue where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-issue-body": {
++              "description": "The API URL to get the issue where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "issue_comment_url": {
++          "name": "issue_comment_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the issue comment where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/issues/comments/1081119451",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-issue-comment": {
++              "description": "The API URL to get the issue comment where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/issues/comments/1081119451",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "issue_title_url": {
++          "name": "issue_title_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the issue where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-issue-title": {
++              "description": "The API URL to get the issue where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "page_url": {
++          "name": "page_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The GitHub URL to get the associated wiki page",
++            "example": "https://github.com/octocat/Hello-World/wiki/Home/302c0b7e200761c9dd9b57e57db540ee0b4293a5",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "The GitHub URL to get the associated wiki page",
++              "example": "https://github.com/octocat/Hello-World/wiki/Home/302c0b7e200761c9dd9b57e57db540ee0b4293a5",
++              "type": "string"
++            }
++          }
++        },
++        "path": {
++          "name": "path",
++          "returns": [
++            "str"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "The file path in the repository",
++              "example": "/example/secrets.txt",
++              "type": "string"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "The file path of the wiki page",
++              "example": "/example/Home.md",
++              "type": "string"
++            }
++          }
++        },
++        "pull_request_body_url": {
++          "name": "pull_request_body_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the pull request where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/2846",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-pull-request-body": {
++              "description": "The API URL to get the pull request where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/pulls/2846",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "pull_request_comment_url": {
++          "name": "pull_request_comment_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the pull request comment where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/issues/comments/1081119451",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-pull-request-comment": {
++              "description": "The API URL to get the pull request comment where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/issues/comments/1081119451",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "pull_request_review_comment_url": {
++          "name": "pull_request_review_comment_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the pull request review comment where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/comments/12",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-pull-request-review-comment": {
++              "description": "The API URL to get the pull request review comment where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/pulls/comments/12",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "pull_request_review_url": {
++          "name": "pull_request_review_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the pull request review where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/2846/reviews/80",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-pull-request-review": {
++              "description": "The API URL to get the pull request review where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/pulls/2846/reviews/80",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "pull_request_title_url": {
++          "name": "pull_request_title_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The API URL to get the pull request where the secret was detected.",
++            "example": "https://api.github.com/repos/octocat/Hello-World/pulls/2846",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-pull-request-title": {
++              "description": "The API URL to get the pull request where the secret was detected.",
++              "example": "https://api.github.com/repos/octocat/Hello-World/pulls/2846",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "start_column": {
++          "name": "start_column",
++          "returns": [
++            "float"
++          ],
++          "schema": null,
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "The column at which the secret starts within the start line when the file is interpreted as 8BIT ASCII",
++              "type": "number"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "The column at which the secret starts within the start line when the file is interpreted as 8-bit ASCII.",
++              "type": "number"
++            }
++          }
++        },
++        "start_line": {
++          "name": "start_line",
++          "returns": [
++            "float"
++          ],
++          "schema": {
++            "description": "Line number at which the secret starts in the file",
++            "type": "number"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-location-commit": {
++              "description": "Line number at which the secret starts in the file",
++              "type": "number"
++            },
++            "/components/schemas/secret-scanning-location-wiki-commit": {
++              "description": "Line number at which the secret starts in the file",
++              "type": "number"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/nullable-secret-scanning-first-detected-location",
++        "/components/schemas/secret-scanning-location-commit",
++        "/components/schemas/secret-scanning-location-wiki-commit",
++        "/components/schemas/secret-scanning-location-issue-title",
++        "/components/schemas/secret-scanning-location-issue-body",
++        "/components/schemas/secret-scanning-location-issue-comment",
++        "/components/schemas/secret-scanning-location-discussion-title",
++        "/components/schemas/secret-scanning-location-discussion-body",
++        "/components/schemas/secret-scanning-location-discussion-comment",
++        "/components/schemas/secret-scanning-location-pull-request-title",
++        "/components/schemas/secret-scanning-location-pull-request-body",
++        "/components/schemas/secret-scanning-location-pull-request-comment",
++        "/components/schemas/secret-scanning-location-pull-request-review",
++        "/components/schemas/secret-scanning-location-pull-request-review-comment"
++      ],
++      "test_filename": "tests/SecretScanAlertInstance.py"
++    },
+     "_BadAttribute": {
+       "bases": [
+         "Attribute"
+@@ -4937,7 +5383,8 @@
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject",
+         "Reaction",
+-        "Repository"
++        "Repository",
++        "SecretScanAlertInstance"
+       ],
+       "Attribute": [
+         "_BadAttribute",
+@@ -4973,7 +5420,8 @@
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject",
+         "Reaction",
+-        "Repository"
++        "Repository",
++        "SecretScanAlertInstance"
+       ],
+       "NamedUser": [
+         "NamedUserSearchResult"
+@@ -4982,7 +5430,8 @@
+         "GitAuthor",
+         "GitCommit",
+         "Items",
+-        "Reaction"
++        "Reaction",
++        "SecretScanAlertInstance"
+       ],
+       "Protocol": [
+         "Attribute",
+@@ -5695,6 +6144,9 @@
+       "/components/schemas/nullable-git-user": [
+         "GitAuthor"
+       ],
++      "/components/schemas/nullable-secret-scanning-first-detected-location": [
++        "SecretScanAlertInstance"
++      ],
+       "/components/schemas/nullable-simple-commit": [
+         "GitCommit"
+       ],
+@@ -5719,6 +6171,45 @@
+       "/components/schemas/search-result-text-matches/items": [
+         "Items"
+       ],
++      "/components/schemas/secret-scanning-location-commit": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-discussion-body": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-discussion-comment": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-discussion-title": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-issue-body": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-issue-comment": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-issue-title": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-pull-request-body": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-pull-request-comment": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-pull-request-review": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-pull-request-review-comment": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-pull-request-title": [
++        "SecretScanAlertInstance"
++      ],
++      "/components/schemas/secret-scanning-location-wiki-commit": [
++        "SecretScanAlertInstance"
++      ],
+       "/components/schemas/simple-commit": [
+         "GitCommit"
+       ],
+diff --unified --recursive --new-file before/tests/SecretScanAlertInstance.py after/tests/SecretScanAlertInstance.py
+--- before/tests/SecretScanAlertInstance.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/SecretScanAlertInstance.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,61 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class SecretScanAlertInstance(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type SecretScanAlertInstance and assign to self.ssai, then run:
++        #   pytest ./tests/SecretScanAlertInstance.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/SecretScanAlertInstance.py testAttributes
++        #   pre-commit run --all-files
++        self.ssai = None
++
++    def testAttributes(self):
++        ssai = self.ssai
++        self.assertEqual(ssai.__repr__(), "")
++        self.assertEqual(ssai.blob_sha, "")
++        self.assertEqual(ssai.blob_url, "")
++        self.assertEqual(ssai.commit_sha, "")
++        self.assertEqual(ssai.commit_url, "")
++        self.assertEqual(ssai.discussion_body_url, "")
++        self.assertEqual(ssai.discussion_comment_url, "")
++        self.assertEqual(ssai.discussion_title_url, "")
++        self.assertEqual(ssai.end_column, 0.0)
++        self.assertEqual(ssai.end_line, 0.0)
++        self.assertEqual(ssai.issue_body_url, "")
++        self.assertEqual(ssai.issue_comment_url, "")
++        self.assertEqual(ssai.issue_title_url, "")
++        self.assertEqual(ssai.page_url, "")
++        self.assertEqual(ssai.path, "")
++        self.assertEqual(ssai.pull_request_body_url, "")
++        self.assertEqual(ssai.pull_request_comment_url, "")
++        self.assertEqual(ssai.pull_request_review_comment_url, "")
++        self.assertEqual(ssai.pull_request_review_url, "")
++        self.assertEqual(ssai.pull_request_title_url, "")
++        self.assertEqual(ssai.start_column, 0.0)
++        self.assertEqual(ssai.start_line, 0.0)
