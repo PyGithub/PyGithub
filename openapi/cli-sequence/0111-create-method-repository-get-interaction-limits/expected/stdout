@@ -1,33 +1,34 @@
 + python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index Repository get_interaction_limits get '/repos/{owner}/{repo}/interaction-limits'
 Using spec openapi.spec.json
 Creating method github.Repository.Repository.get_interaction_limits in github/Repository.py
-There is no $ref and no type in schema: {"anyOf": [{"$ref": "#/components/schemas/interaction-limit-response"}, {"type": "object", "properties": {}, "additionalProperties": false}]}
+Schema not implemented: /paths//repos/{owner}/{repo}/interaction-limits/get/responses/200/content/application/json/schema/anyOf/1
 Diff:
 --- 
 +++ 
-@@ -642,6 +642,12 @@
+@@ -642,6 +642,13 @@
      def web_commit_signoff_required(self) -> bool:
          self._completeIfNotSet(self._web_commit_signoff_required)
          return self._web_commit_signoff_required.value
 +    
-+    def get_interaction_limits(self) -> None:
++    def get_interaction_limits(self) -> dict[str, Any] | InteractionLimit:
 +        """
 +        :calls: `GET /repos/{owner}/{repo}/interaction-limits <https://docs.github.com/rest/interactions/repos#get-interaction-restrictions-for-a-repository>`_
 +        """
 +        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/interaction-limits")
++        return data
      
-     def get_stargazers(self) -> None:
+     def get_stargazers(self) -> PaginatedList[dict[str, Any]] | PaginatedList[NamedUser]:
          """
 
 + python scripts/openapi.py create method github openapi.spec.json openapi.index Repository get_interaction_limits get '/repos/{owner}/{repo}/interaction-limits'
 Using spec openapi.spec.json
 Creating method github.Repository.Repository.get_interaction_limits in github/Repository.py
-There is no $ref and no type in schema: {"anyOf": [{"$ref": "#/components/schemas/interaction-limit-response"}, {"type": "object", "properties": {}, "additionalProperties": false}]}
+Schema not implemented: /paths//repos/{owner}/{repo}/interaction-limits/get/responses/200/content/application/json/schema/anyOf/1
 Updating index
-Indexing 12 Python files
-Indexed 22 classes
+Indexing 14 Python files
+Indexed 24 classes
 Indexed 6 paths
-Indexed 40 schemas
+Indexed 42 schemas
 Indexing OpenAPI spec
 Using spec openapi.spec.json
 Applying API schemas to PyGithub class Repository
@@ -35,8 +36,8 @@ Applying spec openapi.spec.json to github.Repository.Repository (github/Reposito
 - Updating method get_interaction_limits
 Class Repository changed
 + python scripts/openapi.py index github openapi.spec.json openapi.index
-Indexing 12 Python files
-Indexed 22 classes
+Indexing 14 Python files
+Indexed 24 classes
 Indexed 6 paths
-Indexed 40 schemas
+Indexed 42 schemas
 Indexing OpenAPI spec

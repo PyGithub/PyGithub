@@ -444,7 +444,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Reaction"
        ],
        "Protocol": [
-@@ -4667,9 +4963,15 @@
+@@ -4682,9 +4978,15 @@
        ]
      },
      "schema_to_classes": {
@@ -460,7 +460,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/full-repository": [
          "Repository"
        ],
-@@ -4682,6 +4984,9 @@
+@@ -4697,6 +4999,9 @@
        "/components/schemas/nullable-git-user": [
          "GitAuthor"
        ],
@@ -470,7 +470,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/nullable-simple-commit/properties/author": [
          "GitAuthor"
        ],
-@@ -4700,6 +5005,9 @@
+@@ -4715,6 +5020,9 @@
        "/components/schemas/repository": [
          "Repository"
        ],

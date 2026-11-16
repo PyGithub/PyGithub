@@ -555,7 +555,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
-@@ -4963,15 +5340,25 @@
+@@ -4978,15 +5355,25 @@
        ]
      },
      "schema_to_classes": {

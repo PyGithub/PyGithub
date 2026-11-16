@@ -366,7 +366,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "/components/schemas/public-user"
        ],
        "methods": {},
-@@ -1885,6 +1928,9 @@
+@@ -1900,6 +1943,9 @@
        "/components/schemas/issue-comment": [
          "IssueComment"
        ],

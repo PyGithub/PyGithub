@@ -1007,7 +1007,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NonCompletableGithubObject"
        ],
        "Protocol": [
-@@ -966,7 +1581,11 @@
+@@ -981,7 +1596,11 @@
          "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"
        ]
      },

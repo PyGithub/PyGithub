@@ -1,0 +1,96 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -42,6 +42,8 @@
+ 
+     The OpenAPI schema can be found at
+ 
++    - /components/schemas/commit-search-result-item/properties/commit/properties/author
++    - /components/schemas/nullable-git-user
+     - /components/schemas/nullable-simple-user
+     - /components/schemas/public-user
+     - /components/schemas/simple-user
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -1563,7 +1563,7 @@
+       "bases": [
+         "CompletableGithubObject"
+       ],
+-      "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user\n    - /components/schemas/simple-user",
++      "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/commit-search-result-item/properties/commit/properties/author\n    - /components/schemas/nullable-git-user\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user\n    - /components/schemas/simple-user",
+       "filename": "github/NamedUser.py",
+       "ids": [
+         "some_attribute"
+@@ -1739,6 +1739,13 @@
+           ],
+           "schema": null,
+           "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit/properties/author": {
++              "type": "string"
++            },
++            "/components/schemas/nullable-git-user": {
++              "example": "\"chris@ozmm.org\"",
++              "type": "string"
++            },
+             "/components/schemas/nullable-simple-user": {
+               "nullable": true,
+               "type": "string"
+@@ -1991,11 +1998,15 @@
+           "returns": [
+             "str"
+           ],
+-          "schema": {
+-            "nullable": true,
+-            "type": "string"
+-          },
++          "schema": null,
+           "schemas": {
++            "/components/schemas/commit-search-result-item/properties/commit/properties/author": {
++              "type": "string"
++            },
++            "/components/schemas/nullable-git-user": {
++              "example": "\"Chris Wanstrath\"",
++              "type": "string"
++            },
+             "/components/schemas/nullable-simple-user": {
+               "nullable": true,
+               "type": "string"
+@@ -2350,6 +2361,8 @@
+         }
+       },
+       "schemas": [
++        "/components/schemas/commit-search-result-item/properties/commit/properties/author",
++        "/components/schemas/nullable-git-user",
+         "/components/schemas/nullable-simple-user",
+         "/components/schemas/public-user",
+         "/components/schemas/simple-user"
+@@ -2372,6 +2385,8 @@
+         "NamedUser"
+       ],
+       "inherited_schemas": [
++        "/components/schemas/commit-search-result-item/properties/commit/properties/author",
++        "/components/schemas/nullable-git-user",
+         "/components/schemas/nullable-simple-user",
+         "/components/schemas/public-user",
+         "/components/schemas/simple-user"
+@@ -7010,7 +7025,8 @@
+         "GitCommit"
+       ],
+       "/components/schemas/commit-search-result-item/properties/commit/properties/author": [
+-        "GitAuthor"
++        "GitAuthor",
++        "NamedUser"
+       ],
+       "/components/schemas/commit-search-result-item/properties/parents/items": [
+         "Commit"
+@@ -7031,7 +7047,8 @@
+         "Repository"
+       ],
+       "/components/schemas/nullable-git-user": [
+-        "GitAuthor"
++        "GitAuthor",
++        "NamedUser"
+       ],
+       "/components/schemas/nullable-secret-scanning-first-detected-location": [
+         "SecretScanAlertInstance"

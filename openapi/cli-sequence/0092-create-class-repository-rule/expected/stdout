@@ -1,0 +1,20 @@
++ python scripts/openapi.py create class --tests github openapi.spec.json openapi.index RepositoryRule https://docs.github.com/en/rest/repos/rules /components/schemas/repository-rule
+Creating class github.RepositoryRule.RepositoryRule with parent github.GithubObject.NonCompletableGithubObject in ./github/RepositoryRule.py
+Updating index
+Indexing 12 Python files
+Indexed 22 classes
+Indexed 4 paths
+Indexed 40 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class RepositoryRule
+Applying spec openapi.spec.json to github.RepositoryRule.RepositoryRule (github/RepositoryRule.py)
+Applying schema /components/schemas/repository-rule
+Class RepositoryRule changed
+Test tests/RepositoryRule.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 12 Python files
+Indexed 22 classes
+Indexed 4 paths
+Indexed 40 schemas
+Indexing OpenAPI spec

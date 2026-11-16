@@ -1,0 +1,4 @@
+# property rules is a list of the oneOf wrapper schema repository-rule (RepositoryRule)
+# property conditions is anyOf repository-ruleset-conditions and org-ruleset-conditions (both not implemented)
+python scripts/openapi.py create class --completable --tests --new-schemas as-dict github openapi.spec.json openapi.index RepositoryRuleset "https://docs.github.com/en/rest/repos/rules" "/components/schemas/repository-ruleset"
+python scripts/openapi.py index github openapi.spec.json openapi.index

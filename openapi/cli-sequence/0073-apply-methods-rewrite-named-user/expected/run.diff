@@ -58,7 +58,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        },
        "/users/{username}/starred": {
-@@ -4487,7 +4487,7 @@
+@@ -4502,7 +4502,7 @@
              "class": "NamedUser",
              "name": "get_repo",
              "returns": [
@@ -67,7 +67,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              ]
            }
          ]
-@@ -4524,7 +4524,7 @@
+@@ -4539,7 +4539,7 @@
              "class": "NamedUser",
              "name": "get_repos",
              "returns": [

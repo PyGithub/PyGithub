@@ -330,7 +330,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "return_schema_to_paths": {
        "/components/schemas/actions-artifact-and-log-retention-response": [
          "/orgs/{org}/actions/permissions/artifact-and-log-retention",
-@@ -1950,11 +2107,28 @@
+@@ -1965,11 +2122,28 @@
        "/components/schemas/public-user": [
          "NamedUser"
        ],

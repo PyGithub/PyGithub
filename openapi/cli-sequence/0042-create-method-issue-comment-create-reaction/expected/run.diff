@@ -67,7 +67,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          ]
        }
      },
-@@ -2127,6 +2144,17 @@
+@@ -2142,6 +2159,17 @@
              ]
            }
          ]

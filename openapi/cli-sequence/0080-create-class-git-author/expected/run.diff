@@ -240,7 +240,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Reaction"
        ],
        "Protocol": [
-@@ -4540,6 +4667,9 @@
+@@ -4555,6 +4682,9 @@
        ]
      },
      "schema_to_classes": {
@@ -250,7 +250,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/full-repository": [
          "Repository"
        ],
-@@ -4549,6 +4679,15 @@
+@@ -4564,6 +4694,15 @@
        "/components/schemas/minimal-repository": [
          "Repository"
        ],
@@ -266,7 +266,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/nullable-simple-user": [
          "NamedUser"
        ],
-@@ -4561,6 +4700,12 @@
+@@ -4576,6 +4715,12 @@
        "/components/schemas/repository": [
          "Repository"
        ],

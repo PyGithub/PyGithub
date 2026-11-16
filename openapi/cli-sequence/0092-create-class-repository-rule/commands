@@ -1,0 +1,3 @@
+# one class implements only the oneOf / anyOf wrapper schema, not its alternative schemas
+python scripts/openapi.py create class --tests github openapi.spec.json openapi.index RepositoryRule "https://docs.github.com/en/rest/repos/rules" "/components/schemas/repository-rule"
+python scripts/openapi.py index github openapi.spec.json openapi.index

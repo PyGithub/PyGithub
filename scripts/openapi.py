@@ -100,11 +100,15 @@ def as_python_type(
             verbose=verbose,
             collect_new_schemas=collect_new_schemas,
         )
-    elif "oneOf" in schema_type:
+    elif ("oneOf" in schema_type or "anyOf" in schema_type) and "/".join([""] + schema_path) in schema_to_class:
+        # the wrapper schema itself is implemented by a class, no need to look at the alternative schemas
+        schema = "/".join([""] + schema_path)
+    elif "oneOf" in schema_type or "anyOf" in schema_type:
+        key = "oneOf" if "oneOf" in schema_type else "anyOf"
         types = [
             as_python_type(
                 t,
-                schema_path + ["oneOf", str(idx)],
+                schema_path + [key, str(idx)],
                 schema_to_class,
                 classes,
                 spec,
@@ -112,7 +116,7 @@ def as_python_type(
                 verbose=verbose,
                 collect_new_schemas=collect_new_schemas,
             )
-            for idx, t in enumerate(schema_type.get("oneOf"))
+            for idx, t in enumerate(schema_type.get(key))
         ]
         types = list({t for t in types if t is not None})
         if len(types) == 0:
@@ -464,6 +468,9 @@ class GithubClass:
 
 # readable Python words for characters that are not allowed in Python identifiers
 _PROPERTY_NAME_SPECIAL_CHARS = {"+": "plus", "-": "minus", "1": "one"}
+
+# keys of schemas that provide alternative schemas, which may not be compatible with each other
+ALTERNATIVE_SCHEMA_KEYS = ["oneOf", "anyOf"]
 
 
 def to_python_name(name: str) -> str:
@@ -3358,11 +3365,12 @@ class OpenApi:
         """
         if "$ref" in schema:
             return [schema.get("$ref")]
-        if "oneOf" in schema:
+        if "oneOf" in schema or "anyOf" in schema:
+            key = "oneOf" if "oneOf" in schema else "anyOf"
             return [
                 spec_type
-                for idx, component in enumerate(schema.get("oneOf"))
-                for spec_type in self.get_inner_spec_types(component, schema_path + ["oneOf", str(idx)])
+                for idx, component in enumerate(schema.get(key))
+                for spec_type in self.get_inner_spec_types(component, schema_path + [key, str(idx)])
             ]
         if "allOf" in schema and len(schema.get("allOf")) == 1:
             return [schema.get("allOf")[0].get("$ref")]
@@ -3386,6 +3394,204 @@ class OpenApi:
             return self.get_inner_spec_types(schema.get("items"), schema_path + ["items"])
 
         return self.get_spec_types(schema, schema_path)
+
+    @staticmethod
+    def is_empty_object(schema: dict[str, Any]) -> bool:
+        return (
+            schema.get("type") == "object"
+            and not schema.get("properties")
+            and schema.get("additionalProperties") is False
+        )
+
+    def is_relevant_spec_type(self, spec: dict[str, Any], spec_type: str) -> bool:
+        """
+        Spec types that are ignored, or empty objects, are not relevant for suggestions.
+        """
+        spec_type = spec_type.lstrip("#")
+        if spec_type in self.ignored_schemas:
+            return False
+        _, schema = self.get_schema(spec, spec_type)
+        return not self.is_empty_object(schema)
+
+    def get_alternative_spec_types(
+        self, spec: dict[str, Any], schema: dict, schema_path: list[str | int]
+    ) -> list[list[str]]:
+        """
+        Returns groups of alternative spec types of oneOf / anyOf schemas, ignores outer datastructures
+        like lists or pagination. Follows references to oneOf / anyOf wrapper schemas.
+        Groups with less than two relevant alternatives are ignored.
+        """
+        if "properties" in schema:
+            props = schema.get("properties")
+            list_item = pagination_list_property(props)
+            if list_item is not None:
+                return self.get_alternative_spec_types(
+                    spec, props.get(list_item).get("items"), schema_path + ["properties", list_item, "items"]
+                )
+        if schema.get("type") == "array" and "items" in schema:
+            return self.get_alternative_spec_types(spec, schema.get("items"), schema_path + ["items"])
+        if "$ref" in schema:
+            ref_path, ref_schema = self.get_schema(spec, schema.get("$ref").lstrip("#"))
+            if any(key in ref_schema for key in ALTERNATIVE_SCHEMA_KEYS):
+                return self.get_alternative_spec_types(spec, ref_schema, ref_path)
+            return []
+        for key in ALTERNATIVE_SCHEMA_KEYS:
+            if key in schema:
+                alternatives = [
+                    spec_type.lstrip("#")
+                    for idx, component in enumerate(schema.get(key))
+                    for spec_type in self.get_inner_spec_types(component, schema_path + [key, str(idx)])
+                    if self.is_relevant_spec_type(spec, spec_type)
+                ]
+                return [alternatives] if len(alternatives) > 1 else []
+        return []
+
+    @staticmethod
+    def normalize_type(type: PythonType | GithubClass | str | None) -> str | None:
+        """
+        Returns a canonical string of the type, so that types from the spec and from the index can be compared.
+        Module and package names are removed, None is removed from unions, and union types are sorted.
+        """
+        if type is None:
+            return None
+
+        def render(t: PythonType | GithubClass) -> str:
+            if isinstance(t, GithubClass):
+                return t.name
+            if t.type == "union":
+                return " | ".join(render(inner) for inner in t.inner_types)
+            if t.inner_types:
+                return f"{t.type}[{', '.join(render(inner) for inner in t.inner_types)}]"
+            return t.type
+
+        def split(text: str, separator: str) -> list[str]:
+            parts, depth, start = [], 0, 0
+            for idx, char in enumerate(text):
+                if char == "[":
+                    depth += 1
+                elif char == "]":
+                    depth -= 1
+                elif char == separator and depth == 0:
+                    parts.append(text[start:idx])
+                    start = idx + 1
+            parts.append(text[start:])
+            return parts
+
+        def normalize(text: str) -> str:
+            alternatives = set()
+            for alternative in split(text.replace(" ", ""), "|"):
+                if alternative.startswith("Optional[") and alternative.endswith("]"):
+                    alternative = f"{alternative[9:-1]}|None"
+                if "|" in alternative and "[" not in alternative.split("|")[0]:
+                    alternatives.update(normalize(alternative).split(" | "))
+                    continue
+                if "[" in alternative and alternative.endswith("]"):
+                    name, inner = alternative[:-1].split("[", maxsplit=1)
+                    alternative = f"{name.split('.')[-1]}[{', '.join(normalize(i) for i in split(inner, ','))}]"
+                else:
+                    alternative = alternative.split(".")[-1]
+                if alternative and alternative != "None":
+                    alternatives.add(alternative)
+            return " | ".join(sorted(alternatives))
+
+        return normalize(type if isinstance(type, str) else render(type)) or None
+
+    def get_schema_property_types(self, spec: dict[str, Any], spec_type: str) -> dict[str, str | None]:
+        """
+        Returns the normalized Python types of the schema's properties, including those of allOf schemas.
+        Properties of unknown type have type None.
+        """
+        schema_path, schema = self.get_schema(spec, spec_type.lstrip("#"))
+
+        def types_of(properties: dict[str, Any], path: list[str]) -> dict[str, str | None]:
+            return {
+                name: self.normalize_type(
+                    as_python_type(
+                        property_schema,
+                        path + ["properties", name],
+                        self.schema_to_class,
+                        self.classes,
+                        spec,
+                        verbose=False,
+                    )
+                )
+                for name, property_schema in properties.items()
+            }
+
+        types = types_of(schema.get("properties", {}), schema_path)
+        for idx, component in enumerate(schema.get("allOf", [])):
+            if "$ref" in component:
+                types.update(self.get_schema_property_types(spec, component.get("$ref")))
+            else:
+                types.update(types_of(component.get("properties", {}), schema_path + ["allOf", str(idx)]))
+        return types
+
+    def print_alternative_spec_types(
+        self,
+        spec: dict[str, Any],
+        classes: dict[str, Any],
+        schema_to_classes: dict[str, list[str]],
+        cls: str,
+        alternatives: tuple[str, ...],
+        sources: list[str],
+    ):
+        """
+        Prints how much the alternative schemas overlap with each other and with candidate classes,
+        and which overlapping properties have conflicting types.
+        """
+
+        def class_property_types(class_name: str) -> dict[str, str | None]:
+            clazz = classes.get(class_name, {})
+            properties = {}
+            for c in [clazz] + [classes.get(base, {}) for base in clazz.get("inheritance", [])]:
+                for name, prop in c.get("properties", {}).items():
+                    if name not in properties:
+                        properties[name] = self.normalize_type(" | ".join(prop.get("returns", [])) or None)
+            return properties
+
+        def conflicting(type: str | None, other_types: list[str | None]) -> bool:
+            return type is not None and any(other is not None and other != type for other in other_types)
+
+        def with_conflicts(text: str, conflicts: list[str]) -> str:
+            if conflicts:
+                return f"{text} ({len(conflicts)} conflicting: {', '.join(sorted(conflicts))})"
+            return text
+
+        properties = {alternative: self.get_schema_property_types(spec, alternative) for alternative in alternatives}
+        union = set().union(*[p.keys() for p in properties.values()])
+        implementing_classes = {
+            alternative: sorted(schema_to_classes.get(alternative, [])) for alternative in alternatives
+        }
+        candidate_classes = [cls] + sorted(
+            {c for cs in implementing_classes.values() for c in cs if c in classes}.difference({cls})
+        )
+        candidate_properties = {c: class_property_types(c) for c in candidate_classes}
+
+        print(f"Alternative schemas returned by {', '.join(sources)} (union of {len(union)} properties):")
+        for alternative in alternatives:
+            props = properties[alternative]
+            others = {a: p for a, p in properties.items() if a != alternative}
+            shared = [name for name in props if any(name in p for p in others.values())]
+            shared_conflicts = [
+                name for name in shared if conflicting(props[name], [p.get(name) for p in others.values()])
+            ]
+            overlaps = []
+            for c in candidate_classes:
+                class_props = candidate_properties[c]
+                in_class = [name for name in props if name in class_props]
+                class_conflicts = [name for name in in_class if conflicting(props[name], [class_props[name]])]
+                overlaps.append(with_conflicts(f"{len(in_class)}/{len(props)} in class {c}", class_conflicts))
+            implemented = (
+                f", implemented by {', '.join(implementing_classes[alternative])}"
+                if implementing_classes[alternative]
+                else ""
+            )
+            print(
+                f"- {alternative}: {len(props)} properties, "
+                f"{len(props)}/{len(union)} of union, "
+                f"{with_conflicts(f'{len(shared)}/{len(props)} shared with other alternatives', shared_conflicts)}, "
+                f"{', '.join(overlaps)}{implemented}"
+            )
 
     @staticmethod
     def extend_inheritance(classes: dict[str, Any]) -> bool:
@@ -4069,8 +4275,25 @@ class OpenApi:
         else:
             print("Suggesting API schemas for PyGithub classes")
 
+        def split_union(return_type: str) -> list[str]:
+            # split by "|" outside of brackets, e.g. "PaginatedList[A] | PaginatedList[B]"
+            alternatives, depth, start = [], 0, 0
+            for idx, char in enumerate(return_type):
+                if char == "[":
+                    depth += 1
+                elif char == "]":
+                    depth -= 1
+                elif char == "|" and depth == 0:
+                    alternatives.append(return_type[start:idx])
+                    start = idx + 1
+            alternatives.append(return_type[start:])
+            return alternatives
+
         def inner_return_type(return_type: str) -> list[str]:
             return_type = return_type.strip()
+            alternatives = split_union(return_type)
+            if len(alternatives) > 1:
+                return [rt for alt in alternatives for rt in inner_return_type(alt)]
             if return_type == "None":
                 return []
             if return_type.startswith("Optional[") and return_type.endswith("]"):
@@ -4084,8 +4307,9 @@ class OpenApi:
                 return []
 
             # now that we have removed outer types, we can look for alternatives
-            if "|" in return_type:
-                return [rt for alt in return_type.split("|") for rt in inner_return_type(alt)]
+            alternatives = split_union(return_type)
+            if len(alternatives) > 1:
+                return [rt for alt in alternatives for rt in inner_return_type(alt)]
 
             # return the pure class name, no outer class, module or package names
             if "." in return_type:
@@ -4093,8 +4317,32 @@ class OpenApi:
 
             return [return_type]
 
+        def other_classes_implement(spec_type: str, cls_name: str, cls_names: set[str]) -> bool:
+            # whether this schema is implemented by any other class in the union (cls_names)
+            return any(
+                spec_type in classes.get(n, {}).get("schemas", [])
+                for n in cls_names.difference({cls_name})
+                # normalize class names, remove the module and package
+                for n in ([n.split(".")[-1]] if "." in n else [n])
+            )
+
+        def print_alternatives(
+            cls: str, schemas_to_consider: list[str], alternative_groups: dict[tuple[str, ...], set[str]]
+        ):
+            for alternatives, sources in sorted(alternative_groups.items()):
+                if set(alternatives).intersection(schemas_to_consider):
+                    self.print_alternative_spec_types(
+                        spec, classes, schema_to_classes, cls, alternatives, sorted(sources)
+                    )
+
+        alternative_schemas_suggested = 0
+
         # suggest schemas based on properties of classes
+        # alternative schemas of oneOf / anyOf schemas are only suggested, but not added,
+        # as alternative schemas may not be compatible with each other
         available_schemas = {}
+        available_alternative_schemas = defaultdict(set)
+        alternative_groups_of_class = defaultdict(lambda: defaultdict(set))
         schema_returned_by = defaultdict(set)
         unimplemented_schemas = set()
         for cls in self.classes.values():
@@ -4114,9 +4362,15 @@ class OpenApi:
                     property = properties.get(property_name, {})
                     returns = property.get("returns", [])
                     cls_names = {ir for ret in returns for ir in inner_return_type(ret)}
-                    spec_type = self.get_inner_spec_types(
-                        property_spec_type, schema_path + ["properties", property_name]
-                    )
+                    property_schema_path = schema_path + ["properties", property_name]
+                    alternative_groups = self.get_alternative_spec_types(spec, property_spec_type, property_schema_path)
+                    alternatives = {alternative for group in alternative_groups for alternative in group}
+                    spec_types = [
+                        st.lstrip("#")
+                        for st in self.get_inner_spec_types(property_spec_type, property_schema_path)
+                        if self.is_relevant_spec_type(spec, st)
+                    ]
+                    spec_types.extend(sorted(alternatives.difference(spec_types)))
 
                     for cls_name in cls_names:
                         if class_names and cls_name not in class_names:
@@ -4128,22 +4382,19 @@ class OpenApi:
                         key = (cls.get("name"), property_name)
                         if key not in available_schemas[cls_name]:
                             available_schemas[cls_name][key] = []
-                        for st in spec_type:
-                            st = st.lstrip("#")
-                            if st in self.ignored_schemas:
-                                continue
+                        for group in alternative_groups:
+                            alternative_groups_of_class[cls_name][tuple(group)].add(f"{key[0]}.{key[1]}")
+                        for st in spec_types:
                             schema_returned_by[st].add(key)
-                            if st not in schema_to_classes:
+                            if st not in schema_to_classes and st not in alternatives:
                                 unimplemented_schemas.add(st)
                             # only add as available schema for cls_name if this schema
                             # is not implemented by any other class in the union (cls_names)
-                            if not any(
-                                st in classes.get(n, {}).get("schemas", [])
-                                for n in cls_names.difference(set(cls_name))
-                                # normalize class names, remove the module and package
-                                for n in ([n.split(".")[-1]] if "." in n else [n])
-                            ):
-                                available_schemas[cls_name][key].append(st)
+                            if not other_classes_implement(st, cls_name, cls_names):
+                                if st in alternatives:
+                                    available_alternative_schemas[cls_name].add(st)
+                                else:
+                                    available_schemas[cls_name][key].append(st)
 
         for schema in sorted(list(unimplemented_schemas)):
             print(f"schema not implemented: {schema}")
@@ -4163,8 +4414,11 @@ class OpenApi:
                 providing_properties.append(providing_property)
 
             schemas_to_implement = sorted(list(available.difference(set(implemented))))
+            schemas_to_consider = sorted(
+                available_alternative_schemas[cls].difference(set(implemented)).difference(schemas_to_implement)
+            )
             # schemas_to_remove = sorted(list(set(implemented).difference(available)))
-            if schemas_to_implement:  # or schemas_to_remove:
+            if schemas_to_implement or schemas_to_consider:  # or schemas_to_remove:
                 print()
                 print(f"Class {cls}:")
                 for schema_to_implement in sorted(schemas_to_implement):
@@ -4173,11 +4427,18 @@ class OpenApi:
                         print("  Properties returning the schema:")
                         for providing_class, providing_property in sorted(schema_returned_by[schema_to_implement]):
                             print(f"  - {providing_class}.{providing_property}")
+                for schema_to_consider in schemas_to_consider:
+                    print(f"- may implement alternative schema {schema_to_consider}")
+                    if schema_returned_by[schema_to_consider]:
+                        print("  Properties returning the schema:")
+                        for providing_class, providing_property in sorted(schema_returned_by[schema_to_consider]):
+                            print(f"  - {providing_class}.{providing_property}")
                 # for schema_to_remove in sorted(schemas_to_remove):
                 #    print(f"- should not implement schema {schema_to_remove}")
                 print("Properties returning the class:")
                 for providing_class, providing_property in sorted(providing_properties):
                     print(f"- {providing_class}.{providing_property}")
+                print_alternatives(cls, schemas_to_consider, alternative_groups_of_class[cls])
 
             # adding sorts and de-duplicates the schema list, so run it whenever
             # --add is given, even when there are no new schemas to implement
@@ -4192,9 +4453,12 @@ class OpenApi:
                     added = self.add_schema_to_class(clazz_name, filename, schemas_to_implement, dry_run)
                     schemas_added += added
             schemas_suggested += len(schemas_to_implement)
+            alternative_schemas_suggested += len(schemas_to_consider)
 
         # suggest schemas based on API calls
         available_schemas = {}
+        available_alternative_schemas = defaultdict(set)
+        alternative_groups_of_class = defaultdict(lambda: defaultdict(set))
         schema_returned_by = defaultdict(set)
         paths = set(spec.get("paths", {}).keys()).union(path_to_return_classes.keys())
         # paths can have an optional #property appended
@@ -4205,47 +4469,58 @@ class OpenApi:
             for verb in spec.get("paths", {}).get(path, {}).keys():
                 responses_of_path = spec.get("paths", {}).get(path, {}).get(verb, {}).get("responses", {})
                 schema_path = ["paths", f'"{path}"', verb, "responses"]
+                response_schemas = [
+                    (schema, schema_path + [str(status), "content", '"application/json"', "schema"])
+                    for status, response in responses_of_path.items()
+                    if status.isnumeric() and int(status) < 400 and "content" in response
+                    for schema in [response.get("content").get("application/json", {}).get("schema", {})]
+                ]
                 # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
                 schemas_of_path = [
                     "/".join(component.rstrip("/").split("/") + ["properties", schema_property])
                     if schema_property
                     else component
-                    for status, response in responses_of_path.items()
-                    if status.isnumeric() and int(status) < 400 and "content" in response
-                    for schema in [response.get("content").get("application/json", {}).get("schema", {})]
-                    for component in self.get_inner_spec_types(
-                        schema, schema_path + [str(status), "content", '"application/json"', "schema"]
-                    )
+                    for schema, response_schema_path in response_schemas
+                    for component in self.get_inner_spec_types(schema, response_schema_path)
+                    if self.is_relevant_spec_type(spec, component)
                     for component in [component.lstrip("#")]
-                    if component not in self.ignored_schemas
                 ]
+                alternative_groups = (
+                    []
+                    if schema_property
+                    else [
+                        group
+                        for schema, response_schema_path in response_schemas
+                        for group in self.get_alternative_spec_types(spec, schema, response_schema_path)
+                    ]
+                )
+                alternatives = {alternative for group in alternative_groups for alternative in group}
+                schemas_of_path.extend(sorted(alternatives.difference(schemas_of_path)))
                 classes_of_path = set(
                     index.get("indices", {}).get("path_to_return_classes", {}).get(path_with_property, {}).get(verb, [])
                 )
+                # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
+                return_types = {rt for cls in classes_of_path for rt in inner_return_type(cls)}
 
-                for cls in classes_of_path:
-                    # we ignore wrapping types like lists / arrays here and assume methods comply with schema in that sense
-                    return_types = set(inner_return_type(cls))
-
-                    for cls in return_types:
-                        if cls not in available_schemas:
-                            available_schemas[cls] = {}
-                        if verb not in available_schemas[cls]:
-                            available_schemas[cls][verb] = {}
-                        # only add schema as available schema for cls if this schema
-                        # is not implemented by any other class in the union (classes_of_path)
-                        available_schemas[cls][verb][path_with_property] = {
-                            s
-                            for s in schemas_of_path
-                            if not any(
-                                s in classes.get(n, {}).get("schemas", [])
-                                for n in classes_of_path.difference(set(cls))
-                                # normalize class names, remove the module and package
-                                for n in ([n.split(".")[-1]] if "." in n else [n])
-                            )
-                        }
-                        for schema in schemas_of_path:
-                            schema_returned_by[schema].add((verb, path_with_property))
+                for cls in return_types:
+                    if cls not in available_schemas:
+                        available_schemas[cls] = {}
+                    if verb not in available_schemas[cls]:
+                        available_schemas[cls][verb] = {}
+                    # only add schema as available schema for cls if this schema
+                    # is not implemented by any other class in the union (return_types)
+                    available_schemas[cls][verb][path_with_property] = {
+                        s
+                        for s in schemas_of_path
+                        if s not in alternatives and not other_classes_implement(s, cls, return_types)
+                    }
+                    available_alternative_schemas[cls].update(
+                        s for s in alternatives if not other_classes_implement(s, cls, return_types)
+                    )
+                    for group in alternative_groups:
+                        alternative_groups_of_class[cls][tuple(group)].add(f"{verb.upper()} {path_with_property}")
+                    for schema in schemas_of_path:
+                        schema_returned_by[schema].add((verb, path_with_property))
 
         for cls, available_verbs in sorted(available_schemas.items(), key=lambda v: v[0]):
             if cls in ["bool", "str", "None"]:
@@ -4270,27 +4545,38 @@ class OpenApi:
                 available = available.union({a for s in available_paths.values() for a in s})
 
             schemas_to_implement = sorted(list(available.difference(set(implemented))))
+            schemas_to_consider = sorted(
+                available_alternative_schemas[cls].difference(set(implemented)).difference(schemas_to_implement)
+            )
+
+            def print_methods(schema: str):
+                methods = set()
+                for verb, verb_paths in paths.items():
+                    for path in verb_paths:
+                        if (verb, path) in schema_returned_by[schema]:
+                            methods = methods.union(path_to_call_methods.get(path, {}).get(verb, set()))
+                if methods:
+                    print("  Methods returning the schema:")
+                    for method in sorted(methods):
+                        print(f"  - {method}")
+
             # schemas_to_remove = sorted(list(set(implemented).difference(available)))
-            if schemas_to_implement:  # or schemas_to_remove:
+            if schemas_to_implement or schemas_to_consider:  # or schemas_to_remove:
                 print()
                 print(f"Class {cls}:")
                 for schema_to_implement in sorted(schemas_to_implement):
                     print(f"- should implement schema {schema_to_implement}")
-                    methods = set()
-                    for verb, verb_paths in paths.items():
-                        for path in verb_paths:
-                            if (verb, path) in schema_returned_by[schema_to_implement]:
-                                methods = methods.union(path_to_call_methods.get(path, {}).get(verb, set()))
-                    if methods:
-                        print("  Methods returning the schema:")
-                        for method in methods:
-                            print(f"  - {method}")
+                    print_methods(schema_to_implement)
+                for schema_to_consider in schemas_to_consider:
+                    print(f"- may implement alternative schema {schema_to_consider}")
+                    print_methods(schema_to_consider)
                 # for schema_to_remove in sorted(schemas_to_remove):
                 #    print(f"- should not implement schema {schema_to_remove}")
                 print("Paths returning the class:")
                 for verb, verb_paths in sorted(paths.items(), key=lambda v: v[0]):
                     for path in sorted(verb_paths):
                         print(f"- {verb.upper()} {path}")
+                print_alternatives(cls, schemas_to_consider, alternative_groups_of_class[cls])
 
             # adding sorts and de-duplicates the schema list, so run it whenever
             # --add is given, even when there are no new schemas to implement
@@ -4304,10 +4590,13 @@ class OpenApi:
                     added = self.add_schema_to_class(cls, filename, schemas_to_implement, dry_run)
                     schemas_added += added
             schemas_suggested += len(schemas_to_implement)
+            alternative_schemas_suggested += len(schemas_to_consider)
 
         print(f"Suggested {schemas_suggested} schemas")
+        if alternative_schemas_suggested:
+            print(f"Suggested {alternative_schemas_suggested} alternative schemas, which are not added")
         print(f"Added {schemas_added} schemas")
-        return schemas_suggested > 0
+        return schemas_suggested + alternative_schemas_suggested > 0
 
     def create_class(
         self,

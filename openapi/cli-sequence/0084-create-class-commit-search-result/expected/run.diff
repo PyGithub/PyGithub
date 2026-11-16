@@ -438,7 +438,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Reaction"
        ],
        "Protocol": [
-@@ -5453,6 +5664,9 @@
+@@ -5468,6 +5679,9 @@
        "/components/schemas/commit": [
          "Commit"
        ],
@@ -448,7 +448,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/commit-search-result-item/properties/commit": [
          "Commit",
          "GitCommit"
-@@ -5502,6 +5716,9 @@
+@@ -5517,6 +5731,9 @@
        "/components/schemas/repository": [
          "Repository"
        ],

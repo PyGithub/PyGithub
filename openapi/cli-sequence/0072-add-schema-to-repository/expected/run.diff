@@ -1734,7 +1734,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "/components/schemas/repository"
        ],
        "test_filename": "tests/Repository.py"
-@@ -3922,9 +4450,15 @@
+@@ -3937,9 +4465,15 @@
        ]
      },
      "schema_to_classes": {
