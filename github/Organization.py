@@ -1413,7 +1413,14 @@ class Organization(CompletableGithubObject):
         """
         return PaginatedList(github.Team.Team, self._requester, f"{self.url}/teams", None)
 
+    @deprecated("Use get_invitations instead")
     def invitations(self) -> PaginatedList[OrganizationInvitation]:
+        """
+        :calls: `GET /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
+        """
+        return self.get_invitations()
+
+    def get_invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
         :calls: `GET /orgs/{org}/invitations <https://docs.github.com/en/rest/reference/orgs#members>`_
         """
@@ -1425,7 +1432,7 @@ class Organization(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeOrganizationInvitationPreview},
         )
 
-    def failed_invitations(self) -> PaginatedList[OrganizationInvitation]:
+    def get_failed_invitations(self) -> PaginatedList[OrganizationInvitation]:
         """
         :calls: `GET /orgs/{org}/failed_invitations <https://docs.github.com/en/rest/orgs/members#list-failed-organization-invitations>`_
         """

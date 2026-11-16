@@ -381,7 +381,7 @@ class Organization(Framework.TestCase):
         self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, True])
 
     def testFailedInvitations(self):
-        invitations = list(self.org.failed_invitations())
+        invitations = list(self.org.get_failed_invitations())
         self.assertEqual(len(invitations), 1)
         self.assertEqual(invitations[0].id, 28984230)
         self.assertEqual(invitations[0].email, "foo@bar.org")
