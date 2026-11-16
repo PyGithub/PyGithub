@@ -68,6 +68,7 @@ class Team(Framework.TestCase):
         self.team = self.org.get_team(12345678)
 
     def testAttributes(self):
+        self.assertEqual(self.team.access_source, "organization")
         self.assertEqual(self.team.created_at, datetime(2024, 6, 18, 10, 27, 23, tzinfo=timezone.utc))
         self.assertEqual(self.team.description, "a team")
         self.assertIsNone(self.team.enterprise_id)

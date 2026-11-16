@@ -87,6 +87,9 @@ class RateLimiting(Framework.TestCase):
         )
         self.assertEqual(repr(rateLimit.code_search), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=10, limit=10)")
         self.assertEqual(
+            repr(rateLimit.copilot_usage_records), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=57, limit=60)"
+        )
+        self.assertEqual(
             repr(rateLimit.dependency_snapshots), "Rate(reset=2024-12-13 06:29:18+00:00, remaining=100, limit=100)"
         )
         self.assertEqual(repr(rateLimit.graphql), "Rate(reset=2024-12-13 06:43:42+00:00, remaining=4808, limit=5000)")
