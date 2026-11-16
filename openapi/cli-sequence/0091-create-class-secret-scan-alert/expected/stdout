@@ -1,0 +1,20 @@
++ python scripts/openapi.py create class --completable --tests --new-schemas as-dict github openapi.spec.json openapi.index SecretScanAlert https://docs.github.com/en/rest/reference/secret-scanning /components/schemas/secret-scanning-alert
+Creating class github.SecretScanAlert.SecretScanAlert with parent github.GithubObject.CompletableGithubObject in ./github/SecretScanAlert.py
+Updating index
+Indexing 11 Python files
+Indexed 21 classes
+Indexed 4 paths
+Indexed 39 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class SecretScanAlert
+Applying spec openapi.spec.json to github.SecretScanAlert.SecretScanAlert (github/SecretScanAlert.py)
+Applying schema /components/schemas/secret-scanning-alert
+Class SecretScanAlert changed
+Test tests/SecretScanAlert.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 11 Python files
+Indexed 21 classes
+Indexed 4 paths
+Indexed 39 schemas
+Indexing OpenAPI spec
