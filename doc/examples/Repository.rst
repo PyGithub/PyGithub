@@ -45,7 +45,7 @@ Get list of code scanning alerts
     >>> for alert in codescan_alerts:
     ...     print(alert.number, alert.created_at, alert.dismissed_at)
     ...     print("  ", alert.tool.name, alert.tool.version, alert.tool.guid)
-    ...     print("  ", alert.rule.name alert.rule.security_severity_level alert.rule.severity)
+    ...     print("  ", alert.rule.name, alert.rule.security_severity_level, alert.rule.severity)
     ...     print("    ", alert.rule.description)
     ...     print("  ", alert.most_recent_instance.ref, alert.most_recent_instance.state)
     ...     print("    ", alert.most_recent_instance.location)
