@@ -2407,6 +2407,7 @@ class Repository(CompletableGithubObject):
             None,
         )
 
+    # v3: sha should be renamed to ref, which breaks user code like get_commit(sha=...)
     def get_commit(self, sha: str, *, commit_files_per_page: int | None = None) -> Commit:
         """
         :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/commits/commits#get-a-commit>`_
