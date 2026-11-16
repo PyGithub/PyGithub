@@ -106,6 +106,9 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
         return self._repository.value
 
     def get_comments(self, comment_graphql_schema: str) -> PaginatedList[RepositoryDiscussionComment]:
+        """
+        :graphql: `query Discussion.comments <https://docs.github.com/en/graphql/reference/discussions#object-discussion>`_
+        """
         if self._comments_page is not None:
             return PaginatedList(
                 github.RepositoryDiscussionComment.RepositoryDiscussionComment,
@@ -162,6 +165,9 @@ class RepositoryDiscussion(GraphQlObject, DiscussionBase):
     def add_comment(
         self, body: str, reply_to: RepositoryDiscussionComment | str | None = None, output_schema: str = "id"
     ) -> RepositoryDiscussionComment:
+        """
+        :graphql: `mutation addDiscussionComment <https://docs.github.com/en/graphql/reference/discussions#mutation-adddiscussioncomment>`_
+        """
         reply_to_id = (
             reply_to.id
             if isinstance(reply_to, github.RepositoryDiscussionComment.RepositoryDiscussionComment)

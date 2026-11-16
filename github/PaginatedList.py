@@ -82,12 +82,10 @@ class PaginatedListBase(Generic[T]):
         self.__elements = [] if elements is None else elements
 
     @overload
-    def __getitem__(self, index: int) -> T:
-        ...
+    def __getitem__(self, index: int) -> T: ...
 
     @overload
-    def __getitem__(self, index: slice) -> _Slice:
-        ...
+    def __getitem__(self, index: slice) -> _Slice: ...
 
     def __getitem__(self, index: int | slice) -> T | _Slice:
         assert isinstance(index, (int, slice))
@@ -275,7 +273,10 @@ class PaginatedList(PaginatedListBase[T]):
             # set per_page = 1 so the totalCount is just the number of pages
             params.update({"per_page": 1})
             headers, data = self.__requester.requestJsonAndCheck(
-                "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
+                "GET",
+                self.__firstUrl,  # type: ignore[arg-type]
+                parameters=params,
+                headers=self.__headers,
             )
             links = self.__parseLinkHeader(headers)
             lastUrl = links.get("last")
@@ -328,7 +329,10 @@ class PaginatedList(PaginatedListBase[T]):
 
     def _getLastPageUrl(self) -> str | None:
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__firstUrl, parameters=self.__nextParams, headers=self.__headers  # type: ignore
+            "GET",
+            self.__firstUrl,  # type: ignore[arg-type]
+            parameters=self.__nextParams,
+            headers=self.__headers,
         )
         links = self.__parseLinkHeader(headers)
         return links.get("last")
@@ -399,7 +403,10 @@ class PaginatedList(PaginatedListBase[T]):
         if self.is_rest:
             # REST API pagination
             headers, data = self.__requester.requestJsonAndCheck(
-                "GET", self.__nextUrl, parameters=self.__nextParams, headers=self.__headers  # type: ignore
+                "GET",
+                self.__nextUrl,  # type: ignore[arg-type]
+                parameters=self.__nextParams,
+                headers=self.__headers,
             )
             data = data if data else []
             return self._getPage(data, headers)
@@ -493,7 +500,10 @@ class PaginatedList(PaginatedListBase[T]):
         if self.__requester.per_page != Consts.DEFAULT_PER_PAGE:
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", self.__firstUrl, parameters=params, headers=self.__headers  # type: ignore
+            "GET",
+            self.__firstUrl,  # type: ignore[arg-type]
+            parameters=params,
+            headers=self.__headers,
         )
 
         if self.__list_item in data:

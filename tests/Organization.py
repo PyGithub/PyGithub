@@ -828,6 +828,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(custom_property.required, True)
         self.assertEqual(custom_property.default_value, "foo")
         self.assertEqual(custom_property.description, "description")
+        self.assertEqual(custom_property.regex, "^[a-z]+$")
+        self.assertEqual(custom_property.require_explicit_values, True)
         self.assertEqual(custom_property.url, "https://api.github.com/orgs/BeaverSoftware/properties/schema/property_1")
         self.assertEqual(custom_property.values_editable_by, "org_actors")
 
@@ -896,6 +898,10 @@ class Organization(Framework.TestCase):
     def testGetCodeSecurityConfig(self):
         config = self.org.get_code_security_config(id=17)
         self.assertEqual(config.id, 17)
+        self.assertEqual(config.dependabot_delegated_alert_dismissal, "disabled")
+        self.assertEqual(config.dependabot_reachability, "enabled")
+        self.assertEqual(config.secret_scanning_extended_metadata, "not_set")
+        self.assertEqual(config.secret_scanning_generic_secrets_push_protection, "enabled")
 
     def testSetDefaultCodeSecurityConfig(self):
         self.org.set_default_code_security_config(id=17, default_for_new_repos="all")

@@ -45,12 +45,15 @@ import os
 import re
 import sys
 from collections.abc import Iterable
+from pathlib import Path
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath(".."))
 from importlib.metadata import version  # noqa: E402
+
+from doc.graphql_reference import generate_graphql_reference  # noqa: E402
 
 setupVersion = version("pygithub")
 
@@ -77,7 +80,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "PyGithub"
-copyright = "%d, Vincent Jacques, Liuyang Wan, Steve Kowalik, Enrico Minack" % datetime.date.today().year
+copyright = f"{datetime.date.today().year}, Vincent Jacques, Liuyang Wan, Steve Kowalik, Enrico Minack"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -389,10 +392,16 @@ with open("apis.rst", "w") as apis:
     apis.write("APIs\n")
     apis.write("====\n")
     apis.write("\n")
+    apis.write("REST\n")
+    apis.write("----\n")
+    apis.write("\n")
     for url, verbs in sorted(methods.items()):
+        if url == "/graphql":
+            continue
         apis.write("* ``" + url + "``\n")
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
                 apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
+    apis.write(generate_graphql_reference(Path("../github")))

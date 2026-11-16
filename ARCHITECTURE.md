@@ -78,8 +78,8 @@ attributes:
 ```python
 # github/SomeThing.py
 
-class SomeThing(github.GithubObject.CompletableGithubObject):
 
+class SomeThing(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self) -> None:
         # Initialize ALL attributes to NotSet
         self._id: github.GithubObject.Attribute[int] = github.GithubObject.NotSet
@@ -184,12 +184,12 @@ keys within the outer dict.
 PyGithub distinguishes between "the caller did not pass this parameter" and "the caller explicitly passed `None`":
 
 ```python
-# Opt[T] = Union[T, _NotSetType]
+# Opt[T] = T | _NotSetType
 def create_issue(
-        self,
-        title: str,
-        body: Opt[str] = NotSet,  # omitted → not sent to API
-        assignee: Opt[str] = NotSet,  # None → sent as null, clearing the field
+    self,
+    title: str,
+    body: Opt[str] = NotSet,  # omitted → not sent to API
+    assignee: Opt[str] = NotSet,  # None → sent as null, clearing the field
 ) -> Issue: ...
 ```
 
@@ -234,7 +234,8 @@ Exception
 
 Tests live in `tests/`, one file per PyGithub class (e.g. `tests/Repository.py`).
 
-- Framework: `unittest` + [`responses`](https://github.com/getsentry/responses) for HTTP mocking.
+- Framework: `unittest` + [`vcrpy`](https://github.com/kevin1024/vcrpy) for HTTP mocking, via a custom serializer
+  (`tests/VcrSerializer.py`) that reads/writes the pre-existing `tests/ReplayData/*.txt` cassette format unchanged.
 - Shared base class: `tests/Framework.py`.
 - A frame-buffer debug system in `Requester` (`NEW_DEBUG_FRAME()`) records request/response pairs for low-level
   inspection.
@@ -470,10 +471,12 @@ if is_undefined(value):  # True when value is NotSet
 Use `NotSet.remove_unset_items({...})` to strip any `NotSet` values from the dict before passing to the requester:
 
 ```python
-post_parameters = NotSet.remove_unset_items({
-    "title": title,
-    "body": body,  # omitted if NotSet
-})
+post_parameters = NotSet.remove_unset_items(
+    {
+        "title": title,
+        "body": body,  # omitted if NotSet
+    }
+)
 headers, data = self._requester.requestJsonAndCheck("POST", self.url, input=post_parameters)
 ```
 
@@ -651,7 +654,7 @@ exists under `TYPE_CHECKING`:
 
 ```python
 from github.GithubObject import CompletableGithubObject  # base class — runtime import required
-from github.AdvisoryBase import AdvisoryBase             # domain base class — same
+from github.AdvisoryBase import AdvisoryBase  # domain base class — same
 ```
 
 Infrastructure that is not a `GithubObject` data class (e.g. `PaginatedList`, `Requester`, `Consts`,

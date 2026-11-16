@@ -77,8 +77,10 @@ class PullRequestReview(NonCompletableGithubObject):
         self._body_html: Attribute[str] = NotSet
         self._body_text: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
+        self._copilot_code_review_effort: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
+        self._is_copilot_code_review: Attribute[bool] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
         self._state: Attribute[str] = NotSet
@@ -109,12 +111,20 @@ class PullRequestReview(NonCompletableGithubObject):
         return self._commit_id.value
 
     @property
+    def copilot_code_review_effort(self) -> str:
+        return self._copilot_code_review_effort.value
+
+    @property
     def html_url(self) -> str:
         return self._html_url.value
 
     @property
     def id(self) -> int:
         return self._id.value
+
+    @property
+    def is_copilot_code_review(self) -> bool:
+        return self._is_copilot_code_review.value
 
     @property
     def node_id(self) -> str:
@@ -181,10 +191,14 @@ class PullRequestReview(NonCompletableGithubObject):
             self._body_text = self._makeStringAttribute(attributes["body_text"])
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
+        if "copilot_code_review_effort" in attributes:  # pragma no branch
+            self._copilot_code_review_effort = self._makeStringAttribute(attributes["copilot_code_review_effort"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "is_copilot_code_review" in attributes:  # pragma no branch
+            self._is_copilot_code_review = self._makeBoolAttribute(attributes["is_copilot_code_review"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "pull_request_url" in attributes:  # pragma no branch
