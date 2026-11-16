@@ -39,6 +39,7 @@ class Rule(NonCompletableGithubObject):
 
     The OpenAPI schema can be found at
 
+    - /components/schemas/repository-rule
     - /components/schemas/repository-rule-detailed
 
     """
