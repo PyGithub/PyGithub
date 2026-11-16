@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2024 Pasha Fateev <pasha@autokitteh.com>                           #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

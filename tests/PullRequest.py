@@ -32,6 +32,7 @@
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Jakub Smolar <jakub.smolar@scylladb.com>                      #
 # Copyright 2025 Michael Kukarkin <kukarkinmm@gmail.com>                       #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -68,7 +69,7 @@ class PullRequest(Framework.TestCase):
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(31)
 
-        marco_repo = self.g.get_repo("MarcoFalke/PyGithub", lazy=True)
+        marco_repo = self.g.withLazy(True).get_repo("MarcoFalke/PyGithub")
         self.pullIssue256Closed = marco_repo.get_pull(1).complete()
         self.pullIssue256Merged = marco_repo.get_pull(2).complete()
         self.pullIssue256Conflict = marco_repo.get_pull(3).complete()
@@ -533,7 +534,7 @@ class PullRequest(Framework.TestCase):
         self.assertTrue(self.pull.update_branch())
 
     def testConvertToDraft(self):
-        ready_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(1)
+        ready_pr = self.g.withLazy(True).get_repo("didot/PyGithub").get_pull(1)
         self.assertFalse(ready_pr.draft)
         response = ready_pr.convert_to_draft()
         self.assertTrue(ready_pr.draft)
@@ -545,7 +546,7 @@ class PullRequest(Framework.TestCase):
         }
 
     def testMarkReadyForReview(self):
-        draft_pr = self.g.get_repo("didot/PyGithub", lazy=True).get_pull(2)
+        draft_pr = self.g.withLazy(True).get_repo("didot/PyGithub").get_pull(2)
         self.assertTrue(draft_pr.draft)
         response = draft_pr.mark_ready_for_review()
         self.assertFalse(draft_pr.draft)

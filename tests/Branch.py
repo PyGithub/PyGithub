@@ -21,6 +21,7 @@
 # Copyright 2024 Benjamin K. <53038537+treee111@users.noreply.github.com>      #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -53,7 +54,7 @@ class Branch(Framework.TestCase):
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.branch = self.repo.get_branch("topic/RewriteWithGeneratedCode")
         self.protected_branch = self.repo.get_branch("integrations")
-        self.organization_branch = self.g.get_repo("PyGithub/PyGithub", lazy=True).get_branch("master")
+        self.organization_branch = self.g.withLazy(True).get_repo("PyGithub/PyGithub").get_branch("master")
 
     def testAttributes(self):
         self.assertEqual(

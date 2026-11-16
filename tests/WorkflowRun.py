@@ -12,6 +12,7 @@
 # Copyright 2024 Geoffrey <geoffrey@moveparallel.com>                          #
 # Copyright 2025 Alejandro Perez Gancedo <37455131+LifeLex@users.noreply.github.com>#
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Chinedum Echeta <60179183+cecheta@users.noreply.github.com>   #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

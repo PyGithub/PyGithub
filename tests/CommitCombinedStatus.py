@@ -17,6 +17,8 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,7 +49,8 @@ class CommitCombinedStatus(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.combined_status = (
-            self.g.get_repo("edx/edx-platform", lazy=True)
+            self.g.withLazy(True)
+            .get_repo("edx/edx-platform")
             .get_commit("74e70119a23fa3ffb3db19d4590eccfebd72b659")
             .get_combined_status()
         )

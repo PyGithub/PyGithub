@@ -25,6 +25,8 @@
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Nick McClorey <32378821+nickrmcclorey@users.noreply.github.com>#
 # Copyright 2026 Denis Blanchette <dblanchette@coveo.com>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Sebastien NICOT <sebastien.nicot@enterprisedb.com>            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -46,8 +48,9 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 import github.Branch
 import github.Commit
@@ -55,7 +58,7 @@ import github.GithubObject
 import github.NamedUser
 import github.Tag
 import github.WorkflowRun
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, ignore_return_type
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
@@ -150,13 +153,35 @@ class Workflow(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    # v3: default throw to True
+    @overload
     def create_dispatch(
         self,
         ref: Branch | Tag | Commit | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
+        return_run_details: Literal[False] = ...,
     ) -> bool:
+        ...
+
+    @overload
+    def create_dispatch(
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+        return_run_details: Literal[True] = ...,
+    ) -> WorkflowRun:
+        ...
+
+    # v3: default throw to True
+    @ignore_return_type(ignore_type="WorkflowRun")
+    def create_dispatch(
+        self,
+        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        inputs: Opt[dict] = NotSet,
+        throw: bool = False,
+        return_run_details: bool = False,
+    ) -> bool | WorkflowRun:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
         Note: raises or return False without details on error, depending on the ``throw`` parameter.
@@ -177,14 +202,39 @@ class Workflow(CompletableGithubObject):
         if inputs is NotSet:
             inputs = {}
         url = f"{self.url}/dispatches"
-        input = {"ref": ref, "inputs": inputs}
+        input: dict[str, str | bool | dict] = NotSet.remove_unset_items({"ref": ref, "inputs": inputs})
+
+        # Add return_run_details to the request body if requested
+        if return_run_details:
+            input["return_run_details"] = True
 
         if throw:
-            self._requester.requestJsonAndCheck("POST", url, input=input)
+            _, data = self._requester.requestJsonAndCheck("POST", url, input=input)
+            if return_run_details and data:
+                # Map API response to WorkflowRun attributes
+                workflow_run_data = {
+                    "id": data["workflow_run_id"],
+                    "url": data["run_url"],
+                    "html_url": data["html_url"],
+                }
+                return github.WorkflowRun.WorkflowRun(
+                    self._requester, headers={}, attributes=workflow_run_data, completed=False
+                )
             return True
         else:
-            status, _, _ = self._requester.requestJson("POST", url, input=input)
-            return status == 204
+            status, _, data = self._requester.requestJson("POST", url, input=input)
+            if return_run_details and status == 200 and data:
+                # Parse JSON and map API response to WorkflowRun attributes
+                run_data = json.loads(data)
+                workflow_run_data = {
+                    "id": run_data["workflow_run_id"],
+                    "url": run_data["run_url"],
+                    "html_url": run_data["html_url"],
+                }
+                return github.WorkflowRun.WorkflowRun(
+                    self._requester, headers={}, attributes=workflow_run_data, completed=False
+                )
+            return status in (200, 204)
 
     def get_runs(
         self,

@@ -38,6 +38,8 @@
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Mathieu Parent <math.parent@etik.com>                         #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -449,7 +451,8 @@ class GitRelease(CompletableGithubObject):
         elif "url" in attributes and attributes["url"] and isinstance(attributes["url"], str):
             quoted_tag_name = attributes["url"].split("/")[-1]
             tag_name = urllib.parse.unquote(quoted_tag_name)
-            self._tag_name = self._makeStringAttribute(tag_name)
+            if tag_name != "latest":
+                self._tag_name = self._makeStringAttribute(tag_name)
         if "tarball_url" in attributes:
             self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
         if "target_commitish" in attributes:

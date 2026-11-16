@@ -19,6 +19,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Sai Asish Y <say.apm35@gmail.com>                             #
+# Copyright 2026 Tanishk <tanishk7531@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -134,6 +136,32 @@ class RateLimitExceededException(GithubException):
     Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML
     status)
     """
+
+
+class RateLimitExceededExceedsMaxWait(RateLimitExceededException):
+    """
+    Exception raised when the wait required to respect a rate limit reset exceeds the configured
+    ``max_rate_limit_wait`` on ``GithubRetry``, instead of blocking until the rate limit resets.
+    """
+
+    def __init__(
+        self,
+        status: int,
+        data: Any = None,
+        headers: dict[str, str] | None = None,
+        message: str | None = None,
+        wait: float | None = None,
+    ):
+        super().__init__(status, data, headers, message)
+        self.__wait = wait
+
+    @property
+    def wait(self) -> float | None:
+        """
+        The backoff in seconds that would have been required to respect the rate limit reset, before it was capped by
+        ``max_rate_limit_wait``.
+        """
+        return self.__wait
 
 
 class BadAttributeException(Exception):

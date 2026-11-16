@@ -9,6 +9,8 @@
 # Copyright 2024 Xavi Vega <xabi1309@gmail.com>                                #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Yossi Rozantsev <54272821+Apakottur@users.noreply.github.com> #
+# Copyright 2026 Chinedum Echeta <60179183+cecheta@users.noreply.github.com>   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #

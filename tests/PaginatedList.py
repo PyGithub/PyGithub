@@ -24,6 +24,9 @@
 # Copyright 2025 Matej Focko <mfocko@users.noreply.github.com>                 #
 # Copyright 2025 odedperezcodes <oded.perez.codes@gmail.com>                   #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Mikhail f. Shiryaev <mr.felixoid@gmail.com>                   #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -498,7 +501,7 @@ class PaginatedList(Framework.TestCase):
     def testWithFirstPage(self):
         # fetching the commit also fetches the fist page of files
         with self.captureRequests() as requests:
-            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
             commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
             # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
             commit.complete()
@@ -545,7 +548,7 @@ class PaginatedList(Framework.TestCase):
     def testWithFirstSinglePage(self):
         # fetching the commit also fetches the fist page of files
         with self.captureRequests() as requests:
-            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
             commit = repo.get_commit("f5f9756a1dd52a53820cc54927abb34725377987", commit_files_per_page=3)
             # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
             commit.complete()
@@ -568,7 +571,7 @@ class PaginatedList(Framework.TestCase):
     def testReversedWithFirstPage(self):
         # this is all lazy, no requests fired
         with self.captureRequests() as requests:
-            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
             commit = repo.get_commit("e359b83a04e8f34bedab0f2180169012d238a135", commit_files_per_page=3)
             # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
             commit.complete()
@@ -623,7 +626,7 @@ class PaginatedList(Framework.TestCase):
     def testReversedWithFirstSinglePage(self):
         # fetching the commit also fetches the fist page of files
         with self.captureRequests() as requests:
-            repo = self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            repo = self.g.withLazy(True).get_repo("PyGithub/PyGithub")
             commit = repo.get_commit("f5f9756a1dd52a53820cc54927abb34725377987", commit_files_per_page=3)
             # repo is lazy, so this commit is also lazy, here we test with an eager (fetched) commit
             commit.complete()

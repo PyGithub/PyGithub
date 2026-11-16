@@ -148,9 +148,11 @@
 # Copyright 2025 Ryosuke <88011751+nrysk@users.noreply.github.com>             #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 # Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
+# Copyright 2025 Jens Keiner <jens.keiner@gmail.com>                           #
+# Copyright 2026 Chinedum Echeta <60179183+cecheta@users.noreply.github.com>   #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2026 Matt Davis <35502728+matt-davis27@users.noreply.github.com>   #
-# Copyright 2025 Jens Keiner <jens.keiner@gmail.com>                           #
+# Copyright 2026 Shannon Poole <1154610+shannon@users.noreply.github.com>      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -330,9 +332,8 @@ if TYPE_CHECKING:
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
-    from github.Secret import Secret
-    from github.SecretScanAlert import SecretScanAlert
     from github.Ruleset import Ruleset
+    from github.Secret import Secret
     from github.SecretScanAlert import SecretScanAlert
     from github.SecurityAndAnalysis import SecurityAndAnalysis
     from github.SelfHostedActionsRunner import SelfHostedActionsRunner

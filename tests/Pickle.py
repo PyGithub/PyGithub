@@ -5,6 +5,7 @@
 # Copyright 2023 Hemslo Wang <hemslo.wang@gmail.com>                           #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -59,7 +60,7 @@ class Pickle(Framework.TestCase):
 
     def testPicklePaginatedList(self):
         gh = github.Github()
-        repo = gh.get_repo(REPO_NAME, lazy=True)
+        repo = gh.withLazy(True).get_repo(REPO_NAME)
         branches = repo.get_branches()
         branches2 = pickle.loads(pickle.dumps(branches))
         self.assertIsInstance(branches2, PaginatedList)

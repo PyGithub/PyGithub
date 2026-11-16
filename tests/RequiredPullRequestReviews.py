@@ -19,6 +19,7 @@
 # Copyright 2024 Benjamin K <53038537+treee111@users.noreply.github.com>       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Nayak <omk.nyk2729@gmail.com>                                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -70,7 +71,8 @@ class RequiredPullRequestReviews(Framework.TestCase):
 
     def testOrganizationOwnedTeam(self):
         required_pull_request_reviews = (
-            self.g.get_repo("PyGithub/PyGithub", lazy=True)
+            self.g.withLazy(True)
+            .get_repo("PyGithub/PyGithub")
             .get_branch("integrations")
             .get_required_pull_request_reviews()
         )
