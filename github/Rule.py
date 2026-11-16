@@ -40,7 +40,33 @@ class Rule(NonCompletableGithubObject):
     The OpenAPI schema can be found at
 
     - /components/schemas/repository-rule
+    - /components/schemas/repository-rule-branch-name-pattern
+    - /components/schemas/repository-rule-code-coverage
+    - /components/schemas/repository-rule-code-quality
+    - /components/schemas/repository-rule-code-scanning
+    - /components/schemas/repository-rule-commit-author-email-pattern
+    - /components/schemas/repository-rule-commit-message-pattern
+    - /components/schemas/repository-rule-committer-email-pattern
+    - /components/schemas/repository-rule-copilot-code-review
+    - /components/schemas/repository-rule-creation
+    - /components/schemas/repository-rule-deletion
     - /components/schemas/repository-rule-detailed
+    - /components/schemas/repository-rule-file-extension-restriction
+    - /components/schemas/repository-rule-file-path-restriction
+    - /components/schemas/repository-rule-license-compliance-scanning
+    - /components/schemas/repository-rule-max-file-path-length
+    - /components/schemas/repository-rule-max-file-size
+    - /components/schemas/repository-rule-merge-queue
+    - /components/schemas/repository-rule-non-fast-forward
+    - /components/schemas/repository-rule-pull-request
+    - /components/schemas/repository-rule-required-deployments
+    - /components/schemas/repository-rule-required-linear-history
+    - /components/schemas/repository-rule-required-signatures
+    - /components/schemas/repository-rule-required-status-checks
+    - /components/schemas/repository-rule-ruleset-info
+    - /components/schemas/repository-rule-tag-name-pattern
+    - /components/schemas/repository-rule-update
+    - /components/schemas/repository-rule-workflows
 
     """
 
