@@ -55,19 +55,19 @@ class Ruleset(CompletableGithubObject):
 
     def _initAttributes(self) -> None:
         self.__links: Attribute[dict[str, Any]] = NotSet
-        self._id: Attribute[int] = NotSet
-        self._name: Attribute[str] = NotSet
-        self._target: Attribute[str] = NotSet
-        self._source_type: Attribute[str] = NotSet
-        self._source: Attribute[str] = NotSet
-        self._enforcement: Attribute[str] = NotSet
         self._bypass_actors: Attribute[list[RepositoryRulesetBypassActor]] = NotSet
         self._conditions: Attribute[dict[str, Any]] = NotSet
-        self._rules: Attribute[list[Rule]] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._node_id: Attribute[str] = NotSet
         self._current_user_can_bypass: Attribute[str] = NotSet
+        self._enforcement: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._rules: Attribute[list[Rule]] = NotSet
+        self._source: Attribute[str] = NotSet
+        self._source_type: Attribute[str] = NotSet
+        self._target: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -80,60 +80,6 @@ class Ruleset(CompletableGithubObject):
         :return: URLs related to the ruleset, including self URL and optional html URL
         """
         return self.__links.value
-
-    @property
-    def id(self) -> int:
-        """
-        :type: integer
-        :return: The unique identifier of the ruleset
-        """
-        self._completeIfNotSet(self._id)
-        return self._id.value
-
-    @property
-    def name(self) -> str:
-        """
-        :type: string
-        :return: The name of the ruleset
-        """
-        self._completeIfNotSet(self._name)
-        return self._name.value
-
-    @property
-    def target(self) -> str:
-        """
-        :type: string
-        :return: The target of the ruleset (branch, tag, push, or repository)
-        """
-        self._completeIfNotSet(self._target)
-        return self._target.value
-
-    @property
-    def source_type(self) -> str:
-        """
-        :type: string
-        :return: The type of the source of the ruleset (Repository, Organization, or Enterprise)
-        """
-        self._completeIfNotSet(self._source_type)
-        return self._source_type.value
-
-    @property
-    def source(self) -> str:
-        """
-        :type: string
-        :return: The name of the source where the ruleset was created
-        """
-        self._completeIfNotSet(self._source)
-        return self._source.value
-
-    @property
-    def enforcement(self) -> str:
-        """
-        :type: string
-        :return: The enforcement status of the ruleset (active, disabled, or evaluate)
-        """
-        self._completeIfNotSet(self._enforcement)
-        return self._enforcement.value
 
     @property
     def bypass_actors(self) -> list[RepositoryRulesetBypassActor]:
@@ -154,15 +100,6 @@ class Ruleset(CompletableGithubObject):
         return self._conditions.value
 
     @property
-    def rules(self) -> list[Rule]:
-        """
-        :type: list[:class:`github.Rule.Rule`]
-        :return: The list of rules included in this ruleset
-        """
-        self._completeIfNotSet(self._rules)
-        return self._rules.value
-
-    @property
     def created_at(self) -> datetime:
         """
         :type: datetime
@@ -172,13 +109,40 @@ class Ruleset(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def updated_at(self) -> datetime:
+    def current_user_can_bypass(self) -> str:
         """
-        :type: datetime
-        :return: The date and time when the ruleset was last updated
+        :type: string
+        :return: The bypass type of the current user for this ruleset (always, pull_requests_only, or never)
         """
-        self._completeIfNotSet(self._updated_at)
-        return self._updated_at.value
+        self._completeIfNotSet(self._current_user_can_bypass)
+        return self._current_user_can_bypass.value
+
+    @property
+    def enforcement(self) -> str:
+        """
+        :type: string
+        :return: The enforcement status of the ruleset (active, disabled, or evaluate)
+        """
+        self._completeIfNotSet(self._enforcement)
+        return self._enforcement.value
+
+    @property
+    def id(self) -> int:
+        """
+        :type: integer
+        :return: The unique identifier of the ruleset
+        """
+        self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
+    def name(self) -> str:
+        """
+        :type: string
+        :return: The name of the ruleset
+        """
+        self._completeIfNotSet(self._name)
+        return self._name.value
 
     @property
     def node_id(self) -> str:
@@ -190,13 +154,49 @@ class Ruleset(CompletableGithubObject):
         return self._node_id.value
 
     @property
-    def current_user_can_bypass(self) -> str:
+    def rules(self) -> list[Rule]:
+        """
+        :type: list[:class:`github.Rule.Rule`]
+        :return: The list of rules included in this ruleset
+        """
+        self._completeIfNotSet(self._rules)
+        return self._rules.value
+
+    @property
+    def source(self) -> str:
         """
         :type: string
-        :return: The bypass type of the current user for this ruleset (always, pull_requests_only, or never)
+        :return: The name of the source where the ruleset was created
         """
-        self._completeIfNotSet(self._current_user_can_bypass)
-        return self._current_user_can_bypass.value
+        self._completeIfNotSet(self._source)
+        return self._source.value
+
+    @property
+    def source_type(self) -> str:
+        """
+        :type: string
+        :return: The type of the source of the ruleset (Repository, Organization, or Enterprise)
+        """
+        self._completeIfNotSet(self._source_type)
+        return self._source_type.value
+
+    @property
+    def target(self) -> str:
+        """
+        :type: string
+        :return: The target of the ruleset (branch, tag, push, or repository)
+        """
+        self._completeIfNotSet(self._target)
+        return self._target.value
+
+    @property
+    def updated_at(self) -> datetime:
+        """
+        :type: datetime
+        :return: The date and time when the ruleset was last updated
+        """
+        self._completeIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self) -> str:
@@ -261,31 +261,31 @@ class Ruleset(CompletableGithubObject):
         super()._useAttributes(attributes)
         if "_links" in attributes:  # pragma no branch
             self.__links = self._makeDictAttribute(attributes["_links"])
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "name" in attributes:  # pragma no branch
-            self._name = self._makeStringAttribute(attributes["name"])
-        if "target" in attributes:  # pragma no branch
-            self._target = self._makeStringAttribute(attributes["target"])
-        if "source_type" in attributes:  # pragma no branch
-            self._source_type = self._makeStringAttribute(attributes["source_type"])
-        if "source" in attributes:  # pragma no branch
-            self._source = self._makeStringAttribute(attributes["source"])
-        if "enforcement" in attributes:  # pragma no branch
-            self._enforcement = self._makeStringAttribute(attributes["enforcement"])
         if "bypass_actors" in attributes:  # pragma no branch
             self._bypass_actors = self._makeListOfClassesAttribute(
                 RepositoryRulesetBypassActor, attributes["bypass_actors"]
             )
         if "conditions" in attributes:  # pragma no branch
             self._conditions = self._makeDictAttribute(attributes["conditions"])
-        if "rules" in attributes:  # pragma no branch
-            self._rules = self._makeListOfClassesAttribute(Rule, attributes["rules"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "node_id" in attributes:  # pragma no branch
-            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "current_user_can_bypass" in attributes:  # pragma no branch
             self._current_user_can_bypass = self._makeStringAttribute(attributes["current_user_can_bypass"])
+        if "enforcement" in attributes:  # pragma no branch
+            self._enforcement = self._makeStringAttribute(attributes["enforcement"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "name" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "rules" in attributes:  # pragma no branch
+            self._rules = self._makeListOfClassesAttribute(Rule, attributes["rules"])
+        if "source" in attributes:  # pragma no branch
+            self._source = self._makeStringAttribute(attributes["source"])
+        if "source_type" in attributes:  # pragma no branch
+            self._source_type = self._makeStringAttribute(attributes["source_type"])
+        if "target" in attributes:  # pragma no branch
+            self._target = self._makeStringAttribute(attributes["target"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])

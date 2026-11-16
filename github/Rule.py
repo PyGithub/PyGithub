@@ -44,30 +44,22 @@ class Rule(NonCompletableGithubObject):
     """
 
     def _initAttributes(self) -> None:
-        self._ruleset_source_type: Attribute[str] = NotSet
-        self._ruleset_source: Attribute[str] = NotSet
-        self._ruleset_id: Attribute[int] = NotSet
-        self._type: Attribute[str] = NotSet
         self._parameters: Attribute[dict[str, Any]] = NotSet
+        self._ruleset_id: Attribute[int] = NotSet
+        self._ruleset_source: Attribute[str] = NotSet
+        self._ruleset_source_type: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"type": self._type.value})
 
     @property
-    def ruleset_source_type(self) -> str:
+    def parameters(self) -> dict[str, Any]:
         """
-        :type: string
-        :return: The type of source for the ruleset that includes this rule (Repository or Organization)
+        :type: dict
+        :return: The parameters specific to this rule type
         """
-        return self._ruleset_source_type.value
-
-    @property
-    def ruleset_source(self) -> str:
-        """
-        :type: string
-        :return: The name of the source of the ruleset that includes this rule
-        """
-        return self._ruleset_source.value
+        return self._parameters.value
 
     @property
     def ruleset_id(self) -> int:
@@ -78,6 +70,22 @@ class Rule(NonCompletableGithubObject):
         return self._ruleset_id.value
 
     @property
+    def ruleset_source(self) -> str:
+        """
+        :type: string
+        :return: The name of the source of the ruleset that includes this rule
+        """
+        return self._ruleset_source.value
+
+    @property
+    def ruleset_source_type(self) -> str:
+        """
+        :type: string
+        :return: The type of source for the ruleset that includes this rule (Repository or Organization)
+        """
+        return self._ruleset_source_type.value
+
+    @property
     def type(self) -> str:
         """
         :type: string
@@ -85,22 +93,14 @@ class Rule(NonCompletableGithubObject):
         """
         return self._type.value
 
-    @property
-    def parameters(self) -> dict[str, Any]:
-        """
-        :type: dict
-        :return: The parameters specific to this rule type
-        """
-        return self._parameters.value
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "ruleset_source_type" in attributes:  # pragma no branch
-            self._ruleset_source_type = self._makeStringAttribute(attributes["ruleset_source_type"])
-        if "ruleset_source" in attributes:  # pragma no branch
-            self._ruleset_source = self._makeStringAttribute(attributes["ruleset_source"])
-        if "ruleset_id" in attributes:  # pragma no branch
-            self._ruleset_id = self._makeIntAttribute(attributes["ruleset_id"])
-        if "type" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
         if "parameters" in attributes:  # pragma no branch
             self._parameters = self._makeDictAttribute(attributes["parameters"])
+        if "ruleset_id" in attributes:  # pragma no branch
+            self._ruleset_id = self._makeIntAttribute(attributes["ruleset_id"])
+        if "ruleset_source" in attributes:  # pragma no branch
+            self._ruleset_source = self._makeStringAttribute(attributes["ruleset_source"])
+        if "ruleset_source_type" in attributes:  # pragma no branch
+            self._ruleset_source_type = self._makeStringAttribute(attributes["ruleset_source_type"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])
