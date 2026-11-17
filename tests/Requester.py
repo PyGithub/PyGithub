@@ -677,6 +677,7 @@ class Requester(Framework.TestCase):
                 g = github.Github(auth=github.Auth.Token("token"))
                 self._assertCurrentRateLimitsShared(g.requester, g.withLazy(lazy).requester)
 
+    @Framework.requires_jwt
     def testCurrentRateLimitsSharedWithGithubIntegrationWithLazy(self):
         for lazy in [True, False]:
             with self.subTest(lazy=lazy):
@@ -722,6 +723,7 @@ class Requester(Framework.TestCase):
         self._requestWithHeaders(g.requester, self._rateLimitHeaders("core", "5000", "4999", "1", "1700000000"))
         self.assertRate(g.current_rate_limits.resources.core, 5000, 4999, 1, 1700000000)
 
+    @Framework.requires_jwt
     def testCurrentRateLimitsOfGithubIntegration(self):
         gi = github.GithubIntegration(auth=github.Auth.AppAuth(APP_ID, PRIVATE_KEY))
         self.assertIsNone(gi.current_rate_limits.resources.core)

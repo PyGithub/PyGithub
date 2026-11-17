@@ -125,6 +125,7 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.url, "/apps/github-actions")
         self.assertIsNone(app.webhook_secret)
 
+    @Framework.requires_jwt
     def testGetAuthenticatedApp(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         g = github.Github(auth=auth)

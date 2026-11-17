@@ -27,6 +27,12 @@ Creating or updating secrets requires installing PyGithub with encryption suppor
 pip install PyGithub[encryption]
 ```
 
+Authenticating as a GitHub App with a private key requires installing PyGithub with JWT support:
+
+```bash
+pip install PyGithub[jwt]
+```
+
 ## Simple Demo
 
 ```python

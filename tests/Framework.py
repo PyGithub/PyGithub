@@ -101,6 +101,10 @@ eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
 
+# Signing JWTs with a private key requires the optional dependency PyJWT (PyGithub[jwt])
+jwt_available = importlib.util.find_spec("jwt") is not None
+requires_jwt = unittest.skipUnless(jwt_available, "requires PyJWT, install PyGithub[jwt]")
+
 # Creating or updating secrets requires optional dependency PyNaCl via encryption support (PyGithub[encryption])
 nacl_available = importlib.util.find_spec("nacl") is not None
 requires_nacl = unittest.skipUnless(nacl_available, "requires PyNaCl, install PyGithub[encryption]")

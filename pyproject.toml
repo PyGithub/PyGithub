@@ -30,7 +30,6 @@ dynamic = ["version"]
 
 dependencies = [
   "requests>=2.14.0",
-  "pyjwt[crypto]>=2.4.0",
   "typing-extensions>=4.5.0",
   "urllib3>=1.26.0",
 ]
@@ -42,6 +41,7 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 
 [project.optional-dependencies]
 encryption = ["pynacl>=1.4.0"]
+jwt = ["pyjwt[crypto]>=2.4.0"]
 integrations = []
 
 [tool.setuptools_scm]
