@@ -3191,7 +3191,7 @@ class Repository(CompletableGithubObject):
         sort: Opt[str] = NotSet,
         direction: Opt[str] = NotSet,
         since: Opt[datetime] = NotSet,
-        creator: NamedUser | Opt[str] = NotSet,
+        creator: Opt[NamedUser | str] = NotSet,
         type: Opt[str] = NotSet,
     ) -> PaginatedList[Issue]:
         """
