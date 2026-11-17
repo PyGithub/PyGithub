@@ -50,6 +50,11 @@ class OrganizationSecretScanAlert(Framework.TestCase):
 
         test_alert = alert_list[-1]
         self.assertEqual(test_alert.number, 1)
+        self.assertEqual(test_alert.closure_request_comment, "This is a test key")
+        self.assertEqual(test_alert.closure_request_reviewer.login, "monalisa")
+        self.assertEqual(test_alert.closure_request_reviewer_comment, "This key is real, please rotate it")
+        self.assertEqual(test_alert.provider, "Mailchimp")
+        self.assertEqual(test_alert.provider_slug, "mailchimp")
         self.assertEqual(test_alert.created_at, datetime(2020, 11, 6, 18, 18, 30, tzinfo=timezone.utc))
         self.assertEqual(test_alert.url, "https://api.github.com/repos/owner/repo/secret-scanning/alerts/1")
         self.assertEqual(test_alert.html_url, "https://github.com/owner/repo/security/secret-scanning/1")
