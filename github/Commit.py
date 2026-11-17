@@ -70,7 +70,6 @@ from github.GithubObject import (
     NotSet,
     Opt,
     is_optional,
-    is_undefined,
 )
 from github.PaginatedList import PaginatedList
 
