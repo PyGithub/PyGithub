@@ -39,6 +39,8 @@
 
 from __future__ import annotations
 
+import importlib.util
+
 from . import Framework
 
 
@@ -71,10 +73,10 @@ class PublicKey(Framework.TestCase):
         with self.replayData("PublicKey.testAttributes.txt"):
             public_key = self.g.get_user().get_repo("PyGithub").get_public_key()
 
-        try:
-            from nacl import encoding, public
+        required_imports_work = [importlib.util.find_spec(imp) is not None for imp in ["nacl.encoding", "nacl.public"]]
+        if required_imports_work:
             encrypted = public_key.encrypt("value")
             self.assertEqual(len(encrypted), 72)
-        except ImportError:
+        else:
             with self.assertRaisesRegex(ImportError, "PyGithub\\[encryption\\]"):
                 public_key.encrypt("value")
