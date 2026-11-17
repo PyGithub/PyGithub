@@ -27,7 +27,30 @@ For a local branch use `git diff origin/main...HEAD` instead.
 - Read the linked issue(s). Understand the problem being solved, not just the diff.
 - Search for **related / overlapping PRs and issues** (`gh pr list -R PyGithub/PyGithub --search "<keyword>"`,
   `gh issue list ... --search`). Reference them in the review. If another PR already fixes part of this (e.g. an
-  allowed host in `Requester`, a dependency bump), ask to drop that part and say which PR covers it.
+  allowed host in `Requester`, a dependency bump), ask to drop that part and say which PR covers it. If another PR
+  (open or merged) already covers the whole change, the PR is closed "in favour of #N" / "Superseded by #N" / "Fixed
+  in #N" — about a third of recently closed unmerged PRs ended this way.
+- **Is the change needed at all?** Before reviewing details, check whether users can already achieve the goal:
+  - lazy objects (`Github(lazy=True)`, `withLazy`) avoid requests without new code,
+  - `Github(per_page=…)` controls page size for all `PaginatedList`s (no per-method `per_page` parameters),
+  - `requests` honours `HTTP(S)_PROXY` environment variables,
+  - the GitHub API may not support the parameter / value at all (check the docs),
+  - an existing feature or a docs example (e.g. reading rate limits from response headers) may already answer the
+    use case.
+  If so, point the author to it instead of reviewing the code.
+- **Fix the root cause, not the symptom.** Class-specific logic in a general place (e.g. release-by-tag URL
+  handling in `Requester`) indicates a fix at the wrong level; ask where the problem originates (e.g. `GitRelease`
+  using a non-canonical URL as lazy URL, or a base class like `Variable` not being initialised / reused properly).
+- **General problems are fixed generally.** Piecemeal fixes of a problem that affects most classes (e.g. missing
+  nullable annotations) should instead be done for all classes, usually via the OpenAPI tooling
+  (`scripts/openapi.py`), not by hand in one class.
+- **Semantic questions first.** When a PR changes the meaning of an existing value (e.g. `PaginatedList.totalCount`
+  being the number of items when fully iterated vs. GitHub's capped `total_count`), resolve the intended semantics
+  (and link the related issues) before reviewing the implementation; both semantics may be useful and need different
+  APIs.
+- **Big architectural changes** (new runtime dependencies, generated code, packaging, async support) need a design
+  discussion with the other maintainers before code review; summarise the implications (maintenance cost, code
+  duplication, package layout, major-version need) and ask for their input.
 - Look up the endpoint in the GitHub REST docs and in the OpenAPI spec (`api.github.com.*.json`, query with `jq` or
   the `openapi` skill) to verify paths, verbs, parameter names, response schemas, nullability and status codes. Do
   not trust the PR description for this; reviewers have found methods whose response schema did not match the
@@ -68,7 +91,15 @@ Then request the removal of anything not needed for the PR's purpose. Look for:
 - Copyright lines copied from another file into a new file. New files need the license header block, but the
   `Copyright …` lines are generated automatically at release time — contributors do not add themselves or others.
 - Leftovers: `print(...)`, `# TODO`, stub methods with `pass`, placeholder comments like
-  `# New file named github/X.py`, a bare `return` at the end of a function.
+  `# New file named github/X.py`, a bare `return` at the end of a function, empty `if TYPE_CHECKING: pass` blocks,
+  unused imports, committed build / test artifacts (`pytest.xml`, coverage files).
+- Redundant code: methods that are equivalent to a combination of existing ones (`Repository.update_ruleset(id, …)`
+  ≡ `Repository.get_ruleset(id).edit(…)` when `get_ruleset` is lazy) are removed.
+- **Generated / mechanical contributions**: when content looks generated (AI-written code, bulk docstring changes,
+  tool-driven refactorings), ask "Is this auto-generated or hand-crafted?" and for the commands to reproduce it.
+  Scrutinise such PRs extra carefully: wrong license headers, invented API parameters, mocked tests, claims about
+  response fields that are not in the replay data (ask for evidence, e.g. the field in
+  `tests/ReplayData/<Class>.setUp.txt`).
 
 ## 3. API design
 
@@ -90,7 +121,30 @@ if another class already solves the same problem, the PR must follow that soluti
   attributes from the response when appropriate.
 - **Unknown vs. false**: a value that is unknown until a request happens is `T | None`.
 - **No client-side validation of enum values** (`allowed_states = [...]`): these go stale; the API validates.
-- **Precise types**: `Opt[dict[str, Any]]` not `Opt[dict[Any]]`; `bool` parameters, not `"true"` strings.
+- **Precise types**: `Opt[dict[str, Any]]` not `Opt[dict[Any]]`; `bool` parameters, not `"true"` strings;
+  `Opt[NamedUser | str]` rather than `NamedUser | Opt[str]`.
+- **Nested objects are classes, not dicts**: attributes like `bypass_actors: list[dict[str, Any]]` should be a list
+  of a dedicated PyGithub class implementing the OpenAPI schema (bootstrap it with
+  `python scripts/openapi.py create class …`, see the `openapi` skill). New classes list their OpenAPI schema in the
+  docstring.
+- **Parameters match the API docs**: remove parameters the endpoint does not document (and `per_page`, which is
+  global), add documented parameters that are missing while touching the method; for GraphQL, support all arguments
+  of the field (e.g. `orderBy`, `userLinkedOnly`).
+- **GraphQL-backed methods** follow `Repository.get_discussions`: let the caller pass the GraphQL schema of returned
+  objects (`…_graphql_schema: str = "…"`), always include the fields needed to construct the REST `url` (e.g.
+  `number`) so the object can be completed via REST, and keep GraphQL's HTML `url` as `html_url`. Test with an empty
+  schema, a custom schema, and completing a returned object.
+- **Status codes**: do not turn `requestJsonAndCheck` into `requestJson` + `return status == 204` (bad practice,
+  #2760 — errors get swallowed). Use `requestJson` and inspect `status` only where a status is a documented result
+  (e.g. 404 meaning "not enabled"), and still raise for any other unexpected status; then check all methods using
+  the same pattern.
+- **Defaults keep current behaviour**: a new option (e.g. an API version header) defaults to the behaviour users
+  have today (`None` → nothing sent); a default that changes requests would also require touching all replay data.
+- **Keyword-only for internal / trailing arguments**: arguments that user code should not pass positionally (e.g.
+  `requester`) go after `*`, so new public arguments can be added before them without breaking callers. `:param:`
+  docs follow the signature order.
+- **Accurate messages**: exception and log messages must describe the actual situation (e.g. a redirect loop is not
+  "you may need to correct your base_url" when both URLs are identical).
 - **Generality**: does the change fix the whole class of problem? When a PR fixes one occurrence of a pattern
   (missing `urllib.parse.quote(..., safe="")`, `warnings.warn` without `stacklevel`, mutating a caller's headers dict),
   `grep` the code base and ask to fix all occurrences.
@@ -249,6 +303,16 @@ replay data if the contributor struggles). Check against ARCHITECTURE.md "Test C
   new result class, both `status` and `message` of expected exceptions (`assertEqual`, not `assertIsNone(x, msg)`).
 - If an existing test already exercises the method, extend it instead of duplicating.
 - No `print`, no loops-with-`break` to get the first item, `assertIsNone` for `None`.
+- **Replay data, not mocks**: tests must use the replay data framework. Mocking `requestJsonAndCheck`, `responses`
+  / `httpretty` decorators or hand-written JSON responses in the test are not accepted; ask to record replay data or
+  to copy and hand-edit an existing replay data file (e.g. copy `Milestone.testEditWithAllParameters.txt` and change
+  `due_on`).
+- **Positive and negative cases**: a test with invalid input only is not enough — require a test with valid values
+  and recorded data. Use distinct values in tests so that "unchanged" vs. "overwritten" is observable (e.g. pass
+  `start_side="RIGHT"` when the default would be `"LEFT"`).
+- New tests sit next to related tests in the file (e.g. a slice test next to the other slice tests).
+- Tests that only repeat what `setUp` or another test already covers (e.g. `Repository.testGetRuleset` when
+  `Ruleset.setUp` calls `get_ruleset`) are removed.
 - Parent objects fetched with `lazy=True` to avoid unrelated recorded requests.
 - Windows-safe (temp files, no symlinks — use `self.replayData("Other.test.txt")` to share replay data).
 - Organisation-level variants: when an endpoint exists for repos and orgs, both are implemented and tested.
@@ -278,9 +342,14 @@ Open each failing check and translate it into a concrete request:
   sorting and pushes them to the branch.
 - **mypy** (`mypy github tests`): type errors are blocking.
 - **docs** (`sphinx-build doc build`): new warnings/errors are blocking.
-- **OpenAPI checks** ("Check verbs", "Add schemas", "Add implementations"): when the job suggests schemas for a new
-  class, ask to add them to the class docstring. "Check verbs" differences that are side-effects of the PR are fine.
-- **Tests** on all supported Pythons and on Windows.
+- **OpenAPI checks** ("Check verbs", "Add schemas", "Implement schemas" / "Add implementations"): failures of these
+  jobs are generally not blocking and contributors can be told to ignore them. Exception: when the job suggests
+  schemas for a class added or changed by the PR, ask to add them to the class docstring. "Check verbs" differences
+  that are side-effects of the PR are fine.
+- **Tests** on all supported Pythons and on Windows. Changes involving optional dependencies / extras (e.g.
+  `PyGithub[encryption]`) must be tested in CI and tox both with and without the extra installed, and installation
+  docs (`README.md`, `doc/introduction.rst` "Download and install") updated.
+- If CI does not run or fails for reasons fixed on `main`, ask to merge `main` (and resolve conflicts).
 
 Locally, for the touched files:
 
@@ -303,6 +372,13 @@ Mirror the maintainer's style: friendly, short, concrete.
 - Ask questions where intent is unclear ("Is this related to …?", "What is the current behaviour of GitHub with
   `make_latest` omitted?", "Are these test files hand crafted?") rather than assuming.
 - Link the failing CI step or the related PR / issue / docs page.
+- Help the contributor get unstuck: explain how to record replay data on a fork (record, revert `setUp` replay data,
+  rename the fork owner), offer a patch or a PR against their branch for larger fixes, and ask them to "allow edits
+  by maintainers" when a stale PR should be taken over and finished.
+- When recommending to close: name the PR / commit / docs that supersede or answer it ("Closing in favour of #N",
+  "Fixed in #N", "Would this example work for you?").
+- PRs that remove deprecated API are kept as drafts until the next major release; they must also delete the
+  corresponding tests and replay data files.
 - Verdict:
   - **APPROVE** ("LGTM!") only when every section above is clean and CI is green.
   - **REQUEST_CHANGES** for anything in sections 2–10 that must change; say whether the changes are minor.

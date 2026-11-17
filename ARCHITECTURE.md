@@ -300,6 +300,11 @@ pytest tests/
   ```
 - Use `assertIsNone(x)` rather than `assertEqual(x, None)`, `assertListKeyEqual(...)` for lists, and index access
   (`items[0]`) rather than `for … : … break`. No `print()` statements in tests.
+- **Replay data, not mocks**: tests talk to the (replayed) API through the normal `Requester`. Do not mock
+  `requestJsonAndCheck`, use `responses` / `httpretty`, or hand-write JSON responses in tests; record replay data or
+  copy and hand-edit an existing replay data file instead.
+- **Valid and invalid input**: a test for invalid input alone is not sufficient, a test with valid values (and
+  recorded data) is required. Use values that differ from defaults so overwriting vs. keeping a value is observable.
 - **Avoid needless requests**: obtain parent objects lazily (`self.g.get_repo("PyGithub/PyGithub", lazy=True)`) so
   that `setUp` / tests do not record GET requests that are irrelevant to what is being tested.
 - **Reusing replay data**: use `with self.replayData("Other.testName.txt"):` to reuse another test's replay data.
@@ -855,6 +860,14 @@ The id of the object the method lives on is not a parameter (it is part of `self
   without their own endpoint become a `NonCompletableGithubObject`.
 - Methods that only perform an action (`delete_x`, `disable`, …) return `None`, not a `bool` or a `PaginatedList`.
   Rely on exceptions to signal failures.
+- Do not replace `requestJsonAndCheck` with `requestJson` to return `status == 204` — that swallows errors. Only
+  inspect the status where a status code is a documented result (e.g. 404 meaning "not enabled"), and raise for any
+  other unexpected status.
+- Nested JSON objects in attributes are modelled as PyGithub classes (implementing their OpenAPI schema), not as
+  `dict[str, Any]`.
+- Paginated properties follow `Commit.files` / `Commit.get_files(*, commit_files_per_page=…)`: a property using the
+  first page fetched with the object, plus a method that fetches again with an optional per-page argument. Turning an
+  existing `list` property into a `PaginatedList` is a breaking change (`len()` / `list()` behave differently).
 - A method that explicitly calls the API must always make the call; it must not fall back to an already known
   property value (callers can do that themselves). If the response updates known state, update the attributes.
 - When a value can be unknown (not fetched yet), type it as `T | None` so that "unknown" is distinguishable from
