@@ -19,17 +19,19 @@ jobs:
 
   test:
     runs-on: ${{ matrix.os }}
-    name: test (Python ${{ matrix.python-version }} on ${{ matrix.os-label }})
+    name: test (Python ${{ matrix.python-version }} on ${{ matrix.os-label }}${{ matrix.extras == 'none' && '' || format(' with {}', matrix.extras)}})
     strategy:
       fail-fast: false
       matrix:
-        # keep in sync with tox.ini [gh-actions] section
+        # keep in sync with tox.ini [gh-actions] section / [gh-actions:env] sections
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
+        extras: ["none"]
         os: ["ubuntu-latest"]
         os-label: ["Ubuntu"]
         include:
-          - {python-version: "3.10", os: "windows-latest", os-label: "Windows"}
-          - {python-version: "3.10", os: "macos-latest", os-label: "macOS"}
+          - {python-version: "3.10", extras: "none", os: "windows-latest", os-label: "Windows"}
+          - {python-version: "3.10", extras: "none", os: "macos-latest", os-label: "macOS"}
+          - {python-version: "3.15", extras: "encryption", os: "ubuntu-latest", os-label: "Ubuntu"}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Set up Python
@@ -42,6 +44,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install tox tox-gh-actions
       - name: Run tests
+        env:
+          EXTRAS: ${{ matrix.extras }}
         run: tox
       - name: Upload Test Results
         if: always()
