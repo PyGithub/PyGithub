@@ -280,6 +280,10 @@ pytest tests/
   Do not create per-issue / per-pull-request test classes or files (`tests/Issue3278.py`,
   `tests/PullRequest2989.py`, `class InstallationGetRepos`). The existing legacy files of that kind
   (`tests/Issue*.py`, `tests/PullRequest1168.py`, …) are not a pattern to follow and should not be extended.
+- **Tests must fail without the change**: with the production code of the change reverted (tests and replay data
+  kept), each new test must fail on an assertion or a replay data mismatch. A test that only fails because the new
+  method / parameter does not exist proves nothing; its assertions must also catch a wrong implementation (e.g. the
+  new parameter not being sent, a wrong attribute being returned).
 - **Naming**: test methods are camelCase and start with `test` (`testGetReposForCodeSecurityConfig`, not
   `test_get_repos_for_code_security_config`). The method name determines the replay data file name.
 - **Prefer extending existing tests**: if an existing test (e.g. `testCreateTeamWithAllArguments`) already covers the
@@ -801,6 +805,15 @@ entry points such as `Github` in `MainClass.py`.
 ---
 
 ## API Design Conventions
+
+### Prior art first
+
+Before designing something new, look for how the code base already solves the same problem in other classes and
+follow that: the same endpoint at another level (repository / organization / enterprise, e.g.
+`Repository.get_self_hosted_runners` and `Organization.get_self_hosted_runners`; repository and organization secrets,
+variables, alerts), similar parameter and return shapes, deprecations, streaming / downloads, and the corresponding
+tests and replay data. Consistency with existing classes takes precedence over a locally "nicer" design; deviations
+need a reason.
 
 ### Where a method belongs
 

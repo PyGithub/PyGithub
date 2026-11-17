@@ -32,10 +32,30 @@ For a local branch use `git diff origin/main...HEAD` instead.
   the `openapi` skill) to verify paths, verbs, parameter names, response schemas, nullability and status codes. Do
   not trust the PR description for this; reviewers have found methods whose response schema did not match the
   implementation at all.
+- **Find prior art.** Before judging how something is done, search for how the same thing is already done in other
+  PyGithub classes (`grep -rn` in `github/` and `tests/`): the same endpoint shape at another level (repo vs. org vs.
+  enterprise, e.g. `Repository.get_self_hosted_runners` for `Organization.get_self_hosted_runners`, repo vs. org
+  secrets / variables / code scanning alerts), similar parameters (`Opt[...]` lists, `Commit | str`, `NamedUser | str`),
+  similar return shapes (`list_item=` for wrapped lists, `NonCompletableGithubObject` result classes), streaming /
+  downloads, deprecations, and the matching tests and replay data. The PR should reuse the existing pattern, naming
+  and practices; deviations need a reason. Point the author to the concrete prior art (file:line or method name) in the
+  review.
 
 ## 2. Scope and hygiene
 
-Request the removal of anything not needed for the PR's purpose. Look for:
+**One PR, one scope.** Identify the distinct concerns in the PR (e.g. a new endpoint + a `Requester` fix + a
+docs improvement + a dependency bump). Each distinct concern goes into its own PR:
+
+- Independent concerns → separate PRs against `main`.
+- A concern that builds on another (e.g. a `Requester` streaming capability, then `GitReleaseAsset.download_asset`
+  using it; or a deprecation PR followed by the breaking-change PR) → separate PRs **stacked** on GitHub: the
+  dependent PR's base branch is the branch of the PR it builds on, so each PR shows only its own diff and they are
+  merged in order. When the base branch cannot be used (e.g. both branches live in a fork), the dependent PR targets
+  `main`, states "Depends on #N" in its description, and is reviewed on its own commits only and merged after #N.
+
+Name the concerns you found and propose the split in the review.
+
+Then request the removal of anything not needed for the PR's purpose. Look for:
 
 - Unrelated formatting / whitespace changes, re-quoted comments (`'Pending' members won't` → `"Pending" members
   won"t"`), broken license-header alignment, added blank lines.
@@ -52,7 +72,8 @@ Request the removal of anything not needed for the PR's purpose. Look for:
 
 ## 3. API design
 
-See "API Design Conventions" in ARCHITECTURE.md. Check:
+See "API Design Conventions" in ARCHITECTURE.md. Compare everything below against the prior art found in step 1 —
+if another class already solves the same problem, the PR must follow that solution. Check:
 
 - **Placement**: does each new method live on the class of the resource it operates on? A method on a parent that takes
   the child's id (`Environment.delete_deployment_branch_policy(id)`, `Repository.get_workflow_run_attempt(run_id, n)`)
@@ -195,6 +216,34 @@ replay data if the contributor struggles). Check against ARCHITECTURE.md "Test C
   (`tests/IssueNNNN.py`, `tests/PullRequestNNNN.py`, `class InstallationGetRepos`) and out of ad-hoc classes into the
   class' main test class (and rename the replay data files accordingly). Legacy `tests/Issue*.py` files are not a
   precedent.
+- **New tests must fail without the contribution — for the right reason.** Check it out and revert only the
+  non-test changes, then run the new / changed tests:
+
+  ```bash
+  # fetch upstream main and the PR head, independent of how remotes are named locally
+  git fetch https://github.com/PyGithub/PyGithub.git \
+    +refs/heads/main:refs/remotes/pygithub/main +refs/pull/<N>/head:refs/remotes/pygithub/pr-<N>
+  # use a separate worktree, so the current checkout is not disturbed
+  git worktree add --detach ../pr-<N> pygithub/pr-<N> && cd ../pr-<N>
+  BASE=$(git merge-base pygithub/main HEAD)
+  git diff --name-only $BASE -- github/                         # production changes of the PR
+  git checkout $BASE -- github/                                 # revert them, keep tests + replay data
+  pytest tests/<Class>.py -k "<newTest1> or <newTest2>"
+  git checkout HEAD -- github/                                  # restore
+  ```
+
+  (Remove the worktree afterwards with `git worktree remove ../pr-<N>`.)
+
+  - **Bug fixes**: every new test must fail with an assertion error or a replay data mismatch (e.g. the request does
+    not match the recorded one). A test that still passes does not cover the fix.
+  - A failure that is *only* due to the new code not existing (`AttributeError` / `ImportError` / `NameError` /
+    `TypeError: unexpected keyword argument`) proves nothing. This is always the case for new methods, classes or
+    parameters, so check that the assertions would catch a **wrong** implementation instead: e.g. temporarily drop
+    the new parameter from the request body, return a wrong attribute, skip the `_useAttributes` branch, or break the
+    URL — the test must then fail. Typical misses: asserting `pull.id` instead of the attribute that the new
+    argument affects, asserting only the type of a result, or a replay data file that does not contain the new
+    parameter at all.
+  - Ask the author to strengthen the test when it passes without the fix or survives a broken implementation.
 - camelCase `testXxx` names.
 - Assertions verify what changed: the new argument's effect, the reordered order, the removed item, every field of a
   new result class, both `status` and `message` of expected exceptions (`assertEqual`, not `assertIsNone(x, msg)`).
