@@ -73,8 +73,7 @@ class PublicKey(Framework.TestCase):
         with self.replayData("PublicKey.testAttributes.txt"):
             public_key = self.g.get_user().get_repo("PyGithub").get_public_key()
 
-        required_imports_work = [importlib.util.find_spec(imp) is not None for imp in ["nacl.encoding", "nacl.public"]]
-        if all(required_imports_work):
+        if importlib.util.find_spec("nacl") is not None:
             encrypted = public_key.encrypt("value")
             self.assertEqual(len(encrypted), 72)
         else:
