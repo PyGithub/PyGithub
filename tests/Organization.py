@@ -380,6 +380,21 @@ class Organization(Framework.TestCase):
         self.assertListKeyEqual(repos, lambda r: r.name, ["FatherBeaver", "PyGithub"])
         self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, True])
 
+    def testInvitationsDeprecated(self):
+        with self.assertWarns(DeprecationWarning) as warning:
+            invitations = list(self.org.invitations())
+        self.assertEqual(len(invitations), 1)
+        self.assertEqual(invitations[0].id, 28984230)
+        self.assertWarning(warning, "Use get_invitations instead")
+
+    def testFailedInvitations(self):
+        invitations = list(self.org.get_failed_invitations())
+        self.assertEqual(len(invitations), 1)
+        self.assertEqual(invitations[0].id, 28984230)
+        self.assertEqual(invitations[0].email, "foo@bar.org")
+        self.assertEqual(invitations[0].failed_at, "2021-10-13T13:32:33Z")
+        self.assertEqual(invitations[0].failed_reason, "Email address is invalid")
+
     def testGetEvents(self):
         self.assertListKeyEqual(
             self.org.get_events(),
@@ -828,6 +843,8 @@ class Organization(Framework.TestCase):
         self.assertEqual(custom_property.required, True)
         self.assertEqual(custom_property.default_value, "foo")
         self.assertEqual(custom_property.description, "description")
+        self.assertEqual(custom_property.regex, "^[a-z]+$")
+        self.assertEqual(custom_property.require_explicit_values, True)
         self.assertEqual(custom_property.url, "https://api.github.com/orgs/BeaverSoftware/properties/schema/property_1")
         self.assertEqual(custom_property.values_editable_by, "org_actors")
 
@@ -896,6 +913,10 @@ class Organization(Framework.TestCase):
     def testGetCodeSecurityConfig(self):
         config = self.org.get_code_security_config(id=17)
         self.assertEqual(config.id, 17)
+        self.assertEqual(config.dependabot_delegated_alert_dismissal, "disabled")
+        self.assertEqual(config.dependabot_reachability, "enabled")
+        self.assertEqual(config.secret_scanning_extended_metadata, "not_set")
+        self.assertEqual(config.secret_scanning_generic_secrets_push_protection, "enabled")
 
     def testSetDefaultCodeSecurityConfig(self):
         self.org.set_default_code_security_config(id=17, default_for_new_repos="all")

@@ -41,4 +41,4 @@ from . import Framework
 
 class Issue142(Framework.TestCase):
     def testDecodeJson(self):
-        self.assertEqual(github.Github().get_rate_limit().resources.core.limit, 60)
+        self.assertEqual(github.Github().current_rate_limits.update().resources.core.limit, 60)

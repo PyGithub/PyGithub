@@ -37,7 +37,6 @@
 
 import time  # NOQA
 
-import requests  # NOQA
 from urllib3.exceptions import InsecureRequestWarning
 
 import github

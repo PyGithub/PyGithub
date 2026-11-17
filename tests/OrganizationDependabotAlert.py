@@ -50,6 +50,8 @@ class OrganizationDependabotAlert(Framework.TestCase):
 
         test_alert = alert_list[-1]
         self.assertEqual(test_alert.number, 1)
+        self.assertEqual(len(test_alert.assignees), 1)
+        self.assertEqual(test_alert.assignees[0].login, "EnricoMi")
         self.assertEqual(test_alert.state, "open")
         self.assertEqual(test_alert.dependency.package.ecosystem, "pip")
         self.assertEqual(test_alert.dependency.package.name, "ansible")

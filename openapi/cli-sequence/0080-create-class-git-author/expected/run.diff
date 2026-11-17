@@ -216,7 +216,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "GithubObject": {
        "bases": [
          "ABC"
-@@ -3827,6 +3951,7 @@
+@@ -3844,6 +3968,7 @@
        "ABC": [
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
@@ -224,7 +224,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "GithubObject",
          "IssueComment",
          "NamedUser",
-@@ -3850,6 +3975,7 @@
+@@ -3867,6 +3992,7 @@
        "GithubObject": [
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
@@ -232,7 +232,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "IssueComment",
          "NamedUser",
          "NamedUserSearchResult",
-@@ -3861,6 +3987,7 @@
+@@ -3878,6 +4004,7 @@
          "NamedUserSearchResult"
        ],
        "NonCompletableGithubObject": [
@@ -240,7 +240,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Reaction"
        ],
        "Protocol": [
-@@ -4540,6 +4667,9 @@
+@@ -4557,6 +4684,9 @@
        ]
      },
      "schema_to_classes": {
@@ -250,7 +250,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/full-repository": [
          "Repository"
        ],
-@@ -4549,6 +4679,15 @@
+@@ -4566,6 +4696,15 @@
        "/components/schemas/minimal-repository": [
          "Repository"
        ],
@@ -266,7 +266,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/nullable-simple-user": [
          "NamedUser"
        ],
-@@ -4561,6 +4700,12 @@
+@@ -4578,6 +4717,12 @@
        "/components/schemas/repository": [
          "Repository"
        ],

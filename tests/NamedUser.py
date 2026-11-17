@@ -78,6 +78,7 @@ class NamedUser(Framework.TestCase):
         self.assertTrue(self.user.hireable)
         self.assertEqual(self.user.html_url, "https://github.com/jacquev6")
         self.assertEqual(self.user.id, 327146)
+        self.assertTrue(self.user.inherited)
         self.assertIsNone(self.user.ldap_dn)
         self.assertEqual(self.user.location, "France")
         self.assertEqual(self.user.login, "jacquev6")
@@ -96,6 +97,7 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.public_repos, 38)
         self.assertEqual(self.user.received_events_url, "https://api.github.com/users/jacquev6/received_events")
         self.assertEqual(self.user.repos_url, "https://api.github.com/users/jacquev6/repos")
+        self.assertEqual(self.user.role, "maintainer")
         self.assertIsNone(self.user.role_name)
         self.assertEqual(self.user.site_admin, False)
         self.assertIsNone(self.user.starred_at)
@@ -520,7 +522,7 @@ class OrganizationInvitation(Framework.TestCase):
         #   pytest tests/OrganizationInvitation.py -k testAttributes --record
         #   ./scripts/update-assertions.sh tests/OrganizationInvitation.py testAttributes
         self.org = self.g.get_organization("TestOrganization2072")
-        self.invitations = list(self.org.invitations())
+        self.invitations = list(self.org.get_invitations())
         self.assertGreater(len(self.invitations), 0)
         self.invitation = self.invitations[0]
 
@@ -543,10 +545,10 @@ class OrganizationInvitation(Framework.TestCase):
         self.assertEqual(self.invitation.team_count, 0)
 
     def testCancel(self):
-        self.assertFalse(any([i for i in self.org.invitations() if i.email == "foo@bar.org"]))
+        self.assertFalse(any([i for i in self.org.get_invitations() if i.email == "foo@bar.org"]))
         self.org.invite_user(email="foo@bar.org")
-        self.assertTrue(any([i for i in self.org.invitations() if i.email == "foo@bar.org"]))
-        invitation = [i for i in self.org.invitations() if i.email == "foo@bar.org"][0]
+        self.assertTrue(any([i for i in self.org.get_invitations() if i.email == "foo@bar.org"]))
+        invitation = [i for i in self.org.get_invitations() if i.email == "foo@bar.org"][0]
         self.assertTrue(self.org.cancel_invitation(invitation))
         # copy replay data of self.org.cancel_invitation(invitation) call, fix HTTP path
         self.assertTrue(invitation.cancel())
