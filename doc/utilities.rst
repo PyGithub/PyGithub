@@ -37,7 +37,10 @@ like ``core``, ``search``, or ``graphql``. PyGithub provides these limits as a
 Classes :class:`github.MainClass.Github`, :class:`github.GithubIntegration.GithubIntegration`, and all :class:`github.GithubObject.GithubObject` instances provide :attr:`github.GithubObject.GithubObject.current_rate_limits`:
     This returns the latest rate limits known and sends no request. These are collected from each API response. Resources for which rate limits are not known yet are ``None``.  Call ``update()`` to fetch the latest rate limits.
 
-For example, pause before running out of code search requests::
+For example, pause before running out of requests, after a fetched page has been fully consumed. Searching code counts
+against the ``code_search`` resource, not ``core`` like most other requests. The page tells which resource its
+pagination requests count against, and ``current_rate_limits`` provides the latest rate limit of that resource.
+There is no need to wait after the last page, and a response might not report any rate limit::
 
     import time
 
@@ -47,10 +50,18 @@ For example, pause before running out of code search requests::
         for result in page:
             print(result.path)
 
-        # before fetching the next page, inspect the rate limit of search requests
-        rate_limit = gh.current_rate_limits.resources.code_search
-        if rate_limit.remaining < 10:
-            time.sleep(rate_limit.resets_in_seconds)
+        # before fetching the next page, inspect the rate limit for page requests
+        if results.has_unfetched_pages and page.rate_limit is not None:
+            # the rate limit known when the page was fetched
+            rate = page.rate_limit
+
+            # alternatively, the most recent rate limit of the same resource type
+            rate = gh.current_rate_limits.get_rate_limit(page.rate_limit.resource)
+
+            # if we run low on remaining requests
+            if rate.remaining < 10:
+                # defer fetching next page until after reset
+                time.sleep(rate.resets_in_seconds)
 
 Get values for a resource that has not been used yet::
 
@@ -63,6 +74,10 @@ All PyGithub objects (:class:`github.GithubObject.GithubObject`) provide the rat
 :attr:`github.GithubObject.GithubObject.rate_limit`, which is ``None`` if that response did not report any. This value
 does not change with later requests, and it is ``None`` for lazy objects that have not been fetched yet.
 This does not send any request.
+
+Likewise, each page returned by :meth:`github.PaginatedList.PaginatedList.pages` and
+``PaginatedList.get_page()`` provides the rate limit reported by the response of that page via
+:attr:`github.PaginatedList.Page.rate_limit`.
 
 Rate limits are counted per authentication and server, so objects retrieved with a different authentication,
 for example through an installation of a GitHub App, provide their own rate limits.

@@ -59,11 +59,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from typing import Any, Generic, TypeVar, overload
 
 from github import Consts
-from github.GithubObject import GithubObject
+from github.GithubObject import GithubObject, rate_limit_from_headers
+from github.Rate import Rate
 from github.Requester import Requester
 
 T = TypeVar("T", bound=GithubObject)
@@ -78,11 +79,32 @@ class Page(list[T]):
 
     """
 
+    def __init__(self, elements: Iterable[T], requester: Requester, headers: dict[str, str | int] | None):
+        super().__init__(elements)
+        self.__requester = requester
+        self.__headers = headers or {}
+
+    @property
+    def rate_limit(self) -> Rate | None:
+        """
+        Rate limit reported by the response that provided this page, ``None`` if that response did not report any.
+
+        This does not send any request and does not get updated by later requests.
+
+        """
+        attributes = rate_limit_from_headers(self.__headers)
+        if not attributes:
+            return None
+        return Rate(self.__requester, self.__headers, attributes)
+
     def copy(self) -> Page[T]:
         """
         Creates a shallow copy of this page.
         """
-        return Page(self)
+        return Page(self, self.__requester, self.__headers)
+
+    def _reversed(self) -> Page[T]:
+        return Page(self[::-1], self.__requester, self.__headers)
 
 
 class PaginatedListBase(Generic[T]):
@@ -118,6 +140,16 @@ class PaginatedListBase(Generic[T]):
         while self._couldGrow():
             newElements = self._grow()
             yield from newElements
+
+    @property
+    def has_unfetched_pages(self) -> bool:
+        """
+        Whether this list has pages that have not been fetched yet, so that continuing to iterate sends a request.
+
+        This does not send any request. An empty or not yet fetched list may report ``True`` until the first response.
+
+        """
+        return self._couldGrow()
 
     def pages(self) -> Iterator[Page[T]]:
         """
@@ -156,7 +188,7 @@ class PaginatedListBase(Generic[T]):
 
     def _reverse(self) -> None:
         self.__elements.reverse()
-        self.__pages = [Page(page[::-1]) for page in self.__pages[::-1]]
+        self.__pages = [page._reversed() for page in self.__pages[::-1]]
 
     class _Slice:
         def __init__(self, theList: PaginatedListBase[T], theSlice: slice):
@@ -466,10 +498,10 @@ class PaginatedList(PaginatedListBase[T]):
                 if self.__page_info is not None:
                     variables["before"] = self.__page_info["startCursor"]
 
-            _, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
+            headers, data = self.__requester.graphql_query(self.__graphql_query, variables)  # type: ignore
 
             pagination = self._get_graphql_pagination(data["data"], self.__list_item)  # type: ignore
-            return self._getPage(pagination, {})
+            return self._getPage(pagination, headers)
 
     def _getPage(self, data: Any, headers: dict[str, str | int] | None) -> Page[T]:
         if self.is_rest:
@@ -496,7 +528,7 @@ class PaginatedList(PaginatedListBase[T]):
             ]
             if self._reversed:
                 content = content[::-1]
-            return Page(content)
+            return Page(content, self.__requester, headers)
         else:
             if "pageInfo" not in data:
                 raise RuntimeError(f"Query must provide pagination with pageInfo:\n{self.__graphql_query}")
@@ -522,7 +554,13 @@ class PaginatedList(PaginatedListBase[T]):
             if self._reversed:
                 nodes = nodes[::-1]
             return Page(
-                [self.__contentClass(self.__requester, {}, element) for element in nodes if element is not None]
+                [
+                    self.__contentClass(self.__requester, headers, element)  # type: ignore
+                    for element in nodes
+                    if element is not None
+                ],
+                self.__requester,
+                headers,
             )
 
     def __parseLinkHeader(self, headers: dict[str, str | int]) -> dict[str, str]:
@@ -558,7 +596,9 @@ class PaginatedList(PaginatedListBase[T]):
                 self.__incomplete_results = data.get("incomplete_results")
             data = data[self.__list_item]
         return Page(
-            [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data]
+            [self.__contentClass(self.__requester, headers, self._transformAttributes(element)) for element in data],
+            self.__requester,
+            headers,
         )
 
     @classmethod
