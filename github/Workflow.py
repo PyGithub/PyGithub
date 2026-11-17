@@ -53,7 +53,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, Literal, overload
 
 import github.Branch
-import github.Commit
 import github.GithubObject
 import github.NamedUser
 import github.Tag
@@ -63,7 +62,6 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Branch import Branch
-    from github.Commit import Commit
     from github.NamedUser import NamedUser
     from github.Tag import Tag
     from github.WorkflowRun import WorkflowRun
