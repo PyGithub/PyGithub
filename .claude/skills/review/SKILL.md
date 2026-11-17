@@ -342,10 +342,8 @@ Open each failing check and translate it into a concrete request:
   sorting and pushes them to the branch.
 - **mypy** (`mypy github tests`): type errors are blocking.
 - **docs** (`sphinx-build doc build`): new warnings/errors are blocking.
-- **OpenAPI checks** ("Check verbs", "Add schemas", "Implement schemas" / "Add implementations"): failures of these
-  jobs are generally not blocking and contributors can be told to ignore them. Exception: when the job suggests
-  schemas for a class added or changed by the PR, ask to add them to the class docstring. "Check verbs" differences
-  that are side-effects of the PR are fine.
+- **OpenAPI / code-structure checks** ("Check verbs", "Add schemas", "Implement schemas", "Sort classes"): never
+  just report pass/fail — read the output and judge whether it is relevant to this PR (see below).
 - **Tests** on all supported Pythons and on Windows. Changes involving optional dependencies / extras (e.g.
   `PyGithub[encryption]`) must be tested in CI and tox both with and without the extra installed, and installation
   docs (`README.md`, `doc/introduction.rst` "Download and install") updated.
@@ -358,6 +356,79 @@ pytest tests/<Class>.py
 pre-commit run --files <changed files>
 mypy github tests
 ```
+
+### Evaluating "Check verbs", "Add schemas", "Implement schemas" and "Sort classes"
+
+These jobs (`.github/workflows/ci.yml`) run `scripts/openapi.py` / `scripts/sort_class.py`. The first three run the
+script on the PR's **base** and on the **head** (the PR merged into base) and fail on **any difference** between the
+two outputs; "Sort classes" fails if sorting changes any file. A red job is therefore not automatically a problem,
+and a difference is not automatically caused by the PR. For each of the four jobs, whether green or red, fetch the
+log and evaluate it:
+
+```bash
+gh pr checks <N> -R PyGithub/PyGithub                      # job names, states and links
+gh run view <run-id> -R PyGithub/PyGithub --json jobs -q '.jobs[] | "\(.databaseId) \(.name) \(.conclusion)"'
+gh run view <run-id> -R PyGithub/PyGithub --job <job-id> --log | cut -f3- | sed -E 's/^\xEF\xBB\xBF//; s/^[0-9-]+T[0-9:.]+Z //' > job.log
+awk '/^Difference:|^Changes:/{p=1} /^Run the following commands|^To fix this/{p=0} p' job.log   # the relevant part
+```
+
+If CI has not run (fork PRs awaiting approval), reproduce locally (needs `requirements/scripts.txt`):
+
+```bash
+python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json
+python scripts/openapi.py index github openapi.json openapi.index           # on the PR checkout
+python scripts/openapi.py --verbose index --check-verbs github verbs.index  # Check verbs
+python scripts/openapi.py suggest schemas openapi.json openapi.index        # Add schemas
+python scripts/openapi.py --dry-run apply properties --tests github openapi.json openapi.index <Class> …  # Implement schemas
+python scripts/sort_class.py --dry-run openapi.index <Class> …              # Sort classes
+```
+
+Run the same on the base commit for the first three and compare, as CI does.
+
+**How to read the diff.** In `diff base head` output, lines starting with `<` exist only on base, lines starting
+with `>` only on head:
+
+- `>` lines (new on head) are what the PR introduces — evaluate them.
+- `<` lines only (a suggestion / change disappeared on head) usually mean the PR resolved something, or base and head
+  differ for reasons unrelated to the PR. Not a problem in itself, but explain why the job is red.
+- Changes mentioning classes, files or paths the PR does not touch, or a different class count
+  (`Applying API schemas to 230 … classes` vs. `235`), indicate base and head are out of sync (outdated PR branch,
+  `main` moved, OpenAPI spec changed). These are **not relevant** to the PR; at most ask to merge `main` and re-run.
+
+**Per job:**
+
+- **Check verbs** — compares the verb in each method's `:calls:` line with the HTTP verbs the method actually uses.
+  Relevant if a method touched by the PR is listed: the `:calls:` docstring names a wrong verb or path, or the method
+  calls the API in a way the index does not recognise ("Not found any … call in …" / "Method … is known to call …").
+  Ask to fix the docstring (or, for legitimate indirect calls, the known-verbs section of
+  `github/openapi.index.json`). Differences for untouched methods are side effects.
+- **Add schemas** — lists OpenAPI schemas that classes should declare in their docstring (`Class X: - should
+  implement schema /components/schemas/…`, with methods/paths returning them). Relevant when a `> Class X:` entry is a
+  class **added or modified by the PR**, or the schema is returned by a method the PR adds: ask to add the schema to
+  the class docstring (after checking it really matches, e.g. via the "Paths returning the class"). Entries for other
+  classes are pre-existing gaps or base/head drift — tell the contributor they can ignore them.
+- **Implement schemas** — shows which properties the declared schemas would add to / change in each class
+  (`Applying schema …`, followed by a `Diff:` that is empty when the class matches the schema). Relevant for classes
+  added or changed by the PR:
+  - a non-empty `Diff:` means the class misses attributes of its schema (or types differ, e.g. nullability) — ask to
+    implement them (`python scripts/openapi.py apply properties --tests … <Class>`), or to justify omitting them;
+  - `Schema not implemented: …/properties/<name>` means a nested object has no PyGithub class yet — consider asking
+    for a dedicated class instead of `dict[str, Any]`, or accept it as a known gap for a later PR;
+  - diffs in classes the PR does not touch are not relevant (often newly added API fields on `main`).
+- **Sort classes** — the diff shows how members of a class would be reordered (see ARCHITECTURE.md "Internal Class
+  Order"). A diff in a class the PR touches is relevant and must be fixed (`python scripts/sort_class.py openapi.index
+  <Class>`, or the `auto-fix` workflow on the fork). A diff only in untouched classes means `main` itself is unsorted —
+  not the contributor's problem.
+
+**Tool crashes.** A Python traceback from `scripts/openapi.py` or `scripts/sort_class.py` (e.g. `AttributeError:
+'Attribute' object has no attribute 'left'` in `update_use_attrs` / `leave_FunctionDef`) is not a diff. Find the code
+in the PR that triggers it — typically an unusual statement in `_useAttributes` (an `if` whose condition is not of the
+form `"key" in attributes [and …]`) or `_initAttributes`, or class-level statements between methods. If that code
+deviates from the conventions, ask the author to follow them; if the code is legitimate, the script needs fixing
+(separate PR, by maintainers) and the job can be ignored for this PR — say so explicitly.
+
+**In the review**, state for each of these jobs: relevant or not, why, and (if relevant) the concrete change, citing
+the class / method and the log lines. Do not ask contributors to fix differences that are not caused by their PR.
 
 ## 11. Writing the review
 
