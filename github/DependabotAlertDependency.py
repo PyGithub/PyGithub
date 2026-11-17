@@ -53,6 +53,7 @@ class DependabotAlertDependency(NonCompletableGithubObject):
         self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
         self._relationship: Attribute[str] = NotSet
         self._scope: Attribute[str] = NotSet
+        self._version_requirement: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__(
@@ -78,6 +79,10 @@ class DependabotAlertDependency(NonCompletableGithubObject):
     def scope(self) -> str:
         return self._scope.value
 
+    @property
+    def version_requirement(self) -> str:
+        return self._version_requirement.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "manifest_path" in attributes:
             self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
@@ -90,3 +95,5 @@ class DependabotAlertDependency(NonCompletableGithubObject):
             self._relationship = self._makeStringAttribute(attributes["relationship"])
         if "scope" in attributes:
             self._scope = self._makeStringAttribute(attributes["scope"])
+        if "version_requirement" in attributes:  # pragma no branch
+            self._version_requirement = self._makeStringAttribute(attributes["version_requirement"])

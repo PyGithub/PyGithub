@@ -61,24 +61,26 @@
 
 from __future__ import annotations
 
-import base64
 import contextlib
-import json
+import functools
 import os
 import traceback
 import unittest
 import warnings
-from collections.abc import Callable, Generator
+from collections.abc import Generator
 from dataclasses import dataclass
-from io import BytesIO
 from typing import Any
+from urllib.parse import urlsplit
 
-import responses
+import vcr
+import vcr.cassette
 from requests.structures import CaseInsensitiveDict
-from urllib3.util import Url
+from vcr.matchers import requests_match
 
 import github
 from github import Consts
+
+from . import VcrSerializer
 
 APP_PRIVATE_KEY = """
 -----BEGIN RSA PRIVATE KEY-----
@@ -97,41 +99,6 @@ m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
 eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
-
-
-class FakeHttpResponse:
-    def __init__(self, status, headers, output):
-        self.status = status
-        self.__headers = headers
-        self.__output = output
-
-    def getheaders(self):
-        return self.__headers
-
-    def read(self):
-        return self.__output
-
-    def iter_content(self, chunk_size=1):
-        return iter([self.__output[i : i + chunk_size] for i in range(0, len(self.__output), chunk_size)])
-
-    def raise_for_status(self):
-        pass
-
-
-def fixAuthorizationHeader(headers):
-    if "Authorization" in headers:
-        if headers["Authorization"].endswith("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk"):
-            # This special case is here to test the real Authorization header
-            # sent by PyGithub. It would have avoided issue https://github.com/jacquev6/PyGithub/issues/153
-            # because we would have seen that Python 3 was not generating the same
-            # header as Python 2
-            pass
-        elif headers["Authorization"].startswith("token "):
-            headers["Authorization"] = "token private_token_removed"
-        elif headers["Authorization"].startswith("Basic "):
-            headers["Authorization"] = "Basic login_and_password_removed"
-        elif headers["Authorization"].startswith("Bearer "):
-            headers["Authorization"] = "Bearer jwt_removed"
 
 
 @dataclass
@@ -173,272 +140,98 @@ class RequestResponse(Request):
     output: bytes
 
 
-class Connection:
-    __openFile: Callable[[str], ReplayDataFile] | None = None
-    __requests: list[RequestResponse] = []
+class OrderedCassette(vcr.cassette.Cassette):
+    """
+    Same as vcrpy's ``Cassette``, but only ever considers the next not-yet-played interaction as a candidate match,
+    instead of searching the whole cassette for any not-yet-played interaction that matches.
 
-    @classmethod
-    def setOpenFile(cls, func: Callable[[str], ReplayDataFile]):
-        cls.__openFile = func
+    vcrpy's default behavior replays same-shaped requests in recording order (since
+    it always returns the earliest unplayed match), but happily serves requests out of order
+    relative to *other*, differently-shaped requests -- e.g. cassette [A, B, C] replays fine as
+    [B, A, C] as long as each of A, B, C individually matches something unplayed. That would let a
+    refactor that accidentally reorders API calls pass silently. Requiring an exact match against
+    the next interaction turns that into a hard ``CannotOverwriteExistingCassetteException``.
 
-    @classmethod
-    def openFile(cls, mode: str):
-        assert cls.__openFile is not None
-        return cls.__openFile(mode)
+    """
 
-    @classmethod
-    def resetRequests(cls, requests: list[RequestResponse]) -> list[RequestResponse]:
-        try:
-            return cls.__requests
-        finally:
-            cls.__requests = requests
-
-    @classmethod
-    def addRequest(cls, request: RequestResponse):
-        cls.__requests.append(request)
+    def _responses(self, request):
+        request = self._before_record_request(request)
+        for index, (stored_request, response) in enumerate(self.data):
+            if self.play_counts[index] == 0:
+                if requests_match(request, stored_request, self._match_on):
+                    yield index, response
+                return
 
 
-class RecordingConnection(Connection):
-    def __init__(self, protocol, host, port, *args, **kwds):
-        self.__file = self.openFile("w")
-        # write operations make the assumption that the file is not in binary mode
-        assert isinstance(self.__file, ReplayDataFile)
-        self.__request = None
-        self.__protocol = protocol
-        self.__host = host
-        self.__port = port
+class OrderedVCR(vcr.VCR):
+    def _use_cassette(self, with_current_defaults=False, **kwargs):
+        if with_current_defaults:
+            config = self.get_merged_config(**kwargs)
+            return OrderedCassette.use(**config)
+        args_getter = functools.partial(self.get_merged_config, **kwargs)
+        return OrderedCassette.use_arg_getter(args_getter)
+
+
+# A single VCR instance, shared across all tests: it patches http.client/urllib3 generically
+# enough that it transparently intercepts both "requests" and "niquests" traffic (see
+# https://niquests.readthedocs.io/en/latest/community/extensions.html), unlike "responses",
+# which required fooling it into believing niquests IS requests via sys.modules aliasing.
+# OrderedVCR additionally enforces that requests are replayed in exactly the order they were
+# recorded (see OrderedCassette above).
+_vcr = OrderedVCR(serializer="pygithub-replaydata", record_mode="none")
+_vcr.register_serializer("pygithub-replaydata", VcrSerializer)
+_vcr.register_persister(VcrSerializer.Utf8FilesystemPersister)
+
+
+class CassetteConnection:
+    """
+    Base for the classes injected via ``Requester.injectConnectionClasses``.
+
+    All the actual HTTP interception (matching, recording, replaying) is done by ``vcrpy``,
+    patched in transparently underneath ``self._realConnection`` (an unmodified
+    ``HTTP[S]RequestsConnectionClass``, i.e. the real ``requests``/``niquests`` ``Session``).
+    The only thing this class does is make sure the *correct* cassette -- matching the
+    currently running setUp/test/tearDown method, or a ``replayData()`` override -- is active
+    before the connection is used, mirroring how many real requests happen to reuse a
+    single connection per test (``Requester.__persist`` is disabled while testing, so a new
+    connection is created for every single HTTP request).
+
+    """
+
+    def __init__(self, host, port, *args, **kwds):
+        BasicTestCase.ensureCassette()
         self.__cnx = self._realConnection(host, port, *args, **kwds)
-        self.__stream = False
 
     @property
     def host(self):
-        return self.__host
+        return self.__cnx.host
 
     def request(self, verb, url, input, headers, stream=False):
-        self.__cnx.request(verb, url, input, headers)
-        self.__stream = stream
-        # fixAuthorizationHeader changes the parameter directly to remove Authorization token.
-        # however, this is the real dictionary that *will be sent* by "requests",
-        # since we are writing here *before* doing the actual request.
-        # So we must avoid changing the real "headers" or this create this:
-        # https://github.com/PyGithub/PyGithub/pull/664#issuecomment-389964369
-        # https://github.com/PyGithub/PyGithub/issues/822
-        # Since it's dict[str, str], a simple copy is enough.
-        anonymous_headers = headers.copy()
-        fixAuthorizationHeader(anonymous_headers)
-        self.__request = Request(self.__protocol, verb, self.__host, self.__port, url, anonymous_headers, input)
-        self.__writeLine(self.__protocol)
-        self.__writeLine(verb)
-        self.__writeLine(self.__host)
-        self.__writeLine(self.__port)
-        self.__writeLine(url)
-        self.__writeLine(anonymous_headers)
-        self.__writeLine(str(input).replace("\n", "").replace("\r", ""))
+        self.__cnx.request(verb, url, input, headers, stream=stream)
 
     def getresponse(self):
-        res = self.__cnx.getresponse()
-
-        status = res.status
-        headers = res.getheaders()
-        output = res if self.__stream else res.read()
-
-        self.__writeLine(status)
-        self.__writeLine(list(headers))
-        if self.__stream:
-            chunks = [chunk for chunk in output.iter_content(chunk_size=64)]
-            output = b"".join(chunks)
-            for chunk in chunks:
-                self.__writeLine(base64.b64encode(chunk).decode("ascii"))
-            self.__writeLine("")
-        else:
-            self.__writeLine(output)
-        self.__writeLine("")
-
-        self.addRequest(self.__request.with_response(status, dict(headers), output))
-        self.__request = None
-
-        return FakeHttpResponse(status, headers, output)
+        return self.__cnx.getresponse()
 
     def close(self):
         return self.__cnx.close()
 
-    def __writeLine(self, line):
-        self.__file.write(str(line) + "\n")
 
-
-class RecordingHttpConnection(RecordingConnection):
+class CassetteHttpConnection(CassetteConnection):
     _realConnection = github.Requester.HTTPRequestsConnectionClass
 
-    def __init__(self, *args, **kwds):
-        super().__init__("http", *args, **kwds)
 
-
-class RecordingHttpsConnection(RecordingConnection):
+class CassetteHttpsConnection(CassetteConnection):
     _realConnection = github.Requester.HTTPSRequestsConnectionClass
-
-    def __init__(self, *args, **kwds):
-        super().__init__("https", *args, **kwds)
-
-
-class ReplayingConnection(Connection):
-    def __init__(self, protocol, host, port, *args, **kwds):
-        self.__file = self.openFile("r")
-        self.__protocol = protocol
-        self.__host = host
-        self.__port = port
-        self.__stream = False
-        self.response_headers = CaseInsensitiveDict()
-
-        self.__cnx = self._realConnection(host, port, *args, **kwds)
-
-    @property
-    def host(self):
-        return self.__host
-
-    def request(
-        self,
-        verb,
-        url,
-        input,
-        headers,
-        stream: bool = False,
-    ):
-        port = self.__port if self.__port else 443 if self.__protocol == "https" else 80
-        full_url = Url(scheme=self.__protocol, host=self.__host, port=port, path=url)
-
-        response_headers = self.response_headers.copy()
-        responses.add_callback(
-            method=verb,
-            url=full_url.url,
-            callback=lambda request: self.__request_callback(verb, full_url.url, response_headers),
-        )
-
-        self.__stream = stream
-        self.__cnx.request(verb, url, input, headers, stream=stream)
-
-    def __replayDataMismatchLine(self) -> str:
-        return f"Replay data mismatch in {self.__file}"
-
-    def __readNextRequest(self, verb, url, input, headers) -> Request:
-        fixAuthorizationHeader(headers)
-        request = Request(self.__protocol, verb, self.__host, self.__port, url, headers, input)
-        assert request.protocol == self.__file.readline(), self.__replayDataMismatchLine()
-        assert request.verb == self.__file.readline(), self.__replayDataMismatchLine()
-        assert request.host == self.__file.readline(), self.__replayDataMismatchLine()
-        assert str(request.port) == self.__file.readline(), self.__replayDataMismatchLine()
-        assert self.__splitUrl(request.url) == self.__splitUrl(self.__file.readline()), self.__replayDataMismatchLine()
-        assert request.request_headers == eval(self.__file.readline()), self.__replayDataMismatchLine()
-        expectedInput = self.__file.readline()
-        if isinstance(input, str):
-            trInput = input.replace("\n", "").replace("\r", "")
-            if input.startswith("{"):
-                assert expectedInput.startswith("{"), self.__replayDataMismatchLine()
-                assert json.loads(trInput) == json.loads(expectedInput), self.__replayDataMismatchLine()
-            else:
-                assert trInput == expectedInput, self.__replayDataMismatchLine()
-        else:
-            # for non-string input (e.g. upload asset), let it pass.
-            pass
-
-        return request
-
-    def __splitUrl(self, url):
-        splitedUrl = url.split("?")
-        if len(splitedUrl) == 1:
-            return splitedUrl
-        assert len(splitedUrl) == 2
-        base, qs = splitedUrl
-        return (base, sorted(qs.split("&")))
-
-    def __request_callback(self, request, uri, response_headers):
-        request = self.__readNextRequest(self.__cnx.verb, self.__cnx.url, self.__cnx.input, self.__cnx.headers)
-
-        status = int(self.__file.readline())
-        self.response_headers = CaseInsensitiveDict(eval(self.__file.readline()))
-        if self.__stream:
-            output = BytesIO()
-            while True:
-                line = self.__file.readline()
-                if not line:
-                    break
-                output.write(base64.b64decode(line))
-            output = output.getvalue()
-        else:
-            output = bytearray(self.__file.readline(), "utf-8")
-        self.__file.readline()
-
-        # make a copy of the headers and remove the ones that interfere with the response handling
-        adding_headers = CaseInsensitiveDict(self.response_headers)
-        adding_headers.pop("content-length", None)
-        adding_headers.pop("transfer-encoding", None)
-        adding_headers.pop("content-encoding", None)
-
-        response_headers.update(adding_headers)
-        self.addRequest(request.with_response(status, response_headers, output))
-
-        return [status, response_headers, output]
-
-    def getresponse(self):
-        response = self.__cnx.getresponse()
-
-        # restore original headers to the response
-        response.headers = self.response_headers
-
-        return response
-
-    def close(self):
-        self.__cnx.close()
-
-
-class ReplayingHttpConnection(ReplayingConnection):
-    _realConnection = github.Requester.HTTPRequestsConnectionClass
-
-    def __init__(self, *args, **kwds):
-        super().__init__("http", *args, **kwds)
-
-
-class ReplayingHttpsConnection(ReplayingConnection):
-    _realConnection = github.Requester.HTTPSRequestsConnectionClass
-
-    def __init__(self, *args, **kwds):
-        super().__init__("https", *args, **kwds)
-
-
-class ReplayDataFile:
-    @staticmethod
-    def open(filename: str, mode: str, encoding: str) -> ReplayDataFile:
-        file = open(filename, mode, encoding=encoding)
-        return ReplayDataFile(filename, file)
-
-    def __init__(self, filename: str, file):
-        self.__filename = filename
-        self.__file = file
-        self.__line = 0
-
-    def __repr__(self) -> str:
-        return f"{self.__filename}:{self.__line}"
-
-    def write(self, string: str):
-        self.__file.write(string)
-
-    def readline(self) -> str:
-        self.__line += 1
-        line = self.__file.readline()
-        if isinstance(line, bytes):
-            line = line.decode("utf-8")
-        return line.strip()
-
-    @property
-    def line_number(self):
-        return self.__line
-
-    def close(self):
-        self.__file.close()
 
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
     replayDataFolder = os.path.join(os.path.dirname(__file__), "ReplayData")
+
+    # The test currently running, i.e. the one whose stack `ensureCassette()` should inspect
+    # to resolve the active replay file. `CassetteConnection.__init__` cannot reach this any
+    # other way, since `Requester.injectConnectionClasses` only takes classes, not instances.
+    __activeInstance: BasicTestCase | None = None
 
     def __init__(self, methodName="runTest") -> None:
         super().__init__(methodName)
@@ -452,17 +245,19 @@ class BasicTestCase(unittest.TestCase):
     def setUp(self):
         super().setUp()
         self.__customFilename: str | None = None
-        self.__fileName = ""
-        self.__file = None
+        self.__cassettePath: str | None = None
+        self.__cassetteCm = None
+        self.__cassette = None
+        self.__capturedRequests: list[RequestResponse] | None = None
+        BasicTestCase.__activeInstance = self
+
+        github.Requester.Requester.injectConnectionClasses(
+            CassetteHttpConnection,
+            CassetteHttpsConnection,
+        )
         if (
             self.recordMode
         ):  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
-            RecordingHttpConnection.setOpenFile(self.__openFile)
-            RecordingHttpsConnection.setOpenFile(self.__openFile)
-            github.Requester.Requester.injectConnectionClasses(
-                RecordingHttpConnection,
-                RecordingHttpsConnection,
-            )
             import GithubCredentials  # type: ignore
 
             self.oauth_token = (
@@ -475,17 +270,9 @@ class BasicTestCase(unittest.TestCase):
                 else None
             )
         else:
-            ReplayingHttpConnection.setOpenFile(self.__openFile)
-            ReplayingHttpsConnection.setOpenFile(self.__openFile)
-            github.Requester.Requester.injectConnectionClasses(
-                ReplayingHttpConnection,
-                ReplayingHttpsConnection,
-            )
             self.oauth_token = github.Auth.Token("oauth_token")
             self.jwt = github.Auth.AppAuthToken("jwt")
             self.app_auth = github.Auth.AppAuth(123456, APP_PRIVATE_KEY)
-
-            responses.start()
 
     def setPerPage(self, per_page):
         self.per_page = per_page
@@ -516,10 +303,9 @@ class BasicTestCase(unittest.TestCase):
 
     def tearDown(self):
         super().tearDown()
-        responses.stop()
-        responses.reset()
-        self.__closeReplayFileIfNeeded(silent=self.thisTestFailed)
+        self.__closeCassetteIfNeeded(silent=self.thisTestFailed)
         github.Requester.Requester.resetConnectionClasses()
+        BasicTestCase.__activeInstance = None
 
     def assertWarning(self, warning, expected):
         self.assertWarnings(warning, expected)
@@ -547,37 +333,111 @@ class BasicTestCase(unittest.TestCase):
     @contextlib.contextmanager
     def captureRequests(self) -> Generator[list[RequestResponse]]:
         requests: list[RequestResponse] = []
-        earlier_requests = Connection.resetRequests(requests)
+        previous = self.__capturedRequests
+        self.__capturedRequests = requests
         try:
             yield requests
         finally:
-            earlier_requests.extend(requests)
-            Connection.resetRequests(earlier_requests)
+            self.__capturedRequests = previous
 
-    def __openFile(self, mode):
-        fileName = None
+    @classmethod
+    def ensureCassette(cls) -> None:
+        """
+        Called once per HTTP connection (i.e. once per request, connection reuse is disabled while testing) to make
+        sure the vcrpy cassette matching the currently running setUp/test/tearDown method -- or a ``replayData()``
+        override -- is the active one.
+        """
+        self = cls.__activeInstance
+        if self is not None:
+            self.__ensureCassette()
+
+    def __resolveFileName(self) -> str | None:
         if self.__customFilename:
-            fileName = self.__customFilename
-        else:
-            for _, _, functionName, _ in traceback.extract_stack():
-                if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
-                    # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    if functionName != "test":
-                        fileName = f"{self.__class__.__name__}.{functionName}.txt"
-        fileName = os.path.join(self.replayDataFolder, fileName) if fileName else None
-        if fileName != self.__fileName:
-            self.__closeReplayFileIfNeeded()
-            self.__fileName = fileName
-            self.__file = ReplayDataFile.open(self.__fileName, mode, encoding="utf-8")
-        return self.__file
+            return self.__customFilename
+        fileName = None
+        for _, _, functionName, _ in traceback.extract_stack():
+            if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
+                # because in class Hook(Framework.TestCase), method testTest calls Hook.test
+                if functionName != "test":
+                    fileName = f"{self.__class__.__name__}.{functionName}.txt"
+        return fileName
 
-    def __closeReplayFileIfNeeded(self, silent=False):
-        if self.__file is not None:
+    def __ensureCassette(self) -> None:
+        fileName = self.__resolveFileName()
+        path = os.path.join(self.replayDataFolder, fileName) if fileName else None
+        if path == self.__cassettePath:
+            return
+        self.__closeCassetteIfNeeded()
+        self.__cassettePath = path
+        if path is None:
+            return
+        record_mode = "all" if self.recordMode else "none"
+        if self.recordMode and os.path.exists(path):
+            # vcrpy's "all" record mode never plays back existing interactions, but it still
+            # loads them from disk and keeps them in Cassette.data -- so without this, recording
+            # over an existing replay file would append the freshly recorded interactions after
+            # the stale ones instead of replacing them.
+            os.remove(path)
+        cassetteCm = _vcr.use_cassette(path, record_mode=record_mode)
+        self.__cassette = cassetteCm.__enter__()
+        self.__cassetteCm = cassetteCm
+        # wired unconditionally (not just while captureRequests() is active) and exactly once per
+        # cassette: __recordInteraction() itself checks __capturedRequests, so this single wiring
+        # transparently reflects whatever captureRequests() call is active by the time each
+        # request actually happens, without ever double-wrapping play_response/append.
+        self.__wireCaptureHook(self.__cassette)
+
+    def __closeCassetteIfNeeded(self, silent=False):
+        if self.__cassetteCm is not None:
             if (
                 not self.recordMode and not silent
             ):  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
-                self.assertEqual(self.__file.readline(), "", self.__file)
-            self.__file.close()
+                self.assertTrue(
+                    self.__cassette.all_played,
+                    f"Not all replay data was used in {self.__cassettePath}",
+                )
+            self.__cassetteCm.__exit__(None, None, None)
+            self.__cassetteCm = None
+            self.__cassette = None
+
+    def __wireCaptureHook(self, cassette) -> None:
+        originalPlayResponse = cassette.play_response
+        originalAppend = cassette.append
+
+        def play_response(request):
+            response = originalPlayResponse(request)
+            self.__recordInteraction(request, response)
+            return response
+
+        def append(request, response):
+            originalAppend(request, response)
+            self.__recordInteraction(request, response)
+
+        cassette.play_response = play_response
+        cassette.append = append
+
+    def __recordInteraction(self, request, response) -> None:
+        if self.__capturedRequests is None:
+            return
+        parts = urlsplit(request.uri)
+        url = parts.path + (f"?{parts.query}" if parts.query else "")
+        response_headers = CaseInsensitiveDict(
+            {name: values[0] if isinstance(values, list) else values for name, values in response["headers"].items()},
+        )
+        self.__capturedRequests.append(
+            RequestResponse(
+                parts.scheme,
+                request.method,
+                parts.hostname,
+                parts.port,
+                url,
+                dict(request.headers),
+                request.body,
+                response["status"]["code"],
+                {k: v for k, v in response_headers.lower_items()},
+                response["body"]["string"],
+            ),
+        )
 
     def assertListKeyEqual(self, elements, key, expectedKeys):
         realKeys = [key(element) for element in elements]

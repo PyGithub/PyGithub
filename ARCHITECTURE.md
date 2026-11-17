@@ -234,7 +234,8 @@ Exception
 
 Tests live in `tests/`, one file per PyGithub class (e.g. `tests/Repository.py`).
 
-- Framework: `unittest` + [`responses`](https://github.com/getsentry/responses) for HTTP mocking.
+- Framework: `unittest` + [`vcrpy`](https://github.com/kevin1024/vcrpy) for HTTP mocking, via a custom serializer
+  (`tests/VcrSerializer.py`) that reads/writes the pre-existing `tests/ReplayData/*.txt` cassette format unchanged.
 - Shared base class: `tests/Framework.py`.
 - A frame-buffer debug system in `Requester` (`NEW_DEBUG_FRAME()`) records request/response pairs for low-level
   inspection.
