@@ -246,6 +246,73 @@ Running the suite:
 pytest tests/
 ```
 
+### Test Conventions
+
+- **Where tests go**: tests for `github/Foo.py` go into the existing `tests/Foo.py`, inside the existing test class
+  (e.g. `class Foo(Framework.TestCase)`). Do not add new test classes or files named after issues/PRs
+  (`tests/Issue3278.py`, `tests/PullRequest2989.py`) for features or fixes of an existing class. Methods that live on
+  a class are tested in that class' test file (e.g. `WorkflowRun.get_attempt` → `tests/WorkflowRun.py`).
+- **Naming**: test methods are camelCase and start with `test` (`testGetReposForCodeSecurityConfig`, not
+  `test_get_repos_for_code_security_config`). The method name determines the replay data file name.
+- **Prefer extending existing tests**: if an existing test (e.g. `testCreateTeamWithAllArguments`) already covers the
+  method, extend its assertions and replay data rather than adding a near-duplicate test.
+- **Assert the effect, not a proxy**: assert the attribute that the change is about (e.g.
+  `pull.head.repo.full_name` for a new `head_repo` argument, not `pull.id`), that a reorder actually changed the
+  order, that a removal actually removed, and every field of a newly introduced result class.
+- **Exceptions**: assert both status and message:
+  ```python
+  with self.assertRaises(github.GithubException) as raisedexp:
+      repo.merge_upstream("doesNotExist")
+  self.assertEqual(raisedexp.exception.status, 404)
+  self.assertEqual(raisedexp.exception.message, "Branch not found")
+  ```
+- Use `assertIsNone(x)` rather than `assertEqual(x, None)`, `assertListKeyEqual(...)` for lists, and index access
+  (`items[0]`) rather than `for … : … break`. No `print()` statements in tests.
+- **Avoid needless requests**: obtain parent objects lazily (`self.g.get_repo("PyGithub/PyGithub", lazy=True)`) so
+  that `setUp` / tests do not record GET requests that are irrelevant to what is being tested.
+- **Reusing replay data**: use `with self.replayData("Other.testName.txt"):` to reuse another test's replay data.
+  Symlinks do not work on Windows (CI runs tests on Windows).
+- **Platform independence**: tests run on Linux, macOS and Windows; e.g. do not re-open a
+  `tempfile.NamedTemporaryFile` while it is still open (use `tempfile.TemporaryDirectory()` instead).
+- **Auth modes**: tests use token auth by default; set `self.authMode = "jwt" | "app" | "none"` before
+  `super().setUp()` when needed (see `doc/testing.rst`).
+
+### Replay Data
+
+Every test that talks to the GitHub API has a replay data file `tests/ReplayData/<TestClass>.<testMethod>.txt`
+(`<TestClass>.setUp.txt` for `setUp`). Requests are replayed **in recorded order**, and a test fails if not all
+recorded requests were used ("Not all replay data was used"). Each request is a block of lines:
+
+```
+https                                  # protocol
+GET                                    # verb
+api.github.com                         # host
+None                                   # port
+/repos/PyGithub/PyGithub/pulls?per_page=1   # path + query
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}   # request headers
+None                                   # request body (JSON) or None
+200                                    # status
+[('Date', '…'), …]                     # response headers
+{"id": 1, …}                           # response body
+                                       # empty line
+```
+
+Rules:
+
+- Record with `pytest -k Class.testMethod --record` (needs `GithubCredentials.py`, see `doc/testing.rst`); commit the
+  resulting files. Hand-crafted or hand-edited replay data is acceptable for small changes, but it must be consistent
+  with what the code sends.
+- **Code changes that alter requests require replay data changes**: e.g. encoding booleans as `true`/`false` in query
+  strings, removing a default request body field, renaming a parameter, or fixing a typo in a string that is part of
+  a request or an asserted response. Edit the existing files by hand in such cases.
+- **Anonymise / normalise**: organisations are renamed to `BeaverSoftware` (the org used by `tests/Organization.py`),
+  repositories to the test class' established repo (typically `PyGithub/PyGithub`), and the `Authorization` header is
+  normalised according to the auth mode (`token private_token_removed`, `Basic login_and_password_removed`,
+  `Bearer jwt_removed`). Organisation ids in `Link` headers should be consistent with the renamed organisation.
+- Remove requests that are not needed by the test (e.g. a GET of the organisation when it can be obtained lazily).
+- When a test is renamed, rename its replay data file as well. Revert unrelated changes to shared files such as
+  `<Class>.setUp.txt`.
+
 ---
 
 ## File Organization
@@ -663,6 +730,74 @@ runtime.
 
 This convention applies to every module that references PyGithub classes, including non-`GithubObject`
 entry points such as `Github` in `MainClass.py`.
+
+---
+
+## API Design Conventions
+
+### Where a method belongs
+
+A method that operates on a specific resource lives on the PyGithub class of that resource, not on its parent. The
+parent only gets the `get_X` / `get_Xs` / `create_X` accessors:
+
+| Endpoint                                                     | Method                                    |
+|--------------------------------------------------------------|-------------------------------------------|
+| `PUT .../environments/{env}/deployment-branch-policies/{id}` | `DeploymentBranchPolicy.edit(...)`        |
+| `DELETE .../deployment-branch-policies/{id}`                 | `DeploymentBranchPolicy.delete()`         |
+| `GET .../actions/runs/{run_id}/attempts/{attempt}`           | `WorkflowRun.get_attempt(attempt_number)` |
+| `GET .../actions/jobs/{job_id}`                              | `Repository.get_workflow_job(id)`         |
+
+The id of the object the method lives on is not a parameter (it is part of `self.url`).
+
+### Method names
+
+- Use the established verbs: `get_x(id)` / `get_xs()` (never `list_xs`), `create_x`, `edit` / `edit_x` (never
+  `update_x`), `delete` / `delete_x`, `add_x` / `remove_x`, `add_to_x` / `remove_from_x`.
+- Use the plural when a method acts on several items (`add_seats(usernames)`, `remove_seats(...)`).
+- Name parameters after the GitHub API (e.g. `org`, as in the REST docs), and keep names consistent across classes.
+  Where the same operation exists on several classes, the name may reflect the context
+  (`Organization.attach_security_config_to_repositories(...)` vs. `Repository.attach_security_config(...)`).
+
+### Arguments
+
+- Accept either a PyGithub object or its identifier rather than adding a second method:
+  `add_sub_issue(sub_issue: int | Issue)`, `create_review_comment(commit: Commit | str, ...)`. Check with
+  `assert isinstance(x, (github.Issue.Issue, int)), x`.
+- Use precise types (`Opt[dict[str, Any]]`, `Opt[bool]` rather than `Opt[str]` holding `"true"`). Convert to the wire
+  format inside the method.
+- Do not hard-code lists of allowed values for API enums (states, secret types, …) — they go out of date quickly; the
+  GitHub API validates values and returns a meaningful error.
+
+### Return values
+
+- When the API returns a useful payload, return a PyGithub class rather than `None` or a raw `dict` (e.g.
+  `Repository.merge_upstream` → `MergedUpstream`, `GitCommit.verification` → `GitCommitVerification`). Payloads
+  without their own endpoint become a `NonCompletableGithubObject`.
+- Methods that only perform an action (`delete_x`, `disable`, …) return `None`, not a `bool` or a `PaginatedList`.
+  Rely on exceptions to signal failures.
+- A method that explicitly calls the API must always make the call; it must not fall back to an already known
+  property value (callers can do that themselves). If the response updates known state, update the attributes.
+- When a value can be unknown (not fetched yet), type it as `T | None` so that "unknown" is distinguishable from
+  `False` / `0`.
+- Nullable API fields are typed `Attribute[T | None]` and the property returns `T | None`.
+
+### Backward compatibility
+
+PyGithub is widely used; changes must not break user code:
+
+- New parameters of existing public methods are appended at the **end** of the parameter list (callers may pass
+  arguments positionally) unless they are keyword-only.
+- Do not rename existing parameters (callers may pass them by keyword). If a rename is desirable, leave a comment like
+  `# v3: sha should be renamed to ref, which breaks user code like get_commit(sha=...)`.
+- Deprecate rather than remove: use `typing_extensions.deprecated`, and when emitting `warnings.warn(...)` set
+  `stacklevel` so the warning points at the caller's code.
+- Changing a default that is sent to the API (e.g. removing a default `event="COMMENT"`) changes behaviour; it needs
+  justification against the GitHub API docs and adjusted replay data.
+
+### Consistency across the code base
+
+When fixing a bug pattern (e.g. URL-encoding with `urllib.parse.quote`, `del headers[...]` side effects,
+`warnings.warn` without `stacklevel`), search the code base for all other occurrences and fix them in the same PR.
 
 ---
 
