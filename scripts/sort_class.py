@@ -159,28 +159,34 @@ class SortMethodsTransformer(cst.CSTTransformer):
                     )
                 )
         if updated_node.name.value == "_useAttributes":
-            ifs = list([idx for idx, stmt in enumerate(updated_node.body.body) if isinstance(stmt, cst.If)])
-            if ifs:
-                start_if, end_if = ifs[0], ifs[-1] + 1
-                stmts = updated_node.body.body
-                ifs = sorted(
-                    stmts[start_if:end_if],
-                    key=lambda stmt: (
-                        stmt.test.left.value
-                        if isinstance(stmt.test, cst.Comparison)
-                        else (
-                            stmt.test.children[0].func.value
-                            if isinstance(stmt.test.children[0], cst.Call)
-                            else stmt.test.children[0].left.value
-                        )
-                    ),
-                )
-                updated_node = updated_node.with_changes(
-                    body=updated_node.body.with_changes(
-                        body=tuple(stmts[:start_if]) + tuple(ifs) + tuple(stmts[end_if:])
-                    )
-                )
+            # sort each run of consecutive attribute statements (if "name" in attributes: …),
+            # any other statement (e.g. custom code like "if self._url.value: …") stays in place
+            sorted_stmts: list[cst.BaseStatement] = []
+            run: list[cst.If] = []
+            for stmt in updated_node.body.body:
+                if self.use_attr_sort_key(stmt) is not None:
+                    run.append(stmt)
+                    continue
+                sorted_stmts.extend(sorted(run, key=self.use_attr_sort_key))
+                run = []
+                sorted_stmts.append(stmt)
+            sorted_stmts.extend(sorted(run, key=self.use_attr_sort_key))
+            updated_node = updated_node.with_changes(body=updated_node.body.with_changes(body=tuple(sorted_stmts)))
         return updated_node
+
+    @staticmethod
+    def use_attr_sort_key(stmt: cst.BaseStatement) -> str | None:
+        # returns the sort key of attribute statements in _useAttributes, None for any other statement
+        if not isinstance(stmt, cst.If):
+            return None
+        test = stmt.test
+        if isinstance(test, cst.BooleanOperation):
+            test = test.left
+            if isinstance(test, cst.Call) and isinstance(test.func, cst.Name):
+                return test.func.value
+        if isinstance(test, cst.Comparison) and isinstance(test.left, (cst.SimpleString, cst.Name)):
+            return test.left.value
+        return None
 
 
 def sort_class(class_name: str, filename: str, dry_run: bool, locks: dict[str, multiprocessing.Lock]):
