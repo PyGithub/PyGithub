@@ -359,11 +359,13 @@ mypy github tests
 
 ### Evaluating "Check verbs", "Add schemas", "Implement schemas" and "Sort classes"
 
-These jobs (`.github/workflows/ci.yml`) run `scripts/openapi.py` / `scripts/sort_class.py`. The first three run the
-script on the PR's **base** and on the **head** (the PR merged into base) and fail on **any difference** between the
-two outputs; "Sort classes" fails if sorting changes any file. A red job is therefore not automatically a problem,
-and a difference is not automatically caused by the PR. For each of the four jobs, whether green or red, fetch the
-log and evaluate it:
+These jobs (`.github/workflows/ci.yml`) run `scripts/openapi.py` / `scripts/sort_class.py` against the target
+branch (**base**) and the feature branch (**head**) and fail if the outputs differ ("Sort classes" checks that sorting
+the head changes nothing; `main` is kept sorted by the same job on push). The diff therefore shows exactly **what the
+feature branch changes** in the scripts' view of the code base: anything that is already present on `main` (an
+unsorted class, a missing schema, an unimplemented property) does not show up unless the feature branch changes it.
+Every entry in the diff is caused by the PR — the question is whether it is **intended and desirable**, not whether it
+belongs to the PR. For each of the four jobs, whether green or red, fetch the log and evaluate it:
 
 ```bash
 gh pr checks <N> -R PyGithub/PyGithub                      # job names, states and links
@@ -383,17 +385,22 @@ python scripts/openapi.py --dry-run apply properties --tests github openapi.json
 python scripts/sort_class.py --dry-run openapi.index <Class> …              # Sort classes
 ```
 
-Run the same on the base commit for the first three and compare, as CI does.
+Run the same on the base commit and compare the outputs, as CI does (for "Sort classes", any change on head counts,
+as base is sorted).
 
 **How to read the diff.** In `diff base head` output, lines starting with `<` exist only on base, lines starting
 with `>` only on head:
 
-- `>` lines (new on head) are what the PR introduces — evaluate them.
-- `<` lines only (a suggestion / change disappeared on head) usually mean the PR resolved something, or base and head
-  differ for reasons unrelated to the PR. Not a problem in itself, but explain why the job is red.
-- Changes mentioning classes, files or paths the PR does not touch, or a different class count
-  (`Applying API schemas to 230 … classes` vs. `235`), indicate base and head are out of sync (outdated PR branch,
-  `main` moved, OpenAPI spec changed). These are **not relevant** to the PR; at most ask to merge `main` and re-run.
+- `>` lines are findings the PR **introduces** (a new schema suggestion, a missing property, a verb mismatch, an
+  unsorted member). They usually require a change in the PR.
+- `<` lines are findings the PR **removes**. Usually good (the PR implemented a suggested schema or property, fixed a
+  `:calls:` verb) — the job is still red because the output differs; confirm the removal is intended (e.g. not caused
+  by deleting a schema reference or a method) and say in the review that this part is fine.
+- Entries for classes or methods that the diff of the PR does not visibly touch are still caused by the PR: e.g. a
+  changed return type or new method changes which classes a schema is returned by, a changed base class affects all
+  subclasses, a new class changes the class count (`Applying API schemas to 230 … classes` vs. `235`). Trace each
+  such entry back to the change that causes it. If the cause is a change that does not belong to the PR's scope
+  (e.g. the branch contains unrelated commits), that is a scope problem (section 2).
 
 **Per job:**
 
@@ -401,34 +408,37 @@ with `>` only on head:
   Relevant if a method touched by the PR is listed: the `:calls:` docstring names a wrong verb or path, or the method
   calls the API in a way the index does not recognise ("Not found any … call in …" / "Method … is known to call …").
   Ask to fix the docstring (or, for legitimate indirect calls, the known-verbs section of
-  `github/openapi.index.json`). Differences for untouched methods are side effects.
+  `github/openapi.index.json`). A `<` entry means the PR fixed a pre-existing mismatch.
 - **Add schemas** — lists OpenAPI schemas that classes should declare in their docstring (`Class X: - should
-  implement schema /components/schemas/…`, with methods/paths returning them). Relevant when a `> Class X:` entry is a
-  class **added or modified by the PR**, or the schema is returned by a method the PR adds: ask to add the schema to
-  the class docstring (after checking it really matches, e.g. via the "Paths returning the class"). Entries for other
-  classes are pre-existing gaps or base/head drift — tell the contributor they can ignore them.
+  implement schema /components/schemas/…`, with methods/paths returning them). A `> Class X:` entry means the PR
+  made a schema applicable to `X` (new class, new method returning the schema, changed return type): ask to add the
+  schema to the class docstring after checking it really matches (e.g. via "Methods returning the schema" / "Paths
+  returning the class"); if it does not match, the PR's return type or class choice is probably wrong. A `<` entry
+  means the PR resolved a suggestion — check it was added to the right class.
 - **Implement schemas** — shows which properties the declared schemas would add to / change in each class
-  (`Applying schema …`, followed by a `Diff:` that is empty when the class matches the schema). Relevant for classes
-  added or changed by the PR:
+  (`Applying schema …`, followed by a `Diff:` that is empty when the class matches the schema). For entries the PR
+  introduces:
   - a non-empty `Diff:` means the class misses attributes of its schema (or types differ, e.g. nullability) — ask to
     implement them (`python scripts/openapi.py apply properties --tests … <Class>`), or to justify omitting them;
   - `Schema not implemented: …/properties/<name>` means a nested object has no PyGithub class yet — consider asking
     for a dedicated class instead of `dict[str, Any]`, or accept it as a known gap for a later PR;
-  - diffs in classes the PR does not touch are not relevant (often newly added API fields on `main`).
+  - `<` entries mean the PR implemented properties that were missing before — check they follow the conventions.
 - **Sort classes** — the diff shows how members of a class would be reordered (see ARCHITECTURE.md "Internal Class
-  Order"). A diff in a class the PR touches is relevant and must be fixed (`python scripts/sort_class.py openapi.index
-  <Class>`, or the `auto-fix` workflow on the fork). A diff only in untouched classes means `main` itself is unsorted —
-  not the contributor's problem.
+  Order"). Since `main` is sorted, any diff is caused by the PR and must be fixed (`python scripts/sort_class.py
+  openapi.index <Class>`, or the `auto-fix` workflow on the fork). Remember that the script does not reorder regular
+  methods, so a green job does not prove new methods are placed next to related ones.
 
 **Tool crashes.** A Python traceback from `scripts/openapi.py` or `scripts/sort_class.py` (e.g. `AttributeError:
 'Attribute' object has no attribute 'left'` in `update_use_attrs` / `leave_FunctionDef`) is not a diff. Find the code
 in the PR that triggers it — typically an unusual statement in `_useAttributes` (an `if` whose condition is not of the
 form `"key" in attributes [and …]`) or `_initAttributes`, or class-level statements between methods. If that code
 deviates from the conventions, ask the author to follow them; if the code is legitimate, the script needs fixing
-(separate PR, by maintainers) and the job can be ignored for this PR — say so explicitly.
+(separate PR, by maintainers) and the job can be ignored for this PR — say so explicitly. Since base passes, the
+crash is always triggered by code the PR adds or changes.
 
 **In the review**, state for each of these jobs: relevant or not, why, and (if relevant) the concrete change, citing
-the class / method and the log lines. Do not ask contributors to fix differences that are not caused by their PR.
+the class / method and the log lines. For `<` entries (findings the PR removes), confirm they are fine so the
+contributor knows the red job needs no action for them.
 
 ## 11. Writing the review
 
