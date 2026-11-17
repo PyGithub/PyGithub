@@ -50,8 +50,13 @@ class DependabotAlertAdvisory(AdvisoryBase):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._classification: Attribute[str] = NotSet
         self._references: Attribute[list[dict]] = NotSet
         self._vulnerabilities: Attribute[list[DependabotAlertVulnerability]] = NotSet
+
+    @property
+    def classification(self) -> str:
+        return self._classification.value
 
     @property
     def references(self) -> list[dict]:
@@ -62,6 +67,8 @@ class DependabotAlertAdvisory(AdvisoryBase):
         return self._vulnerabilities.value
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "classification" in attributes:  # pragma no branch
+            self._classification = self._makeStringAttribute(attributes["classification"])
         if "references" in attributes:
             self._references = self._makeListOfDictsAttribute(
                 attributes["references"],
