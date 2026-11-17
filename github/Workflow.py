@@ -53,7 +53,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, Literal, overload
 
 import github.Branch
-import github.Commit
 import github.GithubObject
 import github.NamedUser
 import github.Tag
@@ -63,7 +62,6 @@ from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
     from github.Branch import Branch
-    from github.Commit import Commit
     from github.NamedUser import NamedUser
     from github.Tag import Tag
     from github.WorkflowRun import WorkflowRun
@@ -156,7 +154,7 @@ class Workflow(CompletableGithubObject):
     @overload
     def create_dispatch(
         self,
-        ref: Branch | Tag | Commit | str,
+        ref: Branch | Tag | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
         return_run_details: Literal[False] = ...,
@@ -165,7 +163,7 @@ class Workflow(CompletableGithubObject):
     @overload
     def create_dispatch(
         self,
-        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        ref: Branch | Tag | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
         return_run_details: Literal[True] = ...,
@@ -175,26 +173,20 @@ class Workflow(CompletableGithubObject):
     @ignore_return_type(ignore_type="WorkflowRun")
     def create_dispatch(
         self,
-        ref: github.Branch.Branch | github.Tag.Tag | github.Commit.Commit | str,
+        ref: Branch | Tag | str,
         inputs: Opt[dict] = NotSet,
         throw: bool = False,
         return_run_details: bool = False,
     ) -> bool | WorkflowRun:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
+        :param ref: :class:`github.Branch.Branch` or :class:`github.Tag.Tag` or string (branch or tag name)
         Note: raises or return False without details on error, depending on the ``throw`` parameter.
         """
-        assert (
-            isinstance(ref, github.Branch.Branch)
-            or isinstance(ref, github.Tag.Tag)
-            or isinstance(ref, github.Commit.Commit)
-            or isinstance(ref, str)
-        ), ref
+        assert isinstance(ref, (github.Branch.Branch, github.Tag.Tag, str)), ref
         assert inputs is NotSet or isinstance(inputs, dict), inputs
         if isinstance(ref, github.Branch.Branch):
             ref = ref.name
-        elif isinstance(ref, github.Commit.Commit):
-            ref = ref.sha
         elif isinstance(ref, github.Tag.Tag):
             ref = ref.name
         if inputs is NotSet:

@@ -188,6 +188,30 @@ class Environment(Framework.TestCase):
         self.assertTrue(environment.deployment_branch_policy.protected_branches)
         self.assertFalse(environment.deployment_branch_policy.custom_branch_policies)
 
+    def testDeploymentBranchPolicies(self):
+        policies = list(self.environment.get_deployment_branch_policies())
+        self.assertListKeyEqual(policies, lambda p: p.name, ["main", "v*"])
+        self.assertListKeyEqual(policies, lambda p: p.type, ["branch", "tag"])
+
+        policy = self.environment.create_deployment_branch_policy("release/*", type="branch")
+        self.assertEqual(policy.id, 361473)
+        self.assertEqual(policy.name, "release/*")
+        self.assertEqual(policy.type, "branch")
+        self.assertEqual(repr(policy), 'DeploymentBranchPolicy(name="release/*", id=361473)')
+
+        policy = self.environment.get_deployment_branch_policy(361473)
+        self.assertEqual(policy.name, "release/*")
+        self.assertEqual(policy.node_id, "MDE2OkdhdGVCcmFuY2hQb2xpY3k361473")
+
+        self.assertEqual(
+            policy.url, "https://api.github.com/repos/alson/PyGithub/environments/dev/deployment-branch-policies/361473"
+        )
+        policy.edit("releases/*")
+        self.assertEqual(policy.name, "releases/*")
+        self.assertEqual(policy.id, 361473)
+
+        policy.delete()
+
     def testDeleteEnvironment(self):
         self.repo.delete_environment("test")
         with pytest.raises(github.UnknownObjectException):

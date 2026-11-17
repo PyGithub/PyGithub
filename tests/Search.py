@@ -174,6 +174,8 @@ class Search(Framework.TestCase):
                 "azavea/OpenTreeMap",
             ],
         )
+        self.assertTrue(repos[0].has_pull_requests)
+        self.assertEqual(repos[0].pull_request_creation_policy, "all")
 
     def testSearchReposWithNoResults(self):
         repos = self.g.search_repositories("doesnotexist")

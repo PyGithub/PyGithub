@@ -110,13 +110,15 @@ from urllib3 import Retry
 import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
-from github.GithubObject import Opt, as_rest_api_attributes, is_undefined
+import github.RateLimitOverview
+from github.GithubObject import Opt, as_rest_api_attributes, is_undefined, rate_limit_from_headers
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
     from .Auth import Auth
     from .GithubObject import GithubObject
     from .InstallationAuthorization import InstallationAuthorization
+    from .RateLimitOverview import RateLimitOverview
 
 T = TypeVar("T")
 T_gh = TypeVar("T_gh", bound="GithubObject")
@@ -437,6 +439,7 @@ class Requester:
         self.__custom_connections: deque[HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass] = deque()
         self.rate_limiting = (-1, -1)
         self.rate_limiting_resettime = 0
+        self.__rate_limit_resources: dict[str, dict[str, int]] = {}
         self.FIX_REPO_GET_GIT_REF = True
         assert isinstance(per_page, int) and per_page > 0, per_page
         self.per_page = per_page
@@ -531,6 +534,38 @@ class Requester:
             self.__custom_connections.popleft().close()
 
     @property
+    def current_rate_limits(self) -> RateLimitOverview:
+        """
+        Latest rate limits known to this requester, per resource.
+
+        Values come from the response headers of requests made through this requester and any requester sharing them
+        (see :meth:`useCurrentRateLimits`), e.g. derived via :meth:`withLazy` and :meth:`withApiVersion`, and from
+        calls to :meth:`get_rate_limits`, which provide values for all resources. This does not send any request, use
+        :meth:`github.RateLimitOverview.RateLimitOverview.update` to fetch current values.
+
+        Attributes of ``resources`` are ``None`` until values for that resource are known or if the resource is unknown
+        to :class:`github.RateLimit.RateLimit`, ``rate`` holds the values of the ``core`` resource.
+
+        """
+        resources = {resource: dict(rate) for resource, rate in list(self.__rate_limit_resources.items())}
+        attributes: dict[str, Any] = {"resources": resources}
+        if "core" in resources:
+            attributes["rate"] = resources["core"]
+        return github.RateLimitOverview.RateLimitOverview(self, {}, attributes)
+
+    def get_rate_limits(self) -> RateLimitOverview:
+        """
+        Fetch all rate limits.
+
+        This updates the respective values provided by :attr:`current_rate_limits`.
+
+        """
+        headers, data = self.requestJsonAndCheck("GET", "/rate_limit")
+        for resource, rate in data.get("resources", {}).items():
+            self.__rate_limit_resources[resource] = dict(rate)
+        return github.RateLimitOverview.RateLimitOverview(self, headers, data)
+
+    @property
     def kwargs(self) -> dict[str, Any]:
         """
         Returns arguments required to recreate this Requester with Requester.__init__, as well as with
@@ -585,9 +620,7 @@ class Requester:
         :return: new Requester instance
 
         """
-        kwargs = self.kwargs
-        kwargs.update(auth=auth)
-        return Requester(**kwargs)
+        return self.__withArguments(auth=auth)
 
     @property
     def is_lazy(self) -> bool:
@@ -609,9 +642,7 @@ class Requester:
         if is_undefined(lazy) or self.is_lazy == lazy:
             return self
 
-        kwargs = self.kwargs
-        kwargs.update(lazy=lazy)
-        return Requester(**kwargs)
+        return self.__withArguments(lazy=lazy)
 
     @property
     def api_version(self) -> str | None:
@@ -630,9 +661,26 @@ class Requester:
         if api_version == self.api_version:
             return self
 
-        kwargs = self.kwargs
-        kwargs.update(api_version=api_version)
-        return Requester(**kwargs)
+        return self.__withArguments(api_version=api_version)
+
+    def __withArguments(self, **kwargs: Any) -> Requester:
+        requester = Requester(**{**self.kwargs, **kwargs})
+        # rate limits are bound to the authentication and the server, none of the other arguments affect them
+        if not kwargs.keys() & {"auth", "base_url"}:
+            requester.useCurrentRateLimits(self)
+        return requester
+
+    def useCurrentRateLimits(self, requester: Requester) -> None:
+        """
+        Make this requester share :attr:`current_rate_limits` with the given requester, dropping its own known values.
+
+        Rate limits are bound to the authentication and the server, so only use this with a requester of the same
+        authentication and base url.
+
+        :param requester: requester to share rate limits with
+
+        """
+        self.__rate_limit_resources = requester.__rate_limit_resources
 
     def requestJsonAndCheck(
         self,
@@ -1246,6 +1294,10 @@ class Requester:
         if Consts.headerRateReset in responseHeaders:
             # ints expected but sometimes floats returned: https://github.com/PyGithub/PyGithub/pull/2697
             self.rate_limiting_resettime = int(float(responseHeaders[Consts.headerRateReset]))
+        if Consts.headerRateResource in responseHeaders:
+            self.__rate_limit_resources[responseHeaders[Consts.headerRateResource]] = rate_limit_from_headers(
+                responseHeaders
+            )
 
         if Consts.headerOAuthScopes in responseHeaders:
             self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")

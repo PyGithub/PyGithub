@@ -66,6 +66,7 @@ class PullRequestComment(Framework.TestCase):
         self.assertEqual(self.comment.html_url, "https://github.com/PyGithub/PyGithub/pull/31#discussion_r1580134")
         self.assertEqual(self.comment.id, 1580134)
         self.assertIsNone(self.comment.in_reply_to_id)
+        self.assertFalse(self.comment.is_copilot_code_review)
         self.assertEqual(self.comment.line, 73)
         self.assertEqual(self.comment.node_id, "MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDE1ODAxMzQ=")
         self.assertEqual(self.comment.original_commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")

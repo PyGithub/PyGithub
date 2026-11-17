@@ -125,7 +125,22 @@ class Authentication(Framework.BasicTestCase):
     def testAppAuthAuthentication(self):
         # test data copied from testAppAuthentication to test parity
         g = github.Github(auth=self.app_auth.get_installation_auth(29782936))
-        self.assertEqual(g.get_user("ammarmallik").name, "Ammar Akbar")
+        user = g.get_user("ammarmallik")
+        self.assertEqual(user.name, "Ammar Akbar")
+
+        # any GithubObject provides the rate limit of its response
+        self.assertEqual(user.rate_limit.resource, "core")
+        self.assertEqual(user.rate_limit.remaining, 57)
+
+        # any GithubObject provides the current rate limit
+        self.assertEqual(user.current_rate_limits.resources.core.remaining, 57)
+
+        # rate limit overview reflects the recorded response headers
+        core = g.requester.current_rate_limits.resources.core
+        self.assertEqual(core.limit, 60)
+        self.assertEqual(core.remaining, 57)
+        self.assertEqual(core.used, 3)
+        self.assertEqual(core.reset, datetime(2022, 10, 25, 2, 56, 23, tzinfo=timezone.utc))
 
     def assert_requester_args(self, g, expected_requester):
         expected_args = expected_requester.kwargs

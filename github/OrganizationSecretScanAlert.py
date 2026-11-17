@@ -29,11 +29,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import github.NamedUser
+import github.Organization
 import github.Repository
 from github.GithubObject import Attribute, NotSet
 from github.SecretScanAlert import SecretScanAlert
 
 if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Repository import Repository
 
 
@@ -52,7 +56,32 @@ class OrganizationSecretScanAlert(SecretScanAlert):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._closure_request_comment: Attribute[str] = NotSet
+        self._closure_request_reviewer: Attribute[NamedUser | Organization] = NotSet
+        self._closure_request_reviewer_comment: Attribute[str] = NotSet
+        self._provider: Attribute[str] = NotSet
+        self._provider_slug: Attribute[str] = NotSet
         self._repository: Attribute[Repository] = NotSet
+
+    @property
+    def closure_request_comment(self) -> str:
+        return self._closure_request_comment.value
+
+    @property
+    def closure_request_reviewer(self) -> NamedUser | Organization:
+        return self._closure_request_reviewer.value
+
+    @property
+    def closure_request_reviewer_comment(self) -> str:
+        return self._closure_request_reviewer_comment.value
+
+    @property
+    def provider(self) -> str:
+        return self._provider.value
+
+    @property
+    def provider_slug(self) -> str:
+        return self._provider_slug.value
 
     @property
     def repository(self) -> Repository:
@@ -60,5 +89,23 @@ class OrganizationSecretScanAlert(SecretScanAlert):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "closure_request_comment" in attributes:  # pragma no branch
+            self._closure_request_comment = self._makeStringAttribute(attributes["closure_request_comment"])
+        if "closure_request_reviewer" in attributes:  # pragma no branch
+            self._closure_request_reviewer = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["closure_request_reviewer"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )
+        if "closure_request_reviewer_comment" in attributes:  # pragma no branch
+            self._closure_request_reviewer_comment = self._makeStringAttribute(
+                attributes["closure_request_reviewer_comment"]
+            )
+        if "provider" in attributes:  # pragma no branch
+            self._provider = self._makeStringAttribute(attributes["provider"])
+        if "provider_slug" in attributes:  # pragma no branch
+            self._provider_slug = self._makeStringAttribute(attributes["provider_slug"])
         if "repository" in attributes:
             self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
