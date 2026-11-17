@@ -249,7 +249,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "CompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -1358,6 +1433,132 @@
+@@ -1375,6 +1450,132 @@
        ],
        "test_filename": "tests/IssueComment.py"
      },
@@ -382,7 +382,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NamedUser": {
        "bases": [
          "CompletableGithubObject"
-@@ -4724,12 +4925,14 @@
+@@ -4741,12 +4942,14 @@
      "class_to_descendants": {
        "ABC": [
          "Commit",
@@ -397,7 +397,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject",
-@@ -4741,8 +4944,12 @@
+@@ -4758,8 +4961,12 @@
          "_NotSetType",
          "_ValuedAttribute"
        ],
@@ -410,7 +410,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObjectWithPaginatedProperty",
          "IssueComment",
          "NamedUser",
-@@ -4750,15 +4957,18 @@
+@@ -4767,15 +4974,18 @@
          "Repository"
        ],
        "CompletableGithubObjectWithPaginatedProperty": [
@@ -430,7 +430,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject",
-@@ -4771,6 +4981,7 @@
+@@ -4788,6 +4998,7 @@
        "NonCompletableGithubObject": [
          "GitAuthor",
          "GitCommit",
@@ -438,7 +438,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "Reaction"
        ],
        "Protocol": [
-@@ -5453,6 +5664,9 @@
+@@ -5470,6 +5681,9 @@
        "/components/schemas/commit": [
          "Commit"
        ],
@@ -448,7 +448,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "/components/schemas/commit-search-result-item/properties/commit": [
          "Commit",
          "GitCommit"
-@@ -5502,6 +5716,9 @@
+@@ -5519,6 +5733,9 @@
        "/components/schemas/repository": [
          "Repository"
        ],

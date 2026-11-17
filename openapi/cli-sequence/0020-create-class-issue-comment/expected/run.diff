@@ -165,7 +165,7 @@ diff --unified --recursive --new-file before/github/IssueComment.py after/github
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -207,6 +207,236 @@
+@@ -224,6 +224,236 @@
        "schemas": [],
        "test_filename": "tests/GithubObject.py"
      },
@@ -402,7 +402,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NamedUser": {
        "bases": [
          "CompletableGithubObject"
-@@ -996,6 +1226,7 @@
+@@ -1013,6 +1243,7 @@
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GithubObject",
@@ -410,7 +410,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject"
-@@ -1007,12 +1238,14 @@
+@@ -1024,12 +1255,14 @@
        ],
        "CompletableGithubObject": [
          "CompletableGithubObjectWithPaginatedProperty",
@@ -425,7 +425,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NamedUser",
          "NamedUserSearchResult",
          "NonCompletableGithubObject"
-@@ -1649,6 +1882,9 @@
+@@ -1666,6 +1899,9 @@
        ]
      },
      "schema_to_classes": {
