@@ -193,13 +193,8 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
 
     @property
     def repository(self) -> Repository:
-        if is_undefined(self._repository):
-            # Only commit search results contain the repository, other commits refer to it via their url:
-            # .../repos/{owner}/{repo}/commits/{sha} or .../repos/{owner}/{repo}/git/commits/{sha}
-            match = re.fullmatch(r"(.*?/repos/[^/]+/[^/]+)/(?:git/)?commits/[^/]+", self._url.value or "")
-            if match:
-                self._repository = self._makeClassAttribute(github.Repository.Repository, {"url": match.group(1)})
-        self._completeIfNotSet(self._repository)
+        # This attribute is not provided by the response, it is extracted from the URL,
+        # see _useAttributes(). Hence, no need to trigger _completeIfNotSet.
         return self._repository.value
 
     @property
@@ -394,8 +389,6 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "parents" in attributes:  # pragma no branch
             self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
-        if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         elif "url" in attributes and attributes["url"]:
@@ -406,6 +399,13 @@ class Commit(CompletableGithubObjectWithPaginatedProperty):
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "text_matches" in attributes:  # pragma no branch
             self._text_matches = self._makeDictAttribute(attributes["text_matches"])
+
+        # Only commit search results contain the repository, other commits refer to it via their url:
+        # .../repos/{owner}/{repo}/commits/{sha} or .../repos/{owner}/{repo}/git/commits/{sha}
+        if self._url.value:
+            match = re.fullmatch(r"(.*?/repos/[^/]+/[^/]+)/(?:git/)?commits/[^/]+", self._url.value)
+            if match:
+                self._repository = self._makeClassAttribute(github.Repository.Repository, {"url": match.group(1)})
 
 
 class CommitSearchResult(Commit):
@@ -435,5 +435,7 @@ class CommitSearchResult(Commit):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "repository" in attributes:  # pragma no branch
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
