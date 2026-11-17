@@ -126,8 +126,9 @@ class Workflow(CompletableGithubObject):
     def create_dispatch(self, ref: github.Branch.Branch | github.Tag.Tag | str, inputs: Opt[dict] = NotSet) -> bool:
         """
         :calls: `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches <https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event>`_
+        :param ref: :class:`github.Branch.Branch` or :class:`github.Tag.Tag` or string (branch or tag name)
         """
-        assert isinstance(ref, github.Branch.Branch) or isinstance(ref, github.Tag.Tag) or isinstance(ref, str), ref
+        assert isinstance(ref, (github.Branch.Branch, github.Tag.Tag, str)), ref
         assert inputs is NotSet or isinstance(inputs, dict), inputs
         if isinstance(ref, github.Branch.Branch):
             ref = ref.name
