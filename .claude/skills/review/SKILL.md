@@ -76,17 +76,41 @@ See "API Design Conventions" in ARCHITECTURE.md. Check:
 
 ## 4. Backward compatibility
 
-PyGithub has many users; any break must be deliberate.
+PyGithub has many users; any break must be deliberate. See ARCHITECTURE.md "Backward compatibility" and
+"Deprecations".
+
+**Find every break.** Walk through each changed public signature, property, return type and default and ask "does
+existing user code still run and behave the same?":
 
 - New parameter inserted in the **middle** of an existing signature → must be appended at the end (callers pass
   positionally), unless it is keyword-only.
 - Renamed parameters break keyword callers → keep the old name; at most add a `# v3: …` comment.
-- Changed defaults that are sent to the API (e.g. dropping `event="COMMENT"`), changed return types, removed methods:
-  ask what GitHub does when the value is omitted, and require deprecation (`typing_extensions.deprecated`) instead of
-  removal.
+- Removed / renamed methods, properties or classes; changed return types (e.g. `dict` → PyGithub object, `str` →
+  object); changed defaults that are sent to the API (e.g. dropping `event="COMMENT"`) — ask what GitHub does when
+  the value is omitted.
 - Nullable fields: when an attribute becomes `Attribute[T | None]`, the property return type must also become
-  `T | None` (a common miss).
-- Deprecation warnings point at the caller (`stacklevel=2`); check all `warnings.warn` calls in the touched module.
+  `T | None` (a common miss; this is a typing fix, not a break).
+
+**Split breaking changes out.** For every break found, check whether it can be moved into a subsequent PR, leaving
+this PR with the new API plus a proper deprecation of the old one. Request that split unless a non-breaking
+intermediate step is genuinely impossible; in that case the PR must say so and the break must be documented with
+"code like … should be replaced with …" (as in the "Breaking Changes" sections of `doc/changes.rst`).
+
+**Check every deprecation:**
+
+- Uses `@deprecated("…")` from `typing_extensions` (methods, properties, classes) or
+  `warnings.warn("…", category=DeprecationWarning, stacklevel=2)` (parameters / values). `stacklevel` makes the
+  warning point at the caller; check all `warnings.warn` calls in the touched module.
+- The message names an **alternative**, and the alternative provides **identical, or as similar as possible,
+  behaviour**. Verify this by comparing old and new code paths: same returned data, same laziness, same number of API
+  calls. If the alternative needs an extra request, the deprecation / description must show how to avoid it (e.g. a
+  lazy `Github` instance: `Github(..., lazy=True).get_organization(...).get_hook(id).edit(...)`). If the alternative
+  does not exist yet, it must be added in the same PR.
+- The deprecated API still works unchanged (preferably delegating to the alternative) and remains tested; tests
+  assert the `DeprecationWarning`.
+- **The PR description enumerates all deprecations** (and breaking changes), each with its alternative, in a form
+  that can be copied into the "Deprecations" section of `doc/changes.rst`. Compare the list against the diff
+  (`grep` the diff for `deprecated` and `DeprecationWarning`); ask the author to add missing entries.
 
 ## 5. Implementation conventions
 
@@ -110,8 +134,22 @@ Compare against ARCHITECTURE.md "Naming and Structuring Conventions". The most f
   changes to code guarded by `__connection_lock` for thread safety; prefer leaving correct-but-slow code alone over a
   risky optimisation.
 - `_useAttributes` must set every attribute declared in `_initAttributes` (look for missing ones, e.g.
-  `dismissal_approved_by`); attributes and methods sorted as required (the `sorted-classes` skill /
-  `scripts/sort_class.py`).
+  `dismissal_approved_by`).
+- **Member order** (ARCHITECTURE.md "Internal Class Order", enforced by `scripts/sort_class.py`): prolog →
+  `__init__` → `_initAttributes` → dunders (alphabetical) → `@property`s (alphabetical) → other methods →
+  `_useAttributes` last. Attribute assignments in `_initAttributes` and the `if "key" in attributes` blocks in
+  `_useAttributes` are alphabetical (ASCII: `repo_name` before `repository`). Check in particular:
+  - a new property / attribute / `if` block inserted at the right alphabetical position in **all three** places
+    (`_initAttributes`, properties, `_useAttributes`) — the most common CI "sort classes" failure;
+  - classes that subclass another PyGithub class (`SubIssue(Issue)`, `RepositoryAdvisory(AdvisoryBase)`) are not
+    sorted by the script, so check their order by hand;
+  - no class-level statements between methods (the script fails on them);
+  - new regular methods are not sorted by the script: they belong next to related methods (`get_x` / `create_x` /
+    `delete_x` together), not appended at the end of the class or after `_useAttributes`.
+
+  Run `python scripts/sort_class.py --dry-run openapi.index <Class> …` (needs `libcst`, from
+  `requirements/scripts.txt`, and an index from `python scripts/openapi.py index github openapi.index`); any diff it
+  prints is a required change.
 
 ## 6. Documentation
 

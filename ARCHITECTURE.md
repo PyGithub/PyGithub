@@ -392,15 +392,54 @@ A class that maps to more than one OpenAPI schema lists all of them:
 
 ### Internal Class Order
 
+The order of members of a PyGithub class is enforced by `scripts/sort_class.py` (CI job "sort classes" in
+`.github/workflows/auto-fix.yml` / `.github/actions/sort-classes`, see also the `sorted-classes` skill). A class body
+is laid out as:
+
 ```
-_initAttributes()
-dunder methods  (alphabetical: __eq__, __hash__, __repr__, __str__, …)
-@property  (one per attribute, alphabetical by name)
-public methods
-_useAttributes()
+1. prolog           class docstring, class-level constants / annotations — everything before the first `def`
+2. __init__()       only if the class overrides the constructor
+3. _initAttributes()
+4. dunder methods   alphabetical: __eq__, __hash__, __repr__, __str__, …
+5. @property        alphabetical by property name
+6. other methods    public and private methods, in the order chosen by the author (NOT sorted)
+7. _useAttributes()
+8. epilog           anything after the last `def`
 ```
 
 `_useAttributes` is always the last method in the class.
+
+Exact rules implemented by the script:
+
+- **Which classes**: only classes whose *direct* base class name ends with `GithubObject` (`GithubObject`,
+  `CompletableGithubObject`, `NonCompletableGithubObject`, `CompletableGithubObjectWithPaginatedProperty`, also when
+  written as `github.GithubObject.X`). Subclasses of other PyGithub classes (e.g. `SubIssue(Issue)`,
+  `RepositoryAdvisory(AdvisoryBase)`, `IssueSearchResult(Issue)`) are **not** touched by the script — they must
+  follow the same order by hand.
+- **One block of methods**: all `def`s of the class must form one consecutive block. A class-level statement between
+  two methods makes the script fail ("There is no consecutive block of functions"); put class-level constants before
+  the first method.
+- **Unique names**: `__init__`, `_initAttributes` and `_useAttributes` may each exist only once.
+- **Properties** are methods decorated with a plain `@property` (also when stacked with other decorators, e.g.
+  `@property` + `@deprecated(...)`; deprecated properties stay in alphabetical position, they are not moved to the
+  end). `@x.setter` methods are not recognised as properties and end up among the other methods.
+- **Sort key** is the plain Python string order of the name (ASCII): uppercase < `_` < lowercase, so `repo_name`
+  comes before `repository`, and `created_at` before `creator`.
+- **`_initAttributes`**: the block from the first to the last annotated assignment (`self._x: Attribute[T] = NotSet`)
+  is sorted by attribute name. Keep all attribute initialisations as one contiguous block of annotated assignments
+  (no un-annotated assignments or other statements in between); statements before the first or after the last one
+  stay where they are.
+- **`_useAttributes`**: the block from the first to the last top-level `if` statement is sorted by the key in the
+  condition: `if "key" in attributes:` and `if "key" in attributes and …:` sort by `"key"`. An `elif` / `else` belongs
+  to its `if` and moves with it. Statements before the first `if` (e.g. `super()._useAttributes(attributes)`) stay
+  first.
+- **Other methods are never reordered** by the script. New methods should be placed next to the methods they relate
+  to (see "Public method ordering" below), e.g. `get_x` / `create_x` / `delete_x` together, rather than appended at
+  the end of the class.
+
+Run `python scripts/sort_class.py --dry-run openapi.index <ClassName> …` to see the diff the script would apply
+(`openapi.index` is created by `python scripts/openapi.py index github openapi.index`). Contributors can run the
+`auto-fix` workflow on their fork to apply the sort (and pre-commit fixes) to their branch.
 
 **Dunder methods** are Python special methods (`__name__`). All dunder methods of a class go immediately after
 `_initAttributes()`, in alphabetical order. The most common ones in PyGithub classes:
@@ -789,10 +828,50 @@ PyGithub is widely used; changes must not break user code:
   arguments positionally) unless they are keyword-only.
 - Do not rename existing parameters (callers may pass them by keyword). If a rename is desirable, leave a comment like
   `# v3: sha should be renamed to ref, which breaks user code like get_commit(sha=...)`.
-- Deprecate rather than remove: use `typing_extensions.deprecated`, and when emitting `warnings.warn(...)` set
-  `stacklevel` so the warning points at the caller's code.
 - Changing a default that is sent to the API (e.g. removing a default `event="COMMENT"`) changes behaviour; it needs
   justification against the GitHub API docs and adjusted replay data.
+- **Split breaking changes out**: a PR that would break user code (removed / renamed methods, properties or
+  parameters, changed return types, changed parameter order or semantics) should, wherever possible, be split into:
+  1. a PR that adds the new API and **deprecates** the old one, keeping the old one working, and
+  2. a subsequent PR that removes the deprecated API / makes the breaking change, merged for a later major release.
+
+  Only when no non-breaking intermediate step is possible does a breaking change go in directly; it is then listed
+  under "Breaking Changes" in `doc/changes.rst` together with "code like … should be replaced with …" examples.
+
+### Deprecations
+
+- Deprecate methods, properties and classes with `@deprecated("<alternative>")` from `typing_extensions` (stacked
+  below `@property` for properties). Deprecate parameters (or individual values) with
+  `warnings.warn("<alternative>", category=DeprecationWarning, stacklevel=2)` inside the method, so the warning points
+  at the caller's code.
+- **Every deprecation names an alternative** in its message, and that alternative must provide **identical** or **as
+  similar as possible** behaviour — same data, same number of API calls where it matters, same laziness. Where the
+  alternative differs (e.g. needs an extra GET), the deprecation (and changelog) explains how to get the old
+  behaviour, e.g. via a lazy `Github` instance:
+
+  ```python
+  @deprecated("Use Organization.get_hook(id).edit(…) instead")
+  def edit_hook(self, id: int, ...) -> Hook: ...
+
+
+  # equivalent without the extra GET of the hook:
+  Github(..., lazy=True).get_organization(...).get_hook(id).edit(...)
+  ```
+
+  Messages like "This is deprecated" without an alternative are not acceptable. If no alternative exists yet, add it
+  in the same PR.
+- The deprecated code keeps working unchanged (ideally implemented by delegating to the alternative) and keeps its
+  tests; tests of deprecated API assert the warning (`with self.assertWarns(DeprecationWarning)` /
+  `self.assertWarning(...)`).
+- **The PR description enumerates all deprecations** (and any breaking changes), each with its alternative. These
+  entries become the "Deprecations" / "Breaking Changes" sections in `doc/changes.rst`, e.g.:
+
+  ```
+  Deprecations
+  * Method `Organization.edit_hook` is deprecated, use `Organization.get_hook(id).edit(…)` instead.
+  * Method `Issue.assignee` and parameter `Issue.edit(assignee=…)` are deprecated,
+    use `Issue.assignees` and `Issue.edit(assignees=…)` instead.
+  ```
 
 ### Consistency across the code base
 
