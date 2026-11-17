@@ -19,7 +19,7 @@ jobs:
 
   test:
     runs-on: ${{ matrix.os }}
-    name: test (Python ${{ matrix.python-version }} on ${{ matrix.os-label }}${{ matrix.extras == 'none' && '' || format(' with {0}', matrix.extras)}})
+    name: test (Python ${{ matrix.python-version }} on ${{ matrix.os-label }}${{ matrix.extras != 'none' && format(' with {0}', matrix.extras) || '' }})
     strategy:
       fail-fast: false
       matrix:
