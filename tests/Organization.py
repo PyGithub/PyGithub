@@ -380,6 +380,13 @@ class Organization(Framework.TestCase):
         self.assertListKeyEqual(repos, lambda r: r.name, ["FatherBeaver", "PyGithub"])
         self.assertListKeyEqual(repos, lambda r: r.has_pages, [True, True])
 
+    def testInvitationsDeprecated(self):
+        with self.assertWarns(DeprecationWarning) as warning:
+            invitations = list(self.org.invitations())
+        self.assertEqual(len(invitations), 1)
+        self.assertEqual(invitations[0].id, 28984230)
+        self.assertWarning(warning, "Use get_invitations instead")
+
     def testFailedInvitations(self):
         invitations = list(self.org.get_failed_invitations())
         self.assertEqual(len(invitations), 1)
