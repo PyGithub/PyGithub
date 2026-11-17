@@ -1835,7 +1835,7 @@ class Repository(Framework.TestCase):
         content = b"Hello world"
         author = github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00")
         self.assertEqual(repr(author), 'InputGitAuthor(name="Enix Yu")')
-        self.repo.create_file(
+        result = self.repo.create_file(
             path=newFile,
             message="Create file for testCreateFile",
             content=content,
@@ -1843,6 +1843,7 @@ class Repository(Framework.TestCase):
             committer=author,
             author=author,
         )
+        self.assertEqual(result["commit"].repository.full_name, "PyGithub/PyGithub")
 
     def testUpdateFile(self):
         updateFile = "doc/testCreateUpdateDeleteFile.md"
