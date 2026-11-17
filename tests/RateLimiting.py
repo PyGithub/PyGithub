@@ -36,23 +36,67 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from unittest import mock
+
+import github.Rate
 
 from . import Framework
 
 
 class RateLimiting(Framework.TestCase):
+    DEPRECATION_MESSAGE = "Use current_rate_limits instead"
+
     def testRateLimiting(self):
-        self.assertEqual(self.g.rate_limiting, (4904, 5000))
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting, (4904, 5000))
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
+
         self.g.get_user("yurinnick")
-        self.assertEqual(self.g.rate_limiting, (4903, 5000))
-        self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting, (4903, 5000))
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
+
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
 
     def testResetTime(self):
-        self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.assertEqual(self.g.rate_limiting_resettime, 1684195041)
+        self.assertWarning(warning, self.DEPRECATION_MESSAGE)
+
+    def testResetsInSeconds(self):
+        reset = datetime(2024, 12, 13, 6, 43, 18, tzinfo=timezone.utc)
+        rate = github.Rate.Rate(self.g.requester, {}, {"reset": int(reset.timestamp())})
+
+        for now, expected in [
+            (reset - timedelta(seconds=90, milliseconds=500), 90.5),
+            (reset - timedelta(seconds=1), 1.0),
+            # the reset time is now or has passed
+            (reset, 0.0),
+            (reset + timedelta(seconds=1), 0.0),
+            (reset + timedelta(days=1), 0.0),
+        ]:
+            with self.subTest(now=now):
+                with mock.patch("github.Rate.datetime") as datetime_mock:
+                    datetime_mock.now.return_value = now
+                    actual = rate.resets_in_seconds
+                datetime_mock.now.assert_called_once_with(timezone.utc)
+                self.assertEqual(actual, expected)
 
     def testGetRateLimit(self):
-        rateLimitOverview = self.g.get_rate_limit()
+        with self.assertWarns(DeprecationWarning) as warning:
+            rateLimitOverview = self.g.get_rate_limit()
+        self.assertWarning(warning, "Use current_rate_limits.update() instead")
+
+        # the requester provides all rate limits from the response body, not just those from the response headers
+        overview = self.g.requester.current_rate_limits
+        self.assertEqual(repr(overview.rate), repr(rateLimitOverview.resources.core))
+        self.assertEqual(repr(overview.resources.core), repr(rateLimitOverview.resources.core))
+        self.assertEqual(repr(overview.resources.search), repr(rateLimitOverview.resources.search))
+        self.assertEqual(repr(overview.resources.graphql), repr(rateLimitOverview.resources.graphql))
 
         rate = rateLimitOverview.rate
         self.assertEqual(

@@ -146,7 +146,7 @@ diff --unified --recursive --new-file before/github/Repository.py after/github/R
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -2911,6 +2911,22 @@
+@@ -2928,6 +2928,22 @@
              }
            }
          },
@@ -169,7 +169,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "node_id": {
            "name": "node_id",
            "returns": [
-@@ -2998,6 +3014,20 @@
+@@ -3015,6 +3031,20 @@
              }
            }
          },
@@ -190,7 +190,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "owner": {
            "name": "owner",
            "returns": [
-@@ -3018,6 +3048,20 @@
+@@ -3035,6 +3065,20 @@
              }
            }
          },
@@ -211,7 +211,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "private": {
            "name": "private",
            "returns": [
-@@ -3112,6 +3156,22 @@
+@@ -3129,6 +3173,22 @@
              }
            }
          },
@@ -234,7 +234,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "size": {
            "name": "size",
            "returns": [
-@@ -3135,6 +3195,20 @@
+@@ -3152,6 +3212,20 @@
              }
            }
          },
@@ -255,7 +255,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "squash_merge_commit_message": {
            "name": "squash_merge_commit_message",
            "returns": [
-@@ -3297,6 +3371,22 @@
+@@ -3314,6 +3388,22 @@
              }
            }
          },

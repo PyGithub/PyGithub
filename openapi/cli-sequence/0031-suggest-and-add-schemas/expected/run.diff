@@ -12,7 +12,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -441,7 +441,7 @@
+@@ -458,7 +458,7 @@
        "bases": [
          "CompletableGithubObject"
        ],
@@ -21,7 +21,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "filename": "github/NamedUser.py",
        "ids": [
          "some_attribute"
-@@ -462,11 +462,13 @@
+@@ -479,11 +479,13 @@
            "returns": [
              "str"
            ],
@@ -39,7 +39,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "uri",
                "type": "string"
-@@ -574,12 +576,12 @@
+@@ -591,12 +593,12 @@
            "returns": [
              "str"
            ],
@@ -57,7 +57,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "email",
                "nullable": true,
-@@ -592,10 +594,12 @@
+@@ -609,10 +611,12 @@
            "returns": [
              "str"
            ],
@@ -73,7 +73,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -620,11 +624,13 @@
+@@ -637,11 +641,13 @@
            "returns": [
              "str"
            ],
@@ -91,7 +91,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "uri",
                "type": "string"
-@@ -650,10 +656,12 @@
+@@ -667,10 +673,12 @@
            "returns": [
              "str"
            ],
@@ -107,7 +107,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -664,10 +672,12 @@
+@@ -681,10 +689,12 @@
            "returns": [
              "str"
            ],
@@ -123,7 +123,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -678,11 +688,13 @@
+@@ -695,11 +705,13 @@
            "returns": [
              "str"
            ],
@@ -141,7 +141,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "nullable": true,
                "type": "string"
-@@ -710,11 +722,13 @@
+@@ -727,11 +739,13 @@
            "returns": [
              "str"
            ],
@@ -159,7 +159,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "uri",
                "type": "string"
-@@ -726,11 +740,13 @@
+@@ -743,11 +757,13 @@
            "returns": [
              "int"
            ],
@@ -177,7 +177,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "int64",
                "type": "integer"
-@@ -758,10 +774,12 @@
+@@ -775,10 +791,12 @@
            "returns": [
              "str"
            ],
@@ -193,7 +193,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -777,6 +795,10 @@
+@@ -794,6 +812,10 @@
              "type": "string"
            },
            "schemas": {
@@ -204,7 +204,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "nullable": true,
                "type": "string"
-@@ -788,10 +810,12 @@
+@@ -805,10 +827,12 @@
            "returns": [
              "str"
            ],
@@ -220,7 +220,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -820,11 +844,13 @@
+@@ -837,11 +861,13 @@
            "returns": [
              "str"
            ],
@@ -238,7 +238,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "uri",
                "type": "string"
-@@ -896,11 +922,13 @@
+@@ -913,11 +939,13 @@
            "returns": [
              "str"
            ],
@@ -256,7 +256,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "uri",
                "type": "string"
-@@ -912,11 +940,13 @@
+@@ -929,11 +957,13 @@
            "returns": [
              "str"
            ],
@@ -274,7 +274,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "uri",
                "type": "string"
-@@ -932,6 +962,9 @@
+@@ -949,6 +979,9 @@
              "type": "boolean"
            },
            "schemas": {
@@ -284,7 +284,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "boolean"
              }
-@@ -942,10 +975,12 @@
+@@ -959,10 +992,12 @@
            "returns": [
              "str"
            ],
@@ -300,7 +300,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -956,11 +991,13 @@
+@@ -973,11 +1008,13 @@
            "returns": [
              "str"
            ],
@@ -318,7 +318,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "format": "uri",
                "type": "string"
-@@ -1004,10 +1041,12 @@
+@@ -1021,10 +1058,12 @@
            "returns": [
              "str"
            ],
@@ -334,7 +334,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -1034,10 +1073,12 @@
+@@ -1051,10 +1090,12 @@
            "returns": [
              "str"
            ],
@@ -350,7 +350,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
              "/components/schemas/public-user": {
                "type": "string"
              }
-@@ -1045,6 +1086,7 @@
+@@ -1062,6 +1103,7 @@
          }
        },
        "schemas": [
@@ -358,7 +358,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "/components/schemas/public-user"
        ],
        "test_filename": "tests/NamedUser.py"
-@@ -1065,6 +1107,7 @@
+@@ -1082,6 +1124,7 @@
          "NamedUser"
        ],
        "inherited_schemas": [
@@ -366,7 +366,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "/components/schemas/public-user"
        ],
        "methods": {},
-@@ -1885,6 +1928,9 @@
+@@ -1902,6 +1945,9 @@
        "/components/schemas/issue-comment": [
          "IssueComment"
        ],
