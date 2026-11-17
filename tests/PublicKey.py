@@ -39,12 +39,6 @@
 
 from __future__ import annotations
 
-import sys
-import unittest
-from unittest import mock
-
-import github.PublicKey
-
 from . import Framework
 
 
@@ -78,4 +72,15 @@ class Encrypt(unittest.TestCase):
     def testEncryptWithoutPyNaCl(self):
         with mock.patch.dict(sys.modules, {"nacl": None}):
             with self.assertRaisesRegex(ImportError, "PyGithub\\[encryption\\]"):
-                github.PublicKey.encrypt("u5e1Z25+z8pmgVVt5Pd8k0z/sKpVL1MXYtRAecE4vm8=", "value")
+
+    def testEncrypt(self):
+        with self.replayData("PublicKey.testAttributes.txt"):
+            public_key = self.g.get_user().get_repo("PyGithub").get_public_key()
+
+        try:
+            from nacl import encoding, public
+            encrypted = public_key.encrypt("value")
+            self.assertEqual(len(encrypted), 72)
+        except ImportError:
+            with self.assertRaisesRegex(ImportError, "PyGithub\\[encryption\\]"):
+                public_key.encrypt("value")
