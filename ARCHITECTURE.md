@@ -227,6 +227,30 @@ Exception
 - **Type hints**: full PEP 484 annotations on all public APIs.
 - **`TYPE_CHECKING` guards**: used for imports that would cause circular dependencies.
 - **No `.pyi` stubs**: types live directly in source files.
+- **Examples must work**: example code in docstrings (`.. code-block:: python`, inline ``` ``…`` ``` snippets),
+  in deprecation / warning / exception messages ("Use `Organization.get_hook(id).edit(…)` instead"), and in `doc/`
+  must be valid Python that works against the current API: correct syntax, existing method and property names,
+  correct argument names and types, correct return types (e.g. iterating a `PaginatedList`, not indexing a `dict`).
+  Where possible, examples in `doc/examples/` are backed by a test.
+
+---
+
+## Pickling
+
+PyGithub objects can be pickled, either directly with `pickle` or via `Github.dump(obj, file)` /
+`Github.load(file)` (`github/MainClass.py`; the latter only pickles `(class, raw_data, raw_headers)`).
+`tests/Pickle.py` covers `Github`, PyGithub objects (e.g. `Repository`), `PaginatedList` and all `Auth` classes.
+
+- **Pickling must not break**: every PyGithub class, `Github`, `Requester`, `PaginatedList` and every `Auth` class
+  must remain picklable. Do not store unpicklable state (locks, sessions / connections, open files, generators,
+  lambdas or locally defined functions, module objects) in their attributes. If such state is unavoidable, exclude it
+  in `__getstate__` and recreate it in `__setstate__`, as `Requester` does for `__connection_lock`, `__connection`
+  and `__custom_connections`.
+- New `Auth` classes must be added to `Pickle.auths` (`testPickleAuthSetup` fails otherwise); new kinds of objects
+  that hold extra runtime state should get a pickle round-trip test in `tests/Pickle.py`.
+- **Compatibility across releases is not guaranteed**: unpickling an object that was pickled with a different
+  PyGithub release may break (private attribute names and class layouts change between releases). Changes that only
+  affect unpickling of objects pickled by another release are therefore acceptable.
 
 ---
 
@@ -249,9 +273,13 @@ pytest tests/
 ### Test Conventions
 
 - **Where tests go**: tests for `github/Foo.py` go into the existing `tests/Foo.py`, inside the existing test class
-  (e.g. `class Foo(Framework.TestCase)`). Do not add new test classes or files named after issues/PRs
-  (`tests/Issue3278.py`, `tests/PullRequest2989.py`) for features or fixes of an existing class. Methods that live on
-  a class are tested in that class' test file (e.g. `WorkflowRun.get_attempt` → `tests/WorkflowRun.py`).
+  (e.g. `class Foo(Framework.TestCase)`). Methods that live on a class are tested in that class' test file (e.g.
+  `WorkflowRun.get_attempt` → `tests/WorkflowRun.py`).
+- **New test classes / files only for new or untested PyGithub classes**: a new `tests/Foo.py` with
+  `class Foo(Framework.TestCase)` is created only when `github/Foo.py` is a new PyGithub class or has no tests yet.
+  Do not create per-issue / per-pull-request test classes or files (`tests/Issue3278.py`,
+  `tests/PullRequest2989.py`, `class InstallationGetRepos`). The existing legacy files of that kind
+  (`tests/Issue*.py`, `tests/PullRequest1168.py`, …) are not a pattern to follow and should not be extended.
 - **Naming**: test methods are camelCase and start with `test` (`testGetReposForCodeSecurityConfig`, not
   `test_get_repos_for_code_security_config`). The method name determines the replay data file name.
 - **Prefer extending existing tests**: if an existing test (e.g. `testCreateTeamWithAllArguments`) already covers the

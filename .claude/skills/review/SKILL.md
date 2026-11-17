@@ -165,13 +165,36 @@ Compare against ARCHITECTURE.md "Naming and Structuring Conventions". The most f
 - Files under `doc/` are reStructuredText, not Markdown (`### Overview` is wrong). Check the Read the Docs preview
   (`https://pygithub--<N>.org.readthedocs.build/en/<N>/`) for rendering problems.
 - GraphQL references link to an anchor that exists.
+- **Example code must work.** Check every code snippet the PR adds or touches — in docstrings
+  (`.. code-block:: python`, inline ``` ``…`` ```), in plain strings such as `@deprecated(...)`, `warnings.warn(...)` and
+  exception messages, and in `doc/` (`doc/examples/*.rst`, `doc/changes.rst`). It must be syntactically valid Python
+  and use methods, properties and arguments that exist with those names, types and return types in the code after this
+  PR (e.g. a `PaginatedList` is iterated, not indexed like a `dict`; the alternative named in a deprecation message
+  actually exists). When in doubt, run the snippet against replay data or write a quick test; doc examples should
+  ideally be backed by a test.
 
-## 7. Tests
+## 7. Pickling
+
+See ARCHITECTURE.md "Pickling".
+
+- Pickling must keep working: look for new attributes on PyGithub classes, `Github`, `Requester`, `PaginatedList` or
+  `Auth` classes holding unpicklable state (locks, sessions / connections, open files, generators, lambdas, local
+  functions). Such state must be excluded in `__getstate__` and recreated in `__setstate__`.
+- A new `Auth` class must be added to `Pickle.auths` in `tests/Pickle.py`; new objects with extra runtime state need a
+  pickle round-trip test there.
+- Do **not** request changes because objects pickled with a different PyGithub release can no longer be unpickled
+  (renamed private attributes, changed class layouts) — compatibility across releases is not guaranteed.
+
+## 8. Tests
 
 A behavioural change without a test is not approvable. Ask for one (offer guidance on how to record / hand-craft
 replay data if the contributor struggles). Check against ARCHITECTURE.md "Test Conventions":
 
-- Test is in `tests/<Class>.py` in the existing test class; no new `IssueNNNN` / ad-hoc test classes or files.
+- Test is in `tests/<Class>.py` in the existing test class. A new test class / file is only acceptable for a new
+  PyGithub class or one that has no tests yet. Request moving tests out of per-issue / per-PR test classes or files
+  (`tests/IssueNNNN.py`, `tests/PullRequestNNNN.py`, `class InstallationGetRepos`) and out of ad-hoc classes into the
+  class' main test class (and rename the replay data files accordingly). Legacy `tests/Issue*.py` files are not a
+  precedent.
 - camelCase `testXxx` names.
 - Assertions verify what changed: the new argument's effect, the reordered order, the removed item, every field of a
   new result class, both `status` and `message` of expected exceptions (`assertEqual`, not `assertIsNone(x, msg)`).
@@ -182,7 +205,7 @@ replay data if the contributor struggles). Check against ARCHITECTURE.md "Test C
 - Organisation-level variants: when an endpoint exists for repos and orgs, both are implemented and tested.
 - Doc examples (`doc/examples/*.rst`) ideally get a test proving they work.
 
-## 8. Replay data
+## 9. Replay data
 
 See ARCHITECTURE.md "Replay Data". Check:
 
@@ -196,7 +219,7 @@ See ARCHITECTURE.md "Replay Data". Check:
 - No superfluous requests (a GET that disappears when the parent is obtained lazily).
 - Hand-crafted files must be consistent with what the code sends (path, query, body).
 
-## 9. CI
+## 10. CI
 
 Open each failing check and translate it into a concrete request:
 
@@ -218,7 +241,7 @@ pre-commit run --files <changed files>
 mypy github tests
 ```
 
-## 10. Writing the review
+## 11. Writing the review
 
 Mirror the maintainer's style: friendly, short, concrete.
 
@@ -233,7 +256,7 @@ Mirror the maintainer's style: friendly, short, concrete.
 - Link the failing CI step or the related PR / issue / docs page.
 - Verdict:
   - **APPROVE** ("LGTM!") only when every section above is clean and CI is green.
-  - **REQUEST_CHANGES** for anything in sections 2–9 that must change; say whether the changes are minor.
+  - **REQUEST_CHANGES** for anything in sections 2–10 that must change; say whether the changes are minor.
   - **COMMENT** for design discussion without a blocking request.
 - Do not post anything to GitHub unless the user asked for it; by default present the review (verdict, summary,
   inline findings with file:line and suggestions) to the user.
