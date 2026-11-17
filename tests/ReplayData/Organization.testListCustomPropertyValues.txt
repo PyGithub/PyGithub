@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/properties/values?repository_query=repo%3ABeaverSoftware%2FTestPyGithub
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Sat, 01 Jun 2024 07:48:37 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"41a390c81a11644bf754e25767f1d7720567ca8a8d6e9ac11f1ee1f5be6313b5"'), ('github-authentication-token-expiration', '2024-06-08 02:45:21 +0100'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-accepted-github-permissions', 'organization_custom_properties=read'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4865'), ('X-RateLimit-Reset', '1717228808'), ('X-RateLimit-Used', '135'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'CTDD:9BZ2B7:ELXM6L:AE6Q1F:3SBURNLR')]
+[{"repository_id":494563892,"repository_name":"TestPyGithub","repository_full_name":"BeaverSoftware/TestPyGithub","properties":[{"property_name":"property_1","value":"bar"},{"property_name":"property_2","value":"foo"}]}]

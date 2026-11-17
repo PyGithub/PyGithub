@@ -1,0 +1,78 @@
+diff --unified --recursive --new-file before/github/Repository.py after/github/Repository.py
+--- before/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -26,8 +26,10 @@
+ 
+ from github.GithubObject import CompletableGithubObject
+ from github.GithubObject import Attribute, NotSet
++import github.NamedUser
+ 
+ if TYPE_CHECKING:
++    from github.NamedUser import NamedUser
+     pass
+ 
+ 
+@@ -111,6 +113,7 @@
+         self._notifications_url: Attribute[str] = NotSet
+         self._open_issues: Attribute[int] = NotSet
+         self._open_issues_count: Attribute[int] = NotSet
++        self._owner: Attribute[NamedUser] = NotSet
+         self._private: Attribute[bool] = NotSet
+         self._pulls_url: Attribute[str] = NotSet
+         self._pushed_at: Attribute[datetime] = NotSet
+@@ -468,6 +471,11 @@
+         return self._open_issues_count.value
+ 
+     @property
++    def owner(self) -> NamedUser:
++        self._completeIfNotSet(self._owner)
++        return self._owner.value
++
++    @property
+     def private(self) -> bool:
+         self._completeIfNotSet(self._private)
+         return self._private.value
+@@ -729,6 +737,8 @@
+             self._open_issues = self._makeIntAttribute(attributes["open_issues"])
+         if "open_issues_count" in attributes:  # pragma no branch
+             self._open_issues_count = self._makeIntAttribute(attributes["open_issues_count"])
++        if "owner" in attributes:  # pragma no branch
++            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+         if "private" in attributes:  # pragma no branch
+             self._private = self._makeBoolAttribute(attributes["private"])
+         if "pulls_url" in attributes:  # pragma no branch
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -2607,6 +2607,20 @@
+             }
+           }
+         },
++        "owner": {
++          "name": "owner",
++          "returns": [
++            "NamedUser"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/simple-user"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "$ref": "#/components/schemas/simple-user"
++            }
++          }
++        },
+         "private": {
+           "name": "private",
+           "returns": [
+diff --unified --recursive --new-file before/tests/Repository.py after/tests/Repository.py
+--- before/tests/Repository.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/Repository.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -103,6 +103,7 @@
+         self.assertEqual(r.notifications_url, "")
+         self.assertEqual(r.open_issues, 0)
+         self.assertEqual(r.open_issues_count, 0)
++        self.assertEqual(r.owner.some_attribute, "")
+         self.assertEqual(r.private, False)
+         self.assertEqual(r.pulls_url, "")
+         self.assertEqual(r.pushed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))

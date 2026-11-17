@@ -28,8 +28,12 @@
 # Copyright 2022 KimSia Sim <245021+simkimsia@users.noreply.github.com>        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Chris Wells <ping@cwlls.com>                                  #
+# Copyright 2024 Eduardo Ramírez <edu.rh90@gmail.com>                          #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -48,6 +52,8 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 ################################################################################
+
+from __future__ import annotations
 
 from datetime import datetime, timezone
 
@@ -68,6 +74,7 @@ class AuthenticatedUser(Framework.TestCase):
         )
         self.assertEqual(self.user.bio, "")
         self.assertEqual(self.user.blog, "http://vincent-jacques.net")
+        self.assertIsNone(self.user.business_plus)
         self.assertEqual(self.user.collaborators, 0)
         self.assertEqual(self.user.company, "Criteo")
         self.assertEqual(
@@ -76,15 +83,22 @@ class AuthenticatedUser(Framework.TestCase):
         )
         self.assertEqual(self.user.disk_usage, 16692)
         self.assertEqual(self.user.email, "vincent@vincent-jacques.net")
+        self.assertIsNone(self.user.events_url)
         self.assertEqual(self.user.followers, 13)
+        self.assertIsNone(self.user.followers_url)
         self.assertEqual(self.user.following, 24)
+        self.assertIsNone(self.user.following_url)
+        self.assertIsNone(self.user.gists_url)
         self.assertEqual(self.user.gravatar_id, "b68de5ae38616c296fa345d2b9df2225")
         self.assertFalse(self.user.hireable)
         self.assertEqual(self.user.html_url, "https://github.com/jacquev6")
         self.assertEqual(self.user.id, 327146)
+        self.assertIsNone(self.user.ldap_dn)
         self.assertEqual(self.user.location, "Paris, France")
         self.assertEqual(self.user.login, "jacquev6")
         self.assertEqual(self.user.name, "Vincent Jacques")
+        self.assertIsNone(self.user.notification_email)
+        self.assertIsNone(self.user.organizations_url)
         self.assertEqual(self.user.owned_private_repos, 5)
         self.assertEqual(self.user.plan.name, "micro")
         self.assertEqual(self.user.plan.collaborators, 1)
@@ -93,12 +107,20 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.private_gists, 5)
         self.assertEqual(self.user.public_gists, 1)
         self.assertEqual(self.user.public_repos, 10)
+        self.assertIsNone(self.user.received_events_url)
+        self.assertIsNone(self.user.repos_url)
+        self.assertIsNone(self.user.site_admin)
+        self.assertIsNone(self.user.starred_url)
+        self.assertIsNone(self.user.subscriptions_url)
         self.assertEqual(self.user.total_private_repos, 5)
+        self.assertIsNone(self.user.twitter_username)
         self.assertEqual(self.user.type, "User")
+        self.assertIsNone(self.user.updated_at)
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
         self.assertEqual(self.user.node_id, "MDQ6VXNlcjMyNzE0Ng==")
         self.assertEqual(repr(self.user), 'AuthenticatedUser(login="jacquev6")')
         self.assertTrue(self.user.two_factor_authentication)
+        self.assertIsNone(self.user.user_view_type)
 
     def testEditWithoutArguments(self):
         self.user.edit()
@@ -365,6 +387,7 @@ class AuthenticatedUser(Framework.TestCase):
             has_issues=False,
             has_projects=False,
             has_wiki=False,
+            has_discussions=False,
             has_downloads=False,
             allow_squash_merge=False,
             allow_merge_commit=False,
@@ -713,7 +736,7 @@ class AuthenticatedUser(Framework.TestCase):
             notification.updated_at,
             datetime(2013, 3, 15, 5, 43, 11, tzinfo=timezone.utc),
         )
-        self.assertEqual(notification.url, None)
+        self.assertEqual(notification.url, "/notifications/threads/8406712")
         self.assertEqual(notification.subject.url, None)
         self.assertEqual(notification.subject.latest_comment_url, None)
         self.assertEqual(
@@ -759,11 +782,13 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(invitation.permissions, "write")
         created_at = datetime(2019, 6, 27, 11, 47, tzinfo=timezone.utc)
         self.assertEqual(invitation.created_at, created_at)
+        self.assertEqual(invitation.expired, True)
         self.assertEqual(
             invitation.url,
             "https://api.github.com/user/repository_invitations/17285388",
         )
         self.assertEqual(invitation.html_url, "https://github.com/jacquev6/PyGithub/invitations")
+        self.assertEqual(invitation.node_id, "MDIwOlJlcG9zaXRvcnlJbnZpdGF0aW9uMTcyODUzODg=")
         self.assertEqual(invitation.repository.name, "PyGithub")
         self.assertEqual(invitation.invitee.login, "foobar-test1")
         self.assertEqual(invitation.inviter.login, "jacquev6")
@@ -781,3 +806,14 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(installations[0].target_id, 3344556)
         self.assertEqual(installations[0].target_type, "User")
         self.assertEqual(installations.totalCount, 1)
+
+    def testGetMemberships(self):
+        membership_data = self.user.get_organization_memberships()
+        self.assertListKeyEqual(
+            membership_data,
+            lambda e: e.organization.login,
+            ["aneyem-github", "nko4", "geoservel", "iic2154-uc-cl", "nnodes", "sushiclm"],
+        )
+        self.assertListKeyEqual(
+            membership_data, lambda e: e.role, ["member", "member", "admin", "member", "member", "admin"]
+        )

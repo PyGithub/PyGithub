@@ -1,0 +1,291 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -42,6 +42,7 @@
+ 
+     - /components/schemas/nullable-simple-user
+     - /components/schemas/public-user
++    - /components/schemas/simple-user
+ 
+     """
+ 
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -464,7 +464,7 @@
+       "bases": [
+         "CompletableGithubObject"
+       ],
+-      "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user",
++      "docstring": "This class represents NamedUser.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/users#get-a-user\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/nullable-simple-user\n    - /components/schemas/public-user\n    - /components/schemas/simple-user",
+       "filename": "github/NamedUser.py",
+       "ids": [
+         "some_attribute"
+@@ -507,6 +507,11 @@
+             "/components/schemas/public-user": {
+               "format": "uri",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://github.com/images/error/octocat_happy.gif",
++              "format": "uri",
++              "type": "string"
+             }
+           }
+         },
+@@ -621,6 +626,10 @@
+               "format": "email",
+               "nullable": true,
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "nullable": true,
++              "type": "string"
+             }
+           }
+         },
+@@ -637,6 +646,10 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/events{/privacy}",
++              "type": "string"
+             }
+           }
+         },
+@@ -669,6 +682,11 @@
+             "/components/schemas/public-user": {
+               "format": "uri",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/followers",
++              "format": "uri",
++              "type": "string"
+             }
+           }
+         },
+@@ -699,6 +717,10 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/following{/other_user}",
++              "type": "string"
+             }
+           }
+         },
+@@ -715,6 +737,10 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/gists{/gist_id}",
++              "type": "string"
+             }
+           }
+         },
+@@ -733,6 +759,11 @@
+             "/components/schemas/public-user": {
+               "nullable": true,
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "41d064eb2195891e12d0413f63227ea7",
++              "nullable": true,
++              "type": "string"
+             }
+           }
+         },
+@@ -767,6 +798,11 @@
+             "/components/schemas/public-user": {
+               "format": "uri",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://github.com/octocat",
++              "format": "uri",
++              "type": "string"
+             }
+           }
+         },
+@@ -785,6 +821,11 @@
+             "/components/schemas/public-user": {
+               "format": "int64",
+               "type": "integer"
++            },
++            "/components/schemas/simple-user": {
++              "example": 1,
++              "format": "int64",
++              "type": "integer"
+             }
+           }
+         },
+@@ -817,6 +858,10 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "octocat",
++              "type": "string"
+             }
+           }
+         },
+@@ -837,6 +882,10 @@
+             "/components/schemas/public-user": {
+               "nullable": true,
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "nullable": true,
++              "type": "string"
+             }
+           }
+         },
+@@ -853,6 +902,10 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "MDQ6VXNlcjE=",
++              "type": "string"
+             }
+           }
+         },
+@@ -889,6 +942,11 @@
+             "/components/schemas/public-user": {
+               "format": "uri",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/orgs",
++              "format": "uri",
++              "type": "string"
+             }
+           }
+         },
+@@ -967,6 +1025,11 @@
+             "/components/schemas/public-user": {
+               "format": "uri",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/received_events",
++              "format": "uri",
++              "type": "string"
+             }
+           }
+         },
+@@ -985,6 +1048,11 @@
+             "/components/schemas/public-user": {
+               "format": "uri",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/repos",
++              "format": "uri",
++              "type": "string"
+             }
+           }
+         },
+@@ -1002,6 +1070,9 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "boolean"
++            },
++            "/components/schemas/simple-user": {
++              "type": "boolean"
+             }
+           }
+         },
+@@ -1018,6 +1089,10 @@
+             "/components/schemas/nullable-simple-user": {
+               "example": "\"2020-07-09T00:17:55Z\"",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "\"2020-07-09T00:17:55Z\"",
++              "type": "string"
+             }
+           }
+         },
+@@ -1034,6 +1109,10 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
++              "type": "string"
+             }
+           }
+         },
+@@ -1052,6 +1131,11 @@
+             "/components/schemas/public-user": {
+               "format": "uri",
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "https://api.github.com/users/octocat/subscriptions",
++              "format": "uri",
++              "type": "string"
+             }
+           }
+         },
+@@ -1100,6 +1184,10 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "User",
++              "type": "string"
+             }
+           }
+         },
+@@ -1132,13 +1220,18 @@
+             },
+             "/components/schemas/public-user": {
+               "type": "string"
++            },
++            "/components/schemas/simple-user": {
++              "example": "public",
++              "type": "string"
+             }
+           }
+         }
+       },
+       "schemas": [
+         "/components/schemas/nullable-simple-user",
+-        "/components/schemas/public-user"
++        "/components/schemas/public-user",
++        "/components/schemas/simple-user"
+       ],
+       "test_filename": "tests/NamedUser.py"
+     },
+@@ -1159,7 +1252,8 @@
+       ],
+       "inherited_schemas": [
+         "/components/schemas/nullable-simple-user",
+-        "/components/schemas/public-user"
++        "/components/schemas/public-user",
++        "/components/schemas/simple-user"
+       ],
+       "methods": {},
+       "module": "NamedUser",
+@@ -3787,6 +3881,9 @@
+       "/components/schemas/repository": [
+         "Repository"
+       ],
++      "/components/schemas/simple-user": [
++        "NamedUser"
++      ],
+       "/components/schemas/user-search-result-item": [
+         "NamedUserSearchResult"
+       ]

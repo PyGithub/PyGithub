@@ -21,7 +21,12 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 iarspider <iarspider@gmail.com>                               #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -43,8 +48,10 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from typing import TYPE_CHECKING, Any
 
+import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.CommitCombinedStatus
@@ -55,10 +62,12 @@ import github.File
 import github.GitCommit
 import github.NamedUser
 import github.PaginatedList
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+import github.Repository
+from github.GithubObject import Attribute, CompletableGithubObjectWithPaginatedProperty, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.Branch import Branch
     from github.CheckRun import CheckRun
     from github.CheckSuite import CheckSuite
     from github.CommitCombinedStatus import CommitCombinedStatus
@@ -69,31 +78,51 @@ if TYPE_CHECKING:
     from github.GitCommit import GitCommit
     from github.NamedUser import NamedUser
     from github.PullRequest import PullRequest
+    from github.Repository import Repository
 
 
-class Commit(CompletableGithubObject):
+class Commit(CompletableGithubObjectWithPaginatedProperty):
     """
     This class represents Commits.
 
     The reference can be found here
-    https://docs.github.com/en/rest/reference/git#commits
+    https://docs.github.com/en/rest/commits/commits#get-a-commit
+
+    This class has a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+    For details, see :meth:`Commit.files` or :meth:`Commit.get_files`.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/branch-short/properties/commit
+    - /components/schemas/commit
+    - /components/schemas/commit-search-result-item/properties/parents/items
+    - /components/schemas/commit/properties/parents/items
+    - /components/schemas/short-branch/properties/commit
+    - /components/schemas/tag/properties/commit
 
     """
 
     def _initAttributes(self) -> None:
+        super()._initAttributes()
         self._author: Attribute[NamedUser] = NotSet
         self._comments_url: Attribute[str] = NotSet
         self._commit: Attribute[GitCommit] = NotSet
         self._committer: Attribute[NamedUser] = NotSet
         self._files: Attribute[list[File]] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._parents: Attribute[list[Commit]] = NotSet
+        self._repository: Attribute[Repository] = NotSet
         self._sha: Attribute[str] = NotSet
         self._stats: Attribute[CommitStats] = NotSet
-        self._url: Attribute[str] = NotSet
+        self._text_matches: Attribute[dict[str, Any]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"sha": self._sha.value})
+
+    @property
+    def _identity(self) -> str:
+        return self.sha
 
     @property
     def author(self) -> NamedUser:
@@ -116,9 +145,28 @@ class Commit(CompletableGithubObject):
         return self._committer.value
 
     @property
-    def files(self) -> list[File]:
-        self._completeIfNotSet(self._files)
-        return self._files.value
+    def files(self) -> PaginatedList[File]:
+        """
+        This is a `paginated property <https://pygithub.readthedocs.io/en/stable/utilities.html#classes-with-paginated-properties>`_.
+
+        Iterating over this paginated list may fetch multiple pages. The size of these pages can be controlled via
+        the ``…_per_page`` parameter of :meth:`github.Repository.Repository.get_commit`,
+        :meth:`github.Commit.Commit.get_files`, or :meth:`github.Github`.
+
+        If no ``per_page`` is given, the default page size is 300. The maximum is 300.
+
+        At most 3000 files can be retrieved.
+        """
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            self._pagination_parameters,
+            list_item="files",
+            total_count_item="total_files",
+            firstData=self.raw_data if self.completed else None,
+            firstHeaders=self.raw_headers if self.completed else None,
+        )
 
     @property
     def html_url(self) -> str:
@@ -126,9 +174,19 @@ class Commit(CompletableGithubObject):
         return self._html_url.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def parents(self) -> list[Commit]:
         self._completeIfNotSet(self._parents)
         return self._parents.value
+
+    @property
+    def repository(self) -> Repository:
+        self._completeIfNotSet(self._repository)
+        return self._repository.value
 
     @property
     def sha(self) -> str:
@@ -141,9 +199,9 @@ class Commit(CompletableGithubObject):
         return self._stats.value
 
     @property
-    def url(self) -> str:
-        self._completeIfNotSet(self._url)
-        return self._url.value
+    def text_matches(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._text_matches)
+        return self._text_matches.value
 
     def create_comment(
         self,
@@ -153,7 +211,7 @@ class Commit(CompletableGithubObject):
         position: Opt[int] = NotSet,
     ) -> CommitComment:
         """
-        :calls: `POST /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `POST /repos/{owner}/{repo}/commits/{commit_sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
         assert isinstance(body, str), body
         assert is_optional(line, int), line
@@ -192,11 +250,18 @@ class Commit(CompletableGithubObject):
             f"{self._parentUrl(self._parentUrl(self.url))}/statuses/{self.sha}",
             input=post_parameters,
         )
-        return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
+        return github.CommitStatus.CommitStatus(self._requester, headers, data)
+
+    def get_branches_where_head(self) -> list[Branch]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head <https://docs.github.com/rest/commits/commits#list-branches-for-head-commit>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/branches-where-head")
+        return [github.Branch.Branch(self._requester, headers, item) for item in data]
 
     def get_comments(self) -> PaginatedList[CommitComment]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/comments <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
         return PaginatedList(
             github.CommitComment.CommitComment,
@@ -205,9 +270,30 @@ class Commit(CompletableGithubObject):
             None,
         )
 
+    def get_files(self, *, commit_files_per_page: int | None = None) -> PaginatedList[File]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/commits/{sha} <https://docs.github.com/en/rest/reference/repos#commits>`_
+
+        Identical to calling :meth:`github.Commit.Commit.files`, except that this uses the given ``per_page`` value.
+
+        For more details, see :meth:`github.Commit.Commit.files`.
+
+        :param commit_files_per_page: int Number of files retrieved per page.
+               Iterating over the files will fetch pages of this size. The default page size is 300, the maximum is 300.
+               At most 3000 files can be retrieved.
+        """
+        return PaginatedList(
+            github.File.File,
+            self._requester,
+            self.url,
+            self._pagination_parameters_with(page=1, per_page=commit_files_per_page),
+            headers=None,
+            list_item="files",
+        )
+
     def get_statuses(self) -> PaginatedList[CommitStatus]:
         """
-        :calls: `GET /repos/{owner}/{repo}/statuses/{ref} <https://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/statuses/{sha} <https://docs.github.com/en/rest/reference/repos#statuses>`_
         """
         return PaginatedList(
             github.CommitStatus.CommitStatus,
@@ -218,14 +304,14 @@ class Commit(CompletableGithubObject):
 
     def get_combined_status(self) -> CommitCombinedStatus:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status/ <http://docs.github.com/en/rest/reference/repos#statuses>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/status <http://docs.github.com/en/rest/reference/repos#statuses>`_
         """
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/status")
-        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data, completed=True)
+        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data)
 
     def get_pulls(self) -> PaginatedList[PullRequest]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls <https://docs.github.com/en/rest/reference/repos#list-pull-requests-associated-with-a-commit>`_
         """
         return PaginatedList(
             github.PullRequest.PullRequest,
@@ -242,7 +328,7 @@ class Commit(CompletableGithubObject):
         filter: Opt[str] = NotSet,
     ) -> PaginatedList[CheckRun]:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{sha}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref}/check-runs <https://docs.github.com/en/rest/reference/checks#list-check-runs-for-a-git-reference>`_
         """
         assert is_optional(check_name, str), check_name
         assert is_optional(status, str), status
@@ -276,11 +362,8 @@ class Commit(CompletableGithubObject):
             list_item="check_suites",
         )
 
-    @property
-    def _identity(self) -> str:
-        return self.sha
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
         if "author" in attributes:  # pragma no branch
             self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "comments_url" in attributes:  # pragma no branch
@@ -293,11 +376,50 @@ class Commit(CompletableGithubObject):
             self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "parents" in attributes:  # pragma no branch
             self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
+        if "repository" in attributes:  # pragma no branch
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_sha = attributes["url"].split("/")[-1]
+            sha = urllib.parse.unquote(quoted_sha)
+            self._sha = self._makeStringAttribute(sha)
         if "stats" in attributes:  # pragma no branch
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
-        if "url" in attributes:  # pragma no branch
-            self._url = self._makeStringAttribute(attributes["url"])
+        if "text_matches" in attributes:  # pragma no branch
+            self._text_matches = self._makeDictAttribute(attributes["text_matches"])
+
+
+class CommitSearchResult(Commit):
+    """
+    This class represents CommitSearchResult.
+
+    The reference can be found here
+    https://docs.github.com/en/rest/reference/search#search-commits
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/commit-search-result-item
+
+    """
+
+    def _initAttributes(self) -> None:
+        super()._initAttributes()
+        self._score: Attribute[float] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__({"sha": self._sha.value, "score": self._score.value})
+
+    @property
+    def score(self) -> float:
+        self._completeIfNotSet(self._score)
+        return self._score.value
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        super()._useAttributes(attributes)
+        if "score" in attributes:  # pragma no branch
+            self._score = self._makeFloatAttribute(attributes["score"])

@@ -1,0 +1,2 @@
+patch github/Repository.py ../Repository.py.patch
+python scripts/openapi.py index github openapi.spec.json openapi.index

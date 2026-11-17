@@ -3,6 +3,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,10 +26,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from github.AdvisoryVulnerabilityPackage import AdvisoryVulnerabilityPackage
+import github.AdvisoryVulnerabilityPackage
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.AdvisoryVulnerabilityPackage import AdvisoryVulnerabilityPackage
 
 
 class DependabotAlertDependency(NonCompletableGithubObject):
@@ -37,32 +42,58 @@ class DependabotAlertDependency(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/dependabot-alert/properties/dependency
+
     """
 
     def _initAttributes(self) -> None:
-        self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
         self._manifest_path: Attribute[str] = NotSet
+        self._package: Attribute[AdvisoryVulnerabilityPackage] = NotSet
+        self._relationship: Attribute[str] = NotSet
         self._scope: Attribute[str] = NotSet
+        self._version_requirement: Attribute[str] = NotSet
 
-    @property
-    def package(self) -> AdvisoryVulnerabilityPackage:
-        return self._package.value
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "package": self.package,
+                "manifest_path": self.manifest_path,
+            }
+        )
 
     @property
     def manifest_path(self) -> str:
         return self._manifest_path.value
 
     @property
+    def package(self) -> AdvisoryVulnerabilityPackage:
+        return self._package.value
+
+    @property
+    def relationship(self) -> str:
+        return self._relationship.value
+
+    @property
     def scope(self) -> str:
         return self._scope.value
 
+    @property
+    def version_requirement(self) -> str:
+        return self._version_requirement.value
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "package" in attributes:
-            self._package = self._makeClassAttribute(
-                AdvisoryVulnerabilityPackage,
-                attributes["package"],
-            )
         if "manifest_path" in attributes:
             self._manifest_path = self._makeStringAttribute(attributes["manifest_path"])
+        if "package" in attributes:
+            self._package = self._makeClassAttribute(
+                github.AdvisoryVulnerabilityPackage.AdvisoryVulnerabilityPackage,
+                attributes["package"],
+            )
+        if "relationship" in attributes:  # pragma no branch
+            self._relationship = self._makeStringAttribute(attributes["relationship"])
         if "scope" in attributes:
             self._scope = self._makeStringAttribute(attributes["scope"])
+        if "version_requirement" in attributes:  # pragma no branch
+            self._version_requirement = self._makeStringAttribute(attributes["version_requirement"])

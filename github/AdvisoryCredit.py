@@ -5,7 +5,10 @@
 # Copyright 2023 Jonathan Leitschuh <jonathan.leitschuh@gmail.com>             #
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -27,12 +30,15 @@
 
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from typing_extensions import TypedDict
 
 import github.NamedUser
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class SimpleCredit(TypedDict):
@@ -40,7 +46,7 @@ class SimpleCredit(TypedDict):
     A simple credit for a security advisory.
     """
 
-    login: str | github.NamedUser.NamedUser
+    login: str | NamedUser
     type: str
 
 
@@ -54,7 +60,23 @@ class AdvisoryCredit(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/security-advisories/repository-advisories
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/repository-advisory/properties/credits/items
+
     """
+
+    def _initAttributes(self) -> None:
+        self._login: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
+
+    def __repr__(self) -> str:
+        return self.get__repr__(
+            {
+                "login": self.login,
+                "type": self.type,
+            }
+        )
 
     @property
     def login(self) -> str:
@@ -69,16 +91,6 @@ class AdvisoryCredit(NonCompletableGithubObject):
         :type: string
         """
         return self._type.value
-
-    def _initAttributes(self) -> None:
-        self._login: Attribute[str] = NotSet
-        self._type: Attribute[str] = NotSet
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "login" in attributes:  # pragma no branch
-            self._login = self._makeStringAttribute(attributes["login"])
-        if "type" in attributes:  # pragma no branch
-            self._type = self._makeStringAttribute(attributes["type"])
 
     @staticmethod
     def _validate_credit(credit: Credit) -> None:
@@ -111,3 +123,9 @@ class AdvisoryCredit(NonCompletableGithubObject):
                 "login": credit.login,
                 "type": credit.type,
             }
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "login" in attributes:  # pragma no branch
+            self._login = self._makeStringAttribute(attributes["login"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/actions/workflows/1026390/runs?head_sha=3a6235b56eecc0e193c1e267b064c155c6ebc022
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Mon, 31 Oct 2022 15:21:04 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'public, max-age=60, s-maxage=60'), ('Vary', 'Accept, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"cf18c178032bf666defcb2b80301e3802f88e1fd2ff4fbab12cdbb4c9544861c"'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '60'), ('X-RateLimit-Remaining', '53'), ('X-RateLimit-Reset', '1667233078'), ('X-RateLimit-Used', '7'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'AC5C:EE0F:F1A2470:F5264AF:635FE7E0')]

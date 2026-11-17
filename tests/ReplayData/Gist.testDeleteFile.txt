@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /gists/5339374
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4995'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '3241'), ('server', 'GitHub.com'), ('last-modified', 'Mon, 08 Apr 2013 18:46:15 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d1bfdcec2c35202fa167ebdfed524d25"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Mon, 08 Apr 2013 18:50:39 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ PATCH
 api.github.com
 None
 /gists/5339374
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"files": {"foo.txt": null}}
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('content-length', '4233'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"316f00c71eeb327bbeac7a3f7aba5237"'), ('cache-control', 'max-age=0, private, must-revalidate'), ('date', 'Mon, 08 Apr 2013 18:50:40 GMT'), ('content-type', 'application/json; charset=utf-8')]

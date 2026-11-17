@@ -2,8 +2,13 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Mauricio Alejandro Martínez Pacheco <mauricio.martinez@premise.com>#
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Crowley <15927917+thomascrowley@users.noreply.github.com>#
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Krishna Chaitanya <krishnabkc15@gmail.com>                    #
+# Copyright 2026 Noethix <ryuga.rago1111@gmail.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -23,13 +28,21 @@
 #                                                                              #
 ################################################################################
 
-from datetime import datetime
-from typing import Any, Dict
+from __future__ import annotations
 
-from github.GithubObject import Attribute, NotSet
+import urllib.parse
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
+import github.PublicKey
+import github.Repository
+from github.GithubObject import Attribute, NotSet, Opt, is_defined, is_optional_list
 from github.PaginatedList import PaginatedList
-from github.Repository import Repository
 from github.Secret import Secret
+
+if TYPE_CHECKING:
+    from github.PublicKey import PublicKey
+    from github.Repository import Repository
 
 
 class OrganizationSecret(Secret):
@@ -39,16 +52,25 @@ class OrganizationSecret(Secret):
     The reference can be found here
     https://docs.github.com/en/rest/actions/secrets
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/organization-actions-secret
+
     """
 
     def _initAttributes(self) -> None:
-        self._name: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._updated_at: Attribute[datetime] = NotSet
-        self._visibility: Attribute[str] = NotSet
+        self._name: Attribute[str] = NotSet
         self._selected_repositories: Attribute[PaginatedList[Repository]] = NotSet
         self._selected_repositories_url: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
+        self._visibility: Attribute[str] = NotSet
+
+    @property
+    def selected_repositories_url(self) -> str:
+        self._completeIfNotSet(self._selected_repositories_url)
+        return self._selected_repositories_url.value
 
     @property
     def visibility(self) -> str:
@@ -61,9 +83,9 @@ class OrganizationSecret(Secret):
     @property
     def selected_repositories(self) -> PaginatedList[Repository]:
         return PaginatedList(
-            Repository,
+            github.Repository.Repository,
             self._requester,
-            self._selected_repositories_url.value,
+            self.selected_repositories_url,
             None,
             list_item="repositories",
         )
@@ -73,35 +95,61 @@ class OrganizationSecret(Secret):
         value: str,
         visibility: str = "all",
         secret_type: str = "actions",
+        selected_repositories: Opt[list[Repository]] = NotSet,
     ) -> bool:
         """
-        :calls: `PATCH /orgs/{org}/{secret_type}/secrets/{variable_name} <https://docs.github.com/en/rest/reference/actions/secrets#update-an-organization-variable>`_
-        :param variable_name: string
-        :param value: string
-        :param visibility: string
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/dependabot/secrets/{secret_name} <https://docs.github.com/en/rest/dependabot/secrets#create-or-update-an-organization-secret>`_
+        :param value: string plain text value of the secret
+        :param visibility: string options all, private or selected
         :param secret_type: string options actions or dependabot
+        :param selected_repositories: list of :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(value, str), value
         assert isinstance(visibility, str), visibility
+        assert is_optional_list(selected_repositories, github.Repository.Repository), selected_repositories
         assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
 
-        patch_parameters: Dict[str, Any] = {
-            "name": self.name,
-            "value": value,
+        public_key = self.get_public_key(secret_type=secret_type)
+        encrypted_value = public_key.encrypt(value)
+        put_parameters: dict[str, Any] = {
+            "key_id": public_key.key_id,
+            "encrypted_value": encrypted_value,
             "visibility": visibility,
         }
+        if visibility == "selected" and is_defined(selected_repositories):
+            # Dependabot and Actions endpoints expect different types
+            # https://docs.github.com/en/rest/dependabot/secrets#create-or-update-an-organization-secret
+            # https://docs.github.com/en/rest/actions/secrets#create-or-update-an-organization-secret
+            if secret_type == "actions":
+                put_parameters["selected_repository_ids"] = [element.id for element in selected_repositories]
+            else:
+                put_parameters["selected_repository_ids"] = [str(element.id) for element in selected_repositories]
 
         status, _, _ = self._requester.requestJson(
-            "PATCH",
-            f"{self.url}/{secret_type}/secrets/{self.name}",
-            input=patch_parameters,
+            "PUT",
+            self.url,
+            input=put_parameters,
         )
-        return status == 204
+        return status in (201, 204)
+
+    def get_public_key(self, secret_type: str = "actions") -> PublicKey:
+        """
+        :calls: `GET /orgs/{org}/actions/secrets/public-key <https://docs.github.com/en/rest/actions/secrets#get-an-organization-public-key>`_
+        :calls: `GET /orgs/{org}/dependabot/secrets/public-key <https://docs.github.com/en/rest/dependabot/secrets#get-an-organization-public-key>`_
+        :param secret_type: string options actions or dependabot
+        :rtype: :class:`github.PublicKey.PublicKey`
+        """
+        assert secret_type in ["actions", "dependabot"], "secret_type should be actions or dependabot"
+        # self.url is .../orgs/{org}/{secret_type}/secrets/{secret_name}
+        base_url = self.url.rsplit("/secrets/", 1)[0]
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{base_url}/secrets/public-key")
+        return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def add_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'PUT {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `PUT /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -112,7 +160,7 @@ class OrganizationSecret(Secret):
 
     def remove_repo(self, repo: Repository) -> bool:
         """
-        :calls: 'DELETE {org_url}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
+        :calls: `DELETE /orgs/{org}/actions/secrets/{secret_name} <https://docs.github.com/en/rest/actions/secrets#add-selected-repository-to-an-organization-secret>`_
         :param repo: github.Repository.Repository
         :rtype: bool
         """
@@ -121,16 +169,20 @@ class OrganizationSecret(Secret):
         self._requester.requestJsonAndCheck("DELETE", f"{self._selected_repositories_url.value}/{repo.id}")
         return True
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
-        if "name" in attributes:
-            self._name = self._makeStringAttribute(attributes["name"])
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
-        if "updated_at" in attributes:
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "visibility" in attributes:
-            self._visibility = self._makeStringAttribute(attributes["visibility"])
+        if "name" in attributes:
+            self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
         if "selected_repositories_url" in attributes:
             self._selected_repositories_url = self._makeStringAttribute(attributes["selected_repositories_url"])
+        if "updated_at" in attributes:
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
+        if "visibility" in attributes:
+            self._visibility = self._makeStringAttribute(attributes["visibility"])

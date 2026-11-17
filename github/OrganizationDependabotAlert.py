@@ -3,6 +3,8 @@
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,11 +26,16 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+import github.NamedUser
+import github.Repository
 from github.DependabotAlert import DependabotAlert
 from github.GithubObject import Attribute, NotSet
-from github.Repository import Repository
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Repository import Repository
 
 
 class OrganizationDependabotAlert(DependabotAlert):
@@ -38,11 +45,20 @@ class OrganizationDependabotAlert(DependabotAlert):
     The reference can be found here
     https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-an-organization
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/dependabot-alert-with-repository
+
     """
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._assignees: Attribute[list[NamedUser]] = NotSet
         self._repository: Attribute[Repository] = NotSet
+
+    @property
+    def assignees(self) -> list[NamedUser]:
+        return self._assignees.value
 
     @property
     def repository(self) -> Repository:
@@ -50,5 +66,7 @@ class OrganizationDependabotAlert(DependabotAlert):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "assignees" in attributes:  # pragma no branch
+            self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
         if "repository" in attributes:
-            self._repository = self._makeClassAttribute(Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])

@@ -1,0 +1,542 @@
+diff --unified --recursive --new-file before/github/Commit.py after/github/Commit.py
+--- before/github/Commit.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/Commit.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -27,13 +27,17 @@
+ 
+ from github.GithubObject import CompletableGithubObjectWithPaginatedProperty
+ from github.GithubObject import Attribute, NotSet
++import github.Items
+ import github.NamedUser
++import github.Repository
+ 
+ if TYPE_CHECKING:
+     from github.GitAuthor import GitAuthor
+     from github.GitCommit import GitCommit
++    from github.Items import Items
+     from github.NamedUser import NamedUser
+     from github.GitCommit import GitCommit
++    from github.Repository import Repository
+     pass
+ 
+ 
+@@ -175,3 +179,52 @@
+         if "verification" in attributes:  # pragma no branch
+             self._verification = self._makeDictAttribute(attributes["verification"])
+ 
++
++
++class CommitSearchResult(Commit):
++    """
++    This class represents CommitSearchResult.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/search#search-commits
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/commit-search-result-item
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self._repository: Attribute[Repository] = NotSet
++        self._score: Attribute[float] = NotSet
++        self._text_matches: Attribute[list[Items]] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def repository(self) -> Repository:
++        self._completeIfNotSet(self._repository)
++        return self._repository.value
++
++    @property
++    def score(self) -> float:
++        self._completeIfNotSet(self._score)
++        return self._score.value
++
++    @property
++    def text_matches(self) -> list[Items]:
++        self._completeIfNotSet(self._text_matches)
++        return self._text_matches.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "repository" in attributes:  # pragma no branch
++            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
++        if "score" in attributes:  # pragma no branch
++            self._score = self._makeFloatAttribute(attributes["score"])
++        if "text_matches" in attributes:  # pragma no branch
++            self._text_matches = self._makeListOfClassesAttribute(github.Items.Items, attributes["text_matches"])
++
+diff --unified --recursive --new-file before/github/Items.py after/github/Items.py
+--- before/github/Items.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/Items.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,88 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class Items(NonCompletableGithubObject):
++    """
++    This class represents Items.
++
++    The reference can be found here
++    https://docs.github.com/en/rest
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/search-result-text-matches/items
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._fragment: Attribute[str] = NotSet
++        self._matches: Attribute[list[dict[str, Any]]] = NotSet
++        self._object_type: Attribute[str] = NotSet
++        self._object_url: Attribute[str] = NotSet
++        self._property: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def fragment(self) -> str:
++        return self._fragment.value
++
++    @property
++    def matches(self) -> list[dict[str, Any]]:
++        return self._matches.value
++
++    @property
++    def object_type(self) -> str:
++        return self._object_type.value
++
++    @property
++    def object_url(self) -> str:
++        return self._object_url.value
++
++    @property
++    def property(self) -> str:
++        return self._property.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "fragment" in attributes:  # pragma no branch
++            self._fragment = self._makeStringAttribute(attributes["fragment"])
++        if "matches" in attributes:  # pragma no branch
++            self._matches = self._makeListOfDictsAttribute(attributes["matches"])
++        if "object_type" in attributes:  # pragma no branch
++            self._object_type = self._makeStringAttribute(attributes["object_type"])
++        if "object_url" in attributes:  # pragma no branch
++            self._object_url = self._makeStringAttribute(attributes["object_url"])
++        if "property" in attributes:  # pragma no branch
++            self._property = self._makeStringAttribute(attributes["property"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -509,6 +509,81 @@
+       ],
+       "test_filename": "tests/Commit.py"
+     },
++    "CommitSearchResult": {
++      "bases": [
++        "Commit"
++      ],
++      "docstring": "This class represents CommitSearchResult.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/search#search-commits\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/commit-search-result-item",
++      "filename": "github/Commit.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "Commit",
++        "CompletableGithubObject",
++        "CompletableGithubObjectWithPaginatedProperty",
++        "GithubObject"
++      ],
++      "inherited_schemas": [
++        "/components/schemas/commit",
++        "/components/schemas/commit-search-result-item/properties/commit",
++        "/components/schemas/commit-search-result-item/properties/parents/items",
++        "/components/schemas/commit/properties/parents/items"
++      ],
++      "methods": {},
++      "module": "Commit",
++      "name": "CommitSearchResult",
++      "package": "github",
++      "properties": {
++        "repository": {
++          "name": "repository",
++          "returns": [
++            "Repository"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/minimal-repository"
++          },
++          "schemas": {
++            "/components/schemas/commit-search-result-item": {
++              "$ref": "#/components/schemas/minimal-repository"
++            }
++          }
++        },
++        "score": {
++          "name": "score",
++          "returns": [
++            "float"
++          ],
++          "schema": {
++            "type": "number"
++          },
++          "schemas": {
++            "/components/schemas/commit-search-result-item": {
++              "type": "number"
++            }
++          }
++        },
++        "text_matches": {
++          "name": "text_matches",
++          "returns": [
++            "list[Items]"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/search-result-text-matches"
++          },
++          "schemas": {
++            "/components/schemas/commit-search-result-item": {
++              "$ref": "#/components/schemas/search-result-text-matches"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/commit-search-result-item"
++      ],
++      "test_filename": "tests/Commit.py"
++    },
+     "CompletableGithubObject": {
+       "bases": [
+         "GithubObject",
+@@ -1358,6 +1433,132 @@
+       ],
+       "test_filename": "tests/IssueComment.py"
+     },
++    "Items": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents Items.\n\n    The reference can be found here\n    https://docs.github.com/en/rest\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/search-result-text-matches/items",
++      "filename": "github/Items.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "Items",
++      "name": "Items",
++      "package": "github",
++      "properties": {
++        "fragment": {
++          "name": "fragment",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/search-result-text-matches/items": {
++              "type": "string"
++            }
++          }
++        },
++        "matches": {
++          "name": "matches",
++          "returns": [
++            "list[dict[str, Any]]"
++          ],
++          "schema": {
++            "items": {
++              "properties": {
++                "indices": {
++                  "items": {
++                    "type": "integer"
++                  },
++                  "type": "array"
++                },
++                "text": {
++                  "type": "string"
++                }
++              },
++              "type": "object"
++            },
++            "type": "array"
++          },
++          "schemas": {
++            "/components/schemas/search-result-text-matches/items": {
++              "items": {
++                "properties": {
++                  "indices": {
++                    "items": {
++                      "type": "integer"
++                    },
++                    "type": "array"
++                  },
++                  "text": {
++                    "type": "string"
++                  }
++                },
++                "type": "object"
++              },
++              "type": "array"
++            }
++          }
++        },
++        "object_type": {
++          "name": "object_type",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/search-result-text-matches/items": {
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "object_url": {
++          "name": "object_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/search-result-text-matches/items": {
++              "type": "string"
++            }
++          }
++        },
++        "property": {
++          "name": "property",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/search-result-text-matches/items": {
++              "type": "string"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/search-result-text-matches/items"
++      ],
++      "test_filename": "tests/Items.py"
++    },
+     "NamedUser": {
+       "bases": [
+         "CompletableGithubObject"
+@@ -4724,12 +4925,14 @@
+     "class_to_descendants": {
+       "ABC": [
+         "Commit",
++        "CommitSearchResult",
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
+         "GitAuthor",
+         "GitCommit",
+         "GithubObject",
+         "IssueComment",
++        "Items",
+         "NamedUser",
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject",
+@@ -4741,8 +4944,12 @@
+         "_NotSetType",
+         "_ValuedAttribute"
+       ],
++      "Commit": [
++        "CommitSearchResult"
++      ],
+       "CompletableGithubObject": [
+         "Commit",
++        "CommitSearchResult",
+         "CompletableGithubObjectWithPaginatedProperty",
+         "IssueComment",
+         "NamedUser",
+@@ -4750,15 +4957,18 @@
+         "Repository"
+       ],
+       "CompletableGithubObjectWithPaginatedProperty": [
+-        "Commit"
++        "Commit",
++        "CommitSearchResult"
+       ],
+       "GithubObject": [
+         "Commit",
++        "CommitSearchResult",
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
+         "GitAuthor",
+         "GitCommit",
+         "IssueComment",
++        "Items",
+         "NamedUser",
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject",
+@@ -4771,6 +4981,7 @@
+       "NonCompletableGithubObject": [
+         "GitAuthor",
+         "GitCommit",
++        "Items",
+         "Reaction"
+       ],
+       "Protocol": [
+@@ -5453,6 +5664,9 @@
+       "/components/schemas/commit": [
+         "Commit"
+       ],
++      "/components/schemas/commit-search-result-item": [
++        "CommitSearchResult"
++      ],
+       "/components/schemas/commit-search-result-item/properties/commit": [
+         "Commit",
+         "GitCommit"
+@@ -5502,6 +5716,9 @@
+       "/components/schemas/repository": [
+         "Repository"
+       ],
++      "/components/schemas/search-result-text-matches/items": [
++        "Items"
++      ],
+       "/components/schemas/simple-commit": [
+         "GitCommit"
+       ],
+diff --unified --recursive --new-file before/tests/Commit.py after/tests/Commit.py
+--- before/tests/Commit.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/Commit.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -53,3 +53,29 @@
+         self.assertEqual(c.tree, "dict[str, Any]")
+         self.assertEqual(c.url, "")
+         self.assertEqual(c.verification, "dict[str, Any]")
++
++
++class CommitSearchResult(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type CommitSearchResult and assign to self.csr, then run:
++        #   pytest ./tests/Commit.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/Commit.py testAttributes
++        #   pre-commit run --all-files
++        self.csr = None
++
++    def testAttributes(self):
++        csr = self.csr
++        self.assertEqual(csr.__repr__(), "")
++        self.assertEqual(csr.author.some_attribute, "")
++        self.assertEqual(csr.comments_url, "")
++        self.assertEqual(csr.commit.some_attribute, "")
++        self.assertEqual(csr.committer.some_attribute, "")
++        self.assertEqual(csr.html_url, "")
++        self.assertEqual(csr.node_id, "")
++        self.assertEqual(csr.parents[0].some_attribute, "")
++        self.assertEqual(csr.repository.some_attribute, "")
++        self.assertEqual(csr.score, 0.0)
++        self.assertEqual(csr.sha, "")
++        self.assertEqual(csr.text_matches[0].some_attribute, "")
++        self.assertEqual(csr.url, "")
+diff --unified --recursive --new-file before/tests/Items.py after/tests/Items.py
+--- before/tests/Items.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/Items.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,45 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class Items(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type Items and assign to self.i, then run:
++        #   pytest ./tests/Items.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/Items.py testAttributes
++        #   pre-commit run --all-files
++        self.i = None
++
++    def testAttributes(self):
++        i = self.i
++        self.assertEqual(i.__repr__(), "")
++        self.assertEqual(i.fragment, "")
++        self.assertEqual(i.matches, "list[dict[str, Any]]")
++        self.assertEqual(i.object_type, "")
++        self.assertEqual(i.object_url, "")
++        self.assertEqual(i.property, "")

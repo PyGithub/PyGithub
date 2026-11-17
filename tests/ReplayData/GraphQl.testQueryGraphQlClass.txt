@@ -1,0 +1,10 @@
+https
+POST
+api.github.com
+None
+/graphql
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"query": "\n            query Q($id: ID!) {\n              node(id: $id) { ... on DiscussionComment { url } }\n            }", "variables": {"id": "DC_kwDOADYVqs4AU3Mg"}}
+200
+[('Date', 'Tue, 17 Sep 2024 18:58:31 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('X-OAuth-Scopes', 'read:discussion, read:org'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-10-04 11:29:00 UTC'), ('X-GitHub-Media-Type', 'github.v4; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4990'), ('X-RateLimit-Reset', '1726602697'), ('X-RateLimit-Used', '10'), ('X-RateLimit-Resource', 'graphql'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('Transfer-Encoding', 'chunked'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '7F30:39A73C:87FC61:8965EC:66E9D157')]
+{"data":{"node":{"url":"https://github.com/PyGithub/PyGithub/discussions/2480#discussioncomment-5468960"}}}

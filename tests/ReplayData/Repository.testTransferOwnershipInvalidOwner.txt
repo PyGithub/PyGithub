@@ -1,0 +1,10 @@
+https
+POST
+api.github.com
+None
+/repos/PyGithub/PyGithub/transfer
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"new_owner": "new_owner"}
+422
+[('Date', 'Tue, 17 Dec 2024 04:11:17 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '131'), ('X-OAuth-Scopes', 'admin:org, repo'), ('X-Accepted-OAuth-Scopes', 'repo'), ('github-authentication-token-expiration', '2024-12-23 03:25:37 UTC'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4947'), ('X-RateLimit-Reset', '1734410505'), ('X-RateLimit-Used', '53'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Server', 'github.com'), ('X-GitHub-Request-Id', '80E6:155D4B:D7C3EC:F32C9E:6760F9E5')]
+{"message":"Invalid new_owner","documentation_url":"https://docs.github.com/rest/repos/repos#transfer-a-repository","status":"422"}

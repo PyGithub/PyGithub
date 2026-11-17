@@ -1,0 +1,4 @@
+python scripts/openapi.py --dry-run apply methods openapi.spec.json openapi.index NamedUser
+python scripts/openapi.py --dry-run apply methods --rewrite openapi.spec.json openapi.index NamedUser
+python scripts/openapi.py apply methods --rewrite openapi.spec.json openapi.index NamedUser
+python scripts/openapi.py index github openapi.spec.json openapi.index

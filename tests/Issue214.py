@@ -12,6 +12,8 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -56,20 +58,20 @@ class Issue214(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
         self.assertFalse(self.repo.has_in_collaborators("marcmenges"))
 
     def testEditIssue(self):
-        self.assertEqual(self.issue.assignee, None)
+        self.assertEqual(len(self.issue.assignees), 0)
 
-        self.issue.edit(assignee="farrd")
-        self.assertEqual(self.issue.assignee.login, "farrd")
+        self.issue.edit(assignees=["farrd"])
+        self.assertEqual(self.issue.assignees[0].login, "farrd")
 
-        self.issue.edit(assignee=None)
-        self.assertEqual(self.issue.assignee, None)
+        self.issue.edit(assignees=[])
+        self.assertEqual(len(self.issue.assignees), 0)
 
     def testCreateIssue(self):
         issue = self.repo.create_issue("Issue created by PyGithub", assignee="farrd")
-        self.assertEqual(issue.assignee.login, "farrd")
+        self.assertEqual(issue.assignees[0].login, "farrd")
 
     def testGetIssues(self):
         issues = self.repo.get_issues(assignee="farrd")
 
         for issue in issues:
-            self.assertEqual(issue.assignee.login, "farrd")
+            self.assertEqual(issue.assignees[0].login, "farrd")

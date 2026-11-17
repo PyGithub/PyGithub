@@ -1,0 +1,9 @@
+https
+PATCH
+api.github.com
+None
+/repos/PyGithub/PyGithub/properties/values
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"properties": [{"property_name": "foo", "value": "bar"}]}
+204
+[('Server', 'GitHub.com'), ('Date', 'Mon, 13 May 2024 21:14:43 GMT'), ('github-authentication-token-expiration', '2024-05-14 21:59:19 +0100'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-accepted-github-permissions', 'repository_custom_properties=write'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4966'), ('X-RateLimit-Reset', '1715634908'), ('X-RateLimit-Used', '34'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'E3E1:217A23:4C86BFF:5DECCFD:9E22D3D7')]

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/rickrickston123/RepoTest/commits
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Tue, 14 Jul 2020 17:14:56 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4766'), ('X-RateLimit-Reset', '1594749126'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"1ecac7ea1780c4d77d519466d2894d79"'), ('Last-Modified', 'Sun, 12 Jul 2020 07:34:42 GMT'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '88C0:745A:45C1DE:C0D08B:5F0DE810')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/rickrickston123/RepoTest/git/tags
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
 {"tag": "v1.25.2", "message": "tag message", "object": "813da528da46ef4cbb28d2018eaa6d4b3d56f40f", "type": "commit"}
 201
 [('Server', 'GitHub.com'), ('Date', 'Tue, 14 Jul 2020 17:14:56 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '694'), ('Status', '201 Created'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4765'), ('X-RateLimit-Reset', '1594749125'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"5051215225850947c282d3f591630ef2"'), ('Location', 'https://api.github.com/repos/rickrickston123/RepoTest/git/tags/bd980f7d7d8ffae882c2ee02793bb7102c4bb443'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', '88C8:3982:10F294D:1D52054:5F0DE810')]
@@ -25,8 +25,8 @@ POST
 api.github.com
 None
 /repos/rickrickston123/RepoTest/releases
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
-{"tag_name": "v1.25.2", "name": "release title", "body": "release message", "draft": false, "prerelease": false, "generate_release_notes": false, "target_commitish": "813da528da46ef4cbb28d2018eaa6d4b3d56f40f"}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"tag_name": "v1.25.2", "draft": false, "prerelease": false, "generate_release_notes": false, "name": "release title", "body": "release message", "target_commitish": "813da528da46ef4cbb28d2018eaa6d4b3d56f40f", "make_latest": "true"}
 201
 [('Server', 'GitHub.com'), ('Date', 'Tue, 14 Jul 2020 17:14:57 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '1839'), ('Status', '201 Created'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4764'), ('X-RateLimit-Reset', '1594749126'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"08734005fd9365fc591d27a27bdf992a"'), ('Location', 'https://api.github.com/repos/rickrickston123/RepoTest/releases/28553925'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', '88D4:6F6D:F280BD:1A3F57A:5F0DE811')]
 {"url":"https://api.github.com/repos/rickrickston123/RepoTest/releases/28553925","assets_url":"https://api.github.com/repos/rickrickston123/RepoTest/releases/28553925/assets","upload_url":"https://uploads.github.com/repos/rickrickston123/RepoTest/releases/28553925/assets{?name,label}","html_url":"https://github.com/rickrickston123/RepoTest/releases/tag/v1.25.2","id":28553925,"node_id":"MDc6UmVsZWFzZTI4NTUzOTI1","tag_name":"v1.25.2","target_commitish":"813da528da46ef4cbb28d2018eaa6d4b3d56f40f","name":"release title","draft":false,"author":{"login":"rickrickston123","id":64711998,"node_id":"MDQ6VXNlcjY0NzExOTk4","avatar_url":"https://avatars0.githubusercontent.com/u/64711998?v=4","gravatar_id":"","url":"https://api.github.com/users/rickrickston123","html_url":"https://github.com/rickrickston123","followers_url":"https://api.github.com/users/rickrickston123/followers","following_url":"https://api.github.com/users/rickrickston123/following{/other_user}","gists_url":"https://api.github.com/users/rickrickston123/gists{/gist_id}","starred_url":"https://api.github.com/users/rickrickston123/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/rickrickston123/subscriptions","organizations_url":"https://api.github.com/users/rickrickston123/orgs","repos_url":"https://api.github.com/users/rickrickston123/repos","events_url":"https://api.github.com/users/rickrickston123/events{/privacy}","received_events_url":"https://api.github.com/users/rickrickston123/received_events","type":"User","site_admin":false},"prerelease":false,"created_at":"2020-07-12T07:34:42Z","published_at":"2020-07-14T17:14:57Z","assets":[],"tarball_url":"https://api.github.com/repos/rickrickston123/RepoTest/tarball/v1.25.2","zipball_url":"https://api.github.com/repos/rickrickston123/RepoTest/zipball/v1.25.2","body":"release message"}
@@ -36,7 +36,7 @@ POST
 uploads.github.com
 None
 /repos/rickrickston123/RepoTest/releases/28553925/assets?label=unit+test+artifact&name=archive.zip
-{'Content-Type': 'application/zip', 'Content-Length': '140', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/zip', 'Content-Length': '140', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 <_io.BufferedReader name='archive.zip'>
 201
 [('Cache-Control', 'no-cache'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Type', 'application/json; charset=utf-8'), ('Etag', 'W/"af76ff306880818d79f0fa772d6f8cf1"'), ('Last-Modified', 'Tue, 14 Jul 2020 17:14:58 GMT'), ('Strict-Transport-Security', 'max-age=31557600'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('X-Content-Type-Options', 'nosniff'), ('X-Frame-Options', 'deny'), ('X-Github-Media-Type', 'github.v3; format=json'), ('X-Xss-Protection', '1; mode=block'), ('Date', 'Tue, 14 Jul 2020 17:14:58 GMT'), ('Transfer-Encoding', 'chunked'), ('X-GitHub-Request-Id', 'AEA8:5691:6650A9:77690A:5F0DE811')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /repos/rickrickston123/RepoTest/releases/28553925
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Tue, 14 Jul 2020 17:14:58 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4761'), ('X-RateLimit-Reset', '1594749126'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"0037b79d5f7fa7e156e9f7b8e9ff711a"'), ('Last-Modified', 'Tue, 14 Jul 2020 17:14:57 GMT'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '88EA:102B:596CE9:CDC973:5F0DE812')]
@@ -58,7 +58,7 @@ DELETE
 api.github.com
 None
 /repos/rickrickston123/RepoTest/releases/28553925
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('Server', 'GitHub.com'), ('Date', 'Tue, 14 Jul 2020 17:14:59 GMT'), ('Status', '204 No Content'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4760'), ('X-RateLimit-Reset', '1594749125'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', '88F4:6228:451708:B801AA:5F0DE812')]

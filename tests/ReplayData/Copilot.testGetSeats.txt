@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/copilot/billing/seats
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4973'), ('content-length', '716'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"4862bcec9fa538316e2fcd73be37b846"'), ('date', 'Sat, 26 May 2012 21:09:52 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"seats": [{"created_at": "2010-07-09T06:10:06Z", "updated_at": "2012-05-26T11:25:48Z", "pending_cancellation_date": null, "last_activity_at": "2012-05-26T14:59:39Z", "last_activity_editor": "vscode/1.0.0", "plan_type": "business", "assignee": {"login": "pashafateev", "id": 327146}}]}

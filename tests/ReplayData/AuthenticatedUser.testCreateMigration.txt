@@ -3,7 +3,7 @@ POST
 api.github.com
 None
 /user/migrations
-{'Content-Type': 'application/json', 'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 {"repositories": ["sample-repo"]}
 201
 [('Server', 'GitHub.com'), ('Date', 'Thu, 13 Sep 2018 14:27:49 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '6113'), ('Status', '201 Created'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4990'), ('X-RateLimit-Reset', '1536851865'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', '"effe78003c129e46e2cc58a5ac1f001d"'), ('Location', 'https://api.github.com/user/migrations/25309'), ('X-GitHub-Media-Type', 'github.wyandotte-preview; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.105195'), ('X-GitHub-Request-Id', '8B80:1FE2:1A4DEF4:311C09F:5B9A73E4')]

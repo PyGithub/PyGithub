@@ -1,0 +1,29 @@
++ python scripts/openapi.py suggest paths openapi.spec.json openapi.index IssueComment
+Using spec openapi.spec.json
+Suggesting API paths for PyGithub class IssueComment
+
+There are 0 out of 1111 verbs (0%) implemented
+There are 0 verbs unknown to the OpenAPI spec
+
+There are 0 out of 737 paths (0%) implemented
+There are 0 paths unknown to the OpenAPI spec
+
+Class IssueComment
+- Implements schema /components/schemas/issue-comment
+  - Returned by path /repos/{owner}/{repo}/issues/comments/{comment_id}
+    - get /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions should be implemented as IssueComment.get_reactions()
+      python scripts/openapi.py create method openapi.spec.json openapi.index IssueComment get_reactions get /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
+    - post /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions should be implemented as IssueComment.create_reactions() or IssueComment.reactions()
+      python scripts/openapi.py create method openapi.spec.json openapi.index IssueComment create_reactions post /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
+      python scripts/openapi.py create method openapi.spec.json openapi.index IssueComment reactions post /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
+
+    - delete /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id} should be implemented as IssueComment.delete_reactions_reaction(id)()
+      python scripts/openapi.py create method openapi.spec.json openapi.index IssueComment delete_reactions_reaction(id) delete /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}
+
+
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 3 Python files
+Indexed 12 classes
+Indexed 0 paths
+Indexed 4 schemas
+Indexing OpenAPI spec

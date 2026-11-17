@@ -1,0 +1,56 @@
+diff --unified --recursive --new-file before/github/IssueComment.py after/github/IssueComment.py
+--- before/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -24,11 +24,12 @@
+ from typing import Any, TYPE_CHECKING
+ from datetime import datetime, timezone
+ 
++import github.NamedUser
+ from github.GithubObject import CompletableGithubObject
+ from github.GithubObject import Attribute, NotSet
+ 
+ if TYPE_CHECKING:
+-    pass
++    from github.NamedUser import NamedUser
+ 
+ 
+ class IssueComment(CompletableGithubObject):
+@@ -58,7 +59,7 @@
+         self._performed_via_github_app: Attribute[dict[str, Any]] = NotSet
+         self._reactions: Attribute[dict[str, Any]] = NotSet
+         self._updated_at: Attribute[datetime] = NotSet
+-        self._user: Attribute[dict[str, Any]] = NotSet
++        self._user: Attribute[NamedUser] = NotSet
+ 
+     def __repr__(self) -> str:
+         # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
+@@ -125,7 +126,7 @@
+         return self._updated_at.value
+ 
+     @property
+-    def user(self) -> dict[str, Any]:
++    def user(self) -> NamedUser:
+         self._completeIfNotSet(self._user)
+         return self._user.value
+ 
+@@ -156,5 +157,7 @@
+         if "updated_at" in attributes:  # pragma no branch
+             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+         if "user" in attributes:  # pragma no branch
+-            self._user = self._makeDictAttribute(attributes["user"])
++            self._user = self._makeClassAttribute(
++                github.NamedUser.NamedUser, attributes["user"]
++            )
+ 
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -420,7 +420,7 @@
+         "user": {
+           "name": "user",
+           "returns": [
+-            "dict[str, Any]"
++            "NamedUser"
+           ],
+           "schema": {
+             "$ref": "#/components/schemas/nullable-simple-user"

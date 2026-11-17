@@ -16,7 +16,11 @@
 # Copyright 2022 Liuyang Wan <tsfdye@gmail.com>                                #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Sai Asish Y <say.apm35@gmail.com>                             #
+# Copyright 2026 Tanishk <tanishk7531@gmail.com>                               #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -36,8 +40,10 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 import json
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any
 
 
 class GithubException(Exception):
@@ -53,8 +59,8 @@ class GithubException(Exception):
         self,
         status: int,
         data: Any = None,
-        headers: Optional[Dict[str, str]] = None,
-        message: Optional[str] = None,
+        headers: dict[str, str] | None = None,
+        message: str | None = None,
     ):
         super().__init__()
         self.__status = status
@@ -64,7 +70,7 @@ class GithubException(Exception):
         self.args = (status, data, headers, message)
 
     @property
-    def message(self) -> Optional[str]:
+    def message(self) -> str | None:
         return self.__message
 
     @property
@@ -82,7 +88,7 @@ class GithubException(Exception):
         return self.__data
 
     @property
-    def headers(self) -> Optional[Dict[str, str]]:
+    def headers(self) -> dict[str, str] | None:
         """
         The headers returned by the Github API.
         """
@@ -98,7 +104,10 @@ class GithubException(Exception):
             msg = f"{self.status}"
 
         if self.data is not None:
-            msg += " " + json.dumps(self.data)
+            data = self.data
+            if isinstance(data, bytes):
+                data = data.decode("utf-8", errors="replace")
+            msg += " " + json.dumps(data)
 
         return msg
 
@@ -129,6 +138,32 @@ class RateLimitExceededException(GithubException):
     """
 
 
+class RateLimitExceededExceedsMaxWait(RateLimitExceededException):
+    """
+    Exception raised when the wait required to respect a rate limit reset exceeds the configured
+    ``max_rate_limit_wait`` on ``GithubRetry``, instead of blocking until the rate limit resets.
+    """
+
+    def __init__(
+        self,
+        status: int,
+        data: Any = None,
+        headers: dict[str, str] | None = None,
+        message: str | None = None,
+        wait: float | None = None,
+    ):
+        super().__init__(status, data, headers, message)
+        self.__wait = wait
+
+    @property
+    def wait(self) -> float | None:
+        """
+        The backoff in seconds that would have been required to respect the rate limit reset, before it was capped by
+        ``max_rate_limit_wait``.
+        """
+        return self.__wait
+
+
 class BadAttributeException(Exception):
     """
     Exception raised when Github returns an attribute with the wrong type.
@@ -137,13 +172,13 @@ class BadAttributeException(Exception):
     def __init__(
         self,
         actualValue: Any,
-        expectedType: Union[
-            Dict[Tuple[Type[str], Type[str]], Type[dict]],
-            Tuple[Type[str], Type[str]],
-            List[Type[dict]],
-            List[Tuple[Type[str], Type[str]]],
-        ],
-        transformationException: Optional[Exception],
+        expectedType: (
+            dict[tuple[type[str], type[str]], type[dict]]
+            | tuple[type[str], type[str]]
+            | list[type[dict]]
+            | list[tuple[type[str], type[str]]]
+        ),
+        transformationException: Exception | None,
     ):
         self.__actualValue = actualValue
         self.__expectedType = expectedType
@@ -159,19 +194,19 @@ class BadAttributeException(Exception):
     @property
     def expected_type(
         self,
-    ) -> Union[
-        List[Type[dict]],
-        Tuple[Type[str], Type[str]],
-        Dict[Tuple[Type[str], Type[str]], Type[dict]],
-        List[Tuple[Type[str], Type[str]]],
-    ]:
+    ) -> (
+        list[type[dict]]
+        | tuple[type[str], type[str]]
+        | dict[tuple[type[str], type[str]], type[dict]]
+        | list[tuple[type[str], type[str]]]
+    ):
         """
         The type PyGithub expected.
         """
         return self.__expectedType
 
     @property
-    def transformation_exception(self) -> Optional[Exception]:
+    def transformation_exception(self) -> Exception | None:
         """
         The exception raised when PyGithub tried to parse the value.
         """

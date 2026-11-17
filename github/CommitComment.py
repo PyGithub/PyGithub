@@ -20,7 +20,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,11 +49,14 @@ from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Reaction import Reaction
 
 
@@ -62,23 +67,35 @@ class CommitComment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#comments
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/commit-comment
+
     """
 
     def _initAttributes(self) -> None:
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._line: Attribute[int] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._path: Attribute[str] = NotSet
         self._position: Attribute[int] = NotSet
+        self._reactions: Attribute[dict[str, Any]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._user: Attribute[NamedUser | Organization] = NotSet
 
     def __repr__(self) -> str:
-        return self.get__repr__({"id": self._id.value, "user": self.user})
+        return self.get__repr__({"id": self._id.value, "user": self._user.value})
+
+    @property
+    def author_association(self) -> str:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
 
     @property
     def body(self) -> str:
@@ -111,6 +128,11 @@ class CommitComment(CompletableGithubObject):
         return self._line.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def path(self) -> str:
         self._completeIfNotSet(self._path)
         return self._path.value
@@ -119,6 +141,11 @@ class CommitComment(CompletableGithubObject):
     def position(self) -> int:
         self._completeIfNotSet(self._position)
         return self._position.value
+
+    @property
+    def reactions(self) -> dict[str, Any]:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
 
     @property
     def updated_at(self) -> datetime:
@@ -131,20 +158,20 @@ class CommitComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self) -> github.NamedUser.NamedUser:
+    def user(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._user)
         return self._user.value
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/comments/{id} <https://docs.github.com/en/rest/reference/repos#comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/comments/{comment_id} <https://docs.github.com/en/rest/reference/repos#comments>`_
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -152,10 +179,11 @@ class CommitComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_reactions(self) -> PaginatedList[Reaction]:
         """
-        :calls: `GET /repos/{owner}/{repo}/comments/{id}/reactions
+        :calls: `GET /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-a-commit-comment>`_
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
@@ -169,7 +197,7 @@ class CommitComment(CompletableGithubObject):
 
     def create_reaction(self, reaction_type: str) -> Reaction:
         """
-        :calls: `POST /repos/{owner}/{repo}/comments/{id}/reactions
+        :calls: `POST /repos/{owner}/{repo}/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-a-commit-comment>`_
         """
         assert isinstance(reaction_type, str), reaction_type
@@ -182,7 +210,7 @@ class CommitComment(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+        return github.Reaction.Reaction(self._requester, headers, data)
 
     def delete_reaction(self, reaction_id: int) -> bool:
         """
@@ -200,6 +228,8 @@ class CommitComment(CompletableGithubObject):
         return status == 204
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
@@ -210,15 +240,29 @@ class CommitComment(CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "line" in attributes:  # pragma no branch
             self._line = self._makeIntAttribute(attributes["line"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "position" in attributes:  # pragma no branch
             self._position = self._makeIntAttribute(attributes["position"])
+        if "reactions" in attributes:  # pragma no branch
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["user"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )

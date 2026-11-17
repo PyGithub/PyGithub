@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /events
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Date', 'Sat, 25 Apr 2020 12:12:00 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Server', 'GitHub.com'), ('Status', '200 OK'), ('X-RateLimit-Limit', '60'), ('X-RateLimit-Remaining', '58'), ('X-RateLimit-Reset', '1587820042'), ('Cache-Control', 'public, max-age=60, s-maxage=60'), ('Vary', 'Accept, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"3a593e38a3ba7d45b1eaaf7b919e070b"'), ('Last-Modified', 'Sat, 25 Apr 2020 12:07:00 GMT'), ('X-Poll-Interval', '60'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Link', '<https://api.github.com/events?page=2>; rel="next", <https://api.github.com/events?page=10>; rel="last"'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'BA46:2F091:487499F:555A490:5EA42910')]

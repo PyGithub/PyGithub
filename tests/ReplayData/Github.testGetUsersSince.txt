@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users?since=1000
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4995'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('cache-control', 'max-age=0, private, must-revalidate'), ('vary', 'Accept-Encoding'), ('content-length', '98348'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/users?since=1101>; rel="next", <https://api.github.com/users{?since}>; rel="first"'), ('etag', '"cca5d88559ccabed801c053558444403"'), ('access-control-allow-credentials', 'true'), ('date', 'Tue, 18 Jun 2013 15:43:12 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8')]

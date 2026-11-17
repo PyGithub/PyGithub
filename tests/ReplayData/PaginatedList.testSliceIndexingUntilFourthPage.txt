@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4927'), ('content-length', '52085'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/openframeworks/openFrameworks/issues?page=2>; rel="next", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=14>; rel="last"'), ('etag', '"5e8867ffb4e7630e852b2b231f3b9cdb"'), ('date', 'Tue, 29 May 2012 19:36:57 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues?page=2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4996'), ('content-length', '49679'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/openframeworks/openFrameworks/issues?page=3>; rel="next", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=14>; rel="last", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=1>; rel="first", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=1>; rel="prev"'), ('etag', '"cf9ec647fbc78faae05cb2d11598f79c"'), ('date', 'Tue, 29 May 2012 20:01:47 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues?page=3
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4995'), ('content-length', '55518'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/openframeworks/openFrameworks/issues?page=4>; rel="next", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=14>; rel="last", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=1>; rel="first", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=2>; rel="prev"'), ('etag', '"99258d32bcb6ade5b1153c8155fc2466"'), ('date', 'Tue, 29 May 2012 20:01:48 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/openframeworks/openFrameworks/issues?page=4
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '44623'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/repos/openframeworks/openFrameworks/issues?page=5>; rel="next", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=14>; rel="last", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=1>; rel="first", <https://api.github.com/repos/openframeworks/openFrameworks/issues?page=3>; rel="prev"'), ('etag', '"503341a3315e7439ca42af2db36615d4"'), ('date', 'Tue, 29 May 2012 20:01:49 GMT'), ('content-type', 'application/json; charset=utf-8')]

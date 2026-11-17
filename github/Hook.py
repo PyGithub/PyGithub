@@ -18,7 +18,10 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,11 +44,14 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.HookResponse
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional, is_optional_list
+
+if TYPE_CHECKING:
+    from github.HookResponse import HookResponse
 
 
 class Hook(CompletableGithubObject):
@@ -55,20 +61,27 @@ class Hook(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/repos#webhooks
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/hook
+    - /components/schemas/org-hook
+
     """
 
     def _initAttributes(self) -> None:
         self._active: Attribute[bool] = NotSet
         self._config: Attribute[dict] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._deliveries_url: Attribute[str] = NotSet
         self._events: Attribute[list[str]] = NotSet
         self._id: Attribute[int] = NotSet
-        self._last_response: Attribute[github.HookResponse.HookResponse] = NotSet
+        self._last_response: Attribute[HookResponse] = NotSet
         self._name: Attribute[str] = NotSet
+        self._ping_url: Attribute[str] = NotSet
         self._test_url: Attribute[str] = NotSet
+        self._type: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._ping_url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "url": self._url.value})
@@ -89,6 +102,11 @@ class Hook(CompletableGithubObject):
         return self._created_at.value
 
     @property
+    def deliveries_url(self) -> str:
+        self._completeIfNotSet(self._deliveries_url)
+        return self._deliveries_url.value
+
+    @property
     def events(self) -> list[str]:
         self._completeIfNotSet(self._events)
         return self._events.value
@@ -99,7 +117,7 @@ class Hook(CompletableGithubObject):
         return self._id.value
 
     @property
-    def last_response(self) -> github.HookResponse.HookResponse:
+    def last_response(self) -> HookResponse:
         self._completeIfNotSet(self._last_response)
         return self._last_response.value
 
@@ -109,9 +127,19 @@ class Hook(CompletableGithubObject):
         return self._name.value
 
     @property
+    def ping_url(self) -> str:
+        self._completeIfNotSet(self._ping_url)
+        return self._ping_url.value
+
+    @property
     def test_url(self) -> str:
         self._completeIfNotSet(self._test_url)
         return self._test_url.value
+
+    @property
+    def type(self) -> str:
+        self._completeIfNotSet(self._type)
+        return self._type.value
 
     @property
     def updated_at(self) -> datetime:
@@ -123,14 +151,9 @@ class Hook(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    @property
-    def ping_url(self) -> str:
-        self._completeIfNotSet(self._ping_url)
-        return self._ping_url.value
-
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `DELETE /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -144,7 +167,7 @@ class Hook(CompletableGithubObject):
         active: Opt[bool] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/hooks/{id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         assert isinstance(name, str), name
         assert isinstance(config, dict), config
@@ -165,16 +188,17 @@ class Hook(CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def test(self) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/tests <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `POST /repos/{owner}/{repo}/hooks/{hook_id}/tests <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/tests")
 
     def ping(self) -> None:
         """
-        :calls: `POST /repos/{owner}/{repo}/hooks/{id}/pings <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `POST /repos/{owner}/{repo}/hooks/{hook_id}/pings <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
         headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pings")
 
@@ -185,21 +209,29 @@ class Hook(CompletableGithubObject):
             self._config = self._makeDictAttribute(attributes["config"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "deliveries_url" in attributes:  # pragma no branch
+            self._deliveries_url = self._makeStringAttribute(attributes["deliveries_url"])
         if "events" in attributes:  # pragma no branch
             self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "last_response" in attributes:  # pragma no branch
             self._last_response = self._makeClassAttribute(
                 github.HookResponse.HookResponse, attributes["last_response"]
             )
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "ping_url" in attributes:  # pragma no branch
+            self._ping_url = self._makeStringAttribute(attributes["ping_url"])
         if "test_url" in attributes:  # pragma no branch
             self._test_url = self._makeStringAttribute(attributes["test_url"])
+        if "type" in attributes:  # pragma no branch
+            self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "ping_url" in attributes:  # pragma no branch
-            self._ping_url = self._makeStringAttribute(attributes["ping_url"])

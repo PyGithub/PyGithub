@@ -1,0 +1,87 @@
+diff --unified --recursive --new-file before/github/IssueComment.py after/github/IssueComment.py
+--- before/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -130,6 +130,24 @@
+         self._completeIfNotSet(self._user)
+         return self._user.value
+     
++    def create_reaction(self, content: str) -> Reaction:
++        """
++        Create reaction for an issue comment
++
++        Create a reaction to an [issue comment](https://docs.github.com/rest/issues/comments#get-an-issue-comment). A response with an HTTP `200` status means that you already added the reaction type to this issue comment.
++
++        :calls: `POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions <https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue-comment>`_
++        :param content: The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the issue comment.
++        """
++        assert isinstance(content, str), content
++        post_parameters = NotSet.remove_unset_items(
++            {
++                "content": content,
++            }
++        )
++        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/reactions", input=post_parameters)
++        return github.Reaction.Reaction(self._requester, headers, data)
++    
+     def get_reactions(self, content: Opt[str] = NotSet) -> PaginatedList[Reaction]:
+         """
+         List reactions for an issue comment
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -223,6 +223,17 @@
+       ],
+       "inherited_schemas": [],
+       "methods": {
++        "create_reaction": {
++          "call": {
++            "docs": "<https://docs.github.com/rest/reactions/reactions#create-reaction-for-an-issue-comment>`_",
++            "path": "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
++            "verb": "POST"
++          },
++          "name": "create_reaction",
++          "returns": [
++            "Reaction"
++          ]
++        },
+         "get_reactions": {
+           "call": {
+             "docs": "<https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment>`_",
+@@ -1468,6 +1479,9 @@
+       "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
+         "get": [
+           "IssueComment.get_reactions"
++        ],
++        "post": [
++          "IssueComment.create_reaction"
+         ]
+       }
+     },
+@@ -1475,6 +1489,9 @@
+       "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
+         "get": [
+           "PaginatedList[Reaction]"
++        ],
++        "post": [
++          "Reaction"
+         ]
+       }
+     },
+@@ -2127,6 +2144,17 @@
+             ]
+           }
+         ]
++      },
++      "POST": {
++        "methods": [
++          {
++            "class": "IssueComment",
++            "name": "create_reaction",
++            "returns": [
++              "Reaction"
++            ]
++          }
++        ]
+       }
+     }
+   },

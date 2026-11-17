@@ -4,6 +4,8 @@
 # Copyright 2023 Joseph Henrich <crimsonknave@gmail.com>                       #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Thomas Cooper <coopernetes@proton.me>                         #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -26,16 +28,20 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from github.CVSS import CVSS
-from github.CWE import CWE
+import github.CVSS
+import github.CWE
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.CVSS import CVSS
+    from github.CWE import CWE
 
 
 class AdvisoryBase(NonCompletableGithubObject):
     """
-    This class represents a the shared attributes between GlobalAdvisory, RepositoryAdvisory and DependabotAdvisory
+    This class represents the shared attributes between GlobalAdvisory, RepositoryAdvisory and DependabotAdvisory
     https://docs.github.com/en/rest/security-advisories/global-advisories
     https://docs.github.com/en/rest/security-advisories/repository-advisories
     https://docs.github.com/en/rest/dependabot/alerts
@@ -44,6 +50,7 @@ class AdvisoryBase(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._cve_id: Attribute[str] = NotSet
         self._cvss: Attribute[CVSS] = NotSet
+        self._cvss_severities: Attribute[dict[str, Any]] = NotSet
         self._cwes: Attribute[list[CWE]] = NotSet
         self._description: Attribute[str] = NotSet
         self._ghsa_id: Attribute[str] = NotSet
@@ -66,6 +73,10 @@ class AdvisoryBase(NonCompletableGithubObject):
     @property
     def cvss(self) -> CVSS:
         return self._cvss.value
+
+    @property
+    def cvss_severities(self) -> dict[str, Any]:
+        return self._cvss_severities.value
 
     @property
     def cwes(self) -> list[CWE]:
@@ -115,9 +126,11 @@ class AdvisoryBase(NonCompletableGithubObject):
         if "cve_id" in attributes:  # pragma no branch
             self._cve_id = self._makeStringAttribute(attributes["cve_id"])
         if "cvss" in attributes:  # pragma no branch
-            self._cvss = self._makeClassAttribute(CVSS, attributes["cvss"])
+            self._cvss = self._makeClassAttribute(github.CVSS.CVSS, attributes["cvss"])
+        if "cvss_severities" in attributes:  # pragma no branch
+            self._cvss_severities = self._makeDictAttribute(attributes["cvss_severities"])
         if "cwes" in attributes:  # pragma no branch
-            self._cwes = self._makeListOfClassesAttribute(CWE, attributes["cwes"])
+            self._cwes = self._makeListOfClassesAttribute(github.CWE.CWE, attributes["cwes"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
         if "ghsa_id" in attributes:  # pragma no branch

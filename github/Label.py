@@ -19,7 +19,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,11 +41,18 @@
 #                                                                              #
 ################################################################################
 
-import urllib.parse
-from typing import Any, Dict
+from __future__ import annotations
 
+import urllib.parse
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
+import github.NamedUser
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class Label(CompletableGithubObject):
@@ -53,16 +62,45 @@ class Label(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#labels
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/issue-event-label
+    - /components/schemas/issue-search-result-item/properties/labels/items
+    - /components/schemas/issue/properties/labels/items/oneOf/1
+    - /components/schemas/label
+    - /components/schemas/nullable-issue/properties/labels/items/oneOf/1
+    - /components/schemas/pull-request-simple/properties/labels/items
+    - /components/schemas/pull-request/properties/labels/items
+
     """
 
     def _initAttributes(self) -> None:
+        self._archived_at: Attribute[datetime] = NotSet
+        self._archived_by: Attribute[NamedUser] = NotSet
         self._color: Attribute[str] = NotSet
+        self._default: Attribute[bool] = NotSet
         self._description: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
+
+    @property
+    def _identity(self) -> str:
+        return urllib.parse.quote(self.name)
+
+    @property
+    def archived_at(self) -> datetime:
+        self._completeIfNotSet(self._archived_at)
+        return self._archived_at.value
+
+    @property
+    def archived_by(self) -> NamedUser:
+        self._completeIfNotSet(self._archived_by)
+        return self._archived_by.value
 
     @property
     def color(self) -> str:
@@ -70,14 +108,29 @@ class Label(CompletableGithubObject):
         return self._color.value
 
     @property
+    def default(self) -> bool:
+        self._completeIfNotSet(self._default)
+        return self._default.value
+
+    @property
     def description(self) -> str:
         self._completeIfNotSet(self._description)
         return self._description.value
 
     @property
+    def id(self) -> int:
+        self._completeIfNotSet(self._id)
+        return self._id.value
+
+    @property
     def name(self) -> str:
         self._completeIfNotSet(self._name)
         return self._name.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def url(self) -> str:
@@ -105,17 +158,28 @@ class Label(CompletableGithubObject):
             headers={"Accept": Consts.mediaTypeLabelDescriptionSearchPreview},
         )
         self._useAttributes(data)
+        self._set_complete()
 
-    @property
-    def _identity(self) -> str:
-        return urllib.parse.quote(self.name)
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "archived_at" in attributes:  # pragma no branch
+            self._archived_at = self._makeDatetimeAttribute(attributes["archived_at"])
+        if "archived_by" in attributes:  # pragma no branch
+            self._archived_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["archived_by"])
         if "color" in attributes:  # pragma no branch
             self._color = self._makeStringAttribute(attributes["color"])
+        if "default" in attributes:  # pragma no branch
+            self._default = self._makeBoolAttribute(attributes["default"])
         if "description" in attributes:  # pragma no branch
             self._description = self._makeStringAttribute(attributes["description"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

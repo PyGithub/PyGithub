@@ -17,7 +17,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -37,7 +39,10 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -49,13 +54,18 @@ class Autolink(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/repos/autolinks?apiVersion=2022-11-28
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/autolink
+
     """
 
     def _initAttributes(self) -> None:
         self._id: Attribute[int] = NotSet
-        self._key_prefix: Attribute[str] = NotSet
-        self._url_template: Attribute[str] = NotSet
         self._is_alphanumeric: Attribute[bool] = NotSet
+        self._key_prefix: Attribute[str] = NotSet
+        self._updated_at: Attribute[datetime] = NotSet
+        self._url_template: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
@@ -65,23 +75,29 @@ class Autolink(NonCompletableGithubObject):
         return self._id.value
 
     @property
+    def is_alphanumeric(self) -> bool:
+        return self._is_alphanumeric.value
+
+    @property
     def key_prefix(self) -> str:
         return self._key_prefix.value
+
+    @property
+    def updated_at(self) -> datetime:
+        return self._updated_at.value
 
     @property
     def url_template(self) -> str:
         return self._url_template.value
 
-    @property
-    def is_alphanumeric(self) -> bool:
-        return self._is_alphanumeric.value
-
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
-        if "key_prefix" in attributes:  # pragma no branch
-            self._key_prefix = self._makeStringAttribute(attributes["key_prefix"])
-        if "url_template" in attributes:  # pragma no branch
-            self._url_template = self._makeStringAttribute(attributes["url_template"])
         if "is_alphanumeric" in attributes:  # pragma no branch
             self._is_alphanumeric = self._makeBoolAttribute(attributes["is_alphanumeric"])
+        if "key_prefix" in attributes:  # pragma no branch
+            self._key_prefix = self._makeStringAttribute(attributes["key_prefix"])
+        if "updated_at" in attributes:  # pragma no branch
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+        if "url_template" in attributes:  # pragma no branch
+            self._url_template = self._makeStringAttribute(attributes["url_template"])

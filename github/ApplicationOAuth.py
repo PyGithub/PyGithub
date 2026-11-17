@@ -8,6 +8,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Théo Goudout <TheoGoudout@users.noreply.github.com>           #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -53,20 +55,19 @@ class ApplicationOAuth(NonCompletableGithubObject):
 
     """
 
-    def _initAttributes(self) -> None:
-        self._client_id: Attribute[str] = NotSet
-        self._client_secret: Attribute[str] = NotSet
-
     def __init__(
         self,
         requester: Requester,
         headers: dict[str, Any],
         attributes: Any,
-        completed: bool,
     ) -> None:
         # this object requires a request without authentication
         requester = requester.withAuth(auth=None)
-        super().__init__(requester, headers, attributes, completed)
+        super().__init__(requester, headers, attributes)
+
+    def _initAttributes(self) -> None:
+        self._client_id: Attribute[str] = NotSet
+        self._client_secret: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"client_id": self._client_id.value})
@@ -78,12 +79,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
     @property
     def client_secret(self) -> str:
         return self._client_secret.value
-
-    def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "client_id" in attributes:  # pragma no branch
-            self._client_id = self._makeStringAttribute(attributes["client_id"])
-        if "client_secret" in attributes:  # pragma no branch
-            self._client_secret = self._makeStringAttribute(attributes["client_secret"])
 
     def get_oauth_url(self, path: str) -> str:
         if not path.startswith("/"):
@@ -119,9 +114,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
 
         return self.get_oauth_url(f"/authorize?{query}")
 
-    def get_access_token(self, code: str, state: str | None = None) -> AccessToken:
+    def get_access_token(self, code: str, code_verifier: str | None = None) -> AccessToken:
         """
-        :calls: `POST /login/oauth/access_token <https://docs.github.com/en/developers/apps/identifying-and-authorizing-users-for-github-apps>`_
+        :calls: `POST /login/oauth/access_token <https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app#using-the-web-application-flow-to-generate-a-user-access-token>`_
         """
         assert isinstance(code, str), code
         post_parameters = {
@@ -130,8 +125,8 @@ class ApplicationOAuth(NonCompletableGithubObject):
             "client_secret": self.client_secret,
         }
 
-        if state is not None:
-            post_parameters["state"] = state
+        if code_verifier is not None:
+            post_parameters["code_verifier"] = code_verifier
 
         headers, data = self._checkError(
             *self._requester.requestJsonAndCheck(
@@ -146,7 +141,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
             requester=self._requester,
             headers=headers,
             attributes=data,
-            completed=False,
         )
 
     def get_app_user_auth(self, token: AccessToken) -> AppUserAuth:
@@ -187,7 +181,6 @@ class ApplicationOAuth(NonCompletableGithubObject):
             requester=self._requester,
             headers=headers,
             attributes=data,
-            completed=False,
         )
 
     @staticmethod
@@ -198,3 +191,9 @@ class ApplicationOAuth(NonCompletableGithubObject):
             raise GithubException(200, data, headers)
 
         return headers, data
+
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "client_id" in attributes:  # pragma no branch
+            self._client_id = self._makeStringAttribute(attributes["client_id"])
+        if "client_secret" in attributes:  # pragma no branch
+            self._client_secret = self._makeStringAttribute(attributes["client_secret"])

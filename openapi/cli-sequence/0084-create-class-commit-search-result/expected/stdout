@@ -1,0 +1,165 @@
++ python scripts/openapi.py --dry-run create class --parent Commit --file Commit.py --tests --new-schemas as-dict github openapi.spec.json openapi.index CommitSearchResult https://docs.github.com/en/rest/reference/search#search-commits /components/schemas/commit-search-result-item /components/schemas/commit-search-result-item/properties/commit
+Creating class github.CommitSearchResult.CommitSearchResult with parent github.Commit.Commit in ./github/Commit.py
+Updating temporary index
+Indexing 8 Python files
+Indexed 18 classes
+Indexed 4 paths
+Indexed 23 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class CommitSearchResult
+Applying spec openapi.spec.json to github.Commit.CommitSearchResult (github/Commit.py)
+Applying schema /components/schemas/commit-search-result-item
+Applying schema /components/schemas/commit-search-result-item/properties/commit
+Class CommitSearchResult changed
+Test tests/Commit.py changed
+Diff:
+--- 
++++ 
+@@ -28,12 +28,14 @@
+ from github.GithubObject import CompletableGithubObjectWithPaginatedProperty
+ from github.GithubObject import Attribute, NotSet
+ import github.NamedUser
++import github.Repository
+ 
+ if TYPE_CHECKING:
+     from github.GitAuthor import GitAuthor
+     from github.GitCommit import GitCommit
+     from github.NamedUser import NamedUser
+     from github.GitCommit import GitCommit
++    from github.Repository import Repository
+     pass
+ 
+ 
+@@ -175,3 +177,53 @@
+         if "verification" in attributes:  # pragma no branch
+             self._verification = self._makeDictAttribute(attributes["verification"])
+ 
++
++
++class CommitSearchResult(Commit):
++    """
++    This class represents CommitSearchResult.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/search#search-commits
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/commit-search-result-item
++    - /components/schemas/commit-search-result-item/properties/commit
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self._repository: Attribute[Repository] = NotSet
++        self._score: Attribute[float] = NotSet
++        self._text_matches: Attribute[list[dict[str, Any]]] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def repository(self) -> Repository:
++        self._completeIfNotSet(self._repository)
++        return self._repository.value
++
++    @property
++    def score(self) -> float:
++        self._completeIfNotSet(self._score)
++        return self._score.value
++
++    @property
++    def text_matches(self) -> list[dict[str, Any]]:
++        self._completeIfNotSet(self._text_matches)
++        return self._text_matches.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "repository" in attributes:  # pragma no branch
++            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
++        if "score" in attributes:  # pragma no branch
++            self._score = self._makeFloatAttribute(attributes["score"])
++        if "text_matches" in attributes:  # pragma no branch
++            self._text_matches = self._makeListOfDictsAttribute(attributes["text_matches"])
++
+
+Diff:
+--- 
++++ 
+@@ -53,3 +53,33 @@
+         self.assertEqual(c.tree, "dict[str, Any]")
+         self.assertEqual(c.url, "")
+         self.assertEqual(c.verification, "dict[str, Any]")
++
++
++class CommitSearchResult(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type CommitSearchResult and assign to self.csr, then run:
++        #   pytest ./tests/Commit.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/Commit.py testAttributes
++        #   pre-commit run --all-files
++        self.csr = None
++
++    def testAttributes(self):
++        csr = self.csr
++        self.assertEqual(csr.__repr__(), "")
++        self.assertEqual(csr.author.some_attribute, "")
++        self.assertEqual(csr.comment_count, 0)
++        self.assertEqual(csr.comments_url, "")
++        self.assertEqual(csr.commit.some_attribute, "")
++        self.assertEqual(csr.committer.some_attribute, "")
++        self.assertEqual(csr.html_url, "")
++        self.assertEqual(csr.message, "")
++        self.assertEqual(csr.node_id, "")
++        self.assertEqual(csr.parents[0].some_attribute, "")
++        self.assertEqual(csr.repository.some_attribute, "")
++        self.assertEqual(csr.score, 0.0)
++        self.assertEqual(csr.sha, "")
++        self.assertEqual(csr.text_matches, "list[dict[str, Any]]")
++        self.assertEqual(csr.tree, "dict[str, Any]")
++        self.assertEqual(csr.url, "")
++        self.assertEqual(csr.verification, "dict[str, Any]")
+
++ python scripts/openapi.py create class --parent Commit --file Commit.py --tests --new-schemas create-class github openapi.spec.json openapi.index CommitSearchResult https://docs.github.com/en/rest/reference/search#search-commits /components/schemas/commit-search-result-item
+Creating class github.CommitSearchResult.CommitSearchResult with parent github.Commit.Commit in ./github/Commit.py
+Updating index
+Indexing 8 Python files
+Indexed 18 classes
+Indexed 4 paths
+Indexed 23 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class CommitSearchResult
+Applying spec openapi.spec.json to github.Commit.CommitSearchResult (github/Commit.py)
+Applying schema /components/schemas/commit-search-result-item
+Drafting class Items for new schema /components/schemas/search-result-text-matches/items
+Creating class github.Items.Items with parent github.GithubObject.NonCompletableGithubObject in ./github/Items.py
+Updating index
+Indexing 9 Python files
+Indexed 19 classes
+Indexed 4 paths
+Indexed 24 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Items
+Applying spec openapi.spec.json to github.Items.Items (github/Items.py)
+Applying schema /components/schemas/search-result-text-matches/items
+Class Items changed
+Test tests/Items.py changed
+Indexing 9 Python files
+Indexed 19 classes
+Indexed 4 paths
+Indexed 24 schemas
+Indexing OpenAPI spec
+Class CommitSearchResult changed
+Test tests/Commit.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 9 Python files
+Indexed 19 classes
+Indexed 4 paths
+Indexed 24 schemas
+Indexing OpenAPI spec

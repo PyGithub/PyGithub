@@ -15,7 +15,9 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -35,7 +37,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
@@ -47,11 +51,18 @@ class GitBlob(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#blobs
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/blob
+    - /components/schemas/short-blob
+
     """
 
     def _initAttributes(self) -> None:
         self._content: Attribute[str] = NotSet
         self._encoding: Attribute[str] = NotSet
+        self._highlighted_content: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._sha: Attribute[str] = NotSet
         self._size: Attribute[int] = NotSet
         self._url: Attribute[str] = NotSet
@@ -70,6 +81,16 @@ class GitBlob(CompletableGithubObject):
         return self._encoding.value
 
     @property
+    def highlighted_content(self) -> str:
+        self._completeIfNotSet(self._highlighted_content)
+        return self._highlighted_content.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def sha(self) -> str:
         self._completeIfNotSet(self._sha)
         return self._sha.value
@@ -84,11 +105,15 @@ class GitBlob(CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "content" in attributes:  # pragma no branch
             self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch
             self._encoding = self._makeStringAttribute(attributes["encoding"])
+        if "highlighted_content" in attributes:  # pragma no branch
+            self._highlighted_content = self._makeStringAttribute(attributes["highlighted_content"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch

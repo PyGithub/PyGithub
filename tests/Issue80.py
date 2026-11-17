@@ -12,6 +12,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -38,7 +39,7 @@ from . import Framework
 
 class Issue80(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/issues/80
     def testIgnoreHttpsFromGithubEnterprise(self):
-        g = github.Github(auth=self.login, base_url="http://my.enterprise.com/some/prefix")  # http here
+        g = github.Github(auth=self.oauth_token, base_url="http://my.enterprise.com/some/prefix")  # http here
         org = g.get_organization("BeaverSoftware")
         self.assertEqual(org.url, "https://my.enterprise.com/some/prefix/orgs/BeaverSoftware")  # https returned
         self.assertListKeyEqual(
@@ -47,7 +48,7 @@ class Issue80(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/
 
     def testIgnoreHttpsFromGithubEnterpriseWithPort(self):
         g = github.Github(
-            auth=self.login,
+            auth=self.oauth_token,
             base_url="http://my.enterprise.com:1234/some/prefix",
         )  # http here
         org = g.get_organization("BeaverSoftware")

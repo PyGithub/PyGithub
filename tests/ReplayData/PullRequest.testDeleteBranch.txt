@@ -1,0 +1,54 @@
+https
+GET
+api.github.com
+None
+/repos/austinsasko/PyGithub/branches/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Fri, 11 Dec 2020 22:17:38 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"9e7706dfd919e04e9df872052add55475df9953d3b9c0d20df34fdeb8effc446"'), ('X-OAuth-Scopes', 'public_repo, read:user, repo:status'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4971'), ('X-RateLimit-Reset', '1607728588'), ('X-RateLimit-Used', '29'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'FFDC:379D:155E19:322526:5FD3F001')]
+{"name":"revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing","_links":{"self":"https://api.github.com/repos/austinsasko/PyGithub/branches/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing","html":"https://github.com/austinsasko/PyGithub/tree/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing"},"protected":false,"protection":{"enabled":false,"required_status_checks":{"enforcement_level":"off","contexts":[]}},"protection_url":"https://api.github.com/repos/austinsasko/PyGithub/branches/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing/protection"}
+
+https
+GET
+api.github.com
+None
+/repos/austinsasko/PyGithub/pulls?head=austinsasko%3Arevert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing&per_page=1
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Fri, 11 Dec 2020 22:17:38 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Content-Length', '2'), ('Status', '200 OK'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', '"5b0893a1da6bb8cfc57acf8d3216d8751325252d4a5750cede94ca1dd53c6a54"'), ('X-OAuth-Scopes', 'public_repo, read:user, repo:status'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4970'), ('X-RateLimit-Reset', '1607728588'), ('X-RateLimit-Used', '30'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-GitHub-Request-Id', 'FFDD:43CF:26E97C:578F6F:5FD3F002')]
+[]
+
+https
+GET
+api.github.com
+None
+/repos/austinsasko/PyGithub/git/ref/heads/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Fri, 11 Dec 2020 22:17:38 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"50d4d8f24500a45face48f0774778f2df511639264b29745fc3a3dd0880943a6"'), ('Last-Modified', 'Fri, 11 Dec 2020 22:17:23 GMT'), ('X-Poll-Interval', '300'), ('X-OAuth-Scopes', 'public_repo, read:user, repo:status'), ('X-Accepted-OAuth-Scopes', 'repo'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4969'), ('X-RateLimit-Reset', '1607728588'), ('X-RateLimit-Used', '31'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'FFDE:5324:70192:13F750:5FD3F002')]
+{"ref":"refs/heads/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing","node_id":"MDM6UmVmMzIwNjYxMzYwOnJlZnMvaGVhZHMvcmV2ZXJ0LTIwLXJldmVydC0xOS1yZXZlcnQtMTgtcmV2ZXJ0LTE2LXJldmVydC0xNS1yZXZlcnQtMTQtcmV2ZXJ0LTEzLXJldmVydC0xMi1yZXZlcnQtMTEtcmV2ZXJ0LTEwLXJldmVydC05LXJldmVydC04LXJldmVydC03LXJldmVydC02LXJldmVydC01LXJldmVydC00LXJldmVydC0zLXJldmVydC0yLXJldmVydC0xLXRlc3Rpbmc=","url":"https://api.github.com/repos/austinsasko/PyGithub/git/ref/heads/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing","object":{"sha":"adf76c80c6d28dc2d47b1a22622082786192c887","type":"commit","url":"https://api.github.com/repos/austinsasko/PyGithub/git/commits/adf76c80c6d28dc2d47b1a22622082786192c887"}}
+
+https
+DELETE
+api.github.com
+None
+/repos/austinsasko/PyGithub/git/ref/heads/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('Server', 'GitHub.com'), ('Date', 'Fri, 11 Dec 2020 22:17:38 GMT'), ('Status', '204 No Content'), ('X-OAuth-Scopes', 'public_repo, read:user, repo:status'), ('X-Accepted-OAuth-Scopes', 'repo'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4968'), ('X-RateLimit-Reset', '1607728588'), ('X-RateLimit-Used', '32'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('X-GitHub-Request-Id', 'FFDF:110B:3EC696:68A9AE:5FD3F002')]
+
+
+https
+GET
+api.github.com
+None
+/repos/austinsasko/PyGithub/branches/revert-20-revert-19-revert-18-revert-16-revert-15-revert-14-revert-13-revert-12-revert-11-revert-10-revert-9-revert-8-revert-7-revert-6-revert-5-revert-4-revert-3-revert-2-revert-1-testing
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+404
+[('Server', 'GitHub.com'), ('Date', 'Fri, 11 Dec 2020 22:17:39 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '404 Not Found'), ('X-OAuth-Scopes', 'public_repo, read:user, repo:status'), ('X-Accepted-OAuth-Scopes', ''), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4967'), ('X-RateLimit-Reset', '1607728588'), ('X-RateLimit-Used', '33'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Vary', 'Accept-Encoding, Accept, X-Requested-With'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'FFE0:5E4B:63459:11BB67:5FD3F002')]
+{"message":"Branch not found","documentation_url":"https://docs.github.com/rest/reference/repos#get-a-branch"}

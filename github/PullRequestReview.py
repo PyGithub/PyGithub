@@ -23,6 +23,8 @@
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,11 +47,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
 
 
 class PullRequestReview(NonCompletableGithubObject):
@@ -59,56 +65,90 @@ class PullRequestReview(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/pulls#reviews
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/pull-request-review
+
     """
 
     def _initAttributes(self) -> None:
-        self._id: Attribute[int] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
+        self._body_html: Attribute[str] = NotSet
+        self._body_text: Attribute[str] = NotSet
         self._commit_id: Attribute[str] = NotSet
-        self._state: Attribute[str] = NotSet
+        self._copilot_code_review_effort: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
+        self._id: Attribute[int] = NotSet
+        self._is_copilot_code_review: Attribute[bool] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._pull_request_url: Attribute[str] = NotSet
+        self._state: Attribute[str] = NotSet
         self._submitted_at: Attribute[datetime] = NotSet
+        self._user: Attribute[NamedUser] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
 
     @property
-    def id(self) -> int:
-        return self._id.value
-
-    @property
-    def user(self) -> github.NamedUser.NamedUser:
-        return self._user.value
+    def author_association(self) -> str:
+        return self._author_association.value
 
     @property
     def body(self) -> str:
         return self._body.value
 
     @property
+    def body_html(self) -> str:
+        return self._body_html.value
+
+    @property
+    def body_text(self) -> str:
+        return self._body_text.value
+
+    @property
     def commit_id(self) -> str:
         return self._commit_id.value
 
     @property
-    def state(self) -> str:
-        return self._state.value
+    def copilot_code_review_effort(self) -> str:
+        return self._copilot_code_review_effort.value
 
     @property
     def html_url(self) -> str:
         return self._html_url.value
 
     @property
+    def id(self) -> int:
+        return self._id.value
+
+    @property
+    def is_copilot_code_review(self) -> bool:
+        return self._is_copilot_code_review.value
+
+    @property
+    def node_id(self) -> str:
+        return self._node_id.value
+
+    @property
     def pull_request_url(self) -> str:
         return self._pull_request_url.value
+
+    @property
+    def state(self) -> str:
+        return self._state.value
 
     @property
     def submitted_at(self) -> datetime:
         return self._submitted_at.value
 
+    @property
+    def user(self) -> NamedUser:
+        return self._user.value
+
     def dismiss(self, message: str) -> None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/reviews/{review_id}/dismissals <https://docs.github.com/en/rest/reference/pulls#reviews>`_
+        :calls: `PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals <https://docs.github.com/en/rest/reference/pulls#reviews>`_
         """
         post_parameters = {"message": message}
         headers, data = self._requester.requestJsonAndCheck(
@@ -120,13 +160,13 @@ class PullRequestReview(NonCompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/:owner/:repo/pulls/:number/reviews/:review_id <https://developer.github.com/v3/pulls/reviews/>`_
+        :calls: `DELETE /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id} <https://developer.github.com/v3/pulls/reviews/>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.pull_request_url}/reviews/{self.id}")
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PUT /repos/{owner}/{repo}/pulls/{number}/reviews/{review_id}
+        :calls: `PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}
                 <https://docs.github.com/en/rest/pulls/reviews#update-a-review-for-a-pull-request>`_
         """
         assert isinstance(body, str), body
@@ -141,19 +181,31 @@ class PullRequestReview(NonCompletableGithubObject):
         self._useAttributes(data)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "id" in attributes:  # pragma no branch
-            self._id = self._makeIntAttribute(attributes["id"])
-        if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
+        if "body_html" in attributes:  # pragma no branch
+            self._body_html = self._makeStringAttribute(attributes["body_html"])
+        if "body_text" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["body_text"])
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
-        if "state" in attributes:  # pragma no branch
-            self._state = self._makeStringAttribute(attributes["state"])
+        if "copilot_code_review_effort" in attributes:  # pragma no branch
+            self._copilot_code_review_effort = self._makeStringAttribute(attributes["copilot_code_review_effort"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
+        if "id" in attributes:  # pragma no branch
+            self._id = self._makeIntAttribute(attributes["id"])
+        if "is_copilot_code_review" in attributes:  # pragma no branch
+            self._is_copilot_code_review = self._makeBoolAttribute(attributes["is_copilot_code_review"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "pull_request_url" in attributes:  # pragma no branch
             self._pull_request_url = self._makeStringAttribute(attributes["pull_request_url"])
+        if "state" in attributes:  # pragma no branch
+            self._state = self._makeStringAttribute(attributes["state"])
         if "submitted_at" in attributes:  # pragma no branch
             self._submitted_at = self._makeDatetimeAttribute(attributes["submitted_at"])
+        if "user" in attributes:  # pragma no branch
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

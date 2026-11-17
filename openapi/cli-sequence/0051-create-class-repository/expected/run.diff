@@ -1,0 +1,2606 @@
+diff --unified --recursive --new-file before/github/Repository.py after/github/Repository.py
+--- before/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/Repository.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,784 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import CompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class Repository(CompletableGithubObject):
++    """
++    This class represents Repository.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/repos
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/repository
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self._allow_auto_merge: Attribute[bool] = NotSet
++        self._allow_forking: Attribute[bool] = NotSet
++        self._allow_merge_commit: Attribute[bool] = NotSet
++        self._allow_rebase_merge: Attribute[bool] = NotSet
++        self._allow_squash_merge: Attribute[bool] = NotSet
++        self._allow_update_branch: Attribute[bool] = NotSet
++        self._anonymous_access_enabled: Attribute[bool] = NotSet
++        self._archive_url: Attribute[str] = NotSet
++        self._archived: Attribute[bool] = NotSet
++        self._assignees_url: Attribute[str] = NotSet
++        self._blobs_url: Attribute[str] = NotSet
++        self._branches_url: Attribute[str] = NotSet
++        self._clone_url: Attribute[str] = NotSet
++        self._collaborators_url: Attribute[str] = NotSet
++        self._comments_url: Attribute[str] = NotSet
++        self._commits_url: Attribute[str] = NotSet
++        self._compare_url: Attribute[str] = NotSet
++        self._contents_url: Attribute[str] = NotSet
++        self._contributors_url: Attribute[str] = NotSet
++        self._created_at: Attribute[datetime] = NotSet
++        self._default_branch: Attribute[str] = NotSet
++        self._delete_branch_on_merge: Attribute[bool] = NotSet
++        self._deployments_url: Attribute[str] = NotSet
++        self._description: Attribute[str] = NotSet
++        self._disabled: Attribute[bool] = NotSet
++        self._downloads_url: Attribute[str] = NotSet
++        self._events_url: Attribute[str] = NotSet
++        self._fork: Attribute[bool] = NotSet
++        self._forks: Attribute[int] = NotSet
++        self._forks_count: Attribute[int] = NotSet
++        self._forks_url: Attribute[str] = NotSet
++        self._full_name: Attribute[str] = NotSet
++        self._git_commits_url: Attribute[str] = NotSet
++        self._git_refs_url: Attribute[str] = NotSet
++        self._git_tags_url: Attribute[str] = NotSet
++        self._git_url: Attribute[str] = NotSet
++        self._has_discussions: Attribute[bool] = NotSet
++        self._has_downloads: Attribute[bool] = NotSet
++        self._has_issues: Attribute[bool] = NotSet
++        self._has_pages: Attribute[bool] = NotSet
++        self._has_projects: Attribute[bool] = NotSet
++        self._has_wiki: Attribute[bool] = NotSet
++        self._homepage: Attribute[str] = NotSet
++        self._hooks_url: Attribute[str] = NotSet
++        self._html_url: Attribute[str] = NotSet
++        self._id: Attribute[int] = NotSet
++        self._is_template: Attribute[bool] = NotSet
++        self._issue_comment_url: Attribute[str] = NotSet
++        self._issue_events_url: Attribute[str] = NotSet
++        self._issues_url: Attribute[str] = NotSet
++        self._keys_url: Attribute[str] = NotSet
++        self._labels_url: Attribute[str] = NotSet
++        self._language: Attribute[str] = NotSet
++        self._languages_url: Attribute[str] = NotSet
++        self._master_branch: Attribute[str] = NotSet
++        self._merge_commit_message: Attribute[str] = NotSet
++        self._merge_commit_title: Attribute[str] = NotSet
++        self._merges_url: Attribute[str] = NotSet
++        self._milestones_url: Attribute[str] = NotSet
++        self._mirror_url: Attribute[str] = NotSet
++        self._name: Attribute[str] = NotSet
++        self._node_id: Attribute[str] = NotSet
++        self._notifications_url: Attribute[str] = NotSet
++        self._open_issues: Attribute[int] = NotSet
++        self._open_issues_count: Attribute[int] = NotSet
++        self._private: Attribute[bool] = NotSet
++        self._pulls_url: Attribute[str] = NotSet
++        self._pushed_at: Attribute[datetime] = NotSet
++        self._releases_url: Attribute[str] = NotSet
++        self._size: Attribute[int] = NotSet
++        self._squash_merge_commit_message: Attribute[str] = NotSet
++        self._squash_merge_commit_title: Attribute[str] = NotSet
++        self._ssh_url: Attribute[str] = NotSet
++        self._stargazers_count: Attribute[int] = NotSet
++        self._stargazers_url: Attribute[str] = NotSet
++        self._starred_at: Attribute[str] = NotSet
++        self._statuses_url: Attribute[str] = NotSet
++        self._subscribers_url: Attribute[str] = NotSet
++        self._subscription_url: Attribute[str] = NotSet
++        self._svn_url: Attribute[str] = NotSet
++        self._tags_url: Attribute[str] = NotSet
++        self._teams_url: Attribute[str] = NotSet
++        self._temp_clone_token: Attribute[str] = NotSet
++        self._topics: Attribute[list[str]] = NotSet
++        self._trees_url: Attribute[str] = NotSet
++        self._updated_at: Attribute[datetime] = NotSet
++        self._use_squash_pr_title_as_default: Attribute[bool] = NotSet
++        self._visibility: Attribute[str] = NotSet
++        self._watchers: Attribute[int] = NotSet
++        self._watchers_count: Attribute[int] = NotSet
++        self._web_commit_signoff_required: Attribute[bool] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def allow_auto_merge(self) -> bool:
++        self._completeIfNotSet(self._allow_auto_merge)
++        return self._allow_auto_merge.value
++
++    @property
++    def allow_forking(self) -> bool:
++        self._completeIfNotSet(self._allow_forking)
++        return self._allow_forking.value
++
++    @property
++    def allow_merge_commit(self) -> bool:
++        self._completeIfNotSet(self._allow_merge_commit)
++        return self._allow_merge_commit.value
++
++    @property
++    def allow_rebase_merge(self) -> bool:
++        self._completeIfNotSet(self._allow_rebase_merge)
++        return self._allow_rebase_merge.value
++
++    @property
++    def allow_squash_merge(self) -> bool:
++        self._completeIfNotSet(self._allow_squash_merge)
++        return self._allow_squash_merge.value
++
++    @property
++    def allow_update_branch(self) -> bool:
++        self._completeIfNotSet(self._allow_update_branch)
++        return self._allow_update_branch.value
++
++    @property
++    def anonymous_access_enabled(self) -> bool:
++        self._completeIfNotSet(self._anonymous_access_enabled)
++        return self._anonymous_access_enabled.value
++
++    @property
++    def archive_url(self) -> str:
++        self._completeIfNotSet(self._archive_url)
++        return self._archive_url.value
++
++    @property
++    def archived(self) -> bool:
++        self._completeIfNotSet(self._archived)
++        return self._archived.value
++
++    @property
++    def assignees_url(self) -> str:
++        self._completeIfNotSet(self._assignees_url)
++        return self._assignees_url.value
++
++    @property
++    def blobs_url(self) -> str:
++        self._completeIfNotSet(self._blobs_url)
++        return self._blobs_url.value
++
++    @property
++    def branches_url(self) -> str:
++        self._completeIfNotSet(self._branches_url)
++        return self._branches_url.value
++
++    @property
++    def clone_url(self) -> str:
++        self._completeIfNotSet(self._clone_url)
++        return self._clone_url.value
++
++    @property
++    def collaborators_url(self) -> str:
++        self._completeIfNotSet(self._collaborators_url)
++        return self._collaborators_url.value
++
++    @property
++    def comments_url(self) -> str:
++        self._completeIfNotSet(self._comments_url)
++        return self._comments_url.value
++
++    @property
++    def commits_url(self) -> str:
++        self._completeIfNotSet(self._commits_url)
++        return self._commits_url.value
++
++    @property
++    def compare_url(self) -> str:
++        self._completeIfNotSet(self._compare_url)
++        return self._compare_url.value
++
++    @property
++    def contents_url(self) -> str:
++        self._completeIfNotSet(self._contents_url)
++        return self._contents_url.value
++
++    @property
++    def contributors_url(self) -> str:
++        self._completeIfNotSet(self._contributors_url)
++        return self._contributors_url.value
++
++    @property
++    def created_at(self) -> datetime:
++        self._completeIfNotSet(self._created_at)
++        return self._created_at.value
++
++    @property
++    def default_branch(self) -> str:
++        self._completeIfNotSet(self._default_branch)
++        return self._default_branch.value
++
++    @property
++    def delete_branch_on_merge(self) -> bool:
++        self._completeIfNotSet(self._delete_branch_on_merge)
++        return self._delete_branch_on_merge.value
++
++    @property
++    def deployments_url(self) -> str:
++        self._completeIfNotSet(self._deployments_url)
++        return self._deployments_url.value
++
++    @property
++    def description(self) -> str:
++        self._completeIfNotSet(self._description)
++        return self._description.value
++
++    @property
++    def disabled(self) -> bool:
++        self._completeIfNotSet(self._disabled)
++        return self._disabled.value
++
++    @property
++    def downloads_url(self) -> str:
++        self._completeIfNotSet(self._downloads_url)
++        return self._downloads_url.value
++
++    @property
++    def events_url(self) -> str:
++        self._completeIfNotSet(self._events_url)
++        return self._events_url.value
++
++    @property
++    def fork(self) -> bool:
++        self._completeIfNotSet(self._fork)
++        return self._fork.value
++
++    @property
++    def forks(self) -> int:
++        self._completeIfNotSet(self._forks)
++        return self._forks.value
++
++    @property
++    def forks_count(self) -> int:
++        self._completeIfNotSet(self._forks_count)
++        return self._forks_count.value
++
++    @property
++    def forks_url(self) -> str:
++        self._completeIfNotSet(self._forks_url)
++        return self._forks_url.value
++
++    @property
++    def full_name(self) -> str:
++        self._completeIfNotSet(self._full_name)
++        return self._full_name.value
++
++    @property
++    def git_commits_url(self) -> str:
++        self._completeIfNotSet(self._git_commits_url)
++        return self._git_commits_url.value
++
++    @property
++    def git_refs_url(self) -> str:
++        self._completeIfNotSet(self._git_refs_url)
++        return self._git_refs_url.value
++
++    @property
++    def git_tags_url(self) -> str:
++        self._completeIfNotSet(self._git_tags_url)
++        return self._git_tags_url.value
++
++    @property
++    def git_url(self) -> str:
++        self._completeIfNotSet(self._git_url)
++        return self._git_url.value
++
++    @property
++    def has_discussions(self) -> bool:
++        self._completeIfNotSet(self._has_discussions)
++        return self._has_discussions.value
++
++    @property
++    def has_downloads(self) -> bool:
++        self._completeIfNotSet(self._has_downloads)
++        return self._has_downloads.value
++
++    @property
++    def has_issues(self) -> bool:
++        self._completeIfNotSet(self._has_issues)
++        return self._has_issues.value
++
++    @property
++    def has_pages(self) -> bool:
++        self._completeIfNotSet(self._has_pages)
++        return self._has_pages.value
++
++    @property
++    def has_projects(self) -> bool:
++        self._completeIfNotSet(self._has_projects)
++        return self._has_projects.value
++
++    @property
++    def has_wiki(self) -> bool:
++        self._completeIfNotSet(self._has_wiki)
++        return self._has_wiki.value
++
++    @property
++    def homepage(self) -> str:
++        self._completeIfNotSet(self._homepage)
++        return self._homepage.value
++
++    @property
++    def hooks_url(self) -> str:
++        self._completeIfNotSet(self._hooks_url)
++        return self._hooks_url.value
++
++    @property
++    def html_url(self) -> str:
++        self._completeIfNotSet(self._html_url)
++        return self._html_url.value
++
++    @property
++    def id(self) -> int:
++        self._completeIfNotSet(self._id)
++        return self._id.value
++
++    @property
++    def is_template(self) -> bool:
++        self._completeIfNotSet(self._is_template)
++        return self._is_template.value
++
++    @property
++    def issue_comment_url(self) -> str:
++        self._completeIfNotSet(self._issue_comment_url)
++        return self._issue_comment_url.value
++
++    @property
++    def issue_events_url(self) -> str:
++        self._completeIfNotSet(self._issue_events_url)
++        return self._issue_events_url.value
++
++    @property
++    def issues_url(self) -> str:
++        self._completeIfNotSet(self._issues_url)
++        return self._issues_url.value
++
++    @property
++    def keys_url(self) -> str:
++        self._completeIfNotSet(self._keys_url)
++        return self._keys_url.value
++
++    @property
++    def labels_url(self) -> str:
++        self._completeIfNotSet(self._labels_url)
++        return self._labels_url.value
++
++    @property
++    def language(self) -> str:
++        self._completeIfNotSet(self._language)
++        return self._language.value
++
++    @property
++    def languages_url(self) -> str:
++        self._completeIfNotSet(self._languages_url)
++        return self._languages_url.value
++
++    @property
++    def master_branch(self) -> str:
++        self._completeIfNotSet(self._master_branch)
++        return self._master_branch.value
++
++    @property
++    def merge_commit_message(self) -> str:
++        self._completeIfNotSet(self._merge_commit_message)
++        return self._merge_commit_message.value
++
++    @property
++    def merge_commit_title(self) -> str:
++        self._completeIfNotSet(self._merge_commit_title)
++        return self._merge_commit_title.value
++
++    @property
++    def merges_url(self) -> str:
++        self._completeIfNotSet(self._merges_url)
++        return self._merges_url.value
++
++    @property
++    def milestones_url(self) -> str:
++        self._completeIfNotSet(self._milestones_url)
++        return self._milestones_url.value
++
++    @property
++    def mirror_url(self) -> str:
++        self._completeIfNotSet(self._mirror_url)
++        return self._mirror_url.value
++
++    @property
++    def name(self) -> str:
++        self._completeIfNotSet(self._name)
++        return self._name.value
++
++    @property
++    def node_id(self) -> str:
++        self._completeIfNotSet(self._node_id)
++        return self._node_id.value
++
++    @property
++    def notifications_url(self) -> str:
++        self._completeIfNotSet(self._notifications_url)
++        return self._notifications_url.value
++
++    @property
++    def open_issues(self) -> int:
++        self._completeIfNotSet(self._open_issues)
++        return self._open_issues.value
++
++    @property
++    def open_issues_count(self) -> int:
++        self._completeIfNotSet(self._open_issues_count)
++        return self._open_issues_count.value
++
++    @property
++    def private(self) -> bool:
++        self._completeIfNotSet(self._private)
++        return self._private.value
++
++    @property
++    def pulls_url(self) -> str:
++        self._completeIfNotSet(self._pulls_url)
++        return self._pulls_url.value
++
++    @property
++    def pushed_at(self) -> datetime:
++        self._completeIfNotSet(self._pushed_at)
++        return self._pushed_at.value
++
++    @property
++    def releases_url(self) -> str:
++        self._completeIfNotSet(self._releases_url)
++        return self._releases_url.value
++
++    @property
++    def size(self) -> int:
++        self._completeIfNotSet(self._size)
++        return self._size.value
++
++    @property
++    def squash_merge_commit_message(self) -> str:
++        self._completeIfNotSet(self._squash_merge_commit_message)
++        return self._squash_merge_commit_message.value
++
++    @property
++    def squash_merge_commit_title(self) -> str:
++        self._completeIfNotSet(self._squash_merge_commit_title)
++        return self._squash_merge_commit_title.value
++
++    @property
++    def ssh_url(self) -> str:
++        self._completeIfNotSet(self._ssh_url)
++        return self._ssh_url.value
++
++    @property
++    def stargazers_count(self) -> int:
++        self._completeIfNotSet(self._stargazers_count)
++        return self._stargazers_count.value
++
++    @property
++    def stargazers_url(self) -> str:
++        self._completeIfNotSet(self._stargazers_url)
++        return self._stargazers_url.value
++
++    @property
++    def starred_at(self) -> str:
++        self._completeIfNotSet(self._starred_at)
++        return self._starred_at.value
++
++    @property
++    def statuses_url(self) -> str:
++        self._completeIfNotSet(self._statuses_url)
++        return self._statuses_url.value
++
++    @property
++    def subscribers_url(self) -> str:
++        self._completeIfNotSet(self._subscribers_url)
++        return self._subscribers_url.value
++
++    @property
++    def subscription_url(self) -> str:
++        self._completeIfNotSet(self._subscription_url)
++        return self._subscription_url.value
++
++    @property
++    def svn_url(self) -> str:
++        self._completeIfNotSet(self._svn_url)
++        return self._svn_url.value
++
++    @property
++    def tags_url(self) -> str:
++        self._completeIfNotSet(self._tags_url)
++        return self._tags_url.value
++
++    @property
++    def teams_url(self) -> str:
++        self._completeIfNotSet(self._teams_url)
++        return self._teams_url.value
++
++    @property
++    def temp_clone_token(self) -> str:
++        self._completeIfNotSet(self._temp_clone_token)
++        return self._temp_clone_token.value
++
++    @property
++    def topics(self) -> list[str]:
++        self._completeIfNotSet(self._topics)
++        return self._topics.value
++
++    @property
++    def trees_url(self) -> str:
++        self._completeIfNotSet(self._trees_url)
++        return self._trees_url.value
++
++    @property
++    def updated_at(self) -> datetime:
++        self._completeIfNotSet(self._updated_at)
++        return self._updated_at.value
++
++    @property
++    def use_squash_pr_title_as_default(self) -> bool:
++        self._completeIfNotSet(self._use_squash_pr_title_as_default)
++        return self._use_squash_pr_title_as_default.value
++
++    @property
++    def visibility(self) -> str:
++        self._completeIfNotSet(self._visibility)
++        return self._visibility.value
++
++    @property
++    def watchers(self) -> int:
++        self._completeIfNotSet(self._watchers)
++        return self._watchers.value
++
++    @property
++    def watchers_count(self) -> int:
++        self._completeIfNotSet(self._watchers_count)
++        return self._watchers_count.value
++
++    @property
++    def web_commit_signoff_required(self) -> bool:
++        self._completeIfNotSet(self._web_commit_signoff_required)
++        return self._web_commit_signoff_required.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "allow_auto_merge" in attributes:  # pragma no branch
++            self._allow_auto_merge = self._makeBoolAttribute(attributes["allow_auto_merge"])
++        if "allow_forking" in attributes:  # pragma no branch
++            self._allow_forking = self._makeBoolAttribute(attributes["allow_forking"])
++        if "allow_merge_commit" in attributes:  # pragma no branch
++            self._allow_merge_commit = self._makeBoolAttribute(attributes["allow_merge_commit"])
++        if "allow_rebase_merge" in attributes:  # pragma no branch
++            self._allow_rebase_merge = self._makeBoolAttribute(attributes["allow_rebase_merge"])
++        if "allow_squash_merge" in attributes:  # pragma no branch
++            self._allow_squash_merge = self._makeBoolAttribute(attributes["allow_squash_merge"])
++        if "allow_update_branch" in attributes:  # pragma no branch
++            self._allow_update_branch = self._makeBoolAttribute(attributes["allow_update_branch"])
++        if "anonymous_access_enabled" in attributes:  # pragma no branch
++            self._anonymous_access_enabled = self._makeBoolAttribute(attributes["anonymous_access_enabled"])
++        if "archive_url" in attributes:  # pragma no branch
++            self._archive_url = self._makeStringAttribute(attributes["archive_url"])
++        if "archived" in attributes:  # pragma no branch
++            self._archived = self._makeBoolAttribute(attributes["archived"])
++        if "assignees_url" in attributes:  # pragma no branch
++            self._assignees_url = self._makeStringAttribute(attributes["assignees_url"])
++        if "blobs_url" in attributes:  # pragma no branch
++            self._blobs_url = self._makeStringAttribute(attributes["blobs_url"])
++        if "branches_url" in attributes:  # pragma no branch
++            self._branches_url = self._makeStringAttribute(attributes["branches_url"])
++        if "clone_url" in attributes:  # pragma no branch
++            self._clone_url = self._makeStringAttribute(attributes["clone_url"])
++        if "collaborators_url" in attributes:  # pragma no branch
++            self._collaborators_url = self._makeStringAttribute(attributes["collaborators_url"])
++        if "comments_url" in attributes:  # pragma no branch
++            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
++        if "commits_url" in attributes:  # pragma no branch
++            self._commits_url = self._makeStringAttribute(attributes["commits_url"])
++        if "compare_url" in attributes:  # pragma no branch
++            self._compare_url = self._makeStringAttribute(attributes["compare_url"])
++        if "contents_url" in attributes:  # pragma no branch
++            self._contents_url = self._makeStringAttribute(attributes["contents_url"])
++        if "contributors_url" in attributes:  # pragma no branch
++            self._contributors_url = self._makeStringAttribute(attributes["contributors_url"])
++        if "created_at" in attributes:  # pragma no branch
++            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
++        if "default_branch" in attributes:  # pragma no branch
++            self._default_branch = self._makeStringAttribute(attributes["default_branch"])
++        if "delete_branch_on_merge" in attributes:  # pragma no branch
++            self._delete_branch_on_merge = self._makeBoolAttribute(attributes["delete_branch_on_merge"])
++        if "deployments_url" in attributes:  # pragma no branch
++            self._deployments_url = self._makeStringAttribute(attributes["deployments_url"])
++        if "description" in attributes:  # pragma no branch
++            self._description = self._makeStringAttribute(attributes["description"])
++        if "disabled" in attributes:  # pragma no branch
++            self._disabled = self._makeBoolAttribute(attributes["disabled"])
++        if "downloads_url" in attributes:  # pragma no branch
++            self._downloads_url = self._makeStringAttribute(attributes["downloads_url"])
++        if "events_url" in attributes:  # pragma no branch
++            self._events_url = self._makeStringAttribute(attributes["events_url"])
++        if "fork" in attributes:  # pragma no branch
++            self._fork = self._makeBoolAttribute(attributes["fork"])
++        if "forks" in attributes:  # pragma no branch
++            self._forks = self._makeIntAttribute(attributes["forks"])
++        if "forks_count" in attributes:  # pragma no branch
++            self._forks_count = self._makeIntAttribute(attributes["forks_count"])
++        if "forks_url" in attributes:  # pragma no branch
++            self._forks_url = self._makeStringAttribute(attributes["forks_url"])
++        if "full_name" in attributes:  # pragma no branch
++            self._full_name = self._makeStringAttribute(attributes["full_name"])
++        if "git_commits_url" in attributes:  # pragma no branch
++            self._git_commits_url = self._makeStringAttribute(attributes["git_commits_url"])
++        if "git_refs_url" in attributes:  # pragma no branch
++            self._git_refs_url = self._makeStringAttribute(attributes["git_refs_url"])
++        if "git_tags_url" in attributes:  # pragma no branch
++            self._git_tags_url = self._makeStringAttribute(attributes["git_tags_url"])
++        if "git_url" in attributes:  # pragma no branch
++            self._git_url = self._makeStringAttribute(attributes["git_url"])
++        if "has_discussions" in attributes:  # pragma no branch
++            self._has_discussions = self._makeBoolAttribute(attributes["has_discussions"])
++        if "has_downloads" in attributes:  # pragma no branch
++            self._has_downloads = self._makeBoolAttribute(attributes["has_downloads"])
++        if "has_issues" in attributes:  # pragma no branch
++            self._has_issues = self._makeBoolAttribute(attributes["has_issues"])
++        if "has_pages" in attributes:  # pragma no branch
++            self._has_pages = self._makeBoolAttribute(attributes["has_pages"])
++        if "has_projects" in attributes:  # pragma no branch
++            self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
++        if "has_wiki" in attributes:  # pragma no branch
++            self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
++        if "homepage" in attributes:  # pragma no branch
++            self._homepage = self._makeStringAttribute(attributes["homepage"])
++        if "hooks_url" in attributes:  # pragma no branch
++            self._hooks_url = self._makeStringAttribute(attributes["hooks_url"])
++        if "html_url" in attributes:  # pragma no branch
++            self._html_url = self._makeStringAttribute(attributes["html_url"])
++        if "id" in attributes:  # pragma no branch
++            self._id = self._makeIntAttribute(attributes["id"])
++        if "is_template" in attributes:  # pragma no branch
++            self._is_template = self._makeBoolAttribute(attributes["is_template"])
++        if "issue_comment_url" in attributes:  # pragma no branch
++            self._issue_comment_url = self._makeStringAttribute(attributes["issue_comment_url"])
++        if "issue_events_url" in attributes:  # pragma no branch
++            self._issue_events_url = self._makeStringAttribute(attributes["issue_events_url"])
++        if "issues_url" in attributes:  # pragma no branch
++            self._issues_url = self._makeStringAttribute(attributes["issues_url"])
++        if "keys_url" in attributes:  # pragma no branch
++            self._keys_url = self._makeStringAttribute(attributes["keys_url"])
++        if "labels_url" in attributes:  # pragma no branch
++            self._labels_url = self._makeStringAttribute(attributes["labels_url"])
++        if "language" in attributes:  # pragma no branch
++            self._language = self._makeStringAttribute(attributes["language"])
++        if "languages_url" in attributes:  # pragma no branch
++            self._languages_url = self._makeStringAttribute(attributes["languages_url"])
++        if "master_branch" in attributes:  # pragma no branch
++            self._master_branch = self._makeStringAttribute(attributes["master_branch"])
++        if "merge_commit_message" in attributes:  # pragma no branch
++            self._merge_commit_message = self._makeStringAttribute(attributes["merge_commit_message"])
++        if "merge_commit_title" in attributes:  # pragma no branch
++            self._merge_commit_title = self._makeStringAttribute(attributes["merge_commit_title"])
++        if "merges_url" in attributes:  # pragma no branch
++            self._merges_url = self._makeStringAttribute(attributes["merges_url"])
++        if "milestones_url" in attributes:  # pragma no branch
++            self._milestones_url = self._makeStringAttribute(attributes["milestones_url"])
++        if "mirror_url" in attributes:  # pragma no branch
++            self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
++        if "name" in attributes:  # pragma no branch
++            self._name = self._makeStringAttribute(attributes["name"])
++        if "node_id" in attributes:  # pragma no branch
++            self._node_id = self._makeStringAttribute(attributes["node_id"])
++        if "notifications_url" in attributes:  # pragma no branch
++            self._notifications_url = self._makeStringAttribute(attributes["notifications_url"])
++        if "open_issues" in attributes:  # pragma no branch
++            self._open_issues = self._makeIntAttribute(attributes["open_issues"])
++        if "open_issues_count" in attributes:  # pragma no branch
++            self._open_issues_count = self._makeIntAttribute(attributes["open_issues_count"])
++        if "private" in attributes:  # pragma no branch
++            self._private = self._makeBoolAttribute(attributes["private"])
++        if "pulls_url" in attributes:  # pragma no branch
++            self._pulls_url = self._makeStringAttribute(attributes["pulls_url"])
++        if "pushed_at" in attributes:  # pragma no branch
++            self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
++        if "releases_url" in attributes:  # pragma no branch
++            self._releases_url = self._makeStringAttribute(attributes["releases_url"])
++        if "size" in attributes:  # pragma no branch
++            self._size = self._makeIntAttribute(attributes["size"])
++        if "squash_merge_commit_message" in attributes:  # pragma no branch
++            self._squash_merge_commit_message = self._makeStringAttribute(attributes["squash_merge_commit_message"])
++        if "squash_merge_commit_title" in attributes:  # pragma no branch
++            self._squash_merge_commit_title = self._makeStringAttribute(attributes["squash_merge_commit_title"])
++        if "ssh_url" in attributes:  # pragma no branch
++            self._ssh_url = self._makeStringAttribute(attributes["ssh_url"])
++        if "stargazers_count" in attributes:  # pragma no branch
++            self._stargazers_count = self._makeIntAttribute(attributes["stargazers_count"])
++        if "stargazers_url" in attributes:  # pragma no branch
++            self._stargazers_url = self._makeStringAttribute(attributes["stargazers_url"])
++        if "starred_at" in attributes:  # pragma no branch
++            self._starred_at = self._makeStringAttribute(attributes["starred_at"])
++        if "statuses_url" in attributes:  # pragma no branch
++            self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
++        if "subscribers_url" in attributes:  # pragma no branch
++            self._subscribers_url = self._makeStringAttribute(attributes["subscribers_url"])
++        if "subscription_url" in attributes:  # pragma no branch
++            self._subscription_url = self._makeStringAttribute(attributes["subscription_url"])
++        if "svn_url" in attributes:  # pragma no branch
++            self._svn_url = self._makeStringAttribute(attributes["svn_url"])
++        if "tags_url" in attributes:  # pragma no branch
++            self._tags_url = self._makeStringAttribute(attributes["tags_url"])
++        if "teams_url" in attributes:  # pragma no branch
++            self._teams_url = self._makeStringAttribute(attributes["teams_url"])
++        if "temp_clone_token" in attributes:  # pragma no branch
++            self._temp_clone_token = self._makeStringAttribute(attributes["temp_clone_token"])
++        if "topics" in attributes:  # pragma no branch
++            self._topics = self._makeListOfStringsAttribute(attributes["topics"])
++        if "trees_url" in attributes:  # pragma no branch
++            self._trees_url = self._makeStringAttribute(attributes["trees_url"])
++        if "updated_at" in attributes:  # pragma no branch
++            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
++        if "use_squash_pr_title_as_default" in attributes:  # pragma no branch
++            self._use_squash_pr_title_as_default = self._makeBoolAttribute(attributes["use_squash_pr_title_as_default"])
++        if "visibility" in attributes:  # pragma no branch
++            self._visibility = self._makeStringAttribute(attributes["visibility"])
++        if "watchers" in attributes:  # pragma no branch
++            self._watchers = self._makeIntAttribute(attributes["watchers"])
++        if "watchers_count" in attributes:  # pragma no branch
++            self._watchers_count = self._makeIntAttribute(attributes["watchers_count"])
++        if "web_commit_signoff_required" in attributes:  # pragma no branch
++            self._web_commit_signoff_required = self._makeBoolAttribute(attributes["web_commit_signoff_required"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -1353,6 +1353,1638 @@
+       ],
+       "test_filename": "tests/Reaction.py"
+     },
++    "Repository": {
++      "bases": [
++        "CompletableGithubObject"
++      ],
++      "docstring": "This class represents Repository.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/repos\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/repository",
++      "filename": "github/Repository.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "CompletableGithubObject",
++        "GithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "Repository",
++      "name": "Repository",
++      "package": "github",
++      "properties": {
++        "allow_auto_merge": {
++          "name": "allow_auto_merge",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether to allow Auto-merge to be used on pull requests.",
++            "example": false,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether to allow Auto-merge to be used on pull requests.",
++              "example": false,
++              "type": "boolean"
++            }
++          }
++        },
++        "allow_forking": {
++          "name": "allow_forking",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "Whether to allow forking this repo",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "Whether to allow forking this repo",
++              "type": "boolean"
++            }
++          }
++        },
++        "allow_merge_commit": {
++          "name": "allow_merge_commit",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": true,
++            "description": "Whether to allow merge commits for pull requests.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": true,
++              "description": "Whether to allow merge commits for pull requests.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "allow_rebase_merge": {
++          "name": "allow_rebase_merge",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": true,
++            "description": "Whether to allow rebase merges for pull requests.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": true,
++              "description": "Whether to allow rebase merges for pull requests.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "allow_squash_merge": {
++          "name": "allow_squash_merge",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": true,
++            "description": "Whether to allow squash merges for pull requests.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": true,
++              "description": "Whether to allow squash merges for pull requests.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "allow_update_branch": {
++          "name": "allow_update_branch",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
++            "example": false,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
++              "example": false,
++              "type": "boolean"
++            }
++          }
++        },
++        "anonymous_access_enabled": {
++          "name": "anonymous_access_enabled",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "Whether anonymous git access is enabled for this repository",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "Whether anonymous git access is enabled for this repository",
++              "type": "boolean"
++            }
++          }
++        },
++        "archive_url": {
++          "name": "archive_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}",
++              "type": "string"
++            }
++          }
++        },
++        "archived": {
++          "name": "archived",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether the repository is archived.",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether the repository is archived.",
++              "type": "boolean"
++            }
++          }
++        },
++        "assignees_url": {
++          "name": "assignees_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/assignees{/user}",
++              "type": "string"
++            }
++          }
++        },
++        "blobs_url": {
++          "name": "blobs_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}",
++              "type": "string"
++            }
++          }
++        },
++        "branches_url": {
++          "name": "branches_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/branches{/branch}",
++              "type": "string"
++            }
++          }
++        },
++        "clone_url": {
++          "name": "clone_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "https://github.com/octocat/Hello-World.git",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "https://github.com/octocat/Hello-World.git",
++              "type": "string"
++            }
++          }
++        },
++        "collaborators_url": {
++          "name": "collaborators_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}",
++              "type": "string"
++            }
++          }
++        },
++        "comments_url": {
++          "name": "comments_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/comments{/number}",
++              "type": "string"
++            }
++          }
++        },
++        "commits_url": {
++          "name": "commits_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/commits{/sha}",
++              "type": "string"
++            }
++          }
++        },
++        "compare_url": {
++          "name": "compare_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}",
++              "type": "string"
++            }
++          }
++        },
++        "contents_url": {
++          "name": "contents_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/contents/{+path}",
++              "type": "string"
++            }
++          }
++        },
++        "contributors_url": {
++          "name": "contributors_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/contributors",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/contributors",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "created_at": {
++          "name": "created_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "example": "2011-01-26T19:01:12Z",
++            "format": "date-time",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "2011-01-26T19:01:12Z",
++              "format": "date-time",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "default_branch": {
++          "name": "default_branch",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The default branch of the repository.",
++            "example": "master",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "The default branch of the repository.",
++              "example": "master",
++              "type": "string"
++            }
++          }
++        },
++        "delete_branch_on_merge": {
++          "name": "delete_branch_on_merge",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether to delete head branches when pull requests are merged",
++            "example": false,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether to delete head branches when pull requests are merged",
++              "example": false,
++              "type": "boolean"
++            }
++          }
++        },
++        "deployments_url": {
++          "name": "deployments_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/deployments",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/deployments",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "description": {
++          "name": "description",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "This your first repo!",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "This your first repo!",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "disabled": {
++          "name": "disabled",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "Returns whether or not this repository disabled.",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "Returns whether or not this repository disabled.",
++              "type": "boolean"
++            }
++          }
++        },
++        "downloads_url": {
++          "name": "downloads_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/downloads",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/downloads",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "events_url": {
++          "name": "events_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/events",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/events",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "fork": {
++          "name": "fork",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "type": "boolean"
++            }
++          }
++        },
++        "forks": {
++          "name": "forks",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "type": "integer"
++            }
++          }
++        },
++        "forks_count": {
++          "name": "forks_count",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "example": 9,
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": 9,
++              "type": "integer"
++            }
++          }
++        },
++        "forks_url": {
++          "name": "forks_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/forks",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/forks",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "full_name": {
++          "name": "full_name",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "octocat/Hello-World",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "octocat/Hello-World",
++              "type": "string"
++            }
++          }
++        },
++        "git_commits_url": {
++          "name": "git_commits_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}",
++              "type": "string"
++            }
++          }
++        },
++        "git_refs_url": {
++          "name": "git_refs_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}",
++              "type": "string"
++            }
++          }
++        },
++        "git_tags_url": {
++          "name": "git_tags_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}",
++              "type": "string"
++            }
++          }
++        },
++        "git_url": {
++          "name": "git_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "git:github.com/octocat/Hello-World.git",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "git:github.com/octocat/Hello-World.git",
++              "type": "string"
++            }
++          }
++        },
++        "has_discussions": {
++          "name": "has_discussions",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether discussions are enabled.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether discussions are enabled.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "has_downloads": {
++          "name": "has_downloads",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": true,
++            "deprecated": true,
++            "description": "Whether downloads are enabled.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": true,
++              "deprecated": true,
++              "description": "Whether downloads are enabled.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "has_issues": {
++          "name": "has_issues",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": true,
++            "description": "Whether issues are enabled.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": true,
++              "description": "Whether issues are enabled.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "has_pages": {
++          "name": "has_pages",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "type": "boolean"
++            }
++          }
++        },
++        "has_projects": {
++          "name": "has_projects",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": true,
++            "description": "Whether projects are enabled.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": true,
++              "description": "Whether projects are enabled.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "has_wiki": {
++          "name": "has_wiki",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": true,
++            "description": "Whether the wiki is enabled.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": true,
++              "description": "Whether the wiki is enabled.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "homepage": {
++          "name": "homepage",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "https://github.com",
++            "format": "uri",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "https://github.com",
++              "format": "uri",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "hooks_url": {
++          "name": "hooks_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/hooks",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/hooks",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "html_url": {
++          "name": "html_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "https://github.com/octocat/Hello-World",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "https://github.com/octocat/Hello-World",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "id": {
++          "name": "id",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "description": "Unique identifier of the repository",
++            "example": 42,
++            "format": "int64",
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "Unique identifier of the repository",
++              "example": 42,
++              "format": "int64",
++              "type": "integer"
++            }
++          }
++        },
++        "is_template": {
++          "name": "is_template",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether this repository acts as a template that can be used to generate new repositories.",
++            "example": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether this repository acts as a template that can be used to generate new repositories.",
++              "example": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "issue_comment_url": {
++          "name": "issue_comment_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/issues/comments{/number}",
++              "type": "string"
++            }
++          }
++        },
++        "issue_events_url": {
++          "name": "issue_events_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/issues/events{/number}",
++              "type": "string"
++            }
++          }
++        },
++        "issues_url": {
++          "name": "issues_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/issues{/number}",
++              "type": "string"
++            }
++          }
++        },
++        "keys_url": {
++          "name": "keys_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/keys{/key_id}",
++              "type": "string"
++            }
++          }
++        },
++        "labels_url": {
++          "name": "labels_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/labels{/name}",
++              "type": "string"
++            }
++          }
++        },
++        "language": {
++          "name": "language",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "languages_url": {
++          "name": "languages_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/languages",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/languages",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "master_branch": {
++          "name": "master_branch",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "type": "string"
++            }
++          }
++        },
++        "merge_commit_message": {
++          "name": "merge_commit_message",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message.",
++            "enum": [
++              "PR_BODY",
++              "PR_TITLE",
++              "BLANK"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message.",
++              "enum": [
++                "PR_BODY",
++                "PR_TITLE",
++                "BLANK"
++              ],
++              "type": "string"
++            }
++          }
++        },
++        "merge_commit_title": {
++          "name": "merge_commit_title",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The default value for a merge commit title.\n\n- `PR_TITLE` - default to the pull request's title.\n- `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).",
++            "enum": [
++              "PR_TITLE",
++              "MERGE_MESSAGE"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "The default value for a merge commit title.\n\n- `PR_TITLE` - default to the pull request's title.\n- `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).",
++              "enum": [
++                "PR_TITLE",
++                "MERGE_MESSAGE"
++              ],
++              "type": "string"
++            }
++          }
++        },
++        "merges_url": {
++          "name": "merges_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/merges",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/merges",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "milestones_url": {
++          "name": "milestones_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/milestones{/number}",
++              "type": "string"
++            }
++          }
++        },
++        "mirror_url": {
++          "name": "mirror_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "git:git.example.com/octocat/Hello-World",
++            "format": "uri",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "git:git.example.com/octocat/Hello-World",
++              "format": "uri",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "name": {
++          "name": "name",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The name of the repository.",
++            "example": "Team Environment",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "The name of the repository.",
++              "example": "Team Environment",
++              "type": "string"
++            }
++          }
++        },
++        "node_id": {
++          "name": "node_id",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
++              "type": "string"
++            }
++          }
++        },
++        "notifications_url": {
++          "name": "notifications_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}",
++              "type": "string"
++            }
++          }
++        },
++        "open_issues": {
++          "name": "open_issues",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "type": "integer"
++            }
++          }
++        },
++        "open_issues_count": {
++          "name": "open_issues_count",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "example": 0,
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": 0,
++              "type": "integer"
++            }
++          }
++        },
++        "private": {
++          "name": "private",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether the repository is private or public.",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether the repository is private or public.",
++              "type": "boolean"
++            }
++          }
++        },
++        "pulls_url": {
++          "name": "pulls_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/pulls{/number}",
++              "type": "string"
++            }
++          }
++        },
++        "pushed_at": {
++          "name": "pushed_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "example": "2011-01-26T19:06:43Z",
++            "format": "date-time",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "2011-01-26T19:06:43Z",
++              "format": "date-time",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "releases_url": {
++          "name": "releases_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/releases{/id}",
++              "type": "string"
++            }
++          }
++        },
++        "size": {
++          "name": "size",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
++            "example": 108,
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
++              "example": 108,
++              "type": "integer"
++            }
++          }
++        },
++        "squash_merge_commit_message": {
++          "name": "squash_merge_commit_message",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message.",
++            "enum": [
++              "PR_BODY",
++              "COMMIT_MESSAGES",
++              "BLANK"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message.",
++              "enum": [
++                "PR_BODY",
++                "COMMIT_MESSAGES",
++                "BLANK"
++              ],
++              "type": "string"
++            }
++          }
++        },
++        "squash_merge_commit_title": {
++          "name": "squash_merge_commit_title",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).",
++            "enum": [
++              "PR_TITLE",
++              "COMMIT_OR_PR_TITLE"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).",
++              "enum": [
++                "PR_TITLE",
++                "COMMIT_OR_PR_TITLE"
++              ],
++              "type": "string"
++            }
++          }
++        },
++        "ssh_url": {
++          "name": "ssh_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "git@github.com:octocat/Hello-World.git",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "git@github.com:octocat/Hello-World.git",
++              "type": "string"
++            }
++          }
++        },
++        "stargazers_count": {
++          "name": "stargazers_count",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "example": 80,
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": 80,
++              "type": "integer"
++            }
++          }
++        },
++        "stargazers_url": {
++          "name": "stargazers_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/stargazers",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/stargazers",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "starred_at": {
++          "name": "starred_at",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "\"2020-07-09T00:17:42Z\"",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "\"2020-07-09T00:17:42Z\"",
++              "type": "string"
++            }
++          }
++        },
++        "statuses_url": {
++          "name": "statuses_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/statuses/{sha}",
++              "type": "string"
++            }
++          }
++        },
++        "subscribers_url": {
++          "name": "subscribers_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/subscribers",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/subscribers",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "subscription_url": {
++          "name": "subscription_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/subscription",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/subscription",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "svn_url": {
++          "name": "svn_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "https://svn.github.com/octocat/Hello-World",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "https://svn.github.com/octocat/Hello-World",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "tags_url": {
++          "name": "tags_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/tags",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/tags",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "teams_url": {
++          "name": "teams_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/teams",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/teams",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "temp_clone_token": {
++          "name": "temp_clone_token",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "type": "string"
++            }
++          }
++        },
++        "topics": {
++          "name": "topics",
++          "returns": [
++            "list[str]"
++          ],
++          "schema": {
++            "items": {
++              "type": "string"
++            },
++            "type": "array"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "items": {
++                "type": "string"
++              },
++              "type": "array"
++            }
++          }
++        },
++        "trees_url": {
++          "name": "trees_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "http://api.github.com/repos/octocat/Hello-World/git/trees{/sha}",
++              "type": "string"
++            }
++          }
++        },
++        "updated_at": {
++          "name": "updated_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "example": "2011-01-26T19:14:43Z",
++            "format": "date-time",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": "2011-01-26T19:14:43Z",
++              "format": "date-time",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "use_squash_pr_title_as_default": {
++          "name": "use_squash_pr_title_as_default",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "deprecated": true,
++            "description": "Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "deprecated": true,
++              "description": "Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.",
++              "type": "boolean"
++            }
++          }
++        },
++        "visibility": {
++          "name": "visibility",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "default": "public",
++            "description": "The repository visibility: public, private, or internal.",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": "public",
++              "description": "The repository visibility: public, private, or internal.",
++              "type": "string"
++            }
++          }
++        },
++        "watchers": {
++          "name": "watchers",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "type": "integer"
++            }
++          }
++        },
++        "watchers_count": {
++          "name": "watchers_count",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "example": 80,
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "example": 80,
++              "type": "integer"
++            }
++          }
++        },
++        "web_commit_signoff_required": {
++          "name": "web_commit_signoff_required",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "default": false,
++            "description": "Whether to require contributors to sign off on web-based commits",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/repository": {
++              "default": false,
++              "description": "Whether to require contributors to sign off on web-based commits",
++              "type": "boolean"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/repository"
++      ],
++      "test_filename": "tests/Repository.py"
++    },
+     "_BadAttribute": {
+       "bases": [
+         "Attribute"
+@@ -1452,7 +3084,8 @@
+         "NamedUser",
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject",
+-        "Reaction"
++        "Reaction",
++        "Repository"
+       ],
+       "Attribute": [
+         "_BadAttribute",
+@@ -1463,7 +3096,8 @@
+         "CompletableGithubObjectWithPaginatedProperty",
+         "IssueComment",
+         "NamedUser",
+-        "NamedUserSearchResult"
++        "NamedUserSearchResult",
++        "Repository"
+       ],
+       "GithubObject": [
+         "CompletableGithubObject",
+@@ -1472,7 +3106,8 @@
+         "NamedUser",
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject",
+-        "Reaction"
++        "Reaction",
++        "Repository"
+       ],
+       "NamedUser": [
+         "NamedUserSearchResult"
+@@ -2149,6 +3784,9 @@
+       "/components/schemas/reaction": [
+         "Reaction"
+       ],
++      "/components/schemas/repository": [
++        "Repository"
++      ],
+       "/components/schemas/user-search-result-item": [
+         "NamedUserSearchResult"
+       ]
+diff --unified --recursive --new-file before/tests/Repository.py after/tests/Repository.py
+--- before/tests/Repository.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/Repository.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,132 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class Repository(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type Repository and assign to self.r, then run:
++        #   pytest ./tests/Repository.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/Repository.py testAttributes
++        #   pre-commit run --all-files
++        self.r = None
++
++    def testAttributes(self):
++        r = self.r
++        self.assertEqual(r.__repr__(), "")
++        self.assertEqual(r.allow_auto_merge, False)
++        self.assertEqual(r.allow_forking, False)
++        self.assertEqual(r.allow_merge_commit, False)
++        self.assertEqual(r.allow_rebase_merge, False)
++        self.assertEqual(r.allow_squash_merge, False)
++        self.assertEqual(r.allow_update_branch, False)
++        self.assertEqual(r.anonymous_access_enabled, False)
++        self.assertEqual(r.archive_url, "")
++        self.assertEqual(r.archived, False)
++        self.assertEqual(r.assignees_url, "")
++        self.assertEqual(r.blobs_url, "")
++        self.assertEqual(r.branches_url, "")
++        self.assertEqual(r.clone_url, "")
++        self.assertEqual(r.collaborators_url, "")
++        self.assertEqual(r.comments_url, "")
++        self.assertEqual(r.commits_url, "")
++        self.assertEqual(r.compare_url, "")
++        self.assertEqual(r.contents_url, "")
++        self.assertEqual(r.contributors_url, "")
++        self.assertEqual(r.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(r.default_branch, "")
++        self.assertEqual(r.delete_branch_on_merge, False)
++        self.assertEqual(r.deployments_url, "")
++        self.assertEqual(r.description, "")
++        self.assertEqual(r.disabled, False)
++        self.assertEqual(r.downloads_url, "")
++        self.assertEqual(r.events_url, "")
++        self.assertEqual(r.fork, False)
++        self.assertEqual(r.forks, 0)
++        self.assertEqual(r.forks_count, 0)
++        self.assertEqual(r.forks_url, "")
++        self.assertEqual(r.full_name, "")
++        self.assertEqual(r.git_commits_url, "")
++        self.assertEqual(r.git_refs_url, "")
++        self.assertEqual(r.git_tags_url, "")
++        self.assertEqual(r.git_url, "")
++        self.assertEqual(r.has_discussions, False)
++        self.assertEqual(r.has_downloads, False)
++        self.assertEqual(r.has_issues, False)
++        self.assertEqual(r.has_pages, False)
++        self.assertEqual(r.has_projects, False)
++        self.assertEqual(r.has_wiki, False)
++        self.assertEqual(r.homepage, "")
++        self.assertEqual(r.hooks_url, "")
++        self.assertEqual(r.html_url, "")
++        self.assertEqual(r.id, 0)
++        self.assertEqual(r.is_template, False)
++        self.assertEqual(r.issue_comment_url, "")
++        self.assertEqual(r.issue_events_url, "")
++        self.assertEqual(r.issues_url, "")
++        self.assertEqual(r.keys_url, "")
++        self.assertEqual(r.labels_url, "")
++        self.assertEqual(r.language, "")
++        self.assertEqual(r.languages_url, "")
++        self.assertEqual(r.master_branch, "")
++        self.assertEqual(r.merge_commit_message, "")
++        self.assertEqual(r.merge_commit_title, "")
++        self.assertEqual(r.merges_url, "")
++        self.assertEqual(r.milestones_url, "")
++        self.assertEqual(r.mirror_url, "")
++        self.assertEqual(r.name, "")
++        self.assertEqual(r.node_id, "")
++        self.assertEqual(r.notifications_url, "")
++        self.assertEqual(r.open_issues, 0)
++        self.assertEqual(r.open_issues_count, 0)
++        self.assertEqual(r.private, False)
++        self.assertEqual(r.pulls_url, "")
++        self.assertEqual(r.pushed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(r.releases_url, "")
++        self.assertEqual(r.size, 0)
++        self.assertEqual(r.squash_merge_commit_message, "")
++        self.assertEqual(r.squash_merge_commit_title, "")
++        self.assertEqual(r.ssh_url, "")
++        self.assertEqual(r.stargazers_count, 0)
++        self.assertEqual(r.stargazers_url, "")
++        self.assertEqual(r.starred_at, "")
++        self.assertEqual(r.statuses_url, "")
++        self.assertEqual(r.subscribers_url, "")
++        self.assertEqual(r.subscription_url, "")
++        self.assertEqual(r.svn_url, "")
++        self.assertEqual(r.tags_url, "")
++        self.assertEqual(r.teams_url, "")
++        self.assertEqual(r.temp_clone_token, "")
++        self.assertEqual(r.topics, "list[str]")
++        self.assertEqual(r.trees_url, "")
++        self.assertEqual(r.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(r.url, "")
++        self.assertEqual(r.use_squash_pr_title_as_default, False)
++        self.assertEqual(r.visibility, "")
++        self.assertEqual(r.watchers, 0)
++        self.assertEqual(r.watchers_count, 0)
++        self.assertEqual(r.web_commit_signoff_required, False)

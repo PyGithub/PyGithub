@@ -51,11 +51,12 @@ writable attributes) to be explicit about API calls.
 Typology of attributes
 ======================
 * Internality
-	* Internal (received in the GET request about this object) => attribute (lazy completion if needed)
-	* External (needs another new GET request) => method
+  * Internal (received in the GET request about this object) => attribute (lazy completion if needed)
+  * External (needs another new GET request) => method
 * Type
-	* Simple type
-	* GithubObject
-	* List of simple type
-	* List of GithubObject
-	* Dict of...
+  * Simple type (`str`, `int`, `float`, `Decimal`, `bool`, and utc `datetime`)
+  * GithubObject
+  * List of simple type (`str`, `int`, `dict`, and `list` of `str` elements)
+  * List of GithubObject
+  * Dict of `str` keys and simple type values
+  * Dict of `str` keys and GithubObject values

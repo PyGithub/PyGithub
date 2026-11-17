@@ -15,6 +15,9 @@
 # Copyright 2021 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2024 Jonathan Kliem <jonathan.kliem@gmail.com>                     #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,9 +37,90 @@
 #                                                                              #
 ################################################################################
 
+import subprocess
+import sys
+import textwrap
+import unittest
+
 import github
+from github.Auth import Login
 
 from . import Framework
+from .Authentication import CustomAuth
+
+
+class LoggingConfiguration(unittest.TestCase):
+    def assertLogOutput(self, code, expected):
+        # Import in a fresh interpreter so the test runner's logging setup and
+        # previously imported github modules cannot affect the result.
+        result = subprocess.run([sys.executable, "-c", textwrap.dedent(code)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(result.stderr, expected)
+
+    def testRootLoggerConfiguration(self):
+        for level, expected in (("DEBUG", "app:debug message\napp:info message\n"), ("ERROR", "")):
+            with self.subTest(level=level):
+                self.assertLogOutput(
+                    f"""
+                    import logging
+                    logging.basicConfig(level=logging.{level}, format="app:%(message)s")
+                    import github
+                    logger = logging.getLogger("github.Requester")
+                    logger.debug("debug message")
+                    logger.info("info message")
+                    """,
+                    expected,
+                )
+
+    def testRootLoggerConfiguredAfterImport(self):
+        self.assertLogOutput(
+            """
+            import logging
+            import github
+            logging.basicConfig(level=logging.DEBUG, format="app:%(message)s")
+            logging.getLogger("github.Requester").debug("debug message")
+            """,
+            "app:debug message\n",
+        )
+
+    def testPreservesExplicitLoggerConfiguration(self):
+        self.assertLogOutput(
+            """
+            import logging
+            logger = logging.getLogger("github")
+            logger.setLevel(logging.ERROR)
+            handler = logging.StreamHandler()
+            handler.setFormatter(logging.Formatter("app:%(message)s"))
+            logger.addHandler(handler)
+            import github
+            logger.info("info message")
+            logger.error("error message")
+            """,
+            "app:error message\n",
+        )
+
+    def testNoConsoleOutputWithoutConfiguration(self):
+        self.assertLogOutput(
+            """
+            import logging
+            import github
+            logging.getLogger("github.GithubRetry").warning("warning message")
+            """,
+            "",
+        )
+
+    def testEnableConsoleDebugLogging(self):
+        self.assertLogOutput(
+            """
+            import logging
+            import github
+            github.enable_console_debug_logging()
+            github.enable_console_debug_logging()
+            logging.getLogger("github.Requester").debug("debug message")
+            """,
+            "debug message\n",
+        )
 
 
 class Logging(Framework.BasicTestCase):
@@ -76,6 +160,8 @@ class Logging(Framework.BasicTestCase):
 
     def setUp(self):
         super().setUp()
+        # expected response headers contain the DEBUG_FRAME key
+        github.Requester.Requester.setDebugFlag(True)
         self.logger = self.MockLogger()
         github.Requester.Requester.injectLogger(self.logger)
 
@@ -93,7 +179,7 @@ class Logging(Framework.BasicTestCase):
         self.assertEqual(self.logger.output, output)
 
     def testLoggingWithBasicAuthentication(self):
-        self.assertEqual(github.Github(auth=self.login).get_user().name, "Vincent Jacques")
+        self.assertEqual(github.Github(auth=Login("login", "password")).get_user().name, "Vincent Jacques")
         url = "https://api.github.com/user"
         requestHeaders = {
             "Authorization": "Basic (login and password removed)",
@@ -215,3 +301,17 @@ class Logging(Framework.BasicTestCase):
             None,
         )
         self.assertEqual(requestHeaders["Authorization"], "thisisnotatoken")
+
+    def testMaskingOfCustomAuthHeader(self):
+        requestHeaders = {"Custom key": "secret"}
+        responseHeaders = {"status": "200 OK"}
+        github.Github(auth=CustomAuth())._Github__requester._Requester__log(
+            "GET",
+            "http://example.com",
+            requestHeaders,
+            None,
+            200,
+            responseHeaders,
+            None,
+        )
+        self.assertEqual({"Custom key": "Masked custom header"}, self.logger.requestHeaders)

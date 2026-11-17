@@ -1,0 +1,20 @@
++ python scripts/openapi.py create class --completable --tests github openapi.spec.json openapi.index Repository https://docs.github.com/en/rest/reference/repos /components/schemas/repository
+Creating class github.Repository.Repository with parent github.GithubObject.CompletableGithubObject in ./github/Repository.py
+Updating index
+Indexing 5 Python files
+Indexed 14 classes
+Indexed 2 paths
+Indexed 6 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Repository
+Applying spec openapi.spec.json to github.Repository.Repository (github/Repository.py)
+Applying schema /components/schemas/repository
+Class Repository changed
+Test tests/Repository.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 5 Python files
+Indexed 14 classes
+Indexed 2 paths
+Indexed 6 schemas
+Indexing OpenAPI spec

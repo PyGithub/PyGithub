@@ -18,7 +18,10 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -41,14 +44,19 @@
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.Label
 import github.NamedUser
+import github.Organization
 import github.PaginatedList
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_defined
 from github.PaginatedList import PaginatedList
+
+if TYPE_CHECKING:
+    from github.Label import Label
+    from github.NamedUser import NamedUser
 
 
 class Milestone(CompletableGithubObject):
@@ -58,16 +66,25 @@ class Milestone(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#milestones
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/issue-event-milestone
+    - /components/schemas/milestone
+    - /components/schemas/nullable-milestone
+
     """
 
     def _initAttributes(self) -> None:
+        self._closed_at: Attribute[datetime] = NotSet
         self._closed_issues: Attribute[int] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._creator: Attribute[NamedUser] = NotSet
         self._description: Attribute[str] = NotSet
         self._due_on: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._labels_url: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
         self._number: Attribute[int] = NotSet
         self._open_issues: Attribute[int] = NotSet
         self._state: Attribute[str] = NotSet
@@ -77,6 +94,15 @@ class Milestone(CompletableGithubObject):
 
     def __repr__(self) -> str:
         return self.get__repr__({"number": self._number.value, "title": self._title.value})
+
+    @property
+    def _identity(self) -> int:
+        return self._number.value
+
+    @property
+    def closed_at(self) -> datetime:
+        self._completeIfNotSet(self._closed_at)
+        return self._closed_at.value
 
     @property
     def closed_issues(self) -> int:
@@ -89,7 +115,7 @@ class Milestone(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> github.NamedUser.NamedUser:
+    def creator(self) -> NamedUser:
         self._completeIfNotSet(self._creator)
         return self._creator.value
 
@@ -104,6 +130,11 @@ class Milestone(CompletableGithubObject):
         return self._due_on.value
 
     @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
+
+    @property
     def id(self) -> int:
         self._completeIfNotSet(self._id)
         return self._id.value
@@ -112,6 +143,11 @@ class Milestone(CompletableGithubObject):
     def labels_url(self) -> str:
         self._completeIfNotSet(self._labels_url)
         return self._labels_url.value
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def number(self) -> int:
@@ -145,7 +181,7 @@ class Milestone(CompletableGithubObject):
 
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `DELETE /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
@@ -153,7 +189,7 @@ class Milestone(CompletableGithubObject):
         self, title: str, state: Opt[str] = NotSet, description: Opt[str] = NotSet, due_on: Opt[date] = NotSet
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/milestones/{number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :calls: `PATCH /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
         """
         assert isinstance(title, str), title
         assert state is NotSet or isinstance(state, str), state
@@ -173,17 +209,15 @@ class Milestone(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
 
-    def get_labels(self) -> PaginatedList[github.Label.Label]:
+    def get_labels(self) -> PaginatedList[Label]:
         """
-        :calls: `GET /repos/{owner}/{repo}/milestones/{number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
+        :calls: `GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels <https://docs.github.com/en/rest/reference/issues#labels>`_
         """
         return PaginatedList(github.Label.Label, self._requester, f"{self.url}/labels", None)
 
-    @property
-    def _identity(self) -> int:
-        return self.number
-
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "closed_at" in attributes:  # pragma no branch
+            self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
         if "closed_issues" in attributes:  # pragma no branch
             self._closed_issues = self._makeIntAttribute(attributes["closed_issues"])
         if "created_at" in attributes:  # pragma no branch
@@ -194,12 +228,20 @@ class Milestone(CompletableGithubObject):
             self._description = self._makeStringAttribute(attributes["description"])
         if "due_on" in attributes:  # pragma no branch
             self._due_on = self._makeDatetimeAttribute(attributes["due_on"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "labels_url" in attributes:  # pragma no branch
             self._labels_url = self._makeStringAttribute(attributes["labels_url"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
+        elif "url" in attributes and attributes["url"]:
+            number = attributes["url"].split("/")[-1]
+            if number.isnumeric():
+                self._number = self._makeIntAttribute(int(number))
         if "open_issues" in attributes:  # pragma no branch
             self._open_issues = self._makeIntAttribute(attributes["open_issues"])
         if "state" in attributes:  # pragma no branch

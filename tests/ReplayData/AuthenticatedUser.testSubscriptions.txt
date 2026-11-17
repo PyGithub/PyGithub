@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/nvie
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4945'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '603'), ('server', 'nginx/1.0.13'), ('last-modified', 'Mon, 03 Sep 2012 09:24:06 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"eeac2be05fbbb88d548aaf0353a465f9"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Fri, 07 Sep 2012 23:53:21 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4944'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1272'), ('server', 'nginx/1.0.13'), ('last-modified', 'Fri, 07 Sep 2012 23:34:46 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"86a43618f03354f322e8cd3886e02308"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Fri, 07 Sep 2012 23:53:22 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /user/subscriptions
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4943'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '35709'), ('server', 'nginx/1.0.13'), ('last-modified', 'Fri, 07 Sep 2012 23:34:46 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/user/subscriptions?page=2>; rel="next", <https://api.github.com/user/subscriptions?page=2>; rel="last"'), ('etag', '"86a43618f03354f322e8cd3886e02308"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Fri, 07 Sep 2012 23:53:22 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /user/subscriptions?page=2
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4942'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1221'), ('server', 'nginx/1.0.13'), ('last-modified', 'Fri, 31 Aug 2012 13:53:17 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/user/subscriptions?page=1>; rel="first", <https://api.github.com/user/subscriptions?page=1>; rel="prev"'), ('etag', '"c8db8e82d53b0c24d493ad0dd8413000"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Fri, 07 Sep 2012 23:53:23 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /user/subscriptions/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4941'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Fri, 07 Sep 2012 23:53:23 GMT')]
@@ -58,7 +58,7 @@ DELETE
 api.github.com
 None
 /user/subscriptions/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4940'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Fri, 07 Sep 2012 23:53:24 GMT')]
@@ -69,7 +69,7 @@ GET
 api.github.com
 None
 /user/subscriptions/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 404
 [('status', '404 Not Found'), ('content-length', '23'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-remaining', '4939'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Fri, 07 Sep 2012 23:53:24 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -80,7 +80,7 @@ PUT
 api.github.com
 None
 /user/subscriptions/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4938'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Fri, 07 Sep 2012 23:53:25 GMT')]
@@ -91,7 +91,7 @@ GET
 api.github.com
 None
 /user/subscriptions/nvie/gitflow
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4937'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Fri, 07 Sep 2012 23:53:25 GMT')]

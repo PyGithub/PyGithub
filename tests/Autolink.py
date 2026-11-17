@@ -15,6 +15,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Oskar Jansson <56458534+janssonoskar@users.noreply.github.com>#
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,6 +35,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from tests import Framework
 
 
@@ -49,5 +52,6 @@ class Autolink(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.link.id, 209614)
         self.assertEqual(self.link.key_prefix, "DUMMY-")
+        self.assertIsNone(self.link.updated_at)
         self.assertEqual(self.link.url_template, "https://github.com/PyGithub/PyGithub/issues/<num>")
         self.assertEqual(self.link.is_alphanumeric, True)

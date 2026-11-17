@@ -13,6 +13,11 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Liuyang Wan <tsfdye@gmail.com>                                #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Hugo van Kemenade <1324225+hugovk@users.noreply.github.com>   #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 divyanshi gautam <divyanshigautam9922@gmail.com>              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -39,13 +44,16 @@ import glob
 import os
 import re
 import sys
-from typing import Iterable
+from collections.abc import Iterable
+from pathlib import Path
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath(".."))
 from importlib.metadata import version  # noqa: E402
+
+from doc.graphql_reference import generate_graphql_reference  # noqa: E402
 
 setupVersion = version("pygithub")
 
@@ -56,7 +64,7 @@ setupVersion = version("pygithub")
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage", "sphinx.ext.mathjax"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage", "sphinx.ext.mathjax", "sphinx_copybutton"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -72,7 +80,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "PyGithub"
-copyright = "%d, Vincent Jacques" % datetime.date.today().year
+copyright = f"{datetime.date.today().year}, Vincent Jacques, Liuyang Wan, Steve Kowalik, Enrico Minack"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -197,7 +205,6 @@ html_static_path = ["_static"]
 # Output file base name for HTML help builder.
 htmlhelp_basename = "PyGithubdoc"
 
-
 # -- Options for LaTeX output --------------------------------------------------
 
 # latex_elements = {
@@ -274,7 +281,7 @@ texinfo_documents = [
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 # texinfo_show_urls = 'footnote'
 
-autodoc_default_flags = ["members"]
+autodoc_default_options = {"members": True}
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 
@@ -367,7 +374,7 @@ for githubObjectClass, module in githubObjectClasses.items():
                     ]:
                         method = None
                 isProperty = False
-            if line.startswith("        :calls: `"):
+            if line.startswith("        :calls: `") and method:
                 for callee in line[16:].split(" or "):
                     verb, url = callee[1:].split(" ")[0:2]
                     if url not in methods:
@@ -375,7 +382,6 @@ for githubObjectClass, module in githubObjectClasses.items():
                     if verb not in methods[url]:
                         methods[url][verb] = set()
                     methods[url][verb].add(":meth:`" + module + "." + githubObjectClass + "." + method + "`")
-                method = None
 
 methods["/markdown/raw"] = dict()
 methods["/markdown/raw"]["POST"] = ["Not implemented, see ``/markdown``"]
@@ -386,10 +392,16 @@ with open("apis.rst", "w") as apis:
     apis.write("APIs\n")
     apis.write("====\n")
     apis.write("\n")
+    apis.write("REST\n")
+    apis.write("----\n")
+    apis.write("\n")
     for url, verbs in sorted(methods.items()):
+        if url == "/graphql":
+            continue
         apis.write("* ``" + url + "``\n")
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
                 apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
+    apis.write(generate_graphql_reference(Path("../github")))

@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/orgs/BeaverSoftware/properties/schema
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Date', 'Sat, 01 Jun 2024 07:34:24 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With'), ('ETag', 'W/"b2b84abdf13e6be86f79dac5de7b63b2ca0ff254cf371ca5f470ef363039b6b2"'), ('github-authentication-token-expiration', '2024-06-08 02:45:21 +0100'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('x-accepted-github-permissions', 'organization_custom_properties=read'), ('x-github-api-version-selected', '2022-11-28'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4937'), ('X-RateLimit-Reset', '1717228808'), ('X-RateLimit-Used', '63'), ('X-RateLimit-Resource', 'core'), ('Access-Control-Expose-Headers', 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '0'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'CNX7:4XSRH1:841616:AKM292:60LGFYTX')]
+[{"property_name":"property_1","value_type":"string","required":true,"default_value":"foo","description":"description","values_editable_by":"org_actors"},{"property_name":"property_2","value_type":"single_select","required":true,"default_value":"bar","description":"Lorem ipsum","allowed_values":["foo","bar"],"values_editable_by":"org_and_repo_actors"}]

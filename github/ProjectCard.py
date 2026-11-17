@@ -22,7 +22,10 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -45,14 +48,21 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 import github.Issue
 import github.NamedUser
+import github.Organization
 import github.ProjectColumn
 import github.PullRequest
 from github import Consts
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
+from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet, Opt, _NotSetType
+
+if TYPE_CHECKING:
+    from github.Issue import Issue
+    from github.NamedUser import NamedUser
+    from github.ProjectColumn import ProjectColumn
+    from github.PullRequest import PullRequest
 
 # NOTE: There is currently no way to get cards "in triage" for a project.
 # https://platform.github.community/t/moving-github-project-cards-that-are-in-triage/3784
@@ -61,24 +71,31 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt
 # which may point the way to where the API is likely headed and what might come back to v3. E.g. ProjectCard.content member.
 
 
-class ProjectCard(CompletableGithubObject):
+class ProjectCard(NonCompletableGithubObject):
     """
     This class represents Project Cards.
 
     The reference can be found here
     https://docs.github.com/en/rest/reference/projects#cards
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/project-card
+
     """
 
     def _initAttributes(self) -> None:
         self._archived: Attribute[bool] = NotSet
+        self._column_name: Attribute[str] = NotSet
         self._column_url: Attribute[str] = NotSet
         self._content_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
-        self._creator: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._creator: Attribute[NamedUser] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._note: Attribute[str] = NotSet
+        self._project_id: Attribute[str] = NotSet
+        self._project_url: Attribute[str] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
 
@@ -88,6 +105,10 @@ class ProjectCard(CompletableGithubObject):
     @property
     def archived(self) -> bool:
         return self._archived.value
+
+    @property
+    def column_name(self) -> str:
+        return self._column_name.value
 
     @property
     def column_url(self) -> str:
@@ -102,7 +123,7 @@ class ProjectCard(CompletableGithubObject):
         return self._created_at.value
 
     @property
-    def creator(self) -> github.NamedUser.NamedUser:
+    def creator(self) -> NamedUser:
         return self._creator.value
 
     @property
@@ -118,6 +139,14 @@ class ProjectCard(CompletableGithubObject):
         return self._note.value
 
     @property
+    def project_id(self) -> str:
+        return self._project_id.value
+
+    @property
+    def project_url(self) -> str:
+        return self._project_url.value
+
+    @property
     def updated_at(self) -> datetime:
         return self._updated_at.value
 
@@ -125,20 +154,25 @@ class ProjectCard(CompletableGithubObject):
     def url(self) -> str:
         return self._url.value
 
+    @overload
+    def get_content(self, content_type: Literal["PullRequest"]) -> PullRequest | None: ...
+
+    @overload
+    def get_content(self, content_type: Literal["Issue"] | _NotSetType = NotSet) -> Issue | None: ...
+
     # Note that the content_url for any card will be an "issue" URL, from
     # which you can retrieve either an Issue or a PullRequest. Unfortunately
     # the API doesn't make it clear which you are dealing with.
-    def get_content(
-        self, content_type: Opt[str] = NotSet
-    ) -> github.PullRequest.PullRequest | github.Issue.Issue | None:
+    def get_content(self, content_type: Opt[str] = NotSet) -> PullRequest | Issue | None:
         """
-        :calls: `GET /repos/{owner}/{repo}/pulls/{number} <https://docs.github.com/en/rest/reference/pulls#get-a-pull-request>`_
+        :calls: `GET /repos/{owner}/{repo}/pulls/{pull_number} <https://docs.github.com/en/rest/reference/pulls#get-a-pull-request>`_
+        :calls: `GET /repos/{owner}/{repo}/issues/{pull_number} <https://docs.github.com/en/rest/reference/pulls#get-a-pull-request>`_
         """
         assert content_type is NotSet or isinstance(content_type, str), content_type
         if self.content_url is None:
             return None
 
-        retclass: type[github.PullRequest.PullRequest] | type[github.Issue.Issue]
+        retclass: type[PullRequest] | type[Issue]
         if content_type == "PullRequest":
             url = self.content_url.replace("issues", "pulls")
             retclass = github.PullRequest.PullRequest
@@ -147,10 +181,9 @@ class ProjectCard(CompletableGithubObject):
             retclass = github.Issue.Issue
         else:
             raise ValueError(f"Unknown content type: {content_type}")
-        headers, data = self._requester.requestJsonAndCheck("GET", url)
-        return retclass(self._requester, headers, data, completed=True)
+        return retclass(self._requester, url=url)
 
-    def move(self, position: str, column: github.ProjectColumn.ProjectColumn | int) -> bool:
+    def move(self, position: str, column: ProjectColumn | int) -> bool:
         """
         :calls: `POST /projects/columns/cards/{card_id}/moves <https://docs.github.com/en/rest/reference/projects#cards>`_
         """
@@ -197,6 +230,8 @@ class ProjectCard(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "archived" in attributes:  # pragma no branch
             self._archived = self._makeBoolAttribute(attributes["archived"])
+        if "column_name" in attributes:  # pragma no branch
+            self._column_name = self._makeStringAttribute(attributes["column_name"])
         if "column_url" in attributes:  # pragma no branch
             self._column_url = self._makeStringAttribute(attributes["column_url"])
         if "content_url" in attributes:  # pragma no branch
@@ -211,6 +246,10 @@ class ProjectCard(CompletableGithubObject):
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "note" in attributes:  # pragma no branch
             self._note = self._makeStringAttribute(attributes["note"])
+        if "project_id" in attributes:  # pragma no branch
+            self._project_id = self._makeStringAttribute(attributes["project_id"])
+        if "project_url" in attributes:  # pragma no branch
+            self._project_url = self._makeStringAttribute(attributes["project_url"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch

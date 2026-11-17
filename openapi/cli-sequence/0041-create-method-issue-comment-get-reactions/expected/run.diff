@@ -1,0 +1,412 @@
+diff --unified --recursive --new-file before/github/IssueComment.py after/github/IssueComment.py
+--- before/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -129,6 +129,24 @@
+     def user(self) -> NamedUser:
+         self._completeIfNotSet(self._user)
+         return self._user.value
++    
++    def get_reactions(self, content: Opt[str] = NotSet) -> PaginatedList[Reaction]:
++        """
++        List reactions for an issue comment
++
++        List the reactions to an [issue comment](https://docs.github.com/rest/issues/comments#get-an-issue-comment).
++
++        :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions <https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment>`_
++        :param content: Returns a single [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to an issue comment.
++        """
++        assert is_optional(content, str), content
++        url_parameters = NotSet.remove_unset_items(
++            {
++                "content": content,
++            }
++        )
++        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/reactions")
++        return data
+ 
+     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+         super()._useAttributes(attributes)
+diff --unified --recursive --new-file before/github/Reaction.py after/github/Reaction.py
+--- before/github/Reaction.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/Reaction.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,91 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import NonCompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++import github.NamedUser
++
++if TYPE_CHECKING:
++    from github.NamedUser import NamedUser
++    pass
++
++
++class Reaction(NonCompletableGithubObject):
++    """
++    This class represents Reaction.
++
++    The reference can be found here
++    https://docs.github.com/en/rest
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/reaction
++
++    """
++
++    def _initAttributes(self) -> None:
++        self._content: Attribute[str] = NotSet
++        self._created_at: Attribute[datetime] = NotSet
++        self._id: Attribute[int] = NotSet
++        self._node_id: Attribute[str] = NotSet
++        self._user: Attribute[NamedUser] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def content(self) -> str:
++        return self._content.value
++
++    @property
++    def created_at(self) -> datetime:
++        return self._created_at.value
++
++    @property
++    def id(self) -> int:
++        return self._id.value
++
++    @property
++    def node_id(self) -> str:
++        return self._node_id.value
++
++    @property
++    def user(self) -> NamedUser:
++        return self._user.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        if "content" in attributes:  # pragma no branch
++            self._content = self._makeStringAttribute(attributes["content"])
++        if "created_at" in attributes:  # pragma no branch
++            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
++        if "id" in attributes:  # pragma no branch
++            self._id = self._makeIntAttribute(attributes["id"])
++        if "node_id" in attributes:  # pragma no branch
++            self._node_id = self._makeStringAttribute(attributes["node_id"])
++        if "user" in attributes:  # pragma no branch
++            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -222,7 +222,19 @@
+         "GithubObject"
+       ],
+       "inherited_schemas": [],
+-      "methods": {},
++      "methods": {
++        "get_reactions": {
++          "call": {
++            "docs": "<https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment>`_",
++            "path": "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
++            "verb": "GET"
++          },
++          "name": "get_reactions",
++          "returns": [
++            "PaginatedList[Reaction]"
++          ]
++        }
++      },
+       "module": "IssueComment",
+       "name": "IssueComment",
+       "package": "github",
+@@ -1190,6 +1202,134 @@
+       "schemas": [],
+       "test_filename": "tests/GithubObject.py"
+     },
++    "Reaction": {
++      "bases": [
++        "NonCompletableGithubObject"
++      ],
++      "docstring": "This class represents Reaction.\n\n    The reference can be found here\n    https://docs.github.com/en/rest\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/reaction",
++      "filename": "github/Reaction.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "GithubObject",
++        "NonCompletableGithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "Reaction",
++      "name": "Reaction",
++      "package": "github",
++      "properties": {
++        "content": {
++          "name": "content",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The reaction to use",
++            "enum": [
++              "+1",
++              "-1",
++              "laugh",
++              "confused",
++              "heart",
++              "hooray",
++              "rocket",
++              "eyes"
++            ],
++            "example": "heart",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/reaction": {
++              "description": "The reaction to use",
++              "enum": [
++                "+1",
++                "-1",
++                "laugh",
++                "confused",
++                "heart",
++                "hooray",
++                "rocket",
++                "eyes"
++              ],
++              "example": "heart",
++              "type": "string"
++            }
++          }
++        },
++        "created_at": {
++          "name": "created_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "example": "2016-05-20T20:09:31Z",
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/reaction": {
++              "example": "2016-05-20T20:09:31Z",
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        },
++        "id": {
++          "name": "id",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "example": 1,
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/reaction": {
++              "example": 1,
++              "type": "integer"
++            }
++          }
++        },
++        "node_id": {
++          "name": "node_id",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "example": "MDg6UmVhY3Rpb24x",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/reaction": {
++              "example": "MDg6UmVhY3Rpb24x",
++              "type": "string"
++            }
++          }
++        },
++        "user": {
++          "name": "user",
++          "returns": [
++            "NamedUser"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-simple-user"
++          },
++          "schemas": {
++            "/components/schemas/reaction": {
++              "$ref": "#/components/schemas/nullable-simple-user"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/reaction"
++      ],
++      "test_filename": "tests/Reaction.py"
++    },
+     "_BadAttribute": {
+       "bases": [
+         "Attribute"
+@@ -1288,7 +1428,8 @@
+         "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult",
+-        "NonCompletableGithubObject"
++        "NonCompletableGithubObject",
++        "Reaction"
+       ],
+       "Attribute": [
+         "_BadAttribute",
+@@ -1307,11 +1448,15 @@
+         "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult",
+-        "NonCompletableGithubObject"
++        "NonCompletableGithubObject",
++        "Reaction"
+       ],
+       "NamedUser": [
+         "NamedUserSearchResult"
+       ],
++      "NonCompletableGithubObject": [
++        "Reaction"
++      ],
+       "Protocol": [
+         "Attribute",
+         "_BadAttribute",
+@@ -1319,8 +1464,20 @@
+         "_ValuedAttribute"
+       ]
+     },
+-    "path_to_call_methods": {},
+-    "path_to_return_classes": {},
++    "path_to_call_methods": {
++      "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
++        "get": [
++          "IssueComment.get_reactions"
++        ]
++      }
++    },
++    "path_to_return_classes": {
++      "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
++        "get": [
++          "PaginatedList[Reaction]"
++        ]
++      }
++    },
+     "return_schema_to_paths": {
+       "/components/schemas/actions-artifact-and-log-retention-response": [
+         "/orgs/{org}/actions/permissions/artifact-and-log-retention",
+@@ -1950,11 +2107,28 @@
+       "/components/schemas/public-user": [
+         "NamedUser"
+       ],
++      "/components/schemas/reaction": [
++        "Reaction"
++      ],
+       "/components/schemas/user-search-result-item": [
+         "NamedUserSearchResult"
+       ]
+     }
+   },
+-  "paths": {},
++  "paths": {
++    "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
++      "GET": {
++        "methods": [
++          {
++            "class": "IssueComment",
++            "name": "get_reactions",
++            "returns": [
++              "PaginatedList[Reaction]"
++            ]
++          }
++        ]
++      }
++    }
++  },
+   "sources": "github"
+ }
+\ No newline at end of file
+diff --unified --recursive --new-file before/tests/Reaction.py after/tests/Reaction.py
+--- before/tests/Reaction.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/Reaction.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,45 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class Reaction(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type Reaction and assign to self.r, then run:
++        #   pytest ./tests/Reaction.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/Reaction.py testAttributes
++        #   pre-commit run --all-files
++        self.r = None
++
++    def testAttributes(self):
++        r = self.r
++        self.assertEqual(r.__repr__(), "")
++        self.assertEqual(r.content, "")
++        self.assertEqual(r.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(r.id, 0)
++        self.assertEqual(r.node_id, "")
++        self.assertEqual(r.user.some_attribute, "")

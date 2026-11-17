@@ -5,6 +5,7 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -24,9 +25,12 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 import github
+import github.Organization
 
 from . import Framework
 from .GithubIntegration import APP_ID, PRIVATE_KEY
@@ -36,25 +40,34 @@ class GithubApp(Framework.TestCase):
     def setUp(self):
         super().setUp()
         self.app_slug = "github-actions"
+        self.app = self.g.get_app(slug=self.app_slug)
+        # fetch lazy object
+        self.app.id
 
-    def testGetPublicApp(self):
-        app = self.g.get_app(slug=self.app_slug)
+    def testAttributes(self):
+        app = self.app
+        self.assertEqual(app.client_id, "Iv1.05c79e9ad1f6bdfa")
+        self.assertIsNone(app.client_secret)
         self.assertEqual(app.created_at, datetime(2018, 7, 30, 9, 30, 17, tzinfo=timezone.utc))
         self.assertEqual(app.description, "Automate your workflow from idea to production")
         self.assertListEqual(
             app.events,
             [
+                "branch_protection_rule",
                 "check_run",
                 "check_suite",
                 "create",
                 "delete",
                 "deployment",
                 "deployment_status",
+                "discussion",
+                "discussion_comment",
                 "fork",
                 "gollum",
                 "issues",
                 "issue_comment",
                 "label",
+                "merge_group",
                 "milestone",
                 "page_build",
                 "project",
@@ -78,16 +91,24 @@ class GithubApp(Framework.TestCase):
         self.assertEqual(app.external_url, "https://help.github.com/en/actions")
         self.assertEqual(app.html_url, "https://github.com/apps/github-actions")
         self.assertEqual(app.id, 15368)
+        self.assertIsNone(app.installations_count)
         self.assertEqual(app.name, "GitHub Actions")
+        self.assertEqual(app.node_id, "MDM6QXBwMTUzNjg=")
+        self.assertIsInstance(app.owner, github.Organization.Organization)
         self.assertEqual(app.owner.login, "github")
+        self.assertIsNone(app.pem)
         self.assertDictEqual(
             app.permissions,
             {
                 "actions": "write",
+                "administration": "read",
+                "attestations": "write",
                 "checks": "write",
                 "contents": "write",
                 "deployments": "write",
+                "discussions": "write",
                 "issues": "write",
+                "merge_queues": "write",
                 "metadata": "read",
                 "packages": "write",
                 "pages": "write",
@@ -100,8 +121,9 @@ class GithubApp(Framework.TestCase):
             },
         )
         self.assertEqual(app.slug, "github-actions")
-        self.assertEqual(app.updated_at, datetime(2019, 12, 10, 19, 4, 12, tzinfo=timezone.utc))
+        self.assertEqual(app.updated_at, datetime(2024, 4, 10, 20, 33, 16, tzinfo=timezone.utc))
         self.assertEqual(app.url, "/apps/github-actions")
+        self.assertIsNone(app.webhook_secret)
 
     def testGetAuthenticatedApp(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)

@@ -17,7 +17,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -56,15 +58,25 @@ class GitRef(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/git#references
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/git-ref
+
     """
 
     def _initAttributes(self) -> None:
+        self._node_id: Attribute[str] = NotSet
         self._object: Attribute[GitObject] = NotSet
         self._ref: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"ref": self._ref.value})
+
+    @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
 
     @property
     def object(self) -> GitObject:
@@ -96,8 +108,11 @@ class GitRef(CompletableGithubObject):
         post_parameters = NotSet.remove_unset_items({"sha": sha, "force": force})
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "object" in attributes:  # pragma no branch
             self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "ref" in attributes:  # pragma no branch

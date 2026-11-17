@@ -14,7 +14,9 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -34,7 +36,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -42,6 +46,11 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class HookResponse(NonCompletableGithubObject):
     """
     This class represents HookResponses.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/hook-response
+
     """
 
     def _initAttributes(self) -> None:
@@ -64,7 +73,7 @@ class HookResponse(NonCompletableGithubObject):
     def status(self) -> str:
         return self._status.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "code" in attributes:  # pragma no branch
             self._code = self._makeIntAttribute(attributes["code"])
         if "message" in attributes:  # pragma no branch

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /orgs/sample-test-organisation
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Thu, 13 Sep 2018 15:19:47 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4997'), ('X-RateLimit-Reset', '1536855475'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"1b018825113df112cbfdf5096ac86cfd"'), ('Last-Modified', 'Thu, 13 Sep 2018 09:21:05 GMT'), ('X-GitHub-Media-Type', 'github.v3; format=json'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.063567'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', '1CD7:1FE1:13159D3:27509C2:5B9A8012')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /orgs/sample-test-organisation/migrations?per_page=1
-{'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.wyandotte-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('Server', 'GitHub.com'), ('Date', 'Thu, 13 Sep 2018 15:16:03 GMT'), ('Content-Type', 'application/json; charset=utf-8'), ('Transfer-Encoding', 'chunked'), ('Status', '200 OK'), ('X-RateLimit-Limit', '5000'), ('X-RateLimit-Remaining', '4908'), ('X-RateLimit-Reset', '1536851865'), ('Cache-Control', 'private, max-age=60, s-maxage=60'), ('Vary', 'Accept, Authorization, Cookie, X-GitHub-OTP'), ('ETag', 'W/"b9e918c8c5de017cdd3f3badb9cd7268"'), ('X-GitHub-Media-Type', 'github.wyandotte-preview; format=json'), ('Link', '<https://api.github.com/organizations/43235726/migrations?per_page=1&page=2>; rel="next", <https://api.github.com/organizations/43235726/migrations?per_page=1&page=2>; rel="last"'), ('Access-Control-Expose-Headers', 'ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('Access-Control-Allow-Origin', '*'), ('Strict-Transport-Security', 'max-age=31536000; includeSubdomains; preload'), ('X-Frame-Options', 'deny'), ('X-Content-Type-Options', 'nosniff'), ('X-XSS-Protection', '1; mode=block'), ('Referrer-Policy', 'origin-when-cross-origin, strict-origin-when-cross-origin'), ('Content-Security-Policy', "default-src 'none'"), ('X-Runtime-rack', '0.107384'), ('Content-Encoding', 'gzip'), ('X-GitHub-Request-Id', 'CC2C:1FE2:1A98BC4:31A75CC:5B9A7F32')]

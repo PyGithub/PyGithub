@@ -7,7 +7,14 @@
 # Copyright 2023 Mark Amery <markamery@btinternet.com>                         #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 chantra <chantra@users.noreply.github.com>                    #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2024 Min RK <benjaminrk@gmail.com>                                 #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 xmo-odoo <xmo@odoo.com>                                       #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -33,8 +40,8 @@ import urllib.parse
 import warnings
 from typing import Any
 
-import deprecated
 import urllib3
+from typing_extensions import deprecated
 from urllib3 import Retry
 
 import github
@@ -81,6 +88,9 @@ class GithubIntegration:
         jwt_issued_at: int = Consts.DEFAULT_JWT_ISSUED_AT,
         jwt_algorithm: str = Consts.DEFAULT_JWT_ALGORITHM,
         auth: AppAuth | None = None,
+        # v3: set lazy = True as the default
+        lazy: bool = False,
+        api_version: str | None = None,
     ) -> None:
         """
         :param integration_id: int deprecated, use auth=github.Auth.AppAuth(...) instead
@@ -98,6 +108,11 @@ class GithubIntegration:
         :param jwt_issued_at: int deprecated, use auth=github.Auth.AppAuth(...) instead
         :param jwt_algorithm: string deprecated, use auth=github.Auth.AppAuth(...) instead
         :param auth: authentication method
+        :param lazy: completable objects created from this instance are lazy,
+                     as well as completable objects created from those, and so on
+        :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-api/api-versions).
+                            Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
+                            Set to None to not specify any version
         """
         if integration_id is not None:
             assert isinstance(integration_id, (int, str)), integration_id
@@ -115,6 +130,8 @@ class GithubIntegration:
         assert isinstance(jwt_expiry, int), jwt_expiry
         assert Consts.MIN_JWT_EXPIRY <= jwt_expiry <= Consts.MAX_JWT_EXPIRY, jwt_expiry
         assert isinstance(jwt_issued_at, int)
+        assert isinstance(lazy, bool), lazy
+        assert api_version is None or isinstance(api_version, str), api_version
 
         self.base_url = base_url
 
@@ -129,18 +146,27 @@ class GithubIntegration:
                 "Arguments integration_id, private_key, jwt_expiry, jwt_issued_at and jwt_algorithm are deprecated, "
                 "please use auth=github.Auth.AppAuth(...) instead",
                 category=DeprecationWarning,
+                stacklevel=2,
             )
-            auth = AppAuth(
-                integration_id,  # type: ignore
-                private_key,  # type: ignore
-                jwt_expiry=jwt_expiry,
-                jwt_issued_at=jwt_issued_at,
-                jwt_algorithm=jwt_algorithm,
-            )
+            if jwt_algorithm != Consts.DEFAULT_JWT_ALGORITHM:
+                auth = AppAuth(
+                    integration_id,  # type: ignore
+                    private_key=None,  # type: ignore
+                    sign_func=AppAuth.create_jwt_sign(private_key, jwt_algorithm),  # type: ignore
+                    jwt_expiry=jwt_expiry,
+                    jwt_issued_at=jwt_issued_at,
+                )
+            else:
+                auth = AppAuth(
+                    integration_id,  # type: ignore
+                    private_key,  # type: ignore
+                    jwt_expiry=jwt_expiry,
+                    jwt_issued_at=jwt_issued_at,
+                )
 
-        assert isinstance(
-            auth, AppAuth
-        ), f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
+        assert isinstance(auth, AppAuth), (
+            f"GithubIntegration requires github.Auth.AppAuth authentication, not {type(auth)}"
+        )
 
         self.auth = auth
 
@@ -155,10 +181,26 @@ class GithubIntegration:
             pool_size=pool_size,
             seconds_between_requests=seconds_between_requests,
             seconds_between_writes=seconds_between_writes,
+            lazy=lazy,
+            api_version=api_version,
         )
 
+    def withLazy(self, lazy: bool) -> GithubIntegration:
+        """
+        Create a GithubIntegration instance with identical configuration but the given lazy setting.
+
+        :param lazy: completable objects created from this instance are lazy, as well as completable objects created
+            from those, and so on
+        :return: new Github instance
+
+        """
+        kwargs = self.__requester.kwargs
+        kwargs.update(lazy=lazy)
+        return GithubIntegration(**kwargs)
+
     def close(self) -> None:
-        """Close connections to the server. Alternatively, use the
+        """
+        Close connections to the server. Alternatively, use the
         GithubIntegration object as a context manager:
 
         .. code-block:: python
@@ -181,6 +223,16 @@ class GithubIntegration:
         auth = self.auth.get_installation_auth(installation_id, token_permissions, self.__requester)
         return github.Github(**self.__requester.withAuth(auth).kwargs)
 
+    @property
+    def requester(self) -> Requester:
+        """
+        Return my Requester object.
+
+        For example, to make requests to API endpoints not yet supported by PyGitHub.
+
+        """
+        return self.__requester
+
     def _get_headers(self) -> dict[str, str]:
         """
         Get headers for the requests.
@@ -199,10 +251,9 @@ class GithubIntegration:
             requester=self.__requester,
             headers=headers,
             attributes=response,
-            completed=True,
         )
 
-    @deprecated.deprecated(
+    @deprecated(
         "Use github.Github(auth=github.Auth.AppAuth), github.Auth.AppAuth.token or github.Auth.AppAuth.create_jwt(expiration) instead"
     )
     def create_jwt(self, expiration: int | None = None) -> str:
@@ -236,16 +287,15 @@ class GithubIntegration:
             requester=self.__requester,
             headers=headers,
             attributes=response,
-            completed=True,
         )
 
-    @deprecated.deprecated("Use get_repo_installation")
+    @deprecated("Use get_repo_installation")
     def get_installation(self, owner: str, repo: str) -> Installation:
         """
         Deprecated by get_repo_installation.
 
-        :calls: `GET /repos/{owner}/{repo}/installation
-        <https://docs.github.com/en/rest/reference/apps#get-a-repository-installation-for-the-authenticated-app>`
+        :calls: `GET /repos/{owner}/{repo}/installation <https://docs.github.com/en/rest/reference/apps#get-a-repository-
+        installation-for-the-authenticated-app>`
 
         """
         owner = urllib.parse.quote(owner)
@@ -269,7 +319,7 @@ class GithubIntegration:
         """
         :calls: `GET /orgs/{org}/installation <https://docs.github.com/en/rest/apps/apps#get-an-organization-installation-for-the-authenticated-app>`
         """
-        org = urllib.parse.quote(org)
+        org = urllib.parse.quote(org, safe="")
         return self._get_installed_app(url=f"/orgs/{org}/installation")
 
     def get_repo_installation(self, owner: str, repo: str) -> Installation:
@@ -297,6 +347,5 @@ class GithubIntegration:
         """
         :calls: `GET /app <https://docs.github.com/en/rest/reference/apps#get-the-authenticated-app>`_
         """
-
         headers, data = self.__requester.requestJsonAndCheck("GET", "/app", headers=self._get_headers())
         return GithubApp(requester=self.__requester, headers=headers, attributes=data, completed=True)

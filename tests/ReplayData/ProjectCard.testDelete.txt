@@ -1,0 +1,9 @@
+https
+DELETE
+api.github.com
+None
+/projects/columns/cards/11780055
+{'Accept': 'application/vnd.github.inertia-preview+json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4981'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'F8C2:AADAA:17FC875:24A1090:59635F0C'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-runtime-rack', '0.072659'), ('x-xss-protection', '1; mode=block'), ('x-served-by', '7f48e2f7761567e923121f17538d7a6d'), ('date', 'Thu, 05 Mar 2020 02:43:38 GMT'), ('access-control-allow-origin', '*'), ('x-frame-options', 'deny'), ('x-ratelimit-reset', '1499685825')]

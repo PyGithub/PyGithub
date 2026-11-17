@@ -13,6 +13,7 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -40,4 +41,4 @@ from . import Framework
 
 class Issue142(Framework.TestCase):
     def testDecodeJson(self):
-        self.assertEqual(github.Github().get_rate_limit().core.limit, 60)
+        self.assertEqual(github.Github().get_rate_limit().resources.core.limit, 60)

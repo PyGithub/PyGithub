@@ -22,7 +22,12 @@
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Malik Shahzad Muzaffar <shahzad.malik.muzaffar@cern.ch>       #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Arash Kadkhodaei <arash77.kad@gmail.com>                      #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Aidan McNay <acm289@cornell.edu>                              #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -47,13 +52,18 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.GithubApp
 import github.GithubObject
 import github.NamedUser
+import github.Organization
 from github import Consts
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.GithubApp import GithubApp
+    from github.NamedUser import NamedUser
+    from github.Organization import Organization
     from github.Reaction import Reaction
 
 
@@ -64,21 +74,35 @@ class IssueComment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#comments
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/issue-comment
+
     """
 
     def _initAttributes(self) -> None:
+        self._author_association: Attribute[str] = NotSet
         self._body: Attribute[str] = NotSet
+        self._body_html: Attribute[str] = NotSet
+        self._body_text: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
+        self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._issue_url: Attribute[str] = NotSet
+        self._node_id: Attribute[str] = NotSet
+        self._performed_via_github_app: Attribute[GithubApp] = NotSet
+        self._reactions: Attribute[dict] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
         self._url: Attribute[str] = NotSet
-        self._html_url: Attribute[str] = NotSet
-        self._user: Attribute[github.NamedUser.NamedUser] = NotSet
-        self._reactions: Attribute[dict] = NotSet
+        self._user: Attribute[NamedUser | Organization] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value, "user": self._user.value})
+
+    @property
+    def author_association(self) -> str:
+        self._completeIfNotSet(self._author_association)
+        return self._author_association.value
 
     @property
     def body(self) -> str:
@@ -86,9 +110,24 @@ class IssueComment(CompletableGithubObject):
         return self._body.value
 
     @property
+    def body_html(self) -> str:
+        self._completeIfNotSet(self._body_html)
+        return self._body_html.value
+
+    @property
+    def body_text(self) -> str:
+        self._completeIfNotSet(self._body_text)
+        return self._body_text.value
+
+    @property
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def html_url(self) -> str:
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def id(self) -> int:
@@ -101,6 +140,21 @@ class IssueComment(CompletableGithubObject):
         return self._issue_url.value
 
     @property
+    def node_id(self) -> str:
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
+    def performed_via_github_app(self) -> GithubApp:
+        self._completeIfNotSet(self._performed_via_github_app)
+        return self._performed_via_github_app.value
+
+    @property
+    def reactions(self) -> dict:
+        self._completeIfNotSet(self._reactions)
+        return self._reactions.value
+
+    @property
     def updated_at(self) -> datetime:
         self._completeIfNotSet(self._updated_at)
         return self._updated_at.value
@@ -111,29 +165,19 @@ class IssueComment(CompletableGithubObject):
         return self._url.value
 
     @property
-    def html_url(self) -> str:
-        self._completeIfNotSet(self._html_url)
-        return self._html_url.value
-
-    @property
-    def user(self) -> github.NamedUser.NamedUser:
+    def user(self) -> NamedUser | Organization:
         self._completeIfNotSet(self._user)
         return self._user.value
 
-    @property
-    def reactions(self) -> dict:
-        self._completeIfNotSet(self._reactions)
-        return self._reactions.value
-
     def delete(self) -> None:
         """
-        :calls: `DELETE /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :calls: `DELETE /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(self, body: str) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/issues/comments/{id} <https://docs.github.com/en/rest/reference/issues#comments>`_
+        :calls: `PATCH /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
         """
         assert isinstance(body, str), body
         post_parameters = {
@@ -141,10 +185,11 @@ class IssueComment(CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
+        self._set_complete()
 
     def get_reactions(self) -> PaginatedList[Reaction]:
         """
-        :calls: `GET /repos/{owner}/{repo}/issues/comments/{id}/reactions
+        :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#list-reactions-for-an-issue-comment>`_
         """
         return PaginatedList(
@@ -157,7 +202,7 @@ class IssueComment(CompletableGithubObject):
 
     def create_reaction(self, reaction_type: str) -> Reaction:
         """
-        :calls: `POST /repos/{owner}/{repo}/issues/comments/{id}/reactions
+        :calls: `POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
                 <https://docs.github.com/en/rest/reference/reactions#create-reaction-for-an-issue-comment>`_
         """
         assert isinstance(reaction_type, str), reaction_type
@@ -170,7 +215,7 @@ class IssueComment(CompletableGithubObject):
             input=post_parameters,
             headers={"Accept": Consts.mediaTypeReactionsPreview},
         )
-        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
+        return github.Reaction.Reaction(self._requester, headers, data)
 
     def delete_reaction(self, reaction_id: int) -> bool:
         """
@@ -185,22 +230,78 @@ class IssueComment(CompletableGithubObject):
         )
         return status == 204
 
+    def minimize(self, reason: str = "OUTDATED") -> bool:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to minimize comment
+            <https://docs.github.com/en/graphql/reference/mutations#minimizecomment>
+        :graphql: `mutation minimizeComment <https://docs.github.com/en/graphql/reference/issues#mutation-minimizecomment>`_
+        """
+        assert isinstance(reason, str), reason
+        variables = {
+            "subjectId": self.node_id,
+            "classifier": reason,
+        }
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="minimizeComment",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="minimizedComment { isMinimized }",
+        )
+        return data["minimizedComment"]["isMinimized"] is True
+
+    def unminimize(self) -> bool:
+        """
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to unminimize comment
+            <https://docs.github.com/en/graphql/reference/mutations#unminimizecomment>
+        :graphql: `mutation unminimizeComment <https://docs.github.com/en/graphql/reference/issues#mutation-unminimizecomment>`_
+        """
+        variables = {
+            "subjectId": self.node_id,
+        }
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="unminimizeComment",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="unminimizedComment { isMinimized }",
+        )
+        return data["unminimizedComment"]["isMinimized"] is False
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
+        if "body_html" in attributes:  # pragma no branch
+            self._body_html = self._makeStringAttribute(attributes["body_html"])
+        if "body_text" in attributes:  # pragma no branch
+            self._body_text = self._makeStringAttribute(attributes["body_text"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "html_url" in attributes:  # pragma no branch
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        elif "url" in attributes and attributes["url"]:
+            id = attributes["url"].split("/")[-1]
+            if id.isnumeric():
+                self._id = self._makeIntAttribute(int(id))
         if "issue_url" in attributes:  # pragma no branch
             self._issue_url = self._makeStringAttribute(attributes["issue_url"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
+        if "performed_via_github_app" in attributes:  # pragma no branch
+            self._performed_via_github_app = self._makeClassAttribute(
+                github.GithubApp.GithubApp, attributes["performed_via_github_app"]
+            )
+        if "reactions" in attributes:
+            self._reactions = self._makeDictAttribute(attributes["reactions"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "html_url" in attributes:  # pragma no branch
-            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
-        if "reactions" in attributes:
-            self._reactions = self._makeDictAttribute(attributes["reactions"])
+            self._user = self._makeUnionClassAttributeFromTypeKey(
+                "type",
+                "User",
+                attributes["user"],
+                (github.NamedUser.NamedUser, "User"),
+                (github.Organization.Organization, "Organization"),
+            )

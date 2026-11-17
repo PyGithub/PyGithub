@@ -12,18 +12,19 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Topic :: Software Development",
 ]
 description = "Use the full Github API v3"
 keywords = ["github"]
 name = "PyGithub"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 
 dynamic = ["version"]
 
@@ -31,9 +32,8 @@ dependencies = [
   "pynacl>=1.4.0",
   "requests>=2.14.0",
   "pyjwt[crypto]>=2.4.0",
-  "typing-extensions>=4.0.0",
+  "typing-extensions>=4.5.0",
   "urllib3>=1.26.0",
-  "Deprecated",
 ]
 
 [project.urls]
@@ -50,10 +50,10 @@ integrations = []
 packages = ["github"]
 
 [tool.setuptools.package-data]
-github = ["py.typed", '*.pyi']
+github = ["py.typed", "*.pyi"]
 
 [tool.mypy]
-python_version = '3.7'
+python_version = "3.12"
 ignore_missing_imports = true
 namespace_packages = true
 
@@ -63,44 +63,40 @@ check_untyped_defs = true
 disallow_untyped_defs = true
 warn_no_return = false
 
-[tool.black]
-# https://github.com/psf/black
-line-length = 120
-
-[tool.docformatter]
-recursive = true
-# some docstring start with r"""
-wrap-summaries = 119
-wrap-descriptions = 120
-blank = true
-pre-summary-newline = true
-make-summary-multi-line = true
-
 [tool.codespell]
-skip = 'tests/*'
+skip = "tests/*"
 quiet-level = 3
 # comma separated list of words; waiting for:
 #  https://github.com/codespell-project/codespell/issues/2839#issuecomment-1731601603
 # also adding links until they ignored by its: nature
 #  https://github.com/codespell-project/codespell/issues/2243#issuecomment-1732019960
-ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel"
+ignore-words-list = "bloaded,nto,pullrequest,pullrequests,thi,tim,wan,Wan,chang,chang,manuel,commitish"
 
 [tool.ruff]
 line-length = 120
-# Enable Pyflakes `E` and `F` codes by default.
-select = [
-  "E",
-  # see: https://pypi.org/project/pycodestyle
-  "W",
-  # see: https://pypi.org/project/pyflakes
-  "F",
-  # see: isort
-  "I",
+
+[tool.ruff.lint]
+# ruff's default rule set before 0.16, which enabled many more rules by default
+select = ["E4", "E7", "E9", "F"]
+extend-select = [
+  "I",  # isort
+  "UP", # pyupgrade
+  "FA", # flake8-future-annotations
+  "D",  # pydocstyle
 ]
-ignore = ["E501", "E741"]
-ignore-init-module-imports = true
-unfixable = ["F401"]
+extend-ignore = [
+  "D1",   # undocumented-* (Should address gradually)
+  "D200", # unnecessary-multiline-docstring
+  "D203", # incorrect-blank-line-before-class (Mutually exclusive with D211)
+  "D205", # missing-blank-line-after-summary
+  "D212", # multi-line-summary-first-line (Mutually exclusive with D213)
+  "D400", # missing-trailing-period
+  "D401", # non-imperative-mood
+  "D404", # docstring-starts-with-this
+  "D415", # missing-terminal-punctuation
+]
+extend-safe-fixes = ["ALL"]
 
 [tool.pytest.ini_options]
 python_files = "tests/*.py"
-addopts = "--color=yes"
+addopts = "--color=yes --ignore=openapi"

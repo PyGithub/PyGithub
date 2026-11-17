@@ -1,0 +1,10 @@
+--- github/NamedUser.py.orig	2026-05-19 18:23:33.791552854 +0200
++++ github/NamedUser.py.patched	2026-05-19 18:23:28.069329117 +0200
+@@ -42,6 +42,7 @@
+ 
+     - /components/schemas/nullable-simple-user
+     - /components/schemas/public-user
++    - /components/schemas/simple-user
+ 
+     """
+ 

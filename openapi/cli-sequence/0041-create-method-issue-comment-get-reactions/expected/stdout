@@ -1,0 +1,62 @@
++ python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index IssueComment get_reactions get '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions'
+Using spec openapi.spec.json
+Creating method github.IssueComment.IssueComment.get_reactions in github/IssueComment.py
+Schema not implemented: /components/schemas/reaction
+Diff:
+--- 
++++ 
+@@ -129,6 +129,13 @@
+     def user(self) -> NamedUser:
+         self._completeIfNotSet(self._user)
+         return self._user.value
++    
++    def get_reactions(self) -> list[dict[str, Any]]:
++        """
++        :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions <https://docs.github.com/rest/reactions/reactions#list-reactions-for-an-issue-comment>`_
++        """
++        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/reactions")
++        return data
+ 
+     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+         super()._useAttributes(attributes)
+
++ python scripts/openapi.py create method --new-schemas create-class github openapi.spec.json openapi.index IssueComment get_reactions get '/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions'
+Using spec openapi.spec.json
+Creating method github.IssueComment.IssueComment.get_reactions in github/IssueComment.py
+Creating new class for schema /components/schemas/reaction
+Drafting class Reaction for new schema /components/schemas/reaction
+Creating class github.Reaction.Reaction with parent github.GithubObject.NonCompletableGithubObject in ./github/Reaction.py
+Updating index
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 0 paths
+Indexed 5 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Reaction
+Applying spec openapi.spec.json to github.Reaction.Reaction (github/Reaction.py)
+Applying schema /components/schemas/reaction
+Class Reaction changed
+Test tests/Reaction.py changed
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 0 paths
+Indexed 5 schemas
+Indexing OpenAPI spec
+Updating index
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 1 paths
+Indexed 5 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class IssueComment
+Applying spec openapi.spec.json to github.IssueComment.IssueComment (github/IssueComment.py)
+- Updating method get_reactions
+Class IssueComment changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 1 paths
+Indexed 5 schemas
+Indexing OpenAPI spec

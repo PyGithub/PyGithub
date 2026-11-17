@@ -1,0 +1,42 @@
++ python scripts/openapi.py --dry-run create method github openapi.spec.json openapi.index NamedUser get_starred get '/users/{username}/starred'
+Using spec openapi.spec.json
+Creating method github.NamedUser.NamedUser.get_starred in github/NamedUser.py
+There is no $ref and no type in schema: {"anyOf": [{"type": "array", "items": {"$ref": "#/components/schemas/starred-repository"}}, {"type": "array", "items": {"$ref": "#/components/schemas/repository"}}]}
+Diff:
+--- 
++++ 
+@@ -285,6 +285,12 @@
+     def user_view_type(self) -> str:
+         self._completeIfNotSet(self._user_view_type)
+         return self._user_view_type.value
++    
++    def get_starred(self) -> None:
++        """
++        :calls: `GET /users/{username}/starred <https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user>`_
++        """
++        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/starred")
+ 
+     def _useAttributes(self, attributes: dict[str, Any]) -> None:
+         super()._useAttributes(attributes)
+
++ python scripts/openapi.py create method github openapi.spec.json openapi.index NamedUser get_starred get '/users/{username}/starred'
+Using spec openapi.spec.json
+Creating method github.NamedUser.NamedUser.get_starred in github/NamedUser.py
+There is no $ref and no type in schema: {"anyOf": [{"type": "array", "items": {"$ref": "#/components/schemas/starred-repository"}}, {"type": "array", "items": {"$ref": "#/components/schemas/repository"}}]}
+Updating index
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 2 paths
+Indexed 5 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class NamedUser
+Applying spec openapi.spec.json to github.NamedUser.NamedUser (github/NamedUser.py)
+- Updating method get_starred
+Class NamedUser changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 4 Python files
+Indexed 13 classes
+Indexed 2 paths
+Indexed 5 schemas
+Indexing OpenAPI spec

@@ -14,6 +14,7 @@
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -33,6 +34,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from . import Framework
 
 
@@ -49,19 +52,29 @@ class SourceImport(Framework.TestCase):
             self.source_import.authors_url,
             "https://api.github.com/repos/brix4dayz/source-import-test/import/authors",
         )
+        self.assertIsNone(self.source_import.commit_count)
+        self.assertIsNone(self.source_import.error_message)
+        self.assertIsNone(self.source_import.failed_step)
         self.assertEqual(self.source_import.has_large_files, False)
         self.assertEqual(
             self.source_import.html_url,
             "https://github.com/brix4dayz/source-import-test/import",
         )
+        self.assertIsNone(self.source_import.import_percent)
         self.assertEqual(self.source_import.large_files_count, 0)
         self.assertEqual(self.source_import.large_files_size, 0)
+        self.assertIsNone(self.source_import.message)
+        self.assertIsNone(self.source_import.project_choices)
+        self.assertIsNone(self.source_import.push_percent)
         self.assertEqual(
             self.source_import.repository_url,
             "https://api.github.com/repos/brix4dayz/source-import-test",
         )
         self.assertEqual(self.source_import.status, "complete")
         self.assertEqual(self.source_import.status_text, "Done")
+        self.assertIsNone(self.source_import.svc_root)
+        self.assertIsNone(self.source_import.svn_root)
+        self.assertIsNone(self.source_import.tfvc_project)
         self.assertEqual(
             self.source_import.url,
             "https://api.github.com/repos/brix4dayz/source-import-test/import",

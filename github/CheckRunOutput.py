@@ -16,7 +16,10 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Alexander Todorov <atodorov@otb.bg>                           #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -36,7 +39,9 @@
 #                                                                              #
 ################################################################################
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
@@ -44,6 +49,19 @@ from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 class CheckRunOutput(NonCompletableGithubObject):
     """
     This class represents the output of check run.
+
+    The OpenAPI schema can be found at
+
+    - /components/schemas/check-run/properties/output
+
+    .. warning::
+
+        As of Feb 2025 according to GitHub Support
+        "The Checks API does not support Fine-Grained PATs or classic PATs,
+        only GitHub Apps can use the Checks API". Because of this you may see
+        empty ``.summary``, ``.text`` or ``.title`` attributes. See
+        https://github.com/PyGithub/PyGithub/issues/3227
+
     """
 
     def _initAttributes(self) -> None:
@@ -76,7 +94,7 @@ class CheckRunOutput(NonCompletableGithubObject):
     def title(self) -> str:
         return self._title.value
 
-    def _useAttributes(self, attributes: Dict[str, Any]) -> None:
+    def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "annotations_count" in attributes:  # pragma no branch
             self._annotations_count = self._makeIntAttribute(attributes["annotations_count"])
         if "annotations_url" in attributes:  # pragma no branch

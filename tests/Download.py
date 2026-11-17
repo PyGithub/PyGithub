@@ -12,6 +12,8 @@
 # Copyright 2019 Wan Liuyang <tsfdye@gmail.com>                                #
 # Copyright 2020 Steve Kowalik <steven@wedontsleep.org>                        #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -72,6 +74,12 @@ class Download(Framework.TestCase):
             "https://api.github.com/repos/jacquev6/PyGithub/downloads/242550",
         )
         self.assertEqual(repr(self.download), "Download(id=242550)")
+
+    def testLazyAttributes(self):
+        download = self.g.withLazy(True).get_repo("lazy/repo").get_download(42)
+        self.assertEqual(str(download), "Download(id=42)")
+        self.assertEqual(download.id, 42)
+        self.assertEqual(download.url, "/repos/lazy/repo/downloads/42")
 
     def testDelete(self):
         self.download.delete()

@@ -1,0 +1,125 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -297,9 +297,21 @@
+     )
+     @openapi_parameter(name="owner", input=True, docstring_prepend='- "{owner}": ')
+     @openapi_parameter(name="repo", input=True, docstring_prepend='- "{repo}": ')
+-    def get_repo(self, name: str) -> Repository:
++    def get_repo(self, name: str) -> dict[str, Any]:
+         """
+-        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
++        Get a repository
++
++        The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.
++
++        > [!NOTE]
++        > - In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
++        > - To view merge-related settings, you must have the `contents:read` and `contents:write` permissions.
++
++        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/rest/repos/repos#get-a-repository>`_
++        :param name: The name of the repository in the form "{owner}/{repo}" with:
++            
++            - "{owner}": The account owner of the repository. The name is not case sensitive.
++            - "{repo}": The name of the repository without the `.git` extension. The name is not case sensitive.
+         """
+         assert isinstance(name, str), name
+         url = f"/repos/{self.login}/{name}"
+@@ -310,10 +322,27 @@
+         type: Opt[str] = NotSet,
+         sort: Opt[str] = NotSet,
+         direction: Opt[str] = NotSet,
+-    ) -> PaginatedList[Repository]:
++    ) -> PaginatedList[dict[str, Any]]:
+         """
+-        :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
++        List repositories for a user
++
++        Lists public repositories for the specified user.
++
++        :calls: `GET /users/{username}/repos <https://docs.github.com/rest/repos/repos#list-repositories-for-a-user>`_
++        :param type: Limit results to repositories of the specified type.
++        :param sort: The property to sort the results by.
++        :param direction: The order to sort by. Default: `asc` when using `full_name`, otherwise `desc`.
+         """
++        assert is_optional(type, str), type
++        assert is_optional(sort, str), sort
++        assert is_optional(direction, str), direction
++        url_parameters = NotSet.remove_unset_items(
++            {
++                "type": type,
++                "sort": sort,
++                "direction": direction,
++            }
++        )
+         assert type is NotSet or isinstance(type, str), type
+         assert sort is NotSet or isinstance(sort, str), sort
+         assert direction is NotSet or isinstance(direction, str), direction
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -478,24 +478,24 @@
+       "methods": {
+         "get_repo": {
+           "call": {
+-            "docs": "<https://docs.github.com/en/rest/reference/repos>`_",
++            "docs": "<https://docs.github.com/rest/repos/repos#get-a-repository>`_",
+             "path": "/repos/{owner}/{repo}",
+             "verb": "GET"
+           },
+           "name": "get_repo",
+           "returns": [
+-            "Repository"
++            "dict[str, Any]"
+           ]
+         },
+         "get_repos": {
+           "call": {
+-            "docs": "<https://docs.github.com/en/rest/reference/repos>`_",
++            "docs": "<https://docs.github.com/rest/repos/repos#list-repositories-for-a-user>`_",
+             "path": "/users/{username}/repos",
+             "verb": "GET"
+           },
+           "name": "get_repos",
+           "returns": [
+-            "PaginatedList[Repository]"
++            "PaginatedList[dict[str, Any]]"
+           ]
+         },
+         "get_starred": {
+@@ -3280,7 +3280,7 @@
+     "path_to_return_classes": {
+       "/repos/{owner}/{repo}": {
+         "get": [
+-          "Repository"
++          "dict[str, Any]"
+         ]
+       },
+       "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
+@@ -3293,7 +3293,7 @@
+       },
+       "/users/{username}/repos": {
+         "get": [
+-          "PaginatedList[Repository]"
++          "PaginatedList[dict[str, Any]]"
+         ]
+       },
+       "/users/{username}/starred": {
+@@ -3953,7 +3953,7 @@
+             "class": "NamedUser",
+             "name": "get_repo",
+             "returns": [
+-              "Repository"
++              "dict[str, Any]"
+             ]
+           }
+         ]
+@@ -3990,7 +3990,7 @@
+             "class": "NamedUser",
+             "name": "get_repos",
+             "returns": [
+-              "PaginatedList[Repository]"
++              "PaginatedList[dict[str, Any]]"
+             ]
+           }
+         ]

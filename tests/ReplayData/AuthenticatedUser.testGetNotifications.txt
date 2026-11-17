@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /notifications?participating=true
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4999'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '16567'), ('server', 'nginx'), ('last-modified', 'Fri, 24 Aug 2012 07:05:12 GMT'), ('connection', 'keep-alive'), ('etag', '"eb52c03081d2fc22f26ed2718921e500"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Sat, 08 Sep 2012 17:26:28 GMT'), ('content-type', 'application/json; charset=utf-8')]

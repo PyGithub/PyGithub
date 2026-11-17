@@ -1,0 +1,190 @@
+diff --unified --recursive --new-file before/github/NamedUser.py after/github/NamedUser.py
+--- before/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/NamedUser.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -24,11 +24,13 @@
+ from typing import Any, TYPE_CHECKING
+ from datetime import datetime, timezone
+ 
++import github.Repository
++from github.PaginatedList import PaginatedList
+ from github.GithubObject import CompletableGithubObject
+-from github.GithubObject import Attribute, NotSet
++from github.GithubObject import Attribute, NotSet, is_optional, method_parameter, openapi_parameter, Opt
+ 
+ if TYPE_CHECKING:
+-    pass
++    from github.Repository import Repository
+ 
+ 
+ class NamedUser(CompletableGithubObject):
+@@ -286,7 +288,49 @@
+     def user_view_type(self) -> str:
+         self._completeIfNotSet(self._user_view_type)
+         return self._user_view_type.value
+-    
++
++    @method_parameter(
++        name="name",
++        required=True,
++        merge=["owner", "repo"],
++        docstring_prepend='The name of the repository in the form "{owner}/{repo}" with:\n',
++    )
++    @openapi_parameter(name="owner", input=True, docstring_prepend='- "{owner}": ')
++    @openapi_parameter(name="repo", input=True, docstring_prepend='- "{repo}": ')
++    def get_repo(self, name: str) -> Repository:
++        """
++        :calls: `GET /repos/{owner}/{repo} <https://docs.github.com/en/rest/reference/repos>`_
++        """
++        assert isinstance(name, str), name
++        url = f"/repos/{self.login}/{name}"
++        return github.Repository.Repository(self._requester, url=url)
++
++    def get_repos(
++        self,
++        type: Opt[str] = NotSet,
++        sort: Opt[str] = NotSet,
++        direction: Opt[str] = NotSet,
++    ) -> PaginatedList[Repository]:
++        """
++        :calls: `GET /users/{username}/repos <https://docs.github.com/en/rest/reference/repos>`_
++        """
++        assert type is NotSet or isinstance(type, str), type
++        assert sort is NotSet or isinstance(sort, str), sort
++        assert direction is NotSet or isinstance(direction, str), direction
++        url_parameters = dict()
++        if type is not NotSet:
++            url_parameters["type"] = type
++        if sort is not NotSet:
++            url_parameters["sort"] = sort
++        if direction is not NotSet:
++            url_parameters["direction"] = direction
++        return github.PaginatedList.PaginatedList(
++            github.Repository.Repository,
++            self._requester,
++            f"{self.url}/repos",
++            url_parameters,
++        )
++
+     def get_starred(self, sort: Opt[str] = NotSet, direction: Opt[str] = NotSet) -> None:
+         """
+         List repositories starred by a user
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -476,6 +476,28 @@
+       ],
+       "inherited_schemas": [],
+       "methods": {
++        "get_repo": {
++          "call": {
++            "docs": "<https://docs.github.com/en/rest/reference/repos>`_",
++            "path": "/repos/{owner}/{repo}",
++            "verb": "GET"
++          },
++          "name": "get_repo",
++          "returns": [
++            "Repository"
++          ]
++        },
++        "get_repos": {
++          "call": {
++            "docs": "<https://docs.github.com/en/rest/reference/repos>`_",
++            "path": "/users/{username}/repos",
++            "verb": "GET"
++          },
++          "name": "get_repos",
++          "returns": [
++            "PaginatedList[Repository]"
++          ]
++        },
+         "get_starred": {
+           "call": {
+             "docs": "<https://docs.github.com/rest/activity/starring#list-repositories-starred-by-a-user>`_",
+@@ -3231,6 +3253,11 @@
+       ]
+     },
+     "path_to_call_methods": {
++      "/repos/{owner}/{repo}": {
++        "get": [
++          "NamedUser.get_repo"
++        ]
++      },
+       "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
+         "get": [
+           "IssueComment.get_reactions"
+@@ -3239,6 +3266,11 @@
+           "IssueComment.create_reaction"
+         ]
+       },
++      "/users/{username}/repos": {
++        "get": [
++          "NamedUser.get_repos"
++        ]
++      },
+       "/users/{username}/starred": {
+         "get": [
+           "NamedUser.get_starred"
+@@ -3246,6 +3278,11 @@
+       }
+     },
+     "path_to_return_classes": {
++      "/repos/{owner}/{repo}": {
++        "get": [
++          "Repository"
++        ]
++      },
+       "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
+         "get": [
+           "PaginatedList[Reaction]"
+@@ -3254,6 +3291,11 @@
+           "Reaction"
+         ]
+       },
++      "/users/{username}/repos": {
++        "get": [
++          "PaginatedList[Repository]"
++        ]
++      },
+       "/users/{username}/starred": {
+         "get": [
+           "None"
+@@ -3904,6 +3946,19 @@
+     }
+   },
+   "paths": {
++    "/repos/{owner}/{repo}": {
++      "GET": {
++        "methods": [
++          {
++            "class": "NamedUser",
++            "name": "get_repo",
++            "returns": [
++              "Repository"
++            ]
++          }
++        ]
++      }
++    },
+     "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
+       "GET": {
+         "methods": [
+@@ -3926,6 +3981,19 @@
+             ]
+           }
+         ]
++      }
++    },
++    "/users/{username}/repos": {
++      "GET": {
++        "methods": [
++          {
++            "class": "NamedUser",
++            "name": "get_repos",
++            "returns": [
++              "PaginatedList[Repository]"
++            ]
++          }
++        ]
+       }
+     },
+     "/users/{username}/starred": {

@@ -1,0 +1,495 @@
+diff --unified --recursive --new-file before/github/IssueComment.py after/github/IssueComment.py
+--- before/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,160 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import CompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++
++if TYPE_CHECKING:
++    pass
++
++
++class IssueComment(CompletableGithubObject):
++    """
++    This class represents IssueComment.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/issues#comments
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/issue-comment
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self._author_association: Attribute[str] = NotSet
++        self._body: Attribute[str] = NotSet
++        self._body_html: Attribute[str] = NotSet
++        self._body_text: Attribute[str] = NotSet
++        self._created_at: Attribute[datetime] = NotSet
++        self._html_url: Attribute[str] = NotSet
++        self._id: Attribute[int] = NotSet
++        self._issue_url: Attribute[str] = NotSet
++        self._node_id: Attribute[str] = NotSet
++        self._performed_via_github_app: Attribute[dict[str, Any]] = NotSet
++        self._reactions: Attribute[dict[str, Any]] = NotSet
++        self._updated_at: Attribute[datetime] = NotSet
++        self._user: Attribute[dict[str, Any]] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def author_association(self) -> str:
++        self._completeIfNotSet(self._author_association)
++        return self._author_association.value
++
++    @property
++    def body(self) -> str:
++        self._completeIfNotSet(self._body)
++        return self._body.value
++
++    @property
++    def body_html(self) -> str:
++        self._completeIfNotSet(self._body_html)
++        return self._body_html.value
++
++    @property
++    def body_text(self) -> str:
++        self._completeIfNotSet(self._body_text)
++        return self._body_text.value
++
++    @property
++    def created_at(self) -> datetime:
++        self._completeIfNotSet(self._created_at)
++        return self._created_at.value
++
++    @property
++    def html_url(self) -> str:
++        self._completeIfNotSet(self._html_url)
++        return self._html_url.value
++
++    @property
++    def id(self) -> int:
++        self._completeIfNotSet(self._id)
++        return self._id.value
++
++    @property
++    def issue_url(self) -> str:
++        self._completeIfNotSet(self._issue_url)
++        return self._issue_url.value
++
++    @property
++    def node_id(self) -> str:
++        self._completeIfNotSet(self._node_id)
++        return self._node_id.value
++
++    @property
++    def performed_via_github_app(self) -> dict[str, Any]:
++        self._completeIfNotSet(self._performed_via_github_app)
++        return self._performed_via_github_app.value
++
++    @property
++    def reactions(self) -> dict[str, Any]:
++        self._completeIfNotSet(self._reactions)
++        return self._reactions.value
++
++    @property
++    def updated_at(self) -> datetime:
++        self._completeIfNotSet(self._updated_at)
++        return self._updated_at.value
++
++    @property
++    def user(self) -> dict[str, Any]:
++        self._completeIfNotSet(self._user)
++        return self._user.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "author_association" in attributes:  # pragma no branch
++            self._author_association = self._makeStringAttribute(attributes["author_association"])
++        if "body" in attributes:  # pragma no branch
++            self._body = self._makeStringAttribute(attributes["body"])
++        if "body_html" in attributes:  # pragma no branch
++            self._body_html = self._makeStringAttribute(attributes["body_html"])
++        if "body_text" in attributes:  # pragma no branch
++            self._body_text = self._makeStringAttribute(attributes["body_text"])
++        if "created_at" in attributes:  # pragma no branch
++            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
++        if "html_url" in attributes:  # pragma no branch
++            self._html_url = self._makeStringAttribute(attributes["html_url"])
++        if "id" in attributes:  # pragma no branch
++            self._id = self._makeIntAttribute(attributes["id"])
++        if "issue_url" in attributes:  # pragma no branch
++            self._issue_url = self._makeStringAttribute(attributes["issue_url"])
++        if "node_id" in attributes:  # pragma no branch
++            self._node_id = self._makeStringAttribute(attributes["node_id"])
++        if "performed_via_github_app" in attributes:  # pragma no branch
++            self._performed_via_github_app = self._makeDictAttribute(attributes["performed_via_github_app"])
++        if "reactions" in attributes:  # pragma no branch
++            self._reactions = self._makeDictAttribute(attributes["reactions"])
++        if "updated_at" in attributes:  # pragma no branch
++            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
++        if "user" in attributes:  # pragma no branch
++            self._user = self._makeDictAttribute(attributes["user"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -207,6 +207,236 @@
+       "schemas": [],
+       "test_filename": "tests/GithubObject.py"
+     },
++    "IssueComment": {
++      "bases": [
++        "CompletableGithubObject"
++      ],
++      "docstring": "This class represents IssueComment.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/issues#comments\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/issue-comment",
++      "filename": "github/IssueComment.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "CompletableGithubObject",
++        "GithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "IssueComment",
++      "name": "IssueComment",
++      "package": "github",
++      "properties": {
++        "author_association": {
++          "name": "author_association",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/author-association"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "$ref": "#/components/schemas/author-association"
++            }
++          }
++        },
++        "body": {
++          "name": "body",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "Contents of the issue comment",
++            "example": "What version of Safari were you using when you observed this bug?",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "description": "Contents of the issue comment",
++              "example": "What version of Safari were you using when you observed this bug?",
++              "type": "string"
++            }
++          }
++        },
++        "body_html": {
++          "name": "body_html",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "type": "string"
++            }
++          }
++        },
++        "body_text": {
++          "name": "body_text",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "type": "string"
++            }
++          }
++        },
++        "created_at": {
++          "name": "created_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "example": "2011-04-14T16:00:49Z",
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "example": "2011-04-14T16:00:49Z",
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        },
++        "html_url": {
++          "name": "html_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "id": {
++          "name": "id",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "description": "Unique identifier of the issue comment",
++            "example": 42,
++            "format": "int64",
++            "type": "integer"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "description": "Unique identifier of the issue comment",
++              "example": 42,
++              "format": "int64",
++              "type": "integer"
++            }
++          }
++        },
++        "issue_url": {
++          "name": "issue_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "node_id": {
++          "name": "node_id",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "type": "string"
++            }
++          }
++        },
++        "performed_via_github_app": {
++          "name": "performed_via_github_app",
++          "returns": [
++            "dict[str, Any]"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-integration"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "$ref": "#/components/schemas/nullable-integration"
++            }
++          }
++        },
++        "reactions": {
++          "name": "reactions",
++          "returns": [
++            "dict[str, Any]"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/reaction-rollup"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "$ref": "#/components/schemas/reaction-rollup"
++            }
++          }
++        },
++        "updated_at": {
++          "name": "updated_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "example": "2011-04-14T16:00:49Z",
++            "format": "date-time",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "example": "2011-04-14T16:00:49Z",
++              "format": "date-time",
++              "type": "string"
++            }
++          }
++        },
++        "user": {
++          "name": "user",
++          "returns": [
++            "dict[str, Any]"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-simple-user"
++          },
++          "schemas": {
++            "/components/schemas/issue-comment": {
++              "$ref": "#/components/schemas/nullable-simple-user"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/issue-comment"
++      ],
++      "test_filename": "tests/IssueComment.py"
++    },
+     "NamedUser": {
+       "bases": [
+         "CompletableGithubObject"
+@@ -996,6 +1226,7 @@
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
+         "GithubObject",
++        "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject"
+@@ -1007,12 +1238,14 @@
+       ],
+       "CompletableGithubObject": [
+         "CompletableGithubObjectWithPaginatedProperty",
++        "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult"
+       ],
+       "GithubObject": [
+         "CompletableGithubObject",
+         "CompletableGithubObjectWithPaginatedProperty",
++        "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult",
+         "NonCompletableGithubObject"
+@@ -1649,6 +1882,9 @@
+       ]
+     },
+     "schema_to_classes": {
++      "/components/schemas/issue-comment": [
++        "IssueComment"
++      ],
+       "/components/schemas/public-user": [
+         "NamedUser"
+       ],
+diff --unified --recursive --new-file before/tests/IssueComment.py after/tests/IssueComment.py
+--- before/tests/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/IssueComment.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,54 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class IssueComment(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type IssueComment and assign to self.ic, then run:
++        #   pytest ./tests/IssueComment.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/IssueComment.py testAttributes
++        #   pre-commit run --all-files
++        self.ic = None
++
++    def testAttributes(self):
++        ic = self.ic
++        self.assertEqual(ic.__repr__(), "")
++        self.assertEqual(ic.author_association, "")
++        self.assertEqual(ic.body, "")
++        self.assertEqual(ic.body_html, "")
++        self.assertEqual(ic.body_text, "")
++        self.assertEqual(ic.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(ic.html_url, "")
++        self.assertEqual(ic.id, 0)
++        self.assertEqual(ic.issue_url, "")
++        self.assertEqual(ic.node_id, "")
++        self.assertEqual(ic.performed_via_github_app, "dict[str, Any]")
++        self.assertEqual(ic.reactions, "dict[str, Any]")
++        self.assertEqual(ic.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(ic.url, "")
++        self.assertEqual(ic.user, "dict[str, Any]")

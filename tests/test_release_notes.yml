@@ -1,0 +1,13 @@
+# This file is needed for generating release notes for the Repository::testGenerateReleaseNotesWithAllArguments test
+# See https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+
+# This is used to generate the ReplayData as used by Repository::testGenerateReleaseNotesWithAllArguments.
+# If you need to regenerate this ReplayData files, you will need to copy this yaml file
+# into the `.github` directory on the main branch of your forked repository.
+# The GitHub API expects to see this file in the `.github` directory when generating release notes.
+
+changelog:
+  categories:
+    - title: Features
+      labels:
+        - '*'

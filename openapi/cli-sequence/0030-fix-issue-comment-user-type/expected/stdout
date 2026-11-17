@@ -1,0 +1,8 @@
++ patch github/IssueComment.py ../IssueComment.py.patch
+patching file github/IssueComment.py
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 3 Python files
+Indexed 12 classes
+Indexed 0 paths
+Indexed 3 schemas
+Indexing OpenAPI spec

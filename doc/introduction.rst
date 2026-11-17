@@ -18,7 +18,7 @@ First create a Github instance::
     # Authentication is defined via github.Auth
     from github import Auth
 
-    # using an access token
+    # Using an access token
     auth = Auth.Token("access_token")
 
     # Public Web Github
@@ -26,6 +26,12 @@ First create a Github instance::
 
     # Github Enterprise with custom hostname
     g = Github(auth=auth, base_url="https://{hostname}/api/v3")
+
+    # Use lazy mode (see https://pygithub.readthedocs.io/en/stable/examples/LazyMode.html)
+    g = Github(auth=auth, lazy=True)
+
+    # Set a Github API version (see https://docs.github.com/en/rest/about-the-rest-api/api-versions)
+    g = Github(auth=auth, api_version="2022-11-28")
 
 Then play with your Github objects::
 
@@ -58,7 +64,17 @@ What next?
 
 You need to use a Github API and wonder which class implements it? `Reference of APIs <https://pygithub.readthedocs.io/en/latest/apis.html>`__.
 
-You want all the details about PyGithub classes? `Reference of Classes <https://pygithub.readthedocs.io/en/latest/github_objects.html>`__.
+Contributing
+------------
+
+This project is community-driven. New PyGithub classes, methods and fixes are authored by the community, then reviewed and released by the project maintainers.
+
+See our :doc:`development` guide for further details.
+
+Sponsoring
+----------
+
+Please consider sponsoring this project. Look out for the "Sponsor this project" area on the `PyGithub project page <https://github.com/PyGithub/PyGithub>`__.
 
 Projects using PyGithub
 -----------------------

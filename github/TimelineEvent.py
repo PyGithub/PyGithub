@@ -20,7 +20,10 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
+# Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -43,12 +46,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.NamedUser
 import github.TimelineEventSource
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
+
+if TYPE_CHECKING:
+    from github.NamedUser import NamedUser
+    from github.TimelineEventSource import TimelineEventSource
 
 
 class TimelineEvent(NonCompletableGithubObject):
@@ -58,29 +65,49 @@ class TimelineEvent(NonCompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/issues#timeline
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/timeline-issue-events
+
     """
 
     def _initAttributes(self) -> None:
-        self._actor: Attribute[github.NamedUser.NamedUser] = NotSet
+        self._actor: Attribute[NamedUser] = NotSet
         self._commit_id: Attribute[str] = NotSet
+        self._commit_url: Attribute[str] = NotSet
         self._created_at: Attribute[datetime] = NotSet
         self._event: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._node_id: Attribute[str] = NotSet
-        self._commit_url: Attribute[str] = NotSet
-        self._source: Attribute[github.TimelineEventSource.TimelineEventSource] = NotSet
+        self._source: Attribute[TimelineEventSource] = NotSet
         self._url: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"id": self._id.value})
 
     @property
-    def actor(self) -> github.NamedUser.NamedUser:
+    def actor(self) -> NamedUser:
         return self._actor.value
+
+    @property
+    def author_association(self) -> str | None:
+        if self.event == "commented" and self._author_association is not NotSet:
+            return self._author_association.value
+        return None
+
+    @property
+    def body(self) -> str | None:
+        if self.event == "commented" and self._body is not NotSet:
+            return self._body.value
+        return None
 
     @property
     def commit_id(self) -> str:
         return self._commit_id.value
+
+    @property
+    def commit_url(self) -> str:
+        return self._commit_url.value
 
     @property
     def created_at(self) -> datetime:
@@ -99,26 +126,10 @@ class TimelineEvent(NonCompletableGithubObject):
         return self._node_id.value
 
     @property
-    def commit_url(self) -> str:
-        return self._commit_url.value
-
-    @property
-    def source(self) -> github.TimelineEventSource.TimelineEventSource | None:
+    def source(self) -> TimelineEventSource | None:
         # only available on `cross-referenced` events.
         if self.event == "cross-referenced" and self._source is not NotSet:
             return self._source.value
-        return None
-
-    @property
-    def body(self) -> str | None:
-        if self.event == "commented" and self._body is not NotSet:
-            return self._body.value
-        return None
-
-    @property
-    def author_association(self) -> str | None:
-        if self.event == "commented" and self._author_association is not NotSet:
-            return self._author_association.value
         return None
 
     @property
@@ -128,8 +139,14 @@ class TimelineEvent(NonCompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "actor" in attributes:  # pragma no branch
             self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
+        if "author_association" in attributes:  # pragma no branch
+            self._author_association = self._makeStringAttribute(attributes["author_association"])
+        if "body" in attributes:  # pragma no branch
+            self._body = self._makeStringAttribute(attributes["body"])
         if "commit_id" in attributes:  # pragma no branch
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
+        if "commit_url" in attributes:  # pragma no branch
+            self._commit_url = self._makeStringAttribute(attributes["commit_url"])
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "event" in attributes:  # pragma no branch
@@ -138,15 +155,9 @@ class TimelineEvent(NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
-        if "commit_url" in attributes:  # pragma no branch
-            self._commit_url = self._makeStringAttribute(attributes["commit_url"])
         if "source" in attributes:  # pragma no branch
             self._source = self._makeClassAttribute(
                 github.TimelineEventSource.TimelineEventSource, attributes["source"]
             )
-        if "body" in attributes:  # pragma no branch
-            self._body = self._makeStringAttribute(attributes["body"])
-        if "author_association" in attributes:  # pragma no branch
-            self._author_association = self._makeStringAttribute(attributes["author_association"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

@@ -2,6 +2,7 @@
 #                                                                              #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Jeppe Fihl-Pearson <tenzer@tenzer.dk>                         #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Xavi Vega <xabi1309@gmail.com>                                #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -22,6 +23,8 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from . import Framework
@@ -35,6 +38,7 @@ class WorkflowJob(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.job.id, 11421878319)
+        self.assertEqual(self.job.run_attempt, 1)
         self.assertEqual(self.job.run_id, 4205440316)
         self.assertEqual(
             self.job.run_url,
@@ -88,5 +92,6 @@ class WorkflowJob(Framework.TestCase):
         self.assertEqual(self.job.created_at, created_at)
         self.assertEqual(self.job.head_branch, "tz-aware-2")
         self.assertEqual(self.job.labels, ["ubuntu-latest"])
+        self.assertEqual(self.job.workflow_name, "CI")
         self.assertEqual(self.job.run_attempt, 1)
         self.assertEqual(self.job.workflow_name, "CI")

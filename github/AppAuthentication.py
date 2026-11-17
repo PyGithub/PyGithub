@@ -14,6 +14,8 @@
 # Copyright 2023 Denis Blanchette <dblanchette@coveo.com>                      #
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
+# Copyright 2025 Christoph Reiter <reiter.christoph@gmail.com>                 #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -33,22 +35,21 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import annotations
 
-from typing import Dict, Optional, Union
-
-import deprecated
+from typing_extensions import deprecated
 
 from github.Auth import AppAuth, AppInstallationAuth
 
 
-@deprecated.deprecated("Use github.Auth.AppInstallationAuth instead")
+@deprecated("Use github.Auth.AppInstallationAuth instead")
 class AppAuthentication(AppInstallationAuth):
     def __init__(
         self,
-        app_id: Union[int, str],
+        app_id: int | str,
         private_key: str,
         installation_id: int,
-        token_permissions: Optional[Dict[str, str]] = None,
+        token_permissions: dict[str, str] | None = None,
     ):
         super().__init__(
             app_auth=AppAuth(app_id, private_key),

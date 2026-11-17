@@ -18,7 +18,9 @@
 # Copyright 2023 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2023 Trim21 <trim21.me@gmail.com>                                  #
 # Copyright 2023 alson <git@alm.nufan.net>                                     #
+# Copyright 2024 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2024 Jirka Borovec <6035284+Borda@users.noreply.github.com>        #
+# Copyright 2025 Enrico Minack <github@enrico.minack.dev>                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.readthedocs.io/                                              #
@@ -40,20 +42,26 @@
 
 from __future__ import annotations
 
+import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
+import github.DeploymentBranchPolicy
 import github.EnvironmentDeploymentBranchPolicy
 import github.EnvironmentProtectionRule
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+import github.PublicKey
+import github.Secret
+import github.Variable
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
-from github.PublicKey import PublicKey
-from github.Secret import Secret
-from github.Variable import Variable
 
 if TYPE_CHECKING:
+    from github.DeploymentBranchPolicy import DeploymentBranchPolicy
     from github.EnvironmentDeploymentBranchPolicy import EnvironmentDeploymentBranchPolicy
     from github.EnvironmentProtectionRule import EnvironmentProtectionRule
+    from github.PublicKey import PublicKey
+    from github.Secret import Secret
+    from github.Variable import Variable
 
 
 class Environment(CompletableGithubObject):
@@ -63,19 +71,23 @@ class Environment(CompletableGithubObject):
     The reference can be found here
     https://docs.github.com/en/rest/reference/deployments#environments
 
+    The OpenAPI schema can be found at
+
+    - /components/schemas/environment
+
     """
 
     def _initAttributes(self) -> None:
         self._created_at: Attribute[datetime] = NotSet
+        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
+        self._environments_url: Attribute[str] = NotSet
         self._html_url: Attribute[str] = NotSet
         self._id: Attribute[int] = NotSet
         self._name: Attribute[str] = NotSet
         self._node_id: Attribute[str] = NotSet
         self._protection_rules: Attribute[list[EnvironmentProtectionRule]] = NotSet
         self._updated_at: Attribute[datetime] = NotSet
-        self._environments_url: Attribute[str] = NotSet
         self._url: Attribute[str] = NotSet
-        self._deployment_branch_policy: Attribute[EnvironmentDeploymentBranchPolicy] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"name": self._name.value})
@@ -84,6 +96,20 @@ class Environment(CompletableGithubObject):
     def created_at(self) -> datetime:
         self._completeIfNotSet(self._created_at)
         return self._created_at.value
+
+    @property
+    def deployment_branch_policy(
+        self,
+    ) -> EnvironmentDeploymentBranchPolicy:
+        self._completeIfNotSet(self._deployment_branch_policy)
+        return self._deployment_branch_policy.value
+
+    @property
+    def environments_url(self) -> str:
+        """
+        :type: string
+        """
+        return self._environments_url.value
 
     @property
     def html_url(self) -> str:
@@ -118,13 +144,6 @@ class Environment(CompletableGithubObject):
         return self._updated_at.value
 
     @property
-    def environments_url(self) -> str:
-        """
-        :type: string
-        """
-        return self._environments_url.value
-
-    @property
     def url(self) -> str:
         """
         :type: string
@@ -134,26 +153,19 @@ class Environment(CompletableGithubObject):
             self._url = self._makeStringAttribute(self.environments_url + "/" + self.name)
         return self._url.value
 
-    @property
-    def deployment_branch_policy(
-        self,
-    ) -> EnvironmentDeploymentBranchPolicy:
-        self._completeIfNotSet(self._deployment_branch_policy)
-        return self._deployment_branch_policy.value
-
     def get_public_key(self) -> PublicKey:
         """
-        :calls: `GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/public-key <https://docs.github.com/en/rest/reference#get-a-repository-public-key>`_
         :rtype: :class:`PublicKey`
         """
         # https://stackoverflow.com/a/76474814
         # https://docs.github.com/en/rest/secrets?apiVersion=2022-11-28#get-an-environment-public-key
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/secrets/public-key")
-        return PublicKey(self._requester, headers, data, completed=True)
+        return github.PublicKey.PublicKey(self._requester, headers, data, completed=True)
 
     def create_secret(self, secret_name: str, unencrypted_value: str) -> Secret:
         """
-        :calls: `PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
+        :calls: `PUT /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-a-repository-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
         assert isinstance(unencrypted_value, str), unencrypted_value
@@ -163,23 +175,25 @@ class Environment(CompletableGithubObject):
             "key_id": public_key.key_id,
             "encrypted_value": payload,
         }
-        self._requester.requestJsonAndCheck("PUT", f"{self.url}/secrets/{secret_name}", input=put_parameters)
-        return Secret(
-            requester=self._requester,
-            headers={},
-            attributes={
-                "name": secret_name,
-                "url": f"{self.url}/secrets/{secret_name}",
-            },
+        quoted_secret_name = urllib.parse.quote(secret_name, safe="")
+        url = f"{self.url}/secrets/{quoted_secret_name}"
+        self._requester.requestJsonAndCheck("PUT", url, input=put_parameters)
+        return github.Secret.Secret(
+            self._requester,
+            url=url,
+            attributes={"name": secret_name},
             completed=False,
         )
 
     def get_secrets(self) -> PaginatedList[Secret]:
         """
         Gets all repository secrets.
+
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets </repos/{owner}/{repo}/environments/{environment_name}/secrets>`_
+
         """
         return PaginatedList(
-            Secret,
+            github.Secret.Secret,
             self._requester,
             f"{self.url}/secrets",
             None,
@@ -189,19 +203,15 @@ class Environment(CompletableGithubObject):
 
     def get_secret(self, secret_name: str) -> Secret:
         """
-        :calls: 'GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/secrets#get-an-organization-secret>`_
         """
         assert isinstance(secret_name, str), secret_name
-        return Secret(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/secrets/{secret_name}"},
-            completed=False,
-        )
+        secret_name = urllib.parse.quote(secret_name, safe="")
+        return github.Secret.Secret(self._requester, url=f"{self.url}/secrets/{secret_name}")
 
     def create_variable(self, variable_name: str, value: str) -> Variable:
         """
-        :calls: `POST /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
+        :calls: `POST /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/en/rest/variables#create-a-repository-variable>`_
         """
         assert isinstance(variable_name, str), variable_name
         assert isinstance(value, str), value
@@ -210,13 +220,15 @@ class Environment(CompletableGithubObject):
             "value": value,
         }
         self._requester.requestJsonAndCheck("POST", f"{self.url}/variables", input=post_parameters)
-        return Variable(
+
+        quoted_variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/variables/{quoted_variable_name}"
+        return github.Variable.Variable(
             self._requester,
-            headers={},
+            url=url,
             attributes={
                 "name": variable_name,
                 "value": value,
-                "url": f"{self.url}/variables/{variable_name}",
             },
             completed=False,
         )
@@ -226,7 +238,7 @@ class Environment(CompletableGithubObject):
         Gets all repository variables :rtype: :class:`PaginatedList` of :class:`Variable`
         """
         return PaginatedList(
-            Variable,
+            github.Variable.Variable,
             self._requester,
             f"{self.url}/variables",
             None,
@@ -236,21 +248,18 @@ class Environment(CompletableGithubObject):
 
     def get_variable(self, variable_name: str) -> Variable:
         """
-        :calls: 'GET /orgs/{org}/variables/{variable_name} <https://docs.github.com/en/rest/variables#get-an-organization-variable>`_
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/rest/actions/variables#get-an-environment-variable>`_
         :param variable_name: string
         :rtype: Variable
         """
         assert isinstance(variable_name, str), variable_name
-        return Variable(
-            requester=self._requester,
-            headers={},
-            attributes={"url": f"{self.url}/variables/{variable_name}"},
-            completed=False,
-        )
+        variable_name = urllib.parse.quote(variable_name, safe="")
+        url = f"{self.url}/variables/{variable_name}"
+        return github.Variable.Variable(self._requester, url=url)
 
     def delete_secret(self, secret_name: str) -> bool:
         """
-        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/reference#delete-a-repository-secret>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name} <https://docs.github.com/en/rest/reference#delete-a-repository-secret>`_
         :param secret_name: string
         :rtype: bool
         """
@@ -260,7 +269,7 @@ class Environment(CompletableGithubObject):
 
     def delete_variable(self, variable_name: str) -> bool:
         """
-        :calls: `DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{variable_name} <https://docs.github.com/en/rest/reference#delete-a-repository-variable>`_
+        :calls: `DELETE /repos/{owner}/{repo}/environments/{environment_name}/variables/{name} <https://docs.github.com/en/rest/reference#delete-a-repository-variable>`_
         :param variable_name: string
         :rtype: bool
         """
@@ -268,15 +277,65 @@ class Environment(CompletableGithubObject):
         status, headers, data = self._requester.requestJson("DELETE", f"{self.url}/variables/{variable_name}")
         return status == 204
 
+    def get_deployment_branch_policies(self) -> PaginatedList[DeploymentBranchPolicy]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies <https://docs.github.com/en/rest/deployments/branch-policies#list-deployment-branch-policies>`_
+        """
+        return PaginatedList(
+            github.DeploymentBranchPolicy.DeploymentBranchPolicy,
+            self._requester,
+            f"{self.url}/deployment-branch-policies",
+            None,
+            list_item="branch_policies",
+            attributesTransformer=PaginatedList.override_attributes(
+                {"branch_policies_url": f"{self.url}/deployment-branch-policies"}
+            ),
+        )
+
+    def get_deployment_branch_policy(self, id: int) -> DeploymentBranchPolicy:
+        """
+        :calls: `GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id} <https://docs.github.com/en/rest/deployments/branch-policies#get-a-deployment-branch-policy>`_
+        """
+        assert isinstance(id, int), id
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/deployment-branch-policies/{id}")
+        data["branch_policies_url"] = f"{self.url}/deployment-branch-policies"
+        return github.DeploymentBranchPolicy.DeploymentBranchPolicy(self._requester, headers, data)
+
+    def create_deployment_branch_policy(self, name: str, type: Opt[str] = NotSet) -> DeploymentBranchPolicy:
+        """
+        :calls: `POST /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies <https://docs.github.com/en/rest/deployments/branch-policies#create-a-deployment-branch-policy>`_
+        :param name: name pattern that branches or tags must match to be deployed to the environment
+        :param type: whether the pattern is for a ``branch`` or a ``tag``, GitHub uses ``branch`` if it is not given
+        """
+        assert isinstance(name, str), name
+        assert is_optional(type, str), type
+        post_parameters = NotSet.remove_unset_items({"name": name, "type": type})
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST", f"{self.url}/deployment-branch-policies", input=post_parameters
+        )
+        data["branch_policies_url"] = f"{self.url}/deployment-branch-policies"
+        return github.DeploymentBranchPolicy.DeploymentBranchPolicy(self._requester, headers, data)
+
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "created_at" in attributes:  # pragma no branch
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "deployment_branch_policy" in attributes:  # pragma no branch
+            self._deployment_branch_policy = self._makeClassAttribute(
+                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy,
+                attributes["deployment_branch_policy"],
+            )
+        if "environments_url" in attributes:
+            self._environments_url = self._makeStringAttribute(attributes["environments_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        elif "url" in attributes and attributes["url"]:
+            quoted_name = attributes["url"].split("/")[-1]
+            name = urllib.parse.unquote(quoted_name)
+            self._name = self._makeStringAttribute(name)
         if "node_id" in attributes:  # pragma no branch
             self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "protection_rules" in attributes:  # pragma no branch
@@ -286,12 +345,5 @@ class Environment(CompletableGithubObject):
             )
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
-        if "environments_url" in attributes:
-            self._environments_url = self._makeStringAttribute(attributes["environments_url"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "deployment_branch_policy" in attributes:  # pragma no branch
-            self._deployment_branch_policy = self._makeClassAttribute(
-                github.EnvironmentDeploymentBranchPolicy.EnvironmentDeploymentBranchPolicy,
-                attributes["deployment_branch_policy"],
-            )

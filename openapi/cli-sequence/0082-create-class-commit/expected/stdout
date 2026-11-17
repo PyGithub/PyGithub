@@ -1,0 +1,320 @@
++ python scripts/openapi.py --dry-run create class --parent CompletableGithubObjectWithPaginatedProperty --tests github openapi.spec.json openapi.index Commit https://docs.github.com/en/rest/commits/commits#get-a-commit /components/schemas/commit /components/schemas/commit/properties/parents/items /components/schemas/commit-search-result-item/properties/commit /components/schemas/commit-search-result-item/properties/parents/items
+Creating class github.Commit.Commit with parent github.GithubObject.CompletableGithubObjectWithPaginatedProperty in ./github/Commit.py
+Updating temporary index
+Indexing 8 Python files
+Indexed 17 classes
+Indexed 4 paths
+Indexed 22 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Commit
+Applying spec openapi.spec.json to github.Commit.Commit (github/Commit.py)
+Applying schema /components/schemas/commit
+Applying schema /components/schemas/commit/properties/parents/items
+Applying schema /components/schemas/commit-search-result-item/properties/commit
+Applying schema /components/schemas/commit-search-result-item/properties/parents/items
+Class Commit changed
+Test tests/Commit.py changed
+
+./github/Commit.py:
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++import github.GitAuthor
++import github.GitCommit
++
++from github.GithubObject import CompletableGithubObjectWithPaginatedProperty
++from github.GithubObject import Attribute, NotSet
++import github.NamedUser
++
++if TYPE_CHECKING:
++    from github.GitAuthor import GitAuthor
++    from github.NamedUser import NamedUser
++    from github.GitCommit import GitCommit
++    pass
++
++
++class Commit(CompletableGithubObjectWithPaginatedProperty):
++    """
++    This class represents Commit.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/commits/commits#get-a-commit
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/commit
++    - /components/schemas/commit/properties/parents/items
++    - /components/schemas/commit-search-result-item/properties/commit
++    - /components/schemas/commit-search-result-item/properties/parents/items
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self._author: Attribute[NamedUser] = NotSet
++        self._comment_count: Attribute[int] = NotSet
++        self._comments_url: Attribute[str] = NotSet
++        self._commit: Attribute[GitCommit] = NotSet
++        self._committer: Attribute[NamedUser] = NotSet
++        self._html_url: Attribute[str] = NotSet
++        self._message: Attribute[str] = NotSet
++        self._node_id: Attribute[str] = NotSet
++        self._sha: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def author(self) -> NamedUser:
++        self._completeIfNotSet(self._author)
++        return self._author.value
++
++    @property
++    def comment_count(self) -> int:
++        self._completeIfNotSet(self._comment_count)
++        return self._comment_count.value
++
++    @property
++    def comments_url(self) -> str:
++        self._completeIfNotSet(self._comments_url)
++        return self._comments_url.value
++
++    @property
++    def commit(self) -> GitCommit:
++        self._completeIfNotSet(self._commit)
++        return self._commit.value
++
++    @property
++    def committer(self) -> NamedUser:
++        self._completeIfNotSet(self._committer)
++        return self._committer.value
++
++    @property
++    def html_url(self) -> str:
++        self._completeIfNotSet(self._html_url)
++        return self._html_url.value
++
++    @property
++    def message(self) -> str:
++        self._completeIfNotSet(self._message)
++        return self._message.value
++
++    @property
++    def node_id(self) -> str:
++        self._completeIfNotSet(self._node_id)
++        return self._node_id.value
++
++    @property
++    def sha(self) -> str:
++        self._completeIfNotSet(self._sha)
++        return self._sha.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "author" in attributes:  # pragma no branch
++            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
++        if "comment_count" in attributes:  # pragma no branch
++            self._comment_count = self._makeIntAttribute(attributes["comment_count"])
++        if "comments_url" in attributes:  # pragma no branch
++            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
++        if "commit" in attributes:  # pragma no branch
++            self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
++        if "committer" in attributes:  # pragma no branch
++            self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
++        if "html_url" in attributes:  # pragma no branch
++            self._html_url = self._makeStringAttribute(attributes["html_url"])
++        if "message" in attributes:  # pragma no branch
++            self._message = self._makeStringAttribute(attributes["message"])
++        if "node_id" in attributes:  # pragma no branch
++            self._node_id = self._makeStringAttribute(attributes["node_id"])
++        if "sha" in attributes:  # pragma no branch
++            self._sha = self._makeStringAttribute(attributes["sha"])
++
+
+./tests/Commit.py:
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class Commit(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type Commit and assign to self.c, then run:
++        #   pytest ./tests/Commit.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/Commit.py testAttributes
++        #   pre-commit run --all-files
++        self.c = None
++
++    def testAttributes(self):
++        c = self.c
++        self.assertEqual(c.__repr__(), "")
++        self.assertEqual(c.author.some_attribute, "")
++        self.assertEqual(c.comment_count, 0)
++        self.assertEqual(c.comments_url, "")
++        self.assertEqual(c.commit.some_attribute, "")
++        self.assertEqual(c.committer.some_attribute, "")
++        self.assertEqual(c.html_url, "")
++        self.assertEqual(c.message, "")
++        self.assertEqual(c.node_id, "")
++        self.assertEqual(c.sha, "")
++        self.assertEqual(c.url, "")
++ python scripts/openapi.py create class --parent CompletableGithubObjectWithPaginatedProperty --tests github openapi.spec.json openapi.index Commit https://docs.github.com/en/rest/commits/commits#get-a-commit /components/schemas/commit /components/schemas/commit/properties/parents/items /components/schemas/commit-search-result-item/properties/commit /components/schemas/commit-search-result-item/properties/parents/items
+Creating class github.Commit.Commit with parent github.GithubObject.CompletableGithubObjectWithPaginatedProperty in ./github/Commit.py
+Updating index
+Indexing 8 Python files
+Indexed 17 classes
+Indexed 4 paths
+Indexed 22 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Commit
+Applying spec openapi.spec.json to github.Commit.Commit (github/Commit.py)
+Applying schema /components/schemas/commit
+Applying schema /components/schemas/commit/properties/parents/items
+Applying schema /components/schemas/commit-search-result-item/properties/commit
+Applying schema /components/schemas/commit-search-result-item/properties/parents/items
+Class Commit changed
+Test tests/Commit.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 8 Python files
+Indexed 17 classes
+Indexed 4 paths
+Indexed 22 schemas
+Indexing OpenAPI spec
++ python scripts/openapi.py --dry-run apply properties --tests github openapi.spec.json openapi.index Commit
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Commit
+Applying spec openapi.spec.json to github.Commit.Commit (github/Commit.py)
+Applying schema /components/schemas/commit
+Diff:
+--- 
++++ 
+@@ -31,6 +31,7 @@
+ 
+ if TYPE_CHECKING:
+     from github.GitAuthor import GitAuthor
++    from github.GitCommit import GitCommit
+     from github.NamedUser import NamedUser
+     from github.GitCommit import GitCommit
+     pass
+@@ -62,6 +63,7 @@
+         self._html_url: Attribute[str] = NotSet
+         self._message: Attribute[str] = NotSet
+         self._node_id: Attribute[str] = NotSet
++        self._parents: Attribute[list[Commit]] = NotSet
+         self._sha: Attribute[str] = NotSet
+ 
+     def __repr__(self) -> str:
+@@ -109,6 +111,11 @@
+         return self._node_id.value
+ 
+     @property
++    def parents(self) -> list[Commit]:
++        self._completeIfNotSet(self._parents)
++        return self._parents.value
++
++    @property
+     def sha(self) -> str:
+         self._completeIfNotSet(self._sha)
+         return self._sha.value
+@@ -131,6 +138,8 @@
+             self._message = self._makeStringAttribute(attributes["message"])
+         if "node_id" in attributes:  # pragma no branch
+             self._node_id = self._makeStringAttribute(attributes["node_id"])
++        if "parents" in attributes:  # pragma no branch
++            self._parents = self._makeListOfClassesAttribute(github.Commit.Commit, attributes["parents"])
+         if "sha" in attributes:  # pragma no branch
+             self._sha = self._makeStringAttribute(attributes["sha"])
+ 
+
+Diff:
+--- 
++++ 
+@@ -46,5 +46,6 @@
+         self.assertEqual(c.html_url, "")
+         self.assertEqual(c.message, "")
+         self.assertEqual(c.node_id, "")
++        self.assertEqual(c.parents[0].some_attribute, "")
+         self.assertEqual(c.sha, "")
+         self.assertEqual(c.url, "")
+
+Applying schema /components/schemas/commit/properties/parents/items
+Diff:
+
+Diff:
+
+Applying schema /components/schemas/commit-search-result-item/properties/commit
+Diff:
+
+Diff:
+
+Applying schema /components/schemas/commit-search-result-item/properties/parents/items
+Diff:
+
+Diff:
+
+Class Commit changed
+Test tests/Commit.py changed
++ python scripts/openapi.py apply properties --tests github openapi.spec.json openapi.index Commit
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class Commit
+Applying spec openapi.spec.json to github.Commit.Commit (github/Commit.py)
+Applying schema /components/schemas/commit
+Applying schema /components/schemas/commit/properties/parents/items
+Applying schema /components/schemas/commit-search-result-item/properties/commit
+Applying schema /components/schemas/commit-search-result-item/properties/parents/items
+Class Commit changed
+Test tests/Commit.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 8 Python files
+Indexed 17 classes
+Indexed 4 paths
+Indexed 22 schemas
+Indexing OpenAPI spec
