@@ -66,3 +66,19 @@ class PublicKey(Framework.TestCase):
             repr(self.public_key),
             'PublicKey(key_id=568250167242549743, key="u5e1Z25+z8pmgVVt5Pd8k0z/sKpVL1MXYtRAecE4vm8=")',
         )
+
+    @Framework.requires_nacl
+    def testEncryptWithNacl(self):
+        with self.replayData("PublicKey.testAttributes.txt"):
+            public_key = self.g.get_user().get_repo("PyGithub").get_public_key()
+
+        encrypted = public_key.encrypt("value")
+        self.assertEqual(len(encrypted), 72)
+
+    @Framework.requires_no_nacl
+    def testEncryptWithoutNacl(self):
+        with self.replayData("PublicKey.testAttributes.txt"):
+            public_key = self.g.get_user().get_repo("PyGithub").get_public_key()
+
+        with self.assertRaisesRegex(ImportError, "PyGithub\\[encryption\\]"):
+            public_key.encrypt("value")

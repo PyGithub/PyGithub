@@ -63,6 +63,7 @@ from __future__ import annotations
 
 import contextlib
 import functools
+import importlib.util
 import os
 import traceback
 import unittest
@@ -99,6 +100,11 @@ m1Iq8LMJGYl/LkDJA10CQBV1C+Xu3ukknr7C4A/4lDCa6Xb27cr1HanY7i89A+Ab
 eatdM6f/XVqWp8uPT9RggUV9TjppJobYGT2WrWJMkYw=
 -----END RSA PRIVATE KEY-----
 """
+
+# Creating or updating secrets requires optional dependency PyNaCl via encryption support (PyGithub[encryption])
+nacl_available = importlib.util.find_spec("nacl") is not None
+requires_nacl = unittest.skipUnless(nacl_available, "requires PyNaCl, install PyGithub[encryption]")
+requires_no_nacl = unittest.skipIf(nacl_available, "tests behaviour without PyNaCl")
 
 
 @dataclass
