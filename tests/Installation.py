@@ -60,6 +60,7 @@ class Installation(Framework.BasicTestCase):
         self.installations = list(self.integration.get_installations())
         self.installation = self.installations[0]
 
+    @Framework.requires_jwt
     def testAttributes(self):
         self.assertEqual(
             self.installation.access_tokens_url, "https://api.github.com/app/installations/36541767/access_tokens"
@@ -88,6 +89,7 @@ class Installation(Framework.BasicTestCase):
         self.assertEqual(self.installation.target_type, "User")
         self.assertEqual(self.installation.updated_at, datetime(2023, 6, 8, 7, 38, 12, tzinfo=timezone.utc))
 
+    @Framework.requires_jwt
     def testGetRepos(self):
         repos = list(self.installation.get_repos())
         self.assertEqual(len(repos), 2)
@@ -117,6 +119,7 @@ class Installation(Framework.BasicTestCase):
             ["bearer user_token"] * 3,
         )
 
+    @Framework.requires_jwt
     def testGetReposWithAppUserAuthApiGithub(self):
         self.__testGetReposWithAppUserAuth(
             "https://api.github.com",
@@ -127,6 +130,7 @@ class Installation(Framework.BasicTestCase):
             ],
         )
 
+    @Framework.requires_jwt
     def testGetReposWithAppUserAuthEnterprise(self):
         self.__testGetReposWithAppUserAuth(
             "https://github.example:8443/api/v3",
@@ -137,6 +141,7 @@ class Installation(Framework.BasicTestCase):
             ],
         )
 
+    @Framework.requires_jwt
     def testGetReposWithTokenAuth(self):
         with self.captureRequests() as requests:
             with github.Github(auth=Token("installation_token"), api_version="2022-11-28") as client:
@@ -152,6 +157,7 @@ class Installation(Framework.BasicTestCase):
             ["token installation_token"],
         )
 
+    @Framework.requires_jwt
     def testGetGithubForInstallation(self):
         # with verify=False, urllib3.connectionpool rightly may issue an InsecureRequestWarning
         # we ignore InsecureRequestWarning from urllib3.connectionpool
@@ -194,6 +200,7 @@ class Installation(Framework.BasicTestCase):
             self.assertEqual(repo.id, 3544490)
             self.assertEqual(repo.full_name, "PyGithub/PyGithub")
 
+    @Framework.requires_jwt
     def testRequester(self):
         self.assertEqual(len(self.installations), 1)
         installation = self.installations[0]

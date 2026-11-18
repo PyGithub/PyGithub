@@ -48,10 +48,19 @@ To close connections after use::
 Download and install
 --------------------
 
-This package is in the `Python Package Index
-<http://pypi.python.org/pypi/PyGithub>`__, so ``pip install PyGithub`` should
-be enough.  You can also clone it on `Github
-<http://github.com/PyGithub/PyGithub>`__.
+This package is in the `Python Package Index <http://pypi.python.org/pypi/PyGithub>`__, so it can be installed via::
+
+    pip install PyGithub
+
+Creating or updating secrets requires installing PyGithub with encryption support via::
+
+    pip install PyGithub[encryption]
+
+Authenticating as a GitHub App with a private key (unless a sign function is provided) requires installing PyGithub with JWT support via:
+
+    pip install PyGithub[jwt]
+
+You can also clone it on `Github <http://github.com/PyGithub/PyGithub>`__.
 
 Licensing
 ---------

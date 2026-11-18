@@ -39,7 +39,6 @@ from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING
 
-import jwt
 from requests import utils
 
 from github import Consts
@@ -201,6 +200,12 @@ class JwtSigner:
             private_key = self._private_key_or_func()
         else:
             private_key = self._private_key_or_func
+
+        try:
+            import jwt
+        except ImportError as e:
+            raise ImportError("Signing JWTs with a private key requires PyJWT, install PyGithub[jwt]") from e
+
         return jwt.encode(payload, key=private_key, algorithm=self._jwt_algorithm)
 
 

@@ -50,8 +50,6 @@ from tempfile import NamedTemporaryFile
 from unittest import mock
 from unittest.mock import Mock
 
-import jwt
-
 import github
 from github.Auth import Auth, Login
 
@@ -92,6 +90,7 @@ class Authentication(Framework.BasicTestCase):
             "auth=github.Auth.AppAuthToken(...) instead",
         )
 
+    @Framework.requires_jwt
     def testAppAuthentication(self):
         with self.assertWarns(DeprecationWarning) as warning:
             app_auth = github.AppAuthentication(
@@ -122,6 +121,7 @@ class Authentication(Framework.BasicTestCase):
         g = github.Github(auth=self.jwt)
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
 
+    @Framework.requires_jwt
     def testAppAuthAuthentication(self):
         # test data copied from testAppAuthentication to test parity
         g = github.Github(auth=self.app_auth.get_installation_auth(29782936))
@@ -192,6 +192,7 @@ class Authentication(Framework.BasicTestCase):
 
         self.assert_requester_args(gi.get_github_for_installation(29782936), gi._GithubIntegration__requester)
 
+    @Framework.requires_jwt
     def testAppInstallationAuthAuthentication(self):
         # test data copied from testAppAuthentication to test parity
         installation_auth = github.Auth.AppInstallationAuth(self.app_auth, 29782936)
@@ -309,7 +310,10 @@ class Authentication(Framework.BasicTestCase):
                     github.Github(auth=auth)
                 self.assertEqual(exc.exception.args, ("Could not get credentials from netrc for host api.github.com",))
 
+    @Framework.requires_jwt
     def testCreateJWT(self):
+        import jwt
+
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
 
         with mock.patch("github.Auth.time") as t:
@@ -325,7 +329,10 @@ class Authentication(Framework.BasicTestCase):
         )
         self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": str(APP_ID)})
 
+    @Framework.requires_jwt
     def testCreateJWTWithExpiration(self):
+        import jwt
+
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30)
 
         with mock.patch("github.Auth.time") as t:
@@ -340,6 +347,29 @@ class Authentication(Framework.BasicTestCase):
             issuer=str(APP_ID),
         )
         self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": str(APP_ID)})
+
+    @Framework.requires_no_jwt
+    def testCreateJWTWithoutPyJWT(self):
+        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        with self.assertRaisesRegex(ImportError, "PyGithub\\[jwt\\]"):
+            auth.create_jwt()
+
+    def testCreateJWTWithSignFunc(self):
+        # a custom sign function does not require PyJWT
+        signed_payloads = []
+
+        def sign_func(payload: dict) -> str:
+            signed_payloads.append(payload)
+            return "signed-jwt"
+
+        auth = github.Auth.AppAuth(APP_ID, sign_func=sign_func)
+
+        with mock.patch("github.Auth.time") as t:
+            t.time = mock.Mock(return_value=1550055331.7435968)
+            token = auth.create_jwt()
+
+        self.assertEqual(token, "signed-jwt")
+        self.assertListEqual(signed_payloads, [{"iat": 1550055271, "exp": 1550055631, "iss": str(APP_ID)}])
 
     def testUserAgent(self):
         g = github.Github(user_agent="PyGithubTester")
