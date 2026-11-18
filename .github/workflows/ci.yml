@@ -71,15 +71,21 @@ jobs:
 
   test-build:
     # tests the wheel built by the build job, not the sources of the repository
-    name: "Test built package"
+    name: "Test built ${{ matrix.label }} package"
     needs: [build]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {label: "sync", path: "dist", pkg: "github"}
+          - {label: "async", path: "async/dist", pkg: "githubasyncio"}
     runs-on: ubuntu-latest
     steps:
       - name: Download package
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
         with:
           name: package
-          path: dist
+          path: .
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
@@ -88,15 +94,15 @@ jobs:
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          pip install dist/*.whl
+          pip install ${{ matrix.path }}/*.whl
       - name: Extract tests
         shell: bash
         run: |
           # extract only the tests from the source distribution, no other sources
           mkdir sources
-          tar -xzf dist/*.tar.gz -C sources --strip-components=1 --wildcards '*/tests/*'
+          tar -xzf ${{ matrix.path }}/*.tar.gz -C sources --strip-components=1 --wildcards '*/tests/*'
           # install test requirements of that source distribution
-          tar -xzOf dist/*.tar.gz --wildcards '*/requirements/test.txt' > requirements-test.txt
+          tar -xzOf ${{ matrix.path }}/*.tar.gz --wildcards '*/requirements/test.txt' > requirements-test.txt
           pip install -r requirements-test.txt
           ls -la sources
       - name: Run tests
@@ -104,15 +110,15 @@ jobs:
         working-directory: sources
         run: |
           # make sure we test the installed package
-          python -c "import github; print(github.__file__); assert 'site-packages' in github.__file__"
+          python -c "import ${{ matrix.pkg }} as pkg; print(pkg.__file__); assert 'site-packages' in pkg.__file__"
           # tests/Documentation.py tests the doc/ sources, which are not part of the package
-          pytest -o python_files="tests/*.py" --ignore tests/Documentation.py --junit-xml ../pytest.xml tests
+          pytest -o python_files="tests/*.py" --ignore tests/Documentation.py --junit-xml ../pytest-${{ matrix.label }}.xml tests
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: Test Results (built package)
-          path: pytest.xml
+          path: pytest-${{ matrix.label }}.xml
 
   test_success:
     # this aggregates success state of all jobs listed in `needs`
