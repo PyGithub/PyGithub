@@ -183,6 +183,7 @@ IO_METHOD_PATTERNS = frozenset(
         "graphql_named_mutation_class",
         "getFile",
         "getStream",
+        "get_rate_limits",
     }
 )
 
@@ -400,6 +401,14 @@ PATCHES: dict[str, list[Patch]] = {
             ),
         ),
     ],
+    "RateLimit": [
+        Patch(
+            reason="raw_data is an async property in githubasyncio, but get_rate_limit() sends no request and stays "
+            "sync: RateLimit is non-completable, so read the raw data that property returns directly",
+            match="self._makeRateAttribute(self.raw_data, resource) if resource in self.raw_data else NotSet",
+            replace="self._makeRateAttribute(self._rawData, resource) if resource in self._rawData else NotSet",
+        ),
+    ],
     "PaginatedList": [
         Patch(
             reason="sync iteration protocol (__iter__) becomes async iteration (__aiter__) for both "
@@ -408,6 +417,12 @@ PATCHES: dict[str, list[Patch]] = {
             count=2,
             match=r"def __iter__\(self\)\s*->\s*Iterator\[T\]:",
             replace="async def __aiter__(self) -> AsyncIterator[T]:",
+        ),
+        Patch(
+            reason="pages() fetches pages while iterating, so it is an async generator: annotate it as such",
+            regex=True,
+            match=r"(?:async )?def pages\(self\)\s*->\s*Iterator\[Page\[T\]\]:",
+            replace="async def pages(self) -> AsyncIterator[Page[T]]:",
         ),
         Patch(
             reason="_Slice.__aiter__ must use the async getitem() (subscript would call sync __getitem__)",
@@ -3955,6 +3970,16 @@ class AsyncTransformer:
             # Apply cross-object rules to each method's source separately.
             src = self._apply_per_method_cross_object_rules(src, class_name, per_method_rules)
 
+        # A call through one of this class's own sync properties, e.g. MainClass's
+        # `self.current_rate_limits.update()` (current_rate_limits: RateLimitOverview, whose update() is async)
+        for prop, meth in sorted(set(re.findall(r"(?<!\w)self\.(\w+)\.(\w+)\s*\(", src))):
+            if prop in promoted:
+                continue  # an async property needs `(await self.prop).meth()`, not this
+            prop_types = self.analyzer.resolve_type(class_name, prop)
+            if prop_types and self.analyzer.is_attr_async_on_type(prop_types, meth):
+                logger.debug("add_awaits[%s]: self.%s.%s() through a sync property", class_name, prop, meth)
+                src = self._safe_add_await(src, rf"(?<!\w)self\.{re.escape(prop)}\.{re.escape(meth)}\s*\(")
+
         # For requester method calls
         present_req_methods = [m for m in sorted(REQUESTER_AWAIT_METHODS) if m in src]
         if present_req_methods:
@@ -5429,6 +5454,115 @@ def _ensure_bare_githubasyncio_import(src: str) -> str:
     return src[:insert_at] + "\nimport githubasyncio" + src[insert_at:]
 
 
+def _redirect_remaining_classic_references(result: str, analyzer: IOAnalyzer) -> str:
+    """
+    Last resort for classic ``github`` references that no earlier pass of transform_test_file() redirected.
+
+    Earlier passes keep some references classic on purpose (e.g. in methods matching ENTRY_POINT_CTOR_SKIP_MARKERS),
+    but the generated tests cannot import the classic package, so a classic reference left behind can only fail. This
+    typically hits tests that construct PyGithub objects directly on a ``mock.Mock()`` requester:
+
+    - a ``mock.Mock(...)`` assigned to a name whose async Requester methods the method stubs or asserts
+      (``requester.requestJsonAndCheck.return_value = ...``) is a Requester double: spec it on the async Requester, so
+      those methods become ``AsyncMock``s that the async code can await
+    - ``mock.patch.object(X, ...)`` patches the object underneath a SyncProxy: patch() then sees (and replaces async
+      methods with) the real attribute, and restores it on that object rather than on the proxy
+    - ``mock.patch("github.<Module>....")`` targets the async module
+    - ``from github.<Module> import ...`` imports from the async module
+    - ``github.<Module>.<Class>(...)`` / an imported ``<Class>(...)`` of a class with async methods is constructed
+      through ``Framework.make_async()``, other ``github.<Module>.<Class>`` references become
+      ``githubasyncio.<Module>.<Class>``
+
+    Classic imports left unused by this are removed by ruff.
+
+    """
+    async_mods = {p.stem for p in DST_PKG.glob("*.py")}
+    requester_io = analyzer.async_methods.get("Requester", set())
+    classes = sorted(
+        ((cls_name, mod) for cls_name, mod in analyzer.class_to_file.items() if mod in async_mods),
+        key=lambda kv: len(kv[0]),
+        reverse=True,
+    )
+
+    lines = result.split("\n")
+
+    # Requester doubles, per test method
+    starts = [i for i, line in enumerate(lines) if re.match(r"^    def \w+\(", line)] + [len(lines)]
+    for start, end in zip(starts, starts[1:]):
+        body = "\n".join(lines[start:end])
+        for name in set(re.findall(r"^\s+(\w+) = mock\.Mock\(", body, re.MULTILINE)):
+            if not any(re.search(rf"\b{re.escape(name)}\.{re.escape(meth)}\b", body) for meth in requester_io):
+                continue
+            for i in range(start, end):
+                lines[i] = re.sub(
+                    rf"^(\s+{re.escape(name)} = mock\.Mock\()(\))?",
+                    lambda m: m.group(1) + "githubasyncio.Requester.Requester" + (")" if m.group(2) else ", "),
+                    lines[i],
+                )
+
+    # Classic imports of async modules; names bound to classes with async methods need make_async() construction
+    constructed_names: set[str] = set()
+    for i, line in enumerate(lines):
+        m = re.match(r"^(\s*)from github\.(\w+) import ([^(]+)$", line)
+        if not m or m.group(2) not in async_mods:
+            continue
+        lines[i] = f"{m.group(1)}from githubasyncio.{m.group(2)} import {m.group(3)}"
+        for imported in AsyncTransformer._split_import_names(m.group(3)):
+            cls_name, _, alias = imported.partition(" as ")
+            if cls_name.strip() in analyzer.async_classes:
+                constructed_names.add((alias or cls_name).strip())
+
+    for i, line in enumerate(lines):
+        stripped = line.lstrip()
+        if stripped.startswith(("import ", "from ", "class ")):
+            continue
+        line = re.sub(
+            r"""(\bmock\.patch\(\s*["'])github\.(\w+)\.""",
+            lambda m: f"{m.group(1)}githubasyncio.{m.group(2)}." if m.group(2) in async_mods else m.group(0),
+            line,
+        )
+        for cls_name, mod in classes:
+            if cls_name in analyzer.async_classes:
+                line = re.sub(
+                    rf"(?<![\w.])github\.{re.escape(mod)}\.{re.escape(cls_name)}\(",
+                    lambda m, mod=mod, cls_name=cls_name, line=line: (
+                        m.group(0)
+                        if _in_string_literal(line, m.start())
+                        else f"Framework.make_async(githubasyncio.{mod}.{cls_name}, "
+                    ),
+                    line,
+                )
+            line = re.sub(
+                rf"(?<![\w.\"'])github\.{re.escape(mod)}\.{re.escape(cls_name)}\b",
+                f"githubasyncio.{mod}.{cls_name}",
+                line,
+            )
+        for name in constructed_names:
+            line = re.sub(
+                rf"(?<![\w.]){re.escape(name)}\(",
+                lambda m, name=name, line=line: (
+                    m.group(0) if _in_string_literal(line, m.start()) else f"Framework.make_async({name}, "
+                ),
+                line,
+            )
+        lines[i] = re.sub(r"(Framework\.make_async\([\w.]+), \)", r"\1)", line)
+    result = "\n".join(lines)
+
+    # on the whole text: the patched object may follow `mock.patch.object(` on the next line
+    result = re.sub(
+        r"\bmock\.patch\.object\((\s*)(?!githubasyncio\.|github\.|SyncProxy\.)([\w.]+),",
+        r"mock.patch.object(\1SyncProxy._deep_unwrap(\2),",
+        result,
+    )
+
+    if "SyncProxy._deep_unwrap" in result and "from tests.AsyncFramework import SyncProxy" not in result:
+        result = result.replace(
+            "from tests import AsyncFramework as Framework",
+            "from tests import AsyncFramework as Framework\nfrom tests.AsyncFramework import SyncProxy",
+        )
+    return _ensure_bare_githubasyncio_import(result) if "githubasyncio." in result else result
+
+
 def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     """
     Transform a sync test file into an async version.
@@ -6012,12 +6146,15 @@ def transform_test_file(src: str, test_stem: str, analyzer: IOAnalyzer) -> str:
     if _general_rewritten:
         result = _ensure_bare_githubasyncio_import(result)
 
+    result = _redirect_remaining_classic_references(result, analyzer)
+
     # `pickle.dumps(X)`: X is typically a SyncProxy-wrapped async object (self.g / make_async()
     # results), whose __class__ spoofing breaks pickle's protocol. The raw async object underneath
     # pickles fine (Requester drops its lock/connection in __getstate__ and recreates them in
     # __setstate__), so unwrap it first; what pickle.loads() returns is then a raw async object,
     # which is all the (attribute-inspecting) assertions after it need.
-    _pickle_re = re.compile(r"\bpickle\.dumps\(([^()]*)\)")
+    # (the argument may contain one level of parentheses, e.g. `pickle.dumps(Framework.make_async(Page, ...))`)
+    _pickle_re = re.compile(r"\bpickle\.dumps\(((?:[^()]|\([^()]*\))*)\)")
     if _pickle_re.search(result):
         result = _pickle_re.sub(r"pickle.dumps(SyncProxy._deep_unwrap(\1))", result)
         if "from tests.AsyncFramework import SyncProxy" not in result:
@@ -6225,7 +6362,11 @@ def main():
     # Copy subpackages that need no transformation (see COPIED_SUBPACKAGES)
     for subpkg in COPIED_SUBPACKAGES:
         for p in sorted((SRC_PKG / subpkg).glob("*.py")):
-            write_file(DST_PKG / subpkg / p.name, AUTO_HEADER + p.read_text(encoding="utf-8"))
+            # (also repoints mentions in docstrings, e.g. compat's usage example)
+            content = re.sub(
+                rf"\bgithub\.{re.escape(subpkg)}\b", f"githubasyncio.{subpkg}", p.read_text(encoding="utf-8")
+            )
+            write_file(DST_PKG / subpkg / p.name, AUTO_HEADER + content)
             generated_count += 1
 
     # Generate transformed source files

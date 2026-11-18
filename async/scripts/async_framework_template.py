@@ -30,6 +30,7 @@ import warnings
 from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Any
+from unittest import mock
 from urllib.parse import urlsplit
 
 import vcr
@@ -338,6 +339,22 @@ class BasicTestCase(unittest.TestCase):
         githubasyncio.Requester.Requester.resetConnectionClasses()
         BasicTestCase.__activeInstance = None
 
+    @staticmethod
+    def _unwrapProxy(obj):
+        return object.__getattribute__(obj, "_obj") if isinstance(obj, SyncProxy) else obj
+
+    def assertIs(self, expr1, expr2, msg=None):
+        """
+        Override to compare the objects underneath SyncProxy wrappers: one side may be wrapped, the other not.
+        """
+        super().assertIs(self._unwrapProxy(expr1), self._unwrapProxy(expr2), msg)
+
+    def assertIsNot(self, expr1, expr2, msg=None):
+        """
+        Override to compare the objects underneath SyncProxy wrappers: one side may be wrapped, the other not.
+        """
+        super().assertIsNot(self._unwrapProxy(expr1), self._unwrapProxy(expr2), msg)
+
     def assertWarning(self, warning, expected):
         self.assertWarnings(warning, expected)
 
@@ -510,6 +527,16 @@ def type_of(obj):
     return type(SyncProxy._deep_unwrap(obj)) if isinstance(obj, SyncProxy) else type(obj)
 
 
+def _copy_list_subclass(original, items, attributes):
+    """
+    Copy of a list subclass instance with the given items and instance attributes, without calling its constructor.
+    """
+    copy = type(original).__new__(type(original))
+    list.extend(copy, items)
+    vars(copy).update(attributes)
+    return copy
+
+
 def _is_completable(obj):
     """
     Check if an object is a CompletableGithubObject that may need completion.
@@ -555,7 +582,12 @@ class SyncProxy:
         if isinstance(obj, SyncProxy):
             return object.__getattribute__(obj, "_obj")
         if isinstance(obj, list):
-            return [SyncProxy._deep_unwrap(item) for item in obj]
+            items = [SyncProxy._deep_unwrap(item) for item in obj]
+            if type(obj) is list:
+                return items
+            # a list subclass (e.g. PaginatedList.Page) keeps its type, and its instance attributes get unwrapped too
+            # (e.g. a Page built in a test body with the SyncProxy-wrapped self.g.requester)
+            return _copy_list_subclass(obj, items, {k: SyncProxy._deep_unwrap(v) for k, v in vars(obj).items()})
         if isinstance(obj, tuple):
             if hasattr(type(obj), "_fields"):
                 # NamedTuple
@@ -573,6 +605,10 @@ class SyncProxy:
         Wrap a result if it's a complex object, pass through primitives.
         """
         if isinstance(result, cls._PASSTHROUGH):
+            return result
+        # Test doubles are never async objects: hand them back as-is, so a test can compare them by identity or call
+        # their assert_* methods (wrapping a callable mock would turn it into a sync_wrapper function).
+        if isinstance(result, mock.NonCallableMock):
             return result
         # Don't wrap _NotSetType instances (NotSet sentinel).
         # Tests call is_undefined(obj._attr) which needs the raw _NotSetType,
@@ -593,6 +629,9 @@ class SyncProxy:
             # NamedTuples require positional args, not a single list
             if hasattr(type(result), "_fields"):
                 return type(result)(*wrapped)
+            if isinstance(result, list) and type(result) is not list:
+                # a list subclass (e.g. PaginatedList.Page) need not take a single iterable in its constructor
+                return _copy_list_subclass(result, wrapped, vars(result))
             return type(result)(wrapped)
         if isinstance(result, set):
             return {cls._wrap(item, loop) for item in result}
@@ -647,6 +686,10 @@ class SyncProxy:
         # in a function wrapper. This preserves identity across multiple
         # accesses (e.g., obj.__contentClass == obj.__contentClass).
         if isinstance(attr, type):
+            return attr
+
+        # A (callable) mock: hand it back as-is, see _wrap()
+        if isinstance(attr, mock.NonCallableMock):
             return attr
 
         if callable(attr):
@@ -732,6 +775,19 @@ class SyncProxy:
                 yield SyncProxy._wrap(item, loop)
         else:
             raise TypeError(f"'{type(obj).__name__}' object is not iterable")
+
+    def __next__(self):
+        # next() on a wrapped (async) iterator, e.g. the async generator returned by PaginatedList.pages()
+        obj = object.__getattribute__(self, "_obj")
+        loop = object.__getattribute__(self, "_loop")
+        if hasattr(obj, "__anext__"):
+            try:
+                item = loop.run_until_complete(obj.__anext__())
+            except StopAsyncIteration:
+                raise StopIteration from None
+        else:
+            item = next(obj)
+        return SyncProxy._wrap(item, loop)
 
     def __getitem__(self, index):
         obj = object.__getattribute__(self, "_obj")
