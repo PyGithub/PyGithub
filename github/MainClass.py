@@ -107,7 +107,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, BinaryIO, TypeVar, overload
 
 import urllib3
-from typing_extensions import deprecated
 from urllib3.util import Retry
 
 import github.ApplicationOAuth
@@ -130,6 +129,7 @@ import github.NamedUser
 import github.RepositoryDiscussion
 import github.Topic
 from github import Consts
+from github.compat import deprecated
 from github.GithubIntegration import GithubIntegration
 from github.GithubObject import (
     CompletableGithubObject,

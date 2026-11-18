@@ -32,9 +32,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Union
 
-from typing_extensions import TypedDict
-
 import github.NamedUser
+from github.compat import TypedDict
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:
