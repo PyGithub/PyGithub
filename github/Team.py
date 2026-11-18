@@ -70,8 +70,6 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.NamedUser
 import github.Organization
 import github.PaginatedList
@@ -79,6 +77,7 @@ import github.Permissions
 import github.Repository
 import github.TeamDiscussion
 from github import Consts
+from github.compat import deprecated
 from github.GithubException import UnknownObjectException
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, method_returns
 

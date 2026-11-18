@@ -48,11 +48,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.GithubApp
 import github.NamedUser
 import github.Team
+from github.compat import deprecated
 from github.GithubObject import Attribute, CompletableGithubObject, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:

@@ -32,7 +32,7 @@ dependencies = [
   "pynacl>=1.4.0",
   "requests>=2.14.0",
   "pyjwt[crypto]>=2.4.0",
-  "typing-extensions>=4.5.0",
+  'typing-extensions>=4.5.0; python_version < "3.13"',
   "urllib3>=1.26.0",
 ]
 
@@ -41,13 +41,10 @@ Documentation = "https://pygithub.readthedocs.io/en/stable/"
 Source = "https://github.com/pygithub/pygithub"
 Tracker = "https://github.com/pygithub/pygithub/issues"
 
-[project.optional-dependencies]
-integrations = []
-
 [tool.setuptools_scm]
 
 [tool.setuptools]
-packages = ["github"]
+packages = ["github", "github.compat"]
 
 [tool.setuptools.package-data]
 github = ["py.typed", "*.pyi"]

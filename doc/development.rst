@@ -13,11 +13,13 @@ Deprecation warning
 -------------------
 
 Before removing attributes/methods, consider adding deprecation warnings instead.
-The `typing_extensions <https://pypi.org/project/typing-extensions/>`__ package provides a handy decorator to add deprecation warnings.
+The ``deprecated`` decorator adds deprecation warnings. It is provided by the standard library from Python 3.13
+(``warnings.deprecated``) and by the `typing_extensions <https://pypi.org/project/typing-extensions/>`__ package
+for earlier Python versions. Import it from ``github.compat``, which picks the right one:
 
 .. code-block:: python
 
-    from typing_extensions import deprecated
+    from github.compat import deprecated
 
     @property
     @deprecated("Use core instead")

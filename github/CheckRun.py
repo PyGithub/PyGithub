@@ -37,8 +37,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.CheckRunAnnotation
 import github.CheckRunOutput
 import github.CheckSuite
@@ -46,6 +44,7 @@ import github.Deployment
 import github.GithubApp
 import github.GithubObject
 import github.PullRequest
+from github.compat import deprecated
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,
