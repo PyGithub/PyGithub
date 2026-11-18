@@ -61,9 +61,9 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, TypeAlias, TypeGuard, overload
+from typing import TYPE_CHECKING, Any, ParamSpec, Protocol, TypeAlias, TypeGuard, TypeVar, overload
 
-from github.compat import ParamSpec, Protocol, Self, TypeVar
+from github.compat import Self
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject

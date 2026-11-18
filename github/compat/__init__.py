@@ -37,17 +37,14 @@ from __future__ import annotations
 import sys
 
 if sys.version_info >= (3, 13):
-    from typing import NotRequired, ParamSpec, Protocol, Self, TypedDict, TypeVar
+    from typing import NotRequired, Self, TypedDict
     from warnings import deprecated
 else:
-    from typing_extensions import NotRequired, ParamSpec, Protocol, Self, TypedDict, TypeVar, deprecated
+    from typing_extensions import NotRequired, Self, TypedDict, deprecated
 
 __all__ = [
     "NotRequired",
-    "ParamSpec",
-    "Protocol",
     "Self",
     "TypedDict",
-    "TypeVar",
     "deprecated",
 ]
