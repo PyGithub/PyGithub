@@ -40,7 +40,8 @@ jobs:
       - name: Install tox
         run: |
           python -m pip install --upgrade pip
-          pip install tox tox-gh-actions
+          # tox 4.67.14 breaks tox-gh-actions: https://github.com/ymyzk/tox-gh-actions/issues/243
+          pip install "tox<4.67.14" tox-gh-actions
       - name: Run tests
         run: tox
       - name: Upload Test Results

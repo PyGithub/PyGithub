@@ -528,7 +528,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "CompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -4242,6 +4613,7 @@
+@@ -4259,6 +4630,7 @@
    "indices": {
      "class_to_descendants": {
        "ABC": [
@@ -536,7 +536,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
-@@ -4260,13 +4632,18 @@
+@@ -4277,13 +4649,18 @@
          "_ValuedAttribute"
        ],
        "CompletableGithubObject": [
@@ -555,7 +555,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "CompletableGithubObject",
          "CompletableGithubObjectWithPaginatedProperty",
          "GitAuthor",
-@@ -4963,15 +5340,25 @@
+@@ -4980,15 +5357,25 @@
        ]
      },
      "schema_to_classes": {

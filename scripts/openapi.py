@@ -1750,6 +1750,26 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
 
         return func.with_changes(body=func.body.with_changes(body=updated_statements))
 
+    @staticmethod
+    def use_attr_name(statement: cst.BaseStatement) -> str | None:
+        # returns the quoted attribute name of statements like
+        #   if "name" in attributes: …
+        #   if "name" in attributes and …: …
+        # and None for any other statement
+        if not isinstance(statement, cst.If):
+            return None
+        test = statement.test
+        if isinstance(test, cst.BooleanOperation):
+            test = test.left
+        if (
+            isinstance(test, cst.Comparison)
+            and isinstance(test.left, cst.SimpleString)
+            and len(test.comparisons) == 1
+            and isinstance(test.comparisons[0].operator, cst.In)
+        ):
+            return test.left.value
+        return None
+
     def update_use_attrs(self, func: cst.FunctionDef) -> cst.FunctionDef:
         # adds only missing attributes, does not update existing ones
         statements = func.body.body
@@ -1760,21 +1780,26 @@ class ApplySchemaTransformer(ApplySchemaBaseTransformer):
             if not isinstance(p.data_type, list)
         ]
         updated_statements = []
+        # position in updated_statements right after the last attribute statement
+        insert_remaining_at = None
 
         for statement in statements:
-            if not isinstance(statement, cst.If):
+            name = self.use_attr_name(statement)
+            if name is None:
+                # not an attribute statement (e.g. custom code like "if self._url.value: …")
                 updated_statements.append(statement)
                 continue
-            comparison = statement.test if isinstance(statement.test, cst.Comparison) else statement.test.left
-            while new_statements and new_statements[0].test.left.value < comparison.left.value:
+            while new_statements and new_statements[0].test.left.value < name:
                 updated_statements.append(new_statements.pop(0))
-            if new_statements and new_statements[0].test.left.value == comparison.left.value:
-                updated_statements.append(statement)
+            if new_statements and new_statements[0].test.left.value == name:
                 new_statements.pop(0)
-            else:
-                updated_statements.append(statement)
-        while new_statements:
-            updated_statements.append(new_statements.pop(0))
+            updated_statements.append(statement)
+            insert_remaining_at = len(updated_statements)
+
+        # remaining attributes go after the last attribute statement, ahead of any trailing custom code
+        if insert_remaining_at is None:
+            insert_remaining_at = len(updated_statements)
+        updated_statements[insert_remaining_at:insert_remaining_at] = new_statements
 
         # remove dangling pass command
         if len(updated_statements) > 1 and self.code(updated_statements[0]).strip() == "pass":

@@ -49,7 +49,7 @@ diff --unified --recursive --new-file before/github/NamedUser.py after/github/Na
 diff --unified --recursive --new-file before/openapi.index after/openapi.index
 --- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
 +++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
-@@ -819,6 +819,67 @@
+@@ -836,6 +836,67 @@
        ],
        "test_filename": "tests/NamedUser.py"
      },
@@ -117,7 +117,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
      "NonCompletableGithubObject": {
        "bases": [
          "GithubObject",
-@@ -936,6 +997,7 @@
+@@ -953,6 +1014,7 @@
          "CompletableGithubObjectWithPaginatedProperty",
          "GithubObject",
          "NamedUser",
@@ -125,7 +125,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
          "NonCompletableGithubObject"
        ],
        "Attribute": [
-@@ -945,14 +1007,19 @@
+@@ -962,14 +1024,19 @@
        ],
        "CompletableGithubObject": [
          "CompletableGithubObjectWithPaginatedProperty",
@@ -146,7 +146,7 @@ diff --unified --recursive --new-file before/openapi.index after/openapi.index
        "Protocol": [
          "Attribute",
          "_BadAttribute",
-@@ -1584,6 +1651,9 @@
+@@ -1601,6 +1668,9 @@
      "schema_to_classes": {
        "/components/schemas/public-user": [
          "NamedUser"

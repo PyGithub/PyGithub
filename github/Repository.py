@@ -148,6 +148,7 @@
 # Copyright 2025 Ryosuke <88011751+nrysk@users.noreply.github.com>             #
 # Copyright 2025 Tan An Nie <121005973+tanannie22@users.noreply.github.com>    #
 # Copyright 2025 Zdenek Styblik <6183869+zstyblik@users.noreply.github.com>    #
+# Copyright 2025 Jens Keiner <jens.keiner@gmail.com>                           #
 # Copyright 2026 Chinedum Echeta <60179183+cecheta@users.noreply.github.com>   #
 # Copyright 2026 Enrico Minack <github@enrico.minack.dev>                      #
 # Copyright 2026 Matt Davis <35502728+matt-davis27@users.noreply.github.com>   #
@@ -239,6 +240,7 @@ import github.RepositoryAdvisory
 import github.RepositoryDiscussion
 import github.RepositoryKey
 import github.RepositoryPreferences
+import github.Ruleset
 import github.Secret
 import github.SecretScanAlert
 import github.SecurityAndAnalysis
@@ -330,6 +332,7 @@ if TYPE_CHECKING:
     from github.RepositoryDiscussion import RepositoryDiscussion
     from github.RepositoryKey import RepositoryKey
     from github.RepositoryPreferences import RepositoryPreferences
+    from github.Ruleset import Ruleset
     from github.Secret import Secret
     from github.SecretScanAlert import SecretScanAlert
     from github.SecurityAndAnalysis import SecurityAndAnalysis
@@ -414,6 +417,7 @@ class Repository(CompletableGithubObject):
         self._has_issues: Attribute[bool] = NotSet
         self._has_pages: Attribute[bool] = NotSet
         self._has_projects: Attribute[bool] = NotSet
+        self._has_pull_requests: Attribute[bool] = NotSet
         self._has_wiki: Attribute[bool] = NotSet
         self._homepage: Attribute[str] = NotSet
         self._hooks_url: Attribute[str] = NotSet
@@ -445,6 +449,7 @@ class Repository(CompletableGithubObject):
         self._parent: Attribute[Repository] = NotSet
         self._permissions: Attribute[Permissions] = NotSet
         self._private: Attribute[bool] = NotSet
+        self._pull_request_creation_policy: Attribute[str] = NotSet
         self._pulls_url: Attribute[str] = NotSet
         self._pushed_at: Attribute[datetime] = NotSet
         self._releases_url: Attribute[str] = NotSet
@@ -826,6 +831,11 @@ class Repository(CompletableGithubObject):
         return self._has_projects.value
 
     @property
+    def has_pull_requests(self) -> bool:
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
+
+    @property
     def has_wiki(self) -> bool:
         """
         :type: bool
@@ -1063,6 +1073,11 @@ class Repository(CompletableGithubObject):
         """
         self._completeIfNotSet(self._private)
         return self._private.value
+
+    @property
+    def pull_request_creation_policy(self) -> str:
+        self._completeIfNotSet(self._pull_request_creation_policy)
+        return self._pull_request_creation_policy.value
 
     @property
     def pulls_url(self) -> str:
@@ -2407,10 +2422,11 @@ class Repository(CompletableGithubObject):
             None,
         )
 
+    # v3: sha should be renamed to ref, which breaks user code like get_commit(sha=...)
     def get_commit(self, sha: str, *, commit_files_per_page: int | None = None) -> Commit:
         """
-        :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/reference/repos#commits>`_
-        :param sha: string
+        :calls: `GET /repos/{owner}/{repo}/commits/{ref} <https://docs.github.com/en/rest/commits/commits#get-a-commit>`_
+        :param sha: string, the commit SHA, but also a branch name or a tag name, as the API accepts any ref here
         :param commit_files_per_page: int Number of files retrieved with the commit. Iterating over the files property will fetch pages of this size. Default is 300. Maximum is 300. At most 3000 files can be retrieved.
         :rtype: :class:`github.Commit.Commit`
         """
@@ -2833,6 +2849,74 @@ class Repository(CompletableGithubObject):
         ghsa = urllib.parse.quote(ghsa)
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/security-advisories/{ghsa}")
         return github.RepositoryAdvisory.RepositoryAdvisory(self._requester, headers, data)
+
+    def get_rulesets(self, includes_parents: bool = True, targets: Opt[list[str]] = NotSet) -> PaginatedList[Ruleset]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#get-all-repository-rulesets>`_
+        :param includes_parents: bool
+        :param targets: list of string
+        """
+        assert isinstance(includes_parents, bool), includes_parents
+        assert is_optional_list(targets, str), targets
+        url_parameters: dict[str, Any] = {"includes_parents": includes_parents}
+        if is_defined(targets):
+            url_parameters["targets"] = ",".join(targets)
+        return PaginatedList(
+            github.Ruleset.Ruleset,
+            self._requester,
+            f"{self.url}/rulesets",
+            url_parameters,
+        )
+
+    def get_ruleset(self, ruleset_id: int) -> Ruleset:
+        """
+        :calls: `GET /repos/{owner}/{repo}/rulesets/{ruleset_id} <https://docs.github.com/en/rest/repos/rules#get-a-repository-ruleset>`_
+        :param ruleset_id: int
+        """
+        assert isinstance(ruleset_id, int), ruleset_id
+        attrs = {"id": ruleset_id, "url": f"{self.url}/rulesets/{ruleset_id}"}
+        return github.Ruleset.Ruleset(self._requester, attributes=attrs)
+
+    def create_ruleset(
+        self,
+        name: str,
+        target: str,
+        enforcement: str,
+        bypass_actors: Opt[list[dict[str, Any]]] = NotSet,
+        conditions: Opt[dict[str, Any]] = NotSet,
+        rules: Opt[list[dict[str, Any]]] = NotSet,
+    ) -> Ruleset:
+        """
+        :calls: `POST /repos/{owner}/{repo}/rulesets <https://docs.github.com/en/rest/repos/rules#create-a-repository-ruleset>`_
+        :param name: string
+        :param target: string
+        :param enforcement: string
+        :param bypass_actors: list of dict
+        :param conditions: dict
+        :param rules: list of dict
+        """
+        assert isinstance(name, str), name
+        assert isinstance(target, str), target
+        assert target in ["branch", "tag", "push"], target
+        assert isinstance(enforcement, str), enforcement
+        assert enforcement in ["active", "disabled", "evaluate"], enforcement
+        assert is_optional_list(bypass_actors, dict), bypass_actors
+        assert is_optional(conditions, dict), conditions
+        assert is_optional_list(rules, dict), rules
+
+        post_parameters = NotSet.remove_unset_items(
+            {
+                "name": name,
+                "target": target,
+                "enforcement": enforcement,
+                "bypass_actors": bypass_actors,
+                "conditions": conditions,
+                "rules": rules,
+            }
+        )
+
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/rulesets", input=post_parameters)
+        return github.Ruleset.Ruleset(self._requester, headers, data, completed=True)
 
     def update_file(
         self,
@@ -4811,6 +4895,8 @@ class Repository(CompletableGithubObject):
             self._has_pages = self._makeBoolAttribute(attributes["has_pages"])
         if "has_projects" in attributes:  # pragma no branch
             self._has_projects = self._makeBoolAttribute(attributes["has_projects"])
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
@@ -4896,6 +4982,8 @@ class Repository(CompletableGithubObject):
             self._permissions = self._makeClassAttribute(github.Permissions.Permissions, attributes["permissions"])
         if "private" in attributes:  # pragma no branch
             self._private = self._makeBoolAttribute(attributes["private"])
+        if "pull_request_creation_policy" in attributes:  # pragma no branch
+            self._pull_request_creation_policy = self._makeStringAttribute(attributes["pull_request_creation_policy"])
         if "pulls_url" in attributes:  # pragma no branch
             self._pulls_url = self._makeStringAttribute(attributes["pulls_url"])
         if "pushed_at" in attributes:  # pragma no branch
@@ -4985,11 +5073,23 @@ class RepositorySearchResult(Repository):
 
     def _initAttributes(self) -> None:
         super()._initAttributes()
+        self._has_pull_requests: Attribute[bool] = NotSet
+        self._pull_request_creation_policy: Attribute[str] = NotSet
         self._score: Attribute[float] = NotSet
         self._text_matches: Attribute[dict[str, Any]] = NotSet
 
     def __repr__(self) -> str:
         return self.get__repr__({"full_name": self._full_name.value, "score": self._score.value})
+
+    @property
+    def has_pull_requests(self) -> bool:
+        self._completeIfNotSet(self._has_pull_requests)
+        return self._has_pull_requests.value
+
+    @property
+    def pull_request_creation_policy(self) -> str:
+        self._completeIfNotSet(self._pull_request_creation_policy)
+        return self._pull_request_creation_policy.value
 
     @property
     def score(self) -> float:
@@ -5003,6 +5103,10 @@ class RepositorySearchResult(Repository):
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         super()._useAttributes(attributes)
+        if "has_pull_requests" in attributes:  # pragma no branch
+            self._has_pull_requests = self._makeBoolAttribute(attributes["has_pull_requests"])
+        if "pull_request_creation_policy" in attributes:  # pragma no branch
+            self._pull_request_creation_policy = self._makeStringAttribute(attributes["pull_request_creation_policy"])
         if "score" in attributes:  # pragma no branch
             self._score = self._makeFloatAttribute(attributes["score"])
         if "text_matches" in attributes:  # pragma no branch
