@@ -213,7 +213,7 @@ class BranchProtection(github.GithubObject.CompletableGithubObject):
                 attributes["required_status_checks"],
             )
         if "restrictions" in attributes:  # pragma no branch
-            self._restrictions = attributes["restrictions"]
+            self._restrictions = self._makeDictAttribute(attributes["restrictions"])
             self._user_push_restrictions = attributes["restrictions"]["users_url"]
             self._team_push_restrictions = attributes["restrictions"]["teams_url"]
         if "url" in attributes:  # pragma no branch
