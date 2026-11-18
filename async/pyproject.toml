@@ -47,7 +47,7 @@ integrations = []
 root = ".."
 
 [tool.setuptools]
-packages = ["githubasyncio"]
+packages = ["githubasyncio", "githubasyncio.compat"]
 
 [tool.setuptools.package-data]
 githubasyncio = ["py.typed", "*.pyi"]

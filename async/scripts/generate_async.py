@@ -74,6 +74,12 @@ SKIP_FILES = {"__init__.py"}
 # Stems (without .py) for membership tests against Path.stem or bare module names.
 SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
 
+# Subpackages of github/ that contain no I/O and no references to the github package (e.g. compat, which only
+# re-exports typing / typing_extensions names): copied verbatim into githubasyncio/, with every
+# `github.<subpackage>` import repointed at `githubasyncio.<subpackage>`, so githubasyncio stays self-contained.
+# (github/requestlib/ is deliberately absent: githubasyncio gets its own niquests-only requestlib.py shim.)
+COPIED_SUBPACKAGES = ("compat",)
+
 # Names github/__init__.py re-exports as a class of the same name, shadowing the module itself at
 # the package-attribute level (`github.X` becomes the class, not the module, once
 # github/__init__.py finishes running -- see _find_shadowed_module_aliases()). This is about how
@@ -370,13 +376,14 @@ PATCHES: dict[str, list[Patch]] = {
         Patch(
             reason="TypeGuard now imported from typing, not typing_extensions; drop it here since "
             "is_defined/is_undefined switch to TypeIs (typing_extensions-only)",
-            match="from typing import TYPE_CHECKING, Any, TypeAlias, TypeGuard, overload",
-            replace="from typing import TYPE_CHECKING, Any, TypeAlias, overload",
+            match="from typing import TYPE_CHECKING, Any, ParamSpec, Protocol, TypeAlias, TypeGuard, TypeVar, overload",
+            replace="from typing import TYPE_CHECKING, Any, ParamSpec, Protocol, TypeAlias, TypeVar, overload",
         ),
         Patch(
-            reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
-            match="from typing_extensions import ParamSpec, Protocol, Self, TypeVar",
-            replace="from typing_extensions import ParamSpec, Protocol, Self, TypeIs, TypeVar",
+            reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch); typing.TypeIs "
+            "needs Python 3.13, so take it from typing_extensions (an unconditional async dependency)",
+            match="from githubasyncio.compat import Self\n",
+            replace="from typing_extensions import TypeIs\n\nfrom githubasyncio.compat import Self\n",
         ),
         Patch(
             reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
@@ -2088,6 +2095,9 @@ class IOAnalyzer:
         """
         result = []
         for cls_name in sorted(self.async_classes):
+            # Requester copying itself (`requester = Requester(...)` in __withArguments()) is not an entry point
+            if cls_name == "Requester":
+                continue
             stem = self.class_to_file.get(cls_name)
             node = self._get_class_node(cls_name)
             if stem is None or node is None:
@@ -3360,6 +3370,21 @@ class AsyncTransformer:
                     mod,
                 )
 
+        # Step 1a: function-local `import github.X` (e.g. GithubObject.rate_limit's `import github.Rate`, local
+        # because github.Rate depends on github.GithubObject) stays local: repoint it in place and count it as
+        # imported, so Step 2 below does not hoist a top-level `import githubasyncio.X` that recreates the cycle.
+        local_imports = re.findall(r"^[ \t]+import github\.(\w+)[ \t]*(?:#[^\n]*)?$", result, re.MULTILINE)
+        for mod in local_imports:
+            if mod in async_files:
+                result = re.sub(
+                    rf"^([ \t]+)import github\.{re.escape(mod)}([ \t]*(?:#[^\n]*)?)$",
+                    rf"\1import githubasyncio.{mod}\2",
+                    result,
+                    flags=re.MULTILINE,
+                )
+                already_imported.add(mod)
+                logger.debug("fix_imports[%s]: step 1a — local import github.%s → githubasyncio.%s", stem, mod, mod)
+
         # Step 1b: Convert self-aliased `import github.X as X` -> `from githubasyncio import X`.
         # No `_async_` prefix needed here: the alias already equals the module name, so there's
         # no bare-name collision with a TYPE_CHECKING class import to avoid (unlike Step 1 above)
@@ -3381,6 +3406,15 @@ class AsyncTransformer:
                     mod,
                     mod,
                 )
+
+        # Step 1c: repoint imports of verbatim-copied subpackages (`from github.compat import Self`)
+        for subpkg in COPIED_SUBPACKAGES:
+            result = re.sub(
+                rf"^(\s*)(from|import) github\.{re.escape(subpkg)}\b",
+                rf"\1\2 githubasyncio.{subpkg}",
+                result,
+                flags=re.MULTILINE,
+            )
 
         # Also track modules already imported via `import githubasyncio.X` (Step 1's own form,
         # picked up here too since a module can appear via `bare_imports` in one place and get
@@ -6187,6 +6221,12 @@ def main():
     # Generate requestlib.py (niquests-only shim; see generate_async_requestlib())
     write_file(DST_PKG / "requestlib.py", generate_async_requestlib())
     generated_count += 1
+
+    # Copy subpackages that need no transformation (see COPIED_SUBPACKAGES)
+    for subpkg in COPIED_SUBPACKAGES:
+        for p in sorted((SRC_PKG / subpkg).glob("*.py")):
+            write_file(DST_PKG / subpkg / p.name, AUTO_HEADER + p.read_text(encoding="utf-8"))
+            generated_count += 1
 
     # Generate transformed source files
     reexport_count = 0
