@@ -181,8 +181,6 @@ from collections.abc import Iterable
 from datetime import date, datetime, timezone
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability
 import github.Artifact
@@ -260,6 +258,7 @@ import github.Workflow
 import github.WorkflowJob
 import github.WorkflowRun
 from github import Consts
+from github.compat import deprecated
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,

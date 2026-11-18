@@ -41,12 +41,12 @@ import warnings
 from typing import Any
 
 import urllib3
-from typing_extensions import deprecated
 from urllib3 import Retry
 
 import github
 from github import Consts
 from github.Auth import AppAuth
+from github.compat import deprecated
 from github.GithubApp import GithubApp
 from github.GithubException import GithubException
 from github.Installation import Installation

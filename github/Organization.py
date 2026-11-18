@@ -96,8 +96,6 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.CodeSecurityConfig
 import github.CodeSecurityConfigRepository
 import github.Copilot
@@ -122,6 +120,7 @@ import github.SelfHostedActionsRunnerJitConfig
 import github.SelfHostedActionsRunnerToken
 import github.Team
 from github import Consts
+from github.compat import deprecated
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,

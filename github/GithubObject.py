@@ -61,9 +61,9 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from decimal import Decimal
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, TypeAlias, TypeGuard, overload
+from typing import TYPE_CHECKING, Any, ParamSpec, Protocol, TypeAlias, TypeGuard, TypeVar, overload
 
-from typing_extensions import ParamSpec, Protocol, Self, TypeVar
+from github.compat import Self
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject
@@ -752,8 +752,15 @@ class CompletableGithubObject(GithubObject, ABC):
         self, additional_headers: dict[str, Any] | None = None, parameters: dict[str, Any] | None = None
     ) -> bool:
         """
-        Check and update the object with conditional request :rtype: Boolean value indicating whether the object is
-        changed.
+        Refresh this object in place with a conditional GET request.
+
+        The request uses the object's ETag and Last-Modified headers, when available.
+        A ``304 Not Modified`` response leaves the cached attributes unchanged.
+
+        :param additional_headers: Extra request headers, overriding the conditional headers if supplied.
+        :param parameters: Query parameters for the request.
+        :return: ``True`` if the response refreshed the object, or ``False`` for a ``304 Not Modified`` response.
+        :rtype: bool
         """
         conditionalRequestHeader = dict()
         if self.etag is not None:
