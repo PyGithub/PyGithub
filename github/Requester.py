@@ -98,7 +98,7 @@ import time
 import urllib
 import urllib.parse
 from collections import deque
-from collections.abc import Callable, ItemsView, Iterator
+from collections.abc import Callable, Container, ItemsView, Iterator
 from datetime import datetime, timezone
 from io import IOBase
 from typing import TYPE_CHECKING, Any, BinaryIO, Generic, TypeVar
@@ -723,7 +723,7 @@ class Requester:
         parameters: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
         input: Any | None = None,
-        valid_codes: frozenset[int] = frozenset({200}),
+        valid_codes: Container[int] = frozenset({200}),
         follow_302_redirect: bool = False,
     ) -> tuple[int, dict[str, Any], Any]:
         """
