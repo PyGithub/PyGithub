@@ -707,6 +707,19 @@ class Github:
             url_parameters,
         )
 
+    @staticmethod
+    def _build_query_qualifiers(qualifiers: dict[str, Any]) -> list[str]:
+        # A list/tuple value must be expanded into repeated "qualifier:value" chunks
+        # (the GitHub-idiomatic form), otherwise it would be serialized as a Python
+        # list repr on the wire (e.g. "language:['python', 'ruby']").
+        chunks = []
+        for qualifier, value in qualifiers.items():
+            if isinstance(value, (list, tuple)):
+                chunks.extend(f"{qualifier}:{item}" for item in value)
+            else:
+                chunks.append(f"{qualifier}:{value}")
+        return chunks
+
     def search_repositories(
         self,
         query: str,
@@ -741,8 +754,7 @@ class Github:
         if query:  # pragma no branch (Should be covered)
             query_chunks.append(query)
 
-        for qualifier, value in qualifiers.items():
-            query_chunks.append(f"{qualifier}:{value}")
+        query_chunks.extend(self._build_query_qualifiers(qualifiers))
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -788,8 +800,7 @@ class Github:
         if query:
             query_chunks.append(query)
 
-        for qualifier, value in qualifiers.items():
-            query_chunks.append(f"{qualifier}:{value}")
+        query_chunks.extend(self._build_query_qualifiers(qualifiers))
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -835,8 +846,7 @@ class Github:
         if query:  # pragma no branch (Should be covered)
             query_chunks.append(query)
 
-        for qualifier, value in qualifiers.items():
-            query_chunks.append(f"{qualifier}:{value}")
+        query_chunks.extend(self._build_query_qualifiers(qualifiers))
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -879,8 +889,7 @@ class Github:
         if query:  # pragma no branch (Should be covered)
             query_chunks.append(query)
 
-        for qualifier, value in qualifiers.items():
-            query_chunks.append(f"{qualifier}:{value}")
+        query_chunks.extend(self._build_query_qualifiers(qualifiers))
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -929,8 +938,7 @@ class Github:
         if query:
             query_chunks.append(query)
 
-        for qualifier, value in qualifiers.items():
-            query_chunks.append(f"{qualifier}:{value}")
+        query_chunks.extend(self._build_query_qualifiers(qualifiers))
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -963,8 +971,7 @@ class Github:
         if query:  # pragma no branch (Should be covered)
             query_chunks.append(query)
 
-        for qualifier, value in qualifiers.items():
-            query_chunks.append(f"{qualifier}:{value}")
+        query_chunks.extend(self._build_query_qualifiers(qualifiers))
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
