@@ -58,12 +58,14 @@ Then, use a ``github.Auth.NetrcAuth`` instance to access these information:
     >>> g.get_user().login
     'login'
 
+.. _app-auth:
+
 App authentication
 ------------------
 
-A Github Apps authenticate by an application id and a private key.
+A Github App authenticates by an application id and a private key.
 
-Note that there is only a limited set of endpoints that can be called when authenticated as a Github App.
+Be aware that there is only a limited set of endpoints that can be called when authenticated as a Github App.
 Instead of using ``github.Github``, entry point ``github.GithubIntegration`` should be used
 when authenticated as a Github App:
 
@@ -84,11 +86,16 @@ Get a ``github.Github`` instance authenticated as an App installation:
     >>> g.get_repo("user/repo").name
     'repo'
 
+.. note::
+   Unless a sign function is given, the ``AppAuth`` requires PyGithub installed with JWT support::
+
+       pip install PyGithub[jwt]
+
 App installation authentication
 -------------------------------
 
 A specific installation of a Github App can use the Github API like a normal user.
-It authenticates by the Github App authentication (see above) and the installation id.
+It authenticates by the :ref:`Github App authentication <app-auth>` and the installation id.
 The ``AppInstallationAuth`` fetches an access token for the installation and handles its
 expiration timeout. The access token is refreshed automatically.
 
