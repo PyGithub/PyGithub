@@ -48,7 +48,7 @@
 
 import pickle
 from datetime import datetime, timezone
-from unittest import mock
+from unittest import TestCase, mock
 
 import github.GithubObject
 import github.Rate
@@ -1016,3 +1016,59 @@ class PaginatedList(Framework.TestCase):
 
         # accessing totalCount before iterating the PaginatedList triggers another request
         self.assertEqual(repo.get_discussions("id number").totalCount, 65)
+
+
+class PaginatedListTotalCount(TestCase):
+    def setUp(self):
+        self.requester = mock.Mock(per_page=2, base_url="https://api.github.com")
+        self.url = "https://api.github.com/repos/example/project/issues"
+        self.params = {"state": "closed", "labels": "bug", "sort": "updated", "direction": "asc"}
+        repo = github.Repository.Repository(self.requester, {}, {"url": self.url.removesuffix("/issues")})
+        self.issues = repo.get_issues(state="closed", labels=["bug"], sort="updated", direction="asc")
+        self.last_url = self.url + "?state=closed&labels=bug&sort=updated&direction=asc&per_page=2&page=2"
+        self.first_page = (
+            {"link": f'<{self.last_url}>; rel="next", <{self.last_url}>; rel="last"'},
+            [{"number": 1}, {"number": 2}],
+        )
+
+    def assertFilteredCount(self, issues, expected=3):
+        self.requester.requestJsonAndCheck.side_effect = None
+        self.requester.requestJsonAndCheck.return_value = (
+            ({"link": f'<{self.url}?per_page=1&page={expected}>; rel="last"'}, [{"number": 1}])
+            if expected
+            else ({}, [])
+        )
+        self.assertEqual(issues.totalCount, expected)
+        self.requester.requestJsonAndCheck.assert_called_with(
+            "GET", self.url, parameters={**self.params, "per_page": 1}, headers=None
+        )
+        calls = self.requester.requestJsonAndCheck.call_count
+        self.assertEqual(issues.totalCount, expected)
+        self.assertEqual(self.requester.requestJsonAndCheck.call_count, calls)
+
+    def testBeforeIteration(self):
+        self.assertFilteredCount(self.issues)
+        self.requester.requestJsonAndCheck.return_value = self.first_page
+        self.assertEqual(next(iter(self.issues)).number, 1)
+        self.requester.requestJsonAndCheck.assert_called_with(
+            "GET", self.url, parameters={**self.params, "per_page": 2}, headers=None
+        )
+
+    def testDuringIteration(self):
+        self.requester.requestJsonAndCheck.return_value = self.first_page
+        self.assertEqual(next(iter(self.issues)).number, 1)
+        self.assertFilteredCount(self.issues)
+
+    def testAfterIteration(self):
+        self.requester.requestJsonAndCheck.side_effect = [self.first_page, ({}, [{"number": 3}])]
+        self.assertEqual([issue.number for issue in self.issues], [1, 2, 3])
+        self.assertFilteredCount(self.issues)
+
+    def testAfterEmptyIteration(self):
+        self.requester.requestJsonAndCheck.return_value = ({}, [])
+        self.assertEqual(list(self.issues), [])
+        self.assertFilteredCount(self.issues, expected=0)
+
+    def testReversedBeforeIteration(self):
+        self.requester.requestJsonAndCheck.return_value = self.first_page
+        self.assertFilteredCount(self.issues.reversed)

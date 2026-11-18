@@ -345,7 +345,7 @@ class PaginatedList(PaginatedListBase[T]):
     def _fetchFirstElement(self) -> None:
         # fetches the first element only, updates __totalCount and __incomplete_results
         if self.is_rest:
-            params = self.__nextParams.copy()
+            params = self.__firstParams.copy()
             # set per_page = 1 so the totalCount is just the number of pages
             params.update({"per_page": 1})
             headers, data = self.__requester.requestJsonAndCheck(
