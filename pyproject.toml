@@ -44,7 +44,7 @@ Tracker = "https://github.com/pygithub/pygithub/issues"
 [tool.setuptools_scm]
 
 [tool.setuptools]
-packages = ["github"]
+packages = ["github", "github.compat"]
 
 [tool.setuptools.package-data]
 github = ["py.typed", "*.pyi"]

@@ -66,10 +66,9 @@ from datetime import datetime
 from os.path import basename
 from typing import TYPE_CHECKING, Any, BinaryIO
 
-from typing_extensions import deprecated
-
 import github.GitReleaseAsset
 import github.NamedUser
+from github.compat import deprecated
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional
 from github.PaginatedList import PaginatedList
 

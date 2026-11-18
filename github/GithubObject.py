@@ -63,7 +63,7 @@ from decimal import Decimal
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, TypeAlias, TypeGuard, overload
 
-from typing_extensions import ParamSpec, Protocol, Self, TypeVar
+from github.compat import ParamSpec, Protocol, Self, TypeVar
 
 from . import Consts
 from .GithubException import BadAttributeException, IncompletableObject

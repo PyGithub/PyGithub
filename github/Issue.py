@@ -67,8 +67,6 @@ import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.GithubApp
 import github.GithubObject
 import github.IssueComment
@@ -86,6 +84,7 @@ import github.Repository
 import github.SubIssueSummary
 import github.TimelineEvent
 from github import Consts
+from github.compat import deprecated
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,

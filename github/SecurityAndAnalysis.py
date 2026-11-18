@@ -45,9 +45,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import deprecated
-
 import github.SecurityAndAnalysisFeature
+from github.compat import deprecated
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
 
 if TYPE_CHECKING:

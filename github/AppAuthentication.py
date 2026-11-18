@@ -37,9 +37,8 @@
 
 from __future__ import annotations
 
-from typing_extensions import deprecated
-
 from github.Auth import AppAuth, AppInstallationAuth
+from github.compat import deprecated
 
 
 @deprecated("Use github.Auth.AppInstallationAuth instead")

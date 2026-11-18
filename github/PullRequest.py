@@ -83,8 +83,6 @@ import urllib.parse
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from typing_extensions import NotRequired, TypedDict
-
 import github.Commit
 import github.File
 import github.Issue
@@ -102,6 +100,7 @@ import github.PullRequestReview
 import github.Team
 import github.TimelineEvent
 from github import Consts
+from github.compat import NotRequired, TypedDict
 from github.GithubObject import (
     Attribute,
     CompletableGithubObject,

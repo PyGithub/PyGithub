@@ -41,12 +41,12 @@ from typing import Any
 from requests import Response
 from requests.models import CaseInsensitiveDict
 from requests.utils import get_encoding_from_headers
-from typing_extensions import Self
 from urllib3 import Retry
 from urllib3.connectionpool import ConnectionPool
 from urllib3.exceptions import MaxRetryError
 from urllib3.response import HTTPResponse
 
+from github.compat import Self
 from github.GithubException import GithubException, RateLimitExceededExceedsMaxWait
 from github.Requester import Requester
 
