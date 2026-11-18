@@ -51,6 +51,11 @@ from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 def encrypt(public_key: str, secret_value: str) -> str:
     """
     Encrypt a Unicode string using the public key.
+
+    This method requires PyGithub being installed with encryption support::
+
+        pip install PyGithub[encryption]
+
     """
     try:
         from nacl import encoding, public
@@ -120,6 +125,14 @@ class PublicKey(CompletableGithubObject):
         return self._url.value
 
     def encrypt(self, unencrypted_value: str) -> str:
+        """
+        Encrypt a Unicode string using this public key.
+
+        This method requires PyGithub being installed with encryption support::
+
+            pip install PyGithub[encryption]
+
+        """
         return encrypt(self.key, unencrypted_value)
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
