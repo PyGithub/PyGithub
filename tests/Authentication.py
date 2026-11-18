@@ -45,7 +45,6 @@
 ################################################################################
 
 import os
-import unittest
 from datetime import datetime, timezone
 from tempfile import NamedTemporaryFile
 from unittest import mock
@@ -349,7 +348,7 @@ class Authentication(Framework.BasicTestCase):
         )
         self.assertDictEqual(payload, {"iat": 1550055301, "exp": 1550055391, "iss": str(APP_ID)})
 
-    @unittest.skipIf(Framework.jwt_available, "tests behaviour without PyJWT")
+    @Framework.requires_no_jwt
     def testCreateJWTWithoutPyJWT(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
         with self.assertRaisesRegex(ImportError, "PyGithub\\[jwt\\]"):

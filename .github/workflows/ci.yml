@@ -31,8 +31,9 @@ jobs:
         include:
           - {python-version: "3.10", extras: "none", os: "windows-latest", os-label: "Windows"}
           - {python-version: "3.10", extras: "none", os: "macos-latest", os-label: "macOS"}
-          - {python-version: "3.15", extras: "encryption", os: "ubuntu-latest", os-label: "Ubuntu"}
           - {python-version: "3.15", extras: "jwt", os: "ubuntu-latest", os-label: "Ubuntu"}
+          - {python-version: "3.15", extras: "encryption", os: "ubuntu-latest", os-label: "Ubuntu"}
+          - {python-version: "3.15", extras: "encryption-jwt", os: "ubuntu-latest", os-label: "Ubuntu"}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Set up Python
