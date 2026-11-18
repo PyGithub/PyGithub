@@ -390,26 +390,19 @@ class BasicTestCase(unittest.TestCase):
         self.__closeCassetteIfNeeded()
         self.__cassettePath = path
         if path is None:
+            self.__previousInteractions = []
             return
         record_mode = "all" if self.recordMode else "none"
-        if self.recordMode and os.path.exists(path):
-            # vcrpy's "all" record mode never plays back existing interactions, but it still
-            # loads them from disk and keeps them in Cassette.data -- so without this, recording
-            # over an existing replay file would append the freshly recorded interactions after
-            # the stale ones instead of replacing them.
-            try:
-                requests, responses = VcrSerializer.Utf8FilesystemPersister.load_cassette(
-                    path, _vcr.serializers["pygithub-replaydata"]
-                )
-                self.__previousInteractions = list(zip(requests, responses))
-            except Exception:
-                self.__previousInteractions = []
-            os.remove(path)
-        else:
-            self.__previousInteractions = []
-        cassetteCm = _vcr.use_cassette(path, record_mode=record_mode)
+        # vcrpy's "all" record mode never plays back existing interactions, but it still loads them
+        # from disk. drop_unused_requests makes it write only the interactions of this run, instead
+        # of keeping the stale ones.
+        cassetteCm = _vcr.use_cassette(path, record_mode=record_mode, drop_unused_requests=self.recordMode)
         self.__cassette = cassetteCm.__enter__()
         self.__cassetteCm = cassetteCm
+        # the interactions loaded from disk, which noRecord() serves while recording
+        self.__previousInteractions = (
+            list(zip(self.__cassette.requests, self.__cassette.responses)) if self.recordMode else []
+        )
         # wired unconditionally (not just while captureRequests() is active) and exactly once per
         # cassette: __recordInteraction() itself checks __capturedRequests, so this single wiring
         # transparently reflects whatever captureRequests() call is active by the time each
@@ -453,7 +446,13 @@ class BasicTestCase(unittest.TestCase):
 
         def can_play_response_for(request) -> bool:
             if self.recordMode and self.__noRecord:  # pragma no cover (only used when recording)
-                return previous_index(request) is not None
+                if previous_index(request) is None:
+                    raise AssertionError(
+                        f"noRecord() has been used, but the existing replay data has no response for "
+                        f"{request.method} {request.uri}. Adjust the request to match the existing data, "
+                        f"or remove noRecord() to record new data."
+                    )
+                return True
             return originalCanPlay(request)
 
         def play_response_noRecord(request):
