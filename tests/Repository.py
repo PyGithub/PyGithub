@@ -787,6 +787,29 @@ class Repository(Framework.TestCase):
         self.assertEqual(location.end_line, 20)
         self.assertEqual(location.end_column, 42)
 
+    def testGetCodeownersErrors(self):
+        errors = self.repo.get_codeowners_errors()
+        self.assertEqual(len(errors), 2)
+        error = errors[0]
+        self.assertEqual(repr(error), 'CodeownersError(path=".github/CODEOWNERS", line=3, kind="Unknown owner")')
+        self.assertEqual(error.line, 3)
+        self.assertEqual(error.column, 12)
+        self.assertEqual(error.kind, "Unknown owner")
+        self.assertEqual(error.path, ".github/CODEOWNERS")
+        self.assertEqual(error.source, "/docs/     @ghost-team\n")
+        self.assertEqual(error.suggestion, "make sure @ghost-team exists and has write access to the repository")
+        self.assertEqual(
+            error.message,
+            "Unknown owner on line 3: make sure @ghost-team exists and has write access to the repository\n\n"
+            "  /docs/     @ghost-team\n"
+            "           ^",
+        )
+        self.assertEqual(errors[1].kind, "Invalid pattern")
+        self.assertIsNone(errors[1].suggestion)
+
+    def testGetCodeownersErrorsWithRef(self):
+        self.assertEqual(self.repo.get_codeowners_errors(ref="release-2.0"), [])
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
