@@ -32,7 +32,7 @@ dependencies = [
   "niquests>=3.12,<4",
   "pynacl>=1.4.0",
   "pyjwt[crypto]>=2.4.0",
-  "typing-extensions>=4.5.0",
+  'typing-extensions>=4.5.0; python_version < "3.13"'
 ]
 
 [project.urls]
@@ -41,7 +41,6 @@ Source = "https://github.com/pygithub/pygithub"
 Tracker = "https://github.com/pygithub/pygithub/issues"
 
 [project.optional-dependencies]
-integrations = []
 
 [tool.setuptools_scm]
 root = ".."
