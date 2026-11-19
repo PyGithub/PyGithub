@@ -787,6 +787,54 @@ class Repository(Framework.TestCase):
         self.assertEqual(location.end_line, 20)
         self.assertEqual(location.end_column, 42)
 
+    def testGetPages(self):
+        pages = self.repo.get_pages()
+        self.assertEqual(repr(pages), 'Pages(html_url="https://pygithub.example.com/", build_type="legacy")')
+        self.assertEqual(pages.url, "https://api.github.com/repos/PyGithub/PyGithub/pages")
+        self.assertEqual(pages.status, "built")
+        self.assertEqual(pages.cname, "pygithub.example.com")
+        self.assertEqual(pages.protected_domain_state, "verified")
+        self.assertIsNone(pages.pending_domain_unverified_at)
+        self.assertFalse(pages.custom_404)
+        self.assertEqual(pages.html_url, "https://pygithub.example.com/")
+        self.assertEqual(pages.build_type, "legacy")
+        self.assertTrue(pages.public)
+        self.assertTrue(pages.https_enforced)
+        self.assertEqual(repr(pages.source), 'PagesSource(path="/docs", branch="main")')
+        self.assertEqual(pages.source.branch, "main")
+        self.assertEqual(pages.source.path, "/docs")
+        certificate = pages.https_certificate
+        self.assertEqual(repr(certificate), 'PagesHttpsCertificate(state="approved")')
+        self.assertEqual(certificate.state, "approved")
+        self.assertEqual(certificate.description, "Certificate is approved")
+        self.assertEqual(certificate.domains, ["pygithub.example.com"])
+        self.assertEqual(certificate.expires_at, "2027-02-14")
+
+    def testCreatePages(self):
+        pages = self.repo.create_pages(build_type="legacy", source_branch="main", source_path="/docs")
+        self.assertIsNone(pages.status)
+        self.assertIsNone(pages.cname)
+        self.assertEqual(pages.html_url, "https://pygithub.github.io/PyGithub/")
+        self.assertEqual(pages.source.branch, "main")
+        self.assertEqual(pages.source.path, "/docs")
+
+    def testCreatePagesSourcePathWithoutBranch(self):
+        with self.assertRaises(AssertionError):
+            self.repo.create_pages(source_path="/docs")
+
+    def testUpdatePages(self):
+        self.repo.update_pages(cname="pygithub.example.com", https_enforced=True, source_branch="main", source_path="/")
+
+    def testUpdatePagesRemoveCname(self):
+        self.repo.update_pages(cname=None)
+
+    def testUpdatePagesIncompleteSource(self):
+        with self.assertRaises(AssertionError):
+            self.repo.update_pages(source_branch="main")
+
+    def testDeletePages(self):
+        self.repo.delete_pages()
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))

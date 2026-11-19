@@ -225,6 +225,7 @@ import github.Milestone
 import github.NamedUser
 import github.Notification
 import github.Organization
+import github.Pages
 import github.PaginatedList
 import github.Path
 import github.Permissions
@@ -319,6 +320,7 @@ if TYPE_CHECKING:
     from github.NamedUser import NamedUser
     from github.Notification import Notification
     from github.Organization import Organization
+    from github.Pages import Pages
     from github.Path import Path
     from github.Permissions import Permissions
     from github.Project import Project
@@ -4624,6 +4626,74 @@ class Repository(CompletableGithubObject):
         environment_name = urllib.parse.quote(environment_name, safe="")
 
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/environments/{environment_name}")
+
+    def get_pages(self) -> Pages:
+        """
+        :calls: `GET /repos/{owner}/{repo}/pages <https://docs.github.com/en/rest/pages/pages#get-a-github-pages-site>`_
+        :rtype: :class:`github.Pages.Pages`
+        """
+        headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/pages")
+        return github.Pages.Pages(self._requester, headers, data)
+
+    def create_pages(
+        self,
+        build_type: Opt[str] = NotSet,
+        source_branch: Opt[str] = NotSet,
+        source_path: Opt[str] = NotSet,
+    ) -> Pages:
+        """
+        :calls: `POST /repos/{owner}/{repo}/pages <https://docs.github.com/en/rest/pages/pages#create-a-github-pages-site>`_
+        :param build_type: "legacy" or "workflow"
+        :param source_branch: branch to publish from, required for legacy builds
+        :param source_path: directory to publish from, "/" or "/docs", GitHub defaults to "/"
+        :rtype: :class:`github.Pages.Pages`
+        """
+        assert is_optional(build_type, str), build_type
+        assert is_optional(source_branch, str), source_branch
+        assert is_optional(source_path, str), source_path
+        assert is_defined(source_branch) or is_undefined(source_path), "source_path requires source_branch"
+        post_parameters: dict[str, Any] = NotSet.remove_unset_items({"build_type": build_type})
+        if is_defined(source_branch):
+            post_parameters["source"] = NotSet.remove_unset_items({"branch": source_branch, "path": source_path})
+        headers, data = self._requester.requestJsonAndCheck("POST", f"{self.url}/pages", input=post_parameters)
+        return github.Pages.Pages(self._requester, headers, data)
+
+    def update_pages(
+        self,
+        cname: Opt[str | None] = NotSet,
+        https_enforced: Opt[bool] = NotSet,
+        build_type: Opt[str] = NotSet,
+        source_branch: Opt[str] = NotSet,
+        source_path: Opt[str] = NotSet,
+    ) -> None:
+        """
+        :calls: `PUT /repos/{owner}/{repo}/pages <https://docs.github.com/en/rest/pages/pages#update-information-about-a-github-pages-site>`_
+        :param cname: custom domain, None removes the custom domain
+        :param https_enforced: whether HTTPS is enforced
+        :param build_type: "legacy" or "workflow"
+        :param source_branch: branch to publish from, must be given together with source_path
+        :param source_path: directory to publish from, "/" or "/docs", must be given together with source_branch
+        :rtype: None
+        """
+        assert cname is None or is_optional(cname, str), cname
+        assert is_optional(https_enforced, bool), https_enforced
+        assert is_optional(build_type, str), build_type
+        assert is_optional(source_branch, str), source_branch
+        assert is_optional(source_path, str), source_path
+        assert is_defined(source_branch) == is_defined(source_path), "source_branch and source_path go together"
+        put_parameters: dict[str, Any] = NotSet.remove_unset_items(
+            {"cname": cname, "https_enforced": https_enforced, "build_type": build_type}
+        )
+        if is_defined(source_branch):
+            put_parameters["source"] = {"branch": source_branch, "path": source_path}
+        headers, data = self._requester.requestJsonAndCheck("PUT", f"{self.url}/pages", input=put_parameters)
+
+    def delete_pages(self) -> None:
+        """
+        :calls: `DELETE /repos/{owner}/{repo}/pages <https://docs.github.com/en/rest/pages/pages#delete-a-github-pages-site>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/pages")
 
     def get_dependabot_alerts(
         self,
