@@ -15,6 +15,16 @@ jobs:
   publish:
     needs: [build]
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: sync
+            path: dist
+            secret_name: PYPI_PASSWORD
+          - label: async
+            path: async/dist
+            secret_name: ASYNC_PYPI_PASSWORD
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
         with:
@@ -22,12 +32,12 @@ jobs:
           path: .
       - name: Install twine
         run: pip install -U "twine>=6.1.0" "packaging>=24.2"
-      - name: Check 📦 package
-        run: twine check dist/* async/dist/*
-      - name: Publish 📦 to PyPI
+      - name: Check ${{ matrix.label }} 📦 package
+        run: twine check ${{ matrix.path }}/*
+      - name: Publish ${{ matrix.label }} 📦 to PyPI
         # only run this for tags
         if: startsWith(github.event.ref, 'refs/tags/')
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: twine upload dist/* async/dist/*
+          TWINE_PASSWORD: ${{ secrets[matrix.secret_name] }}
+        run: twine upload ${{ matrix.path }}/*
