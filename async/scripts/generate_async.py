@@ -77,7 +77,7 @@ SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
 # Subpackages of github/ that contain no I/O and no references to the github package (e.g. compat, which only
 # re-exports typing / typing_extensions names): copied verbatim into githubasyncio/, with every
 # `github.<subpackage>` import repointed at `githubasyncio.<subpackage>`, so githubasyncio stays self-contained.
-# (github/requestlib/ is deliberately absent: githubasyncio gets its own niquests-only requestlib.py shim.)
+# (github/requestlib/ is deliberately absent: githubasyncio gets its own niquests-only requestlib/ shim.)
 COPIED_SUBPACKAGES = ("compat",)
 
 # Names github/__init__.py re-exports as a class of the same name, shadowing the module itself at
@@ -5304,7 +5304,7 @@ def _generate_reexport_stub(module_name: str) -> str:
 
 def generate_async_requestlib() -> str:
     """
-    Generate githubasyncio/requestlib.py: the async project's HTTP-backend shim.
+    Generate githubasyncio/requestlib/__init__.py: the async project's HTTP-backend shim.
 
     Mirrors the niquests branch of the classic project's github/requestlib/__init__.py, but
     unconditionally -- the async project mandates niquests (see async/pyproject.toml), so there's
@@ -6355,8 +6355,9 @@ def main():
     write_file(DST_PKG / "__init__.py", generate_async_init())
     generated_count += 1
 
-    # Generate requestlib.py (niquests-only shim; see generate_async_requestlib())
-    write_file(DST_PKG / "requestlib.py", generate_async_requestlib())
+    # Generate requestlib/__init__.py (niquests-only shim; see generate_async_requestlib()), a package like
+    # the classic github/requestlib/
+    write_file(DST_PKG / "requestlib" / "__init__.py", generate_async_requestlib())
     generated_count += 1
 
     # Copy subpackages that need no transformation (see COPIED_SUBPACKAGES)
