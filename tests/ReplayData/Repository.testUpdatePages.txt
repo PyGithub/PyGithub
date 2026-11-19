@@ -7,4 +7,3 @@ None
 {"cname": "pygithub.example.com", "https_enforced": true, "source": {"branch": "main", "path": "/"}}
 204
 [('Server', 'GitHub.com')]
-
