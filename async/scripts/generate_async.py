@@ -75,8 +75,9 @@ SKIP_FILES = {"__init__.py"}
 SKIP_STEMS = {f.removesuffix(".py") for f in SKIP_FILES}
 
 # Subpackages of github/ that contain no I/O and no references to the github package (e.g. compat, which only
-# re-exports typing / typing_extensions names): copied verbatim into githubasyncio/, with every
-# `github.<subpackage>` import repointed at `githubasyncio.<subpackage>`, so githubasyncio stays self-contained.
+# re-exports typing / typing_extensions names): copied into githubasyncio/, with every
+# `github.<subpackage>` import repointed at `githubasyncio.<subpackage>`, so githubasyncio stays self-contained,
+# and with PATCHES["<subpackage>/<stem>"] applied.
 # (github/requestlib/ is deliberately absent: githubasyncio gets its own niquests-only requestlib/ shim.)
 COPIED_SUBPACKAGES = ("compat",)
 
@@ -352,6 +353,25 @@ class Patch(NamedTuple):
 # mechanical transformation can produce. This is the complete catalog of
 # hand-maintained differences between the sync and async variants.
 PATCHES: dict[str, list[Patch]] = {
+    # Keyed "<subpackage>/<stem>" for files of COPIED_SUBPACKAGES.
+    "compat/__init__": [
+        Patch(
+            reason="GithubObject's is_defined/is_undefined use TypeIs (see PATCHES['GithubObject']), which is in "
+            "typing from Python 3.13 and in typing_extensions (>= 4.10.0, see async/pyproject.toml) before",
+            match="    from typing import NotRequired, Self, TypedDict\n",
+            replace="    from typing import NotRequired, Self, TypedDict, TypeIs\n",
+        ),
+        Patch(
+            reason="TypeIs from typing_extensions before Python 3.13 (see above)",
+            match="    from typing_extensions import NotRequired, Self, TypedDict, deprecated\n",
+            replace="    from typing_extensions import NotRequired, Self, TypedDict, TypeIs, deprecated\n",
+        ),
+        Patch(
+            reason="export TypeIs (see above)",
+            match='    "TypedDict",\n',
+            replace='    "TypedDict",\n    "TypeIs",\n',
+        ),
+    ],
     "GithubObject": [
         Patch(
             reason="cannot await inside __init__ — store a flag; SyncProxy._wrap()/user code completes later",
@@ -376,15 +396,15 @@ PATCHES: dict[str, list[Patch]] = {
         ),
         Patch(
             reason="TypeGuard now imported from typing, not typing_extensions; drop it here since "
-            "is_defined/is_undefined switch to TypeIs (typing_extensions-only)",
+            "is_defined/is_undefined switch to TypeIs (imported from githubasyncio.compat below)",
             match="from typing import TYPE_CHECKING, Any, ParamSpec, Protocol, TypeAlias, TypeGuard, TypeVar, overload",
             replace="from typing import TYPE_CHECKING, Any, ParamSpec, Protocol, TypeAlias, TypeVar, overload",
         ),
         Patch(
             reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch); typing.TypeIs "
-            "needs Python 3.13, so take it from typing_extensions (an unconditional async dependency)",
+            "needs Python 3.13, so take it from githubasyncio.compat (see PATCHES['compat/__init__'])",
             match="from githubasyncio.compat import Self\n",
-            replace="from typing_extensions import TypeIs\n\nfrom githubasyncio.compat import Self\n",
+            replace="from githubasyncio.compat import Self, TypeIs\n",
         ),
         Patch(
             reason="TypeIs narrows in both branches (TypeGuard only narrows the True branch)",
@@ -6367,6 +6387,7 @@ def main():
             content = re.sub(
                 rf"\bgithub\.{re.escape(subpkg)}\b", f"githubasyncio.{subpkg}", p.read_text(encoding="utf-8")
             )
+            content = _apply_patches(f"{subpkg}/{p.stem}", content)
             write_file(DST_PKG / subpkg / p.name, AUTO_HEADER + content)
             generated_count += 1
 
