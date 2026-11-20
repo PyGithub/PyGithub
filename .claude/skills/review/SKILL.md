@@ -1,6 +1,6 @@
 ---
 name: review
-description: Review a PyGithub pull request (or local branch / diff) the way the PyGithub maintainer does, and decide whether it can be approved or which changes are required. Use when asked to review a PR, check a contribution, or decide if a change is ready to merge.
+description: Review a PyGithub pull request (or local branch / diff) the way the PyGithub maintainer does, and decide whether it can be approved or which changes are required. Reviews GitHub API changes (PyGithub classes wrapping endpoints) in depth; identifies and highlights architectural changes for a maintainer decision on their direction. Use when asked to review a PR, check a contribution, or decide if a change is ready to merge.
 ---
 
 # Reviewing PyGithub pull requests
@@ -8,6 +8,14 @@ description: Review a PyGithub pull request (or local branch / diff) the way the
 This skill condenses what the maintainer actually asked for before approving ~100 recently merged community pull
 requests. Most PRs get approved after one round of *minor* changes; the recurring themes below are what those
 rounds were about. Check every item, in this order, and only approve when nothing is left.
+
+A PR can contain two kinds of change, which are reviewed differently (step 2):
+
+- **GitHub API changes** — PyGithub classes and methods wrapping specific GitHub REST API endpoints, built on the
+  existing PyGithub architecture. These are **reviewed in depth** (steps 3–11).
+- **Architectural changes** — changes to how PyGithub interacts with the GitHub REST API in general. These are
+  **identified and highlighted, not reviewed in depth**: before anyone reviews their implementation, the maintainers
+  have to judge whether PyGithub should go in that direction at all.
 
 First read [ARCHITECTURE.md](../../../ARCHITECTURE.md). It is the canonical reference for code conventions, API design
 conventions, test conventions and replay data. This skill tells you **what to look for**; ARCHITECTURE.md explains
@@ -48,9 +56,6 @@ For a local branch use `git diff origin/main...HEAD` instead.
   being the number of items when fully iterated vs. GitHub's capped `total_count`), resolve the intended semantics
   (and link the related issues) before reviewing the implementation; both semantics may be useful and need different
   APIs.
-- **Big architectural changes** (new runtime dependencies, generated code, packaging, async support) need a design
-  discussion with the other maintainers before code review; summarise the implications (maintenance cost, code
-  duplication, package layout, major-version need) and ask for their input.
 - Look up the endpoint in the GitHub REST docs and in the OpenAPI spec (`api.github.com.*.json`, query with `jq` or
   the `openapi` skill) to verify paths, verbs, parameter names, response schemas, nullability and status codes. Do
   not trust the PR description for this; reviewers have found methods whose response schema did not match the
@@ -64,7 +69,88 @@ For a local branch use `git diff origin/main...HEAD` instead.
   and practices; deviations need a reason. Point the author to the concrete prior art (file:line or method name) in the
   review.
 
-## 2. Scope and hygiene
+## 2. Classify the changes: architecture vs. GitHub API
+
+Go through the diff and assign every change to one of two kinds. The question is not "which file is touched", but
+"does this change how PyGithub talks to the GitHub REST API **in general**, or does it wrap **specific endpoints**
+using the existing general mechanisms?"
+
+**GitHub API changes** — reviewed in depth in steps 3–11:
+
+- New or changed PyGithub classes in `github/<Class>.py` wrapping endpoints or OpenAPI schemas: attributes,
+  properties, `_initAttributes` / `_useAttributes`, methods calling endpoints, `:calls:` docstrings, class
+  docstrings.
+- Their deprecations, breaking changes and `doc/changes.rst` entries.
+- Their tests in `tests/<Class>.py`, replay data in `tests/ReplayData/`, and examples in `doc/examples/`.
+- Endpoint-specific constants (e.g. a new media type in `github/Consts.py` used by one method).
+- Bulk changes produced by the **existing** OpenAPI tooling (`scripts/openapi.py apply …`), since they apply the
+  current architecture to more classes.
+
+**Architectural changes** — identified and highlighted, not reviewed in depth:
+
+- The HTTP layer: `Requester` (request encoding, headers incl. API version / media types sent with every request,
+  redirects, retries, rate-limit handling, timeouts, connection pooling, streaming, base URL / host handling).
+- The object model: `GithubObject`, `CompletableGithubObject`, `NonCompletableGithubObject`, `Attribute`, lazy
+  loading and completion semantics, `NotSet` / `Opt`, `PaginatedList` (paging, `totalCount`, slicing), the
+  `GithubException` hierarchy and how status codes map to exceptions.
+- Entry points and authentication: `Github` / `GithubIntegration` constructor options, `Auth` classes, `GithubRetry`,
+  `Pickle` support of these classes.
+- Dependencies and packaging: runtime dependencies, extras, supported Python versions, `pyproject.toml`,
+  `requirements/*.txt`, package layout, generated code, async support.
+- Tooling and infrastructure: `scripts/openapi.py`, `scripts/sort_class.py`, CI workflows, pre-commit configuration,
+  the test framework (`tests/Framework.py`, replay mechanism), doc build.
+- Changes to the conventions themselves (ARCHITECTURE.md, a new pattern applied across all classes such as a
+  different annotation style or a new base-class hook), even when every individual edit is in a class file.
+
+Grey zones — classify as architectural and flag them:
+
+- A GitHub API change whose implementation adds a capability to the general layer (e.g. streaming downloads in
+  `Requester` for `GitReleaseAsset.download_asset`): the `Requester` part is architectural, the class method is an API
+  change.
+- Class-specific logic placed in a general place (e.g. release-by-tag URL handling in `Requester`): this is an
+  architectural change *in effect* — highlight it and ask whether the problem should be fixed in the class instead
+  (see "Fix the root cause" in step 1).
+- A small bug fix in the general layer is still architectural: it changes the behaviour of every request it touches.
+
+**For architectural changes, do not review the implementation in depth** — no line-level convention findings, no
+suggestion blocks, no test-mutation checks on that code. The maintainers first have to decide whether PyGithub should
+go in that direction at all; a detailed review of code that may be rejected wastes everyone's time. Instead, for each
+architectural change, prepare for the maintainers:
+
+1. **What changes** — the files / components touched, and the behaviour before vs. after in plain words.
+2. **Who is affected** — every request / every class, or only users opting in (new option, new method).
+3. **Implications** — as far as visible from the diff:
+   - backward compatibility (changed defaults, changed behaviour of existing calls, changed exceptions, need for a
+     major release),
+   - defaults: does the change keep today's behaviour by default (`None` → nothing sent), or would it change every
+     request and require touching all replay data?
+   - new runtime dependencies or extras, supported Python versions,
+   - maintenance cost, code duplication (e.g. sync / async), consistency with existing patterns,
+   - `Requester` specifics: bypassing the existing infrastructure (`__requestEncode` / `__requestRaw`: error handling,
+     rate limit headers, retries) by calling `requests` directly; changes to code guarded by `__connection_lock`
+     (thread safety); risky optimisations of correct-but-slow code,
+   - pickling of `Github`, `Requester`, `PaginatedList` or `Auth` (new unpicklable state, step 8),
+   - effect on tooling and CI (OpenAPI scripts, class sorting, replay data).
+4. **Alternatives** — can users already achieve the goal without it (step 1, "Is the change needed at all?")? Is there
+   a smaller or opt-in variant, or a class-level fix instead?
+5. **Prior discussion** — linked issues, earlier PRs and maintainer comments on the same direction. If a maintainer
+   has already decided on the direction (in the PR, a linked issue or a discussion), cite that decision; the in-depth
+   review of the architectural code is then a separate maintainer task, not part of this review unless the user
+   explicitly asks for it.
+6. **Question for the maintainers** — the concrete direction decision needed (e.g. "Should PyGithub send an API
+   version header with every request, and with which default?").
+
+Then:
+
+- **Pure GitHub API PR**: continue with steps 3–11 for everything.
+- **Pure architectural PR**: skip the in-depth steps; the review consists of the highlighted architectural changes
+  (step 12). Still point out obvious blockers that need no direction decision (e.g. CI cannot run, the PR is a
+  duplicate, unrelated changes mixed in).
+- **Mixed PR**: review the GitHub API part in depth (steps 3–11), highlight the architectural part, and propose a
+  split (step 3): the architectural change as its own PR, the API change stacked on top of it — or, if the API change
+  does not really need the architectural change, rewritten to use the existing architecture.
+
+## 3. Scope and hygiene
 
 **One PR, one scope.** Identify the distinct concerns in the PR (e.g. a new endpoint + a `Requester` fix + a
 docs improvement + a dependency bump). Each distinct concern goes into its own PR:
@@ -75,6 +161,10 @@ docs improvement + a dependency bump). Each distinct concern goes into its own P
   dependent PR's base branch is the branch of the PR it builds on, so each PR shows only its own diff and they are
   merged in order. When the base branch cannot be used (e.g. both branches live in a fork), the dependent PR targets
   `main`, states "Depends on #N" in its description, and is reviewed on its own commits only and merged after #N.
+
+Architectural changes identified in step 2 are always a concern of their own: they are split out of a GitHub API PR
+(the API PR stacked on top when it needs them), so the maintainers can decide on the architectural direction without
+blocking, or being blocked by, the endpoint work.
 
 Name the concerns you found and propose the split in the review.
 
@@ -101,7 +191,7 @@ Then request the removal of anything not needed for the PR's purpose. Look for:
   response fields that are not in the replay data (ask for evidence, e.g. the field in
   `tests/ReplayData/<Class>.setUp.txt`).
 
-## 3. API design
+## 4. API design
 
 See "API Design Conventions" in ARCHITECTURE.md. Compare everything below against the prior art found in step 1 —
 if another class already solves the same problem, the PR must follow that solution. Check:
@@ -138,8 +228,9 @@ if another class already solves the same problem, the PR must follow that soluti
   #2760 — errors get swallowed). Use `requestJson` and inspect `status` only where a status is a documented result
   (e.g. 404 meaning "not enabled"), and still raise for any other unexpected status; then check all methods using
   the same pattern.
-- **Defaults keep current behaviour**: a new option (e.g. an API version header) defaults to the behaviour users
-  have today (`None` → nothing sent); a default that changes requests would also require touching all replay data.
+- **Defaults keep current behaviour**: a new parameter of an existing method defaults to the behaviour users have
+  today (`NotSet` → nothing sent); a default that changes the request would also require touching that method's
+  replay data. (New options that affect every request, e.g. an API version header, are architectural, step 2.)
 - **Keyword-only for internal / trailing arguments**: arguments that user code should not pass positionally (e.g.
   `requester`) go after `*`, so new public arguments can be added before them without breaking callers. `:param:`
   docs follow the signature order.
@@ -149,7 +240,7 @@ if another class already solves the same problem, the PR must follow that soluti
   (missing `urllib.parse.quote(..., safe="")`, `warnings.warn` without `stacklevel`, mutating a caller's headers dict),
   `grep` the code base and ask to fix all occurrences.
 
-## 4. Backward compatibility
+## 5. Backward compatibility
 
 PyGithub has many users; any break must be deliberate. See ARCHITECTURE.md "Backward compatibility" and
 "Deprecations".
@@ -187,7 +278,7 @@ intermediate step is genuinely impossible; in that case the PR must say so and t
   that can be copied into the "Deprecations" section of `doc/changes.rst`. Compare the list against the diff
   (`grep` the diff for `deprecated` and `DeprecationWarning`); ask the author to add missing entries.
 
-## 5. Implementation conventions
+## 6. Implementation conventions
 
 Compare against ARCHITECTURE.md "Naming and Structuring Conventions". The most frequent findings:
 
@@ -204,10 +295,8 @@ Compare against ARCHITECTURE.md "Naming and Structuring Conventions". The most f
 - `data.get("key")` instead of `data.get("key", None)`; `isinstance(x, (A, B))` instead of `isinstance(x, A) or
   isinstance(x, B)`.
 - New media type constants in `github/Consts.py` go next to the existing media type constants, not at the end.
-- `Requester` changes: new request paths must go through the existing infrastructure (`__requestEncode` /
-  `__requestRaw`: error handling, rate limit headers, retries) rather than calling `requests` directly. Scrutinise
-  changes to code guarded by `__connection_lock` for thread safety; prefer leaving correct-but-slow code alone over a
-  risky optimisation.
+- Methods use the existing `Requester` API (`requestJsonAndCheck`, `requestJson`, …) rather than calling `requests`
+  directly or reaching into `Requester` internals. Any change *to* `Requester` is architectural (step 2).
 - `_useAttributes` must set every attribute declared in `_initAttributes` (look for missing ones, e.g.
   `dismissal_approved_by`).
 - **Member order** (ARCHITECTURE.md "Internal Class Order", enforced by `scripts/sort_class.py`): prolog →
@@ -226,7 +315,7 @@ Compare against ARCHITECTURE.md "Naming and Structuring Conventions". The most f
   `requirements/scripts.txt`, and an index from `python scripts/openapi.py index github openapi.index`); any diff it
   prints is a required change.
 
-## 6. Documentation
+## 7. Documentation
 
 - Every API-calling method has a `:calls:` line with the HTTP verb, the path template using the **docs'
   placeholders** (`/orgs/{org}/...`, not `/orgs/{owner}/{repo}/...`), and a link to the **exact** docs anchor of that
@@ -248,19 +337,20 @@ Compare against ARCHITECTURE.md "Naming and Structuring Conventions". The most f
   actually exists). When in doubt, run the snippet against replay data or write a quick test; doc examples should
   ideally be backed by a test.
 
-## 7. Pickling
+## 8. Pickling
 
 See ARCHITECTURE.md "Pickling".
 
-- Pickling must keep working: look for new attributes on PyGithub classes, `Github`, `Requester`, `PaginatedList` or
-  `Auth` classes holding unpicklable state (locks, sessions / connections, open files, generators, lambdas, local
-  functions). Such state must be excluded in `__getstate__` and recreated in `__setstate__`.
-- A new `Auth` class must be added to `Pickle.auths` in `tests/Pickle.py`; new objects with extra runtime state need a
-  pickle round-trip test there.
+- Pickling must keep working: look for new attributes on PyGithub classes holding unpicklable state (locks, sessions /
+  connections, open files, generators, lambdas, local functions). Such state must be excluded in `__getstate__` and
+  recreated in `__setstate__`; new objects with extra runtime state need a pickle round-trip test in `tests/Pickle.py`.
+- New state on `Github`, `Requester`, `PaginatedList` or `Auth` classes is architectural (step 2): list its pickling
+  impact among the implications for the maintainers instead of reviewing it here. (Once that direction is agreed, a
+  new `Auth` class must be added to `Pickle.auths` in `tests/Pickle.py`.)
 - Do **not** request changes because objects pickled with a different PyGithub release can no longer be unpickled
   (renamed private attributes, changed class layouts) — compatibility across releases is not guaranteed.
 
-## 8. Tests
+## 9. Tests
 
 A behavioural change without a test is not approvable. Ask for one (offer guidance on how to record / hand-craft
 replay data if the contributor struggles). Check against ARCHITECTURE.md "Test Conventions":
@@ -318,7 +408,7 @@ replay data if the contributor struggles). Check against ARCHITECTURE.md "Test C
 - Organisation-level variants: when an endpoint exists for repos and orgs, both are implemented and tested.
 - Doc examples (`doc/examples/*.rst`) ideally get a test proving they work.
 
-## 9. Replay data
+## 10. Replay data
 
 See ARCHITECTURE.md "Replay Data". Check:
 
@@ -332,7 +422,7 @@ See ARCHITECTURE.md "Replay Data". Check:
 - No superfluous requests (a GET that disappears when the parent is obtained lazily).
 - Hand-crafted files must be consistent with what the code sends (path, query, body).
 
-## 10. CI
+## 11. CI
 
 Open each failing check and translate it into a concrete request:
 
@@ -344,9 +434,9 @@ Open each failing check and translate it into a concrete request:
 - **docs** (`sphinx-build doc build`): new warnings/errors are blocking.
 - **OpenAPI / code-structure checks** ("Check verbs", "Add schemas", "Implement schemas", "Sort classes"): never
   just report pass/fail — read the output and judge whether it is relevant to this PR (see below).
-- **Tests** on all supported Pythons and on Windows. Changes involving optional dependencies / extras (e.g.
-  `PyGithub[encryption]`) must be tested in CI and tox both with and without the extra installed, and installation
-  docs (`README.md`, `doc/introduction.rst` "Download and install") updated.
+- **Tests** on all supported Pythons and on Windows. New optional dependencies / extras are architectural (step 2);
+  once agreed, they must be tested in CI and tox both with and without the extra installed, and installation docs
+  (`README.md`, `doc/introduction.rst` "Download and install") updated.
 - If CI does not run or fails for reasons fixed on `main`, ask to merge `main` (and resolve conflicts).
 
 Locally, for the touched files:
@@ -400,7 +490,7 @@ with `>` only on head:
   changed return type or new method changes which classes a schema is returned by, a changed base class affects all
   subclasses, a new class changes the class count (`Applying API schemas to 230 … classes` vs. `235`). Trace each
   such entry back to the change that causes it. If the cause is a change that does not belong to the PR's scope
-  (e.g. the branch contains unrelated commits), that is a scope problem (section 2).
+  (e.g. the branch contains unrelated commits), that is a scope problem (section 3).
 
 **Per job:**
 
@@ -440,16 +530,22 @@ crash is always triggered by code the PR adds or changes.
 the class / method and the log lines. For `<` entries (findings the PR removes), confirm they are fine so the
 contributor knows the red job needs no action for them.
 
-## 11. Writing the review
+## 12. Writing the review
 
 Mirror the maintainer's style: friendly, short, concrete.
 
 - Start the summary with thanks and a one-line assessment, e.g. "Thanks for the contribution! Minor structural changes
   needed." / "Great work, just minor convention issues." / "LGTM!".
-- Put each finding as an inline comment on the exact line. Prefer GitHub ```` ```suggestion ```` blocks with the exact
-  replacement text, so the contributor can apply them with one click (also for replay data lines). Use a plain comment
-  with the reasoning when the change is structural ("Please move to `DeploymentBranchPolicy.delete` (removing `id`
-  parameter).").
+- **Architectural changes come first, clearly separated.** If step 2 found any, open the review with a section
+  "Architectural changes — maintainer decision needed", addressed to the maintainers, listing each change with the
+  points from step 2 (what changes, who is affected, implications, alternatives, prior discussion, the question to
+  decide). Keep it neutral and factual: present the trade-offs, do not argue for or against the direction. Tell the
+  contributor that this part is waiting for a maintainer decision on the direction and will be reviewed in detail
+  afterwards, so they do not polish code that may change. No inline findings on architectural code.
+- Then the GitHub API review: put each finding as an inline comment on the exact line. Prefer GitHub
+  ```` ```suggestion ```` blocks with the exact replacement text, so the contributor can apply them with one click (also
+  for replay data lines). Use a plain comment with the reasoning when the change is structural ("Please move to
+  `DeploymentBranchPolicy.delete` (removing `id` parameter).").
 - Ask questions where intent is unclear ("Is this related to …?", "What is the current behaviour of GitHub with
   `make_latest` omitted?", "Are these test files hand crafted?") rather than assuming.
 - Link the failing CI step or the related PR / issue / docs page.
@@ -461,8 +557,11 @@ Mirror the maintainer's style: friendly, short, concrete.
 - PRs that remove deprecated API are kept as drafts until the next major release; they must also delete the
   corresponding tests and replay data files.
 - Verdict:
-  - **APPROVE** ("LGTM!") only when every section above is clean and CI is green.
-  - **REQUEST_CHANGES** for anything in sections 2–10 that must change; say whether the changes are minor.
-  - **COMMENT** for design discussion without a blocking request.
-- Do not post anything to GitHub unless the user asked for it; by default present the review (verdict, summary,
-  inline findings with file:line and suggestions) to the user.
+  - **APPROVE** ("LGTM!") only when every section above is clean, CI is green, and the PR contains no architectural
+    change whose direction has not been decided by a maintainer.
+  - **REQUEST_CHANGES** for anything in sections 3–11 that must change in the GitHub API part (including a requested
+    split of architectural changes into a separate PR); say whether the changes are minor.
+  - **COMMENT** for design discussion without a blocking request — in particular for a purely architectural PR
+    awaiting the maintainers' direction decision.
+- Do not post anything to GitHub unless the user asked for it; by default present the review (architectural changes
+  for the maintainers, verdict, summary, inline findings with file:line and suggestions) to the user.
