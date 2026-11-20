@@ -787,6 +787,29 @@ class Repository(Framework.TestCase):
         self.assertEqual(location.end_line, 20)
         self.assertEqual(location.end_column, 42)
 
+    def testCreatePages(self):
+        pages = self.repo.create_pages(build_type="legacy", source_branch="main", source_path="/docs")
+        self.assertIsNone(pages.status)
+        self.assertIsNone(pages.cname)
+        self.assertEqual(pages.html_url, "https://pygithub.github.io/PyGithub/")
+        self.assertEqual(pages.source.branch, "main")
+        self.assertEqual(pages.source.path, "/docs")
+
+    def testCreatePagesSourcePathWithoutBranch(self):
+        with self.assertRaises(AssertionError):
+            self.repo.create_pages(source_path="/docs")
+
+    def testCreatePagesWorkflow(self):
+        pages = self.repo.create_pages(build_type="workflow")
+        self.assertEqual(pages.build_type, "workflow")
+        self.assertEqual(pages.html_url, "https://pygithub.github.io/PyGithub/")
+
+    def testCreatePagesBranchOnly(self):
+        pages = self.repo.create_pages(source_branch="main")
+        self.assertEqual(pages.build_type, "legacy")
+        self.assertEqual(pages.source.branch, "main")
+        self.assertEqual(pages.source.path, "/")
+
     def testCollaborators(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
