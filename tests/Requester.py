@@ -353,6 +353,29 @@ class Requester(Framework.TestCase):
             "Following Github server redirection from /api/v3/repos/PyGithub/PyGithub to /repos/PyGithub/PyGithub"
         )
 
+    def testRedirectionKeepsQueryParameters(self):
+        # replay data forged
+        repo = self.g.withLazy(True).get_repo("EnricoMi/test")
+        issues = repo.get_issues(state="closed")
+        self.assertListKeyEqual(issues, lambda i: i.number, [1])
+        self.logger.info.assert_called_once_with(
+            "Following Github server redirection from /repos/EnricoMi/test/issues?state=closed "
+            "to /repositories/638123443/issues?state=closed"
+        )
+
+    def testSelfRedirectionWithQueryParameters(self):
+        # replay data forged
+        repo = self.g.withLazy(True).get_repo("EnricoMi/test")
+        with self.assertRaises(RuntimeError) as exc:
+            list(repo.get_issues(state="closed"))
+        self.assertEqual(
+            exc.exception.args,
+            (
+                "Github server redirected https://api.github.com/repos/EnricoMi/test/issues?state=closed "
+                "to itself, stopped following this recursive redirection",
+            ),
+        )
+
     def testHostnameHasDomain(self):
         assert self.g.requester.__hostnameHasDomain("github.com", "github.com")
         assert self.g.requester.__hostnameHasDomain("api.github.com", "github.com")

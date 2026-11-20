@@ -1353,24 +1353,32 @@ class Requester:
                         f"Github server redirected from host {self.__hostname} to {o.hostname}, "
                         f"please correct your Github server URL via base_url: Github(base_url=...)"
                     )
-                if o.path == url:
+                # follow the full location, including its query string (e.g. parameters of a paginated list)
+                path = self.__makeAbsoluteUrl(location)
+                if path == url:
                     port = ":" + str(self.__port) if self.__port is not None else ""
                     requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
+                    if location == requested_location:
+                        # following this redirection would request the same location again, endlessly
+                        raise RuntimeError(
+                            f"Github server redirected {requested_location} to itself, "
+                            f"stopped following this recursive redirection"
+                        )
                     raise RuntimeError(
                         f"Requested {requested_location} but server redirected to {location}, "
                         f"you may need to correct your Github server URL "
                         f"via base_url: Github(base_url=...)"
                     )
                 if self._logger.isEnabledFor(logging.INFO):
-                    self._logger.info(f"Following Github server redirection from {url} to {o.path}")
-                return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input, stream=stream)
+                    self._logger.info(f"Following Github server redirection from {url} to {path}")
+                return self.__requestRaw(original_cnx, verb, path, requestHeaders, input, stream=stream)
             if status == 302 and follow_302_redirect and "location" in responseHeaders:
                 location = responseHeaders["location"]
                 o = urllib.parse.urlparse(location)
                 cnx = self.__customConnection(location)
                 path = self.__makeAbsoluteUrl(location)
                 if self._logger.isEnabledFor(logging.DEBUG):
-                    self._logger.debug(f"Following Github server redirection (302) from {url} to {o.path}")
+                    self._logger.debug(f"Following Github server redirection (302) from {url} to {path}")
                 # remove auth to not leak authentication to redirection location
                 if o.hostname != self.__hostname:
                     requestHeaders = {k: v for k, v in requestHeaders.items() if k != "Authorization"}
