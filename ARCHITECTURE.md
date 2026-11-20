@@ -449,46 +449,16 @@ The order of members of a PyGithub class is enforced by `scripts/sort_class.py` 
 `.github/workflows/auto-fix.yml` / `.github/actions/sort-classes`, see also the `sorted-classes` skill). A class body
 is laid out as:
 
-```
 1. prolog           class docstring, class-level constants / annotations — everything before the first `def`
-2. __init__()       only if the class overrides the constructor
-3. _initAttributes()
-4. dunder methods   alphabetical: __eq__, __hash__, __repr__, __str__, …
-5. @property        alphabetical by property name
+2. `__init__()`     only if the class overrides the constructor
+3. `_initAttributes()`
+4. dunder methods   alphabetical: `__eq__`, `__hash__`, `__repr__`, `__str__`, …
+5. `@property`      alphabetical by property name
 6. other methods    public and private methods, in the order chosen by the author (NOT sorted)
-7. _useAttributes()
+7. `_useAttributes()`
 8. epilog           anything after the last `def`
-```
 
-`_useAttributes` is always the last method in the class.
-
-Exact rules implemented by the script:
-
-- **Which classes**: only classes whose *direct* base class name ends with `GithubObject` (`GithubObject`,
-  `CompletableGithubObject`, `NonCompletableGithubObject`, `CompletableGithubObjectWithPaginatedProperty`, also when
-  written as `github.GithubObject.X`). Subclasses of other PyGithub classes (e.g. `SubIssue(Issue)`,
-  `RepositoryAdvisory(AdvisoryBase)`, `IssueSearchResult(Issue)`) are **not** touched by the script — they must
-  follow the same order by hand.
-- **One block of methods**: all `def`s of the class must form one consecutive block. A class-level statement between
-  two methods makes the script fail ("There is no consecutive block of functions"); put class-level constants before
-  the first method.
-- **Unique names**: `__init__`, `_initAttributes` and `_useAttributes` may each exist only once.
-- **Properties** are methods decorated with a plain `@property` (also when stacked with other decorators, e.g.
-  `@property` + `@deprecated(...)`; deprecated properties stay in alphabetical position, they are not moved to the
-  end). `@x.setter` methods are not recognised as properties and end up among the other methods.
-- **Sort key** is the plain Python string order of the name (ASCII): uppercase < `_` < lowercase, so `repo_name`
-  comes before `repository`, and `created_at` before `creator`.
-- **`_initAttributes`**: the block from the first to the last annotated assignment (`self._x: Attribute[T] = NotSet`)
-  is sorted by attribute name. Keep all attribute initialisations as one contiguous block of annotated assignments
-  (no un-annotated assignments or other statements in between); statements before the first or after the last one
-  stay where they are.
-- **`_useAttributes`**: the block from the first to the last top-level `if` statement is sorted by the key in the
-  condition: `if "key" in attributes:` and `if "key" in attributes and …:` sort by `"key"`. An `elif` / `else` belongs
-  to its `if` and moves with it. Statements before the first `if` (e.g. `super()._useAttributes(attributes)`) stay
-  first.
-- **Other methods are never reordered** by the script. New methods should be placed next to the methods they relate
-  to (see "Public method ordering" below), e.g. `get_x` / `create_x` / `delete_x` together, rather than appended at
-  the end of the class.
+Method `_useAttributes` is always the last method in the class.
 
 Run `python scripts/sort_class.py --dry-run openapi.index <ClassName> …` to see the diff the script would apply
 (`openapi.index` is created by `python scripts/openapi.py index github openapi.index`). Contributors can run the
