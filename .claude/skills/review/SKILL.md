@@ -101,6 +101,13 @@ using the existing general mechanisms?"
   the test framework (`tests/Framework.py`, replay mechanism), doc build.
 - Changes to the conventions themselves (ARCHITECTURE.md, a new pattern applied across all classes such as a
   different annotation style or a new base-class hook), even when every individual edit is in a class file.
+- **Sub-class relations between PyGithub classes**: making one PyGithub class derive from another (e.g.
+  `CommitSearchResult(Commit)`, `SubIssue(Issue)`), introducing a new shared base class (`AdvisoryBase`,
+  `DiscussionBase`), or changing / removing an existing relation. This decides how GitHub schemas map onto PyGithub
+  classes, `isinstance` semantics, which attributes and methods a class inherits (and whether they are valid for its
+  schema and URL), completion / lazy loading behaviour, and what future changes to the base class affect. Adding
+  another member to an existing shared base class (a new `…Advisory(AdvisoryBase)`) follows prior art and is an API
+  change; flag it if in doubt.
 
 Grey zones — classify as architectural and flag them:
 
@@ -138,7 +145,13 @@ architectural change, prepare for the maintainers:
    review of the architectural code is then a separate maintainer task, not part of this review unless the user
    explicitly asks for it.
 6. **Question for the maintainers** — the concrete direction decision needed (e.g. "Should PyGithub send an API
-   version header with every request, and with which default?").
+   version header with every request, and with which default?", "Should `CommitSearchResult` derive from `Commit`, or
+   be a separate class implementing the `commit-search-result-item` schema?").
+
+**Architectural suggestions are welcome, but they are not requests.** The reviewer may itself propose an architectural
+direction, e.g. a sub-class relation or shared base class for classes the PR adds with largely duplicated attributes,
+or dropping a relation the PR introduces. Present it in the architectural section as a suggestion for the maintainers,
+with its trade-offs; do not ask the contributor to implement it until the maintainers have made the call.
 
 Then:
 
