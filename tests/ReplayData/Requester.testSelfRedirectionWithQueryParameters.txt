@@ -8,4 +8,3 @@ None
 301
 [('Content-Type', 'application/json; charset=utf-8'), ('Location', 'https://api.github.com/repos/EnricoMi/test/issues?state=closed')]
 {"message":"Moved Permanently","url":"https://api.github.com/repos/EnricoMi/test/issues?state=closed","documentation_url":"https://docs.github.com/v3/#http-redirects"}
-
