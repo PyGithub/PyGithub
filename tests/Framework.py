@@ -74,12 +74,12 @@ from urllib.parse import urlsplit
 
 import vcr
 import vcr.cassette
-from requests.structures import CaseInsensitiveDict
 from vcr.matchers import requests_match
 from vcr.stubs import VCRConnection
 
 import github
 from github import Consts
+from github.requestlib import CaseInsensitiveDict
 
 from . import VcrSerializer
 
