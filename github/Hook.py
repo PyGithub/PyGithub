@@ -159,8 +159,8 @@ class Hook(CompletableGithubObject):
 
     def edit(
         self,
-        name: str,
-        config: dict,
+        name: Opt[str] = NotSet,
+        config: Opt[dict] = NotSet,
         events: Opt[list[str]] = NotSet,
         add_events: Opt[list[str]] = NotSet,
         remove_events: Opt[list[str]] = NotSet,
@@ -169,8 +169,8 @@ class Hook(CompletableGithubObject):
         """
         :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
         """
-        assert isinstance(name, str), name
-        assert isinstance(config, dict), config
+        assert is_optional(name, str), name
+        assert is_optional(config, dict), config
         assert is_optional_list(events, str), events
         assert is_optional_list(add_events, str), add_events
         assert is_optional_list(remove_events, str), remove_events
