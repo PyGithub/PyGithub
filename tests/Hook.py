@@ -36,6 +36,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 
 from . import Framework
@@ -96,6 +97,32 @@ class Hook(Framework.TestCase):
             self.hook.updated_at,
             datetime(2012, 5, 19, 5, 8, 16, tzinfo=timezone.utc),
         )
+
+    def testEditActiveOnly(self):
+        with self.captureRequests() as requests:
+            self.hook.edit(active=False)
+
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(requests[0].verb, "PATCH")
+        self.assertEqual(json.loads(requests[0].input), {"active": False})
+        self.assertFalse(self.hook.active)
+
+    def testEditOrganizationHookActiveOnly(self):
+        hook = self.g.withLazy(True).get_organization("example").get_hook(42)
+        with self.captureRequests() as requests:
+            hook.edit(active=False)
+
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(requests[0].verb, "PATCH")
+        self.assertEqual(requests[0].url, "/orgs/example/hooks/42")
+        self.assertEqual(json.loads(requests[0].input), {"active": False})
+        self.assertFalse(hook.active)
+
+    def testEditRejectsNone(self):
+        with self.assertRaises(AssertionError):
+            self.hook.edit(None, {})
+        with self.assertRaises(AssertionError):
+            self.hook.edit("web", None)
 
     def testDelete(self):
         self.hook.delete()
