@@ -53,10 +53,48 @@ explanations. Use them as hints, then verify.
 **Telling recorded from made-up replay data.** Recorded responses carry GitHub's full response headers (`Date`,
 `Server: GitHub.com`, `X-GitHub-Request-Id`, `X-RateLimit-*`, `ETag`, …) and complete bodies (all schema properties,
 `node_id`, `*_url` fields, realistic timestamps and ids, URLs consistent with the request path). Signs of made-up data:
-an empty or minimal header list, bodies containing only the fields the test asserts, round or sequential ids
-(`1`, `2`, `123`), URLs or ids inconsistent across requests, properties that are not in the spec, or a file that is a
-copy of another test's file with the response changed (`diff` it against the likely source). When unsure, ask the
-author: "Was this replay data recorded against the GitHub API, or hand crafted?"
+
+- an empty or minimal header list, bodies containing only the fields the test asserts, round or sequential ids
+  (`1`, `2`, `123`), URLs or ids inconsistent across requests, properties that are not in the spec;
+- **copied blocks**: a request / response block (or its headers) that also appears elsewhere — in the same file, in
+  other files of the same test class (`tests/ReplayData/<Class>.*.txt`), or in any other replay data file — possibly
+  with the body or status edited. Every real response has its own `Date`, `X-GitHub-Request-Id`, `ETag` and
+  `X-RateLimit-Remaining`, so a repeated request id is a strong sign of a copy:
+
+  ```bash
+  F=tests/ReplayData/<Class>.<test>.txt
+  ids=$(grep -ohi "('x-github-request-id', '[^']*')" $F | sort -u)
+  grep -ohi "('x-github-request-id', '[^']*')" $F | sort | uniq -d       # repeated within the file
+  while read -r id; do grep -lFi "$id" tests/ReplayData/*.txt; done <<< "$ids" | sort | uniq -c | grep -v " $F$"
+  ```
+
+  `diff` the file against the matching source to see what was changed. Not a copy: a test reusing another file via
+  `self.replayData("Other.test.txt")`, or blocks inherited from `<Class>.setUp.txt`. Legacy files already contain
+  copies; only judge files the PR adds or changes;
+- **`Content-Length` does not match the body**: compare the header with the UTF-8 byte length of the response body:
+
+  ```bash
+  python - tests/ReplayData/<Class>.<test>.txt <<'EOF'
+  import ast, sys
+  lines = open(sys.argv[1], encoding="utf-8").read().split("\n")
+  for i, line in enumerate(lines):
+      if line in ("http", "https") and i + 9 < len(lines):
+          headers = {k.lower(): v for k, v in ast.literal_eval(lines[i + 8])}
+          if "content-length" in headers and "content-encoding" not in headers:
+              declared, actual = headers["content-length"], len(lines[i + 9].encode())
+              print(lines[i + 1], lines[i + 4], "declared", declared, "actual", actual)
+  EOF
+  ```
+
+  Anonymisation changes the length legitimately — e.g. each `someuser` → `BeaverSoftware` rename adds 6 bytes per
+  occurrence, a scrubbed email or token shortens it — so small differences explained by the renames in the body are
+  fine (`Repository.testGetTeams.txt`: 1431 declared, 1453 actual). A difference that anonymisation cannot explain (a
+  body much shorter or longer than declared, e.g. `Authentication.testAppInstallationAuthAuthentication.txt`: 1962
+  declared for a 140-byte body) means the body was replaced or edited. Responses without `Content-Length` (chunked)
+  or with `Content-Encoding` give no signal. Legacy files already contain such edits; only judge files the PR adds or
+  changes.
+
+When unsure, ask the author: "Was this replay data recorded against the GitHub API, or hand crafted?"
 
 **Using ground truth in the review:**
 
