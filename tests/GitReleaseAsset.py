@@ -94,7 +94,10 @@ class GitReleaseAsset(Framework.TestCase):
         self.assertEqual(content[:19], b"\x1f\x8b\x08\x08\xf5\x9aag\x00\x03README.md")
 
     def testDownloadAssetStream(self):
-        (_, _, chunks) = self.asset.download_asset()
+        with self.captureRequests() as requests:
+            (_, _, chunks) = self.asset.download_asset()
+        self.assertIn("Authorization", requests[0].request_headers)
+        self.assertNotIn("Authorization", requests[1].request_headers)
         content = b"".join([chunk for chunk in chunks if chunk])
         self.assertEqual(len(content), 2524)
         self.assertEqual(
