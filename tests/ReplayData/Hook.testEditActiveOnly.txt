@@ -1,0 +1,10 @@
+https
+PATCH
+api.github.com
+None
+/repos/jacquev6/PyGithub/hooks/257993
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{"active": false}
+200
+[('content-type', 'application/json; charset=utf-8')]
+{"id": 257993, "name": "web", "active": false, "events": ["push"], "config": {"url": "http://foobar.com"}, "url": "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993"}
