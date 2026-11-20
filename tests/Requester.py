@@ -369,10 +369,8 @@ class Requester(Framework.TestCase):
         self.assertEqual(
             exc.exception.args,
             (
-                "Requested https://api.github.com/repos/EnricoMi/test/issues?state=closed but server "
-                "redirected to https://api.github.com/repos/EnricoMi/test/issues?state=closed, "
-                "you may need to correct your Github server URL "
-                "via base_url: Github(base_url=...)",
+                "Github server redirected https://api.github.com/repos/EnricoMi/test/issues?state=closed "
+                "to itself, stopped following this recursive redirection",
             ),
         )
 
