@@ -195,6 +195,18 @@ class Issue(Framework.TestCase):
     def testUnlock(self):
         self.issue.unlock()
 
+    def testTransfer(self):
+        target = self.g.get_repo("PyGithub/transfer-target")
+        issue = self.issue.transfer(target)
+        self.assertEqual(issue.number, 7)
+        self.assertEqual(issue.repository_url, "https://api.github.com/repos/PyGithub/transfer-target")
+
+    def testTransferCreatingLabels(self):
+        target = self.g.get_repo("PyGithub/transfer-target")
+        issue = self.issue.transfer(target, create_labels_if_missing=True)
+        self.assertEqual(issue.number, 8)
+        self.assertListKeyEqual(issue.labels, lambda label: label.name, ["bug"])
+
     def testCreateComment(self):
         comment = self.issue.create_comment("Comment created by PyGithub")
         self.assertEqual(comment.id, 5808311)

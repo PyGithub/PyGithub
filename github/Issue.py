@@ -500,6 +500,32 @@ class Issue(CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck("DELETE", f"{self.url}/lock")
 
+    def transfer(self, repository: Repository, create_labels_if_missing: Opt[bool] = NotSet) -> Issue:
+        """
+        Transfer this issue to another repository. The repository has to be owned by the same user or organization.
+
+        :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to transfer the issue
+            <https://docs.github.com/en/graphql/reference/mutations#transferissue>
+        :graphql: `mutation transferIssue <https://docs.github.com/en/graphql/reference/mutations#transferissue>`_
+        :param repository: :class:`github.Repository.Repository` to transfer the issue to
+        :param create_labels_if_missing: bool, create the issue's labels in the target repository if they don't exist
+        :return: :class:`github.Issue.Issue`, the issue in the target repository
+        """
+        assert isinstance(repository, github.Repository.Repository), repository
+        assert is_optional(create_labels_if_missing, bool), create_labels_if_missing
+        variables = {
+            "issueId": self.node_id,
+            "repositoryId": repository.node_id,
+            "createLabelsIfMissing": create_labels_if_missing,
+        }
+        _, data = self._requester.graphql_named_mutation(
+            mutation_name="transferIssue",
+            mutation_input=NotSet.remove_unset_items(variables),
+            output_schema="issue { number }",
+        )
+        number = data["issue"]["number"]
+        return github.Issue.Issue(self._requester, url=f"{repository.url}/issues/{number}")
+
     def get_comment(self, id: int) -> IssueComment:
         """
         :calls: `GET /repos/{owner}/{repo}/issues/comments/{comment_id} <https://docs.github.com/en/rest/reference/issues#comments>`_
