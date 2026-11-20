@@ -43,12 +43,21 @@
 
 from __future__ import annotations
 
+import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.HookResponse
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional, is_optional_list
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    is_defined,
+    is_optional,
+    is_optional_list,
+)
 
 if TYPE_CHECKING:
     from github.HookResponse import HookResponse
@@ -167,7 +176,7 @@ class Hook(CompletableGithubObject):
         active: Opt[bool] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/repos/webhooks#update-a-repository-webhook>`_
         """
         assert is_optional(name, str), name
         assert is_optional(config, dict), config
@@ -175,6 +184,9 @@ class Hook(CompletableGithubObject):
         assert is_optional_list(add_events, str), add_events
         assert is_optional_list(remove_events, str), remove_events
         assert is_optional(active, bool), active
+        if is_defined(name):
+            warnings.warn("Argument name is deprecated", category=DeprecationWarning)
+
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
