@@ -75,14 +75,15 @@ explanations. Use them as hints, then verify.
 
   ```bash
   python - tests/ReplayData/<Class>.<test>.txt <<'EOF'
-  import ast, sys
+  import ast, base64, sys
   lines = open(sys.argv[1], encoding="utf-8").read().split("\n")
   for i, line in enumerate(lines):
       if line in ("http", "https") and i + 9 < len(lines):
           headers = {k.lower(): v for k, v in ast.literal_eval(lines[i + 8])}
           if "content-length" in headers and "content-encoding" not in headers:
-              declared, actual = headers["content-length"], len(lines[i + 9].encode())
-              print(lines[i + 1], lines[i + 4], "declared", declared, "actual", actual)
+              body = lines[i + 9 : lines.index("", i + 9)]  # binary bodies: several base64 lines
+              raw = b"".join(map(base64.b64decode, body)) if len(body) > 1 else "".join(body).encode()
+              print(lines[i + 1], lines[i + 4], "declared", headers["content-length"], "actual", len(raw))
   EOF
   ```
 
@@ -90,9 +91,11 @@ explanations. Use them as hints, then verify.
   occurrence, a scrubbed email or token shortens it — so small differences explained by the renames in the body are
   fine (`Repository.testGetTeams.txt`: 1431 declared, 1453 actual). A difference that anonymisation cannot explain (a
   body much shorter or longer than declared, e.g. `Authentication.testAppInstallationAuthAuthentication.txt`: 1962
-  declared for a 140-byte body) means the body was replaced or edited. Responses without `Content-Length` (chunked)
-  or with `Content-Encoding` give no signal. Legacy files already contain such edits; only judge files the PR adds or
-  changes.
+  declared for a 140-byte body) means the body was replaced or edited. Chunked responses (`Transfer-Encoding:
+  chunked`, no `Content-Length`) and responses with `Content-Encoding` (`Content-Length` is the compressed size) give
+  no signal; see ARCHITECTURE.md "Replay Data" for how bodies are stored. A response whose `Content-Length` /
+  `Transfer-Encoding` headers were changed by hand is made up, too. Legacy files already contain such edits; only
+  judge files the PR adds or changes.
 
 When unsure, ask the author: "Was this replay data recorded against the GitHub API, or hand crafted?"
 

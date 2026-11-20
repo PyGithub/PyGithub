@@ -334,6 +334,22 @@ None                                   # request body (JSON) or None
                                        # empty line
 ```
 
+Response headers are stored as GitHub sent them; the response body is stored **decoded**:
+
+- **Chunked responses**: GitHub sends many responses with `Transfer-Encoding: chunked` (usually together with
+  `Content-Encoding: gzip`) instead of a `Content-Length` header. The replay data keeps these headers, but the body
+  line is the complete, de-chunked and decompressed body — chunk sizes and boundaries are not recorded. Such responses
+  have no `Content-Length` header, so their body length cannot be checked against one.
+- **`Content-Length`**: for responses without `Content-Encoding`, it is the byte length of the body as recorded (before
+  anonymisation, which may change the body length slightly). With `Content-Encoding: gzip` it is the compressed size
+  and does not match the stored body.
+- **Binary bodies** (not valid UTF-8, e.g. downloaded assets) are stored as several lines of base64, 64 raw bytes per
+  line, followed by an empty line.
+- Responses without a body (e.g. `204 No Content`) have an empty body line.
+
+Do not add, remove or change `Content-Length` / `Transfer-Encoding` headers by hand, e.g. to make an edited body look
+consistent: a recorded response keeps the headers it was recorded with.
+
 Rules:
 
 - Record with `pytest -k Class.testMethod --record` (needs `GithubCredentials.py`, see `doc/testing.rst`); commit the
