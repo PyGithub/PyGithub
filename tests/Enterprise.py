@@ -35,9 +35,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from tempfile import TemporaryDirectory
-
 import github
 
 from . import Framework
@@ -46,12 +43,13 @@ from . import Framework
 # Replay data for this test case is forged, because I don't have access to a real Github Enterprise install
 class Enterprise(Framework.BasicTestCase):
     def testDownloadReleaseAssetFile(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
         with github.Github(
             auth=self.oauth_token,
             base_url="https://github.example/api/v3",
             lazy=True,
-            api_version="2022-11-28",
-            seconds_between_requests=None,
         ) as g:
             asset = g.get_repo("owner/repo").get_release_asset(102092)
             with self.captureRequests() as requests, TemporaryDirectory() as directory:
@@ -77,8 +75,6 @@ class Enterprise(Framework.BasicTestCase):
             auth=self.oauth_token,
             base_url="https://github.example:8443/api/v3",
             lazy=True,
-            api_version="2022-11-28",
-            seconds_between_requests=None,
         ) as g:
             asset = g.get_repo("owner/repo").get_release_asset(102092)
             with self.captureRequests() as requests:
@@ -100,10 +96,30 @@ class Enterprise(Framework.BasicTestCase):
             requests, lambda request: request.request_headers["Authorization"], ["token oauth_token"] * 2
         )
 
+    def testDownloadReleaseAssetWithNonNumericPath(self):
+        with github.Github(auth=self.oauth_token, base_url="https://github.example/api/v3", lazy=True) as g:
+            asset = g.get_repo("owner/repo").get_release_asset(102092)
+            with self.captureRequests() as requests:
+                status, headers, chunks = asset.download_asset(chunk_size=4)
+                self.assertEqual(status, 200)
+                self.assertEqual(headers["content-type"], "application/octet-stream")
+                self.assertEqual(b"".join(chunks), b"release asset\n")
+
+        self.assertListKeyEqual(
+            requests,
+            lambda request: request.url,
+            [
+                "/api/v3/repos/owner/repo/releases/assets/102092",
+                "/storage/releases/release-id/files/asset-name?token=download_token",
+            ],
+        )
+
     def testDownloadReleaseAssetRejectsOtherLocations(self):
         for reason, expected in [
             ("other path", "/storage/attachments/270192/files/102092"),
             ("prefix lookalike", "/storage/releases-extra/270192/files/102092"),
+            ("dot path", "/storage/releases/270192/./files/102092"),
+            ("encoded dot path", "/storage/releases/270192/%2e/files/102092"),
             ("parent path", "/storage/releases/270192/files/../../../other"),
             ("encoded parent path", "/storage/releases/270192/files/%2e%2e/%2e%2e/other"),
             ("other port", 9443),
@@ -115,8 +131,6 @@ class Enterprise(Framework.BasicTestCase):
                     auth=self.oauth_token,
                     base_url="https://github.example:8443/api/v3",
                     lazy=True,
-                    api_version="2022-11-28",
-                    seconds_between_requests=None,
                 ) as g:
                     asset = g.get_repo("owner/repo").get_release_asset(102092)
                     with self.assertRaises(AssertionError) as exc:
