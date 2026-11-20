@@ -21,6 +21,59 @@ First read [ARCHITECTURE.md](../../../ARCHITECTURE.md). It is the canonical refe
 conventions, test conventions and replay data. This skill tells you **what to look for**; ARCHITECTURE.md explains
 **what correct looks like**.
 
+## Ground truth
+
+Every claim about how the GitHub API behaves — in the PR, its description, its tests, or your own review — is checked
+against ground truth. There are exactly two sources:
+
+1. **The GitHub OpenAPI spec** (`api.github.com.json` from `github/rest-api-description`). **Always** fetch and
+   consult it for every endpoint and schema the PR touches — not only when something looks suspicious:
+
+   ```bash
+   python scripts/openapi.py fetch api.github.com 2022-11-28 openapi.json      # same version as CI
+   scripts/get-openapi-path.sh '/repos/{owner}/{repo}/pulls/{pull_number}' < openapi.json | jq '.patch'
+   scripts/get-openapi-schema.sh '/components/schemas/pull-request' < openapi.json
+   jq '.components.parameters["per-page"]' openapi.json                       # resolve $ref parameters
+   ```
+
+   Verify against it: the path and its placeholders, the HTTP verb, path / query / body parameter names, types,
+   enums and which are required, response status codes, the response schema per status, property names, types,
+   nullability and `required` lists, and the schema names listed in class docstrings. The REST docs pages are
+   generated from this spec; when the docs and spec disagree, the spec wins.
+2. **Replay data recorded from the real GitHub API.** A response recorded with `--record` shows what GitHub actually
+   sends. Anonymisation and normalisation edits (renamed orgs / repos / users, removed tokens, emails or ids,
+   normalised `Authorization` headers, see step 10) do not change that. **Made-up responses are not ground truth**:
+   hand-written replay data, or recorded data whose response was edited beyond anonymisation (fields added, removed
+   or changed, other status codes) only shows what the author *expects* GitHub to return.
+
+**Not ground truth**: the PR description and the author's claims, code comments, existing PyGithub code (it may be
+stale or wrong — a PR copying an existing mistake is still wrong), other client libraries, and AI-generated
+explanations. Use them as hints, then verify.
+
+**Telling recorded from made-up replay data.** Recorded responses carry GitHub's full response headers (`Date`,
+`Server: GitHub.com`, `X-GitHub-Request-Id`, `X-RateLimit-*`, `ETag`, …) and complete bodies (all schema properties,
+`node_id`, `*_url` fields, realistic timestamps and ids, URLs consistent with the request path). Signs of made-up data:
+an empty or minimal header list, bodies containing only the fields the test asserts, round or sequential ids
+(`1`, `2`, `123`), URLs or ids inconsistent across requests, properties that are not in the spec, or a file that is a
+copy of another test's file with the response changed (`diff` it against the likely source). When unsure, ask the
+author: "Was this replay data recorded against the GitHub API, or hand crafted?"
+
+**Using ground truth in the review:**
+
+- Anything the PR implements must be backed by the spec or by recorded replay data: new attributes and their types,
+  nullability, parameters, return types, status-code handling. If neither backs it, ask for evidence (a recording, or
+  the spec location) instead of accepting it.
+- A test asserting response content must rely on recorded responses. Hand-edited replay data is acceptable to exercise
+  what the code *sends* (request path, query, body), but it cannot prove the shape of a response; ask for a recording
+  when a new class, attribute or response handling is only covered by made-up responses.
+- When the spec and a recorded response disagree (a property that is `null` although the spec says non-nullable, a
+  property missing from the spec, a different status code), both are evidence: implement what the spec describes and
+  tolerate what GitHub actually returns (e.g. `T | None`), point out the discrepancy in the review, and suggest
+  reporting it to `github/rest-api-description`. Do not change the implementation to match a made-up response that
+  contradicts the spec.
+- Cite the ground truth in findings: the spec path / schema (`/components/schemas/pull-request/properties/…`) or the
+  replay data file and line.
+
 ## 1. Gather context
 
 ```bash
@@ -56,10 +109,11 @@ For a local branch use `git diff origin/main...HEAD` instead.
   being the number of items when fully iterated vs. GitHub's capped `total_count`), resolve the intended semantics
   (and link the related issues) before reviewing the implementation; both semantics may be useful and need different
   APIs.
-- Look up the endpoint in the GitHub REST docs and in the OpenAPI spec (`api.github.com.*.json`, query with `jq` or
-  the `openapi` skill) to verify paths, verbs, parameter names, response schemas, nullability and status codes. Do
-  not trust the PR description for this; reviewers have found methods whose response schema did not match the
-  implementation at all.
+- Look up every endpoint and schema the PR touches in the OpenAPI spec (see "Ground truth"; query with `jq`, the
+  `scripts/get-openapi-*.sh` helpers or the `openapi` skill) to verify paths, verbs, parameter names, response schemas,
+  nullability and status codes. Do not trust the PR description for this; reviewers have found methods whose response
+  schema did not match the implementation at all. Note for each new replay data file whether it was recorded or made
+  up.
 - **Find prior art.** Before judging how something is done, search for how the same thing is already done in other
   PyGithub classes (`grep -rn` in `github/` and `tests/`): the same endpoint shape at another level (repo vs. org vs.
   enterprise, e.g. `Repository.get_self_hosted_runners` for `Organization.get_self_hosted_runners`, repo vs. org
@@ -230,9 +284,11 @@ if another class already solves the same problem, the PR must follow that soluti
   of a dedicated PyGithub class implementing the OpenAPI schema (bootstrap it with
   `python scripts/openapi.py create class …`, see the `openapi` skill). New classes list their OpenAPI schema in the
   docstring.
-- **Parameters match the API docs**: remove parameters the endpoint does not document (and `per_page`, which is
-  global), add documented parameters that are missing while touching the method; for GraphQL, support all arguments
-  of the field (e.g. `orderBy`, `userLinkedOnly`).
+- **Parameters match the OpenAPI spec**: remove parameters the endpoint does not define in the spec (and `per_page`,
+  which is global), add spec parameters that are missing while touching the method, and match their names, types and
+  required-ness; for GraphQL, support all arguments of the field (e.g. `orderBy`, `userLinkedOnly`).
+- **Attributes match the schema**: property names, types and nullability follow the response schema in the spec
+  (and, where they disagree, tolerate what recorded replay data shows; see "Ground truth").
 - **GraphQL-backed methods** follow `Repository.get_discussions`: let the caller pass the GraphQL schema of returned
   objects (`…_graphql_schema: str = "…"`), always include the fields needed to construct the REST `url` (e.g.
   `number`) so the object can be completed via REST, and keep GraphQL's HTML `url` as `html_url`. Test with an empty
@@ -330,7 +386,7 @@ Compare against ARCHITECTURE.md "Naming and Structuring Conventions". The most f
 
 ## 7. Documentation
 
-- Every API-calling method has a `:calls:` line with the HTTP verb, the path template using the **docs'
+- Every API-calling method has a `:calls:` line with the HTTP verb, the path template using the **spec's
   placeholders** (`/orgs/{org}/...`, not `/orgs/{owner}/{repo}/...`), and a link to the **exact** docs anchor of that
   endpoint (not a generic `rest/reference/...` page or an anchor of a different endpoint). Check the backtick/quote
   syntax: `` :calls: `GET /path <url>`_ ``.
@@ -409,7 +465,8 @@ replay data if the contributor struggles). Check against ARCHITECTURE.md "Test C
 - **Replay data, not mocks**: tests must use the replay data framework. Mocking `requestJsonAndCheck`, `responses`
   / `httpretty` decorators or hand-written JSON responses in the test are not accepted; ask to record replay data or
   to copy and hand-edit an existing replay data file (e.g. copy `Milestone.testEditWithAllParameters.txt` and change
-  `due_on`).
+  `due_on`). A hand-edited copy only covers what the code sends; response content the tests assert (new classes,
+  attributes, response handling) must come from a recording against the real API (see "Ground truth").
 - **Positive and negative cases**: a test with invalid input only is not enough — require a test with valid values
   and recorded data. Use distinct values in tests so that "unchanged" vs. "overwritten" is observable (e.g. pass
   `start_side="RIGHT"` when the default would be `"LEFT"`).
@@ -433,7 +490,13 @@ See ARCHITECTURE.md "Replay Data". Check:
   `Authorization` header matching the test's auth mode (`token private_token_removed` by default), no personal
   account names, tokens, emails, or ids that leak the contributor's org (e.g. in `Link` headers).
 - No superfluous requests (a GET that disappears when the parent is obtained lazily).
-- Hand-crafted files must be consistent with what the code sends (path, query, body).
+- **Recorded or made up?** Classify each new or changed file (see "Ground truth" for the signs). Anonymisation edits
+  are fine; edits to response content are not, unless the test only exercises the request side.
+- **Requests match the spec**: recorded and hand-crafted requests use the spec's path, verb, query and body parameter
+  names; hand-crafted files must also be consistent with what the code sends (path, query, body).
+- **Responses match the spec**: compare response bodies against the endpoint's response schema. Properties missing
+  from a recorded response, or present but not in the spec, are worth noting (see "Ground truth" for discrepancies);
+  the same in a made-up response means the response is wrong.
 
 ## 11. CI
 
