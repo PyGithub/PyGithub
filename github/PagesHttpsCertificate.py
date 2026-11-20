@@ -21,6 +21,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from github.GithubObject import Attribute, NonCompletableGithubObject, NotSet
@@ -42,7 +43,7 @@ class PagesHttpsCertificate(NonCompletableGithubObject):
     def _initAttributes(self) -> None:
         self._description: Attribute[str] = NotSet
         self._domains: Attribute[list[str]] = NotSet
-        self._expires_at: Attribute[str] = NotSet
+        self._expires_at: Attribute[datetime] = NotSet
         self._state: Attribute[str] = NotSet
 
     def __repr__(self) -> str:
@@ -57,7 +58,7 @@ class PagesHttpsCertificate(NonCompletableGithubObject):
         return self._domains.value
 
     @property
-    def expires_at(self) -> str:
+    def expires_at(self) -> datetime:
         return self._expires_at.value
 
     @property
@@ -70,6 +71,6 @@ class PagesHttpsCertificate(NonCompletableGithubObject):
         if "domains" in attributes:  # pragma no branch
             self._domains = self._makeListOfStringsAttribute(attributes["domains"])
         if "expires_at" in attributes:  # pragma no branch
-            self._expires_at = self._makeStringAttribute(attributes["expires_at"])
+            self._expires_at = self._makeDatetimeAttribute(attributes["expires_at"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])

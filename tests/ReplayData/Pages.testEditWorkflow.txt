@@ -1,0 +1,9 @@
+https
+PUT
+api.github.com
+None
+/repos/PyGithub/PyGithub/pages
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/json'}
+{"build_type": "workflow"}
+204
+[('Server', 'GitHub.com')]
