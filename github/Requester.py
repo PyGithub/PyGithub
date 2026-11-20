@@ -93,7 +93,6 @@ import json
 import logging
 import mimetypes
 import os
-import re
 import threading
 import time
 import urllib
@@ -968,11 +967,12 @@ class Requester:
         assert o.hostname is not None
         if o.hostname == self.__hostname:
             prefixes = [self.__prefix, self.__graphql_prefix, "/api/", "/login/oauth"]
-            # Enterprise release assets can redirect outside the API prefix.
-            is_release_asset = (
-                o.scheme == self.__scheme and re.fullmatch(r"/storage/releases/[0-9]+/files/[0-9]+", o.path) is not None
-            )
-            assert o.path.startswith(tuple(prefixes)) or is_release_asset, o.path
+            # Release downloads follow 302 redirects, which do not check the scheme.
+            if o.scheme == self.__scheme and all(
+                part not in (".", "..") for part in urllib.parse.unquote(o.path).split("/")
+            ):
+                prefixes.append("/storage/releases/")
+            assert o.path.startswith(tuple(prefixes)), o.path
             assert o.port == self.__port, o.port
         else:
             assert self.__hostnameHasDomain(o.hostname, self.__domains), o.hostname
