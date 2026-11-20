@@ -249,6 +249,8 @@ class BasicTestCase(unittest.TestCase):
         self.__cassetteCm = None
         self.__cassette = None
         self.__capturedRequests: list[RequestResponse] | None = None
+        self.__previousInteractions: list[tuple[Any, Any]] = []
+        self.__noRecord = False
         BasicTestCase.__activeInstance = self
 
         github.Requester.Requester.injectConnectionClasses(
@@ -340,6 +342,24 @@ class BasicTestCase(unittest.TestCase):
         finally:
             self.__capturedRequests = previous
 
+    @contextlib.contextmanager
+    def noRecord(self) -> Generator[None]:
+        """
+        While recording (``--record``), serve the requests made inside this block from the replay data
+        that was recorded before, instead of calling the Github API. The replayed interactions are written
+        to the new replay data like any other interaction.
+
+        Use this for requests that cannot be recorded again, for instance because they depend on a repository
+        that no longer exists, or because they change something (like adding a comment).
+        Outside of recording mode, this does nothing: requests are replayed as usual.
+        """
+        previous = self.__noRecord
+        self.__noRecord = True
+        try:
+            yield
+        finally:
+            self.__noRecord = previous
+
     @classmethod
     def ensureCassette(cls) -> None:
         """
@@ -370,17 +390,19 @@ class BasicTestCase(unittest.TestCase):
         self.__closeCassetteIfNeeded()
         self.__cassettePath = path
         if path is None:
+            self.__previousInteractions = []
             return
         record_mode = "all" if self.recordMode else "none"
-        if self.recordMode and os.path.exists(path):
-            # vcrpy's "all" record mode never plays back existing interactions, but it still
-            # loads them from disk and keeps them in Cassette.data -- so without this, recording
-            # over an existing replay file would append the freshly recorded interactions after
-            # the stale ones instead of replacing them.
-            os.remove(path)
-        cassetteCm = _vcr.use_cassette(path, record_mode=record_mode)
+        # vcrpy's "all" record mode never plays back existing interactions, but it still loads them
+        # from disk. drop_unused_requests makes it write only the interactions of this run, instead
+        # of keeping the stale ones.
+        cassetteCm = _vcr.use_cassette(path, record_mode=record_mode, drop_unused_requests=self.recordMode)
         self.__cassette = cassetteCm.__enter__()
         self.__cassetteCm = cassetteCm
+        # the interactions loaded from disk, which noRecord() serves while recording
+        self.__previousInteractions = (
+            list(zip(self.__cassette.requests, self.__cassette.responses)) if self.recordMode else []
+        )
         # wired unconditionally (not just while captureRequests() is active) and exactly once per
         # cassette: __recordInteraction() itself checks __capturedRequests, so this single wiring
         # transparently reflects whatever captureRequests() call is active by the time each
@@ -413,7 +435,37 @@ class BasicTestCase(unittest.TestCase):
             originalAppend(request, response)
             self.__recordInteraction(request, response)
 
-        cassette.play_response = play_response
+        originalCanPlay = cassette.can_play_response_for
+
+        def previous_index(request) -> int | None:
+            request = cassette._before_record_request(request)
+            for index, (stored, _) in enumerate(self.__previousInteractions):
+                if requests_match(request, stored, cassette._match_on):
+                    return index
+            return None
+
+        def can_play_response_for(request) -> bool:
+            if self.recordMode and self.__noRecord:  # pragma no cover (only used when recording)
+                if previous_index(request) is None:
+                    raise AssertionError(
+                        f"noRecord() has been used, but the existing replay data has no response for "
+                        f"{request.method} {request.uri}. Adjust the request to match the existing data, "
+                        f"or remove noRecord() to record new data."
+                    )
+                return True
+            return originalCanPlay(request)
+
+        def play_response_noRecord(request):
+            if self.recordMode and self.__noRecord:  # pragma no cover (only used when recording)
+                index = previous_index(request)
+                _, response = self.__previousInteractions.pop(index)
+                # keep the interaction in the new replay data
+                append(request, response)
+                return response
+            return play_response(request)
+
+        cassette.play_response = play_response_noRecord
+        cassette.can_play_response_for = can_play_response_for
         cassette.append = append
 
     def __recordInteraction(self, request, response) -> None:

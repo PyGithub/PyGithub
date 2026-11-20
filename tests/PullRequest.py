@@ -69,14 +69,16 @@ class PullRequest(Framework.TestCase):
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(31)
 
-        marco_repo = self.g.withLazy(True).get_repo("MarcoFalke/PyGithub")
-        self.pullIssue256Closed = marco_repo.get_pull(1).complete()
-        self.pullIssue256Merged = marco_repo.get_pull(2).complete()
-        self.pullIssue256Conflict = marco_repo.get_pull(3).complete()
-        self.pullIssue256Uncached = marco_repo.get_pull(4).complete()
+        # these forks do not exist anymore, so they cannot be recorded again
+        with self.noRecord():
+            marco_repo = self.g.withLazy(True).get_repo("MarcoFalke/PyGithub")
+            self.pullIssue256Closed = marco_repo.get_pull(1).complete()
+            self.pullIssue256Merged = marco_repo.get_pull(2).complete()
+            self.pullIssue256Conflict = marco_repo.get_pull(3).complete()
+            self.pullIssue256Uncached = marco_repo.get_pull(4).complete()
 
-        flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
-        self.pullMaintainerCanModify = flo_repo.get_pull(2)
+            flo_repo = self.g.get_repo("FlorentClarret/PyGithub")
+            self.pullMaintainerCanModify = flo_repo.get_pull(2)
 
         self.delete_restore_repo = self.g.get_repo("austinsasko/PyGithub")
         self.delete_restore_pull = self.delete_restore_repo.get_pull(21)
