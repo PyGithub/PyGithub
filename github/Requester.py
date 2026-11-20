@@ -1309,7 +1309,7 @@ class Requester:
                     if location == requested_location:
                         # following this redirection would request the same location again, endlessly
                         raise RuntimeError(
-                            f"Github server redirected {location} to itself, "
+                            f"Github server redirected {requested_location} to itself, "
                             f"stopped following this recursive redirection"
                         )
                     raise RuntimeError(
