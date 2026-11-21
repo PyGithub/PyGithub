@@ -181,6 +181,7 @@ from collections.abc import Iterable
 from datetime import date, datetime, timezone
 from typing import TYPE_CHECKING, Any
 
+import github.ActionsRepositoryPermissions
 import github.AdvisoryCredit
 import github.AdvisoryVulnerability
 import github.Artifact
@@ -273,6 +274,7 @@ from github.GithubObject import (
 from github.PaginatedList import PaginatedList
 
 if TYPE_CHECKING:
+    from github.ActionsRepositoryPermissions import ActionsRepositoryPermissions
     from github.AdvisoryCredit import AdvisoryCredit
     from github.AdvisoryVulnerability import AdvisoryVulnerabilityInput
     from github.Artifact import Artifact
@@ -3811,6 +3813,14 @@ class Repository(CompletableGithubObject):
         :rtype: :class:`PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return PaginatedList(github.NamedUser.NamedUser, self._requester, f"{self.url}/watchers", None)
+
+    def get_actions_permissions(self) -> ActionsRepositoryPermissions:
+        """
+        :calls: `GET /repos/{owner}/{repo}/actions/permissions <https://docs.github.com/en/rest/actions/permissions#get-github-actions-permissions-for-a-repository>`_
+        :rtype: :class:`github.ActionsRepositoryPermissions.ActionsRepositoryPermissions`
+        """
+        url = f"{self.url}/actions/permissions"
+        return github.ActionsRepositoryPermissions.ActionsRepositoryPermissions(self._requester, url=url)
 
     def get_workflows(self) -> PaginatedList[Workflow]:
         """
