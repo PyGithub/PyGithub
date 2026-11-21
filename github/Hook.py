@@ -176,6 +176,8 @@ class Hook(CompletableGithubObject):
         active: Opt[bool] = NotSet,
     ) -> None:
         """
+        The name argument is deprecated for repository hooks.
+
         :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/repos/webhooks#update-a-repository-webhook>`_
         """
         assert is_optional(name, str), name
@@ -184,7 +186,8 @@ class Hook(CompletableGithubObject):
         assert is_optional_list(add_events, str), add_events
         assert is_optional_list(remove_events, str), remove_events
         assert is_optional(active, bool), active
-        if is_defined(name):
+        url = self.url
+        if is_defined(name) and url.removeprefix(self.requester.base_url.rstrip("/")).startswith("/repos/"):
             warnings.warn("Argument name is deprecated", category=DeprecationWarning)
 
         post_parameters = NotSet.remove_unset_items(
@@ -198,7 +201,7 @@ class Hook(CompletableGithubObject):
             }
         )
 
-        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
+        headers, data = self._requester.requestJsonAndCheck("PATCH", url, input=post_parameters)
         self._useAttributes(data)
         self._set_complete()
 
