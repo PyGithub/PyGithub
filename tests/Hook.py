@@ -36,7 +36,9 @@
 
 from __future__ import annotations
 
+import warnings
 from datetime import datetime, timezone
+from unittest.mock import patch
 
 from . import Framework
 
@@ -107,6 +109,12 @@ class Hook(Framework.TestCase):
         hook = self.g.withLazy(True).get_organization("example").get_hook(42)
         hook.edit(active=False)
         self.assertFalse(hook.active)
+
+        with patch.object(hook.requester, "requestJsonAndCheck", return_value=({}, {})) as request:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", DeprecationWarning)
+                hook.edit(name="web")
+        request.assert_called_once_with("PATCH", hook.url, input={"name": "web"})
 
     def testEditRejectsNone(self):
         with self.assertRaises(AssertionError):
