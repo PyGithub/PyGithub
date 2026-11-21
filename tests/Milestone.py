@@ -37,6 +37,7 @@
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
+from unittest.mock import patch
 
 from . import Framework
 
@@ -100,6 +101,15 @@ class Milestone(Framework.TestCase):
             lambda lb: lb.name,
             ["Public interface", "Project management"],
         )
+
+    def testClearDueOn(self):
+        with patch.object(
+            self.milestone._requester, "requestJsonAndCheck", return_value=({}, {"due_on": None})
+        ) as request:
+            self.milestone.edit(self.milestone.title, due_on=None)
+
+        request.assert_called_once_with("PATCH", self.milestone.url, input={"title": "Version 0.4", "due_on": None})
+        self.assertIsNone(self.milestone.due_on)
 
     def testDelete(self):
         self.milestone.delete()
