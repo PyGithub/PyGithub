@@ -127,6 +127,22 @@ class Cli(unittest.TestCase):
                 },
             )
 
+        # diff initial index, later tests only diff changes of the run dir
+        if prev_test is None:
+            actual_index = Path(actual_path, "openapi.index")
+            expected_index = Path(expected_path, "openapi.index")
+            # openapi.index has no newline at the end of file, which the end-of-file-fixer pre-commit hook would add
+            actual_index.write_text(Path(run_path, "openapi.index").read_text().rstrip("\n") + "\n")
+            if self.approveMode:
+                shutil.move(actual_index, expected_index)
+            else:
+                execute(
+                    f"cd {self.tests_path}; env LANG=en_US.UTF-8 diff --unified '{expected_index.relative_to(self.tests_path)}' '{actual_index.relative_to(self.tests_path)}'",
+                    {
+                        256: f"Unexpected changes in openapi.index, approve changes by running: cp '{actual_index.relative_to(self.pwd)}' '{expected_index.relative_to(self.pwd)}'."
+                    },
+                )
+
         # diff run dirs
         if prev_test is not None:
             before_path = Path(self.tests_path, "before")

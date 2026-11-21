@@ -1,0 +1,872 @@
+diff --unified --recursive --new-file before/github/SecretScanAlert.py after/github/SecretScanAlert.py
+--- before/github/SecretScanAlert.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/github/SecretScanAlert.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,276 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from typing import Any, TYPE_CHECKING
++from datetime import datetime, timezone
++
++from github.GithubObject import CompletableGithubObject
++from github.GithubObject import Attribute, NotSet
++import github.SecretScanAlertInstance
++import github.NamedUser
++
++if TYPE_CHECKING:
++    from github.SecretScanAlertInstance import SecretScanAlertInstance
++    from github.NamedUser import NamedUser
++    pass
++
++
++class SecretScanAlert(CompletableGithubObject):
++    """
++    This class represents SecretScanAlert.
++
++    The reference can be found here
++    https://docs.github.com/en/rest/reference/secret-scanning
++
++    The OpenAPI schema can be found at
++
++    - /components/schemas/secret-scanning-alert
++
++    """
++
++    def _initAttributes(self) -> None:
++        super()._initAttributes()
++        self._assigned_to: Attribute[NamedUser] = NotSet
++        self._created_at: Attribute[datetime] = NotSet
++        self._first_location_detected: Attribute[SecretScanAlertInstance] = NotSet
++        self._has_more_locations: Attribute[bool] = NotSet
++        self._html_url: Attribute[str] = NotSet
++        self._is_base64_encoded: Attribute[bool] = NotSet
++        self._locations_url: Attribute[str] = NotSet
++        self._multi_repo: Attribute[bool] = NotSet
++        self._number: Attribute[int] = NotSet
++        self._publicly_leaked: Attribute[bool] = NotSet
++        self._push_protection_bypass_request_comment: Attribute[str] = NotSet
++        self._push_protection_bypass_request_html_url: Attribute[str] = NotSet
++        self._push_protection_bypass_request_reviewer: Attribute[NamedUser] = NotSet
++        self._push_protection_bypass_request_reviewer_comment: Attribute[str] = NotSet
++        self._push_protection_bypassed: Attribute[bool] = NotSet
++        self._push_protection_bypassed_at: Attribute[datetime] = NotSet
++        self._push_protection_bypassed_by: Attribute[NamedUser] = NotSet
++        self._resolution: Attribute[str] = NotSet
++        self._resolution_comment: Attribute[str] = NotSet
++        self._resolved_at: Attribute[datetime] = NotSet
++        self._resolved_by: Attribute[NamedUser] = NotSet
++        self._secret: Attribute[str] = NotSet
++        self._secret_type: Attribute[str] = NotSet
++        self._secret_type_display_name: Attribute[str] = NotSet
++        self._state: Attribute[str] = NotSet
++        self._updated_at: Attribute[datetime] = NotSet
++        self._validity: Attribute[str] = NotSet
++
++    def __repr__(self) -> str:
++        # TODO: replace "some_attribute" with uniquely identifying attributes in the dict, then run:
++        return self.get__repr__({"some_attribute": self._some_attribute.value})
++
++    @property
++    def assigned_to(self) -> NamedUser:
++        self._completeIfNotSet(self._assigned_to)
++        return self._assigned_to.value
++
++    @property
++    def created_at(self) -> datetime:
++        self._completeIfNotSet(self._created_at)
++        return self._created_at.value
++
++    @property
++    def first_location_detected(self) -> SecretScanAlertInstance:
++        self._completeIfNotSet(self._first_location_detected)
++        return self._first_location_detected.value
++
++    @property
++    def has_more_locations(self) -> bool:
++        self._completeIfNotSet(self._has_more_locations)
++        return self._has_more_locations.value
++
++    @property
++    def html_url(self) -> str:
++        self._completeIfNotSet(self._html_url)
++        return self._html_url.value
++
++    @property
++    def is_base64_encoded(self) -> bool:
++        self._completeIfNotSet(self._is_base64_encoded)
++        return self._is_base64_encoded.value
++
++    @property
++    def locations_url(self) -> str:
++        self._completeIfNotSet(self._locations_url)
++        return self._locations_url.value
++
++    @property
++    def multi_repo(self) -> bool:
++        self._completeIfNotSet(self._multi_repo)
++        return self._multi_repo.value
++
++    @property
++    def number(self) -> int:
++        self._completeIfNotSet(self._number)
++        return self._number.value
++
++    @property
++    def publicly_leaked(self) -> bool:
++        self._completeIfNotSet(self._publicly_leaked)
++        return self._publicly_leaked.value
++
++    @property
++    def push_protection_bypass_request_comment(self) -> str:
++        self._completeIfNotSet(self._push_protection_bypass_request_comment)
++        return self._push_protection_bypass_request_comment.value
++
++    @property
++    def push_protection_bypass_request_html_url(self) -> str:
++        self._completeIfNotSet(self._push_protection_bypass_request_html_url)
++        return self._push_protection_bypass_request_html_url.value
++
++    @property
++    def push_protection_bypass_request_reviewer(self) -> NamedUser:
++        self._completeIfNotSet(self._push_protection_bypass_request_reviewer)
++        return self._push_protection_bypass_request_reviewer.value
++
++    @property
++    def push_protection_bypass_request_reviewer_comment(self) -> str:
++        self._completeIfNotSet(self._push_protection_bypass_request_reviewer_comment)
++        return self._push_protection_bypass_request_reviewer_comment.value
++
++    @property
++    def push_protection_bypassed(self) -> bool:
++        self._completeIfNotSet(self._push_protection_bypassed)
++        return self._push_protection_bypassed.value
++
++    @property
++    def push_protection_bypassed_at(self) -> datetime:
++        self._completeIfNotSet(self._push_protection_bypassed_at)
++        return self._push_protection_bypassed_at.value
++
++    @property
++    def push_protection_bypassed_by(self) -> NamedUser:
++        self._completeIfNotSet(self._push_protection_bypassed_by)
++        return self._push_protection_bypassed_by.value
++
++    @property
++    def resolution(self) -> str:
++        self._completeIfNotSet(self._resolution)
++        return self._resolution.value
++
++    @property
++    def resolution_comment(self) -> str:
++        self._completeIfNotSet(self._resolution_comment)
++        return self._resolution_comment.value
++
++    @property
++    def resolved_at(self) -> datetime:
++        self._completeIfNotSet(self._resolved_at)
++        return self._resolved_at.value
++
++    @property
++    def resolved_by(self) -> NamedUser:
++        self._completeIfNotSet(self._resolved_by)
++        return self._resolved_by.value
++
++    @property
++    def secret(self) -> str:
++        self._completeIfNotSet(self._secret)
++        return self._secret.value
++
++    @property
++    def secret_type(self) -> str:
++        self._completeIfNotSet(self._secret_type)
++        return self._secret_type.value
++
++    @property
++    def secret_type_display_name(self) -> str:
++        self._completeIfNotSet(self._secret_type_display_name)
++        return self._secret_type_display_name.value
++
++    @property
++    def state(self) -> str:
++        self._completeIfNotSet(self._state)
++        return self._state.value
++
++    @property
++    def updated_at(self) -> datetime:
++        self._completeIfNotSet(self._updated_at)
++        return self._updated_at.value
++
++    @property
++    def validity(self) -> str:
++        self._completeIfNotSet(self._validity)
++        return self._validity.value
++
++    def _useAttributes(self, attributes: dict[str, Any]) -> None:
++        super()._useAttributes(attributes)
++        if "assigned_to" in attributes:  # pragma no branch
++            self._assigned_to = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assigned_to"])
++        if "created_at" in attributes:  # pragma no branch
++            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
++        if "first_location_detected" in attributes:  # pragma no branch
++            self._first_location_detected = self._makeClassAttribute(github.SecretScanAlertInstance.SecretScanAlertInstance, attributes["first_location_detected"])
++        if "has_more_locations" in attributes:  # pragma no branch
++            self._has_more_locations = self._makeBoolAttribute(attributes["has_more_locations"])
++        if "html_url" in attributes:  # pragma no branch
++            self._html_url = self._makeStringAttribute(attributes["html_url"])
++        if "is_base64_encoded" in attributes:  # pragma no branch
++            self._is_base64_encoded = self._makeBoolAttribute(attributes["is_base64_encoded"])
++        if "locations_url" in attributes:  # pragma no branch
++            self._locations_url = self._makeStringAttribute(attributes["locations_url"])
++        if "multi_repo" in attributes:  # pragma no branch
++            self._multi_repo = self._makeBoolAttribute(attributes["multi_repo"])
++        if "number" in attributes:  # pragma no branch
++            self._number = self._makeIntAttribute(attributes["number"])
++        if "publicly_leaked" in attributes:  # pragma no branch
++            self._publicly_leaked = self._makeBoolAttribute(attributes["publicly_leaked"])
++        if "push_protection_bypass_request_comment" in attributes:  # pragma no branch
++            self._push_protection_bypass_request_comment = self._makeStringAttribute(attributes["push_protection_bypass_request_comment"])
++        if "push_protection_bypass_request_html_url" in attributes:  # pragma no branch
++            self._push_protection_bypass_request_html_url = self._makeStringAttribute(attributes["push_protection_bypass_request_html_url"])
++        if "push_protection_bypass_request_reviewer" in attributes:  # pragma no branch
++            self._push_protection_bypass_request_reviewer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["push_protection_bypass_request_reviewer"])
++        if "push_protection_bypass_request_reviewer_comment" in attributes:  # pragma no branch
++            self._push_protection_bypass_request_reviewer_comment = self._makeStringAttribute(attributes["push_protection_bypass_request_reviewer_comment"])
++        if "push_protection_bypassed" in attributes:  # pragma no branch
++            self._push_protection_bypassed = self._makeBoolAttribute(attributes["push_protection_bypassed"])
++        if "push_protection_bypassed_at" in attributes:  # pragma no branch
++            self._push_protection_bypassed_at = self._makeDatetimeAttribute(attributes["push_protection_bypassed_at"])
++        if "push_protection_bypassed_by" in attributes:  # pragma no branch
++            self._push_protection_bypassed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["push_protection_bypassed_by"])
++        if "resolution" in attributes:  # pragma no branch
++            self._resolution = self._makeStringAttribute(attributes["resolution"])
++        if "resolution_comment" in attributes:  # pragma no branch
++            self._resolution_comment = self._makeStringAttribute(attributes["resolution_comment"])
++        if "resolved_at" in attributes:  # pragma no branch
++            self._resolved_at = self._makeDatetimeAttribute(attributes["resolved_at"])
++        if "resolved_by" in attributes:  # pragma no branch
++            self._resolved_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["resolved_by"])
++        if "secret" in attributes:  # pragma no branch
++            self._secret = self._makeStringAttribute(attributes["secret"])
++        if "secret_type" in attributes:  # pragma no branch
++            self._secret_type = self._makeStringAttribute(attributes["secret_type"])
++        if "secret_type_display_name" in attributes:  # pragma no branch
++            self._secret_type_display_name = self._makeStringAttribute(attributes["secret_type_display_name"])
++        if "state" in attributes:  # pragma no branch
++            self._state = self._makeStringAttribute(attributes["state"])
++        if "updated_at" in attributes:  # pragma no branch
++            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
++        if "validity" in attributes:  # pragma no branch
++            self._validity = self._makeStringAttribute(attributes["validity"])
++
+diff --unified --recursive --new-file before/openapi.index after/openapi.index
+--- before/openapi.index	YYYY-MM-DD HH:MM:SS +0000
++++ after/openapi.index	YYYY-MM-DD HH:MM:SS +0000
+@@ -4832,6 +4832,480 @@
+       ],
+       "test_filename": "tests/Repository.py"
+     },
++    "SecretScanAlert": {
++      "bases": [
++        "CompletableGithubObject"
++      ],
++      "docstring": "This class represents SecretScanAlert.\n\n    The reference can be found here\n    https://docs.github.com/en/rest/reference/secret-scanning\n\n    The OpenAPI schema can be found at\n\n    - /components/schemas/secret-scanning-alert",
++      "filename": "github/SecretScanAlert.py",
++      "ids": [
++        "some_attribute"
++      ],
++      "inheritance": [
++        "ABC",
++        "CompletableGithubObject",
++        "GithubObject"
++      ],
++      "inherited_schemas": [],
++      "methods": {},
++      "module": "SecretScanAlert",
++      "name": "SecretScanAlert",
++      "package": "github",
++      "properties": {
++        "assigned_to": {
++          "name": "assigned_to",
++          "returns": [
++            "NamedUser"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-simple-user"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/nullable-simple-user"
++            }
++          }
++        },
++        "created_at": {
++          "name": "created_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/alert-created-at"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/alert-created-at"
++            }
++          }
++        },
++        "first_location_detected": {
++          "name": "first_location_detected",
++          "returns": [
++            "SecretScanAlertInstance"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-secret-scanning-first-detected-location"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/nullable-secret-scanning-first-detected-location"
++            }
++          }
++        },
++        "has_more_locations": {
++          "name": "has_more_locations",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "A boolean value representing whether or not the token in the alert was detected in more than one location.",
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "A boolean value representing whether or not the token in the alert was detected in more than one location.",
++              "type": "boolean"
++            }
++          }
++        },
++        "html_url": {
++          "name": "html_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/alert-html-url"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/alert-html-url"
++            }
++          }
++        },
++        "is_base64_encoded": {
++          "name": "is_base64_encoded",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "A boolean value representing whether or not alert is base64 encoded",
++            "nullable": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "A boolean value representing whether or not alert is base64 encoded",
++              "nullable": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "locations_url": {
++          "name": "locations_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The REST API URL of the code locations for this alert.",
++            "format": "uri",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "The REST API URL of the code locations for this alert.",
++              "format": "uri",
++              "type": "string"
++            }
++          }
++        },
++        "multi_repo": {
++          "name": "multi_repo",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "Whether the detected secret was found in multiple repositories under the same organization or enterprise.",
++            "nullable": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "Whether the detected secret was found in multiple repositories under the same organization or enterprise.",
++              "nullable": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "number": {
++          "name": "number",
++          "returns": [
++            "int"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/alert-number"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/alert-number"
++            }
++          }
++        },
++        "publicly_leaked": {
++          "name": "publicly_leaked",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "Whether the detected secret was publicly leaked.",
++            "nullable": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "Whether the detected secret was publicly leaked.",
++              "nullable": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "push_protection_bypass_request_comment": {
++          "name": "push_protection_bypass_request_comment",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "An optional comment when requesting a push protection bypass.",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "An optional comment when requesting a push protection bypass.",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "push_protection_bypass_request_html_url": {
++          "name": "push_protection_bypass_request_html_url",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The URL to a push protection bypass request.",
++            "format": "uri",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "The URL to a push protection bypass request.",
++              "format": "uri",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "push_protection_bypass_request_reviewer": {
++          "name": "push_protection_bypass_request_reviewer",
++          "returns": [
++            "NamedUser"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-simple-user"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/nullable-simple-user"
++            }
++          }
++        },
++        "push_protection_bypass_request_reviewer_comment": {
++          "name": "push_protection_bypass_request_reviewer_comment",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "An optional comment when reviewing a push protection bypass.",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "An optional comment when reviewing a push protection bypass.",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "push_protection_bypassed": {
++          "name": "push_protection_bypassed",
++          "returns": [
++            "bool"
++          ],
++          "schema": {
++            "description": "Whether push protection was bypassed for the detected secret.",
++            "nullable": true,
++            "type": "boolean"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "Whether push protection was bypassed for the detected secret.",
++              "nullable": true,
++              "type": "boolean"
++            }
++          }
++        },
++        "push_protection_bypassed_at": {
++          "name": "push_protection_bypassed_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "description": "The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
++            "format": "date-time",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
++              "format": "date-time",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "push_protection_bypassed_by": {
++          "name": "push_protection_bypassed_by",
++          "returns": [
++            "NamedUser"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-simple-user"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/nullable-simple-user"
++            }
++          }
++        },
++        "resolution": {
++          "name": "resolution",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/secret-scanning-alert-resolution"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/secret-scanning-alert-resolution"
++            }
++          }
++        },
++        "resolution_comment": {
++          "name": "resolution_comment",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "An optional comment to resolve an alert.",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "An optional comment to resolve an alert.",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "resolved_at": {
++          "name": "resolved_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "description": "The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
++            "format": "date-time",
++            "nullable": true,
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.",
++              "format": "date-time",
++              "nullable": true,
++              "type": "string"
++            }
++          }
++        },
++        "resolved_by": {
++          "name": "resolved_by",
++          "returns": [
++            "NamedUser"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-simple-user"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/nullable-simple-user"
++            }
++          }
++        },
++        "secret": {
++          "name": "secret",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The secret that was detected.",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "The secret that was detected.",
++              "type": "string"
++            }
++          }
++        },
++        "secret_type": {
++          "name": "secret_type",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The type of secret that secret scanning detected.",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "The type of secret that secret scanning detected.",
++              "type": "string"
++            }
++          }
++        },
++        "secret_type_display_name": {
++          "name": "secret_type_display_name",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "User-friendly name for the detected secret, matching the `secret_type`.\nFor a list of built-in patterns, see \"[Supported secret scanning patterns](https://docs.github.com/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets).\"",
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "User-friendly name for the detected secret, matching the `secret_type`.\nFor a list of built-in patterns, see \"[Supported secret scanning patterns](https://docs.github.com/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets).\"",
++              "type": "string"
++            }
++          }
++        },
++        "state": {
++          "name": "state",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/secret-scanning-alert-state"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/secret-scanning-alert-state"
++            }
++          }
++        },
++        "updated_at": {
++          "name": "updated_at",
++          "returns": [
++            "datetime"
++          ],
++          "schema": {
++            "$ref": "#/components/schemas/nullable-alert-updated-at"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "$ref": "#/components/schemas/nullable-alert-updated-at"
++            }
++          }
++        },
++        "validity": {
++          "name": "validity",
++          "returns": [
++            "str"
++          ],
++          "schema": {
++            "description": "The token status as of the latest validity check.",
++            "enum": [
++              "active",
++              "inactive",
++              "unknown"
++            ],
++            "type": "string"
++          },
++          "schemas": {
++            "/components/schemas/secret-scanning-alert": {
++              "description": "The token status as of the latest validity check.",
++              "enum": [
++                "active",
++                "inactive",
++                "unknown"
++              ],
++              "type": "string"
++            }
++          }
++        }
++      },
++      "schemas": [
++        "/components/schemas/secret-scanning-alert"
++      ],
++      "test_filename": "tests/SecretScanAlert.py"
++    },
+     "SecretScanAlertInstance": {
+       "bases": [
+         "NonCompletableGithubObject"
+@@ -5384,6 +5858,7 @@
+         "NonCompletableGithubObject",
+         "Reaction",
+         "Repository",
++        "SecretScanAlert",
+         "SecretScanAlertInstance"
+       ],
+       "Attribute": [
+@@ -5401,7 +5876,8 @@
+         "IssueComment",
+         "NamedUser",
+         "NamedUserSearchResult",
+-        "Repository"
++        "Repository",
++        "SecretScanAlert"
+       ],
+       "CompletableGithubObjectWithPaginatedProperty": [
+         "Commit",
+@@ -5421,6 +5897,7 @@
+         "NonCompletableGithubObject",
+         "Reaction",
+         "Repository",
++        "SecretScanAlert",
+         "SecretScanAlertInstance"
+       ],
+       "NamedUser": [
+@@ -6171,6 +6648,9 @@
+       "/components/schemas/search-result-text-matches/items": [
+         "Items"
+       ],
++      "/components/schemas/secret-scanning-alert": [
++        "SecretScanAlert"
++      ],
+       "/components/schemas/secret-scanning-location-commit": [
+         "SecretScanAlertInstance"
+       ],
+diff --unified --recursive --new-file before/tests/SecretScanAlert.py after/tests/SecretScanAlert.py
+--- before/tests/SecretScanAlert.py	YYYY-MM-DD HH:MM:SS +0000
++++ after/tests/SecretScanAlert.py	YYYY-MM-DD HH:MM:SS +0000
+@@ -0,0 +1,68 @@
++############################ Copyrights and license ############################
++#                                                                              #
++#                                                                              #
++# This file is part of PyGithub.                                               #
++# http://pygithub.readthedocs.io/                                              #
++#                                                                              #
++# PyGithub is free software: you can redistribute it and/or modify it under    #
++# the terms of the GNU Lesser General Public License as published by the Free  #
++# Software Foundation, either version 3 of the License, or (at your option)    #
++# any later version.                                                           #
++#                                                                              #
++# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
++# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
++# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
++# details.                                                                     #
++#                                                                              #
++# You should have received a copy of the GNU Lesser General Public License     #
++# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
++#                                                                              #
++################################################################################
++
++from __future__ import annotations
++
++from datetime import datetime, timezone
++
++from . import Framework
++
++
++class SecretScanAlert(Framework.TestCase):
++    def setUp(self):
++        super().setUp()
++        # TODO: create an instance of type SecretScanAlert and assign to self.ssa, then run:
++        #   pytest ./tests/SecretScanAlert.py -k testAttributes --record
++        #   ./scripts/update-assertions.sh ./tests/SecretScanAlert.py testAttributes
++        #   pre-commit run --all-files
++        self.ssa = None
++
++    def testAttributes(self):
++        ssa = self.ssa
++        self.assertEqual(ssa.__repr__(), "")
++        self.assertEqual(ssa.assigned_to.some_attribute, "")
++        self.assertEqual(ssa.created_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(ssa.first_location_detected.some_attribute, "")
++        self.assertEqual(ssa.has_more_locations, False)
++        self.assertEqual(ssa.html_url, "")
++        self.assertEqual(ssa.is_base64_encoded, False)
++        self.assertEqual(ssa.locations_url, "")
++        self.assertEqual(ssa.multi_repo, False)
++        self.assertEqual(ssa.number, 0)
++        self.assertEqual(ssa.publicly_leaked, False)
++        self.assertEqual(ssa.push_protection_bypass_request_comment, "")
++        self.assertEqual(ssa.push_protection_bypass_request_html_url, "")
++        self.assertEqual(ssa.push_protection_bypass_request_reviewer.some_attribute, "")
++        self.assertEqual(ssa.push_protection_bypass_request_reviewer_comment, "")
++        self.assertEqual(ssa.push_protection_bypassed, False)
++        self.assertEqual(ssa.push_protection_bypassed_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(ssa.push_protection_bypassed_by.some_attribute, "")
++        self.assertEqual(ssa.resolution, "")
++        self.assertEqual(ssa.resolution_comment, "")
++        self.assertEqual(ssa.resolved_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(ssa.resolved_by.some_attribute, "")
++        self.assertEqual(ssa.secret, "")
++        self.assertEqual(ssa.secret_type, "")
++        self.assertEqual(ssa.secret_type_display_name, "")
++        self.assertEqual(ssa.state, "")
++        self.assertEqual(ssa.updated_at, datetime(2020, 1, 2, 12, 34, 56, tzinfo=timezone.utc))
++        self.assertEqual(ssa.url, "")
++        self.assertEqual(ssa.validity, "")

@@ -1,0 +1,973 @@
+{
+  "classes": {
+    "Attribute": {
+      "bases": [
+        "Protocol"
+      ],
+      "docstring": null,
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "Protocol"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "Attribute",
+      "package": "github",
+      "properties": {
+        "value": {
+          "name": "value",
+          "returns": [
+            "T_co"
+          ],
+          "schema": null,
+          "schemas": {}
+        }
+      },
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "CompletableGithubObject": {
+      "bases": [
+        "GithubObject",
+        "ABC"
+      ],
+      "docstring": null,
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "ABC",
+        "GithubObject"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "CompletableGithubObject",
+      "package": "github",
+      "properties": {
+        "completed": {
+          "name": "completed",
+          "returns": [
+            "bool"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "raw_data": {
+          "name": "raw_data",
+          "returns": [
+            "dict[str, Any]"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "raw_headers": {
+          "name": "raw_headers",
+          "returns": [
+            "dict[str, str | int]"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "url": {
+          "name": "url",
+          "returns": [
+            "str"
+          ],
+          "schema": null,
+          "schemas": {}
+        }
+      },
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "CompletableGithubObjectWithPaginatedProperty": {
+      "bases": [
+        "CompletableGithubObject"
+      ],
+      "docstring": "A CompletableGithubObject that has a property that is subject to pagination.\n\n    An instance created from a Requester with a non-default value for ``per_page`` must have the\n    ``per_page`` value in the URL in order for the paginated property to use the ``per_page`` value.",
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "ABC",
+        "CompletableGithubObject",
+        "GithubObject"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "CompletableGithubObjectWithPaginatedProperty",
+      "package": "github",
+      "properties": {
+        "_pagination_parameters": {
+          "name": "_pagination_parameters",
+          "returns": [
+            "dict[str, Any]"
+          ],
+          "schema": null,
+          "schemas": {}
+        }
+      },
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "GithubObject": {
+      "bases": [
+        "ABC"
+      ],
+      "docstring": "Base class for all classes representing objects returned by the API.",
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "ABC"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "GithubObject",
+      "package": "github",
+      "properties": {
+        "api_version": {
+          "name": "api_version",
+          "returns": [
+            "str",
+            "None"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "etag": {
+          "name": "etag",
+          "returns": [
+            "str",
+            "None"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "last_modified": {
+          "name": "last_modified",
+          "returns": [
+            "str",
+            "None"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "last_modified_datetime": {
+          "name": "last_modified_datetime",
+          "returns": [
+            "datetime",
+            "None"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "raw_data": {
+          "name": "raw_data",
+          "returns": [
+            "dict[str, Any]"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "raw_headers": {
+          "name": "raw_headers",
+          "returns": [
+            "dict[str, str | int]"
+          ],
+          "schema": null,
+          "schemas": {}
+        },
+        "requester": {
+          "name": "requester",
+          "returns": [
+            "Requester"
+          ],
+          "schema": null,
+          "schemas": {}
+        }
+      },
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "GraphQlObject": {
+      "bases": [],
+      "docstring": null,
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "GraphQlObject",
+      "package": "github",
+      "properties": {},
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "NonCompletableGithubObject": {
+      "bases": [
+        "GithubObject",
+        "ABC"
+      ],
+      "docstring": null,
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "ABC",
+        "GithubObject"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "NonCompletableGithubObject",
+      "package": "github",
+      "properties": {},
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "_BadAttribute": {
+      "bases": [
+        "Attribute"
+      ],
+      "docstring": null,
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "Attribute",
+        "Protocol"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "_BadAttribute",
+      "package": "github",
+      "properties": {
+        "value": {
+          "name": "value",
+          "returns": [
+            "T"
+          ],
+          "schema": null,
+          "schemas": {}
+        }
+      },
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "_NotSetType": {
+      "bases": [
+        "Attribute"
+      ],
+      "docstring": null,
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "Attribute",
+        "Protocol"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "_NotSetType",
+      "package": "github",
+      "properties": {
+        "value": {
+          "name": "value",
+          "returns": [
+            "Any"
+          ],
+          "schema": null,
+          "schemas": {}
+        }
+      },
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    },
+    "_ValuedAttribute": {
+      "bases": [
+        "Attribute"
+      ],
+      "docstring": null,
+      "filename": "github/GithubObject.py",
+      "ids": [],
+      "inheritance": [
+        "Attribute",
+        "Protocol"
+      ],
+      "inherited_schemas": [],
+      "methods": {},
+      "module": "GithubObject",
+      "name": "_ValuedAttribute",
+      "package": "github",
+      "properties": {
+        "value": {
+          "name": "value",
+          "returns": [
+            "T"
+          ],
+          "schema": null,
+          "schemas": {}
+        }
+      },
+      "schemas": [],
+      "test_filename": "tests/GithubObject.py"
+    }
+  },
+  "config": {},
+  "indices": {
+    "class_to_descendants": {
+      "ABC": [
+        "CompletableGithubObject",
+        "CompletableGithubObjectWithPaginatedProperty",
+        "GithubObject",
+        "NonCompletableGithubObject"
+      ],
+      "Attribute": [
+        "_BadAttribute",
+        "_NotSetType",
+        "_ValuedAttribute"
+      ],
+      "CompletableGithubObject": [
+        "CompletableGithubObjectWithPaginatedProperty"
+      ],
+      "GithubObject": [
+        "CompletableGithubObject",
+        "CompletableGithubObjectWithPaginatedProperty",
+        "NonCompletableGithubObject"
+      ],
+      "Protocol": [
+        "Attribute",
+        "_BadAttribute",
+        "_NotSetType",
+        "_ValuedAttribute"
+      ]
+    },
+    "path_to_call_methods": {},
+    "path_to_return_classes": {},
+    "return_schema_to_paths": {
+      "/components/schemas/actions-artifact-and-log-retention-response": [
+        "/orgs/{org}/actions/permissions/artifact-and-log-retention",
+        "/repos/{owner}/{repo}/actions/permissions/artifact-and-log-retention"
+      ],
+      "/components/schemas/actions-billing-usage": [
+        "/orgs/{org}/settings/billing/actions",
+        "/users/{username}/settings/billing/actions"
+      ],
+      "/components/schemas/actions-cache-list": [
+        "/repos/{owner}/{repo}/actions/caches"
+      ],
+      "/components/schemas/actions-cache-usage-by-repository": [
+        "/repos/{owner}/{repo}/actions/cache/usage"
+      ],
+      "/components/schemas/actions-cache-usage-org-enterprise": [
+        "/orgs/{org}/actions/cache/usage"
+      ],
+      "/components/schemas/actions-fork-pr-contributor-approval": [
+        "/orgs/{org}/actions/permissions/fork-pr-contributor-approval",
+        "/repos/{owner}/{repo}/actions/permissions/fork-pr-contributor-approval"
+      ],
+      "/components/schemas/actions-fork-pr-workflows-private-repos": [
+        "/orgs/{org}/actions/permissions/fork-pr-workflows-private-repos",
+        "/repos/{owner}/{repo}/actions/permissions/fork-pr-workflows-private-repos"
+      ],
+      "/components/schemas/actions-get-default-workflow-permissions": [
+        "/orgs/{org}/actions/permissions/workflow",
+        "/repos/{owner}/{repo}/actions/permissions/workflow"
+      ],
+      "/components/schemas/actions-hosted-runner": [
+        "/orgs/{org}/actions/hosted-runners/{hosted_runner_id}"
+      ],
+      "/components/schemas/actions-hosted-runner-custom-image": [
+        "/orgs/{org}/actions/hosted-runners/images/custom/{image_definition_id}"
+      ],
+      "/components/schemas/actions-hosted-runner-custom-image-version": [
+        "/orgs/{org}/actions/hosted-runners/images/custom/{image_definition_id}/versions/{version}"
+      ],
+      "/components/schemas/actions-hosted-runner-limits": [
+        "/orgs/{org}/actions/hosted-runners/limits"
+      ],
+      "/components/schemas/actions-organization-permissions": [
+        "/orgs/{org}/actions/permissions"
+      ],
+      "/components/schemas/actions-public-key": [
+        "/orgs/{org}/actions/secrets/public-key",
+        "/repos/{owner}/{repo}/actions/secrets/public-key",
+        "/repos/{owner}/{repo}/environments/{environment_name}/secrets/public-key"
+      ],
+      "/components/schemas/actions-repository-permissions": [
+        "/repos/{owner}/{repo}/actions/permissions"
+      ],
+      "/components/schemas/actions-secret": [
+        "/repos/{owner}/{repo}/actions/secrets/{secret_name}",
+        "/repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name}"
+      ],
+      "/components/schemas/actions-variable": [
+        "/repos/{owner}/{repo}/actions/variables/{name}",
+        "/repos/{owner}/{repo}/environments/{environment_name}/variables/{name}"
+      ],
+      "/components/schemas/actions-workflow-access-to-repository": [
+        "/repos/{owner}/{repo}/actions/permissions/access"
+      ],
+      "/components/schemas/api-insights-route-stats": [
+        "/orgs/{org}/insights/api/route-stats/{actor_type}/{actor_id}"
+      ],
+      "/components/schemas/api-insights-subject-stats": [
+        "/orgs/{org}/insights/api/subject-stats"
+      ],
+      "/components/schemas/api-insights-summary-stats": [
+        "/orgs/{org}/insights/api/summary-stats",
+        "/orgs/{org}/insights/api/summary-stats/users/{user_id}",
+        "/orgs/{org}/insights/api/summary-stats/{actor_type}/{actor_id}"
+      ],
+      "/components/schemas/api-insights-time-stats": [
+        "/orgs/{org}/insights/api/time-stats",
+        "/orgs/{org}/insights/api/time-stats/users/{user_id}",
+        "/orgs/{org}/insights/api/time-stats/{actor_type}/{actor_id}"
+      ],
+      "/components/schemas/api-insights-user-stats": [
+        "/orgs/{org}/insights/api/user-stats/{user_id}"
+      ],
+      "/components/schemas/api-overview": [
+        "/meta"
+      ],
+      "/components/schemas/artifact": [
+        "/repos/{owner}/{repo}/actions/artifacts/{artifact_id}"
+      ],
+      "/components/schemas/autolink": [
+        "/repos/{owner}/{repo}/autolinks/{autolink_id}"
+      ],
+      "/components/schemas/blob": [
+        "/repos/{owner}/{repo}/git/blobs/{file_sha}"
+      ],
+      "/components/schemas/branch-protection": [
+        "/repos/{owner}/{repo}/branches/{branch}/protection"
+      ],
+      "/components/schemas/branch-restriction-policy": [
+        "/repos/{owner}/{repo}/branches/{branch}/protection/restrictions"
+      ],
+      "/components/schemas/branch-with-protection": [
+        "/repos/{owner}/{repo}/branches/{branch}"
+      ],
+      "/components/schemas/campaign-summary": [
+        "/orgs/{org}/campaigns/{campaign_number}"
+      ],
+      "/components/schemas/check-automated-security-fixes": [
+        "/repos/{owner}/{repo}/automated-security-fixes"
+      ],
+      "/components/schemas/check-immutable-releases": [
+        "/repos/{owner}/{repo}/immutable-releases"
+      ],
+      "/components/schemas/check-run": [
+        "/repos/{owner}/{repo}/check-runs/{check_run_id}"
+      ],
+      "/components/schemas/check-suite": [
+        "/repos/{owner}/{repo}/check-suites/{check_suite_id}"
+      ],
+      "/components/schemas/classroom": [
+        "/classrooms/{classroom_id}"
+      ],
+      "/components/schemas/classroom-assignment": [
+        "/assignments/{assignment_id}"
+      ],
+      "/components/schemas/clone-traffic": [
+        "/repos/{owner}/{repo}/traffic/clones"
+      ],
+      "/components/schemas/code-of-conduct": [
+        "/codes_of_conduct/{key}"
+      ],
+      "/components/schemas/code-scanning-alert": [
+        "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"
+      ],
+      "/components/schemas/code-scanning-analysis": [
+        "/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"
+      ],
+      "/components/schemas/code-scanning-autofix": [
+        "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix"
+      ],
+      "/components/schemas/code-scanning-codeql-database": [
+        "/repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"
+      ],
+      "/components/schemas/code-scanning-default-setup": [
+        "/repos/{owner}/{repo}/code-scanning/default-setup"
+      ],
+      "/components/schemas/code-scanning-sarifs-status": [
+        "/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"
+      ],
+      "/components/schemas/code-scanning-variant-analysis": [
+        "/repos/{owner}/{repo}/code-scanning/codeql/variant-analyses/{codeql_variant_analysis_id}"
+      ],
+      "/components/schemas/code-scanning-variant-analysis-repo-task": [
+        "/repos/{owner}/{repo}/code-scanning/codeql/variant-analyses/{codeql_variant_analysis_id}/repos/{repo_owner}/{repo_name}"
+      ],
+      "/components/schemas/code-security-configuration": [
+        "/enterprises/{enterprise}/code-security/configurations/{configuration_id}",
+        "/orgs/{org}/code-security/configurations/{configuration_id}"
+      ],
+      "/components/schemas/code-security-configuration-for-repository": [
+        "/repos/{owner}/{repo}/code-security-configuration"
+      ],
+      "/components/schemas/code-security-default-configurations": [
+        "/enterprises/{enterprise}/code-security/configurations/defaults",
+        "/orgs/{org}/code-security/configurations/defaults"
+      ],
+      "/components/schemas/codeowners-errors": [
+        "/repos/{owner}/{repo}/codeowners/errors"
+      ],
+      "/components/schemas/codespace": [
+        "/user/codespaces/{codespace_name}"
+      ],
+      "/components/schemas/codespace-export-details": [
+        "/user/codespaces/{codespace_name}/exports/{export_id}"
+      ],
+      "/components/schemas/codespaces-org-secret": [
+        "/orgs/{org}/codespaces/secrets/{secret_name}"
+      ],
+      "/components/schemas/codespaces-permissions-check-for-devcontainer": [
+        "/repos/{owner}/{repo}/codespaces/permissions_check"
+      ],
+      "/components/schemas/codespaces-public-key": [
+        "/orgs/{org}/codespaces/secrets/public-key",
+        "/repos/{owner}/{repo}/codespaces/secrets/public-key"
+      ],
+      "/components/schemas/codespaces-secret": [
+        "/user/codespaces/secrets/{secret_name}"
+      ],
+      "/components/schemas/codespaces-user-public-key": [
+        "/user/codespaces/secrets/public-key"
+      ],
+      "/components/schemas/combined-billing-usage": [
+        "/orgs/{org}/settings/billing/shared-storage",
+        "/users/{username}/settings/billing/shared-storage"
+      ],
+      "/components/schemas/combined-commit-status": [
+        "/repos/{owner}/{repo}/commits/{ref}/status"
+      ],
+      "/components/schemas/commit": [
+        "/repos/{owner}/{repo}/commits/{ref}"
+      ],
+      "/components/schemas/commit-comment": [
+        "/repos/{owner}/{repo}/comments/{comment_id}"
+      ],
+      "/components/schemas/commit-comparison": [
+        "/repos/{owner}/{repo}/compare/{basehead}"
+      ],
+      "/components/schemas/community-profile": [
+        "/repos/{owner}/{repo}/community/profile"
+      ],
+      "/components/schemas/content-directory": [
+        "/repos/{owner}/{repo}/contents/{path}"
+      ],
+      "/components/schemas/content-file": [
+        "/repos/{owner}/{repo}/contents/{path}",
+        "/repos/{owner}/{repo}/readme",
+        "/repos/{owner}/{repo}/readme/{dir}"
+      ],
+      "/components/schemas/content-submodule": [
+        "/repos/{owner}/{repo}/contents/{path}"
+      ],
+      "/components/schemas/content-symlink": [
+        "/repos/{owner}/{repo}/contents/{path}"
+      ],
+      "/components/schemas/copilot-organization-details": [
+        "/orgs/{org}/copilot/billing"
+      ],
+      "/components/schemas/copilot-seat-details": [
+        "/orgs/{org}/members/{username}/copilot"
+      ],
+      "/components/schemas/custom-property": [
+        "/orgs/{org}/properties/schema/{custom_property_name}"
+      ],
+      "/components/schemas/dependabot-alert": [
+        "/repos/{owner}/{repo}/dependabot/alerts/{alert_number}"
+      ],
+      "/components/schemas/dependabot-public-key": [
+        "/orgs/{org}/dependabot/secrets/public-key",
+        "/repos/{owner}/{repo}/dependabot/secrets/public-key"
+      ],
+      "/components/schemas/dependabot-repository-access-details": [
+        "/organizations/{org}/dependabot/repository-access"
+      ],
+      "/components/schemas/dependabot-secret": [
+        "/repos/{owner}/{repo}/dependabot/secrets/{secret_name}"
+      ],
+      "/components/schemas/dependency-graph-diff": [
+        "/repos/{owner}/{repo}/dependency-graph/compare/{basehead}"
+      ],
+      "/components/schemas/dependency-graph-spdx-sbom": [
+        "/repos/{owner}/{repo}/dependency-graph/sbom"
+      ],
+      "/components/schemas/deploy-key": [
+        "/repos/{owner}/{repo}/keys/{key_id}"
+      ],
+      "/components/schemas/deployment": [
+        "/repos/{owner}/{repo}/deployments/{deployment_id}"
+      ],
+      "/components/schemas/deployment-branch-policy": [
+        "/repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"
+      ],
+      "/components/schemas/deployment-protection-rule": [
+        "/repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"
+      ],
+      "/components/schemas/deployment-status": [
+        "/repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}"
+      ],
+      "/components/schemas/enterprise-team": [
+        "/enterprises/{enterprise}/teams/{team_slug}"
+      ],
+      "/components/schemas/environment": [
+        "/repos/{owner}/{repo}/environments/{environment_name}"
+      ],
+      "/components/schemas/feed": [
+        "/feeds"
+      ],
+      "/components/schemas/full-repository": [
+        "/repos/{owner}/{repo}"
+      ],
+      "/components/schemas/gist-comment": [
+        "/gists/{gist_id}/comments/{comment_id}"
+      ],
+      "/components/schemas/gist-simple": [
+        "/gists/{gist_id}",
+        "/gists/{gist_id}/{sha}"
+      ],
+      "/components/schemas/git-commit": [
+        "/repos/{owner}/{repo}/git/commits/{commit_sha}"
+      ],
+      "/components/schemas/git-ref": [
+        "/repos/{owner}/{repo}/git/ref/{ref}"
+      ],
+      "/components/schemas/git-tag": [
+        "/repos/{owner}/{repo}/git/tags/{tag_sha}"
+      ],
+      "/components/schemas/git-tree": [
+        "/repos/{owner}/{repo}/git/trees/{tree_sha}"
+      ],
+      "/components/schemas/gitignore-template": [
+        "/gitignore/templates/{name}"
+      ],
+      "/components/schemas/global-advisory": [
+        "/advisories/{ghsa_id}"
+      ],
+      "/components/schemas/gpg-key": [
+        "/user/gpg_keys/{gpg_key_id}"
+      ],
+      "/components/schemas/hook": [
+        "/repos/{owner}/{repo}/hooks/{hook_id}"
+      ],
+      "/components/schemas/hook-delivery": [
+        "/app/hook/deliveries/{delivery_id}",
+        "/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}",
+        "/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}"
+      ],
+      "/components/schemas/hovercard": [
+        "/users/{username}/hovercard"
+      ],
+      "/components/schemas/immutable-releases-organization-settings": [
+        "/orgs/{org}/settings/immutable-releases"
+      ],
+      "/components/schemas/import": [
+        "/repos/{owner}/{repo}/import"
+      ],
+      "/components/schemas/installation": [
+        "/app/installations/{installation_id}",
+        "/orgs/{org}/installation",
+        "/repos/{owner}/{repo}/installation",
+        "/users/{username}/installation"
+      ],
+      "/components/schemas/integration": [
+        "/app",
+        "/apps/{app_slug}"
+      ],
+      "/components/schemas/issue": [
+        "/repos/{owner}/{repo}/issues/{issue_number}",
+        "/repos/{owner}/{repo}/issues/{issue_number}/parent"
+      ],
+      "/components/schemas/issue-comment": [
+        "/repos/{owner}/{repo}/issues/comments/{comment_id}"
+      ],
+      "/components/schemas/issue-event": [
+        "/repos/{owner}/{repo}/issues/events/{event_id}"
+      ],
+      "/components/schemas/job": [
+        "/repos/{owner}/{repo}/actions/jobs/{job_id}"
+      ],
+      "/components/schemas/key": [
+        "/user/keys/{key_id}"
+      ],
+      "/components/schemas/label": [
+        "/repos/{owner}/{repo}/labels/{name}"
+      ],
+      "/components/schemas/language": [
+        "/repos/{owner}/{repo}/languages"
+      ],
+      "/components/schemas/license": [
+        "/licenses/{license}"
+      ],
+      "/components/schemas/license-content": [
+        "/repos/{owner}/{repo}/license"
+      ],
+      "/components/schemas/marketplace-purchase": [
+        "/marketplace_listing/accounts/{account_id}",
+        "/marketplace_listing/stubbed/accounts/{account_id}"
+      ],
+      "/components/schemas/migration": [
+        "/orgs/{org}/migrations/{migration_id}",
+        "/user/migrations/{migration_id}"
+      ],
+      "/components/schemas/milestone": [
+        "/repos/{owner}/{repo}/milestones/{milestone_number}"
+      ],
+      "/components/schemas/network-configuration": [
+        "/orgs/{org}/settings/network-configurations/{network_configuration_id}"
+      ],
+      "/components/schemas/network-settings": [
+        "/orgs/{org}/settings/network-settings/{network_settings_id}"
+      ],
+      "/components/schemas/oidc-custom-sub": [
+        "/orgs/{org}/actions/oidc/customization/sub"
+      ],
+      "/components/schemas/oidc-custom-sub-repo": [
+        "/repos/{owner}/{repo}/actions/oidc/customization/sub"
+      ],
+      "/components/schemas/org-hook": [
+        "/orgs/{org}/hooks/{hook_id}"
+      ],
+      "/components/schemas/org-membership": [
+        "/orgs/{org}/memberships/{username}",
+        "/user/memberships/orgs/{org}"
+      ],
+      "/components/schemas/org-private-registry-configuration": [
+        "/orgs/{org}/private-registries/{secret_name}"
+      ],
+      "/components/schemas/organization-actions-secret": [
+        "/orgs/{org}/actions/secrets/{secret_name}"
+      ],
+      "/components/schemas/organization-actions-variable": [
+        "/orgs/{org}/actions/variables/{name}"
+      ],
+      "/components/schemas/organization-dependabot-secret": [
+        "/orgs/{org}/dependabot/secrets/{secret_name}"
+      ],
+      "/components/schemas/organization-full": [
+        "/orgs/{org}"
+      ],
+      "/components/schemas/organization-role": [
+        "/orgs/{org}/organization-roles/{role_id}"
+      ],
+      "/components/schemas/organization-simple": [
+        "/enterprises/{enterprise}/teams/{enterprise-team}/organizations/{org}"
+      ],
+      "/components/schemas/package": [
+        "/orgs/{org}/packages/{package_type}/{package_name}",
+        "/user/packages/{package_type}/{package_name}",
+        "/users/{username}/packages/{package_type}/{package_name}"
+      ],
+      "/components/schemas/package-version": [
+        "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}",
+        "/user/packages/{package_type}/{package_name}/versions/{package_version_id}",
+        "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"
+      ],
+      "/components/schemas/packages-billing-usage": [
+        "/orgs/{org}/settings/billing/packages",
+        "/users/{username}/settings/billing/packages"
+      ],
+      "/components/schemas/page": [
+        "/repos/{owner}/{repo}/pages"
+      ],
+      "/components/schemas/page-build": [
+        "/repos/{owner}/{repo}/pages/builds/latest",
+        "/repos/{owner}/{repo}/pages/builds/{build_id}"
+      ],
+      "/components/schemas/pages-deployment-status": [
+        "/repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}"
+      ],
+      "/components/schemas/pages-health-check": [
+        "/repos/{owner}/{repo}/pages/health"
+      ],
+      "/components/schemas/participation-stats": [
+        "/repos/{owner}/{repo}/stats/participation"
+      ],
+      "/components/schemas/private-user": [
+        "/user",
+        "/user/{account_id}",
+        "/users/{username}"
+      ],
+      "/components/schemas/project-collaborator-permission": [
+        "/projects/{project_id}/collaborators/{username}/permission"
+      ],
+      "/components/schemas/project-column": [
+        "/projects/columns/{column_id}"
+      ],
+      "/components/schemas/projects-v2": [
+        "/orgs/{org}/projectsV2/{project_number}",
+        "/users/{username}/projectsV2/{project_number}"
+      ],
+      "/components/schemas/projects-v2-field": [
+        "/orgs/{org}/projectsV2/{project_number}/fields/{field_id}",
+        "/users/{username}/projectsV2/{project_number}/fields/{field_id}"
+      ],
+      "/components/schemas/projects-v2-item-with-content": [
+        "/orgs/{org}/projectsV2/{project_number}/items/{item_id}",
+        "/users/{username}/projectsV2/{project_number}/items/{item_id}"
+      ],
+      "/components/schemas/protected-branch-admin-enforced": [
+        "/repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins",
+        "/repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"
+      ],
+      "/components/schemas/protected-branch-pull-request-review": [
+        "/repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"
+      ],
+      "/components/schemas/public-user": [
+        "/user",
+        "/user/{account_id}",
+        "/users/{username}"
+      ],
+      "/components/schemas/pull-request": [
+        "/repos/{owner}/{repo}/pulls/{pull_number}"
+      ],
+      "/components/schemas/pull-request-review": [
+        "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"
+      ],
+      "/components/schemas/pull-request-review-comment": [
+        "/repos/{owner}/{repo}/pulls/comments/{comment_id}"
+      ],
+      "/components/schemas/pull-request-review-request": [
+        "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers"
+      ],
+      "/components/schemas/rate-limit-overview": [
+        "/rate_limit"
+      ],
+      "/components/schemas/release": [
+        "/repos/{owner}/{repo}/releases/latest",
+        "/repos/{owner}/{repo}/releases/tags/{tag}",
+        "/repos/{owner}/{repo}/releases/{release_id}"
+      ],
+      "/components/schemas/release-asset": [
+        "/repos/{owner}/{repo}/releases/assets/{asset_id}"
+      ],
+      "/components/schemas/repo-codespaces-secret": [
+        "/repos/{owner}/{repo}/codespaces/secrets/{secret_name}"
+      ],
+      "/components/schemas/repository-advisory": [
+        "/repos/{owner}/{repo}/security-advisories/{ghsa_id}"
+      ],
+      "/components/schemas/repository-collaborator-permission": [
+        "/repos/{owner}/{repo}/collaborators/{username}/permission"
+      ],
+      "/components/schemas/repository-ruleset": [
+        "/orgs/{org}/rulesets/{ruleset_id}",
+        "/repos/{owner}/{repo}/rulesets/{ruleset_id}"
+      ],
+      "/components/schemas/repository-subscription": [
+        "/repos/{owner}/{repo}/subscription"
+      ],
+      "/components/schemas/root": [
+        "/"
+      ],
+      "/components/schemas/rule-suite": [
+        "/orgs/{org}/rulesets/rule-suites/{rule_suite_id}",
+        "/repos/{owner}/{repo}/rulesets/rule-suites/{rule_suite_id}"
+      ],
+      "/components/schemas/rule-suites": [
+        "/orgs/{org}/rulesets/rule-suites",
+        "/repos/{owner}/{repo}/rulesets/rule-suites"
+      ],
+      "/components/schemas/ruleset-version-with-state": [
+        "/orgs/{org}/rulesets/{ruleset_id}/history/{version_id}",
+        "/repos/{owner}/{repo}/rulesets/{ruleset_id}/history/{version_id}"
+      ],
+      "/components/schemas/runner": [
+        "/orgs/{org}/actions/runners/{runner_id}",
+        "/repos/{owner}/{repo}/actions/runners/{runner_id}"
+      ],
+      "/components/schemas/runner-groups-org": [
+        "/orgs/{org}/actions/runner-groups/{runner_group_id}"
+      ],
+      "/components/schemas/secret-scanning-alert": [
+        "/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"
+      ],
+      "/components/schemas/secret-scanning-pattern-configuration": [
+        "/orgs/{org}/secret-scanning/pattern-configurations"
+      ],
+      "/components/schemas/secret-scanning-scan-history": [
+        "/repos/{owner}/{repo}/secret-scanning/scan-history"
+      ],
+      "/components/schemas/selected-actions": [
+        "/orgs/{org}/actions/permissions/selected-actions",
+        "/repos/{owner}/{repo}/actions/permissions/selected-actions"
+      ],
+      "/components/schemas/self-hosted-runners-settings": [
+        "/orgs/{org}/actions/permissions/self-hosted-runners"
+      ],
+      "/components/schemas/simple-user": [
+        "/enterprises/{enterprise}/teams/{enterprise-team}/memberships/{username}"
+      ],
+      "/components/schemas/ssh-signing-key": [
+        "/user/ssh_signing_keys/{ssh_signing_key_id}"
+      ],
+      "/components/schemas/status-check-policy": [
+        "/repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"
+      ],
+      "/components/schemas/team-discussion": [
+        "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}",
+        "/teams/{team_id}/discussions/{discussion_number}"
+      ],
+      "/components/schemas/team-discussion-comment": [
+        "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}",
+        "/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}"
+      ],
+      "/components/schemas/team-full": [
+        "/orgs/{org}/teams/{team_slug}",
+        "/teams/{team_id}"
+      ],
+      "/components/schemas/team-membership": [
+        "/orgs/{org}/teams/{team_slug}/memberships/{username}",
+        "/teams/{team_id}/memberships/{username}"
+      ],
+      "/components/schemas/team-project": [
+        "/orgs/{org}/teams/{team_slug}/projects/{project_id}",
+        "/teams/{team_id}/projects/{project_id}"
+      ],
+      "/components/schemas/team-repository": [
+        "/orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}",
+        "/teams/{team_id}/repos/{owner}/{repo}"
+      ],
+      "/components/schemas/thread": [
+        "/notifications/threads/{thread_id}"
+      ],
+      "/components/schemas/thread-subscription": [
+        "/notifications/threads/{thread_id}/subscription"
+      ],
+      "/components/schemas/topic": [
+        "/repos/{owner}/{repo}/topics"
+      ],
+      "/components/schemas/view-traffic": [
+        "/repos/{owner}/{repo}/traffic/views"
+      ],
+      "/components/schemas/webhook-config": [
+        "/app/hook/config",
+        "/orgs/{org}/hooks/{hook_id}/config",
+        "/repos/{owner}/{repo}/hooks/{hook_id}/config"
+      ],
+      "/components/schemas/workflow": [
+        "/repos/{owner}/{repo}/actions/workflows/{workflow_id}"
+      ],
+      "/components/schemas/workflow-run": [
+        "/repos/{owner}/{repo}/actions/runs/{run_id}",
+        "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}"
+      ],
+      "/components/schemas/workflow-run-usage": [
+        "/repos/{owner}/{repo}/actions/runs/{run_id}/timing"
+      ],
+      "/components/schemas/workflow-usage": [
+        "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"
+      ]
+    },
+    "schema_to_classes": {}
+  },
+  "paths": {},
+  "sources": "github"
+}

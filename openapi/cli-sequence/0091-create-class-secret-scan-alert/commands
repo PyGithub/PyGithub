@@ -1,0 +1,3 @@
+# property first_location_detected references the oneOf / anyOf wrapper schema implemented by SecretScanAlertInstance
+python scripts/openapi.py create class --completable --tests --new-schemas as-dict github openapi.spec.json openapi.index SecretScanAlert "https://docs.github.com/en/rest/reference/secret-scanning" "/components/schemas/secret-scanning-alert"
+python scripts/openapi.py index github openapi.spec.json openapi.index
