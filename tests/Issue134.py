@@ -58,6 +58,20 @@ class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub
 
     def testGetOAuthScopesFromHeader(self):
         g = github.Github(auth=self.oauth_token)
-        self.assertEqual(g.oauth_scopes, None)
         g.get_user().name
         self.assertEqual(g.oauth_scopes, ["repo", "user", "gist"])
+
+    def testGetOAuthScopesFetchedOnAccess(self):
+        g = github.Github(auth=self.oauth_token)
+        # scopes are unknown until a response provided the X-OAuth-Scopes header:
+        # accessing the property fetches them with a single GET /rate_limit
+        self.assertEqual(g.oauth_scopes, ["repo", "user", "gist"])
+        # and they are cached, so the next access does not send another request
+        self.assertEqual(g.oauth_scopes, ["repo", "user", "gist"])
+
+    def testGetOAuthScopesUnknownWithoutScopeHeader(self):
+        # GitHub App installation tokens do not report OAuth scopes, so the value stays None
+        g = github.Github(auth=self.oauth_token)
+        self.assertIsNone(g.oauth_scopes)
+        # the fetch is not repeated on every access
+        self.assertIsNone(g.oauth_scopes)
