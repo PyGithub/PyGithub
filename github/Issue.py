@@ -504,6 +504,8 @@ class Issue(CompletableGithubObject):
         """
         Transfer this issue to another repository. The repository has to be owned by the same user or organization.
 
+        This requires an App Installation token with issue: write and content: write permissions.
+
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to transfer the issue
             <https://docs.github.com/en/graphql/reference/mutations#transferissue>
         :graphql: `mutation transferIssue <https://docs.github.com/en/graphql/reference/mutations#transferissue>`_

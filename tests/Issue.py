@@ -46,10 +46,12 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from unittest import mock
 
 from . import Framework
 
 gho = Framework.github.GithubObject
+ghi = Framework.github.GithubIntegration
 
 
 class Issue(Framework.TestCase):
@@ -196,16 +198,42 @@ class Issue(Framework.TestCase):
         self.issue.unlock()
 
     def testTransfer(self):
-        target = self.g.get_repo("PyGithub/transfer-target")
-        issue = self.issue.transfer(target)
-        self.assertEqual(issue.number, 7)
-        self.assertEqual(issue.repository_url, "https://api.github.com/repos/PyGithub/transfer-target")
+        # transfer requires GitHub app installation token
+        github_integration = ghi(auth=self.app_auth)
+        installation = github_integration.get_app_installation(installation_id=1234567)
+        gh = installation.get_github_for_installation().withLazy(lazy=True)
+
+        # recorded token expires otherwise
+        with mock.patch("github.Auth.datetime") as dt:
+            dt.now = mock.Mock(return_value=datetime(2026, 11, 25, 18, 0, 0, tzinfo=timezone.utc))
+
+            issue = gh.get_repo("EnricoMi/PyGithub").get_issue(27)
+            self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
+
+            target = gh.get_repo("EnricoMi/PyGithub-fork")
+            issue = issue.transfer(target)
+            self.assertEqual(issue.number, 16)
+            self.assertEqual(issue.repository_url, "https://api.github.com/repos/EnricoMi/PyGithub-fork")
+            self.assertListKeyEqual(issue.labels, lambda label: label.name, [])
 
     def testTransferCreatingLabels(self):
-        target = self.g.get_repo("PyGithub/transfer-target")
-        issue = self.issue.transfer(target, create_labels_if_missing=True)
-        self.assertEqual(issue.number, 8)
-        self.assertListKeyEqual(issue.labels, lambda label: label.name, ["bug"])
+        # transfer requires GitHub app installation token
+        github_integration = ghi(auth=self.app_auth)
+        installation = github_integration.get_app_installation(installation_id=1234567)
+        gh = installation.get_github_for_installation().withLazy(lazy=True)
+
+        # recorded token expires otherwise
+        with mock.patch("github.Auth.datetime") as dt:
+            dt.now = mock.Mock(return_value=datetime(2026, 11, 25, 18, 0, 0, tzinfo=timezone.utc))
+
+            issue = gh.get_repo("EnricoMi/PyGithub").get_issue(28)
+            self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
+
+            target = gh.get_repo("EnricoMi/PyGithub-fork")
+            issue = issue.transfer(target, create_labels_if_missing=True)
+            self.assertEqual(issue.number, 17)
+            self.assertEqual(issue.repository_url, "https://api.github.com/repos/EnricoMi/PyGithub-fork")
+            self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
 
     def testCreateComment(self):
         comment = self.issue.create_comment("Comment created by PyGithub")
