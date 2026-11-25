@@ -579,6 +579,8 @@ class Requester:
         If the token does not report scopes (for example a GitHub App installation token), the value is ``None``.
 
         """
+        # returned early rather than inside `if is_undefined(...)`: type checkers cannot narrow the
+        # Opt[...] sentinel away from a value that is mutated in the if-branch
         if is_defined(self._oauth_scopes):
             return self._oauth_scopes
         # remember that we asked, even if the request fails or provides no scopes
