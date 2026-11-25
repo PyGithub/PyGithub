@@ -293,9 +293,6 @@ class Github:
             api_version,
         )
 
-        # whether we already asked the API for the OAuth scopes of this instance, see Github.oauth_scopes
-        self.__oauth_scopes_requested = False
-
     def withLazy(self, lazy: bool) -> Github:
         """
         Create a Github instance with identical configuration but the given lazy setting.
@@ -404,17 +401,16 @@ class Github:
         """
         OAuth scopes of the token this instance authenticates with.
 
-        The scopes are taken from the ``X-OAuth-Scopes`` response header, so they are unknown until this instance has
-        sent its first request. Accessing this property before that sends a single ``GET /rate_limit`` request, which
-        is not counted against the rate limit, to learn the scopes. If the token does not report scopes (for example a
-        GitHub App installation token) the value is ``None`` and the request is not repeated on later access.
+        This invokes a ``GET /rate_limit`` request if this instance has never sent a request,
+        or if responses never provided the ``X-OAuth-Scopes`` response header. Such a request
+        is not counted against the rate limit.
+
+        If the token does not report scopes (for example a GitHub App installation token),
+        the value is ``None``.
 
         :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
         :type: list of string or None
         """
-        if self.__requester.oauth_scopes is None and not self.__oauth_scopes_requested:
-            self.__oauth_scopes_requested = True
-            self.__requester.get_rate_limits()
         return self.__requester.oauth_scopes
 
     def get_license(self, key: Opt[str] = NotSet) -> License:
