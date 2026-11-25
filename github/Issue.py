@@ -507,8 +507,7 @@ class Issue(CompletableGithubObject):
         This requires an App Installation token with ``content: write`` permission.
 
         :calls: `POST /graphql <https://docs.github.com/en/graphql>`__ with a mutation to transfer the issue
-            <https://docs.github.com/en/graphql/reference/mutations#transferissue>
-        :graphql: `mutation transferIssue <https://docs.github.com/en/graphql/reference/mutations#transferissue>`_
+        :graphql: `mutation transferIssue <https://docs.github.com/en/graphql/reference/issues#mutation-transferissue>`_
         :param repository: :class:`github.Repository.Repository` to transfer the issue to
         :param create_labels_if_missing: bool, create the issue's labels in the target repository if they don't exist
         :return: :class:`github.Issue.Issue`, the issue in the target repository
