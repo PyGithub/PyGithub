@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/repos/PyGithub/PyGithub/codeowners/errors
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('Server', 'GitHub.com'), ('Content-Type', 'application/json; charset=utf-8')]
+{"errors":[{"line":3,"column":12,"kind":"Unknown owner","source":"/docs/     @ghost-team\n","suggestion":"make sure @ghost-team exists and has write access to the repository","message":"Unknown owner on line 3: make sure @ghost-team exists and has write access to the repository\n\n  /docs/     @ghost-team\n           ^","path":".github/CODEOWNERS"},{"line":7,"column":1,"kind":"Invalid pattern","source":"[*.py     @PyGithub/maintainers\n","suggestion":null,"message":"Invalid pattern on line 7: Unterminated character class\n\n  [*.py     @PyGithub/maintainers\n  ^","path":".github/CODEOWNERS"}]}

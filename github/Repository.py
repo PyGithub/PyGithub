@@ -190,6 +190,7 @@ import github.Branch
 import github.CheckRun
 import github.CheckSuite
 import github.Clones
+import github.CodeownersError
 import github.CodeScanAlert
 import github.Commit
 import github.CommitComment
@@ -282,6 +283,7 @@ if TYPE_CHECKING:
     from github.CheckRun import CheckRun
     from github.CheckSuite import CheckSuite
     from github.Clones import Clones
+    from github.CodeownersError import CodeownersError
     from github.CodeScanAlert import CodeScanAlert
     from github.Commit import Commit
     from github.CommitComment import CommitComment
@@ -4450,6 +4452,19 @@ class Repository(CompletableGithubObject):
         assert isinstance(number, int), number
         headers, data = self._requester.requestJsonAndCheck("GET", f"{self.url}/code-scanning/alerts/{number}")
         return github.CodeScanAlert.CodeScanAlert(self._requester, headers, data)
+
+    def get_codeowners_errors(self, ref: Opt[str] = NotSet) -> list[CodeownersError]:
+        """
+        :calls: `GET /repos/{owner}/{repo}/codeowners/errors <https://docs.github.com/en/rest/repos/repos#list-codeowners-errors>`_
+        :param ref: branch, tag or commit whose CODEOWNERS file is checked, the default branch if not given
+        :rtype: list of :class:`github.CodeownersError.CodeownersError`
+        """
+        assert is_optional(ref, str), ref
+        url_parameters = NotSet.remove_unset_items({"ref": ref})
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET", f"{self.url}/codeowners/errors", parameters=url_parameters
+        )
+        return [github.CodeownersError.CodeownersError(self._requester, headers, error) for error in data["errors"]]
 
     def get_secret_scanning_alerts(
         self,
