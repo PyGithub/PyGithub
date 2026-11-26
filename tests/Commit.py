@@ -40,7 +40,24 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+from github import Github
+from github.File import File
+
 from . import Framework
+
+if TYPE_CHECKING:
+    from typing import assert_type
+
+
+def test_file_without_patch() -> None:
+    with Github() as client:
+        file = client.create_from_raw_data(File, {"filename": "image.png"})
+
+    if TYPE_CHECKING:
+        assert_type(file.patch, str | None)
+    assert file.patch is None
 
 
 class Commit(Framework.TestCase):

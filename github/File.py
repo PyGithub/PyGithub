@@ -63,7 +63,7 @@ class File(NonCompletableGithubObject):
         self._contents_url: Attribute[str] = NotSet
         self._deletions: Attribute[int] = NotSet
         self._filename: Attribute[str] = NotSet
-        self._patch: Attribute[str] = NotSet
+        self._patch: Attribute[str | None] = NotSet
         self._previous_filename: Attribute[str] = NotSet
         self._raw_url: Attribute[str] = NotSet
         self._sha: Attribute[str] = NotSet
@@ -97,7 +97,8 @@ class File(NonCompletableGithubObject):
         return self._filename.value
 
     @property
-    def patch(self) -> str:
+    def patch(self) -> str | None:
+        """The patch text, or ``None`` if GitHub does not provide it."""
         return self._patch.value
 
     @property
