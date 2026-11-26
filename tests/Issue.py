@@ -45,8 +45,8 @@
 
 from __future__ import annotations
 
+import time
 from datetime import datetime, timezone
-from unittest import mock
 
 from . import Framework
 
@@ -198,42 +198,44 @@ class Issue(Framework.TestCase):
         self.issue.unlock()
 
     def testTransfer(self):
-        # transfer requires GitHub app installation token
-        github_integration = ghi(auth=self.app_auth)
-        installation = github_integration.get_app_installation(installation_id=1234567)
-        gh = installation.get_github_for_installation().withLazy(lazy=True)
+        # recording this test requires an existing issue with label "custom"
+        # that label must not exist in the target repository
+        gh = self.g.withLazy(lazy=True)
+        repo = gh.get_repo("EnricoMi/PyGithub")
+        issue = repo.get_issue(44)
+        self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
 
-        # recorded token expires otherwise
-        with mock.patch("github.Auth.datetime") as dt:
-            dt.now = mock.Mock(return_value=datetime(2026, 11, 25, 18, 0, 0, tzinfo=timezone.utc))
-
-            issue = gh.get_repo("EnricoMi/PyGithub").get_issue(27)
-            self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
-
-            target = gh.get_repo("EnricoMi/PyGithub-fork")
-            issue = issue.transfer(target)
-            self.assertEqual(issue.number, 16)
-            self.assertEqual(issue.repository_url, "https://api.github.com/repos/EnricoMi/PyGithub-fork")
-            self.assertListKeyEqual(issue.labels, lambda label: label.name, [])
+        target = gh.get_repo("EnricoMi/PyGithub-testing")
+        issue = issue.transfer(target)
+        if self.recordMode:
+            # labels need some time to appear
+            time.sleep(2)
+        else:
+            # we can only know the issue number in replay mode
+            self.assertEqual(issue.number, 37)
+            self.assertEqual(issue.url, "https://api.github.com/repos/EnricoMi/PyGithub-testing/issues/37")
+        # this fetches the issue
+        self.assertListKeyEqual(issue.labels, lambda label: label.name, [])
 
     def testTransferCreatingLabels(self):
-        # transfer requires GitHub app installation token
-        github_integration = ghi(auth=self.app_auth)
-        installation = github_integration.get_app_installation(installation_id=1234567)
-        gh = installation.get_github_for_installation().withLazy(lazy=True)
+        # recording this test requires an existing issue with label "custom"
+        # that label must not exist in the target repository
+        gh = self.g.withLazy(lazy=True)
+        repo = gh.get_repo("EnricoMi/PyGithub")
+        issue = repo.get_issue(number=48)
+        self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
 
-        # recorded token expires otherwise
-        with mock.patch("github.Auth.datetime") as dt:
-            dt.now = mock.Mock(return_value=datetime(2026, 11, 25, 18, 0, 0, tzinfo=timezone.utc))
-
-            issue = gh.get_repo("EnricoMi/PyGithub").get_issue(28)
-            self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
-
-            target = gh.get_repo("EnricoMi/PyGithub-fork")
-            issue = issue.transfer(target, create_labels_if_missing=True)
-            self.assertEqual(issue.number, 17)
-            self.assertEqual(issue.repository_url, "https://api.github.com/repos/EnricoMi/PyGithub-fork")
-            self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
+        target = gh.get_repo("EnricoMi/PyGithub-testing")
+        issue = issue.transfer(target, create_labels_if_missing=True)
+        if self.recordMode:
+            # labels need some time to appear
+            time.sleep(2)
+        else:
+            # we can only know the issue number in replay mode
+            self.assertEqual(issue.number, 35)
+            self.assertEqual(issue.url, "https://api.github.com/repos/EnricoMi/PyGithub-testing/issues/35")
+        # this fetches the issue
+        self.assertListKeyEqual(issue.labels, lambda label: label.name, ["custom"])
 
     def testCreateComment(self):
         comment = self.issue.create_comment("Comment created by PyGithub")
