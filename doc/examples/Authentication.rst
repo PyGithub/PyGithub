@@ -61,7 +61,9 @@ Then, use a ``github.Auth.NetrcAuth`` instance to access these information:
 App authentication
 ------------------
 
-A Github Apps authenticate by an application id and a private key.
+GitHub Apps authenticate with a private key and either the app's client ID or
+its numeric app ID. GitHub recommends using the client ID. Pass either value
+as the ``app_id`` argument to ``Auth.AppAuth``.
 
 Note that there is only a limited set of endpoints that can be called when authenticated as a Github App.
 Instead of using ``github.Github``, entry point ``github.GithubIntegration`` should be used
@@ -69,7 +71,7 @@ when authenticated as a Github App:
 
 .. code-block:: python
 
-    >>> auth = Auth.AppAuth(123456, private_key)
+    >>> auth = Auth.AppAuth(app_id=client_id, private_key=private_key)
     >>> gi = GithubIntegration(auth=auth)
     >>> for installation in gi.get_installations():
     ...     installation.id

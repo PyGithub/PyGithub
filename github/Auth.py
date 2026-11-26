@@ -210,6 +210,8 @@ class AppAuth(JWT):
 
     https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/authenticating-as-a-github-app
 
+    :param app_id: The GitHub App's client ID (recommended) or numeric app ID, used as the JWT issuer.
+
     """
 
     @staticmethod

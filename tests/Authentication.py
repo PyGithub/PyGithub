@@ -310,20 +310,22 @@ class Authentication(Framework.BasicTestCase):
                 self.assertEqual(exc.exception.args, ("Could not get credentials from netrc for host api.github.com",))
 
     def testCreateJWT(self):
-        auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY)
+        for app_id in (APP_ID, "Iv1.0123456789abcdef"):
+            with self.subTest(app_id=app_id):
+                auth = github.Auth.AppAuth(app_id=app_id, private_key=PRIVATE_KEY)
 
-        with mock.patch("github.Auth.time") as t:
-            t.time = mock.Mock(return_value=1550055331.7435968)
-            token = auth.create_jwt()
+                with mock.patch("github.Auth.time") as t:
+                    t.time = mock.Mock(return_value=1550055331.7435968)
+                    token = auth.create_jwt()
 
-        payload = jwt.decode(
-            token,
-            key=PUBLIC_KEY,
-            algorithms=["RS256"],
-            options={"verify_exp": False},
-            issuer=str(APP_ID),
-        )
-        self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": str(APP_ID)})
+                payload = jwt.decode(
+                    token,
+                    key=PUBLIC_KEY,
+                    algorithms=["RS256"],
+                    options={"verify_exp": False},
+                    issuer=str(app_id),
+                )
+                self.assertDictEqual(payload, {"iat": 1550055271, "exp": 1550055631, "iss": str(app_id)})
 
     def testCreateJWTWithExpiration(self):
         auth = github.Auth.AppAuth(APP_ID, PRIVATE_KEY, jwt_expiry=120, jwt_issued_at=-30)
