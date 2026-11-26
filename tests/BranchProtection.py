@@ -37,6 +37,11 @@
 
 from __future__ import annotations
 
+from unittest import mock
+
+import github.BranchProtection
+import github.Requester
+
 from . import Framework
 
 
@@ -79,3 +84,40 @@ class BranchProtection(Framework.TestCase):
         self.assertFalse(self.branch_protection.required_conversation_resolution)
         self.assertFalse(self.branch_protection.lock_branch)
         self.assertFalse(self.branch_protection.allow_fork_syncing)
+
+
+class RequiredStatusChecksCompletion(Framework.BasicTestCase):
+    def testPreserveStatusChecksUrl(self):
+        requester = mock.Mock(github.Requester.Requester)
+        status_checks_url = "https://api.github.com/repos/owner/repo/branches/main/protection/required_status_checks"
+        protection = github.BranchProtection.BranchProtection(
+            requester,
+            {},
+            {
+                "url": "https://api.github.com/repos/owner/repo/branches/other/protection",
+                "required_status_checks": {"url": status_checks_url, "strict": False},
+            },
+        )
+        self.assertEqual(protection.required_status_checks.url, status_checks_url)
+        self.assertFalse(protection.required_status_checks.strict)
+        requester.requestJsonAndCheck.assert_not_called()
+
+    def testStatusChecksWithoutProtectionUrl(self):
+        requester = mock.Mock(github.Requester.Requester)
+        protection = github.BranchProtection.BranchProtection(
+            requester, {}, {"required_status_checks": {"contexts": []}}
+        )
+        self.assertEqual(protection.required_status_checks.contexts, [])
+        with self.assertRaises(github.IncompletableObject):
+            _ = protection.required_status_checks.strict
+        requester.requestJsonAndCheck.assert_not_called()
+
+    def testNullStatusChecks(self):
+        requester = mock.Mock(github.Requester.Requester)
+        protection = github.BranchProtection.BranchProtection(
+            requester,
+            {},
+            {"url": "https://api.github.com/repos/owner/repo/branches/main/protection", "required_status_checks": None},
+        )
+        self.assertIsNone(protection.required_status_checks)
+        requester.requestJsonAndCheck.assert_not_called()
