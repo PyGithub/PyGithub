@@ -27,6 +27,12 @@ Error Handling
 
 .. automodule:: github.GithubException
 
+GitHub can return HTTP 202 while it computes repository statistics. For a
+GET or HEAD request, PyGithub waits two seconds between polls and retries up
+to ten times. If the response is still 202, it raises
+:class:`github.GithubException.GithubException` with ``status == 202``.
+The caller can request the statistics again later.
+
 Rate limits
 -----------
 

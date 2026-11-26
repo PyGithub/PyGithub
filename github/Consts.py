@@ -61,6 +61,7 @@ from __future__ import annotations
 REQ_IF_NONE_MATCH = "If-None-Match"
 REQ_IF_MODIFIED_SINCE = "If-Modified-Since"
 PROCESSING_202_WAIT_TIME = 2
+PROCESSING_202_MAX_RETRIES = 10
 
 # ##############################################################################
 # Response Header                                                              #
