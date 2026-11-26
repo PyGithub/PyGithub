@@ -71,7 +71,7 @@ when authenticated as a Github App:
 
 .. code-block:: python
 
-    >>> auth = Auth.AppAuth(app_id=client_id, private_key=private_key)
+    >>> auth = Auth.AppAuth(app_id="Iv1.0123456789abcdef", private_key=private_key)
     >>> gi = GithubIntegration(auth=auth)
     >>> for installation in gi.get_installations():
     ...     installation.id
