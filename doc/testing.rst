@@ -50,6 +50,21 @@ If you add or modify a test, for example ``Repository.testCompare``, you have re
 This will create or update the ``tests/ReplayData/Repository.testCompare.txt`` file needed for your new test.
 Add those files to git and commit them as well.
 
+Requests that cannot be recorded again
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Recording replaces the whole replay data file. If some requests of a test cannot be repeated, for example
+because they read a repository that no longer exists or because they change something on Github,
+wrap them in ``noRecord()``. While recording, these requests are answered with the replay data recorded
+before, and they are kept in the new replay data file. When the tests run normally, ``noRecord()`` has no effect.
+
+.. code-block:: python
+
+    def testSomething(self):
+        with self.noRecord():
+            old_repo = self.g.get_repo("some-user/deleted-fork")
+        ...
+
 Reusing other tests' replay data
 --------------------------------
 
