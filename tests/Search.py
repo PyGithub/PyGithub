@@ -177,6 +177,25 @@ class Search(Framework.TestCase):
         self.assertTrue(repos[0].has_pull_requests)
         self.assertEqual(repos[0].pull_request_creation_policy, "all")
 
+    def testSearchReposWithMultipleLanguages(self):
+        repos = self.g.search_repositories("", sort="stars", order="desc", language=["javascript", "typescript"])
+        self.assertListKeyBegin(
+            repos,
+            lambda r: r.full_name,
+            [
+                "freeCodeCamp/freeCodeCamp",
+                "kamranahmedse/developer-roadmap",
+                "facebook/react",
+                "vuejs/vue",
+                "trekhleb/javascript-algorithms",
+                "microsoft/vscode",
+                "n8n-io/n8n",
+                "airbnb/javascript",
+                "f/awesome-chatgpt-prompts",
+                "vercel/next.js",
+            ],
+        )
+
     def testSearchReposWithNoResults(self):
         repos = self.g.search_repositories("doesnotexist")
         self.assertEqual(repos.totalCount, 0)
