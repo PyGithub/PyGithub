@@ -1,0 +1,33 @@
++ python scripts/openapi.py create class --tests github openapi.spec.json openapi.index SecretScanAlertInstance https://docs.github.com/en/rest/reference/secret-scanning /components/schemas/nullable-secret-scanning-first-detected-location /components/schemas/secret-scanning-location-commit /components/schemas/secret-scanning-location-wiki-commit /components/schemas/secret-scanning-location-issue-title /components/schemas/secret-scanning-location-issue-body /components/schemas/secret-scanning-location-issue-comment /components/schemas/secret-scanning-location-discussion-title /components/schemas/secret-scanning-location-discussion-body /components/schemas/secret-scanning-location-discussion-comment /components/schemas/secret-scanning-location-pull-request-title /components/schemas/secret-scanning-location-pull-request-body /components/schemas/secret-scanning-location-pull-request-comment /components/schemas/secret-scanning-location-pull-request-review /components/schemas/secret-scanning-location-pull-request-review-comment
+Creating class github.SecretScanAlertInstance.SecretScanAlertInstance with parent github.GithubObject.NonCompletableGithubObject in ./github/SecretScanAlertInstance.py
+Updating index
+Indexing 10 Python files
+Indexed 20 classes
+Indexed 4 paths
+Indexed 38 schemas
+Indexing OpenAPI spec
+Using spec openapi.spec.json
+Applying API schemas to PyGithub class SecretScanAlertInstance
+Applying spec openapi.spec.json to github.SecretScanAlertInstance.SecretScanAlertInstance (github/SecretScanAlertInstance.py)
+Applying schema /components/schemas/nullable-secret-scanning-first-detected-location
+Applying schema /components/schemas/secret-scanning-location-commit
+Applying schema /components/schemas/secret-scanning-location-wiki-commit
+Applying schema /components/schemas/secret-scanning-location-issue-title
+Applying schema /components/schemas/secret-scanning-location-issue-body
+Applying schema /components/schemas/secret-scanning-location-issue-comment
+Applying schema /components/schemas/secret-scanning-location-discussion-title
+Applying schema /components/schemas/secret-scanning-location-discussion-body
+Applying schema /components/schemas/secret-scanning-location-discussion-comment
+Applying schema /components/schemas/secret-scanning-location-pull-request-title
+Applying schema /components/schemas/secret-scanning-location-pull-request-body
+Applying schema /components/schemas/secret-scanning-location-pull-request-comment
+Applying schema /components/schemas/secret-scanning-location-pull-request-review
+Applying schema /components/schemas/secret-scanning-location-pull-request-review-comment
+Class SecretScanAlertInstance changed
+Test tests/SecretScanAlertInstance.py changed
++ python scripts/openapi.py index github openapi.spec.json openapi.index
+Indexing 10 Python files
+Indexed 20 classes
+Indexed 4 paths
+Indexed 38 schemas
+Indexing OpenAPI spec
