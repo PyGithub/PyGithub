@@ -412,6 +412,7 @@ class Requester:
         self.__base_url = base_url
 
         o = urllib.parse.urlparse(base_url)
+        assert o.hostname is not None, f"Invalid base_url: {base_url}"
         self.__graphql_prefix = self.get_graphql_prefix(o.path)
         self.__graphql_url = urllib.parse.urlunparse(o._replace(path=self.__graphql_prefix))
         self.__hostname = o.hostname  # type: ignore
