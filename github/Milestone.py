@@ -186,15 +186,16 @@ class Milestone(CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck("DELETE", self.url)
 
     def edit(
-        self, title: str, state: Opt[str] = NotSet, description: Opt[str] = NotSet, due_on: Opt[date] = NotSet
+        self, title: str, state: Opt[str] = NotSet, description: Opt[str] = NotSet, due_on: Opt[date | None] = NotSet
     ) -> None:
         """
         :calls: `PATCH /repos/{owner}/{repo}/milestones/{milestone_number} <https://docs.github.com/en/rest/reference/issues#milestones>`_
+        :param due_on: date or None to remove the due date. Omit to leave it unchanged.
         """
         assert isinstance(title, str), title
         assert state is NotSet or isinstance(state, str), state
         assert description is NotSet or isinstance(description, str), description
-        assert due_on is NotSet or isinstance(due_on, date), due_on
+        assert due_on is NotSet or due_on is None or isinstance(due_on, date), due_on
         post_parameters = NotSet.remove_unset_items(
             {
                 "title": title,
@@ -204,7 +205,7 @@ class Milestone(CompletableGithubObject):
         )
 
         if is_defined(due_on):
-            post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
+            post_parameters["due_on"] = due_on.strftime("%Y-%m-%d") if due_on is not None else None
 
         headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
         self._useAttributes(data)
