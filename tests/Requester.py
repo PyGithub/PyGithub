@@ -235,6 +235,44 @@ class Requester(Framework.TestCase):
         self.assertIsNot(r6, r)
         self.assertIsNone(r6.api_version)
 
+    def testRequestJsonAndValidateStatus(self):
+        r = gr.Requester(
+            auth=None,
+            base_url=Consts.DEFAULT_BASE_URL,
+            timeout=Consts.DEFAULT_TIMEOUT,
+            user_agent=Consts.DEFAULT_USER_AGENT,
+            per_page=Consts.DEFAULT_PER_PAGE,
+            verify=True,
+            retry=github.GithubRetry(),
+            pool_size=None,
+            api_version=None,
+        )
+
+        with mock.patch.object(r, "requestJson", return_value=(204, {"header": "val"}, '{"ok": true}')):
+            status, headers, data = r.requestJsonAndValidateStatus("GET", "/test", valid_codes={204, 404})
+            self.assertEqual(status, 204)
+            self.assertEqual(data, {"ok": True})
+
+        with mock.patch.object(r, "requestJson", return_value=(404, {"header": "val"}, '{"message": "Not Found"}')):
+            status, headers, data = r.requestJsonAndValidateStatus("GET", "/test", valid_codes={204, 404})
+            self.assertEqual(status, 404)
+            self.assertEqual(data, {"message": "Not Found"})
+
+        with mock.patch.object(
+            r, "requestJson", return_value=(401, {"header": "val"}, '{"message": "Bad credentials"}')
+        ):
+            with self.assertRaises(github.GithubException):
+                r.requestJsonAndValidateStatus("GET", "/test", valid_codes={204, 404})
+
+        # Test default valid_codes={200}
+        with mock.patch.object(r, "requestJson", return_value=(200, {}, '{"success": true}')):
+            status, _, data = r.requestJsonAndValidateStatus("GET", "/test")
+            self.assertEqual(status, 200)
+
+        with mock.patch.object(r, "requestJson", return_value=(204, {}, "")):
+            with self.assertRaises(github.GithubException):
+                r.requestJsonAndValidateStatus("GET", "/test")
+
     def testGetParametersOfUrl(self):
         self.assertEqual({}, gr.Requester.get_parameters_of_url("https://github.com/api"))
         self.assertEqual({"per_page": ["10"]}, gr.Requester.get_parameters_of_url("https://github.com/api?per_page=10"))
