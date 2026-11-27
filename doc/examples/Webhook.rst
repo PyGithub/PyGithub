@@ -9,7 +9,7 @@ To receive a continuous stream of events from GitHub, you can set up a WSGI app 
 Overview
 --------
 
-The example below demonstrates how to create a webhook listener using Pyramid and PyGithub. This webhook will listen for `pull_request` and `push` events, triggering specific actions when a PR is opened, closed, merged, or synced, or when a commit is pushed.
+The example below demonstrates how to create a webhook listener using Pyramid and PyGithub. This webhook will listen for ``pull_request`` and ``push`` events, triggering specific actions when a PR is opened, closed, merged, or synced, or when a commit is pushed.
 
 For reference, this example is adapted from `GitHub's platform samples <https://github.com/github/platform-samples/blob/master/api/python/building-a-ci-server/server.py>`__. A comprehensive list of event types that GitHub webhooks support is available in the `GitHub Webhooks documentation <https://developer.github.com/v3/issues/events/>`__.
 
