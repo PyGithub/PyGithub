@@ -60,6 +60,23 @@ Get list of code scanning alerts
         Sensitive data (password) is used in a hashing algorithm (SHA1) that is insecure⤶
         for password hashing, since it is not a computationally expensive hash function.
 
+Read and update code scanning default setup
+--------------------------------------------
+
+.. code-block:: python
+
+    >>> repo = g.get_repo("PyGithub/PyGithub")
+    >>> setup = repo.get_codescan_default_setup()
+    >>> setup.state
+    'configured'
+    >>> run = repo.set_codescan_default_setup(query_suite="extended")
+    >>> if run is not None:
+    ...     print(run.id)
+
+Updating the configuration may start a validation workflow. In that case the
+method returns its ``WorkflowRun``; otherwise it returns ``None``. Omitted
+parameters remain unchanged. Pass ``runner_label=None`` to clear a runner label.
+
 Get all the labels of the repository
 ------------------------------------
 
