@@ -509,6 +509,18 @@ class Requester(Framework.TestCase):
         )
         self.assertEqual("/request?param=value", requester.__makeAbsoluteUrl("https://github.com/request?param=value"))
 
+    def testBaseUrlWithoutHostname(self):
+        # a base_url without a hostname must be rejected with a clear message
+        # instead of failing with an AttributeError deep inside Requester
+        for base_url in ["", "github.com", "github.com/api/v3", "https://", "http://"]:
+            with self.assertRaises(AssertionError) as exc:
+                github.Github(base_url=base_url)
+            self.assertEqual(exc.exception.args, (f"Invalid base_url: {base_url}",))
+
+        # valid base_urls keep working
+        self.assertEqual(github.Github(base_url="https://api.github.com").requester.hostname, "api.github.com")
+        self.assertEqual(github.Github(base_url="https://ghe.example.com/api/v3").requester.hostname, "ghe.example.com")
+
     PrimaryRateLimitErrors = [
         "API rate limit exceeded for x.x.x.x. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
     ]
