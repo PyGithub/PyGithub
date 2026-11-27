@@ -43,12 +43,21 @@
 
 from __future__ import annotations
 
+import warnings
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 import github.GithubObject
 import github.HookResponse
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet, Opt, is_optional, is_optional_list
+from github.GithubObject import (
+    Attribute,
+    CompletableGithubObject,
+    NotSet,
+    Opt,
+    is_defined,
+    is_optional,
+    is_optional_list,
+)
 
 if TYPE_CHECKING:
     from github.HookResponse import HookResponse
@@ -159,22 +168,28 @@ class Hook(CompletableGithubObject):
 
     def edit(
         self,
-        name: str,
-        config: dict,
+        name: Opt[str] = NotSet,
+        config: Opt[dict] = NotSet,
         events: Opt[list[str]] = NotSet,
         add_events: Opt[list[str]] = NotSet,
         remove_events: Opt[list[str]] = NotSet,
         active: Opt[bool] = NotSet,
     ) -> None:
         """
-        :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/reference/repos#webhooks>`_
+        The name argument is deprecated for repository hooks.
+
+        :calls: `PATCH /repos/{owner}/{repo}/hooks/{hook_id} <https://docs.github.com/en/rest/repos/webhooks#update-a-repository-webhook>`_
         """
-        assert isinstance(name, str), name
-        assert isinstance(config, dict), config
+        assert is_optional(name, str), name
+        assert is_optional(config, dict), config
         assert is_optional_list(events, str), events
         assert is_optional_list(add_events, str), add_events
         assert is_optional_list(remove_events, str), remove_events
         assert is_optional(active, bool), active
+        url = self.url
+        if is_defined(name) and url.removeprefix(self.requester.base_url.rstrip("/")).startswith("/repos/"):
+            warnings.warn("Argument name is deprecated", category=DeprecationWarning)
+
         post_parameters = NotSet.remove_unset_items(
             {
                 "name": name,
@@ -186,7 +201,7 @@ class Hook(CompletableGithubObject):
             }
         )
 
-        headers, data = self._requester.requestJsonAndCheck("PATCH", self.url, input=post_parameters)
+        headers, data = self._requester.requestJsonAndCheck("PATCH", url, input=post_parameters)
         self._useAttributes(data)
         self._set_complete()
 

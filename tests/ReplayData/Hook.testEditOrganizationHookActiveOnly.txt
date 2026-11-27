@@ -1,0 +1,10 @@
+https
+PATCH
+api.github.com
+None
+/orgs/example/hooks/42
+{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{"active": false}
+200
+[('content-type', 'application/json; charset=utf-8')]
+{"id": 42, "name": "web", "active": false, "events": ["push"], "config": {"url": "https://example.invalid/hook"}, "url": "https://api.github.com/orgs/example/hooks/42"}

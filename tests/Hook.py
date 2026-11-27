@@ -36,7 +36,9 @@
 
 from __future__ import annotations
 
+import warnings
 from datetime import datetime, timezone
+from unittest.mock import patch
 
 from . import Framework
 
@@ -90,12 +92,35 @@ class Hook(Framework.TestCase):
         self.assertEqual(hook.url, "/repos/lazy/repo/hooks/42")
 
     def testEditWithMinimalParameters(self):
-        self.hook.edit("web", {"url": "http://foobar.com/hook"})
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.hook.edit("web", {"url": "http://foobar.com/hook"})
+        self.assertWarning(warning, "Argument name is deprecated")
         self.assertEqual(self.hook.config, {"url": "http://foobar.com/hook"})
         self.assertEqual(
             self.hook.updated_at,
             datetime(2012, 5, 19, 5, 8, 16, tzinfo=timezone.utc),
         )
+
+    def testEditActiveOnly(self):
+        self.hook.edit(active=False)
+        self.assertFalse(self.hook.active)
+
+    def testEditOrganizationHookActiveOnly(self):
+        hook = self.g.withLazy(True).get_organization("example").get_hook(42)
+        hook.edit(active=False)
+        self.assertFalse(hook.active)
+
+        with patch.object(hook.requester, "requestJsonAndCheck", return_value=({}, {})) as request:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", DeprecationWarning)
+                hook.edit(name="web")
+        request.assert_called_once_with("PATCH", hook.url, input={"name": "web"})
+
+    def testEditRejectsNone(self):
+        with self.assertRaises(AssertionError):
+            self.hook.edit(None, {})
+        with self.assertRaises(AssertionError):
+            self.hook.edit("web", None)
 
     def testDelete(self):
         self.hook.delete()
@@ -107,11 +132,19 @@ class Hook(Framework.TestCase):
         self.hook.ping()  # This does not update attributes of hook
 
     def testEditWithAllParameters(self):
-        self.hook.edit("web", {"url": "http://foobar.com"}, events=["fork", "push"])
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.hook.edit("web", {"url": "http://foobar.com"}, events=["fork", "push"])
+        self.assertWarning(warning, "Argument name is deprecated")
         self.assertEqual(self.hook.events, ["fork", "push"])
-        self.hook.edit("web", {"url": "http://foobar.com"}, add_events=["push"])
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.hook.edit("web", {"url": "http://foobar.com"}, add_events=["push"])
+        self.assertWarning(warning, "Argument name is deprecated")
         self.assertEqual(self.hook.events, ["fork", "push"])
-        self.hook.edit("web", {"url": "http://foobar.com"}, remove_events=["fork"])
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.hook.edit("web", {"url": "http://foobar.com"}, remove_events=["fork"])
+        self.assertWarning(warning, "Argument name is deprecated")
         self.assertEqual(self.hook.events, ["push"])
-        self.hook.edit("web", {"url": "http://foobar.com"}, active=True)
+        with self.assertWarns(DeprecationWarning) as warning:
+            self.hook.edit("web", {"url": "http://foobar.com"}, active=True)
+        self.assertWarning(warning, "Argument name is deprecated")
         self.assertTrue(self.hook.active)
