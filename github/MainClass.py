@@ -399,7 +399,17 @@ class Github:
     @property
     def oauth_scopes(self) -> list[str] | None:
         """
-        :type: list of string
+        OAuth scopes of the token this instance authenticates with.
+
+        This invokes a ``GET /rate_limit`` request if this instance has never sent a request,
+        or if responses never provided the ``X-OAuth-Scopes`` response header. Such a request
+        is not counted against the rate limit.
+
+        If the token does not report scopes (for example a GitHub App installation token),
+        the value is ``None``.
+
+        :calls: `GET /rate_limit <https://docs.github.com/en/rest/reference/rate-limit>`_
+        :type: list of string or None
         """
         return self.__requester.oauth_scopes
 

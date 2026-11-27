@@ -1,0 +1,10 @@
+https
+GET
+api.github.com
+None
+/rate_limit
+{'Authorization': '***', 'User-Agent': 'PyGithub/Python'}
+None
+200
+[('status', '200 OK'), ('server', 'GitHub.com'), ('date', 'Wed, 25 Nov 2026 03:30:00 GMT'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4999'), ('x-ratelimit-used', '1'), ('x-ratelimit-resource', 'core'), ('x-ratelimit-reset', '1795582800'), ('x-github-media-type', 'github.v3; format=json'), ('x-oauth-scopes', 'repo, user, gist'), ('x-accepted-oauth-scopes', '')]
+{"resources":{"core":{"limit":5000,"used":13,"remaining":4987,"reset":1734072198},"search":{"limit":30,"used":1,"remaining":29,"reset":1734071358},"graphql":{"limit":5000,"used":192,"remaining":4808,"reset":1734072222},"integration_manifest":{"limit":5000,"used":0,"remaining":5000,"reset":1734074898},"source_import":{"limit":100,"used":0,"remaining":100,"reset":1734071358},"code_scanning_upload":{"limit":1000,"used":0,"remaining":1000,"reset":1734074898},"code_scanning_autofix":{"limit":10,"used":0,"remaining":10,"reset":1734071358},"actions_runner_registration":{"limit":10000,"used":0,"remaining":10000,"reset":1734074898},"scim":{"limit":15000,"used":0,"remaining":15000,"reset":1734074898},"dependency_snapshots":{"limit":100,"used":0,"remaining":100,"reset":1734071358},"audit_log":{"limit":1750,"used":0,"remaining":1750,"reset":1734074898},"audit_log_streaming":{"limit":15,"used":0,"remaining":15,"reset":1734074898},"code_search":{"limit":10,"used":0,"remaining":10,"reset":1734071358}},"rate":{"limit":5000,"used":13,"remaining":4987,"reset":1734072198}}

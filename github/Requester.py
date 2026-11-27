@@ -111,7 +111,7 @@ import github.Consts as Consts
 import github.GithubException
 import github.GithubException as GithubException
 import github.RateLimitOverview
-from github.GithubObject import Opt, as_rest_api_attributes, is_undefined, rate_limit_from_headers
+from github.GithubObject import NotSet, Opt, as_rest_api_attributes, is_defined, is_undefined, rate_limit_from_headers
 
 if TYPE_CHECKING:
     from .AppAuthentication import AppAuthentication
@@ -444,7 +444,9 @@ class Requester:
         assert isinstance(per_page, int) and per_page > 0, per_page
         self.per_page = per_page
 
-        self.oauth_scopes = None
+        # scopes are unknown (NotSet) until a response provides the header or they are fetched on access,
+        # see the oauth_scopes property
+        self._oauth_scopes: Opt[list[str] | None] = NotSet
 
         assert user_agent is not None, (
             "github now requires a user-agent. "
@@ -564,6 +566,28 @@ class Requester:
         for resource, rate in data.get("resources", {}).items():
             self.__rate_limit_resources[resource] = dict(rate)
         return github.RateLimitOverview.RateLimitOverview(self, headers, data)
+
+    @property
+    def oauth_scopes(self) -> list[str] | None:
+        """
+        OAuth scopes of the token this requester authenticates with.
+
+        The scopes are taken from the ``X-OAuth-Scopes`` response header. This invokes a ``GET /rate_limit`` request
+        if this requester has never sent a request, or if responses never provided that header. Such a request is not
+        counted against the rate limit.
+
+        If the token does not report scopes (for example a GitHub App installation token), the value is ``None``.
+
+        """
+        # returned early rather than inside `if is_undefined(...)`: type checkers cannot narrow the
+        # Opt[...] sentinel away from a value that is mutated in the if-branch
+        if is_defined(self._oauth_scopes):
+            return self._oauth_scopes
+        # remember that we asked, even if the request fails or provides no scopes
+        self._oauth_scopes = None
+        # a response header may update _oauth_scopes
+        self.get_rate_limits()
+        return self._oauth_scopes
 
     @property
     def kwargs(self) -> dict[str, Any]:
@@ -1300,7 +1324,7 @@ class Requester:
             )
 
         if Consts.headerOAuthScopes in responseHeaders:
-            self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
+            self._oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
 
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output if isinstance(output, str) else "stream")
 
