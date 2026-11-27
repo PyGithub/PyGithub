@@ -15,17 +15,34 @@ jobs:
   publish:
     needs: [build]
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        label: [sync, async]
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
         with:
           name: package
-          path: dist
+          path: .
       - name: Install twine
         run: pip install -U "twine>=6.1.0" "packaging>=24.2"
-      - name: Publish 📦 to PyPI
+      - name: Check sync 📦 package
+        if: matrix.label == 'sync'
+        run: twine check dist/*
+      - name: Publish sync 📦 to PyPI
         # only run this for tags
-        if: startsWith(github.event.ref, 'refs/tags/')
+        if: startsWith(github.event.ref, 'refs/tags/') && matrix.label == 'sync'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: twine upload dist/*
+      - name: Check async 📦 package
+        if: matrix.label == 'async'
+        run: twine check async/dist/*
+      - name: Publish async 📦 to PyPI
+        # only run this for tags
+        if: startsWith(github.event.ref, 'refs/tags/') && matrix.label == 'async'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.ASYNC_PYPI_PASSWORD }}
+        run: twine upload async/dist/*
