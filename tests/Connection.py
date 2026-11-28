@@ -33,8 +33,9 @@
 import itertools
 
 import pytest
+from vcr.request import Request
 
-from . import VcrSerializer
+from . import Framework, VcrSerializer
 
 PARAMETERS = itertools.product(
     ["http", "https"],
@@ -102,3 +103,54 @@ def testRecordAndReplay(protocol, response_body):
     assert interaction["request"]["headers"]["Authorization"] == ["Basic login_and_password_removed"]
     assert interaction["response"]["status"]["code"] == 200
     assert interaction["response"]["body"]["string"] == response_body.encode("utf-8")
+
+
+@pytest.mark.parametrize(
+    ("recorded", "sent", "matches"),
+    [
+        ('{"message": "expected"}', b'{"message": "changed"}', False),
+        ('{"message": "expected"}', b"{}", False),
+        ('{"message": "expected"}', None, False),
+        (None, b'{"message": "unexpected"}', False),
+        ('{"a": 1, "b": [2, 3]}', b'{"b":[2,3],"a":1}', True),
+        ('{"values": [1, 2]}', b'{"values": [2, 1]}', False),
+        ('{"name": "café"}', b'{"name": "caf\\u00e9"}', True),
+        ("first body", b"second body", False),
+        ("same body", b"same body", True),
+        ("first\r\nsecond", b"first\r\nsecond", True),
+        (b"\xff\x00", b"\xff\x00", True),
+        (b"\xff\x00", b"\xff\x01", False),
+        ("<html>first</html>", b"<html>second</html>", False),
+        (None, None, True),
+        (None, b"", True),
+        (None, b"null", False),
+    ],
+)
+def testReplayChecksRequestBody(tmp_path, recorded, sent, matches):
+    cassette_dict = _cassette_dict("https", "response body")
+    request = cassette_dict["interactions"][0]["request"]
+    request.update(method="POST", body=recorded)
+    path = tmp_path / "body.txt"
+    path.write_text(VcrSerializer.serialize(cassette_dict), encoding="utf-8")
+
+    # Exercise the shared replay configuration, including its serializer.
+    with Framework._vcr.use_cassette(str(path)) as cassette:
+        actual = Request("POST", request["uri"], sent, {})
+        assert cassette.can_play_response_for(actual) is matches
+        if matches:
+            assert cassette.play_response(actual)["body"]["string"] == b"response body"
+        else:
+            assert cassette.play_counts[0] == 0
+
+
+@pytest.mark.parametrize("method", ["GET", "HEAD", "POST"])
+def testReplayLegacyNullBody(tmp_path, method):
+    cassette_dict = _cassette_dict("https", "response body")
+    request = cassette_dict["interactions"][0]["request"]
+    request.update(method=method, body="null")
+    path = tmp_path / "legacy-null.txt"
+    path.write_text(VcrSerializer.serialize(cassette_dict), encoding="utf-8")
+
+    with Framework._vcr.use_cassette(str(path)) as cassette:
+        actual = Request(method, request["uri"], None, {})
+        assert cassette.can_play_response_for(actual) is (method != "POST")

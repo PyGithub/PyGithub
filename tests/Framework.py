@@ -63,7 +63,9 @@ from __future__ import annotations
 
 import contextlib
 import functools
+import json
 import os
+import re
 import traceback
 import unittest
 import warnings
@@ -75,7 +77,7 @@ from urllib.parse import urlsplit
 import vcr
 import vcr.cassette
 from requests.structures import CaseInsensitiveDict
-from vcr.matchers import requests_match
+from vcr.matchers import read_body, requests_match
 
 import github
 from github import Consts
@@ -172,13 +174,38 @@ class OrderedVCR(vcr.VCR):
         return OrderedCassette.use_arg_getter(args_getter)
 
 
+def request_body(request, recorded):
+    actual_body = read_body(request) or b""
+    recorded_body = read_body(recorded) or b""
+    # Legacy upload records contain only the file object's repr, not its bytes.
+    # Keep the old exemption only for those records, not for recorded payloads.
+    if re.fullmatch(
+        rb"<(?:_io\.BufferedReader name=.+|tests\.GitRelease\.FileLikeStub object at 0x[0-9a-fA-F]+)>",
+        recorded_body,
+    ):
+        return
+    try:
+        actual_value = json.loads(actual_body)
+        recorded_value = json.loads(recorded_body)
+    except ValueError:
+        # The replay format stores non-JSON bodies on a single line.
+        actual_value = VcrSerializer._body_to_input_line(actual_body)
+        recorded_value = VcrSerializer._body_to_input_line(recorded_body)
+    assert actual_value == recorded_value, f"Request body differs: {actual_value!r} != {recorded_value!r}"
+
+
 # A single VCR instance, shared across all tests: it patches http.client/urllib3 generically
 # enough that it transparently intercepts both "requests" and "niquests" traffic (see
 # https://niquests.readthedocs.io/en/latest/community/extensions.html), unlike "responses",
 # which required fooling it into believing niquests IS requests via sys.modules aliasing.
 # OrderedVCR additionally enforces that requests are replayed in exactly the order they were
 # recorded (see OrderedCassette above).
-_vcr = OrderedVCR(serializer="pygithub-replaydata", record_mode="none")
+_vcr = OrderedVCR(
+    serializer="pygithub-replaydata",
+    record_mode="none",
+    match_on=("method", "scheme", "host", "port", "path", "query", "request_body"),
+)
+_vcr.register_matcher("request_body", request_body)
 _vcr.register_serializer("pygithub-replaydata", VcrSerializer)
 _vcr.register_persister(VcrSerializer.Utf8FilesystemPersister)
 

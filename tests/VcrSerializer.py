@@ -130,6 +130,8 @@ def deserialize(cassette_string: str) -> dict[str, Any]:
         url = lines[i + 4].strip()
         headers = eval(lines[i + 5].strip())  # noqa: S307
         input_line = lines[i + 6].strip()
+        # Older body-less GET requests were recorded as the JSON literal null.
+        input_body = None if input_line == "None" or (verb in ("GET", "HEAD") and input_line == "null") else input_line
         status = int(lines[i + 7].strip())
         response_headers = eval(lines[i + 8].strip())  # noqa: S307
 
@@ -156,7 +158,7 @@ def deserialize(cassette_string: str) -> dict[str, Any]:
                 "request": {
                     "method": verb,
                     "uri": uri,
-                    "body": input_line,
+                    "body": input_body,
                     "headers": {name: [value] for name, value in headers.items()},
                 },
                 "response": {
