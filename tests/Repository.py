@@ -2111,8 +2111,7 @@ class Repository(Framework.TestCase):
         self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")
 
     def testStatisticsContributors(self):
-        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
-            stats = self.repo.get_stats_contributors()
+        stats = self.repo.get_stats_contributors()
         seenJacquev6 = False
         for s in stats:
             adTotal = 0
@@ -2131,8 +2130,7 @@ class Repository(Framework.TestCase):
         self.assertTrue(seenJacquev6)
 
     def testStatisticsCommitActivity(self):
-        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
-            stats = self.repo.get_stats_commit_activity()
+        stats = self.repo.get_stats_commit_activity()
         self.assertEqual(
             stats[0].week,
             datetime(2012, 11, 18, 0, 0, tzinfo=timezone.utc),
@@ -2141,8 +2139,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(stats[0].days, [0, 7, 3, 9, 7, 3, 0])
 
     def testStatisticsCodeFrequency(self):
-        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
-            stats = self.repo.get_stats_code_frequency()
+        stats = self.repo.get_stats_code_frequency()
         self.assertEqual(
             stats[0].week,
             datetime(2012, 2, 12, 0, 0, tzinfo=timezone.utc),
@@ -2151,8 +2148,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(stats[0].deletions, -2098)
 
     def testStatisticsParticipation(self):
-        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
-            stats = self.repo.get_stats_participation()
+        stats = self.repo.get_stats_participation()
         self.assertEqual(
             stats.owner,
             [
@@ -2269,8 +2265,7 @@ class Repository(Framework.TestCase):
         )
 
     def testStatisticsPunchCard(self):
-        with mock.patch("github.Requester.Consts.PROCESSING_202_WAIT_TIME", 0):
-            stats = self.repo.get_stats_punch_card()
+        stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
 

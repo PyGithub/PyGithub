@@ -488,6 +488,7 @@ class TestCase(BasicTestCase):
             pool_size=pool_size,
             seconds_between_requests=self.seconds_between_requests,
             seconds_between_writes=self.seconds_between_writes,
+            processing_202_wait_time=0,
         )
 
 

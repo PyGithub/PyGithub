@@ -360,7 +360,9 @@ class Authentication(Framework.BasicTestCase):
     def testAddingCustomHeaders(self):
         requester = github.Github(auth=CustomAuth())._Github__requester
 
-        def requestRaw(cnx, verb, url, requestHeaders, encoded_input, stream=False, follow_302_redirect=False):
+        def requestRaw(
+            cnx, verb, url, requestHeaders, encoded_input, retries_202, stream=False, follow_302_redirect=False
+        ):
             self.modifiedHeaders = requestHeaders
             return Mock(), {}, Mock()
 

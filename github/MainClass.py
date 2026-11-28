@@ -209,6 +209,8 @@ class Github:
         # v3: set lazy = True as the default
         lazy: bool = False,
         api_version: str | None = None,
+        processing_202_wait_time: float = Consts.DEFAULT_PROCESSING_202_WAIT_TIME,
+        processing_202_max_retries: int | None = Consts.DEFAULT_PROCESSING_202_MAX_RETRIES,
     ) -> None:
         """
         :param login_or_token: string deprecated, use auth=github.Auth.Login(...) or auth=github.Auth.Token(...) instead
@@ -232,6 +234,8 @@ class Github:
         :param api_version: string, GitHub API version to use (see https://docs.github.com/en/rest/about-the-rest-api/api-versions).
                             Note that some PyGithub methods might downgrade this version if it is not supported by the implementation.
                             Set to None to not specify any version
+        :param processing_202_wait_time: seconds to wait before retrying a GET or HEAD request after a 202 response
+        :param processing_202_max_retries: maximum number of additional requests after a 202 response, or None for unlimited retries
         """
         assert login_or_token is None or isinstance(login_or_token, str), login_or_token
         assert password is None or isinstance(password, str), password
@@ -291,6 +295,8 @@ class Github:
             seconds_between_writes,
             lazy,
             api_version,
+            processing_202_wait_time=processing_202_wait_time,
+            processing_202_max_retries=processing_202_max_retries,
         )
 
     def withLazy(self, lazy: bool) -> Github:

@@ -60,8 +60,6 @@ from __future__ import annotations
 
 REQ_IF_NONE_MATCH = "If-None-Match"
 REQ_IF_MODIFIED_SINCE = "If-Modified-Since"
-PROCESSING_202_WAIT_TIME = 2
-PROCESSING_202_MAX_RETRIES = 10
 
 # ##############################################################################
 # Response Header                                                              #
@@ -195,3 +193,7 @@ DEFAULT_JWT_ALGORITHM = "RS256"
 # https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
 DEFAULT_SECONDS_BETWEEN_REQUESTS = 0.25
 DEFAULT_SECONDS_BETWEEN_WRITES = 1.0
+
+DEFAULT_PROCESSING_202_WAIT_TIME = 2
+DEFAULT_PROCESSING_202_MAX_RETRIES: int | None = None
+PROCESSING_202_WAIT_TIME = DEFAULT_PROCESSING_202_WAIT_TIME

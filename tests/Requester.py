@@ -34,6 +34,7 @@ from __future__ import annotations
 import contextlib
 import json
 import pickle
+import sys
 from datetime import datetime, timedelta, timezone
 from unittest import mock
 
@@ -60,32 +61,49 @@ class Requester(Framework.TestCase):
         super().tearDown()
 
     def testAcceptedResponsesHaveBoundedRetries(self):
-        response = mock.Mock(status=202)
-        response.read.return_value = "{}"
         final_headers = self._rateLimitHeaders("core", "5000", "1", "4999", "1700000000")
         final_headers["content-type"] = "application/json"
-        response.getheaders.side_effect = [[("Content-Type", "application/json")]] * 10 + [list(final_headers.items())]
+        for verb, retries in [("GET", 2), ("HEAD", 0)]:
+            with (
+                self.subTest(verb=verb, retries=retries),
+                mock.patch("github.Requester.time.sleep") as sleep,
+                github.Github(
+                    seconds_between_requests=0, processing_202_wait_time=0.5, processing_202_max_retries=retries
+                ) as gh,
+            ):
+                response = mock.Mock(status=202)
+                response.read.return_value = "{}"
+                response.getheaders.side_effect = [[]] * retries + [list(final_headers.items())]
+                connection = mock.Mock(host="api.github.com")
+                connection.getresponse.side_effect = [response] * (1 + retries)
+                with self.assertRaises(github.GithubException) as raised:
+                    gh.requester.requestJson(verb, "/repos/PyGithub/PyGithub/stats/contributors", cnx=connection)
+
+                self.assertEqual(raised.exception.status, 202)
+                self.assertEqual(connection.request.call_count, 1 + retries)
+                self.assertEqual(sleep.call_args_list, [mock.call(0.5)] * retries)
+                for key, value in final_headers.items():
+                    self.assertEqual(raised.exception.headers[key], value)
+                self.assertRate(gh.current_rate_limits.resources.core, 5000, 1, 4999, 1700000000)
+
+    def testAcceptedRetryLimitSurvivesRedirect(self):
+        accepted = mock.Mock(status=202)
+        accepted.getheaders.return_value = []
+        redirect = mock.Mock(status=301)
+        redirect.getheaders.return_value = [("Location", "https://api.github.com/new")]
         connection = mock.Mock(host="api.github.com")
-        # Stop the test even if the requester keeps polling indefinitely.
-        connection.getresponse.side_effect = [response] * 11 + [
-            AssertionError("Requester exceeded 11 accepted responses")
-        ]
+        connection.getresponse.side_effect = [accepted, redirect, accepted]
+
         with (
+            github.Github(seconds_between_requests=0, processing_202_max_retries=1) as gh,
             mock.patch("github.Requester.time.sleep") as sleep,
-            github.Github(seconds_between_requests=0, seconds_between_writes=0) as gh,
+            self.assertRaises(github.GithubException) as raised,
         ):
-            with self.assertRaises(github.GithubException) as raised:
-                gh.requester.requestJson("GET", "/repos/PyGithub/PyGithub/stats/contributors", cnx=connection)
+            gh.requester.requestJson("GET", "/old", cnx=connection)
 
         self.assertEqual(raised.exception.status, 202)
-        self.assertTrue(raised.exception.message)
-        self.assertEqual(connection.request.call_count, 11)
-        self.assertEqual(sleep.call_args_list, [mock.call(Consts.PROCESSING_202_WAIT_TIME)] * 10)
-        for key, value in final_headers.items():
-            self.assertEqual(raised.exception.headers[key], value)
-        core = gh.current_rate_limits.resources.core
-        self.assertIsNotNone(core)
-        self.assertRate(core, 5000, 1, 4999, 1700000000)
+        self.assertEqual([call.args[1] for call in connection.request.call_args_list], ["/old", "/old", "/new"])
+        sleep.assert_called_once_with(Consts.DEFAULT_PROCESSING_202_WAIT_TIME)
 
     def testAcceptedPostIsNotRetried(self):
         response = mock.Mock(status=202)
@@ -113,7 +131,9 @@ class Requester(Framework.TestCase):
         chunks = iter([b"first", b"second"])
         success.iter_content.return_value = chunks
         connection = mock.Mock(host="api.github.com")
-        connection.getresponse.side_effect = [accepted, success]
+        # A long-running job should still finish after more polls than the recursion limit.
+        polls = sys.getrecursionlimit() + 1
+        connection.getresponse.side_effect = [accepted] * polls + [success]
         events = mock.Mock()
         events.attach_mock(connection.request, "request")
         events.attach_mock(accepted.read, "consume_accepted")
@@ -124,14 +144,14 @@ class Requester(Framework.TestCase):
         ):
             status, headers, stream = gh.requester.getStream("/archive", cnx=connection, chunk_size=8)
 
-        self.assertEqual([call[0] for call in events.mock_calls], ["request", "consume_accepted", "request"])
+        self.assertEqual([call[0] for call in events.mock_calls], ["request", "consume_accepted"] * polls + ["request"])
         self.assertEqual(status, 200)
         self.assertEqual(headers["content-type"], "application/octet-stream")
         self.assertIs(stream, chunks)
         self.assertEqual(list(stream), [b"first", b"second"])
         success.read.assert_not_called()
         success.iter_content.assert_called_once_with(chunk_size=8)
-        sleep.assert_called_once_with(Consts.PROCESSING_202_WAIT_TIME)
+        self.assertEqual(sleep.call_args_list, [mock.call(2)] * polls)
 
     def testRecreation(self):
         class TestAuth(github.Auth.AppAuth):
@@ -150,6 +170,8 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
+            processing_202_wait_time=0.5,
+            processing_202_max_retries=2,
             # v3: this should not be the default value, so if this has been changed in v3,
             # change it here is well
             lazy=True,
@@ -172,6 +194,8 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
+                processing_202_wait_time=0.5,
+                processing_202_max_retries=2,
                 lazy=True,
                 api_version="version",
             ),
@@ -206,6 +230,8 @@ class Requester(Framework.TestCase):
             pool_size=5,
             seconds_between_requests=1.2,
             seconds_between_writes=3.4,
+            processing_202_wait_time=0.5,
+            processing_202_max_retries=2,
             # v3: this should not be the default value, so if this has been changed in v3,
             # change it here is well
             lazy=True,
@@ -230,6 +256,8 @@ class Requester(Framework.TestCase):
                 pool_size=5,
                 seconds_between_requests=1.2,
                 seconds_between_writes=3.4,
+                processing_202_wait_time=0.5,
+                processing_202_max_retries=2,
                 lazy=True,
                 api_version="version",
             ),
