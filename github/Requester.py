@@ -91,6 +91,7 @@ from __future__ import annotations
 import io
 import json
 import logging
+import math
 import mimetypes
 import os
 import threading
@@ -389,6 +390,9 @@ class Requester:
     __authorizationHeader: str | None
     __seconds_between_requests: float | None
     __seconds_between_writes: float | None
+    # Defaults also apply to requesters restored from older pickles.
+    __processing_202_wait_time: float = Consts.DEFAULT_PROCESSING_202_WAIT_TIME
+    __processing_202_max_retries: int | None = Consts.DEFAULT_PROCESSING_202_MAX_RETRIES
 
     # keep arguments in-sync with github.MainClass and GithubIntegration
     def __init__(
@@ -405,6 +409,8 @@ class Requester:
         seconds_between_writes: float | None = None,
         lazy: bool = False,
         api_version: str | None = None,
+        processing_202_wait_time: float = Consts.DEFAULT_PROCESSING_202_WAIT_TIME,
+        processing_202_max_retries: int | None = Consts.DEFAULT_PROCESSING_202_MAX_RETRIES,
     ):
         self._initializeDebugFeature()
 
@@ -426,6 +432,14 @@ class Requester:
         self.__pool_size = pool_size
         self.__seconds_between_requests = seconds_between_requests
         self.__seconds_between_writes = seconds_between_writes
+        if not math.isfinite(processing_202_wait_time) or processing_202_wait_time < 0:
+            raise ValueError("processing_202_wait_time must be finite and non-negative")
+        if processing_202_max_retries is not None and (
+            not isinstance(processing_202_max_retries, int) or processing_202_max_retries < 0
+        ):
+            raise ValueError("processing_202_max_retries must be a non-negative integer or None")
+        self.__processing_202_wait_time = processing_202_wait_time
+        self.__processing_202_max_retries = processing_202_max_retries
         self.__last_requests: dict[str, float] = dict()
         self.__scheme = o.scheme
         if o.scheme == "https":
@@ -582,6 +596,8 @@ class Requester:
             pool_size=self.__pool_size,
             seconds_between_requests=self.__seconds_between_requests,
             seconds_between_writes=self.__seconds_between_writes,
+            processing_202_wait_time=self.__processing_202_wait_time,
+            processing_202_max_retries=self.__processing_202_max_retries,
             lazy=self.__lazy,
             api_version=self.__apiVersion,
         )
@@ -1282,7 +1298,14 @@ class Requester:
         self.NEW_DEBUG_FRAME(requestHeaders)
 
         status, responseHeaders, output = self.__requestRaw(
-            cnx, verb, url, requestHeaders, encoded_input, stream=stream, follow_302_redirect=follow_302_redirect
+            cnx,
+            verb,
+            url,
+            requestHeaders,
+            encoded_input,
+            self.__processing_202_max_retries,
+            stream=stream,
+            follow_302_redirect=follow_302_redirect,
         )
 
         if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
@@ -1304,6 +1327,13 @@ class Requester:
 
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output if isinstance(output, str) else "stream")
 
+        if status == 202 and verb in ("GET", "HEAD"):
+            raise github.GithubException(
+                status=202,
+                headers=responseHeaders,
+                message=f"GitHub is still processing the request (retry limit: {self.__processing_202_max_retries})",
+            )
+
         return status, responseHeaders, output
 
     def __requestRaw(
@@ -1313,13 +1343,82 @@ class Requester:
         url: str,
         requestHeaders: dict[str, str],
         input: Any | None,
+        retries_202: int | None,
         stream: bool = False,
         follow_302_redirect: bool = False,
+    ) -> tuple[int, dict[str, Any], str | object]:
+        # An unlimited run of 202 responses must not consume the Python call stack.
+        while True:
+            status, responseHeaders, output = self.__requestRawOnce(
+                cnx, verb, url, requestHeaders, input, stream=stream
+            )
+            if status != 202 or verb not in ("GET", "HEAD"):
+                break
+            if retries_202 == 0:
+                break
+            if retries_202 is not None:
+                retries_202 -= 1
+            time.sleep(self.__processing_202_wait_time)
+
+        if status == 301 and "location" in responseHeaders:
+            location = responseHeaders["location"]
+            o = urllib.parse.urlparse(location)
+            if o.scheme != self.__scheme:
+                raise RuntimeError(
+                    f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
+                    f"please correct your Github server URL via base_url: Github(base_url=...)"
+                )
+            if o.hostname != self.__hostname:
+                raise RuntimeError(
+                    f"Github server redirected from host {self.__hostname} to {o.hostname}, "
+                    f"please correct your Github server URL via base_url: Github(base_url=...)"
+                )
+            # follow the full location, including its query string (e.g. parameters of a paginated list)
+            path = self.__makeAbsoluteUrl(location)
+            if path == url:
+                port = ":" + str(self.__port) if self.__port is not None else ""
+                requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
+                if location == requested_location:
+                    # following this redirection would request the same location again, endlessly
+                    raise RuntimeError(
+                        f"Github server redirected {requested_location} to itself, "
+                        f"stopped following this recursive redirection"
+                    )
+                raise RuntimeError(
+                    f"Requested {requested_location} but server redirected to {location}, "
+                    f"you may need to correct your Github server URL "
+                    f"via base_url: Github(base_url=...)"
+                )
+            if self._logger.isEnabledFor(logging.INFO):
+                self._logger.info(f"Following Github server redirection from {url} to {path}")
+            return self.__requestRaw(cnx, verb, path, requestHeaders, input, retries_202, stream=stream)
+        if status == 302 and follow_302_redirect and "location" in responseHeaders:
+            location = responseHeaders["location"]
+            o = urllib.parse.urlparse(location)
+            cnx = self.__customConnection(location)
+            path = self.__makeAbsoluteUrl(location)
+            if self._logger.isEnabledFor(logging.DEBUG):
+                self._logger.debug(f"Following Github server redirection (302) from {url} to {path}")
+            # remove auth to not leak authentication to redirection location
+            if o.hostname != self.__hostname:
+                requestHeaders = {k: v for k, v in requestHeaders.items() if k != "Authorization"}
+            return self.__requestRaw(
+                cnx, verb, path, requestHeaders, input, retries_202, stream=stream, follow_302_redirect=True
+            )
+        return status, responseHeaders, output
+
+    def __requestRawOnce(
+        self,
+        cnx: HTTPRequestsConnectionClass | HTTPSRequestsConnectionClass | None,
+        verb: str,
+        url: str,
+        requestHeaders: dict[str, str],
+        input: Any | None,
+        stream: bool = False,
     ) -> tuple[int, dict[str, Any], str | object]:
         self.__deferRequest(verb)
 
         try:
-            original_cnx = cnx
             if cnx is None:
                 cnx = self.__createConnection()
             cnx.request(verb, url, input, requestHeaders, stream)
@@ -1334,57 +1433,10 @@ class Requester:
 
             self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
-            if status == 202 and (
-                verb == "GET" or verb == "HEAD"
-            ):  # only for requests that are considered 'safe' in RFC 2616
-                time.sleep(Consts.PROCESSING_202_WAIT_TIME)
-                return self.__requestRaw(original_cnx, verb, url, requestHeaders, input, stream=stream)
+            if stream and status == 202 and verb in ("GET", "HEAD"):
+                # Consume discarded processing responses to release their connections.
+                response.read()
 
-            if status == 301 and "location" in responseHeaders:
-                location = responseHeaders["location"]
-                o = urllib.parse.urlparse(location)
-                if o.scheme != self.__scheme:
-                    raise RuntimeError(
-                        f"Github server redirected from {self.__scheme} protocol to {o.scheme}, "
-                        f"please correct your Github server URL via base_url: Github(base_url=...)"
-                    )
-                if o.hostname != self.__hostname:
-                    raise RuntimeError(
-                        f"Github server redirected from host {self.__hostname} to {o.hostname}, "
-                        f"please correct your Github server URL via base_url: Github(base_url=...)"
-                    )
-                # follow the full location, including its query string (e.g. parameters of a paginated list)
-                path = self.__makeAbsoluteUrl(location)
-                if path == url:
-                    port = ":" + str(self.__port) if self.__port is not None else ""
-                    requested_location = f"{self.__scheme}://{self.__hostname}{port}{url}"
-                    if location == requested_location:
-                        # following this redirection would request the same location again, endlessly
-                        raise RuntimeError(
-                            f"Github server redirected {requested_location} to itself, "
-                            f"stopped following this recursive redirection"
-                        )
-                    raise RuntimeError(
-                        f"Requested {requested_location} but server redirected to {location}, "
-                        f"you may need to correct your Github server URL "
-                        f"via base_url: Github(base_url=...)"
-                    )
-                if self._logger.isEnabledFor(logging.INFO):
-                    self._logger.info(f"Following Github server redirection from {url} to {path}")
-                return self.__requestRaw(original_cnx, verb, path, requestHeaders, input, stream=stream)
-            if status == 302 and follow_302_redirect and "location" in responseHeaders:
-                location = responseHeaders["location"]
-                o = urllib.parse.urlparse(location)
-                cnx = self.__customConnection(location)
-                path = self.__makeAbsoluteUrl(location)
-                if self._logger.isEnabledFor(logging.DEBUG):
-                    self._logger.debug(f"Following Github server redirection (302) from {url} to {path}")
-                # remove auth to not leak authentication to redirection location
-                if o.hostname != self.__hostname:
-                    requestHeaders = {k: v for k, v in requestHeaders.items() if k != "Authorization"}
-                return self.__requestRaw(
-                    cnx, verb, path, requestHeaders, input, stream=stream, follow_302_redirect=True
-                )
             return status, responseHeaders, output
         finally:
             # we record the time of this request after it finished

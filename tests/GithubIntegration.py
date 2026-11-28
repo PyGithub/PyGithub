@@ -188,6 +188,8 @@ class GithubIntegration(Framework.BasicTestCase):
                 pool_size=10,
                 seconds_between_requests=100,
                 seconds_between_writes=1000,
+                processing_202_wait_time=0.5,
+                processing_202_max_retries=2,
                 # v3: this should not be the default value, so if this has been changed in v3,
                 # change it here is well
                 lazy=True,

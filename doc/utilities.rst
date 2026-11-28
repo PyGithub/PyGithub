@@ -27,6 +27,17 @@ Error Handling
 
 .. automodule:: github.GithubException
 
+GitHub can return HTTP 202 while it computes a result, such as repository statistics.
+For GET and HEAD requests, PyGithub waits two seconds before retrying. By default it
+keeps polling until GitHub returns a different status.
+
+Set ``processing_202_wait_time`` (seconds) and ``processing_202_max_retries`` on
+``Github`` or ``GithubIntegration`` to change this behavior. For example,
+``Github(processing_202_max_retries=3)`` makes at most three retries after the
+initial request. If the last response is still 202, PyGithub raises
+:class:`github.GithubException.GithubException` with that status and the response
+headers. Set the limit to ``0`` to skip retries or ``None`` for unlimited retries.
+
 Rate limits
 -----------
 
